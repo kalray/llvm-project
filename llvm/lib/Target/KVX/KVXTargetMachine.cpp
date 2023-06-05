@@ -34,7 +34,7 @@ static cl::opt<bool>
 
 static cl::opt<bool>
     ForceDisableBundling("disable-kvx-bundling", cl::Hidden,
-                         cl::desc("Disable Bundling Pass for KVX target"));
+                         cl::desc("Disable Bundling for KVX target"));
 
 static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(false),

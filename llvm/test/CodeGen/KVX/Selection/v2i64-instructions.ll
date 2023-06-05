@@ -12,7 +12,7 @@ define <2 x i64> @test_ret_const() {
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    make $r1 = 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret <2 x i64> <i64 1, i64 2>
 }
 
@@ -30,7 +30,7 @@ define i64 @test_extract_1(<2 x i64> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %e = extractelement <2 x i64> %a, i64 1
   ret i64 %e
 }
@@ -40,7 +40,7 @@ define i64 @test_extract_i(<2 x i64> %a, i64 %idx) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %e = extractelement <2 x i64> %a, i64 %idx
   ret i64 %e
 }
@@ -51,7 +51,7 @@ define <2 x i64> @test_add(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    addd $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = add <2 x i64> %a, %b
   ret <2 x i64> %r
 }
@@ -62,7 +62,7 @@ define <2 x i64> @test_add_imm_0(<2 x i64> %a) {
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    addd $r1 = $r1, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = add <2 x i64> <i64 1, i64 2>, %a
   ret <2 x i64> %r
 }
@@ -73,7 +73,7 @@ define <2 x i64> @test_add_imm_1(<2 x i64> %a) {
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    addd $r1 = $r1, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = add <2 x i64> %a, <i64 1, i64 2>
   ret <2 x i64> %r
 }
@@ -84,7 +84,7 @@ define <2 x i64> @test_sub(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = sub <2 x i64> %a, %b
   ret <2 x i64> %r
 }
@@ -95,7 +95,7 @@ define <2 x i64> @test_sub_imm(<2 x i64> %a) {
 ; CHECK-NEXT:    addd $r0 = $r0, -1
 ; CHECK-NEXT:    addd $r1 = $r1, -2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = sub <2 x i64> %a, <i64 1, i64 2>
   ret <2 x i64> %r
 }
@@ -106,7 +106,7 @@ define <2 x i64> @test_sub_fromimm(<2 x i64> %a) {
 ; CHECK-NEXT:    sbfd $r0 = $r0, 1
 ; CHECK-NEXT:    sbfd $r1 = $r1, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = sub <2 x i64> <i64 1, i64 2>, %a
   ret <2 x i64> %r
 }
@@ -116,10 +116,10 @@ define <2 x i64> @test_fma(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c) {
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddd $r1 = $r3, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maddd $r0 = $r2, $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %m = mul <2 x i64> %b, %c
   %ad = add <2 x i64> %a, %m
   ret <2 x i64> %ad
@@ -131,7 +131,7 @@ define <2 x i64> @test_fma_imm(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-NEXT:    maddd $r0 = $r2, 5
 ; CHECK-NEXT:    addx2d $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %m = mul <2 x i64> <i64 5, i64 2>, %b
   %ad = add <2 x i64> %a, %m
   ret <2 x i64> %ad
@@ -143,7 +143,7 @@ define <2 x i64> @test_fma_imm_2(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    addx2d $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %m = mul <2 x i64> <i64 1, i64 2>, %b
   %ad = add <2 x i64> %a, %m
   ret <2 x i64> %ad
@@ -155,7 +155,7 @@ define <2 x i64> @test_neg(<2 x i64> %a) {
 ; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    negd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = sub <2 x i64> <i64 0, i64 0>, %a
   ret <2 x i64> %r
 }
@@ -164,10 +164,10 @@ define <2 x i64> @test_mul(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-LABEL: test_mul:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muld $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muld $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = mul <2 x i64> %a, %b
   ret <2 x i64> %r
 }
@@ -176,14 +176,14 @@ define <2 x i64> @test_mul_2(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c) {
 ; CHECK-LABEL: test_mul_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muld $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muld $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    muld $r1 = $r1, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    muld $r0 = $r0, $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %r = mul <2 x i64> %a, %b
   %r1 = mul <2 x i64> %r, %c
   ret <2 x i64> %r1
@@ -194,34 +194,34 @@ define <2 x i64> @test_div(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    call __divdi3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __divdi3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r21 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sdiv <2 x i64> %a, %b
@@ -233,34 +233,34 @@ define <2 x i64> @test_rem(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    call __moddi3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __moddi3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r21 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = srem <2 x i64> %a, %b
@@ -271,10 +271,10 @@ define void @test_ldst_v2i64(<2 x i64>* %a, <2 x i64>* %b) {
 ; CHECK-LABEL: test_ldst_v2i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %t1 = load <2 x i64>, <2 x i64>* %a
   store <2 x i64> %t1, <2 x i64>* %b, align 16
   ret void
@@ -287,15 +287,15 @@ define <2 x i64> @test_call(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x i64> @test_callee(<2 x i64> %a, <2 x i64> %b)
@@ -307,20 +307,20 @@ define <2 x i64> @test_call_flipped(<2 x i64> %a, <2 x i64> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x i64> @test_callee(<2 x i64> %b, <2 x i64> %a)
@@ -335,7 +335,7 @@ define <2 x i64> @test_tailcall_flipped(<2 x i64> %a, <2 x i64> %b) {
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    goto test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = tail call <2 x i64> @test_callee(<2 x i64> %b, <2 x i64> %a)
   ret <2 x i64> %r
 }
@@ -346,7 +346,7 @@ define <2 x i64> @test_select(<2 x i64> %a, <2 x i64> %b, i1 zeroext %c) {
 ; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = select i1 %c, <2 x i64> %a, <2 x i64> %b
   ret <2 x i64> %r
 }
@@ -358,30 +358,30 @@ define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x 
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.lt $r4 = $r4, $r6
 ; CV1-NEXT:    compd.lt $r5 = $r5, $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r4 = $r4
 ; CV1-NEXT:    negd $r5 = $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CV1-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    copyd $r1 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: test_select_cc:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.lt $r4 = $r4, $r6
 ; CV2-NEXT:    compnd.lt $r5 = $r5, $r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CV2-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    copyd $r1 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
   %cc = icmp slt <2 x i64> %c, %d
   %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
   ret <2 x i64> %r
@@ -392,30 +392,30 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.ltu $r4 = $r4, $r6
 ; CV1-NEXT:    compd.ltu $r5 = $r5, $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r4 = $r4
 ; CV1-NEXT:    negd $r5 = $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CV1-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    copyd $r1 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: test_select_cc_f32_f32:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.ltu $r4 = $r4, $r6
 ; CV2-NEXT:    compnd.ltu $r5 = $r5, $r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CV2-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    copyd $r1 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
   %cc = icmp ult <2 x i64> %c, %d
   %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
   ret <2 x i64> %r
@@ -426,22 +426,22 @@ define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.leu $r0 = $r0, $r2
 ; CV1-NEXT:    compd.leu $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r0 = $r0
 ; CV1-NEXT:    negd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: test_icmp_ule:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.leu $r0 = $r0, $r2
 ; CV2-NEXT:    compnd.leu $r1 = $r1, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r1, 15, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %r = icmp ule <2 x i64> %a, %b
   ret <2 x i1> %r
 }
@@ -451,22 +451,22 @@ define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.lt $r0 = $r0, $r2
 ; CV1-NEXT:    compd.lt $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r0 = $r0
 ; CV1-NEXT:    negd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: test_icmp_slt:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.lt $r0 = $r0, $r2
 ; CV2-NEXT:    compnd.lt $r1 = $r1, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r1, 15, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %r = icmp slt <2 x i64> %a, %b
   ret <2 x i1> %r
 }
@@ -476,22 +476,22 @@ define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.gtu $r0 = $r0, $r2
 ; CV1-NEXT:    compd.gtu $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r0 = $r0
 ; CV1-NEXT:    negd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: test_icmp_ugt:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.gtu $r0 = $r0, $r2
 ; CV2-NEXT:    compnd.gtu $r1 = $r1, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r1, 15, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %r = icmp ugt <2 x i64> %a, %b
   ret <2 x i1> %r
 }
@@ -501,22 +501,22 @@ define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.geu $r0 = $r0, $r2
 ; CV1-NEXT:    compd.geu $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r0 = $r0
 ; CV1-NEXT:    negd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: test_icmp_uge:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.geu $r0 = $r0, $r2
 ; CV2-NEXT:    compnd.geu $r1 = $r1, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r1, 15, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %r = icmp uge <2 x i64> %a, %b
   ret <2 x i1> %r
 }
@@ -526,22 +526,22 @@ define <2 x i1> @test_icmp_ult(<2 x i64> %a, <2 x i64> %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    compd.ltu $r0 = $r0, $r2
 ; CV1-NEXT:    compd.ltu $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    negd $r0 = $r0
 ; CV1-NEXT:    negd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: test_icmp_ult:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnd.ltu $r0 = $r0, $r2
 ; CV2-NEXT:    compnd.ltu $r1 = $r1, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r1, 15, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %r = icmp ult <2 x i64> %a, %b
   ret <2 x i1> %r
 }
@@ -554,7 +554,7 @@ define <2 x i64> @test_abs(<2 x i64> %a) {
 ; CHECK-NEXT:    absd $r0 = $r0
 ; CHECK-NEXT:    absd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call <2 x i64> @llvm.abs.v2i64(<2 x i64> %a, i1 false)
   ret <2 x i64> %r
 }
@@ -564,7 +564,7 @@ define <2 x i64> @test_insertelement0(<2 x i64> %a, i64 %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <2 x i64> %a, i64 %x, i64 0
   ret <2 x i64> %i
 }
@@ -574,7 +574,7 @@ define <2 x i64> @test_insertelement1(<2 x i64> %a, i64 %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <2 x i64> %a, i64 %x, i64 1
   ret <2 x i64> %i
 }
@@ -585,7 +585,7 @@ define <2 x i64> @test_insertelement(<2 x i64> %a, i64 %x, i64 %p) {
 ; CHECK-NEXT:    cmoved.even $r3 ? $r0 = $r2
 ; CHECK-NEXT:    cmoved.odd $r3 ? $r1 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <2 x i64> %a, i64 %x, i64 %p
   ret <2 x i64> %i
 }
@@ -595,7 +595,7 @@ define <2 x i8> @trunc_to_v2i8(<2 x i64> %a){
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = trunc <2 x i64> %a to <2 x i8>
   ret <2 x i8> %r
 }
@@ -605,7 +605,7 @@ define <2 x i8> @trunc_to_v2i64_buildvector(i64 %arg1, i64 %arg2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
   %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
   %conv = trunc <2 x i64> %v1 to <2 x i8>
@@ -617,7 +617,7 @@ define <2 x i64> @MULWDP(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulwdp $r0r1 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = sext <2 x i32> %a to <2 x i64>
   %1 = sext <2 x i32> %b to <2 x i64>
@@ -630,7 +630,7 @@ define <2 x i64> @MULSUWDP(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulsuwdp $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = sext <2 x i32> %a to <2 x i64>
   %1 = zext <2 x i32> %b to <2 x i64>
@@ -643,7 +643,7 @@ define <2 x i64> @MULUWDP(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    muluwdp $r0r1 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = zext <2 x i32> %a to <2 x i64>
   %1 = zext <2 x i32> %b to <2 x i64>
@@ -656,7 +656,7 @@ define <2 x i64> @MADDWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddwdp $r0r1 = $r3, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = sext <2 x i32> %2 to <2 x i64>
   %6 = mul nsw <2 x i64> %5, %4
@@ -669,7 +669,7 @@ define <2 x i64> @MADDSUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddsuwdp $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = zext <2 x i32> %2 to <2 x i64>
   %6 = mul nsw <2 x i64> %5, %4
@@ -682,7 +682,7 @@ define <2 x i64> @MADDUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    madduwdp $r0r1 = $r3, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = zext <2 x i32> %1 to <2 x i64>
   %5 = zext <2 x i32> %2 to <2 x i64>
   %6 = mul nuw <2 x i64> %5, %4
@@ -695,7 +695,7 @@ define <2 x i64> @MSBFUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfuwdp $r0r1 = $r3, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = zext <2 x i32> %1 to <2 x i64>
   %5 = zext <2 x i32> %2 to <2 x i64>
   %6 = mul nsw <2 x i64> %5, %4
@@ -708,7 +708,7 @@ define <2 x i64> @MSBFSUWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfsuwdp $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = zext <2 x i32> %2 to <2 x i64>
   %6 = mul nsw <2 x i64> %5, %4
@@ -721,7 +721,7 @@ define <2 x i64> @MSBFWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    msbfwdp $r0r1 = $r3, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   entry:
   %3 = sext <2 x i32> %1 to <2 x i64>
   %4 = sext <2 x i32> %2 to <2 x i64>

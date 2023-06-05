@@ -11,7 +11,7 @@ define <2 x float> @expand2(<2 x half> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = fpext <2 x half> %a to <2 x float>
   ret <2 x float> %conv
@@ -22,10 +22,10 @@ define <4 x float> @expand4(<4 x half> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r0
 ; CHECK-NEXT:    fwidenlhwp $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = fpext <4 x half> %a to <4 x float>
   ret <4 x float> %conv
@@ -36,12 +36,12 @@ define <8 x float> @expand8(<8 x half> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fwidenlhwp $r2 = $r1
 ; CHECK-NEXT:    fwidenlhwp $r4 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r0
 ; CHECK-NEXT:    fwidenmhwp $r3 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = fpext <8 x half> %a to <8 x float>
   ret <8 x float> %conv
@@ -51,10 +51,10 @@ define <2 x half> @narrow2(<2 x float> %a) {
 ; CHECK-LABEL: narrow2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = fptrunc <2 x float> %a to <2 x half>
   ret <2 x half> %conv
@@ -65,7 +65,7 @@ define <4 x half> @narrow4(<4 x float> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = fptrunc <4 x float> %a to <4 x half>
   ret <4 x half> %conv
@@ -77,7 +77,7 @@ define <8 x half> @narrow8(<8 x float> %a) {
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = fptrunc <8 x float> %a to <8 x half>
   ret <8 x half> %conv
@@ -88,10 +88,10 @@ define <2 x half> @narrow2d(<2 x double> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = fptrunc <2 x double> %a to <2 x half>
   ret <2 x half> %conv
@@ -101,12 +101,12 @@ define <4 x half> @narrow4d(<4 x double> %a) {
 ; CHECK-LABEL: narrow4d:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnarrowdwp $r3 = $r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdwp $r2 = $r0r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %conv = fptrunc <4 x double> %a to <4 x half>
   ret <4 x half> %conv

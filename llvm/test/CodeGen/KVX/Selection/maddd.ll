@@ -11,7 +11,7 @@ define i64 @f_madddrr(i64 %a, i64 %b, i64 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddd $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul nsw i64 %c, %b
   %add = add nsw i64 %mul, %a
@@ -23,7 +23,7 @@ define i64 @f_madddri_1(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddd $r0 = $r1, 11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul nsw i64 %b, 11
   %add = add nsw i64 %mul, %a
@@ -34,12 +34,12 @@ define i64 @f_maddd(i64 %a, i64 %b){
 ; CHECK-LABEL: f_maddd:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r2 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maddd $r2 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %mul = mul nsw i64 %b, %a
   %add = add nsw i64 %b, %a

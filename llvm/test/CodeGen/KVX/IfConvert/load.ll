@@ -9,7 +9,7 @@ define i8 @ld_ri10(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 511[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 511
   %0 = load i8, i8* %arrayidx, align 1
@@ -21,7 +21,7 @@ define i8 @ld_ri10_neg(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = -512[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 -512
   %0 = load i8, i8* %arrayidx, align 1
@@ -33,7 +33,7 @@ define i8 @ld_ri37_pos_min(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 512[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 512
   %0 = load i8, i8* %arrayidx, align 1
@@ -45,7 +45,7 @@ define i8 @ld_ri37_neg_max(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = -513[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 -513
   %0 = load i8, i8* %arrayidx, align 1
@@ -57,7 +57,7 @@ define i8 @ld_ri37_pos_max(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0x1fffffffff[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 137438953471
   %0 = load i8, i8* %arrayidx, align 1
@@ -69,7 +69,7 @@ define i8 @ld_ri37_neg_min(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0xffffffe000000000[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 -137438953472
   %0 = load i8, i8* %arrayidx, align 1
@@ -81,7 +81,7 @@ define i8 @ld_ri64_pos_min(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0x2000000000[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 137438953472
   %0 = load i8, i8* %arrayidx, align 1
@@ -93,7 +93,7 @@ define i8 @ld_ri64_neg_max(i8* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0xffffffdfffffffff[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %arrayidx = getelementptr inbounds i8, i8* %p, i64 -137438953473
   %0 = load i8, i8* %arrayidx, align 1
@@ -105,7 +105,7 @@ define i32 @cc_weqz_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.weqz $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -124,7 +124,7 @@ define i64 @cc_deqz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.deqz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i64 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -146,11 +146,11 @@ define i32 @cc_wnez_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK-NEXT:  # %bb.1: # %if.then
 ; CHECK-NEXT:    lwz $r0 = 0[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB10_2:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %return, label %if.then
@@ -169,7 +169,7 @@ define i64 @cc_dnez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dnez $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i64 %c, 0
   br i1 %tobool.not, label %return, label %if.then
@@ -188,7 +188,7 @@ define i32 @cc_wgez_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgez $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %c, -1
   br i1 %cmp, label %if.then, label %return
@@ -207,7 +207,7 @@ define i64 @cc_dgez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgez $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %c, -1
   br i1 %cmp, label %if.then, label %return
@@ -226,7 +226,7 @@ define i32 @cc_wgtz_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgtz $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -245,7 +245,7 @@ define i64 @cc_dgtz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgtz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -264,7 +264,7 @@ define i32 @cc_wgtz_ld_rr_2(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgtz $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -283,7 +283,7 @@ define i64 @cc_dgtz_rr_2(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgtz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -302,7 +302,7 @@ define i32 @cc_wlez_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wlez $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %c, 1
   br i1 %cmp, label %if.then, label %return
@@ -321,7 +321,7 @@ define i64 @cc_dlez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dlez $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %c, 1
   br i1 %cmp, label %if.then, label %return
@@ -340,7 +340,7 @@ define i32 @cc_wltz_ld_rr(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wltz $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -359,7 +359,7 @@ define i64 @cc_dltz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -378,7 +378,7 @@ define i32 @cc_wltz_ld_rr_2(i32 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wltz $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -397,7 +397,7 @@ define i64 @cc_dltz_rr_2(i64 %v, i64* nocapture readonly %p, i64 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -416,7 +416,7 @@ define i8 @cc_rr(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -435,7 +435,7 @@ define i8 @cc_ri27_pos_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 1[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -455,7 +455,7 @@ define i8 @cc_ri27_neg_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = -1[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -475,7 +475,7 @@ define i8 @cc_ri27_pos_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0x3ffffff[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -495,7 +495,7 @@ define i8 @cc_ri27_neg_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0xfffffffffc000000[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -515,7 +515,7 @@ define i8 @cc_ri54_pos_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0x1fffffffffffff[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -535,7 +535,7 @@ define i8 @cc_ri54_neg_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0xffe0000000000000[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -561,7 +561,7 @@ define i8 @cc_rr_make_offset_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK-NEXT:  .LBB31_2: # %if.then
 ; CHECK-NEXT:    lbz $r0 = 0x20000000000000[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -587,7 +587,7 @@ define i8 @cc_rr_make_offset_max_neg(i8 %v, i8* nocapture readonly %p, i32 %c) {
 ; CHECK-NEXT:  .LBB32_2: # %if.then
 ; CHECK-NEXT:    lbz $r0 = 0xffdfffffffffffff[$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool.not = icmp eq i32 %c, 0
   br i1 %tobool.not, label %if.then, label %return
@@ -607,7 +607,7 @@ define i64 @sext_32_rr(i64 %c, i32* nocapture readonly %p) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws.dgez $r0 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge i64 %c, 0
   br i1 %cmp, label %if.then, label %return
@@ -627,7 +627,7 @@ define <2 x i64> @ldq_cc(<2 x i64> %0, <2 x i64>* nocapture readonly %1, i64 %2)
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq.dnez $r3 ? $r0r1 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i64 %2, 0
   br i1 %4, label %7, label %5
 
@@ -645,7 +645,7 @@ define <4 x i64> @ldo_cc(<4 x i64> %0, <4 x i64>* nocapture readonly %1, i64 %2)
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo.dnez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i64 %2, 0
   br i1 %4, label %7, label %5
 
@@ -669,17 +669,17 @@ define <4 x i64> @select_v4(<4 x i64> %0, <4 x i64> %1, i32 %2, i32 %3, <4 x i64
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r10]
 ; CHECK-NEXT:    goto .LBB36_4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB36_3:
 ; CHECK-NEXT:    copyo $r4r5r6r7 = $r0r1r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB36_4:
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %6 = icmp eq i32 %2, 0
   br i1 %6, label %11, label %7
 

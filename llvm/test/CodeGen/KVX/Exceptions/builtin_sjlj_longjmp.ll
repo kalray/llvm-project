@@ -11,13 +11,13 @@ define void @f_longjump() noreturn {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = buf
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r14
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r1 = 8[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r14 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r12 = 16[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    igoto $r1
@@ -26,16 +26,16 @@ define void @f_longjump() noreturn {
 ; PIC-LABEL: f_longjump:
 ; PIC:       # %bb.0:
 ; PIC-NEXT:    addd $r12 = $r12, -32
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 0)
 ; PIC-NEXT:    sd 24[$r12] = $r14
 ; PIC-NEXT:    pcrel $r0 = @gotaddr()
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 1)
 ; PIC-NEXT:    ld $r0 = @got( buf )[$r0]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 2)
 ; PIC-NEXT:    ld $r1 = 8[$r0]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 5)
 ; PIC-NEXT:    ld $r14 = 0[$r0]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 6)
 ; PIC-NEXT:    ld $r12 = 16[$r0]
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:    igoto $r1

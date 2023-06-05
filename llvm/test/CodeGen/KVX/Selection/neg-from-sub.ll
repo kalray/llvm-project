@@ -11,7 +11,7 @@ define <2 x i16> @foo_v2i16(<2 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub <2 x i16> zeroinitializer, %x
   ret <2 x i16> %sub
@@ -22,7 +22,7 @@ define <4 x i16> @foo_v4i16(<4 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub <4 x i16> zeroinitializer, %x
   ret <4 x i16> %sub
@@ -33,7 +33,7 @@ define <2 x i32> @foo_v2i32(<2 x i32> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    negwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub <2 x i32> zeroinitializer, %x
   ret <2 x i32> %sub
@@ -44,7 +44,7 @@ define <2 x half> @foo_v2f16(<2 x half> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub <2 x half> zeroinitializer, %x
   ret <2 x half> %sub
@@ -55,7 +55,7 @@ define <4 x half> @foo_v4f16(<4 x half> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub <4 x half> zeroinitializer, %x
   ret <4 x half> %sub
@@ -66,7 +66,7 @@ define <2 x float> @foo_v2f32(<2 x float> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub <2 x float> zeroinitializer, %x
   ret <2 x float> %sub
@@ -77,7 +77,7 @@ define i32 @foo_int(i32 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    negw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw i32 0, %x
   ret i32 %sub
@@ -88,7 +88,7 @@ define i64 @foo_long(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw i64 0, %x
   ret i64 %sub

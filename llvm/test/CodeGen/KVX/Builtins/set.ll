@@ -12,13 +12,14 @@ target triple = "kvx-kalray-cos"
 define float @setcs_asm(i64 %l, float %a, float %b) {
 ; CHECK-LABEL: setcs_asm:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:     # (here cycle 0)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %l)
   %add = fadd float %a, %b
@@ -28,13 +29,14 @@ entry:
 define float @setcs_builtin(i64 %l, float %a, float %b) {
 ; CHECK-LABEL: setcs_builtin:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:     # (here cycle 0)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %l)
   %add = fadd float %a, %b
@@ -45,14 +47,15 @@ define float @setcs_asm2(i64 %l, float %a, float %b, float %c) {
 ; CHECK-LABEL: setcs_asm2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmulw $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %mul = fmul float %b, %c
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %l)
@@ -64,14 +67,15 @@ define float @setcs_builtin2(i64 %l, float %a, float %b, float %c) {
 ; CHECK-LABEL: setcs_builtin2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmulw $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %mul = fmul float %b, %c
   tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 %l)

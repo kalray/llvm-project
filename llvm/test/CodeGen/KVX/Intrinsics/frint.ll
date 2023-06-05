@@ -11,15 +11,15 @@ define float @rintf32(float %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call float @llvm.rint.f32(float %x)
@@ -31,15 +31,15 @@ define double @rintf64(double %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call rint
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call double @llvm.rint.f64(double %x)
@@ -51,27 +51,27 @@ define <2 x float> @rintv2f32(<2 x float> %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call <2 x float> @llvm.rint.v2f32(<2 x float> %x)
@@ -83,30 +83,30 @@ define <2 x double> @rintv2f64(<2 x double> %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 8[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    call rint
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call rint
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ld $r18 = 8[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %tmp = call <2 x double> @llvm.rint.v2f64(<2 x double> %x)

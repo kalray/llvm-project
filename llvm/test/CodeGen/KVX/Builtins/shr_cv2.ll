@@ -9,7 +9,7 @@ define <8 x i8> @shrbos(<8 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %0, i32 %1, i32 0)
   ret <8 x i8> %3
 }
@@ -21,7 +21,7 @@ define <8 x i8> @shrbos_s(<8 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srabos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %0, i32 %1, i32 1)
   ret <8 x i8> %3
 }
@@ -31,7 +31,7 @@ define <8 x i8> @shrbos_as(<8 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srsbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %0, i32 %1, i32 2)
   ret <8 x i8> %3
 }
@@ -41,16 +41,16 @@ define <8 x i8> @shrbos_r(<8 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
 ; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    srlhqs $r2 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; CHECK-NEXT:    sllhqs $r1 = $r2, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %0, i32 %1, i32 3)
   ret <8 x i8> %3
 }
@@ -60,7 +60,7 @@ define <2 x i8> @shrbps(<2 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 0)
   ret <2 x i8> %3
 }
@@ -72,7 +72,7 @@ define <2 x i8> @shrbps_s(<2 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srabos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 1)
   ret <2 x i8> %3
 }
@@ -82,7 +82,7 @@ define <2 x i8> @shrbps_as(<2 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srsbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 2)
   ret <2 x i8> %3
 }
@@ -91,26 +91,26 @@ define <2 x i8> @shrbps_r(<2 x i8> %0, i32 %1) {
 ; CHECK-LABEL: shrbps_r:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r1, 15, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r1 = $r1, 0x707
 ; CHECK-NEXT:    negbo $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlbos $r1 = $r0, $r1
 ; CHECK-NEXT:    andw $r2 = $r2, 0x707
 ; CHECK-NEXT:    extfz $r3 = $r1, 10, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sllbos $r2 = $r0, $r2
 ; CHECK-NEXT:    srlbos $r3 = $r0, $r3
 ; CHECK-NEXT:    extfz $r4 = $r2, 10, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sllbos $r0 = $r0, $r4
 ; CHECK-NEXT:    insf $r3 = $r1, 7, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    insf $r0 = $r2, 7, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    orw $r0 = $r3, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 3)
   ret <2 x i8> %3
 }
@@ -120,7 +120,7 @@ define <4 x i8> @shrbqs(<4 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 0)
   ret <4 x i8> %3
 }
@@ -132,7 +132,7 @@ define <4 x i8> @shrbqs_s(<4 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srabos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 1)
   ret <4 x i8> %3
 }
@@ -142,7 +142,7 @@ define <4 x i8> @shrbqs_as(<4 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srsbos $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 2)
   ret <4 x i8> %3
 }
@@ -151,41 +151,41 @@ define <4 x i8> @shrbqs_r(<4 x i8> %0, i32 %1) {
 ; CHECK-LABEL: shrbqs_r:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1010101
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r1 = $r1, 0x7070707
 ; CHECK-NEXT:    negbo $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r2 = $r2, 0x7070707
 ; CHECK-NEXT:    extfz $r3 = $r1, 10, 8
 ; CHECK-NEXT:    srlbos $r5 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srlbos $r3 = $r0, $r3
 ; CHECK-NEXT:    extfz $r4 = $r2, 10, 8
 ; CHECK-NEXT:    sllbos $r6 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    extfz $r1 = $r1, 26, 24
 ; CHECK-NEXT:    insf $r3 = $r5, 7, 0
 ; CHECK-NEXT:    sllbos $r4 = $r0, $r4
 ; CHECK-NEXT:    extfz $r5 = $r1, 18, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    extfz $r2 = $r2, 26, 24
 ; CHECK-NEXT:    insf $r4 = $r6, 7, 0
 ; CHECK-NEXT:    srlbos $r5 = $r0, $r5
 ; CHECK-NEXT:    extfz $r6 = $r2, 18, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sllbos $r0 = $r0, $r2
 ; CHECK-NEXT:    srlbos $r1 = $r0, $r1
 ; CHECK-NEXT:    insf $r5 = $r3, 15, 0
 ; CHECK-NEXT:    sllbos $r6 = $r0, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    insf $r1 = $r5, 23, 0
 ; CHECK-NEXT:    insf $r6 = $r4, 15, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r6, 23, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    orw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 3)
   ret <4 x i8> %3
 }
@@ -198,7 +198,7 @@ define <32 x i8> @shrbvs(<32 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    srlbos $r2 = $r2, $r4
 ; CHECK-NEXT:    srlbos $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 0)
   %5 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -221,7 +221,7 @@ define <32 x i8> @shrbvs_s(<32 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    srabos $r2 = $r2, $r4
 ; CHECK-NEXT:    srabos $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 1)
   %5 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -241,11 +241,11 @@ define <32 x i8> @shrbvs_as(<32 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srsbos $r0 = $r0, $r4
 ; CHECK-NEXT:    srsbos $r1 = $r1, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srsbos $r2 = $r2, $r4
 ; CHECK-NEXT:    srsbos $r3 = $r3, $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 2)
   %5 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -265,41 +265,41 @@ define <32 x i8> @shrbvs_r(<32 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
 ; CHECK-NEXT:    sbmm8 $r5 = $r0, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r4
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x4040101004040101
 ; CHECK-NEXT:    srlhqs $r5 = $r5, $r4
 ; CHECK-NEXT:    sbmm8 $r6 = $r1, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r4
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x4040101004040101
 ; CHECK-NEXT:    srlhqs $r6 = $r6, $r4
 ; CHECK-NEXT:    sbmm8 $r7 = $r2, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srlhqs $r2 = $r2, $r4
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x4040101004040101
 ; CHECK-NEXT:    srlhqs $r7 = $r7, $r4
 ; CHECK-NEXT:    sbmm8 $r8 = $r3, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; CHECK-NEXT:    srlhqs $r3 = $r3, $r4
 ; CHECK-NEXT:    sllhqs $r4 = $r5, 8
 ; CHECK-NEXT:    srlhqs $r8 = $r8, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CHECK-NEXT:    andd.@ $r2 = $r2, 0xff00ff
 ; CHECK-NEXT:    sllhqs $r5 = $r6, 8
 ; CHECK-NEXT:    sllhqs $r6 = $r7, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ord $r0 = $r0, $r4
 ; CHECK-NEXT:    ord $r1 = $r1, $r5
 ; CHECK-NEXT:    andd.@ $r3 = $r3, 0xff00ff
 ; CHECK-NEXT:    sllhqs $r7 = $r8, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ord $r2 = $r2, $r6
 ; CHECK-NEXT:    ord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 3)
   %5 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -320,7 +320,7 @@ define <16 x i8> @shrbxs(<16 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    srlbos $r0 = $r0, $r2
 ; CHECK-NEXT:    srlbos $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 0)
   %5 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -335,7 +335,7 @@ define <16 x i8> @shrbxs_s(<16 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    srabos $r0 = $r0, $r2
 ; CHECK-NEXT:    srabos $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 1)
   %5 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -350,7 +350,7 @@ define <16 x i8> @shrbxs_as(<16 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    srsbos $r0 = $r0, $r2
 ; CHECK-NEXT:    srsbos $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 2)
   %5 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -364,24 +364,24 @@ define <16 x i8> @shrbxs_r(<16 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4040101004040101
 ; CHECK-NEXT:    sbmm8 $r3 = $r0, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x4040101004040101
 ; CHECK-NEXT:    srlhqs $r3 = $r3, $r2
 ; CHECK-NEXT:    sbmm8 $r4 = $r1, 0x8080202008080202
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; CHECK-NEXT:    srlhqs $r1 = $r1, $r2
 ; CHECK-NEXT:    sllhqs $r2 = $r3, 8
 ; CHECK-NEXT:    srlhqs $r4 = $r4, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CHECK-NEXT:    sllhqs $r3 = $r4, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %4 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %3, i32 %1, i32 3)
   %5 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>

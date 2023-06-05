@@ -10,10 +10,10 @@ define i32 @pos_sel_constants(i32 %a) {
 ; CHECK-LABEL: pos_sel_constants:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r0 = $r0, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andnw $r0 = $r0, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %tmp.1 = icmp sgt i32 %a, -1
   %retval = select i1 %tmp.1, i32 5, i32 0
   ret i32 %retval
@@ -23,10 +23,10 @@ define i64 @pos_sel_constants_64(i64 %a) {
 ; CHECK-LABEL: pos_sel_constants_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 63
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andnd $r0 = $r0, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %tmp.1 = icmp sgt i64 %a, -1
   %retval = select i1 %tmp.1, i64 5, i64 0
   ret i64 %retval

@@ -10,14 +10,14 @@ define i32 @load8to32(i8* nocapture readonly %0) {
 ; CHECK-LABEL: load8to32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = load atomic i8, i8* %0 seq_cst, align 1
   %3 = sext i8 %2 to i32
   ret i32 %3
@@ -27,14 +27,14 @@ define i16 @load8to16(i8* nocapture readonly %0) {
 ; CHECK-LABEL: load8to16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = load atomic i8, i8* %0 seq_cst, align 1
   %3 = sext i8 %2 to i16
   ret i16 %3
@@ -44,14 +44,14 @@ define i64 @load8to64(i8* nocapture readonly %0) {
 ; CHECK-LABEL: load8to64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sxbd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = load atomic i8, i8* %0 seq_cst, align 1
   %3 = sext i8 %2 to i64
   ret i64 %3
@@ -61,14 +61,14 @@ define i32 @load16to32(i16* nocapture readonly %0) {
 ; CHECK-LABEL: load16to32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = load atomic i16, i16* %0 seq_cst, align 2
   %3 = sext i16 %2 to i32
   ret i32 %3
@@ -78,14 +78,14 @@ define i64 @load16to64(i16* nocapture readonly %0) {
 ; CHECK-LABEL: load16to64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = load atomic i16, i16* %0 seq_cst, align 2
   %3 = sext i16 %2 to i64
   ret i64 %3

@@ -9,32 +9,32 @@ define i32 @factorial(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw 20[$r12] = $r0
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:  # %bb.1: # %if.then
 ; CHECK-NEXT:    lwz $r0 = 20[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, -1
 ; CHECK-NEXT:    call factorial
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    lwz $r1 = 20[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 20[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:  .LBB0_2: # %if.end
 ; CHECK-NEXT:    lwz $r0 = 20[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -63,39 +63,39 @@ define i32 @f(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB1_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 28[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    compw.gt $r0 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB1_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
 ; CHECK-NEXT:    goto .LBB1_1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:  .LBB1_3: # %for.end
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %i = alloca i32, align 4
   %s = alloca i32, align 4

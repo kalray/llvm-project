@@ -11,7 +11,7 @@ define i1 @f1(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool = icmp ne i64 %a, 0
   %tobool1 = icmp ne i64 %b, 0
@@ -24,7 +24,7 @@ define i1 @f2(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool = icmp eq i64 %a, 0
   %tobool1 = icmp eq i64 %b, 0
@@ -37,7 +37,7 @@ define i1 @f3(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = or i64 %b, %a
   %1 = icmp eq i64 %0, 0
@@ -49,7 +49,7 @@ define i1 @f4(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = or i64 %b, %a
   %1 = icmp ne i64 %0, 0
@@ -61,7 +61,7 @@ define i1 @f5(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool = icmp eq i64 %a, 0
   %tobool1 = icmp eq i64 %b, 0
@@ -74,7 +74,7 @@ define i1 @f6(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = or i64 %b, %a
   %1 = icmp eq i64 %0, 0

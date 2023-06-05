@@ -11,7 +11,7 @@ define i64 @ORNDrr(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i64 %0, -1
   %4 = or i64 %3, %1
   ret i64 %4
@@ -22,7 +22,7 @@ define i64 @ORNDri10(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, -60
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, -60
   %3 = xor i64 %2, 59
   ret i64 %3
@@ -33,7 +33,7 @@ define i64 @ORNDri37(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, 0x1fffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, 137438953471
   %3 = xor i64 %2, -137438953472
   ret i64 %3
@@ -44,7 +44,7 @@ define i64 @ORNDri64(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, 0x2000000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, 137438953472
   %3 = xor i64 %2, -137438953473
   ret i64 %3
@@ -55,7 +55,7 @@ define <2 x i32> @ORNDrr_v2i32(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i32> %0, <i32 -1, i32 -1>
   %4 = or <2 x i32> %3, %1
   ret <2 x i32> %4
@@ -66,7 +66,7 @@ define <2 x i32> @ORNDri_v2i32(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, 0x4ffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i32> %0, <i32 -5, i32 -5>
   %3 = or <2 x i32> %2, <i32 -1, i32 4>
   ret <2 x i32> %3
@@ -77,7 +77,7 @@ define <8 x i8> @ORNDrr_v8i8(<8 x i8> %0, <8 x i8> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <8 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
   %4 = or <8 x i8> %3, %1
   ret <8 x i8> %4
@@ -88,7 +88,7 @@ define <8 x i8> @ORNDri_v8i8(<8 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, 0x403020104030201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <8 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
   %3 = or <8 x i8> %2, <i8 1, i8 2, i8 3, i8 4, i8 1, i8 2, i8 3, i8 4>
   ret <8 x i8> %3
@@ -98,10 +98,10 @@ define i64 @NOT_ORNDri10(i64 %0) {
 ; CHECK-LABEL: NOT_ORNDri10:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ord $r0 = $r0, -60
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xord $r0 = $r0, 60
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = or i64 %0, -60
   %3 = xor i64 %2, 60
   ret i64 %3

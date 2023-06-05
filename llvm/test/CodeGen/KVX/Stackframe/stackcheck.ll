@@ -8,26 +8,26 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r16 = $r12, -32
 ; CHECK-NEXT:    get $r17 = $sr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r16 = $r16, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.dgtz $r16 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
 ; CHECK-NEXT:    addx4wd $r1 = $r0, 31
 ; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 16[$r12] = $r14
 ; CHECK-NEXT:    sbfd $r2 = $r1, $r2
 ; CHECK-NEXT:    addd $r14 = $r12, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    cb.dgtz $r2 ? .LBB0_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    copyd $r12 = $r1
@@ -37,36 +37,36 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    zxwd $r3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r2[$r1] = $r2
 ; CHECK-NEXT:    addd $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
 ; CHECK-NEXT:    addw $r0 = $r0, -2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz.xs $r0 = $r0[$r1]
 ; CHECK-NEXT:    addd $r12 = $r14, -16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_5: # Label of block must be emitted
 ; CHECK-NEXT:    get $r0 = $pc
 ; CHECK-NEXT:    copyd $r1 = $r12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    call __stack_overflow_detected
 ; CHECK-NEXT:    ;;
 entry:
@@ -108,49 +108,49 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r16 = $r12, -256
 ; CHECK-NEXT:    get $r17 = $sr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r16 = $r16, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.dgtz $r16 ? .LBB1_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
 ; CHECK-NEXT:    make $r0 = 7
 ; CHECK-NEXT:    addd $r12 = $r12, -256
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 248[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 240
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 232[$r12] = $r31
 ; CHECK-NEXT:    andd $r31 = $r12, -128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 228[$r31] = $r0
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    addd $r1 = $r31, 128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw 128[$r31] = $r0
 ; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    call other
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r31 = 232[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r14 = 240[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 248[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 256
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # Label of block must be emitted
 ; CHECK-NEXT:    get $r0 = $pc
 ; CHECK-NEXT:    copyd $r1 = $r12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    call __stack_overflow_detected
 ; CHECK-NEXT:    ;;
 entry:

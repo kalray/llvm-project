@@ -13,10 +13,10 @@ define void @test1(i16 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i16 %b to i32
   %conv13 = zext i16 %c to i32

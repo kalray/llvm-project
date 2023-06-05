@@ -34,7 +34,7 @@ define half @test_ret_const() #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x3c00
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret half 1.0
 }
 
@@ -43,10 +43,10 @@ define half @test_fadd(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fadd half %a, %b
   ret half %r
 }
@@ -56,10 +56,10 @@ define <1 x half> @test_fadd_v1f16(<1 x half> %a, <1 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fadd <1 x half> %a, %b
   ret <1 x half> %r
 }
@@ -68,19 +68,19 @@ define half @test_fadd_imm_0(half %b) #0 {
 ; KV3_1-LABEL: test_fadd_imm_0:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    zxhd $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    faddhq $r0 = $r0, 0x3c00
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ;
 ; KV3_2-LABEL: test_fadd_imm_0:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    zxhd $r0 = $r0
 ; KV3_2-NEXT:    make $r1 = 0x3c00
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    faddhq $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fadd half 1.0, %b
   ret half %r
 }
@@ -89,19 +89,19 @@ define half @test_fadd_imm_1(half %a) #0 {
 ; KV3_1-LABEL: test_fadd_imm_1:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    zxhd $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    faddhq $r0 = $r0, 0x3c00
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ;
 ; KV3_2-LABEL: test_fadd_imm_1:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    zxhd $r0 = $r0
 ; KV3_2-NEXT:    make $r1 = 0x3c00
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    faddhq $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fadd half %a, 1.0
   ret half %r
 }
@@ -111,10 +111,10 @@ define half @test_fsub(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fsub half %a, %b
   ret half %r
 }
@@ -124,7 +124,7 @@ define half @test_fneg(half %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fsub half 0.0, %a
   ret half %r
 }
@@ -134,10 +134,10 @@ define half @test_fmul(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fmul half %a, %b
   ret half %r
 }
@@ -146,19 +146,19 @@ define half @test_fmul_imm(half %a) #0 {
 ; KV3_1-LABEL: test_fmul_imm:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    zxhd $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fmulhq $r0 = $r0, 0x3d33
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ;
 ; KV3_2-LABEL: test_fmul_imm:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    zxhd $r0 = $r0
 ; KV3_2-NEXT:    make $r1 = 0x3d33
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fmulhq $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fmul half %a, 0xH3D33
   ret half %r
 }
@@ -169,18 +169,18 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fdiv half %a, %b
@@ -193,18 +193,18 @@ define half @test_frem(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = frem half %a, %b
@@ -216,7 +216,7 @@ define void @test_store(half %a, half* %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   store half %a, half* %b
   ret void
 }
@@ -226,7 +226,7 @@ define half @test_load(half* %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = load half, half* %a
   ret half %r
 }
@@ -235,10 +235,10 @@ define void @test_halfp0a1(half * noalias readonly %from, half * %to) {
 ; CHECK-LABEL: test_halfp0a1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %1 = load half, half * %from , align 1
   store half %1, half * %to , align 1
   ret void
@@ -251,15 +251,15 @@ define half @test_call(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @test_callee(half %a, half %b)
@@ -271,17 +271,17 @@ define half @test_call_flipped(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @test_callee(half %b, half %a)
@@ -294,7 +294,7 @@ define half @test_tailcall_flipped(half %a, half %b) #0 {
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    goto test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = tail call half @test_callee(half %b, half %a)
   ret half %r
 }
@@ -303,10 +303,10 @@ define half @test_select(half %a, half %b, i1 zeroext %c) #0 {
 ; CHECK-LABEL: test_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = select i1 %c, half %a, half %b
   ret half %r
 }
@@ -315,14 +315,14 @@ define half @test_select_cc(half %a, half %b, half %c, half %d) #0 {
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %cc = fcmp une half %c, %d
   %r = select i1 %cc, half %a, half %b
   ret half %r
@@ -332,14 +332,14 @@ define float @test_select_cc_f32_f16(float %a, float %b, half %c, half %d) #0 {
 ; CHECK-LABEL: test_select_cc_f32_f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %cc = fcmp une half %c, %d
   %r = select i1 %cc, float %a, float %b
   ret float %r
@@ -349,12 +349,12 @@ define half @test_select_cc_f16_f32(half %a, half %b, float %c, float %d) #0 {
 ; CHECK-LABEL: test_select_cc_f16_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompw.une $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %cc = fcmp une float %c, %d
   %r = select i1 %cc, half %a, half %b
   ret half %r
@@ -364,10 +364,10 @@ define i1 @test_fcmp_une(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_une:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp une half %a, %b
   ret i1 %r
 }
@@ -376,10 +376,10 @@ define i1 @test_fcmp_ueq(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ueq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ueq half %a, %b
   ret i1 %r
 }
@@ -388,10 +388,10 @@ define i1 @test_fcmp_ugt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ugt half %a, %b
   ret i1 %r
 }
@@ -400,10 +400,10 @@ define i1 @test_fcmp_uge(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp uge half %a, %b
   ret i1 %r
 }
@@ -412,10 +412,10 @@ define i1 @test_fcmp_ult(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ult half %a, %b
   ret i1 %r
 }
@@ -424,10 +424,10 @@ define i1 @test_fcmp_ule(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ule half %a, %b
   ret i1 %r
 }
@@ -438,12 +438,12 @@ define i1 @test_fcmp_uno(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp uno half %a, %b
   ret i1 %r
 }
@@ -452,10 +452,10 @@ define i1 @test_fcmp_one(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_one:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp one half %a, %b
   ret i1 %r
 }
@@ -464,10 +464,10 @@ define i1 @test_fcmp_oeq(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_oeq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp oeq half %a, %b
   ret i1 %r
 }
@@ -476,10 +476,10 @@ define i1 @test_fcmp_ogt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ogt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ogt half %a, %b
   ret i1 %r
 }
@@ -488,10 +488,10 @@ define i1 @test_fcmp_oge(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_oge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp oge half %a, %b
   ret i1 %r
 }
@@ -501,10 +501,10 @@ define i1 @test_fcmp_olt(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_olt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp olt half %a, %b
   ret i1 %r
 }
@@ -514,10 +514,10 @@ define i1 @test_fcmp_ole(half %a, half %b) #0 {
 ; CHECK-LABEL: test_fcmp_ole:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ole half %a, %b
   ret i1 %r
 }
@@ -527,12 +527,12 @@ define i1 @test_fcmp_ord(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ord half %a, %b
   ret i1 %r
 }
@@ -541,23 +541,23 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-LABEL: test_br_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB35_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %then
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB35_2: # %else
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r3] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %c = fcmp uge half %a, %b
   br i1 %c, label %then, label %else
 then:
@@ -573,38 +573,38 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:  .LBB36_1: # %loop
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r20
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
 ; CHECK-NEXT:    call test_dummy
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB36_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %return
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -624,10 +624,10 @@ define i32 @test_fptosi_i32(half %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptosi half %a to i32
   ret i32 %r
 }
@@ -636,12 +636,12 @@ define i64 @test_fptosi_i64(half %a) #0 {
 ; CHECK-LABEL: test_fptosi_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fptosi half %a to i64
   ret i64 %r
 }
@@ -650,10 +650,10 @@ define i32 @test_fptoui_i32(half %a) #0 {
 ; CHECK-LABEL: test_fptoui_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixeduw.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptoui half %a to i32
   ret i32 %r
 }
@@ -662,12 +662,12 @@ define i64 @test_fptoui_i64(half %a) #0 {
 ; CHECK-LABEL: test_fptoui_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fptoui half %a to i64
   ret i64 %r
 }
@@ -676,10 +676,10 @@ define half @test_uitofp_i32(i32 %a) #0 {
 ; CHECK-LABEL: test_uitofp_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = uitofp i32 %a to half
   ret half %r
 }
@@ -688,12 +688,12 @@ define half @test_uitofp_i64(i64 %a) #0 {
 ; CHECK-LABEL: test_uitofp_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %r = uitofp i64 %a to half
   ret half %r
 }
@@ -702,10 +702,10 @@ define half @test_sitofp_i32(i32 %a) #0 {
 ; CHECK-LABEL: test_sitofp_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = sitofp i32 %a to half
   ret half %r
 }
@@ -714,12 +714,12 @@ define half @test_sitofp_i64(i64 %a) #0 {
 ; CHECK-LABEL: test_sitofp_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %r = sitofp i64 %a to half
   ret half %r
 }
@@ -729,14 +729,14 @@ define half @test_uitofp_i32_fadd(i32 %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    faddhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %c = uitofp i32 %a to half
   %r = fadd half %b, %c
   ret half %r
@@ -751,14 +751,14 @@ define half @test_sitofp_i32_fadd(i32 %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    faddhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %c = sitofp i32 %a to half
   %r = fadd half %b, %c
   ret half %r
@@ -769,7 +769,7 @@ define half @test_fptrunc_float(float %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fptrunc float %a to half
   ret half %r
 }
@@ -778,10 +778,10 @@ define half @test_fptrunc_double(double %a) #0 {
 ; CHECK-LABEL: test_fptrunc_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowdw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptrunc double %a to half
   ret half %r
 }
@@ -791,7 +791,7 @@ define float @test_fpext_float(half %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fpext half %a to float
   ret float %r
 }
@@ -800,10 +800,10 @@ define double @test_fpext_double(half %a) #0 {
 ; CHECK-LABEL: test_fpext_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fpext half %a to double
   ret double %r
 }
@@ -813,13 +813,13 @@ define i16 @test_bitcast_halftoi16(half %a) #0 {
 ; CHECK-LABEL: test_bitcast_halftoi16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 30[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lhz $r0 = 30[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = bitcast half %a to i16
   ret i16 %r
 }
@@ -828,13 +828,13 @@ define half @test_bitcast_i16tohalf(i16 %a) #0 {
 ; CHECK-LABEL: test_bitcast_i16tohalf:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 30[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lhz $r0 = 30[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = bitcast i16 %a to half
   ret half %r
 }
@@ -845,16 +845,16 @@ define half @test_sqrt(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.sqrt.f16(half %a)
@@ -867,16 +867,16 @@ define half @test_powi(half %a, i32 %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.powi.f16(half %a, i32 %b)
@@ -889,16 +889,16 @@ define half @test_sin(half %a) #0 #1 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.sin.f16(half %a)
@@ -911,16 +911,16 @@ define half @test_cos(half %a) #0 #1 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.cos.f16(half %a)
@@ -933,18 +933,18 @@ define half @test_pow(half %a, half %b) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.pow.f16(half %a, half %b)
@@ -957,16 +957,16 @@ define half @test_exp(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.exp.f16(half %a)
@@ -979,16 +979,16 @@ define half @test_exp2(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.exp2.f16(half %a)
@@ -1001,16 +1001,16 @@ define half @test_log(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.log.f16(half %a)
@@ -1023,16 +1023,16 @@ define half @test_log10(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.log10.f16(half %a)
@@ -1045,16 +1045,16 @@ define half @test_log2(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call half @llvm.log2.f16(half %a)
@@ -1066,22 +1066,22 @@ define half @test_fma(half %a, half %b, half %c) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    zxhd $r1 = $r1
 ; KV3_1-NEXT:    zxhd $r3 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    zxhd $r0 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ffmahq $r0 = $r3, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_fma:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    zxhd $r0 = $r2
 ; KV3_2-NEXT:    zxhd $r1 = $r1
 ; KV3_2-NEXT:    zxhd $r3 = $r0
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ffmahq $r0 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = call half @llvm.fma.f16(half %a, half %b, half %c)
   ret half %r
 }
@@ -1091,7 +1091,7 @@ define half @test_fabs(half %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call half @llvm.fabs.f16(half %a)
   ret half %r
 }
@@ -1102,18 +1102,18 @@ define half @test_minnum(half %a, half %b) #0 {
 ; KV3_1-NEXT:    fwidenlhw $r0 = $r0
 ; KV3_1-NEXT:    fwidenlhw $r1 = $r1
 ; KV3_1-NEXT:    addd $r12 = $r12, -32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 24[$r12] = $r16
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    fnarrowwh $r0 = $r0
 ; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1121,7 +1121,7 @@ define half @test_minnum(half %a, half %b) #0 {
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    fminhq $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call half @llvm.minnum.f16(half %a, half %b)
   ret half %r
 }
@@ -1131,7 +1131,7 @@ define half @test_minnum_fast(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fminhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast half @llvm.minnum.f16(half %a, half %b)
   ret half %r
 }
@@ -1142,18 +1142,18 @@ define half @test_maxnum(half %a, half %b) #0 {
 ; KV3_1-NEXT:    fwidenlhw $r0 = $r0
 ; KV3_1-NEXT:    fwidenlhw $r1 = $r1
 ; KV3_1-NEXT:    addd $r12 = $r12, -32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 24[$r12] = $r16
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    fnarrowwh $r0 = $r0
 ; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1161,7 +1161,7 @@ define half @test_maxnum(half %a, half %b) #0 {
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    fmaxhq $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call half @llvm.maxnum.f16(half %a, half %b)
   ret half %r
 }
@@ -1171,7 +1171,7 @@ define half @test_maxnum_fast(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmaxhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast half @llvm.maxnum.f16(half %a, half %b)
   ret half %r
 }
@@ -1180,10 +1180,10 @@ define half @test_copysign(half %a, half %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r1 = $r1, 15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call half @llvm.copysign.f16(half %a, half %b)
   ret half %r
 }
@@ -1192,10 +1192,10 @@ define half @test_copysign_f32(half %a, float %b) #0 {
 ; CHECK-LABEL: test_copysign_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r1 = $r1, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %tb = fptrunc float %b to half
   %r = call half @llvm.copysign.f16(half %a, half %tb)
   ret half %r
@@ -1205,10 +1205,10 @@ define half @test_copysign_f64(half %a, double %b) #0 {
 ; CHECK-LABEL: test_copysign_f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r1, 63
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %tb = fptrunc double %b to half
   %r = call half @llvm.copysign.f16(half %a, half %tb)
   ret half %r
@@ -1218,12 +1218,12 @@ define float @test_copysign_extended(half %a, half %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r1 = $r1, 15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = call half @llvm.copysign.f16(half %a, half %b)
   %xr = fpext half %r to float
   ret float %xr
@@ -1235,16 +1235,16 @@ define half @test_floor(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.floor.f16(half %a)
@@ -1257,16 +1257,16 @@ define half @test_ceil(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.ceil.f16(half %a)
@@ -1279,16 +1279,16 @@ define half @test_trunc(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.trunc.f16(half %a)
@@ -1301,16 +1301,16 @@ define half @test_rint(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.rint.f16(half %a)
@@ -1323,16 +1323,16 @@ define half @test_nearbyint(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.nearbyint.f16(half %a)
@@ -1345,16 +1345,16 @@ define half @test_round(half %a) #0 {
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call half @llvm.round.f16(half %a)
@@ -1366,22 +1366,22 @@ define half @test_fmuladd(half %a, half %b, half %c) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    zxhd $r1 = $r1
 ; KV3_1-NEXT:    zxhd $r3 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    zxhd $r0 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ffmahq $r0 = $r3, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_fmuladd:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    zxhd $r0 = $r2
 ; KV3_2-NEXT:    zxhd $r1 = $r1
 ; KV3_2-NEXT:    zxhd $r3 = $r0
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ffmahq $r0 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = call half @llvm.fmuladd.f16(half %a, half %b, half %c)
   ret half %r
 }
@@ -1390,10 +1390,10 @@ define i32 @fcmp_setoeq(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setoeq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp oeq half %a, %b
   %1 = zext i1 %0 to i32
@@ -1404,10 +1404,10 @@ define i32 @fcmp_setoeq_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setoeq_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp oeq half %a, %a
   %1 = zext i1 %0 to i32
@@ -1418,10 +1418,10 @@ define i32 @fcmp_setogt(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setogt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ogt half %a, %b
   %1 = zext i1 %0 to i32
@@ -1433,7 +1433,7 @@ define i32 @fcmp_setogt_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt half %a, %a
   %1 = zext i1 %0 to i32
@@ -1444,10 +1444,10 @@ define i32 @fcmp_setoge(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setoge:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp oge half %a, %b
   %1 = zext i1 %0 to i32
@@ -1458,10 +1458,10 @@ define i32 @fcmp_setoge_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setoge_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp oge half %a, %a
   %1 = zext i1 %0 to i32
@@ -1472,10 +1472,10 @@ define i32 @fcmp_setolt(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setolt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp olt half %a, %b
   %1 = zext i1 %0 to i32
@@ -1487,7 +1487,7 @@ define i32 @fcmp_setolt_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt half %a, %a
   %1 = zext i1 %0 to i32
@@ -1498,10 +1498,10 @@ define i32 @fcmp_setole(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setole:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ole half %a, %b
   %1 = zext i1 %0 to i32
@@ -1512,10 +1512,10 @@ define i32 @fcmp_setole_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setole_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ole half %a, %a
   %1 = zext i1 %0 to i32
@@ -1526,10 +1526,10 @@ define i32 @fcmp_setone(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setone:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp one half %a, %b
   %1 = zext i1 %0 to i32
@@ -1541,7 +1541,7 @@ define i32 @fcmp_setone_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one half %a, %a
   %1 = zext i1 %0 to i32
@@ -1553,12 +1553,12 @@ define i32 @fcmp_setord(half %a, half %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %0 = fcmp ord half %a, %b
   %1 = zext i1 %0 to i32
@@ -1569,10 +1569,10 @@ define i32 @fcmp_setord_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setord_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ord half %a, %a
   %1 = zext i1 %0 to i32
@@ -1584,12 +1584,12 @@ define i32 @fcmp_setuno(half %a, half %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %0 = fcmp uno half %a, %b
   %1 = zext i1 %0 to i32
@@ -1600,10 +1600,10 @@ define i32 @fcmp_setuno_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setuno_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno half %a, %a
   %1 = zext i1 %0 to i32
@@ -1614,10 +1614,10 @@ define i32 @fcmp_setueq(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setueq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.ueq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ueq half %a, %b
   %1 = zext i1 %0 to i32
@@ -1629,7 +1629,7 @@ define i32 @fcmp_setueq_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq half %a, %a
   %1 = zext i1 %0 to i32
@@ -1640,10 +1640,10 @@ define i32 @fcmp_setugt(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setugt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ugt half %a, %b
   %1 = zext i1 %0 to i32
@@ -1654,10 +1654,10 @@ define i32 @fcmp_setugt_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setugt_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ugt half %a, %a
   %1 = zext i1 %0 to i32
@@ -1668,10 +1668,10 @@ define i32 @fcmp_setuge(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setuge:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uge half %a, %b
   %1 = zext i1 %0 to i32
@@ -1683,7 +1683,7 @@ define i32 @fcmp_setuge_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge half %a, %a
   %1 = zext i1 %0 to i32
@@ -1694,10 +1694,10 @@ define i32 @fcmp_setult(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setult:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.ult $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ult half %a, %b
   %1 = zext i1 %0 to i32
@@ -1708,10 +1708,10 @@ define i32 @fcmp_setult_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setult_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ult half %a, %a
   %1 = zext i1 %0 to i32
@@ -1722,10 +1722,10 @@ define i32 @fcmp_setule(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setule:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ule half %a, %b
   %1 = zext i1 %0 to i32
@@ -1737,7 +1737,7 @@ define i32 @fcmp_setule_single(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule half %a, %a
   %1 = zext i1 %0 to i32
@@ -1748,10 +1748,10 @@ define i32 @fcmp_setune(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setune:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp une half %a, %b
   %1 = zext i1 %0 to i32
@@ -1762,10 +1762,10 @@ define i32 @fcmp_setune_single(half %a) #0 {
 ; CHECK-LABEL: fcmp_setune_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp une half %a, %a
   %1 = zext i1 %0 to i32
@@ -1776,10 +1776,10 @@ define i32 @fcmp_setoeq_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setoeq_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oeq half %a, %b
   %1 = zext i1 %0 to i32
@@ -1791,7 +1791,7 @@ define i32 @fcmp_setoeq_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq half %a, %a
   %1 = zext i1 %0 to i32
@@ -1802,10 +1802,10 @@ define i32 @fcmp_setogt_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setogt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ogt half %a, %b
   %1 = zext i1 %0 to i32
@@ -1817,7 +1817,7 @@ define i32 @fcmp_setogt_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt half %a, %a
   %1 = zext i1 %0 to i32
@@ -1828,10 +1828,10 @@ define i32 @fcmp_setoge_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setoge_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oge half %a, %b
   %1 = zext i1 %0 to i32
@@ -1843,7 +1843,7 @@ define i32 @fcmp_setoge_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge half %a, %a
   %1 = zext i1 %0 to i32
@@ -1854,10 +1854,10 @@ define i32 @fcmp_setolt_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setolt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast olt half %a, %b
   %1 = zext i1 %0 to i32
@@ -1869,7 +1869,7 @@ define i32 @fcmp_setolt_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt half %a, %a
   %1 = zext i1 %0 to i32
@@ -1880,10 +1880,10 @@ define i32 @fcmp_setole_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setole_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ole half %a, %b
   %1 = zext i1 %0 to i32
@@ -1895,7 +1895,7 @@ define i32 @fcmp_setole_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole half %a, %a
   %1 = zext i1 %0 to i32
@@ -1906,10 +1906,10 @@ define i32 @fcmp_setone_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setone_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast one half %a, %b
   %1 = zext i1 %0 to i32
@@ -1921,7 +1921,7 @@ define i32 @fcmp_setone_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one half %a, %a
   %1 = zext i1 %0 to i32
@@ -1933,12 +1933,12 @@ define i32 @fcmp_setord_fast(half %a, half %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %0 = fcmp fast ord half %a, %b
   %1 = zext i1 %0 to i32
@@ -1949,10 +1949,10 @@ define i32 @fcmp_setord_single_fast(half %a) #0 {
 ; CHECK-LABEL: fcmp_setord_single_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ord half %a, %a
   %1 = zext i1 %0 to i32
@@ -1964,12 +1964,12 @@ define i32 @fcmp_setuno_fast(half %a, half %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %0 = fcmp fast uno half %a, %b
   %1 = zext i1 %0 to i32
@@ -1980,10 +1980,10 @@ define i32 @fcmp_setuno_single_fast(half %a) #0 {
 ; CHECK-LABEL: fcmp_setuno_single_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno half %a, %a
   %1 = zext i1 %0 to i32
@@ -1994,10 +1994,10 @@ define i32 @fcmp_setueq_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setueq_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ueq half %a, %b
   %1 = zext i1 %0 to i32
@@ -2009,7 +2009,7 @@ define i32 @fcmp_setueq_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq half %a, %a
   %1 = zext i1 %0 to i32
@@ -2020,10 +2020,10 @@ define i32 @fcmp_setugt_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setugt_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ugt half %a, %b
   %1 = zext i1 %0 to i32
@@ -2035,7 +2035,7 @@ define i32 @fcmp_setugt_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt half %a, %a
   %1 = zext i1 %0 to i32
@@ -2046,10 +2046,10 @@ define i32 @fcmp_setuge_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setuge_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uge half %a, %b
   %1 = zext i1 %0 to i32
@@ -2061,7 +2061,7 @@ define i32 @fcmp_setuge_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge half %a, %a
   %1 = zext i1 %0 to i32
@@ -2072,10 +2072,10 @@ define i32 @fcmp_setult_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setult_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ult half %a, %b
   %1 = zext i1 %0 to i32
@@ -2087,7 +2087,7 @@ define i32 @fcmp_setult_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult half %a, %a
   %1 = zext i1 %0 to i32
@@ -2098,10 +2098,10 @@ define i32 @fcmp_setule_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setule_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ule half %a, %b
   %1 = zext i1 %0 to i32
@@ -2113,7 +2113,7 @@ define i32 @fcmp_setule_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule half %a, %a
   %1 = zext i1 %0 to i32
@@ -2124,10 +2124,10 @@ define i32 @fcmp_setune_fast(half %a, half %b) #0 {
 ; CHECK-LABEL: fcmp_setune_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.one $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast une half %a, %b
   %1 = zext i1 %0 to i32
@@ -2139,7 +2139,7 @@ define i32 @fcmp_setune_single_fast(half %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une half %a, %a
   %1 = zext i1 %0 to i32

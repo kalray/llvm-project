@@ -11,30 +11,30 @@ define void @has_no_empty_hwloops(%struct.Image* nocapture readonly %0, %struct.
 ; CHECK-LABEL: has_no_empty_hwloops:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 10[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    addw $r2 = $r0, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compw.ltu $r2 = $r2, 7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    andw $r2 = $r0, 0xfff8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    negw $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_3: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addw $r2 = $r2, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r2 ? .LBB0_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4:
 ; CHECK-NEXT:    sh 10[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds %struct.Image, %struct.Image* %0, i64 0, i32 2
   %4 = load i16, i16* %3, align 2
   %5 = zext i16 %4 to i32

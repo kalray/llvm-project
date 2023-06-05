@@ -11,7 +11,7 @@ define i8 @lbz(i8* nocapture readonly %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = addrspacecast i8* %p to i8 addrspace(256)*
   %1 = load i8, i8 addrspace(256)* %0, align 1
@@ -23,7 +23,7 @@ define i32 @lbs_volatile(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbs.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = addrspacecast i8* %p to i8 addrspace(257)*
   %1 = load volatile i8, i8 addrspace(257)* %0, align 1
@@ -36,7 +36,7 @@ define i16 @lhz(i8* nocapture readonly %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to i16*
   %1 = addrspacecast i16* %0 to i16 addrspace(256)*
@@ -49,7 +49,7 @@ define i32 @lhs_volatile(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhs.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to i16*
   %1 = addrspacecast i16* %0 to i16 addrspace(257)*
@@ -63,7 +63,7 @@ define i32 @lwz(i8* nocapture readonly %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to i32*
   %1 = addrspacecast i32* %0 to i32 addrspace(256)*
@@ -76,7 +76,7 @@ define i32 @lws_volatile(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to i32*
   %1 = addrspacecast i32* %0 to i32 addrspace(257)*
@@ -89,7 +89,7 @@ define float @lwf(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to float*
   %1 = addrspacecast float* %0 to float addrspace(258)*
@@ -102,7 +102,7 @@ define i64 @ld(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to i64*
   %1 = addrspacecast i64* %0 to i64 addrspace(258)*
@@ -115,7 +115,7 @@ define double @ldf(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to double*
   %1 = addrspacecast double* %0 to double addrspace(258)*
@@ -128,7 +128,7 @@ define <8 x i8> @ldbo(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <8 x i8>*
   %1 = addrspacecast <8 x i8>* %0 to <8 x i8> addrspace(258)*
@@ -141,7 +141,7 @@ define <4 x i16> @ldhq(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <4 x i16>*
   %1 = addrspacecast <4 x i16>* %0 to <4 x i16> addrspace(258)*
@@ -154,7 +154,7 @@ define <2 x i32> @ldwp(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <2 x i32>*
   %1 = addrspacecast <2 x i32>* %0 to <2 x i32> addrspace(258)*
@@ -167,7 +167,7 @@ define <2 x float> @ldfwp(i8* %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <2 x float>*
   %1 = addrspacecast <2 x float>* %0 to <2 x float> addrspace(258)*
@@ -180,7 +180,7 @@ define void @sdbo(i8* %p, <8 x i8> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <8 x i8>*
   store volatile <8 x i8> %v, <8 x i8>* %0, align 8
@@ -192,7 +192,7 @@ define void @sdhq(i8* %p, <4 x i16> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <4 x i16>*
   store volatile <4 x i16> %v, <4 x i16>* %0, align 8
@@ -204,7 +204,7 @@ define void @sdwp(i8* %p, <2 x i32> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <2 x i32>*
   store volatile <2 x i32> %v, <2 x i32>* %0, align 8
@@ -216,7 +216,7 @@ define void @sdfwp(i8* %p, <2 x float> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %p to <2 x float>*
   store volatile <2 x float> %v, <2 x float>* %0, align 8

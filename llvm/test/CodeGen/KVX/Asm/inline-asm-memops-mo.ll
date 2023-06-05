@@ -26,6 +26,7 @@ target triple = "kvx-kalray-cos"
 define double @asm_memory_operand_m(ptr noundef readonly %m) {
 ; CHECK-LABEL: asm_memory_operand_m:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:     # (here cycle 0)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -41,7 +42,8 @@ define double @asm_memory_operand_m2(ptr noundef readonly %m) {
 ; CHECK-LABEL: asm_memory_operand_m2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r0 = $r0, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;;

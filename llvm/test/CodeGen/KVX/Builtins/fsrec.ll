@@ -11,7 +11,7 @@ define double @fsrecd(double %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsrecd $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.fsrec.f64(double %0, i32 0)
   ret double %2
 }
@@ -24,7 +24,7 @@ define <2 x double> @fsrecdp(<2 x double> %0) {
 ; ALL-NEXT:    fsrecd $r0 = $r0
 ; ALL-NEXT:    fsrecd $r1 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x double> %0, i64 0
   %3 = tail call double @llvm.kvx.fsrec.f64(double %2, i32 0)
   %4 = extractelement <2 x double> %0, i64 1
@@ -39,11 +39,11 @@ define <4 x double> @fsrecdq(<4 x double> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsrecd $r0 = $r0
 ; ALL-NEXT:    fsrecd $r1 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsrecd $r2 = $r2
 ; ALL-NEXT:    fsrecd $r3 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x double> %0, i64 0
   %3 = tail call double @llvm.kvx.fsrec.f64(double %2, i32 0)
   %4 = extractelement <4 x double> %0, i64 1
@@ -64,7 +64,7 @@ define float @fsrecw(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsrecw $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.fsrec.f32(float %0, i32 0)
   ret float %2
 }
@@ -76,11 +76,11 @@ define <8 x float> @fsrecwo(<8 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsrecwp $r0 = $r0
 ; ALL-NEXT:    fsrecwp $r1 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsrecwp $r2 = $r2
 ; ALL-NEXT:    fsrecwp $r3 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.fsrec.v2f32(<2 x float> %2, i32 0)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -102,7 +102,7 @@ define <2 x float> @fsrecwp(<2 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsrecwp $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.kvx.fsrec.v2f32(<2 x float> %0, i32 0)
   ret <2 x float> %2
 }
@@ -113,7 +113,7 @@ define <4 x float> @fsrecwq(<4 x float> %0) {
 ; ALL-NEXT:    fsrecwp $r0 = $r0
 ; ALL-NEXT:    fsrecwp $r1 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.fsrec.v2f32(<2 x float> %2, i32 0)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>

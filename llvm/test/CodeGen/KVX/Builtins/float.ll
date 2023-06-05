@@ -11,7 +11,7 @@ define double @floatd_limit(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd.rz $r0 = $r0, 63
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.floatd(i64 %0, i32 63, i32 3, i32 0)
   ret double %2
 }
@@ -23,7 +23,7 @@ define double @floatd_s(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd.rn.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.floatd(i64 %0, i32 3, i32 0, i32 1)
   ret double %2
 }
@@ -33,7 +33,7 @@ define double @floatd(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.floatd(i64 %0, i32 3, i32 7, i32 0)
   ret double %2
 }
@@ -42,10 +42,10 @@ define <2 x double> @floatdp_s(<2 x i64> %0) {
 ; ALL-LABEL: floatdp_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd.rn.s $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatd.rn.s $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call double @llvm.kvx.floatd(i64 %2, i32 3, i32 0, i32 1)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -59,10 +59,10 @@ define <2 x double> @floatdp(<2 x i64> %0) {
 ; ALL-LABEL: floatdp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatd.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call double @llvm.kvx.floatd(i64 %2, i32 3, i32 0, i32 0)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -76,14 +76,14 @@ define <4 x double> @floatdq(<4 x i64> %0) {
 ; ALL-LABEL: floatdq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatd.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatd.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    floatd.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    floatd.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call double @llvm.kvx.floatd(i64 %2, i32 3, i32 0, i32 0)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -104,7 +104,7 @@ define double @floatud(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatud.rz $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.floatud(i64 %0, i32 3, i32 3, i32 0)
   ret double %2
 }
@@ -115,10 +115,10 @@ define <2 x double> @floatudp(<2 x i64> %0) {
 ; ALL-LABEL: floatudp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatud.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatud.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call double @llvm.kvx.floatud(i64 %2, i32 3, i32 0, i32 0)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -132,14 +132,14 @@ define <4 x double> @floatudq(<4 x i64> %0) {
 ; ALL-LABEL: floatudq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatud.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatud.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    floatud.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    floatud.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call double @llvm.kvx.floatud(i64 %2, i32 3, i32 0, i32 0)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -160,7 +160,7 @@ define float @floatuw(i32 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatuw.rz $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.floatuw(i32 %0, i32 3, i32 3, i32 0)
   ret float %2
 }
@@ -171,14 +171,14 @@ define <8 x float> @floatuwo(<8 x i32> %0) {
 ; ALL-LABEL: floatuwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatuwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatuwp.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    floatuwp.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    floatuwp.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -200,7 +200,7 @@ define <2 x float> @floatuwp(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatuwp.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %0, i32 3, i32 0, i32 0)
   ret <2 x float> %2
 }
@@ -209,10 +209,10 @@ define <4 x float> @floatuwq(<4 x i32> %0) {
 ; ALL-LABEL: floatuwq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatuwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatuwp.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.floatuwp(<2 x i32> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -226,7 +226,7 @@ define float @floatw_s(i32 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatw.rn.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.floatw(i32 %0, i32 3, i32 0, i32 1)
   ret float %2
 }
@@ -238,7 +238,7 @@ define float @floatw(i32 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatw.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.floatw(i32 %0, i32 3, i32 0, i32 0)
   ret float %2
 }
@@ -247,14 +247,14 @@ define <8 x float> @floatwo(<8 x i32> %0) {
 ; ALL-LABEL: floatwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatwp.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    floatwp.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    floatwp.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -276,7 +276,7 @@ define <2 x float> @floatwp(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatwp.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %0, i32 3, i32 0, i32 0)
   ret <2 x float> %2
 }
@@ -285,10 +285,10 @@ define <4 x float> @floatwq_s(<4 x i32> %0) {
 ; ALL-LABEL: floatwq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatwp.rn.s $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatwp.rn.s $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i32 3, i32 0, i32 1)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -301,10 +301,10 @@ define <4 x float> @floatwq(<4 x i32> %0) {
 ; ALL-LABEL: floatwq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    floatwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    floatwp.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.floatwp(<2 x i32> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>

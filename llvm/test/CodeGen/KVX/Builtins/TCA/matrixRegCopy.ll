@@ -8,23 +8,23 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-LABEL: c:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.ltu $r0 = $r0, 508
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB0_1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

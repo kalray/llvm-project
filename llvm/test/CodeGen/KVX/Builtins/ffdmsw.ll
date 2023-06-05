@@ -9,7 +9,7 @@ define float @ffdmsw(<2 x float> %0, <2 x float> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmsw $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.ffdms.f32(<2 x float> %0, <2 x float> %1, i32 7, i32 0)
   ret float %3
 }
@@ -21,7 +21,7 @@ define <2 x float> @ffdmswp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmswp $r0 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x float> @llvm.kvx.ffdms.v2f32(<4 x float> %0, <4 x float> %1, i32 7, i32 0)
   ret <2 x float> %4
 }
@@ -33,7 +33,7 @@ define <4 x float> @ffdmswq(<8 x float> %0, <8 x float> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmswq $r0r1 = $r0r1r2r3, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.ffdms.v4f32(<8 x float> %0, <8 x float> %1, i32 7, i32 0)
   ret <4 x float> %3
 }
@@ -45,7 +45,7 @@ define <4 x float> @ffdmswq_rn_s(<8 x float> %0, <8 x float> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmswq.rn.s $r0r1 = $r0r1r2r3, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.ffdms.v4f32(<8 x float> %0, <8 x float> %1, i32 0, i32 1)
   ret <4 x float> %3
 }

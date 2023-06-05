@@ -10,18 +10,18 @@ define i32 @uadd_sat32(i32 %a, i32 %b) {
 ; KVXV1-LABEL: uadd_sat32:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    notw $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuw $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_sat32:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusw $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %b, i32 %a)
   ret i32 %0
@@ -31,16 +31,16 @@ define i32 @uadd_sat32_ri(i32 %a) {
 ; KVXV1-LABEL: uadd_sat32_ri:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minuw $r0 = $r0, 0xffff3535
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addw $r0 = $r0, 0xcaca
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_sat32_ri:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusw $r0 = $r0, 0xcaca
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %a, i32 51914)
   ret i32 %0
@@ -51,20 +51,20 @@ define signext i16 @uadd_sat16(i16 signext %a, i16 signext %b) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    zxhd $r0 = $r0
 ; KVXV1-NEXT:    zxhd $r1 = $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    minuw $r0 = $r0, 0xffff
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    sxhd $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_sat16:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i16 @llvm.uadd.sat.i16(i16 %b, i16 %a)
   ret i16 %0
@@ -75,20 +75,20 @@ define signext i8 @uadd_sat8(i8 signext %a, i8 signext %b) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    minuw $r0 = $r0, 255
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    sxbd $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_sat8:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i8 @llvm.uadd.sat.i8(i8 %b, i8 %a)
   ret i8 %0
@@ -98,18 +98,18 @@ define signext i64 @uadd_sat64(i64 signext %a, i64 signext %b) {
 ; KVXV1-LABEL: uadd_sat64:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    notd $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minud $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addd $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_sat64:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusd $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %b, i64 %a)
   ret i64 %0
@@ -119,16 +119,16 @@ define signext i64 @uadd_sat64_ri10(i64 signext %a) {
 ; KVXV1-LABEL: uadd_sat64_ri10:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minud $r0 = $r0, 511
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    ord $r0 = $r0, -512
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_sat64_ri10:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusd $r0 = $r0, -512
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 -512)
   ret i64 %0
@@ -138,18 +138,18 @@ define signext i64 @uadd_sat64_ri37(i64 signext %a) {
 ; KVXV1-LABEL: uadd_sat64_ri37:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minud $r0 = $r0, 0xffffffe000000000
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addd $r0 = $r0, 0x1fffffffff
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_sat64_ri37:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    make $r1 = 0x1fffffffff
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    addusd $r0 = $r0, $r1
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 137438953471)
   ret i64 %0
@@ -159,18 +159,18 @@ define signext i64 @uadd_sat64_ri64(i64 signext %a) {
 ; KVXV1-LABEL: uadd_sat64_ri64:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minud $r0 = $r0, -9223372036854775808
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addd $r0 = $r0, 0x7fffffffffffffff
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_sat64_ri64:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    make $r1 = 0x7fffffffffffffff
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    addusd $r0 = $r0, $r1
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 9223372036854775807)
   ret i64 %0
@@ -180,16 +180,16 @@ define signext i64 @uadd_sat64_ri_at(i64 signext %a) {
 ; KVXV1-LABEL: uadd_sat64_ri_at:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minud $r0 = $r0, 0xe4111110e4111110
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addd $r0 = $r0, 0x1beeeeef1beeeeef
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_sat64_ri_at:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusd.@ $r0 = $r0, 0x1beeeeef
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.uadd.sat.i64(i64 %a, i64 2012808794214428399)
   ret i64 %0
@@ -199,18 +199,18 @@ define <2 x i32> @uadd_satv2i32(<2 x i32> %a, <2 x i32> %b) {
 ; KVXV1-LABEL: uadd_satv2i32:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    addwp $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    compnwp.ltu $r1 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    ord $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_satv2i32:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    adduswp $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %b, <2 x i32> %a)
   ret <2 x i32> %0
@@ -220,20 +220,20 @@ define <2 x i32> @uadd_satv2i32_ri_(<2 x i32> %a) {
 ; KVXV1-LABEL: uadd_satv2i32_ri_:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    make $r1 = 15
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addwp $r1 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_satv2i32_ri_:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    adduswp $r0 = $r0, 15
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 15, i32 0>)
   ret <2 x i32> %0
@@ -243,20 +243,20 @@ define <2 x i32> @uadd_satv2i32_ri_at(<2 x i32> %a) {
 ; KVXV1-LABEL: uadd_satv2i32_ri_at:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    make $r1 = 0xf0000000f
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addwp $r1 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_satv2i32_ri_at:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    adduswp.@ $r0 = $r0, 15
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 15, i32 15>)
   ret <2 x i32> %0
@@ -266,22 +266,22 @@ define <2 x i32> @uadd_satv2i32_rr(<2 x i32> %a) {
 ; KVXV1-LABEL: uadd_satv2i32_rr:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    make $r1 = 0x1b58000002bc
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addwp $r1 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_satv2i32_rr:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    make $r1 = 0x1b58000002bc
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    adduswp $r0 = $r0, $r1
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call <2 x i32> @llvm.uadd.sat.v2i32(<2 x i32> %a, <2 x i32> <i32 700, i32 7000>)
   ret <2 x i32> %0
@@ -291,18 +291,18 @@ define <2 x i16> @uadd_satv2i16(<2 x i16> %a, <2 x i16> %b) {
 ; KVXV1-LABEL: uadd_satv2i16:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    notw $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuhq $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_satv2i16:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i16> @llvm.uadd.sat.v2i16(<2 x i16> %b, <2 x i16> %a)
   ret <2 x i16> %0
@@ -312,16 +312,16 @@ define <2 x i16> @uadd_satv2i16_ri(<2 x i16> %a) {
 ; KVXV1-LABEL: uadd_satv2i16_ri:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minuhq $r0 = $r0, 0xfffefffe
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addhq $r0 = $r0, 0x10001
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_satv2i16_ri:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq $r0 = $r0, 0x10001
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i16> @llvm.uadd.sat.v2i16(<2 x i16> %a, <2 x i16> <i16 1, i16 1>)
   ret <2 x i16> %0
@@ -331,18 +331,18 @@ define <4 x i16> @uadd_satv4i16(<4 x i16> %a, <4 x i16> %b) {
 ; KVXV1-LABEL: uadd_satv4i16:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    notd $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuhq $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_satv4i16:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %b, <4 x i16> %a)
   ret <4 x i16> %0
@@ -352,18 +352,18 @@ define <4 x i16> @uadd_satv4i16_ri_(<4 x i16> %a) {
 ; KVXV1-LABEL: uadd_satv4i16_ri_:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    make $r1 = 0xfffffffff61709e7
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuhq $r0 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r0 = $r0, 0x9e8f618
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_satv4i16_ri_:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq $r0 = $r0, 0x9e8f618
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %a, <4 x i16> <i16 63000, i16 -63000, i16 0, i16 0>)
   ret <4 x i16> %0
@@ -373,16 +373,16 @@ define <4 x i16> @uadd_satv4i16_ri_at(<4 x i16> %a) {
 ; KVXV1-LABEL: uadd_satv4i16_ri_at:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minuhq.@ $r0 = $r0, 0xf61709e7
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addhq.@ $r0 = $r0, 0x9e8f618
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_satv4i16_ri_at:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addushq.@ $r0 = $r0, 0x9e8f618
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i16> @llvm.uadd.sat.v4i16(<4 x i16> %a, <4 x i16> <i16 63000, i16 -63000, i16 63000, i16 -63000>)
   ret <4 x i16> %0
@@ -393,21 +393,21 @@ define <4 x i32> @uadd_satv4i32(<4 x i32> %a, <4 x i32> %b) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    addwp $r0 = $r2, $r0
 ; KVXV1-NEXT:    addwp $r1 = $r3, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    compnwp.ltu $r2 = $r0, $r2
 ; KVXV1-NEXT:    compnwp.ltu $r3 = $r1, $r3
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    ord $r0 = $r2, $r0
 ; KVXV1-NEXT:    ord $r1 = $r3, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_satv4i32:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    adduswp $r0 = $r2, $r0
 ; KVXV2-NEXT:    adduswp $r1 = $r3, $r1
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i32> @llvm.uadd.sat.v4i32(<4 x i32> %b, <4 x i32> %a)
   ret <4 x i32> %0
@@ -418,24 +418,24 @@ define i32 @uadd_sat32_trunc(i32 %a, i32 %b) {
 ; KVXV1-LABEL: uadd_sat32_trunc:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    sxwd $r1 = $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addwd $r0 = $r0, $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    satdh $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_sat32_trunc:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    sxwd $r1 = $r1
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    addwd $r0 = $r0, $r1
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 ; KVXV2-NEXT:    mind $r0 = $r0, 0x7fff
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 2)
 ; KVXV2-NEXT:    maxd $r0 = $r0, 0xffffffffffff8000
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 3)
 entry:
   %conv = sext i32 %a to i64
   %conv1 = sext i32 %b to i64
@@ -453,20 +453,20 @@ define i32 @uadd_sat32_ext16(i32 %a, i16 %b) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    sxhd $r1 = $r1
 ; KVXV1-NEXT:    notw $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuw $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: uadd_sat32_ext16:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    sxhd $r1 = $r1
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    addusw $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = sext i16 %b to i32
   %1 = tail call i32 @llvm.uadd.sat.i32(i32 %0, i32 %a)
@@ -478,12 +478,12 @@ define i32 @uadd_sat32_zext(i32 %a, i32 %b) {
 ; CHECK-LABEL: uadd_sat32_zext:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    adduwd $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    minud $r0 = $r0, 0x7fffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %conv = zext i32 %a to i64
   %conv1 = zext i32 %b to i64
@@ -498,22 +498,22 @@ define i64 @uadd_sat32_notrunc(i32 %a, i32 %b) {
 ; KVXV1-LABEL: uadd_sat32_notrunc:
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    notw $r2 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    minuw $r1 = $r1, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    sxwd $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
 ; KVXV2-LABEL: uadd_sat32_notrunc:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusw $r0 = $r1, $r0
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    sxwd $r0 = $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call i32 @llvm.uadd.sat.i32(i32 %b, i32 %a)
   %spec.store.select8 = sext i32 %0 to i64
@@ -527,27 +527,27 @@ define <2 x i8> @uadd_satv2i8(<2 x i8> %a, <2 x i8> %b) {
 ; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    extfz $r2 = $r0, 15, 8
 ; KVXV1-NEXT:    extfz $r3 = $r1, 15, 8
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
 ; KVXV1-NEXT:    addw $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    minuw $r0 = $r0, 255
 ; KVXV1-NEXT:    minuw $r1 = $r2, 255
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    insf $r0 = $r1, 15, 8
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KVXV2-LABEL: uadd_satv2i8:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i8> @llvm.uadd.sat.v2i8(<2 x i8> %b, <2 x i8> %a)
   ret <2 x i8> %0
@@ -558,25 +558,25 @@ define <2 x i8> @uadd_satv2i8_ri(<2 x i8> %a) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    extfz $r1 = $r0, 15, 8
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r0 = $r0, 1
 ; KVXV1-NEXT:    addw $r1 = $r1, 1
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    minuw $r0 = $r0, 255
 ; KVXV1-NEXT:    minuw $r1 = $r1, 255
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    insf $r0 = $r1, 15, 8
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KVXV2-LABEL: uadd_satv2i8_ri:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r0, 257
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <2 x i8> @llvm.uadd.sat.v2i8(<2 x i8> %a, <2 x i8> <i8 1, i8 1>)
   ret <2 x i8> %0
@@ -589,44 +589,44 @@ define <4 x i8> @uadd_satv4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KVXV1-NEXT:    srlw $r3 = $r1, 24
 ; KVXV1-NEXT:    extfz $r4 = $r0, 23, 16
 ; KVXV1-NEXT:    extfz $r5 = $r1, 23, 16
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    extfz $r6 = $r0, 15, 8
 ; KVXV1-NEXT:    extfz $r7 = $r1, 15, 8
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
 ; KVXV1-NEXT:    zxbd $r4 = $r4
 ; KVXV1-NEXT:    zxbd $r5 = $r5
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    zxbd $r0 = $r0
 ; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    zxbd $r6 = $r6
 ; KVXV1-NEXT:    zxbd $r7 = $r7
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    addw $r0 = $r1, $r0
 ; KVXV1-NEXT:    addw $r2 = $r3, $r2
 ; KVXV1-NEXT:    addw $r3 = $r5, $r4
 ; KVXV1-NEXT:    addw $r4 = $r7, $r6
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    minuw $r0 = $r0, 255
 ; KVXV1-NEXT:    minuw $r1 = $r2, 255
 ; KVXV1-NEXT:    minuw $r2 = $r3, 255
 ; KVXV1-NEXT:    minuw $r3 = $r4, 255
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 5)
 ; KVXV1-NEXT:    insf $r0 = $r3, 15, 8
 ; KVXV1-NEXT:    insf $r2 = $r1, 15, 8
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 6)
 ; KVXV1-NEXT:    insf $r0 = $r2, 31, 16
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 7)
 ;
 ; KVXV2-LABEL: uadd_satv4i8:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i8> @llvm.uadd.sat.v4i8(<4 x i8> %b, <4 x i8> %a)
   ret <4 x i8> %0
@@ -639,30 +639,30 @@ define <4 x i8> @uadd_satv4i8_ri(<4 x i8> %a) {
 ; KVXV1-NEXT:    extfz $r1 = $r0, 23, 16
 ; KVXV1-NEXT:    zxbd $r2 = $r0
 ; KVXV1-NEXT:    srlw $r3 = $r0, 24
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    zxbd $r1 = $r1
 ; KVXV1-NEXT:    zxbd $r2 = $r2
 ; KVXV1-NEXT:    zxbd $r3 = $r3
 ; KVXV1-NEXT:    zxbd $r4 = $r0
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addw $r1 = $r1, 129
 ; KVXV1-NEXT:    addw $r2 = $r2, 127
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    minuw $r0 = $r2, 255
 ; KVXV1-NEXT:    minuw $r1 = $r1, 255
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    insf $r0 = $r4, 15, 8
 ; KVXV1-NEXT:    insf $r1 = $r3, 15, 8
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    insf $r0 = $r1, 31, 16
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 5)
 ;
 ; KVXV2-LABEL: uadd_satv4i8_ri:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r0, 0x81007f
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <4 x i8> @llvm.uadd.sat.v4i8(<4 x i8> %a, <4 x i8> <i8 127, i8 0, i8 -127, i8 0>)
   ret <4 x i8> %0
@@ -675,28 +675,28 @@ define <8 x i8> @uadd_satv8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
 ; KVXV1-NEXT:    andd.@ $r2 = $r0, 0xff00ff00
 ; KVXV1-NEXT:    andd.@ $r3 = $r1, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addhq $r0 = $r1, $r0
 ; KVXV1-NEXT:    addhq $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnhq.ltu $r1 = $r0, $r1
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    ord $r0 = $r1, $r0
 ; KVXV1-NEXT:    ord $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 5)
 ;
 ; KVXV2-LABEL: uadd_satv8i8:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r1, $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <8 x i8> @llvm.uadd.sat.v8i8(<8 x i8> %b, <8 x i8> %a)
   ret <8 x i8> %0
@@ -708,31 +708,31 @@ define <8 x i8> @uadd_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f
 ; KVXV1-NEXT:    andd.@ $r3 = $r0, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
 ; KVXV1-NEXT:    andd.@ $r2 = $r1, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r1 = $r0, $r1
 ; KVXV1-NEXT:    addhq $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ord $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 5)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 6)
 ;
 ; KVXV2-LABEL: uadd_satv8i8_ri_:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo $r0 = $r0, 0x81007f
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <8 x i8> @llvm.uadd.sat.v8i8(<8 x i8> %a, <8 x i8> <i8 127, i8 0, i8 -127, i8 0, i8 0, i8 0, i8 0, i8 0>)
   ret <8 x i8> %0
@@ -744,31 +744,31 @@ define <8 x i8> @uadd_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f0081007f
 ; KVXV1-NEXT:    andd.@ $r3 = $r0, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
 ; KVXV1-NEXT:    andd.@ $r2 = $r1, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r1 = $r0, $r1
 ; KVXV1-NEXT:    addhq $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ord $r2 = $r3, $r2
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff00
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 5)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;;
+; KVXV1-NEXT:    ;; # (end cycle 6)
 ;
 ; KVXV2-LABEL: uadd_satv8i8_ri_at:
 ; KVXV2:       # %bb.0: # %entry
 ; KVXV2-NEXT:    addusbo.@ $r0 = $r0, 0x81007f
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;;
+; KVXV2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call <8 x i8> @llvm.uadd.sat.v8i8(<8 x i8> %a, <8 x i8> <i8 127, i8 0, i8 -127, i8 0, i8 127, i8 0, i8 -127, i8 0>)
   ret <8 x i8> %0

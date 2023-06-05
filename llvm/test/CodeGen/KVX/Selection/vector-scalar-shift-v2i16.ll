@@ -11,7 +11,7 @@ define <2 x i16> @sri_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = ashr <2 x i16> %a, <i16 3, i16 3>
   ret <2 x i16> %shr
@@ -22,10 +22,10 @@ define <2 x i16> @not_sri_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    srahqs $r1 = $r0, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shr = ashr <2 x i16> %a, <i16 2, i16 3>
   ret <2 x i16> %shr
@@ -36,7 +36,7 @@ define <2 x i16> @uri_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr <2 x i16> %a, <i16 3, i16 3>
   ret <2 x i16> %shr
@@ -47,10 +47,10 @@ define <2 x i16> @not_uri_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    srlhqs $r1 = $r0, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shr = lshr <2 x i16> %a, <i16 2, i16 3>
   ret <2 x i16> %shr
@@ -61,7 +61,7 @@ define <2 x i16> @sli_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl <2 x i16> %a, <i16 3, i16 3>
   ret <2 x i16> %shl
@@ -72,10 +72,10 @@ define <2 x i16> @not_sli_v2i16(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    sllhqs $r1 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl <2 x i16> %a, <i16 1, i16 3>
   ret <2 x i16> %shl
@@ -87,7 +87,7 @@ define <2 x i16> @srr_v2i16(<2 x i16> %a, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = insertelement <2 x i16> undef, i16 %c, i32 0
   %sh_prom = shufflevector <2 x i16> %0, <2 x i16> undef, <2 x i32> zeroinitializer
@@ -100,12 +100,12 @@ define <2 x i16> @not_srr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r1 = $r0, $r1
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %shr = ashr <2 x i16> %a, %b
   ret <2 x i16> %shr
@@ -116,7 +116,7 @@ define <2 x i16> @urr_v2i16(<2 x i16> %a, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = insertelement <2 x i16> undef, i16 %c, i32 0
   %sh_prom = shufflevector <2 x i16> %0, <2 x i16> undef, <2 x i32> zeroinitializer
@@ -129,12 +129,12 @@ define <2 x i16> @not_urr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %shr = lshr <2 x i16> %a, %b
   ret <2 x i16> %shr
@@ -145,7 +145,7 @@ define <2 x i16> @slr_v2i16(<2 x i16> %a, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = insertelement <2 x i16> undef, i16 %c, i32 0
   %sh_prom = shufflevector <2 x i16> %0, <2 x i16> undef, <2 x i32> zeroinitializer
@@ -158,12 +158,12 @@ define <2 x i16> @not_slr_v2i16(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r1 = $r0, $r1
 ; CHECK-NEXT:    extfz $r2 = $r1, 19, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %shl = shl <2 x i16> %a, %b
   ret <2 x i16> %shl

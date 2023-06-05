@@ -13,10 +13,10 @@ define void @test3(i32 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl i32 %b, %c
   store i32 %shl, i32* @a, align 4
@@ -28,10 +28,10 @@ define void @test6(i32 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl i32 %b, %c
   store i32 %shl, i32* @a, align 4
@@ -43,10 +43,10 @@ define void @test6b(i32 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv1 = zext i16 %c to i32
   %shl = shl i32 %b, %conv1
@@ -59,10 +59,10 @@ define void @test6c(i32 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = zext i16 %c to i32
   %shl = shl i32 %b, %conv
@@ -75,10 +75,10 @@ define void @test6d(i32 %b, i8 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv1 = zext i8 %c to i32
   %shl = shl i32 %b, %conv1
@@ -91,10 +91,10 @@ define void @test6e(i32 %b, i8 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = zext i8 %c to i32
   %shl = shl i32 %b, %conv

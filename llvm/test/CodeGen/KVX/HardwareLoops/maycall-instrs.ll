@@ -9,44 +9,44 @@ define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c,
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB0_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.xs $r19[$r18] = $r0
 ; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %pregion_for_entry.pregion_for_init4.i
@@ -70,44 +70,44 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv( float %a, float %b, i64 %c,
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB1_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.xs $r19[$r18] = $r0
 ; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB1_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 br label %pregion_for_entry.pregion_for_init4.i
@@ -130,44 +130,44 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double( double %a, double %b
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB2_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __divdf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.xs $r19[$r18] = $r0
 ; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB2_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 br label %pregion_for_entry.pregion_for_init4.i
@@ -190,46 +190,46 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB3_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    fwidenlhw $r0 = $r21
 ; CHECK-NEXT:    fwidenlhw $r1 = $r20
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh.xs $r19[$r18] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB3_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 br label %pregion_for_entry.pregion_for_init4.i
@@ -252,19 +252,19 @@ define void @_pocl_kernel_math_kernel_hwloop_fdiv_half_fast( half %a, half %b, i
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    frecw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    loopdo $r0, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB4_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sh.xs $r2[$r3] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    ret
@@ -288,15 +288,15 @@ define void @_pocl_kernel_math_kernel_hwloop_fdiv_fast( float %a, float %b, i64 
 ; CHECK-LABEL: _pocl_kernel_math_kernel_hwloop_fdiv_fast:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    frecw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    loopdo $r0, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r2[$r3] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    ret
@@ -321,44 +321,44 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double_fast( double %a, doub
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    # implicit-def: $r22
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB6_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    call __divdf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.xs $r19[$r18] = $r0
 ; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.dnez $r22 ? .LBB6_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 br label %pregion_for_entry.pregion_for_init4.i

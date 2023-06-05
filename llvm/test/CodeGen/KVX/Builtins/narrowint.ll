@@ -11,14 +11,14 @@ define <16 x i8> @narrowhbx_q(<16 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80200802
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: narrowhbx_q:
 ; CV2:       # %bb.0:
@@ -26,11 +26,11 @@ define <16 x i8> @narrowhbx_q(<16 x i16> %0) {
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x80200802
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x80200802
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 1)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -52,38 +52,38 @@ define <16 x i8> @narrowhbx_s(<16 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    slshqs $r0 = $r0, 8
 ; CV1-NEXT:    slshqs $r1 = $r1, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    slshqs $r1 = $r2, 8
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CV1-NEXT:    slshqs $r2 = $r3, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x80200802
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: narrowhbx_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    slshqs $r0 = $r0, 8
 ; CV2-NEXT:    slshqs $r1 = $r1, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CV2-NEXT:    slshqs $r2 = $r2, 8
 ; CV2-NEXT:    slshqs $r3 = $r3, 8
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x80200802
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 2)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -105,22 +105,22 @@ define <16 x i8> @narrowhbx_us(<16 x i16> %0) {
 ; CV1-NEXT:    maxhq $r1 = $r1, 0
 ; CV1-NEXT:    maxhq $r2 = $r2, 0
 ; CV1-NEXT:    maxhq $r3 = $r3, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    minhq.@ $r0 = $r0, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r1 = $r1, 0xff00ff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    minhq.@ $r1 = $r2, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r2 = $r3, 0xff00ff
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: narrowhbx_us:
 ; CV2:       # %bb.0:
@@ -128,21 +128,21 @@ define <16 x i8> @narrowhbx_us(<16 x i16> %0) {
 ; CV2-NEXT:    maxhq $r1 = $r1, 0
 ; CV2-NEXT:    maxhq $r2 = $r2, 0
 ; CV2-NEXT:    maxhq $r3 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    minhq.@ $r0 = $r0, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r1 = $r1, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r2 = $r2, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r3 = $r3, 0xff00ff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 3)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -162,14 +162,14 @@ define <16 x i8> @narrowhbx(<16 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: narrowhbx:
 ; CV2:       # %bb.0:
@@ -177,11 +177,11 @@ define <16 x i8> @narrowhbx(<16 x i16> %0) {
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 0)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -200,51 +200,51 @@ define <16 x i16> @narrowwhx_q(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_q:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r4, 0x80400804
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r1 = $r6, 0x80400804
 ; CV1-NEXT:    sbmm8 $r5 = $r7, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r2 = $r8, 0x80400804
 ; CV1-NEXT:    sbmm8 $r6 = $r9, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r3 = $r10, 0x80400804
 ; CV1-NEXT:    sbmm8 $r7 = $r11, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowwhx_q:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80400804
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80400804
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80400804
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80400804
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80400804
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80400804
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <16 x i32>, <16 x i32>* %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 1)
@@ -278,74 +278,74 @@ define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    slswps $r0 = $r4, 16
 ; CV1-NEXT:    slswps $r1 = $r5, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    slswps $r2 = $r6, 16
 ; CV1-NEXT:    slswps $r3 = $r7, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    slswps $r4 = $r8, 16
 ; CV1-NEXT:    slswps $r5 = $r9, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80400804
 ; CV1-NEXT:    sbmm8 $r6 = $r1, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80400804
 ; CV1-NEXT:    sbmm8 $r7 = $r3, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    slswps $r3 = $r10, 16
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CV1-NEXT:    slswps $r5 = $r11, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x80400804
 ; CV1-NEXT:    sbmm8 $r5 = $r5, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    insf $r0 = $r6, 63, 32
 ; CV1-NEXT:    insf $r1 = $r7, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    insf $r2 = $r4, 63, 32
 ; CV1-NEXT:    insf $r3 = $r5, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: narrowwhx_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    slswps $r4 = $r4, 16
 ; CV2-NEXT:    slswps $r5 = $r5, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    slswps $r6 = $r6, 16
 ; CV2-NEXT:    slswps $r7 = $r7, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80400804
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80400804
 ; CV2-NEXT:    slswps $r8 = $r0, 16
 ; CV2-NEXT:    slswps $r9 = $r1, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80400804
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80400804
 ; CV2-NEXT:    slswps $r10 = $r2, 16
 ; CV2-NEXT:    slswps $r11 = $r3, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80400804
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80400804
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80400804
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
   %2 = load <16 x i32>, <16 x i32>* %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 2)
@@ -377,90 +377,90 @@ define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxwp $r4 = $r4, 0
 ; CV1-NEXT:    maxwp $r5 = $r5, 0
 ; CV1-NEXT:    maxwp $r6 = $r6, 0
 ; CV1-NEXT:    maxwp $r7 = $r7, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    maxwp $r1 = $r1, 0
 ; CV1-NEXT:    maxwp $r2 = $r2, 0
 ; CV1-NEXT:    maxwp $r3 = $r3, 0
 ; CV1-NEXT:    maxwp $r8 = $r0, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    minwp.@ $r0 = $r4, 0xffff
 ; CV1-NEXT:    minwp.@ $r4 = $r5, 0xffff
 ; CV1-NEXT:    minwp.@ $r5 = $r6, 0xffff
 ; CV1-NEXT:    minwp.@ $r6 = $r7, 0xffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r1 = $r5, 0x20100201
 ; CV1-NEXT:    sbmm8 $r5 = $r6, 0x20100201
 ; CV1-NEXT:    minwp.@ $r7 = $r8, 0xffff
 ; CV1-NEXT:    minwp.@ $r8 = $r1, 0xffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    sbmm8 $r2 = $r7, 0x20100201
 ; CV1-NEXT:    minwp.@ $r6 = $r2, 0xffff
 ; CV1-NEXT:    sbmm8 $r7 = $r8, 0x20100201
 ; CV1-NEXT:    minwp.@ $r8 = $r3, 0xffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    sbmm8 $r4 = $r4, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r3 = $r6, 0x20100201
 ; CV1-NEXT:    sbmm8 $r6 = $r8, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    insf $r2 = $r7, 63, 32
 ; CV1-NEXT:    insf $r3 = $r6, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: narrowwhx_us:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxwp $r4 = $r4, 0
 ; CV2-NEXT:    maxwp $r5 = $r5, 0
 ; CV2-NEXT:    maxwp $r6 = $r6, 0
 ; CV2-NEXT:    maxwp $r7 = $r7, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    maxwp $r0 = $r0, 0
 ; CV2-NEXT:    maxwp $r1 = $r1, 0
 ; CV2-NEXT:    maxwp $r2 = $r2, 0
 ; CV2-NEXT:    maxwp $r3 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    minwp.@ $r4 = $r4, 0xffff
 ; CV2-NEXT:    minwp.@ $r5 = $r5, 0xffff
 ; CV2-NEXT:    minwp.@ $r6 = $r6, 0xffff
 ; CV2-NEXT:    minwp.@ $r7 = $r7, 0xffff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    minwp.@ $r8 = $r0, 0xffff
 ; CV2-NEXT:    minwp.@ $r9 = $r1, 0xffff
 ; CV2-NEXT:    minwp.@ $r10 = $r2, 0xffff
 ; CV2-NEXT:    minwp.@ $r11 = $r3, 0xffff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x20100201
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x20100201
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x20100201
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x20100201
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <16 x i32>, <16 x i32>* %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 3)
@@ -492,51 +492,51 @@ define <16 x i16> @narrowwhx(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r4, 0x20100201
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r1 = $r6, 0x20100201
 ; CV1-NEXT:    sbmm8 $r5 = $r7, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r2 = $r8, 0x20100201
 ; CV1-NEXT:    sbmm8 $r6 = $r9, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r3 = $r10, 0x20100201
 ; CV1-NEXT:    sbmm8 $r7 = $r11, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowwhx:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x20100201
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x20100201
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x20100201
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x20100201
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <16 x i32>, <16 x i32>* %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 0)
@@ -569,7 +569,7 @@ define <2 x i8> @narrowhbp_q(<2 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x802
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i8> @llvm.kvx.narrowint.v2i8(<2 x i16> %0, i32 1)
   ret <2 x i8> %2
 }
@@ -580,10 +580,10 @@ define <2 x i8> @narrowhbp_s(<2 x i16> %0) {
 ; CHECK-LABEL: narrowhbp_s:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slshqs $r0 = $r0, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x802
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i8> @llvm.kvx.narrowint.v2i8(<2 x i16> %0, i32 2)
   ret <2 x i8> %2
 }
@@ -592,12 +592,12 @@ define <2 x i8> @narrowhbp_us(<2 x i16> %0) {
 ; CHECK-LABEL: narrowhbp_us:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxhq $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minhq $r0 = $r0, 0xff00ff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = tail call <2 x i8> @llvm.kvx.narrowint.v2i8(<2 x i16> %0, i32 3)
   ret <2 x i8> %2
 }
@@ -607,7 +607,7 @@ define <2 x i8> @narrowhbp(<2 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i8> @llvm.kvx.narrowint.v2i8(<2 x i16> %0, i32 0)
   ret <2 x i8> %2
 }
@@ -616,12 +616,12 @@ define <2 x i32> @narrowdwp_q(<2 x i64> %0) {
 ; CHECK-LABEL: narrowdwp_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r1 = $r0, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 1)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -637,13 +637,13 @@ define <2 x i32> @narrowdwp_s(<2 x i64> %0) {
 ; CHECK-LABEL: narrowdwp_s:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slsd $r0 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slsd $r0 = $r1, 32
 ; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 2)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -658,13 +658,13 @@ define <2 x i32> @narrowdwp_us(<2 x i64> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxd $r0 = $r0, 0
 ; CHECK-NEXT:    maxd $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mind $r0 = $r0, 0xffffffff
 ; CHECK-NEXT:    mind $r1 = $r1, 0xffffffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 3)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -679,7 +679,7 @@ define <2 x i32> @narrowdwp(<2 x i64> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 0)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -694,7 +694,7 @@ define <2 x i16> @narrowwhp_q(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %0, i32 1)
   ret <2 x i16> %2
 }
@@ -703,10 +703,10 @@ define <2 x i16> @narrowwhp_s(<2 x i32> %0) {
 ; CHECK-LABEL: narrowwhp_s:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slswps $r0 = $r0, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %0, i32 2)
   ret <2 x i16> %2
 }
@@ -715,12 +715,12 @@ define <2 x i16> @narrowwhp_us(<2 x i32> %0) {
 ; CHECK-LABEL: narrowwhp_us:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxwp $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minwp.@ $r0 = $r0, 0xffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %0, i32 3)
   ret <2 x i16> %2
 }
@@ -730,7 +730,7 @@ define <2 x i16> @narrowwhp(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %0, i32 0)
   ret <2 x i16> %2
 }
@@ -739,51 +739,51 @@ define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_q:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r4, 0x80200802
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r1 = $r6, 0x80200802
 ; CV1-NEXT:    sbmm8 $r5 = $r7, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r2 = $r8, 0x80200802
 ; CV1-NEXT:    sbmm8 $r6 = $r9, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r3 = $r10, 0x80200802
 ; CV1-NEXT:    sbmm8 $r7 = $r11, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowhbv_q:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80200802
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80200802
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80200802
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80200802
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80200802
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80200802
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <32 x i16>, <32 x i16>* %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 1)
@@ -815,74 +815,74 @@ define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    slshqs $r0 = $r4, 8
 ; CV1-NEXT:    slshqs $r1 = $r5, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    slshqs $r2 = $r6, 8
 ; CV1-NEXT:    slshqs $r3 = $r7, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    slshqs $r4 = $r8, 8
 ; CV1-NEXT:    slshqs $r5 = $r9, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80200802
 ; CV1-NEXT:    sbmm8 $r6 = $r1, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80200802
 ; CV1-NEXT:    sbmm8 $r7 = $r3, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    slshqs $r3 = $r10, 8
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CV1-NEXT:    slshqs $r5 = $r11, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x80200802
 ; CV1-NEXT:    sbmm8 $r5 = $r5, 0x80200802
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    insf $r0 = $r6, 63, 32
 ; CV1-NEXT:    insf $r1 = $r7, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    insf $r2 = $r4, 63, 32
 ; CV1-NEXT:    insf $r3 = $r5, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: narrowhbv_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    slshqs $r4 = $r4, 8
 ; CV2-NEXT:    slshqs $r5 = $r5, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    slshqs $r6 = $r6, 8
 ; CV2-NEXT:    slshqs $r7 = $r7, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80200802
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80200802
 ; CV2-NEXT:    slshqs $r8 = $r0, 8
 ; CV2-NEXT:    slshqs $r9 = $r1, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80200802
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80200802
 ; CV2-NEXT:    slshqs $r10 = $r2, 8
 ; CV2-NEXT:    slshqs $r11 = $r3, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80200802
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80200802
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80200802
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80200802
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
   %2 = load <32 x i16>, <32 x i16>* %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 2)
@@ -914,90 +914,90 @@ define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxhq $r4 = $r4, 0
 ; CV1-NEXT:    maxhq $r5 = $r5, 0
 ; CV1-NEXT:    maxhq $r6 = $r6, 0
 ; CV1-NEXT:    maxhq $r7 = $r7, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    maxhq $r1 = $r1, 0
 ; CV1-NEXT:    maxhq $r2 = $r2, 0
 ; CV1-NEXT:    maxhq $r3 = $r3, 0
 ; CV1-NEXT:    maxhq $r8 = $r0, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    minhq.@ $r0 = $r4, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r4 = $r5, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r5 = $r6, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r6 = $r7, 0xff00ff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r1 = $r5, 0x40100401
 ; CV1-NEXT:    sbmm8 $r5 = $r6, 0x40100401
 ; CV1-NEXT:    minhq.@ $r7 = $r8, 0xff00ff
 ; CV1-NEXT:    minhq.@ $r8 = $r1, 0xff00ff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    sbmm8 $r2 = $r7, 0x40100401
 ; CV1-NEXT:    minhq.@ $r6 = $r2, 0xff00ff
 ; CV1-NEXT:    sbmm8 $r7 = $r8, 0x40100401
 ; CV1-NEXT:    minhq.@ $r8 = $r3, 0xff00ff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r3 = $r6, 0x40100401
 ; CV1-NEXT:    sbmm8 $r6 = $r8, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    insf $r2 = $r7, 63, 32
 ; CV1-NEXT:    insf $r3 = $r6, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: narrowhbv_us:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxhq $r4 = $r4, 0
 ; CV2-NEXT:    maxhq $r5 = $r5, 0
 ; CV2-NEXT:    maxhq $r6 = $r6, 0
 ; CV2-NEXT:    maxhq $r7 = $r7, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    maxhq $r0 = $r0, 0
 ; CV2-NEXT:    maxhq $r1 = $r1, 0
 ; CV2-NEXT:    maxhq $r2 = $r2, 0
 ; CV2-NEXT:    maxhq $r3 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    minhq.@ $r4 = $r4, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r5 = $r5, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r6 = $r6, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r7 = $r7, 0xff00ff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    minhq.@ $r8 = $r0, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r9 = $r1, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r10 = $r2, 0xff00ff
 ; CV2-NEXT:    minhq.@ $r11 = $r3, 0xff00ff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x40100401
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x40100401
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x40100401
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x40100401
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <32 x i16>, <32 x i16>* %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 3)
@@ -1029,51 +1029,51 @@ define <32 x i8> @narrowhbv(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r4, 0x40100401
 ; CV1-NEXT:    sbmm8 $r4 = $r5, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r1 = $r6, 0x40100401
 ; CV1-NEXT:    sbmm8 $r5 = $r7, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r2 = $r8, 0x40100401
 ; CV1-NEXT:    sbmm8 $r6 = $r9, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r3 = $r10, 0x40100401
 ; CV1-NEXT:    sbmm8 $r7 = $r11, 0x40100401
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowhbv:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r4, 0x40100401
 ; CV2-NEXT:    sbmm8 $r1 = $r6, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    sbmm8 $r2 = $r8, 0x40100401
 ; CV2-NEXT:    sbmm8 $r3 = $r10, 0x40100401
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x40100401
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x40100401
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <32 x i16>, <32 x i16>* %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 0)
@@ -1106,7 +1106,7 @@ define <4 x i8> @narrowhbq_q(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %0, i32 1)
   ret <4 x i8> %2
 }
@@ -1115,10 +1115,10 @@ define <4 x i8> @narrowhbq_s(<4 x i16> %0) {
 ; CHECK-LABEL: narrowhbq_s:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slshqs $r0 = $r0, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %0, i32 2)
   ret <4 x i8> %2
 }
@@ -1127,12 +1127,12 @@ define <4 x i8> @narrowhbq_us(<4 x i16> %0) {
 ; CHECK-LABEL: narrowhbq_us:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxhq $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minhq.@ $r0 = $r0, 0xff00ff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %0, i32 3)
   ret <4 x i8> %2
 }
@@ -1142,7 +1142,7 @@ define <4 x i8> @narrowhbq(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %0, i32 0)
   ret <4 x i8> %2
 }
@@ -1152,14 +1152,14 @@ define <4 x i32> @narrowdwq_q(<4 x i64> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    srld $r2 = $r2, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r1 = $r0, 31, 0
 ; CHECK-NEXT:    insf $r3 = $r2, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 1)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -1180,16 +1180,16 @@ define <4 x i32> @narrowdwq_s(<4 x i64> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slsd $r0 = $r0, 32
 ; CHECK-NEXT:    slsd $r2 = $r2, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slsd $r0 = $r1, 32
 ; CHECK-NEXT:    slsd $r1 = $r3, 32
 ; CHECK-NEXT:    srld $r2 = $r2, 32
 ; CHECK-NEXT:    srld $r4 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r4, 31, 0
 ; CHECK-NEXT:    insf $r1 = $r2, 31, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 2)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -1212,16 +1212,16 @@ define <4 x i32> @narrowdwq_us(<4 x i64> %0) {
 ; CHECK-NEXT:    maxd $r1 = $r1, 0
 ; CHECK-NEXT:    maxd $r2 = $r2, 0
 ; CHECK-NEXT:    maxd $r3 = $r3, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mind $r0 = $r0, 0xffffffff
 ; CHECK-NEXT:    mind $r1 = $r2, 0xffffffff
 ; CHECK-NEXT:    mind $r2 = $r3, 0xffffffff
 ; CHECK-NEXT:    mind $r4 = $r1, 0xffffffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r4, 63, 32
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 3)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -1242,10 +1242,10 @@ define <4 x i32> @narrowdwq(<4 x i64> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = tail call i32 @llvm.kvx.narrowint.i32(i64 %2, i32 0)
   %4 = extractelement <4 x i64> %0, i64 1
@@ -1266,10 +1266,10 @@ define <4 x i16> @narrowwhq_q(<4 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80400804
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 1)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1283,13 +1283,13 @@ define <4 x i16> @narrowwhq_s(<4 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slswps $r0 = $r0, 16
 ; CHECK-NEXT:    slswps $r1 = $r1, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80400804
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 2)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1303,16 +1303,16 @@ define <4 x i16> @narrowwhq_us(<4 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxwp $r0 = $r0, 0
 ; CHECK-NEXT:    maxwp $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minwp.@ $r0 = $r0, 0xffff
 ; CHECK-NEXT:    minwp.@ $r1 = $r1, 0xffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1326,10 +1326,10 @@ define <4 x i16> @narrowwhq(<4 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 0)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1343,10 +1343,10 @@ define <8 x i8> @narrowhbo_q(<8 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80200802
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 1)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1360,13 +1360,13 @@ define <8 x i8> @narrowhbo_s(<8 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slshqs $r0 = $r0, 8
 ; CHECK-NEXT:    slshqs $r1 = $r1, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x80200802
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x80200802
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 2)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1380,16 +1380,16 @@ define <8 x i8> @narrowhbo_us(<8 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxhq $r0 = $r0, 0
 ; CHECK-NEXT:    maxhq $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minhq.@ $r0 = $r0, 0xff00ff
 ; CHECK-NEXT:    minhq.@ $r1 = $r1, 0xff00ff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1403,10 +1403,10 @@ define <8 x i8> @narrowhbo(<8 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %2, i32 0)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1419,26 +1419,26 @@ define <8 x i32> @narrowdwo_q(<8 x i64>* nocapture readonly %0) {
 ; CHECK-LABEL: narrowdwo_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r4 = $r4, 32
 ; CHECK-NEXT:    srld $r6 = $r6, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    srld $r2 = $r2, 32
 ; CHECK-NEXT:    insf $r5 = $r4, 31, 0
 ; CHECK-NEXT:    insf $r7 = $r6, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    insf $r1 = $r0, 31, 0
 ; CHECK-NEXT:    insf $r3 = $r2, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %2 = load <8 x i64>, <8 x i64>* %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 1)
@@ -1471,61 +1471,61 @@ define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    slsd $r0 = $r5, 32
 ; CV1-NEXT:    slsd $r4 = $r4, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    slsd $r1 = $r7, 32
 ; CV1-NEXT:    srld $r4 = $r4, 32
 ; CV1-NEXT:    slsd $r5 = $r6, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    srld $r5 = $r5, 32
 ; CV1-NEXT:    slsd $r6 = $r8, 32
 ; CV1-NEXT:    slsd $r7 = $r10, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    slsd $r2 = $r9, 32
 ; CV1-NEXT:    slsd $r3 = $r11, 32
 ; CV1-NEXT:    srld $r6 = $r6, 32
 ; CV1-NEXT:    srld $r7 = $r7, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 31, 0
 ; CV1-NEXT:    insf $r1 = $r5, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 31, 0
 ; CV1-NEXT:    insf $r3 = $r7, 31, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowdwo_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    slsd $r0 = $r5, 32
 ; CV2-NEXT:    slsd $r2 = $r4, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    slsd $r3 = $r6, 32
 ; CV2-NEXT:    slsd $r4 = $r8, 32
 ; CV2-NEXT:    srld $r6 = $r2, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    slsd $r1 = $r7, 32
 ; CV2-NEXT:    srld $r4 = $r4, 32
 ; CV2-NEXT:    slsd $r5 = $r10, 32
 ; CV2-NEXT:    srld $r7 = $r3, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    insf $r0 = $r6, 31, 0
 ; CV2-NEXT:    slsd $r2 = $r9, 32
 ; CV2-NEXT:    slsd $r3 = $r11, 32
 ; CV2-NEXT:    srld $r5 = $r5, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    insf $r1 = $r7, 31, 0
 ; CV2-NEXT:    insf $r2 = $r4, 31, 0
 ; CV2-NEXT:    insf $r3 = $r5, 31, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <8 x i64>, <8 x i64>* %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 2)
@@ -1558,69 +1558,69 @@ define <8 x i32> @narrowdwo_us(<8 x i64>* nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxd $r4 = $r4, 0
 ; CV1-NEXT:    maxd $r5 = $r5, 0
 ; CV1-NEXT:    maxd $r6 = $r6, 0
 ; CV1-NEXT:    maxd $r7 = $r7, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    maxd $r8 = $r0, 0
 ; CV1-NEXT:    maxd $r9 = $r1, 0
 ; CV1-NEXT:    maxd $r10 = $r2, 0
 ; CV1-NEXT:    maxd $r11 = $r3, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    mind $r0 = $r4, 0xffffffff
 ; CV1-NEXT:    mind $r1 = $r6, 0xffffffff
 ; CV1-NEXT:    mind $r4 = $r5, 0xffffffff
 ; CV1-NEXT:    mind $r5 = $r7, 0xffffffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    mind $r2 = $r8, 0xffffffff
 ; CV1-NEXT:    mind $r3 = $r10, 0xffffffff
 ; CV1-NEXT:    mind $r6 = $r9, 0xffffffff
 ; CV1-NEXT:    mind $r7 = $r11, 0xffffffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowdwo_us:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxd $r4 = $r4, 0
 ; CV2-NEXT:    maxd $r5 = $r5, 0
 ; CV2-NEXT:    maxd $r6 = $r6, 0
 ; CV2-NEXT:    maxd $r7 = $r7, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    maxd $r8 = $r0, 0
 ; CV2-NEXT:    maxd $r9 = $r1, 0
 ; CV2-NEXT:    maxd $r10 = $r2, 0
 ; CV2-NEXT:    maxd $r11 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    mind $r0 = $r4, 0xffffffff
 ; CV2-NEXT:    mind $r1 = $r6, 0xffffffff
 ; CV2-NEXT:    mind $r4 = $r5, 0xffffffff
 ; CV2-NEXT:    mind $r5 = $r7, 0xffffffff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    mind $r2 = $r8, 0xffffffff
 ; CV2-NEXT:    mind $r3 = $r10, 0xffffffff
 ; CV2-NEXT:    mind $r6 = $r9, 0xffffffff
 ; CV2-NEXT:    mind $r7 = $r11, 0xffffffff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    insf $r2 = $r6, 63, 32
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <8 x i64>, <8 x i64>* %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 3)
@@ -1653,20 +1653,20 @@ define <8 x i32> @narrowdwo(<8 x i64>* nocapture readonly %0) {
 ; CHECK-LABEL: narrowdwo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
 ; CHECK-NEXT:    insf $r6 = $r7, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    insf $r2 = $r3, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r4
 ; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %2 = load <8 x i64>, <8 x i64>* %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 0)
@@ -1700,14 +1700,14 @@ define <8 x i16> @narrowwho_q(<8 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80400804
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: narrowwho_q:
 ; CV2:       # %bb.0:
@@ -1715,11 +1715,11 @@ define <8 x i16> @narrowwho_q(<8 x i32> %0) {
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x80400804
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x80400804
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 1)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1739,38 +1739,38 @@ define <8 x i16> @narrowwho_s(<8 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    slswps $r0 = $r0, 16
 ; CV1-NEXT:    slswps $r1 = $r1, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    slswps $r1 = $r2, 16
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CV1-NEXT:    slswps $r2 = $r3, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x80400804
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x80400804
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: narrowwho_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    slswps $r0 = $r0, 16
 ; CV2-NEXT:    slswps $r1 = $r1, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x80400804
 ; CV2-NEXT:    slswps $r2 = $r2, 16
 ; CV2-NEXT:    slswps $r3 = $r3, 16
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x80400804
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x80400804
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 2)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1792,22 +1792,22 @@ define <8 x i16> @narrowwho_us(<8 x i32> %0) {
 ; CV1-NEXT:    maxwp $r1 = $r1, 0
 ; CV1-NEXT:    maxwp $r2 = $r2, 0
 ; CV1-NEXT:    maxwp $r3 = $r3, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    minwp.@ $r0 = $r0, 0xffff
 ; CV1-NEXT:    minwp.@ $r1 = $r1, 0xffff
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    minwp.@ $r1 = $r2, 0xffff
 ; CV1-NEXT:    minwp.@ $r2 = $r3, 0xffff
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: narrowwho_us:
 ; CV2:       # %bb.0:
@@ -1815,21 +1815,21 @@ define <8 x i16> @narrowwho_us(<8 x i32> %0) {
 ; CV2-NEXT:    maxwp $r1 = $r1, 0
 ; CV2-NEXT:    maxwp $r2 = $r2, 0
 ; CV2-NEXT:    maxwp $r3 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    minwp.@ $r0 = $r0, 0xffff
 ; CV2-NEXT:    minwp.@ $r1 = $r1, 0xffff
 ; CV2-NEXT:    minwp.@ $r2 = $r2, 0xffff
 ; CV2-NEXT:    minwp.@ $r3 = $r3, 0xffff
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x20100201
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 3)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -1849,14 +1849,14 @@ define <8 x i16> @narrowwho(<8 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r2, 0x20100201
 ; CV1-NEXT:    sbmm8 $r2 = $r3, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: narrowwho:
 ; CV2:       # %bb.0:
@@ -1864,11 +1864,11 @@ define <8 x i16> @narrowwho(<8 x i32> %0) {
 ; CV2-NEXT:    sbmm8 $r1 = $r2, 0x20100201
 ; CV2-NEXT:    sbmm8 $r2 = $r3, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r1, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r4, 63, 32
 ; CV2-NEXT:    insf $r1 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %2, i32 0)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>

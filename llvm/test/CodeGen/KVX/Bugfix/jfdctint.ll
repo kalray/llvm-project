@@ -15,428 +15,428 @@ define void @jfdctint_jpeg_fdct_islow() {
 ; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    make $r38 = 0xffffe333ffffe333
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 120[$r12] = $r30
 ; CHECK-NEXT:    make $r40 = 0xffffadfdffffadfd
 ; CHECK-NEXT:    make $r42 = 0xffffc13bffffc13b
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 112[$r12] = $r28
 ; CHECK-NEXT:    make $r2 = 0x25a1000025a1
 ; CHECK-NEXT:    make $r44 = 0xfffff384fffff384
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    so 80[$r12] = $r24r25r26r27
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    so 48[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    make $r20 = 0x98e0000098e
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sq 32[$r12] = $r18r19
 ; CHECK-NEXT:    make $r18 = 0x625400006254
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sq 16[$r12] = $r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addd $r5 = $r0, 60
 ; CHECK-NEXT:    lwz $r11 = 64[$r0]
 ; CHECK-NEXT:    addd $r46 = $r0, 4
 ; CHECK-NEXT:    addd $r48 = $r0, 28
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r4 = 96[$r0]
 ; CHECK-NEXT:    addd $r7 = $r0, 56
 ; CHECK-NEXT:    addd $r50 = $r0, 24
 ; CHECK-NEXT:    addd $r55 = $r0, 36
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r17 = $r0, 52
 ; CHECK-NEXT:    addd $r33 = $r0, 40
 ; CHECK-NEXT:    addd $r35 = $r0, 48
 ; CHECK-NEXT:    lwz $r49 = 92[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r6 = 124[$r0]
 ; CHECK-NEXT:    addd $r36 = $r0, 16
 ; CHECK-NEXT:    addd $r58 = $r0, 20
 ; CHECK-NEXT:    addd $r62 = $r0, 12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    lwz $r3 = 88[$r0]
 ; CHECK-NEXT:    insf $r11 = $r4, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    lwz $r9 = 120[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    addd $r6 = $r0, 8
 ; CHECK-NEXT:    insf $r49 = $r6, 63, 32
 ; CHECK-NEXT:    lwz $r53 = 68[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    lwz $r8 = 100[$r0]
 ; CHECK-NEXT:    addwp $r39 = $r49, $r11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r3 = $r9, 63, 32
 ; CHECK-NEXT:    addd $r9 = $r0, 44
 ; CHECK-NEXT:    lwz $r61 = 72[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    lwz $r16 = 104[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    lwz $r19 = 84[$r0]
 ; CHECK-NEXT:    insf $r53 = $r8, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    lwz $r32 = 116[$r0]
 ; CHECK-NEXT:    addwp $r37 = $r3, $r53
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    lwz $r21 = 76[$r0]
 ; CHECK-NEXT:    insf $r61 = $r16, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    lwz $r34 = 108[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    insf $r19 = $r32, 63, 32
 ; CHECK-NEXT:    lwz $r23 = 80[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    lwz $r4 = 112[$r0]
 ; CHECK-NEXT:    addwp $r41 = $r19, $r61
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    insf $r21 = $r34, 63, 32
 ; CHECK-NEXT:    addwp $r37 = $r41, $r37
 ; CHECK-NEXT:    lwz $r52 = 0[$r0]
 ; CHECK-NEXT:    sbfwp $r63 = $r41, $r37
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    lwz $r15 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    insf $r23 = $r4, 63, 32
 ; CHECK-NEXT:    lwz $r54 = 0[$r48]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    addwp $r43 = $r23, $r21
 ; CHECK-NEXT:    lwz $r47 = 0[$r5]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    addwp $r39 = $r43, $r39
 ; CHECK-NEXT:    insf $r52 = $r15, 63, 32
 ; CHECK-NEXT:    lwz $r56 = 0[$r46]
 ; CHECK-NEXT:    sbfwp $r59 = $r43, $r39
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    addwp $r25 = $r59, $r63
 ; CHECK-NEXT:    sbfwp $r37 = $r37, $r39
 ; CHECK-NEXT:    addwp $r41 = $r39, $r37
 ; CHECK-NEXT:    lwz $r51 = 0[$r55]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    sbfwp $r47 = $r49, $r11
 ; CHECK-NEXT:    sbfwp $r49 = $r3, $r53
 ; CHECK-NEXT:    insf $r54 = $r47, 63, 32
 ; CHECK-NEXT:    lwz $r60 = 0[$r50]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    lwz $r2 = 0[$r7]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    sbfwp $r19 = $r23, $r21
 ; CHECK-NEXT:    lwz $r22 = 0[$r33]
 ; CHECK-NEXT:    sbfwp $r51 = $r19, $r61
 ; CHECK-NEXT:    insf $r56 = $r51, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    addwp $r21 = $r51, $r47
 ; CHECK-NEXT:    lwz $r32 = 0[$r17]
 ; CHECK-NEXT:    addwp $r53 = $r19, $r49
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    make $r2 = 0x187e0000187e
 ; CHECK-NEXT:    addwp $r3 = $r53, $r21
 ; CHECK-NEXT:    lwz $r4 = 0[$r9]
 ; CHECK-NEXT:    insf $r60 = $r2, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    sbfwp $r24 = $r60, $r56
 ; CHECK-NEXT:    lwz $r34 = 0[$r35]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    lwz $r30 = 0[$r6]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    sq 0[$r12] = $r6r7
 ; CHECK-NEXT:    make $r6 = 0x115100001151
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    make $r6 = 0x40000000400
 ; CHECK-NEXT:    lwz $r16 = 0[$r58]
 ; CHECK-NEXT:    copyd $r27 = $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    sbfwp $r22 = $r54, $r52
 ; CHECK-NEXT:    insf $r30 = $r22, 63, 32
 ; CHECK-NEXT:    addwp $r52 = $r54, $r52
 ; CHECK-NEXT:    copyd $r57 = $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    lwz $r8 = 0[$r62]
 ; CHECK-NEXT:    copyd $r45 = $r57
 ; CHECK-NEXT:    addwp $r54 = $r60, $r56
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    lwz $r6 = 0[$r36]
 ; CHECK-NEXT:    insf $r16 = $r32, 63, 32
 ; CHECK-NEXT:    maddwp $r45 = $r25, $r27
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    addwp $r16 = $r16, $r30
 ; CHECK-NEXT:    sbfwp $r26 = $r16, $r30
 ; CHECK-NEXT:    make $r30 = 0x41b3000041b3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    insf $r8 = $r4, 63, 32
 ; CHECK-NEXT:    copyd $r11 = $r2
 ; CHECK-NEXT:    addwp $r56 = $r16, $r54
 ; CHECK-NEXT:    copyd $r61 = $r45
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    lq $r10r11 = 16[$r12]
 ; CHECK-NEXT:    insf $r6 = $r34, 63, 32
 ; CHECK-NEXT:    addwp $r34 = $r26, $r22
 ; CHECK-NEXT:    maddwp $r61 = $r59, $r11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    addwp $r6 = $r6, $r8
 ; CHECK-NEXT:    sbfwp $r16 = $r16, $r54
 ; CHECK-NEXT:    sbfwp $r28 = $r6, $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    sbfwp $r6 = $r6, $r52
 ; CHECK-NEXT:    addwp $r8 = $r6, $r52
 ; CHECK-NEXT:    addwp $r32 = $r28, $r24
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 38)
 ; CHECK-NEXT:    addwp $r2 = $r32, $r34
 ; CHECK-NEXT:    copyd $r4 = $r10
 ; CHECK-NEXT:    copyd $r11 = $r10
 ; CHECK-NEXT:    addwp $r52 = $r8, $r56
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 39)
 ; CHECK-NEXT:    sq 16[$r12] = $r4r5
 ; CHECK-NEXT:    make $r4 = 0xffffc4dfffffc4df
 ; CHECK-NEXT:    srld $r15 = $r52, 32
 ; CHECK-NEXT:    sllw $r52 = $r52, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 40)
 ; CHECK-NEXT:    mulwq $r2r3 = $r2r3, $r10r11
 ; CHECK-NEXT:    make $r4 = 0x40000000400
 ; CHECK-NEXT:    copyd $r11 = $r4
 ; CHECK-NEXT:    sllw $r15 = $r15, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 41)
 ; CHECK-NEXT:    sbfwp $r8 = $r56, $r8
 ; CHECK-NEXT:    srld $r15 = $r41, 32
 ; CHECK-NEXT:    maddwp $r45 = $r63, $r11
 ; CHECK-NEXT:    insf $r52 = $r15, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 42)
 ; CHECK-NEXT:    copyd $r11 = $r3
 ; CHECK-NEXT:    sllw $r15 = $r15, 2
 ; CHECK-NEXT:    sllw $r41 = $r41, 2
 ; CHECK-NEXT:    copyd $r59 = $r42
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 43)
 ; CHECK-NEXT:    maddwp $r11 = $r53, $r59
 ; CHECK-NEXT:    copyd $r53 = $r57
 ; CHECK-NEXT:    addwp $r59 = $r19, $r47
 ; CHECK-NEXT:    copyd $r63 = $r38
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 44)
 ; CHECK-NEXT:    copyd $r10 = $r2
 ; CHECK-NEXT:    maddwp $r53 = $r59, $r63
 ; CHECK-NEXT:    addwp $r54 = $r6, $r16
 ; CHECK-NEXT:    copyd $r59 = $r44
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    maddwp $r3 = $r21, $r59
 ; CHECK-NEXT:    srld $r15 = $r8, 32
 ; CHECK-NEXT:    insf $r41 = $r15, 63, 32
 ; CHECK-NEXT:    make $r56 = 0x115100001151
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 46)
 ; CHECK-NEXT:    sllw $r8 = $r8, 2
 ; CHECK-NEXT:    sllw $r15 = $r15, 2
 ; CHECK-NEXT:    copyd $r59 = $r53
 ; CHECK-NEXT:    copyd $r63 = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    copyd $r19 = $r40
 ; CHECK-NEXT:    srld $r43 = $r52, 32
 ; CHECK-NEXT:    maddwp $r59 = $r19, $r63
 ; CHECK-NEXT:    addwp $r63 = $r51, $r49
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 48)
 ; CHECK-NEXT:    insf $r8 = $r15, 63, 32
 ; CHECK-NEXT:    copyd $r19 = $r30
 ; CHECK-NEXT:    maddwp $r57 = $r63, $r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 49)
 ; CHECK-NEXT:    maddwp $r10 = $r32, $r42
 ; CHECK-NEXT:    make $r32 = 0x40000000400
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 50)
 ; CHECK-NEXT:    maddwp $r2 = $r34, $r44
 ; CHECK-NEXT:    copyd $r63 = $r57
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 51)
 ; CHECK-NEXT:    copyd $r51 = $r18
 ; CHECK-NEXT:    copyd $r60 = $r4
 ; CHECK-NEXT:    maddwp $r63 = $r51, $r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 52)
 ; CHECK-NEXT:    maddwp $r60 = $r54, $r56
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 53)
 ; CHECK-NEXT:    sw 64[$r0] = $r41
 ; CHECK-NEXT:    srld $r41 = $r41, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 54)
 ; CHECK-NEXT:    sw 0[$r0] = $r52
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 55)
 ; CHECK-NEXT:    sw 32[$r0] = $r43
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 56)
 ; CHECK-NEXT:    sw 96[$r0] = $r41
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 57)
 ; CHECK-NEXT:    sw 0[$r36] = $r8
 ; CHECK-NEXT:    make $r36 = 0x187e0000187e
 ; CHECK-NEXT:    copyd $r52 = $r60
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 58)
 ; CHECK-NEXT:    srld $r6 = $r8, 32
 ; CHECK-NEXT:    srld $r8 = $r37, 32
 ; CHECK-NEXT:    maddwp $r52 = $r6, $r36
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 59)
 ; CHECK-NEXT:    sw 0[$r35] = $r6
 ; CHECK-NEXT:    sllw $r6 = $r8, 2
 ; CHECK-NEXT:    make $r8 = 0xffffc4dfffffc4df
 ; CHECK-NEXT:    sllw $r35 = $r37, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 60)
 ; CHECK-NEXT:    srld $r6 = $r52, 32
 ; CHECK-NEXT:    sraw $r16 = $r52, 11
 ; CHECK-NEXT:    insf $r35 = $r6, 63, 32
 ; CHECK-NEXT:    maddwp $r60 = $r16, $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 61)
 ; CHECK-NEXT:    sw 80[$r0] = $r35
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
 ; CHECK-NEXT:    srld $r8 = $r35, 32
 ; CHECK-NEXT:    sraw $r35 = $r61, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 62)
 ; CHECK-NEXT:    sw 112[$r0] = $r8
 ; CHECK-NEXT:    srld $r6 = $r61, 32
 ; CHECK-NEXT:    insf $r16 = $r6, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 63)
 ; CHECK-NEXT:    lq $r36r37 = 0[$r12]
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
 ; CHECK-NEXT:    srld $r8 = $r16, 32
 ; CHECK-NEXT:    maddwp $r57 = $r49, $r51
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 64)
 ; CHECK-NEXT:    srld $r6 = $r60, 32
 ; CHECK-NEXT:    insf $r35 = $r6, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 65)
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 66)
 ; CHECK-NEXT:    sw 0[$r36] = $r16
 ; CHECK-NEXT:    sraw $r16 = $r60, 11
 ; CHECK-NEXT:    make $r36 = 0x300b0000300b
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 67)
 ; CHECK-NEXT:    sw 0[$r33] = $r8
 ; CHECK-NEXT:    srld $r8 = $r35, 32
 ; CHECK-NEXT:    insf $r16 = $r6, 63, 32
 ; CHECK-NEXT:    sraw $r33 = $r45, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 68)
 ; CHECK-NEXT:    sw 72[$r0] = $r35
 ; CHECK-NEXT:    srld $r6 = $r16, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 69)
 ; CHECK-NEXT:    sw 104[$r0] = $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 70)
 ; CHECK-NEXT:    sw 0[$r50] = $r16
 ; CHECK-NEXT:    addwp $r16 = $r26, $r24
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 71)
 ; CHECK-NEXT:    sw 0[$r7] = $r6
 ; CHECK-NEXT:    addwp $r6 = $r28, $r22
 ; CHECK-NEXT:    copyd $r7 = $r36
 ; CHECK-NEXT:    copyd $r8 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 72)
 ; CHECK-NEXT:    maddwp $r8 = $r6, $r38
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 73)
 ; CHECK-NEXT:    srld $r7 = $r45, 32
 ; CHECK-NEXT:    maddwp $r53 = $r47, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 74)
 ; CHECK-NEXT:    copyd $r6 = $r8
 ; CHECK-NEXT:    sraw $r7 = $r7, 11
 ; CHECK-NEXT:    maddwp $r32 = $r16, $r40
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 75)
 ; CHECK-NEXT:    maddwp $r6 = $r28, $r20
 ; CHECK-NEXT:    insf $r33 = $r7, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 76)
 ; CHECK-NEXT:    sw 88[$r0] = $r33
 ; CHECK-NEXT:    srld $r15 = $r33, 32
 ; CHECK-NEXT:    copyd $r16 = $r32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 77)
 ; CHECK-NEXT:    addwp $r6 = $r6, $r10
 ; CHECK-NEXT:    maddwp $r16 = $r26, $r30
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 78)
 ; CHECK-NEXT:    sw 120[$r0] = $r15
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
 ; CHECK-NEXT:    srld $r7 = $r6, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 79)
 ; CHECK-NEXT:    sraw $r7 = $r7, 11
 ; CHECK-NEXT:    addwp $r16 = $r16, $r2
 ; CHECK-NEXT:    maddwp $r32 = $r24, $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 80)
 ; CHECK-NEXT:    insf $r6 = $r7, 63, 32
 ; CHECK-NEXT:    addwp $r7 = $r59, $r11
 ; CHECK-NEXT:    maddwp $r8 = $r22, $r36
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 81)
 ; CHECK-NEXT:    sw 0[$r48] = $r6
 ; CHECK-NEXT:    addwp $r4 = $r32, $r10
 ; CHECK-NEXT:    srld $r6 = $r6, 32
 ; CHECK-NEXT:    srld $r15 = $r7, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 82)
 ; CHECK-NEXT:    sw 0[$r5] = $r6
 ; CHECK-NEXT:    addwp $r2 = $r8, $r2
 ; CHECK-NEXT:    sraw $r5 = $r7, 11
 ; CHECK-NEXT:    sraw $r6 = $r15, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 83)
 ; CHECK-NEXT:    insf $r5 = $r6, 63, 32
 ; CHECK-NEXT:    srld $r6 = $r16, 32
 ; CHECK-NEXT:    sraw $r16 = $r16, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 84)
 ; CHECK-NEXT:    sw 92[$r0] = $r5
 ; CHECK-NEXT:    srld $r5 = $r5, 32
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 85)
 ; CHECK-NEXT:    sw 124[$r0] = $r5
 ; CHECK-NEXT:    addwp $r3 = $r53, $r3
 ; CHECK-NEXT:    addwp $r5 = $r63, $r3
 ; CHECK-NEXT:    insf $r16 = $r6, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 86)
 ; CHECK-NEXT:    sw 0[$r58] = $r16
 ; CHECK-NEXT:    sraw $r5 = $r5, 11
 ; CHECK-NEXT:    srld $r6 = $r16, 32
 ; CHECK-NEXT:    srld $r7 = $r5, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 87)
 ; CHECK-NEXT:    sw 0[$r17] = $r6
 ; CHECK-NEXT:    sraw $r6 = $r7, 11
 ; CHECK-NEXT:    addwp $r7 = $r57, $r11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 88)
 ; CHECK-NEXT:    sraw $r4 = $r4, 11
 ; CHECK-NEXT:    insf $r5 = $r6, 63, 32
 ; CHECK-NEXT:    srld $r6 = $r4, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 89)
 ; CHECK-NEXT:    sw 84[$r0] = $r5
 ; CHECK-NEXT:    srld $r5 = $r5, 32
 ; CHECK-NEXT:    sraw $r6 = $r6, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 90)
 ; CHECK-NEXT:    sw 116[$r0] = $r5
 ; CHECK-NEXT:    insf $r4 = $r6, 63, 32
 ; CHECK-NEXT:    srld $r5 = $r7, 32
 ; CHECK-NEXT:    sraw $r7 = $r7, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 91)
 ; CHECK-NEXT:    sw 0[$r62] = $r4
 ; CHECK-NEXT:    srld $r4 = $r4, 32
 ; CHECK-NEXT:    sraw $r5 = $r5, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 92)
 ; CHECK-NEXT:    sw 0[$r9] = $r4
 ; CHECK-NEXT:    sraw $r2 = $r2, 11
 ; CHECK-NEXT:    srld $r4 = $r2, 32
 ; CHECK-NEXT:    insf $r7 = $r5, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 93)
 ; CHECK-NEXT:    sw 76[$r0] = $r7
 ; CHECK-NEXT:    sraw $r4 = $r4, 11
 ; CHECK-NEXT:    srld $r5 = $r7, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 94)
 ; CHECK-NEXT:    sw 108[$r0] = $r5
 ; CHECK-NEXT:    insf $r2 = $r4, 63, 32
 ; CHECK-NEXT:    sraw $r3 = $r3, 11
 ; CHECK-NEXT:    srld $r4 = $r3, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 95)
 ; CHECK-NEXT:    sw 0[$r46] = $r2
 ; CHECK-NEXT:    srld $r2 = $r2, 32
 ; CHECK-NEXT:    sraw $r4 = $r4, 11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 96)
 ; CHECK-NEXT:    sw 0[$r55] = $r2
 ; CHECK-NEXT:    insf $r3 = $r4, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 97)
 ; CHECK-NEXT:    sw 68[$r0] = $r3
 ; CHECK-NEXT:    srld $r2 = $r3, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 98)
 ; CHECK-NEXT:    sw 100[$r0] = $r2
 ; CHECK-NEXT:    addd $r0 = $r0, 128
 ; CHECK-NEXT:    cb.dnez $r1 ? .LBB0_1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 99)
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    lq $r18r19 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r20r21r22r23 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r24r25r26r27 = 80[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r28 = 112[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ld $r30 = 120[$r12]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   br label %1
 
 1:

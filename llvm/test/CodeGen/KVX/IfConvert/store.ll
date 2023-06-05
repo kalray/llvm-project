@@ -11,7 +11,7 @@ define void @test0(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wnez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool = icmp eq i32 %a, 0
   br i1 %tobool, label %if.end, label %if.then
@@ -35,10 +35,10 @@ define void @test1(i32 %a, i32* nocapture %p){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_2: # %if.then
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq i32 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -56,7 +56,7 @@ define void @test2(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wgtz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -74,7 +74,7 @@ define void @test3(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wgez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, -1
   br i1 %cmp, label %if.then, label %if.end
@@ -92,7 +92,7 @@ define void @test4(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wltz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -110,7 +110,7 @@ define void @test5(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wlez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -127,10 +127,10 @@ define void @test6(i32 %a, i32* nocapture %p){
 ; CHECK-LABEL: test6:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r2 = $r0, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.even $r2 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sgt i32 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -148,7 +148,7 @@ define void @test7(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wgtz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -166,7 +166,7 @@ define void @test8(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wlez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -183,10 +183,10 @@ define void @test9(i32 %a, i32* nocapture %p){
 ; CHECK-LABEL: test9:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r2 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.even $r2 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp slt i32 %a, 2
   br i1 %cmp, label %if.then, label %if.end
@@ -204,7 +204,7 @@ define void @test10(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dnez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %tobool = icmp eq i64 %a, 0
   br i1 %tobool, label %if.end, label %if.then
@@ -228,10 +228,10 @@ define void @test11(i64 %a, i64* nocapture %p){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB11_2: # %if.then
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq i64 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -249,7 +249,7 @@ define void @test12(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dgtz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -267,7 +267,7 @@ define void @test13(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dgez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %a, -1
   br i1 %cmp, label %if.then, label %if.end
@@ -285,7 +285,7 @@ define void @test14(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dltz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -303,7 +303,7 @@ define void @test15(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dlez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -320,10 +320,10 @@ define void @test16(i64 %a, i64* nocapture %p){
 ; CHECK-LABEL: test16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compd.lt $r2 = $r0, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.even $r2 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sgt i64 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -341,7 +341,7 @@ define void @test17(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dgtz $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %a, 0
   br i1 %cmp, label %if.then, label %if.end
@@ -359,7 +359,7 @@ define void @test18(i64 %a, i64* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd.dlez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i64 %a, 1
   br i1 %cmp, label %if.then, label %if.end
@@ -376,10 +376,10 @@ define void @test19(i64 %a, i64* nocapture %p){
 ; CHECK-LABEL: test19:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compd.gt $r2 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.even $r2 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp slt i64 %a, 2
   br i1 %cmp, label %if.then, label %if.end
@@ -396,10 +396,10 @@ define void @test20(i64 %a, i64 %b, i64* nocapture %p){
 ; CHECK-LABEL: test20:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compd.ne $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.even $r1 ? [$r2] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq i64 %a, %b
   br i1 %cmp, label %if.then, label %if.end
@@ -416,10 +416,10 @@ define void @test21(i64 %a, i64 %b, i64* nocapture %p){
 ; CHECK-LABEL: test21:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compd.eq $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.even $r1 ? [$r2] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq i64 %a, %b
   br i1 %cmp, label %if.end, label %if.then
@@ -437,7 +437,7 @@ define void @test22(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.wnez $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i32 %a, 0
   br i1 %cmp, label %if.end, label %if.then
@@ -454,14 +454,14 @@ define void @test23(i16 %a, i32* nocapture %p){
 ; CHECK-LABEL: test23:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB23_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %if.then
 ; CHECK-NEXT:    sxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB23_2: # %if.end
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -483,7 +483,7 @@ define void @test24(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.even $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i32 %a, 1
   %cmp = icmp eq i32 %and, 0
@@ -502,7 +502,7 @@ define void @test25(i32 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.odd $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i32 %a, 1
   %tobool = icmp eq i32 %and, 0
@@ -521,7 +521,7 @@ define void @test26(i64 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.even $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i64 %a, 1
   %cmp = icmp eq i64 %and, 0
@@ -541,7 +541,7 @@ define void @test27(i64 %a, i32* nocapture %p){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw.odd $r0 ? [$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i64 %a, 1
   %tobool = icmp eq i64 %and, 0

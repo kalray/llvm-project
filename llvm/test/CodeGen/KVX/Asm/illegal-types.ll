@@ -11,7 +11,8 @@ define <8 x i16> @asm_v8i16(i8* %0, <8 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    sq 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -31,7 +32,8 @@ define <16 x i8> @asm_v16i8(i8* %0, <16 x i8> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    sq 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -51,7 +53,8 @@ define <8 x half> @asm_v8f16(i8* %0, <8 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    sq 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;
@@ -73,7 +76,8 @@ define <8 x float> @asm_v8f32(i8* %0, <8 x float> %1) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -95,7 +99,8 @@ define <8 x i32> @asm_v8i32(i8* %0, <8 x i32> %1) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -117,7 +122,8 @@ define <16 x i16> @asm_v16i16(i8* %0, <16 x i16> %1) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -139,7 +145,8 @@ define <16 x half> @asm_v16f16(i8* %0, <16 x half> %1) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -161,7 +168,8 @@ define <32 x i8> @asm_v32i8(i8* %0, <32 x i8> %1) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ;;
@@ -181,7 +189,8 @@ define i128 @asm_int128(i8* %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    sq 0[$r0] = $r2r3
 ; CHECK-NEXT:    ;;

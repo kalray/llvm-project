@@ -11,7 +11,7 @@ define i8 @loadcbc(i8 %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i8 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -27,7 +27,7 @@ define i64 @loadcbl(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
@@ -39,7 +39,7 @@ define i16 @loadchs(i16 %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i16 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -53,7 +53,7 @@ define i64 @loadchl(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
@@ -65,7 +65,7 @@ define i32 @loadcwi(i32 %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -79,7 +79,7 @@ define i64 @loadcwl(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
@@ -91,7 +91,7 @@ define i64 @loadcdl(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -103,7 +103,7 @@ define i128 @loadcq(i128 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq.dltz $r3 ? $r0r1 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i128 %a to <2 x i64>
   %1 = bitcast i8* %ptr to <2 x i64>*
@@ -119,7 +119,7 @@ define half @loadchf(half %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to half*
   %1 = tail call half @llvm.kvx.loadc.u.f16(half %a, half* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
@@ -133,7 +133,7 @@ define float @loadcwf(float %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to float*
   %1 = tail call float @llvm.kvx.loadc.u.f32(float %a, float* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
@@ -147,7 +147,7 @@ define double @loadcdf(double %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to double*
   %1 = tail call double @llvm.kvx.loadc.u.f64(double %a, double* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -161,7 +161,7 @@ define <2 x i32> @loadc64(<2 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <2 x i32>*
   %1 = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32> %a, <2 x i32>* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -175,7 +175,7 @@ define <4 x i32> @loadc128(<4 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq.dltz $r3 ? $r0r1 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = bitcast i8* %ptr to <2 x i64>*
@@ -189,7 +189,7 @@ define i64 @loadcwls(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.s.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 1, i32 2, i32 -1)
@@ -201,7 +201,7 @@ define i64 @loadcwlu(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.u.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 2, i32 2, i32 -1)
@@ -213,7 +213,7 @@ define i64 @loadcwlus(i64 %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us.dltz $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 3, i32 2, i32 -1)
@@ -225,7 +225,7 @@ define <8 x i32> @loadc256_dltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dltz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -241,7 +241,7 @@ define <8 x i32> @loadc256_dnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dnez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -255,7 +255,7 @@ define <8 x i32> @loadc256_deqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.deqz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -269,7 +269,7 @@ define <8 x i32> @loadc256_dgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dgez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -283,7 +283,7 @@ define <8 x i32> @loadc256_dlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dlez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -297,7 +297,7 @@ define <8 x i32> @loadc256_dgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dgtz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -311,7 +311,7 @@ define <8 x i32> @loadc256_odd(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.odd $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -325,7 +325,7 @@ define <8 x i32> @loadc256_even(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.even $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -339,7 +339,7 @@ define <8 x i32> @loadc256_wnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wnez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -353,7 +353,7 @@ define <8 x i32> @loadc256_weqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.weqz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -367,7 +367,7 @@ define <8 x i32> @loadc256_wltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wltz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -381,7 +381,7 @@ define <8 x i32> @loadc256_wgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wgez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -395,7 +395,7 @@ define <8 x i32> @loadc256_wlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wlez $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -409,7 +409,7 @@ define <8 x i32> @loadc256_wgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wgtz $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -422,10 +422,10 @@ define i32 @loadc_vol(i32 %a, i8* %ptr, i64 %cond) {
 ; CHECK-LABEL: loadc_vol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.wgez $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -440,10 +440,10 @@ define i32 @loadc_novol(i32 %a, i8* %ptr, i64 %cond) {
 ; CHECK-LABEL: loadc_novol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.wgez $r2 ? $r0 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*

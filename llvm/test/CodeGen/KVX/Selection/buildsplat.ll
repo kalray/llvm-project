@@ -15,10 +15,10 @@ define <4 x float> @test_buildsplat_float16(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x0, float 0x0, float 0x0, float 0x0>, %a
   ret <4 x float> %r
 }
@@ -33,10 +33,10 @@ define <4 x float> @test_buildsplat_float43(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float 0x36A0000000000000, float 0x36A0000000000000, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -47,12 +47,12 @@ define <4 x float> @test_buildsplat_float64(<4 x float> %a) #0 {
 ; ALL-LABEL: test_buildsplat_float64:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x8000000180000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %r = fmul <4 x float> <float 0xB6A0000000000000, float 0xB6A0000000000000, float 0xB6A0000000000000, float 0xB6A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -61,12 +61,12 @@ define <4 x i32> @test_buildsplat_nonconstant(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0> ; this is <b, b, b, b>
   %r = mul <4 x i32> %v2, %a
@@ -80,10 +80,10 @@ define <4 x float> @test_buildsplat_float43undef1_1(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float undef, float 0x36A0000000000000, float 0x36A0000000000000, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -92,12 +92,12 @@ define <4 x i32> @test_buildsplat_nonconstant1_1(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant1_1:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 4, i32 0, i32 0, i32 0> ; this is <u, b, b, b>
   %r = mul <4 x i32> %v2, %a
@@ -109,10 +109,10 @@ define <4 x float> @test_buildsplat_float43undef1_2(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float undef, float 0x36A0000000000000, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -121,12 +121,12 @@ define <4 x i32> @test_buildsplat_nonconstant1_2(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant1_2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 4, i32 0, i32 0> ; this is <b, u, b, b>
   %r = mul <4 x i32> %v2, %a
@@ -138,10 +138,10 @@ define <4 x float> @test_buildsplat_float43undef1_3(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float 0x36A0000000000000, float undef, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -150,12 +150,12 @@ define <4 x i32> @test_buildsplat_nonconstant1_3(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant1_3:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 4, i32 0> ; this is <b, b, u, b>
   %r = mul <4 x i32> %v2, %a
@@ -167,10 +167,10 @@ define <4 x float> @test_buildsplat_float43undef1_4(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float 0x36A0000000000000, float 0x36A0000000000000, float undef>, %a
   ret <4 x float> %r
 }
@@ -179,12 +179,12 @@ define <4 x i32> @test_buildsplat_nonconstant1_4(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant1_4:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 4> ; this is <b, b, b, u>
   %r = mul <4 x i32> %v2, %a
@@ -196,10 +196,10 @@ define <4 x float> @test_buildsplat_float43undef2_1(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float 0x36A0000000000000, float undef, float undef>, %a
   ret <4 x float> %r
 }
@@ -208,12 +208,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_1(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_1:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 4, i32 4> ; this is <b, b, u, u>
   %r = mul <4 x i32> %v2, %a
@@ -225,10 +225,10 @@ define <4 x float> @test_buildsplat_float43undef2_2(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float undef, float undef, float 0x36A0000000000000, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -237,12 +237,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_2(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 4, i32 4, i32 0, i32 0> ; this is <u, u, b, b>
   %r = mul <4 x i32> %v2, %a
@@ -254,10 +254,10 @@ define <4 x float> @test_buildsplat_float43undef2_3(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float undef, float undef, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -266,12 +266,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_3(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_3:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 4, i32 4, i32 0> ; this is <b, u, u, b>
   %r = mul <4 x i32> %v2, %a
@@ -283,10 +283,10 @@ define <4 x float> @test_buildsplat_float43undef2_4(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000001
 ; ALL-NEXT:    make $r3 = 0x100000001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float undef, float 0x36A0000000000000, float 0x36A0000000000000, float undef>, %a
   ret <4 x float> %r
 }
@@ -295,12 +295,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_4(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_4:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 4, i32 0, i32 0, i32 4> ; this is <u, b, b, u>
   %r = mul <4 x i32> %v2, %a
@@ -312,10 +312,10 @@ define <4 x float> @test_buildsplat_float43undef2_5(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x100000000
 ; ALL-NEXT:    make $r3 = 0x100000000
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float undef, float 0x36A0000000000000, float undef, float 0x36A0000000000000>, %a
   ret <4 x float> %r
 }
@@ -324,12 +324,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_5(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_5:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 4, i32 0, i32 4, i32 0> ; this is <u, b, u, b>
   %r = mul <4 x i32> %v2, %a
@@ -341,10 +341,10 @@ define <4 x float> @test_buildsplat_float43undef2_6(<4 x float> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 1
 ; ALL-NEXT:    make $r3 = 1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = fmul <4 x float> <float 0x36A0000000000000, float undef, float 0x36A0000000000000, float undef>, %a
   ret <4 x float> %r
 }
@@ -353,12 +353,12 @@ define <4 x i32> @test_buildsplat_nonconstant2_6(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant2_6:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 4, i32 0, i32 4> ; this is <b, u, b, u>
   %r = mul <4 x i32> %v2, %a
@@ -371,12 +371,12 @@ define <4 x i32> @test_buildsplat_nonconstant3(<4 x i32> %a, i32 %b) #0 {
 ; ALL-LABEL: test_buildsplat_nonconstant3:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r3 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    mulwq $r0r1 = $r2r3, $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %v1 = insertelement <4 x i32> undef, i32 %b, i32 0
   %v2 = shufflevector <4 x i32> %v1, <4 x i32> undef, <4 x i32> <i32 0, i32 4, i32 4, i32 4> ; this is <b, u, u, u>
   %r = mul <4 x i32> %v2, %a
@@ -390,10 +390,10 @@ define <4 x i32> @test_buildsplat_int43undef2_6(<4 x i32> %a) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 2
 ; ALL-NEXT:    make $r3 = 2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulwq $r0r1 = $r0r1, $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = mul <4 x i32> <i32 2, i32 undef, i32 2, i32 undef>, %a
   ret <4 x i32> %r
 }

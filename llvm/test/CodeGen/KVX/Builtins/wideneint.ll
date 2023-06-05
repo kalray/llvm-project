@@ -11,11 +11,11 @@ define <8 x i16> @widenebho_(<16 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
 ; ALL-NEXT:    sllhqs $r1 = $r1, 8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srahqs $r0 = $r0, 8
 ; ALL-NEXT:    srahqs $r1 = $r1, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %2, i32 0)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -32,7 +32,7 @@ define <8 x i16> @widenebho_z(<16 x i8> %0) {
 ; ALL-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; ALL-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %2, i32 1)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -47,7 +47,7 @@ define <8 x i16> @widenebho_q(<16 x i8> %0) {
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
 ; ALL-NEXT:    sllhqs $r1 = $r1, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %2, i32 2)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -60,10 +60,10 @@ define <2 x i16> @widenebhp_(<4 x i8> %0) {
 ; ALL-LABEL: widenebhp_:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srahqs $r0 = $r0, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i16> @llvm.kvx.wideninte.v2i16(<4 x i8> %0, i32 0)
   ret <2 x i16> %2
 }
@@ -75,7 +75,7 @@ define <2 x i16> @widenebhp_z(<4 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    andw $r0 = $r0, 0xff00ff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.wideninte.v2i16(<4 x i8> %0, i32 1)
   ret <2 x i16> %2
 }
@@ -85,7 +85,7 @@ define <2 x i16> @widenebhp_q(<4 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.wideninte.v2i16(<4 x i8> %0, i32 2)
   ret <2 x i16> %2
 }
@@ -94,10 +94,10 @@ define <4 x i16> @widenebhq_(<8 x i8> %0) {
 ; ALL-LABEL: widenebhq_:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srahqs $r0 = $r0, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %0, i32 0)
   ret <4 x i16> %2
 }
@@ -107,7 +107,7 @@ define <4 x i16> @widenebhq_z(<8 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %0, i32 1)
   ret <4 x i16> %2
 }
@@ -117,7 +117,7 @@ define <4 x i16> @widenebhq_q(<8 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllhqs $r0 = $r0, 8
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %0, i32 2)
   ret <4 x i16> %2
 }
@@ -127,17 +127,17 @@ define <16 x i16> @widenebhx_(<32 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sllhqs $r0 = $r0, 8
 ; CV1-NEXT:    sllhqs $r1 = $r1, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sllhqs $r2 = $r2, 8
 ; CV1-NEXT:    sllhqs $r3 = $r3, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srahqs $r0 = $r0, 8
 ; CV1-NEXT:    srahqs $r1 = $r1, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srahqs $r2 = $r2, 8
 ; CV1-NEXT:    srahqs $r3 = $r3, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: widenebhx_:
 ; CV2:       # %bb.0:
@@ -145,13 +145,13 @@ define <16 x i16> @widenebhx_(<32 x i8> %0) {
 ; CV2-NEXT:    sllhqs $r1 = $r1, 8
 ; CV2-NEXT:    sllhqs $r2 = $r2, 8
 ; CV2-NEXT:    sllhqs $r3 = $r3, 8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srahqs $r0 = $r0, 8
 ; CV2-NEXT:    srahqs $r1 = $r1, 8
 ; CV2-NEXT:    srahqs $r2 = $r2, 8
 ; CV2-NEXT:    srahqs $r3 = $r3, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %2, i32 0)
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -173,7 +173,7 @@ define <16 x i16> @widenebhx_z(<32 x i8> %0) {
 ; ALL-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; ALL-NEXT:    andd.@ $r2 = $r2, 0xff00ff
 ; ALL-NEXT:    andd.@ $r3 = $r3, 0xff00ff
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -195,11 +195,11 @@ define <16 x i16> @widenebhx_q(<32 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sllhqs $r0 = $r0, 8
 ; CV1-NEXT:    sllhqs $r1 = $r1, 8
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sllhqs $r2 = $r2, 8
 ; CV1-NEXT:    sllhqs $r3 = $r3, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenebhx_q:
 ; CV2:       # %bb.0:
@@ -208,7 +208,7 @@ define <16 x i16> @widenebhx_q(<32 x i8> %0) {
 ; CV2-NEXT:    sllhqs $r2 = $r2, 8
 ; CV2-NEXT:    sllhqs $r3 = $r3, 8
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <4 x i16> @llvm.kvx.wideninte.v4i16(<8 x i8> %2, i32 2)
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -228,17 +228,17 @@ define <8 x i32> @widenehwo_(<16 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sllwps $r0 = $r0, 16
 ; CV1-NEXT:    sllwps $r1 = $r1, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sllwps $r2 = $r2, 16
 ; CV1-NEXT:    sllwps $r3 = $r3, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srawps $r0 = $r0, 16
 ; CV1-NEXT:    srawps $r1 = $r1, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srawps $r2 = $r2, 16
 ; CV1-NEXT:    srawps $r3 = $r3, 16
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: widenehwo_:
 ; CV2:       # %bb.0:
@@ -246,13 +246,13 @@ define <8 x i32> @widenehwo_(<16 x i16> %0) {
 ; CV2-NEXT:    sllwps $r1 = $r1, 16
 ; CV2-NEXT:    sllwps $r2 = $r2, 16
 ; CV2-NEXT:    sllwps $r3 = $r3, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srawps $r0 = $r0, 16
 ; CV2-NEXT:    srawps $r1 = $r1, 16
 ; CV2-NEXT:    srawps $r2 = $r2, 16
 ; CV2-NEXT:    srawps $r3 = $r3, 16
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %2, i32 0)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -276,7 +276,7 @@ define <8 x i32> @widenehwo_z(<16 x i16> %0) {
 ; ALL-NEXT:    andd.@ $r1 = $r1, 0xffff
 ; ALL-NEXT:    andd.@ $r2 = $r2, 0xffff
 ; ALL-NEXT:    andd.@ $r3 = $r3, 0xffff
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -298,11 +298,11 @@ define <8 x i32> @widenehwo_q(<16 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sllwps $r0 = $r0, 16
 ; CV1-NEXT:    sllwps $r1 = $r1, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sllwps $r2 = $r2, 16
 ; CV1-NEXT:    sllwps $r3 = $r3, 16
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenehwo_q:
 ; CV2:       # %bb.0:
@@ -311,7 +311,7 @@ define <8 x i32> @widenehwo_q(<16 x i16> %0) {
 ; CV2-NEXT:    sllwps $r2 = $r2, 16
 ; CV2-NEXT:    sllwps $r3 = $r3, 16
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %2, i32 2)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -330,10 +330,10 @@ define <2 x i32> @widenehwp_(<4 x i16> %0) {
 ; ALL-LABEL: widenehwp_:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllwps $r0 = $r0, 16
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srawps $r0 = $r0, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %0, i32 0)
   ret <2 x i32> %2
 }
@@ -343,7 +343,7 @@ define <2 x i32> @widenehwp_z(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    andd.@ $r0 = $r0, 0xffff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %0, i32 1)
   ret <2 x i32> %2
 }
@@ -353,7 +353,7 @@ define <2 x i32> @widenehwp_q(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllwps $r0 = $r0, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %0, i32 2)
   ret <2 x i32> %2
 }
@@ -363,11 +363,11 @@ define <4 x i32> @widenehwq_(<8 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllwps $r0 = $r0, 16
 ; ALL-NEXT:    sllwps $r1 = $r1, 16
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srawps $r0 = $r0, 16
 ; ALL-NEXT:    srawps $r1 = $r1, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %2, i32 0)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -382,7 +382,7 @@ define <4 x i32> @widenehwq_z(<8 x i16> %0) {
 ; ALL-NEXT:    andd.@ $r0 = $r0, 0xffff
 ; ALL-NEXT:    andd.@ $r1 = $r1, 0xffff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %2, i32 1)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -397,7 +397,7 @@ define <4 x i32> @widenehwq_q(<8 x i16> %0) {
 ; ALL-NEXT:    sllwps $r0 = $r0, 16
 ; ALL-NEXT:    sllwps $r1 = $r1, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <2 x i32> @llvm.kvx.wideninte.v2i32(<4 x i16> %2, i32 2)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -412,7 +412,7 @@ define <2 x i64> @widenewdp_(<4 x i32> %0) {
 ; ALL-NEXT:    sxwd $r0 = $r0
 ; ALL-NEXT:    sxwd $r1 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 0)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -430,7 +430,7 @@ define <2 x i64> @widenewdp_z(<4 x i32> %0) {
 ; ALL-NEXT:    zxwd $r0 = $r0
 ; ALL-NEXT:    zxwd $r1 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 1)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -446,7 +446,7 @@ define <2 x i64> @widenewdp_q(<4 x i32> %0) {
 ; ALL-NEXT:    slld $r0 = $r0, 32
 ; ALL-NEXT:    slld $r1 = $r1, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 2)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -461,11 +461,11 @@ define <4 x i64> @widenewdq_(<8 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxwd $r2 = $r2
 ; CV1-NEXT:    sxwd $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenewdq_:
 ; CV2:       # %bb.0:
@@ -474,7 +474,7 @@ define <4 x i64> @widenewdq_(<8 x i32> %0) {
 ; CV2-NEXT:    sxwd $r2 = $r2
 ; CV2-NEXT:    sxwd $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 0)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -498,7 +498,7 @@ define <4 x i64> @widenewdq_z(<8 x i32> %0) {
 ; ALL-NEXT:    zxwd $r2 = $r2
 ; ALL-NEXT:    zxwd $r3 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 1)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -522,7 +522,7 @@ define <4 x i64> @widenewdq_q(<8 x i32> %0) {
 ; ALL-NEXT:    slld $r2 = $r2, 32
 ; ALL-NEXT:    slld $r3 = $r3, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call i64 @llvm.kvx.widenintes(<2 x i32> %2, i32 2)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>

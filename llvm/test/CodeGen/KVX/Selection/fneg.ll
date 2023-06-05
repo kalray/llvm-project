@@ -11,7 +11,7 @@ define half @f_float16(half %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub half 0xH0000, %x
   ret half %sub
@@ -22,7 +22,7 @@ define float @f_float(float %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub float 0.000000e+00, %x
   ret float %sub
@@ -33,7 +33,7 @@ define double @f_double(double %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = fsub double 0.000000e+00, %x
   ret double %sub
@@ -44,7 +44,7 @@ define double @bitcast_fnegd(double %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast double %x to i64
   %xor = xor i64 %bc1, 9223372036854775808
   %bc2 = bitcast i64 %xor to double
@@ -56,7 +56,7 @@ define float @bitcast_fnegw(float %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast float %x to i32
   %xor = xor i32 %bc1, 2147483648
   %bc2 = bitcast i32 %xor to float
@@ -68,7 +68,7 @@ define half @bitcast_fnegh(half %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast half %x to i16
   %xor = xor i16 %bc1, 32768
   %bc2 = bitcast i16 %xor to half

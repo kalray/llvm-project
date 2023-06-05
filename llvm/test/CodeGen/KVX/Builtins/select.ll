@@ -10,10 +10,10 @@ define i64 @selectd(i64 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: selectd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call i64 @llvm.kvx.select.i64(i64 %0, i64 %1, i64 %2, i32 7)
   ret i64 %4
 }
@@ -25,11 +25,11 @@ define <2 x i64> @selectdp(<2 x i64> %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmoved.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = extractelement <2 x i64> %0, i64 0
   %5 = extractelement <2 x i64> %1, i64 0
   %6 = extractelement <2 x i64> %2, i64 0
@@ -48,16 +48,16 @@ define <4 x i64> @selectdq(<4 x i64> %0, <4 x i64> %1, <4 x i64> %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmoved.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmoved.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmoved.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmoved.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selectdq:
 ; CV2:       # %bb.0:
@@ -65,13 +65,13 @@ define <4 x i64> @selectdq(<4 x i64> %0, <4 x i64> %1, <4 x i64> %2) {
 ; CV2-NEXT:    cmoved.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmoved.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmoved.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = extractelement <4 x i64> %0, i64 0
   %5 = extractelement <4 x i64> %1, i64 0
   %6 = extractelement <4 x i64> %2, i64 0
@@ -99,12 +99,12 @@ define double @selectfd(double %0, double %1, double %2) {
 ; CHECK-LABEL: selectfd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %4 = fptoui double %2 to i64
   %5 = tail call double @llvm.kvx.select.f64(double %0, double %1, i64 %4, i32 7)
   ret double %5
@@ -117,11 +117,11 @@ define <2 x double> @selectfdp(<2 x double> %0, <2 x double> %1, <2 x double> %2
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmoved.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = extractelement <2 x double> %0, i64 0
   %5 = extractelement <2 x double> %1, i64 0
   %6 = bitcast <2 x double> %2 to <2 x i64>
@@ -141,16 +141,16 @@ define <4 x double> @selectfdq(<4 x double> %0, <4 x double> %1, <4 x double> %2
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmoved.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmoved.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmoved.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmoved.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selectfdq:
 ; CV2:       # %bb.0:
@@ -158,13 +158,13 @@ define <4 x double> @selectfdq(<4 x double> %0, <4 x double> %1, <4 x double> %2
 ; CV2-NEXT:    cmoved.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmoved.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmoved.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = extractelement <4 x double> %0, i64 0
   %5 = extractelement <4 x double> %1, i64 0
   %6 = bitcast <4 x double> %2 to <4 x i64>
@@ -193,14 +193,14 @@ define float @selectfw(float %0, float %1, float %2) {
 ; CHECK-LABEL: selectfw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedud.rz $r2 = $r2, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %4 = fptoui float %2 to i64
   %5 = tail call float @llvm.kvx.select.f32(float %0, float %1, i64 %4, i32 7)
   ret float %5
@@ -212,10 +212,10 @@ define <2 x float> @selectfwp(<2 x float> %0, <2 x float> %1, <2 x i32> %2) {
 ; CHECK-LABEL: selectfwp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovewp.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x float> @llvm.kvx.select.vec.v2f32(<2 x float> %0, <2 x float> %1, <2 x i32> %2, i32 7)
   ret <2 x float> %4
 }
@@ -227,11 +227,11 @@ define <4 x float> @selectfwq(<4 x float> %0, <4 x float> %1, <4 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovewp.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmovewp.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i32> %2, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
@@ -249,16 +249,16 @@ define <8 x float> @selectfwo(<8 x float> %0, <8 x float> %1, <8 x i32> %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmovewp.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmovewp.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmovewp.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmovewp.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selectfwo:
 ; CV2:       # %bb.0:
@@ -266,13 +266,13 @@ define <8 x float> @selectfwo(<8 x float> %0, <8 x float> %1, <8 x i32> %2) {
 ; CV2-NEXT:    cmovewp.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmovewp.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmovewp.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <8 x float> %1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
@@ -300,11 +300,11 @@ define <8 x half> @selectfho(<8 x half> %0, <8 x half> %1, <8 x i16> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmovehq.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i16> %2, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -323,10 +323,10 @@ define <2 x half> @selectfhp(<2 x half> %0, <2 x half> %1, <2 x i16> %2) {
 ; CHECK-LABEL: selectfhp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x half> @llvm.kvx.select.vec.v2f16(<2 x half> %0, <2 x half> %1, <2 x i16> %2, i32 7)
   ret <2 x half> %4
 }
@@ -337,10 +337,10 @@ define <4 x half> @selectfhq(<4 x half> %0, <4 x half> %1, <4 x i16> %2) {
 ; CHECK-LABEL: selectfhq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <4 x half> @llvm.kvx.select.vec.v4f16(<4 x half> %0, <4 x half> %1, <4 x i16> %2, i32 7)
   ret <4 x half> %4
 }
@@ -350,16 +350,16 @@ define <16 x half> @selectfhx(<16 x half> %0, <16 x half> %1, <16 x i16> %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmovehq.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmovehq.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmovehq.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmovehq.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selectfhx:
 ; CV2:       # %bb.0:
@@ -367,13 +367,13 @@ define <16 x half> @selectfhx(<16 x half> %0, <16 x half> %1, <16 x i16> %2) {
 ; CV2-NEXT:    cmovehq.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmovehq.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmovehq.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <16 x i16> %2, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -401,11 +401,11 @@ define <8 x i16> @selectho(<8 x i16> %0, <8 x i16> %1, <8 x i16> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmovehq.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i16> %2, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -424,10 +424,10 @@ define <2 x i16> @selecthp(<2 x i16> %0, <2 x i16> %1, <2 x i16> %2) {
 ; CHECK-LABEL: selecthp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i16> @llvm.kvx.select.vec.v2i16(<2 x i16> %0, <2 x i16> %1, <2 x i16> %2, i32 7)
   ret <2 x i16> %4
 }
@@ -438,10 +438,10 @@ define <4 x i16> @selecthq(<4 x i16> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CHECK-LABEL: selecthq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovehq.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <4 x i16> @llvm.kvx.select.vec.v4i16(<4 x i16> %0, <4 x i16> %1, <4 x i16> %2, i32 7)
   ret <4 x i16> %4
 }
@@ -451,16 +451,16 @@ define <16 x i16> @selecthx(<16 x i16> %0, <16 x i16> %1, <16 x i16> %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmovehq.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmovehq.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmovehq.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmovehq.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selecthx:
 ; CV2:       # %bb.0:
@@ -468,13 +468,13 @@ define <16 x i16> @selecthx(<16 x i16> %0, <16 x i16> %1, <16 x i16> %2) {
 ; CV2-NEXT:    cmovehq.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmovehq.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmovehq.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <16 x i16> %2, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -501,12 +501,12 @@ define i32 @selectw(i32 %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: selectw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %4 = zext i32 %2 to i64
   %5 = tail call i32 @llvm.kvx.select.i32(i32 %0, i32 %1, i64 %4, i32 7)
   ret i32 %5
@@ -519,16 +519,16 @@ define <8 x i32> @selectwo(<8 x i32> %0, <8 x i32> %1, <8 x i32> %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    cmovewp.even $r8 ? $r4 = $r0
 ; CV1-NEXT:    cmovewp.even $r9 ? $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmovewp.even $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmovewp.even $r11 ? $r7 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: selectwo:
 ; CV2:       # %bb.0:
@@ -536,13 +536,13 @@ define <8 x i32> @selectwo(<8 x i32> %0, <8 x i32> %1, <8 x i32> %2) {
 ; CV2-NEXT:    cmovewp.even $r9 ? $r5 = $r1
 ; CV2-NEXT:    cmovewp.even $r10 ? $r6 = $r2
 ; CV2-NEXT:    cmovewp.even $r11 ? $r7 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    copyd $r2 = $r6
 ; CV2-NEXT:    copyd $r3 = $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
@@ -571,10 +571,10 @@ define <2 x i32> @selectwp(<2 x i32> %0, <2 x i32> %1, <2 x i32> %2) {
 ; CHECK-LABEL: selectwp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovewp.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i32> @llvm.kvx.select.vec.v2i32(<2 x i32> %0, <2 x i32> %1, <2 x i32> %2, i32 7)
   ret <2 x i32> %4
 }
@@ -584,11 +584,11 @@ define <4 x i32> @selectwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovewp.even $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmovewp.even $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i32> %2, <4 x i32> undef, <2 x i32> <i32 0, i32 1>

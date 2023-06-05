@@ -11,7 +11,7 @@ define half @f1() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0xbc00
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret half 0xHBC00
 }
@@ -21,7 +21,7 @@ define float @f2() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0x3f800000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret float 1.000000e+00
 }
@@ -31,7 +31,7 @@ define double @f3() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0x3ff0000000000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret double 1.000000e+00
 }

@@ -11,7 +11,7 @@ define <4 x i16> @test_ret_const() {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r0 = 0x2000100020001
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   ret <4 x i16> <i16 1, i16 2, i16 1, i16 2>
 }
 
@@ -20,7 +20,7 @@ define i16 @test_extract_0(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    zxhd $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %e = extractelement <4 x i16> %a, i16 0
   ret i16 %e
 }
@@ -30,7 +30,7 @@ define i16 @test_extract_1(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srlw $r0 = $r0, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %e = extractelement <4 x i16> %a, i16 1
   ret i16 %e
 }
@@ -40,7 +40,7 @@ define i16 @test_extract_2(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    extfz $r0 = $r0, 47, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %e = extractelement <4 x i16> %a, i16 2
   ret i16 %e
 }
@@ -50,7 +50,7 @@ define i16 @test_extract_3(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srld $r0 = $r0, 48
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %e = extractelement <4 x i16> %a, i16 3
   ret i16 %e
 }
@@ -60,7 +60,7 @@ define <4 x i16> @test_fma(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddhq $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %m = mul <4 x i16> %b, %c
   %ad = add <4 x i16> %a, %m
   ret <4 x i16> %ad
@@ -71,15 +71,15 @@ define <4 x i16> @test_fma_imm(<4 x i16> %a, <4 x i16> %b) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    maddhq $r0 = $r1, 0x3000100020007
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: test_fma_imm:
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r2 = 0x3000100020007
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maddhq $r0 = $r1, $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %m = mul <4 x i16> <i16 7, i16 2, i16 1, i16 3>, %b
   %ad = add <4 x i16> %a, %m
   ret <4 x i16> %ad
@@ -91,15 +91,15 @@ define <4 x i16> @test_fma_imm_2(<4 x i16> %a, <4 x i16> %b) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    maddhq $r0 = $r1, 0x2000100020001
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: test_fma_imm_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r2 = 0x2000100020001
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maddhq $r0 = $r1, $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %m = mul <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %b
   %ad = add <4 x i16> %a, %m
   ret <4 x i16> %ad
@@ -109,12 +109,12 @@ define i16 @test_extract_i(<4 x i16> %a, i64 %idx) #0 {
 ; ALL-LABEL: test_extract_i:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sllw $r1 = $r1, 4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    srld $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    zxhd $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %e = extractelement <4 x i16> %a, i64 %idx
   ret i16 %e
 }
@@ -124,7 +124,7 @@ define <4 x i16> @test_add(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = add <4 x i16> %a, %b
   ret <4 x i16> %r
 }
@@ -134,7 +134,7 @@ define <4 x i16> @test_add_imm_0(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq.@ $r0 = $r0, 0x20001
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = add <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %a
   ret <4 x i16> %r
 }
@@ -144,7 +144,7 @@ define <4 x i16> @test_add_imm_1(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq.@ $r0 = $r0, 0x20001
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = add <4 x i16> %a, <i16 1, i16 2, i16 1, i16 2>
   ret <4 x i16> %r
 }
@@ -154,7 +154,7 @@ define <4 x i16> @test_sub(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbfhq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> %a, %b
   ret <4 x i16> %r
 }
@@ -164,7 +164,7 @@ define <4 x i16> @test_sub_imm(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq.@ $r0 = $r0, 0xfffeffff
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> %a, <i16 1, i16 2, i16 1, i16 2>
   ret <4 x i16> %r
 }
@@ -174,7 +174,7 @@ define <4 x i16> @test_sub_fromimm(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %a
   ret <4 x i16> %r
 }
@@ -184,7 +184,7 @@ define <4 x i16> @test_neg(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    neghq $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> <i16 0, i16 0, i16 0, i16 0>, %a
   ret <4 x i16> %r
 }
@@ -194,7 +194,7 @@ define <4 x i16> @test_mul(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = mul <4 x i16> %a, %b
   ret <4 x i16> %r
 }
@@ -203,10 +203,10 @@ define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; ALL-LABEL: test_mul_2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulhq $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulhq $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %r = mul <4 x i16> %a, %b
   %r1 = mul <4 x i16> %r, %c
   ret <4 x i16> %r1
@@ -217,59 +217,59 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -64
 ; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sd 56[$r12] = $r16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sq 40[$r12] = $r20r21
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sq 24[$r12] = $r18r19
 ; V1-NEXT:    copyd $r18 = $r1
 ; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    srad $r0 = $r19, 48
 ; V1-NEXT:    srad $r1 = $r18, 48
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    extfs $r0 = $r19, 47, 32
 ; V1-NEXT:    extfs $r1 = $r18, 47, 32
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    extfs $r0 = $r19, 31, 16
 ; V1-NEXT:    extfs $r1 = $r18, 31, 16
 ; V1-NEXT:    copyd $r21 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    insf $r21 = $r20, 31, 16
 ; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxhd $r0 = $r19
 ; V1-NEXT:    sxhd $r1 = $r18
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    lq $r18r19 = 24[$r12]
 ; V1-NEXT:    insf $r0 = $r20, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    lq $r20r21 = 40[$r12]
 ; V1-NEXT:    insf $r0 = $r21, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ld $r16 = 56[$r12]
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    set $ra = $r16
 ; V1-NEXT:    addd $r12 = $r12, 64
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -277,58 +277,58 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addd $r12 = $r12, -64
 ; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sd 56[$r12] = $r16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sq 40[$r12] = $r20r21
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sq 24[$r12] = $r18r19
 ; V2-NEXT:    copyd $r18 = $r1
 ; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    srad $r0 = $r19, 48
 ; V2-NEXT:    srad $r1 = $r18, 48
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
 ; V2-NEXT:    extfs $r0 = $r19, 47, 32
 ; V2-NEXT:    extfs $r1 = $r18, 47, 32
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    extfs $r0 = $r19, 31, 16
 ; V2-NEXT:    extfs $r1 = $r18, 31, 16
 ; V2-NEXT:    copyd $r21 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    insf $r21 = $r20, 31, 16
 ; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sxhd $r0 = $r19
 ; V2-NEXT:    sxhd $r1 = $r18
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    lq $r18r19 = 24[$r12]
 ; V2-NEXT:    insf $r0 = $r20, 31, 16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    lq $r20r21 = 40[$r12]
 ; V2-NEXT:    insf $r0 = $r21, 63, 32
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ld $r16 = 56[$r12]
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    set $ra = $r16
 ; V2-NEXT:    addd $r12 = $r12, 64
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 7)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = sdiv <4 x i16> %a, %b
@@ -340,59 +340,59 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -64
 ; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sd 56[$r12] = $r16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sq 40[$r12] = $r20r21
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sq 24[$r12] = $r18r19
 ; V1-NEXT:    copyd $r18 = $r1
 ; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    srad $r0 = $r19, 48
 ; V1-NEXT:    srad $r1 = $r18, 48
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    extfs $r0 = $r19, 47, 32
 ; V1-NEXT:    extfs $r1 = $r18, 47, 32
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    extfs $r0 = $r19, 31, 16
 ; V1-NEXT:    extfs $r1 = $r18, 31, 16
 ; V1-NEXT:    copyd $r21 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    insf $r21 = $r20, 31, 16
 ; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxhd $r0 = $r19
 ; V1-NEXT:    sxhd $r1 = $r18
 ; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
 ; V1-NEXT:    sxwd $r1 = $r1
 ; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    lq $r18r19 = 24[$r12]
 ; V1-NEXT:    insf $r0 = $r20, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    lq $r20r21 = 40[$r12]
 ; V1-NEXT:    insf $r0 = $r21, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ld $r16 = 56[$r12]
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    set $ra = $r16
 ; V1-NEXT:    addd $r12 = $r12, 64
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;;
 ;
@@ -400,58 +400,58 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; V2:       # %bb.0:
 ; V2-NEXT:    addd $r12 = $r12, -64
 ; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sd 56[$r12] = $r16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sq 40[$r12] = $r20r21
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sq 24[$r12] = $r18r19
 ; V2-NEXT:    copyd $r18 = $r1
 ; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    srad $r0 = $r19, 48
 ; V2-NEXT:    srad $r1 = $r18, 48
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
 ; V2-NEXT:    extfs $r0 = $r19, 47, 32
 ; V2-NEXT:    extfs $r1 = $r18, 47, 32
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    extfs $r0 = $r19, 31, 16
 ; V2-NEXT:    extfs $r1 = $r18, 31, 16
 ; V2-NEXT:    copyd $r21 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    insf $r21 = $r20, 31, 16
 ; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sxhd $r0 = $r19
 ; V2-NEXT:    sxhd $r1 = $r18
 ; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxwd $r0 = $r0
 ; V2-NEXT:    sxwd $r1 = $r1
 ; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    lq $r18r19 = 24[$r12]
 ; V2-NEXT:    insf $r0 = $r20, 31, 16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    lq $r20r21 = 40[$r12]
 ; V2-NEXT:    insf $r0 = $r21, 63, 32
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ld $r16 = 56[$r12]
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    set $ra = $r16
 ; V2-NEXT:    addd $r12 = $r12, 64
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 7)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
   %r = srem <4 x i16> %a, %b
@@ -462,10 +462,10 @@ define void @test_ldst_v4i16(<4 x i16>* %a, <4 x i16>* %b) {
 ; ALL-LABEL: test_ldst_v4i16:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ld $r0 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sd 0[$r1] = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %t1 = load <4 x i16>, <4 x i16>* %a
   store <4 x i16> %t1, <4 x i16>* %b, align 16
   ret void
@@ -478,15 +478,15 @@ define <4 x i16> @test_call(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    call test_callee
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    ld $r16 = 24[$r12]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    set $ra = $r16
 ; ALL-NEXT:    addd $r12 = $r12, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %r = call <4 x i16> @test_callee(<4 x i16> %a, <4 x i16> %b)
@@ -498,17 +498,17 @@ define <4 x i16> @test_call_flipped(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    call test_callee
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    ld $r16 = 24[$r12]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    set $ra = $r16
 ; ALL-NEXT:    addd $r12 = $r12, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %r = call <4 x i16> @test_callee(<4 x i16> %b, <4 x i16> %a)
@@ -522,7 +522,7 @@ define <4 x i16> @test_tailcall_flipped(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    goto test_callee
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = tail call <4 x i16> @test_callee(<4 x i16> %b, <4 x i16> %a)
   ret <4 x i16> %r
 }
@@ -532,7 +532,7 @@ define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = select i1 %c, <4 x i16> %a, <4 x i16> %b
   ret <4 x i16> %r
 }
@@ -541,10 +541,10 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
 ; ALL-LABEL: test_select_cc:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.lt $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %cc = icmp slt <4 x i16> %c, %d
   %r = select <4 x i1> %cc, <4 x i16> %a, <4 x i16> %b
   ret <4 x i16> %r
@@ -554,56 +554,56 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 ; V1-LABEL: test_select_cc_f32_f32:
 ; V1:       # %bb.0:
 ; V1-NEXT:    compnhq.ltu $r8 = $r8, $r9
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    srlw $r8 = $r8, 16
 ; V1-NEXT:    srld $r9 = $r8, 48
 ; V1-NEXT:    extfz $r10 = $r8, 47, 32
 ; V1-NEXT:    zxhd $r11 = $r8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sxhd $r9 = $r9
 ; V1-NEXT:    sxhd $r10 = $r10
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxhd $r8 = $r8
 ; V1-NEXT:    sxhd $r11 = $r11
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; V1-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; V1-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r2 = $r6
 ; V1-NEXT:    copyd $r3 = $r7
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: test_select_cc_f32_f32:
 ; V2:       # %bb.0:
 ; V2-NEXT:    compnhq.ltu $r8 = $r8, $r9
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    srlw $r8 = $r8, 16
 ; V2-NEXT:    srld $r9 = $r8, 48
 ; V2-NEXT:    extfz $r10 = $r8, 47, 32
 ; V2-NEXT:    zxhd $r11 = $r8
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sxhd $r8 = $r8
 ; V2-NEXT:    sxhd $r9 = $r9
 ; V2-NEXT:    sxhd $r10 = $r10
 ; V2-NEXT:    sxhd $r11 = $r11
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
 ; V2-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; V2-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; V2-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    copyd $r2 = $r6
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %cc = icmp ult <4 x i16> %c, %d
   %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
   ret <4 x i64> %r
@@ -613,10 +613,10 @@ define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_icmp_ule:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.leu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = icmp ule <4 x i16> %a, %b
   ret <4 x i1> %r
 }
@@ -625,10 +625,10 @@ define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_icmp_slt:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.lt $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = icmp slt <4 x i16> %a, %b
   ret <4 x i1> %r
 }
@@ -637,10 +637,10 @@ define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_icmp_ugt:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.gtu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = icmp ugt <4 x i16> %a, %b
   ret <4 x i1> %r
 }
@@ -649,10 +649,10 @@ define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_icmp_uge:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.geu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = icmp uge <4 x i16> %a, %b
   ret <4 x i1> %r
 }
@@ -661,10 +661,10 @@ define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: test_icmp_ult:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.ltu $r0 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %r = icmp ult <4 x i16> %a, %b
   ret <4 x i1> %r
 }
@@ -674,7 +674,7 @@ define <4 x i8> @trunc_to_v4i8(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = trunc <4 x i16> %a to <4 x i8>
   ret <4 x i8> %r
 }
@@ -684,10 +684,10 @@ define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 15, 8
 ; ALL-NEXT:    insf $r2 = $r3, 15, 8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    insf $r0 = $r2, 31, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %arg1b = trunc i32 %arg1 to i16
   %arg2b = trunc i32 %arg2 to i16
   %arg3b = trunc i32 %arg3 to i16
@@ -705,7 +705,7 @@ define <4 x i16> @concat(<2 x i16> %a, <2 x i16> %b){
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 63, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %v = shufflevector <2 x i16> %a, <2 x i16> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x i16> %v
 }
@@ -717,14 +717,14 @@ define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
 ; V1-NEXT:    srlw $r2 = $r0, 16
 ; V1-NEXT:    extfz $r3 = $r0, 47, 32
 ; V1-NEXT:    srld $r4 = $r0, 48
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxhd $r0 = $r1
 ; V1-NEXT:    sxhd $r1 = $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sxhd $r2 = $r3
 ; V1-NEXT:    sxhd $r3 = $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: test_sext_2xi64:
 ; V2:       # %bb.0:
@@ -732,13 +732,13 @@ define <4 x i64> @test_sext_2xi64(<4 x i16> %a) {
 ; V2-NEXT:    srlw $r2 = $r0, 16
 ; V2-NEXT:    extfz $r3 = $r0, 47, 32
 ; V2-NEXT:    srld $r4 = $r0, 48
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sxhd $r0 = $r1
 ; V2-NEXT:    sxhd $r1 = $r2
 ; V2-NEXT:    sxhd $r2 = $r3
 ; V2-NEXT:    sxhd $r3 = $r4
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %r = sext <4 x i16> %a to <4 x i64>
   ret <4 x i64> %r
 }
@@ -750,7 +750,7 @@ define <4 x i16> @test_abs(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    abshq $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a, i1 false)
   ret <4 x i16> %r
 }
@@ -760,7 +760,7 @@ define <4 x i16> @test_insertelement0(<4 x i16> %a, i16 %x) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 15, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x i16> %a, i16 %x, i64 0
   ret <4 x i16> %i
 }
@@ -770,7 +770,7 @@ define <4 x i16> @test_insertelement1(<4 x i16> %a, i16 %x) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 31, 16
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x i16> %a, i16 %x, i64 1
   ret <4 x i16> %i
 }
@@ -780,7 +780,7 @@ define <4 x i16> @test_insertelement2(<4 x i16> %a, i16 %x) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 47, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x i16> %a, i16 %x, i64 2
   ret <4 x i16> %i
 }
@@ -790,7 +790,7 @@ define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    insf $r0 = $r1, 63, 48
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x i16> %a, i16 %x, i64 3
   ret <4 x i16> %i
 }
@@ -801,12 +801,12 @@ define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; ALL-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
 ; ALL-NEXT:    sbmm8.@ $r2 = $r2, 0x10001
 ; ALL-NEXT:    make $r3 = 0x3000200010000
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    compnhq.eq $r2 = $r3, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    cmovehq.nez $r2 ? $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %i = insertelement <4 x i16> %a, i16 %x, i64 %p
   ret <4 x i16> %i
 }
@@ -816,7 +816,7 @@ define <4 x i16> @mulsub(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfhq $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %mul = mul <4 x i16> %b, %c
   %sub = sub <4 x i16> %a, %mul
   ret <4 x i16> %sub
@@ -827,7 +827,7 @@ define <4 x i16> @vnot(<4 x i16> %a) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    notd $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %vnot = xor <4 x i16> %a, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %vnot
 }
@@ -837,20 +837,20 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnandhq $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: lnand:
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r2 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r2
 ; V2-NEXT:    compnhq.eq $r1 = $r1, $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ord $r0 = $r1, $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = icmp eq <4 x i16> %0, zeroinitializer
   %4 = icmp eq <4 x i16> %1, zeroinitializer
   %5 = or <4 x i1> %4, %3
@@ -862,21 +862,21 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: lnandn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnandhq $r0 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    neghq $r0 = $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lnandn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r2 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r2
 ; V2-NEXT:    compnhq.eq $r1 = $r1, $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
   %3 = icmp eq <4 x i16> %0, zeroinitializer
   %4 = icmp eq <4 x i16> %1, zeroinitializer
   %5 = or <4 x i1> %4, %3
@@ -889,18 +889,18 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    lorhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: lor:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    make $r1 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <4 x i16> %1, %0
   %4 = icmp ne <4 x i16> %3, zeroinitializer
   %5 = zext <4 x i1> %4 to <4 x i16>
@@ -912,19 +912,19 @@ define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: lorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lorhq $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    neghq $r0 = $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lorneg:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    make $r1 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %3 = or <4 x i16> %1, %0
   %4 = icmp ne <4 x i16> %3, zeroinitializer
   %5 = sext <4 x i1> %4 to <4 x i16>
@@ -936,18 +936,18 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnorhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: lnor:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    make $r1 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <4 x i16> %1, %0
   %4 = icmp eq <4 x i16> %3, zeroinitializer
   %5 = zext <4 x i1> %4 to <4 x i16>
@@ -959,19 +959,19 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: lnorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnorhq $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    neghq $r0 = $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lnorneg:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    make $r1 = 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %3 = or <4 x i16> %1, %0
   %4 = icmp eq <4 x i16> %3, zeroinitializer
   %5 = sext <4 x i1> %4 to <4 x i16>
@@ -984,7 +984,7 @@ define <4 x i16> @abdhq_rr(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    abdhq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw <4 x i16> %a, %b
   %0 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %sub, i1 true)
@@ -995,10 +995,10 @@ define <4 x i16> @abdhq_not_ri(<4 x i16> %0) {
 ; ALL-LABEL: abdhq_not_ri:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r1 = 0x10000f00100012
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    abdhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <4 x i16> <i16 18, i16 16, i16 15, i16 16>, %0
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
   ret <4 x i16> %3
@@ -1009,7 +1009,7 @@ define <4 x i16> @abdhq_ri_(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    abdhq $r0 = $r0, 0x10000f
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 0, i16 0>, %0
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
   ret <4 x i16> %3
@@ -1020,7 +1020,7 @@ define <4 x i16> @abdhq_ri_at(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    abdhq.@ $r0 = $r0, 0x10000f
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 15, i16 16>, %0
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
   ret <4 x i16> %3
@@ -1031,7 +1031,7 @@ define <4 x i16> @nandd_v4i16_rr(<4 x i16> %0, <4 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r1, $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = and <4 x i16> %1, %0
   %4 = xor <4 x i16> %3, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %4
@@ -1042,7 +1042,7 @@ define <4 x i16> @nandd_v4i16_ri10(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 1023
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1023, i16 0, i16 0, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1053,7 +1053,7 @@ define <4 x i16> @nandd_v4i16_ri37_0(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0xfffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 0, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1064,7 +1064,7 @@ define <4 x i16> @nandd_v4i16_ri37_1(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0xfffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 0, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1075,7 +1075,7 @@ define <4 x i16> @nandd_v4i16_ri37_2(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0x1ffffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 31, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1086,7 +1086,7 @@ define <4 x i16> @nandd_v4i16_ri64_0(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0x20fffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 32, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1097,7 +1097,7 @@ define <4 x i16> @nandd_v4i16_ri64_1(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0xfffffffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 -1, i16 0>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1108,7 +1108,7 @@ define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    nandd $r0 = $r0, 0x1001ffffd0400
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = and <4 x i16> %0, <i16 1024, i16 -3, i16 31, i16 1>
   %3 = xor <4 x i16> %2, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %3
@@ -1119,7 +1119,7 @@ define <4 x i16> @splat(i32 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = trunc i32 %0 to i16
   %3 = insertelement <4 x i16> undef, i16 %2, i32 0
   %4 = shufflevector <4 x i16> %3, <4 x i16> undef, <4 x i32> zeroinitializer
@@ -1131,7 +1131,7 @@ define <4 x i16> @splat_0(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
   ret <4 x i16> %2
 }
@@ -1141,7 +1141,7 @@ define <4 x i16> @splat_1(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
   ret <4 x i16> %2
 }
@@ -1151,7 +1151,7 @@ define <4 x i16> @splat_1_32(i32 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i32 %0, 16
   %3 = trunc i32 %2 to i16
   %4 = insertelement <4 x i16> undef, i16 %3, i32 0
@@ -1164,7 +1164,7 @@ define <4 x i16> @splat_1_64(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 16
   %3 = trunc i64 %2 to i16
   %4 = insertelement <4 x i16> undef, i16 %3, i32 0
@@ -1177,7 +1177,7 @@ define <4 x i16> @splat_2(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
   ret <4 x i16> %2
 }
@@ -1187,7 +1187,7 @@ define <4 x i16> @splat_2_64(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 32
   %3 = trunc i64 %2 to i16
   %4 = insertelement <4 x i16> undef, i16 %3, i32 0
@@ -1200,7 +1200,7 @@ define <4 x i16> @splat_3(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
   ret <4 x i16> %2
 }
@@ -1210,7 +1210,7 @@ define <4 x i16> @splat_3_64(i64 %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 48
   %3 = trunc i64 %2 to i16
   %4 = insertelement <4 x i16> undef, i16 %3, i32 0
@@ -1223,7 +1223,7 @@ define  <4 x i16> @v4_maxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    maxhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
   ret <4 x i16> %0
@@ -1234,7 +1234,7 @@ define  <4 x i16> @v4_minhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    minhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
   ret <4 x i16> %0
@@ -1245,7 +1245,7 @@ define  <4 x i16> @v4_umaxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    maxuhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
   ret <4 x i16> %0
@@ -1256,7 +1256,7 @@ define  <4 x i16> @v4_uminhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    minuhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
   ret <4 x i16> %0
@@ -1271,10 +1271,10 @@ define <4 x i16> @add_splat_const_op1(<4 x i16> %vx) #0 {
 ; ALL-LABEL: add_splat_const_op1:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer
   %r = add <4 x i16> %splatx, <i16 42, i16 42, i16 42, i16 42>
   ret <4 x i16> %r
@@ -1286,7 +1286,7 @@ define <4 x i16> @test_div_4(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srshqs $r0 = $r0, 2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
   ret <4 x i16> %r
 }
@@ -1296,7 +1296,7 @@ define <4 x i16> @test_div_32(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srshqs $r0 = $r0, 5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
   ret <4 x i16> %r
 }

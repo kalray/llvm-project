@@ -11,7 +11,7 @@ define float @fsdivw(float %0, float %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsdivw $r0 = $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.fsdiv.f32(float %0, float %1, i32 0)
   ret float %3
 }
@@ -24,19 +24,19 @@ define <8 x float> @fsdivwo(<8 x float> %0, <8 x float> %1) {
 ; ALL-NEXT:    copyd $r9 = $r6
 ; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    copyd $r11 = $r4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsdivwp $r0 = $r10r11
 ; ALL-NEXT:    copyd $r4 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fsdivwp $r1 = $r4r5
 ; ALL-NEXT:    copyd $r8 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fsdivwp $r2 = $r8r9
 ; ALL-NEXT:    copyd $r6 = $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    fsdivwp $r3 = $r6r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.fsdiv.v2f32(<2 x float> %3, <2 x float> %4, i32 0)
@@ -62,7 +62,7 @@ define <2 x float> @fsdivwp(<2 x float> %0, <2 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsdivwp $r0 = $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fsdiv.v2f32(<2 x float> %0, <2 x float> %1, i32 0)
   ret <2 x float> %3
 }
@@ -72,13 +72,13 @@ define <4 x float> @fsdivwq(<4 x float> %0, <4 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r4 = $r0
 ; ALL-NEXT:    copyd $r5 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsdivwp $r0 = $r4r5
 ; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fsdivwp $r1 = $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.fsdiv.v2f32(<2 x float> %3, <2 x float> %4, i32 0)
@@ -94,7 +94,7 @@ define double @fsdivd(double %0, double %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fsdivd $r0 = $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.fsdiv.f64(double %0, double %1, i32 0)
   ret double %3
 }
@@ -106,13 +106,13 @@ define <2 x double> @fsdivdp(<2 x double> %0, <2 x double> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r4 = $r0
 ; ALL-NEXT:    copyd $r5 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsdivd $r0 = $r4r5
 ; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fsdivd $r1 = $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = extractelement <2 x double> %0, i64 0
   %4 = extractelement <2 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fsdiv.f64(double %3, double %4, i32 0)
@@ -130,19 +130,19 @@ define <4 x double> @fsdivdq(<4 x double> %0, <4 x double> %1) {
 ; ALL-NEXT:    copyd $r9 = $r6
 ; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    copyd $r11 = $r4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fsdivd $r0 = $r10r11
 ; ALL-NEXT:    copyd $r4 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fsdivd $r1 = $r4r5
 ; ALL-NEXT:    copyd $r8 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fsdivd $r2 = $r8r9
 ; ALL-NEXT:    copyd $r6 = $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    fsdivd $r3 = $r6r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = extractelement <4 x double> %0, i64 0
   %4 = extractelement <4 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fsdiv.f64(double %3, double %4, i32 0)

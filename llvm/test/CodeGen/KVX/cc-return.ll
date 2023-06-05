@@ -20,7 +20,7 @@ define i16 @test2(i16 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r0, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add i16 %b, 2
   ret i16 %add

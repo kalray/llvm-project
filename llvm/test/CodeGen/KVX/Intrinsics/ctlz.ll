@@ -10,12 +10,12 @@ define i8 @ctlzi8(i8 %a) {
 ; CHECK-LABEL: ctlzi8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxbd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    clzw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r0 = $r0, -24
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %res = call i8 @llvm.ctlz.i8(i8 %a)
   ret i8 %res
 }
@@ -24,12 +24,12 @@ define i16 @ctlzi16(i16 %a) {
 ; CHECK-LABEL: ctlzi16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    clzw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r0 = $r0, -16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %res = call i16 @llvm.ctlz.i16(i16 %a)
   ret i16 %res
 }
@@ -39,7 +39,7 @@ define i32 @clzw(i32 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clzw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i32 @llvm.ctlz.i32(i32 %a)
   ret i32 %res
 }
@@ -49,7 +49,7 @@ define i64 @clzd(i64 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i64 @llvm.ctlz.i64(i64 %a)
   ret i64 %res
 }
@@ -58,14 +58,14 @@ define <2 x i8> @ctlzv2i8(<2 x i8> %a) {
 ; CHECK-LABEL: ctlzv2i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord.@ $r0 = $r0, 0x800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %res = call <2 x i8> @llvm.ctlz.v2i8(<2 x i8> %a)
   ret <2 x i8> %res
 }
@@ -74,14 +74,14 @@ define <2 x i16> @ctlzv2i16(<2 x i16> %a) {
 ; CHECK-LABEL: ctlzv2i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord.@ $r0 = $r0, 0x8000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x100001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %res = call <2 x i16> @llvm.ctlz.v2i16(<2 x i16> %a)
   ret <2 x i16> %res
 }
@@ -91,7 +91,7 @@ define <2 x i32> @clzwp(<2 x i32> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i32> @llvm.ctlz.v2i32(<2 x i32> %a)
   ret <2 x i32> %res
 }
@@ -102,7 +102,7 @@ define <2 x i64> @ctlzv2i64(<2 x i64> %a) {
 ; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    clzd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i64> @llvm.ctlz.v2i64(<2 x i64> %a)
   ret <2 x i64> %res
 }
@@ -112,19 +112,19 @@ define <4 x i8> @ctlzv4i8(<4 x i8> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x800000004000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord.@ $r0 = $r0, 0x800000
 ; CHECK-NEXT:    ord.@ $r1 = $r1, 0x800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %res = call <4 x i8> @llvm.ctlz.v4i8(<4 x i8> %a)
   ret <4 x i8> %res
 }
@@ -134,19 +134,19 @@ define <4 x i16> @ctlzv4i16(<4 x i16> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x8040000020100000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord.@ $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ord.@ $r1 = $r1, 0x8000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x100001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x100001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %res = call <4 x i16> @llvm.ctlz.v4i16(<4 x i16> %a)
   ret <4 x i16> %res
 }
@@ -157,7 +157,7 @@ define <4 x i32> @clzwq(<4 x i32> %a) {
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <4 x i32> @llvm.ctlz.v4i32(<4 x i32> %a)
   ret <4 x i32> %res
 }
@@ -167,11 +167,11 @@ define <4 x i64> @ctlzv4i64(<4 x i64> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clzd $r0 = $r0
 ; CHECK-NEXT:    clzd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    clzd $r2 = $r2
 ; CHECK-NEXT:    clzd $r3 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <4 x i64> @llvm.ctlz.v4i64(<4 x i64> %a)
   ret <4 x i64> %res
 }
@@ -181,64 +181,64 @@ define <8 x i8> @ctlzv8i8(<8 x i8> %a) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r1 = $r0, 0x8000000040000000
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x2000000010000000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
 ; CV1-NEXT:    ord.@ $r1 = $r1, 0x800000
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x800000004000000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ord.@ $r0 = $r0, 0x800000
 ; CV1-NEXT:    clzwp $r1 = $r1
 ; CV1-NEXT:    ord.@ $r2 = $r2, 0x800000
 ; CV1-NEXT:    ord.@ $r3 = $r3, 0x800000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    clzwp $r2 = $r2
 ; CV1-NEXT:    clzwp $r3 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    clzwp $r0 = $r0
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x1001
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x1001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV1-NEXT:    insf $r2 = $r1, 31, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r0 = $r2, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: ctlzv8i8:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sbmm8 $r1 = $r0, 0x8000000040000000
 ; CV2-NEXT:    sbmm8 $r2 = $r0, 0x2000000010000000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
 ; CV2-NEXT:    ord.@ $r1 = $r1, 0x800000
 ; CV2-NEXT:    sbmm8 $r3 = $r0, 0x800000004000000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    ord.@ $r0 = $r0, 0x800000
 ; CV2-NEXT:    clzwp $r1 = $r1
 ; CV2-NEXT:    ord.@ $r2 = $r2, 0x800000
 ; CV2-NEXT:    ord.@ $r3 = $r3, 0x800000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV2-NEXT:    clzwp $r2 = $r2
 ; CV2-NEXT:    clzwp $r3 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    clzwp $r0 = $r0
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x1001
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x1001
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV2-NEXT:    insf $r2 = $r1, 31, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    insf $r0 = $r3, 31, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    insf $r0 = $r2, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
   %res = call <8 x i8> @llvm.ctlz.v8i8(<8 x i8> %a)
   ret <8 x i8> %res
 }
@@ -248,60 +248,60 @@ define <8 x i16> @ctlzv8i16(<8 x i16> %a) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x8040000020100000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x804000002010000
 ; CV1-NEXT:    ord.@ $r2 = $r2, 0x8000
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x8040000020100000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ord.@ $r0 = $r0, 0x8000
 ; CV1-NEXT:    ord.@ $r1 = $r1, 0x8000
 ; CV1-NEXT:    clzwp $r2 = $r2
 ; CV1-NEXT:    ord.@ $r3 = $r3, 0x8000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    clzwp $r0 = $r0
 ; CV1-NEXT:    clzwp $r3 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    clzwp $r1 = $r1
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x100001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x100001
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x100001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    insf $r0 = $r2, 63, 32
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x100001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r1 = $r3, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: ctlzv8i16:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
 ; CV2-NEXT:    sbmm8 $r2 = $r0, 0x8040000020100000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x804000002010000
 ; CV2-NEXT:    ord.@ $r2 = $r2, 0x8000
 ; CV2-NEXT:    sbmm8 $r3 = $r1, 0x8040000020100000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    ord.@ $r0 = $r0, 0x8000
 ; CV2-NEXT:    ord.@ $r1 = $r1, 0x8000
 ; CV2-NEXT:    clzwp $r2 = $r2
 ; CV2-NEXT:    ord.@ $r3 = $r3, 0x8000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    clzwp $r0 = $r0
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x100001
 ; CV2-NEXT:    clzwp $r3 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x100001
 ; CV2-NEXT:    clzwp $r1 = $r1
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x100001
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r2, 63, 32
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x100001
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    insf $r1 = $r3, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
   %res = call <8 x i16> @llvm.ctlz.v8i16(<8 x i16> %a)
   ret <8 x i16> %res
 }
@@ -311,11 +311,11 @@ define <8 x i32> @clzwo(<8 x i32> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    clzwp $r2 = $r2
 ; CHECK-NEXT:    clzwp $r3 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <8 x i32> @llvm.ctlz.v8i32(<8 x i32> %a)
   ret <8 x i32> %res
 }

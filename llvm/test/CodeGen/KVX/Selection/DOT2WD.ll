@@ -11,7 +11,7 @@ define i64 @DOT2WD_rr_1(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dot2wd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <2 x i32> %1, i64 0
   %4 = sext i32 %3 to i64
   %5 = extractelement <2 x i32> %0, i64 0
@@ -31,7 +31,7 @@ define i64 @DOT2WD_rr_2(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dot2wd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shl i64 %0, 32
   %4 = ashr exact i64 %3, 32
   %5 = shl i64 %1, 32
@@ -49,7 +49,7 @@ define i64 @DOT2WD_rr_3(<2 x i32> %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dot2wd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <2 x i32> %0, i32 0
   %4 = sext i32 %3 to i64
   %5 = shl i64 %1, 32
@@ -68,7 +68,7 @@ define i64 @DOT2WD_rr_4(i64 %0, <2 x i32> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dot2wd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shl i64 %0, 32
   %4 = ashr exact i64 %3, 32
   %5 = extractelement <2 x i32> %1, i64 0
@@ -87,7 +87,7 @@ define i64 @DOT2WD_ri_10_1(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwd $r0 = $r0, -1023
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, -1023
@@ -99,7 +99,7 @@ define i64 @DOT2WD_ri_10_2(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwd $r0 = $r0, 1023
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, 1023
@@ -111,7 +111,7 @@ define i64 @DOT2WD_ri_10_3(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwd $r0 = $r0, -1023
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, -1023
@@ -123,7 +123,7 @@ define i64 @DOT2WD_ri_10_4(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulwd $r0 = $r0, 1023
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, 1023
@@ -134,14 +134,14 @@ define i64 @DOT2WD_ri_37_1(<2 x i32> %0) {
 ; CHECK-LABEL: DOT2WD_ri_37_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, 3
@@ -156,14 +156,14 @@ define i64 @DOT2WD_ri_37_2(i64 %0) {
 ; CHECK-LABEL: DOT2WD_ri_37_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, 3
@@ -177,14 +177,14 @@ define i64 @DOT2WD_ri_37_3(i64 %0) {
 ; CHECK-LABEL: DOT2WD_ri_37_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, 3
@@ -198,14 +198,14 @@ define i64 @DOT2WD_ri_37_4(<2 x i32> %0) {
 ; CHECK-LABEL: DOT2WD_ri_37_4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, 31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, 3
@@ -220,14 +220,14 @@ define i64 @DOT2WD_ri_64_1(<2 x i32> %0) {
 ; CHECK-LABEL: DOT2WD_ri_64_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, -5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, 3
@@ -242,14 +242,14 @@ define i64 @DOT2WD_ri_64_2(i64 %0) {
 ; CHECK-LABEL: DOT2WD_ri_64_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 27
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd $r1 = $r1, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, 3
@@ -263,14 +263,14 @@ define i64 @DOT2WD_ri_64_3(i64 %0) {
 ; CHECK-LABEL: DOT2WD_ri_64_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 27
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd $r1 = $r1, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = shl i64 %0, 32
   %3 = ashr exact i64 %2, 32
   %4 = mul nsw i64 %3, 3
@@ -284,14 +284,14 @@ define i64 @DOT2WD_ri_64_4(<2 x i32> %0) {
 ; CHECK-LABEL: DOT2WD_ri_64_4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, -5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddwd $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = sext i32 %2 to i64
   %4 = mul nsw i64 %3, 3

@@ -9,19 +9,19 @@ define dso_local void @no_hwloop(i32* nocapture %0, i32* nocapture readonly %1) 
 ; CHECK-LABEL: no_hwloop:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r4 = $r2[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r3 = $r4, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
 ; CHECK-NEXT:    addd $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    compd.eq $r3 = $r2, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    cb.even $r3 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
@@ -50,19 +50,19 @@ define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) loc
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    make $r3 = 5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz.xs $r3 = $r2[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r4 = $r2[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r3 = $r4, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
 ; CHECK-NEXT:    addd $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    ret

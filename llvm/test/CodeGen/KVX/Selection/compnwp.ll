@@ -11,7 +11,7 @@ define <2 x i32> @eq(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>
@@ -23,7 +23,7 @@ define <2 x i32> @neq(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>
@@ -35,7 +35,7 @@ define <2 x i32> @gt(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>
@@ -47,7 +47,7 @@ define <2 x i32> @lt(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>
@@ -59,7 +59,7 @@ define <2 x i32> @gte(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>
@@ -71,7 +71,7 @@ define <2 x i32> @lte(<2 x i32> %a, <2 x i32> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnwp.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sle <2 x i32> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i32>

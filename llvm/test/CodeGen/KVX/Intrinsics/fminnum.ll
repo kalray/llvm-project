@@ -12,18 +12,18 @@ define half @fminh(half %a, half %b) {
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
 ; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fminf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -31,7 +31,7 @@ define half @fminh(half %a, half %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fminhq $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call half @llvm.minnum.f16(half %a, half %b)
   ret half %res
 }
@@ -41,7 +41,7 @@ define half @fminh_fast(half %a, half %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fminhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call fast half @llvm.minnum.f16(half %a, half %b)
   ret half %0
@@ -55,15 +55,15 @@ define float @fminw(float %a, float %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fminf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -71,7 +71,7 @@ define float @fminw(float %a, float %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fminw $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call float @llvm.minnum.f32(float %a, float %b)
   ret float %res
 }
@@ -81,7 +81,7 @@ define dso_local float @fminw_fast(float %a, float %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fminw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call fast float @llvm.minnum.f32(float %a, float %b)
   ret float %0
@@ -94,15 +94,15 @@ define double @fmind(double %a, double %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fmin
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -110,7 +110,7 @@ define double @fmind(double %a, double %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmind $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call double @llvm.minnum.f64(double %a, double %b)
   ret double %res
 }
@@ -120,7 +120,7 @@ define dso_local double @fmind_fast(double %a, double %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fmind $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call fast double @llvm.minnum.f64(double %a, double %b)
   ret double %0

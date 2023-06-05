@@ -10,16 +10,16 @@ define i64 @f1(i64 %a, i64 %b){
 ; V1-LABEL: f1:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    slld $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f1:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32d $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 5
   %add = add nsw i64 %shl, %a
@@ -30,16 +30,16 @@ define i64 @f2(i64 %a, i64 %b){
 ; V1-LABEL: f2:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    slld $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f2:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32d $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 5
   %add = add nsw i64 %shl, %a
@@ -50,16 +50,16 @@ define i32 @f3(i32 %a, i32 %b){
 ; V1-LABEL: f3:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addw $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f3:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32w $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 5
   %add = add nsw i32 %shl, %a
@@ -70,16 +70,16 @@ define i32 @f4(i32 %a, i32 %b){
 ; V1-LABEL: f4:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addw $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f4:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32w $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 5
   %add = add nsw i32 %shl, %a
@@ -90,16 +90,16 @@ define i64 @f5(i64 %a, i32 %b){
 ; V1-LABEL: f5:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    adduwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f5:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32uwd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
@@ -111,16 +111,16 @@ define i64 @f6(i64 %a, i32 %b){
 ; V1-LABEL: f6:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    adduwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f6:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32uwd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
@@ -132,16 +132,16 @@ define i64 @f7(i64 %a, i32 %b){
 ; V1-LABEL: f7:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f7:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32wd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -153,18 +153,18 @@ define i64 @f8(i64 %a, i32 %b){
 ; V1-LABEL: f8:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r1 = $r1, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addwd $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f8:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    sllw $r1 = $r1, 5
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addwd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -176,16 +176,16 @@ define i64 @f1imm(i64 %b){
 ; V1-LABEL: f1imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    slld $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r0, 0x1beeeeef
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f1imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32d $r0 = $r0, 0x1beeeeef
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 5
   %add = add nsw i64 %shl, 468643567
@@ -196,16 +196,16 @@ define i64 @f2imm(i64 %b){
 ; V1-LABEL: f2imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    slld $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r0, 0x1beeeeef1beeeeef
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f2imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32d.@ $r0 = $r0, 0x1beeeeef
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 5
   %add = add nsw i64 %shl, 2012808794214428399
@@ -216,16 +216,16 @@ define i32 @f3imm(i32 %b){
 ; V1-LABEL: f3imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addw $r0 = $r0, 0xffffa460
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f3imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32w $r0 = $r0, 0xffffa460
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 5
   %add = add nsw i32 %shl, -23456
@@ -236,16 +236,16 @@ define i32 @f4imm(i32 %b){
 ; V1-LABEL: f4imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addw $r0 = $r0, 0xffffa460
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f4imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32w $r0 = $r0, 0xffffa460
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 5
   %sub = add nsw i32 %shl, -23456
@@ -256,16 +256,16 @@ define i64 @f5imm(i32 %b){
 ; V1-LABEL: f5imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r0, 0x1e240
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f5imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32uwd $r0 = $r0, 0x1e240
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
@@ -277,16 +277,16 @@ define i64 @f6imm(i32 %b){
 ; V1-LABEL: f6imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r0 = $r0, 0x1e240
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: f6imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32uwd $r0 = $r0, 0x1e240
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 5
   %conv = zext i32 %shl to i64
@@ -298,18 +298,18 @@ define i64 @f7imm(i32 %b){
 ; V1-LABEL: f7imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: f7imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32wd $r0 = $r0, 0xffffa460
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64
@@ -321,18 +321,18 @@ define i64 @f8imm(i32 %b){
 ; V1-LABEL: f8imm:
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sllw $r0 = $r0, 5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    addd $r0 = $r0, 0xffffffffffffa460
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: f8imm:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addx32wd $r0 = $r0, 0xffffa460
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 5
   %conv = sext i32 %shl to i64

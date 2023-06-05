@@ -13,107 +13,107 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, 0xffffffffffffeae0
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0x1518[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 0x1508[$r12] = $r20r21
 ; CHECK-NEXT:    make $r21 = extfunc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0x14f8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r4
 ; CHECK-NEXT:    copyd $r19 = $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r0 = 0[$r21]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    icall $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r0 ? .LBB0_18
 ; CHECK-NEXT:    make $r20 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    ld $r0 = 0[$r21]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    icall $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.dnez $r0 ? .LBB0_18
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    make $r0 = extfunc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r12, 20
 ; CHECK-NEXT:    ld $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    icall $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    compw.ltu $r0 = $r19, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB0_15
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %.preheader
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    make $r2 = badfunc.ntfsW
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_4: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lhz $r4 = $r2[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r4 ? .LBB0_19
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    sh $r0[$r18] = $r4
 ; CHECK-NEXT:    addw $r3 = $r19, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compw.gtu $r5 = $r3, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.even $r5 ? .LBB0_20
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addd $r4 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz $r5 = 2[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_21
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -2
 ; CHECK-NEXT:    addd $r7 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 2[$r7] = $r5
 ; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r6 ? .LBB0_22
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r5 = 4[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -3
 ; CHECK-NEXT:    addd $r7 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 4[$r7] = $r5
 ; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r6 ? .LBB0_24
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r5 = 6[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r5 ? .LBB0_25
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    addw $r3 = $r19, -4
 ; CHECK-NEXT:    addd $r7 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 6[$r7] = $r5
 ; CHECK-NEXT:    compw.ltu $r6 = $r3, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r6 ? .LBB0_26
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.12: # in Loop: Header=BB0_4 Depth=1
 ; CHECK-NEXT:    lhz $r3 = 8[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_27
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.13: # in Loop: Header=BB0_4 Depth=1
@@ -121,93 +121,93 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:    addd $r1 = $r1, 10
 ; CHECK-NEXT:    addd $r5 = $r18, $r0
 ; CHECK-NEXT:    addw $r19 = $r19, -5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 8[$r5] = $r3
 ; CHECK-NEXT:    compw.gtu $r4 = $r19, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r4 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.14: # %..loopexit1_crit_edge
 ; CHECK-NEXT:    addd $r18 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_15:
 ; CHECK-NEXT:    copyd $r3 = $r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r3 ? .LBB0_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_16:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r18] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_17:
 ; CHECK-NEXT:    make $r20 = 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_18:
 ; CHECK-NEXT:    lq $r18r19 = 0x14f8[$r12]
 ; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r20r21 = 0x1508[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 0x1518[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 0x1520
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_19: # %..loopexit_crit_edge
 ; CHECK-NEXT:    addd $r18 = $r18, $r0
 ; CHECK-NEXT:    goto .LBB0_16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_20: # %.loopexit1splitsplitsplitsplit
 ; CHECK-NEXT:    cb.wnez $r3 ? .LBB0_16
 ; CHECK-NEXT:    addd $r18 = $r1, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    goto .LBB0_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_21: # %..loopexitsplitsplitsplit_crit_edge
 ; CHECK-NEXT:    addd $r0 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r18 = $r0, 2
 ; CHECK-NEXT:    goto .LBB0_16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_22: # %..loopexit1splitsplitsplit_crit_edge
 ; CHECK-NEXT:    cb.wnez $r3 ? .LBB0_16
 ; CHECK-NEXT:    addd $r18 = $r1, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    goto .LBB0_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_23: # %.loopexitsplitsplitsplitsplit
 ; CHECK-NEXT:    addd $r0 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r18 = $r0, 4
 ; CHECK-NEXT:    goto .LBB0_16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_24: # %..loopexit1splitsplit_crit_edge
 ; CHECK-NEXT:    cb.wnez $r3 ? .LBB0_16
 ; CHECK-NEXT:    addd $r18 = $r1, 6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    goto .LBB0_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_25: # %..loopexitsplitsplit_crit_edge
 ; CHECK-NEXT:    addd $r0 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r18 = $r0, 6
 ; CHECK-NEXT:    goto .LBB0_16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_26: # %..loopexit1split_crit_edge
 ; CHECK-NEXT:    cb.wnez $r3 ? .LBB0_16
 ; CHECK-NEXT:    addd $r18 = $r1, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    goto .LBB0_17
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_27: # %..loopexitsplit_crit_edge
 ; CHECK-NEXT:    addd $r0 = $r18, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r18 = $r0, 8
 ; CHECK-NEXT:    goto .LBB0_16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %7 = alloca [5348 x i8], align 1
   %8 = getelementptr inbounds [5348 x i8], [5348 x i8]* %7, i64 0, i64 0
   call void @llvm.lifetime.start.p0i8(i64 5348, i8* nonnull %8) #4

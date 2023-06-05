@@ -10,18 +10,18 @@ define float @ffdmdaw(<2 x float> %0, <2 x float> %1, float %2) {
 ; V1-LABEL: ffdmdaw:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fdot2w $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    faddw $r0 = $r0, $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: ffdmdaw:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdaw $r2 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call float @llvm.kvx.ffdmda.f32(<2 x float> %0, <2 x float> %1, float %2, i32 7, i32 0)
   ret float %4
 }
@@ -32,20 +32,20 @@ define <2 x float> @ffdmdawp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 ; V1-LABEL: ffdmdawp:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r4 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r4 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: ffdmdawp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdawp $r4 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x float> @llvm.kvx.ffdmda.v2f32(<4 x float> %0, <4 x float> %1, <2 x float> %2, i32 7, i32 0)
   ret <2 x float> %4
 }
@@ -59,20 +59,20 @@ define <4 x float> @ffdmdawq(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
 ; V1-NEXT:    copyd $r5 = $r2
 ; V1-NEXT:    copyd $r6 = $r5
 ; V1-NEXT:    copyd $r11 = $r6
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r8 = $r0, $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmawp $r9 = $r2, $r6
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    ffmawp $r8 = $r5, $r11
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    ffmawp $r9 = $r3, $r7
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    copyd $r0 = $r8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    copyd $r1 = $r9
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 10)
 ;
 ; V2-LABEL: ffdmdawq:
 ; V2:       # %bb.0:
@@ -80,19 +80,19 @@ define <4 x float> @ffdmdawq(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
 ; V2-NEXT:    copyd $r6 = $r5
 ; V2-NEXT:    copyd $r10 = $r4
 ; V2-NEXT:    copyd $r11 = $r6
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r2 = $r1
 ; V2-NEXT:    copyd $r4 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ffdmdawp $r8 = $r4r5, $r10r11
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ffdmdawp $r9 = $r2r3, $r6r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    copyd $r0 = $r8
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 6)
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 7)
   %4 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
   %6 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
@@ -112,20 +112,20 @@ define <4 x float> @ffdmdawq_rn_s(<8 x float> %0, <8 x float> %1, <4 x float> %2
 ; V1-NEXT:    copyd $r5 = $r2
 ; V1-NEXT:    copyd $r6 = $r5
 ; V1-NEXT:    copyd $r11 = $r6
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp.rn.s $r8 = $r0, $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmawp.rn.s $r9 = $r2, $r6
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    ffmawp.rn.s $r8 = $r5, $r11
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    ffmawp.rn.s $r9 = $r3, $r7
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    copyd $r0 = $r8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    copyd $r1 = $r9
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 10)
 ;
 ; V2-LABEL: ffdmdawq_rn_s:
 ; V2:       # %bb.0:
@@ -133,19 +133,19 @@ define <4 x float> @ffdmdawq_rn_s(<8 x float> %0, <8 x float> %1, <4 x float> %2
 ; V2-NEXT:    copyd $r6 = $r5
 ; V2-NEXT:    copyd $r10 = $r4
 ; V2-NEXT:    copyd $r11 = $r6
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r2 = $r1
 ; V2-NEXT:    copyd $r4 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ffdmdawp.rn.s $r8 = $r4r5, $r10r11
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ffdmdawp.rn.s $r9 = $r2r3, $r6r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    copyd $r0 = $r8
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 6)
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 7)
   %4 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>
   %6 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 4, i32 5>

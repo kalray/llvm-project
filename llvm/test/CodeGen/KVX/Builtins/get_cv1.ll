@@ -8,7 +8,7 @@ define i64 @get_0() {
 ; CHECK-LABEL: get_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !2)
@@ -21,7 +21,7 @@ define i64 @get_1() {
 ; CHECK-LABEL: get_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ps
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !3)
@@ -32,7 +32,7 @@ define i64 @get_2() {
 ; CHECK-LABEL: get_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pcr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !4)
@@ -43,7 +43,7 @@ define i64 @get_3() {
 ; CHECK-LABEL: get_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !5)
@@ -54,7 +54,7 @@ define i64 @get_4() {
 ; CHECK-LABEL: get_4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $cs
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !6)
@@ -65,7 +65,7 @@ define i64 @get_5() {
 ; CHECK-LABEL: get_5:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $csit
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !7)
@@ -76,7 +76,7 @@ define i64 @get_6() {
 ; CHECK-LABEL: get_6:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $aespc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !8)
@@ -87,7 +87,7 @@ define i64 @get_7() {
 ; CHECK-LABEL: get_7:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ls
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !9)
@@ -98,7 +98,7 @@ define i64 @get_8() {
 ; CHECK-LABEL: get_8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $le
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !10)
@@ -109,7 +109,7 @@ define i64 @get_9() {
 ; CHECK-LABEL: get_9:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $lc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !11)
@@ -120,7 +120,7 @@ define i64 @get_10() {
 ; CHECK-LABEL: get_10:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ipe
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !12)
@@ -131,7 +131,7 @@ define i64 @get_11() {
 ; CHECK-LABEL: get_11:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $men
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !13)
@@ -142,7 +142,7 @@ define i64 @get_12() {
 ; CHECK-LABEL: get_12:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pmc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !14)
@@ -153,7 +153,7 @@ define i64 @get_13() {
 ; CHECK-LABEL: get_13:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pm0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !15)
@@ -164,7 +164,7 @@ define i64 @get_14() {
 ; CHECK-LABEL: get_14:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pm1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !16)
@@ -175,7 +175,7 @@ define i64 @get_15() {
 ; CHECK-LABEL: get_15:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pm2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !17)
@@ -186,7 +186,7 @@ define i64 @get_16() {
 ; CHECK-LABEL: get_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pm3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !18)
@@ -197,7 +197,7 @@ define i64 @get_17() {
 ; CHECK-LABEL: get_17:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pmsa
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !19)
@@ -208,7 +208,7 @@ define i64 @get_18() {
 ; CHECK-LABEL: get_18:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $tcr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !20)
@@ -219,7 +219,7 @@ define i64 @get_19() {
 ; CHECK-LABEL: get_19:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $t0v
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !21)
@@ -230,7 +230,7 @@ define i64 @get_20() {
 ; CHECK-LABEL: get_20:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $t1v
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !22)
@@ -241,7 +241,7 @@ define i64 @get_21() {
 ; CHECK-LABEL: get_21:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $t0r
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !23)
@@ -252,7 +252,7 @@ define i64 @get_22() {
 ; CHECK-LABEL: get_22:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $t1r
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !24)
@@ -263,7 +263,7 @@ define i64 @get_23() {
 ; CHECK-LABEL: get_23:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $wdv
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !25)
@@ -274,7 +274,7 @@ define i64 @get_24() {
 ; CHECK-LABEL: get_24:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $wdr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !26)
@@ -285,7 +285,7 @@ define i64 @get_25() {
 ; CHECK-LABEL: get_25:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ile
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !27)
@@ -296,7 +296,7 @@ define i64 @get_26() {
 ; CHECK-LABEL: get_26:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ill
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !28)
@@ -307,7 +307,7 @@ define i64 @get_27() {
 ; CHECK-LABEL: get_27:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ilr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !29)
@@ -318,7 +318,7 @@ define i64 @get_28() {
 ; CHECK-LABEL: get_28:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $mmc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !30)
@@ -329,7 +329,7 @@ define i64 @get_29() {
 ; CHECK-LABEL: get_29:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $tel
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !31)
@@ -340,7 +340,7 @@ define i64 @get_30() {
 ; CHECK-LABEL: get_30:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $teh
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !32)
@@ -351,7 +351,7 @@ define i64 @get_32() {
 ; CHECK-LABEL: get_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $syo
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !33)
@@ -362,7 +362,7 @@ define i64 @get_33() {
 ; CHECK-LABEL: get_33:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $hto
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !34)
@@ -373,7 +373,7 @@ define i64 @get_34() {
 ; CHECK-LABEL: get_34:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ito
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !35)
@@ -384,7 +384,7 @@ define i64 @get_35() {
 ; CHECK-LABEL: get_35:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $do
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !36)
@@ -395,7 +395,7 @@ define i64 @get_36() {
 ; CHECK-LABEL: get_36:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $mo
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !37)
@@ -406,7 +406,7 @@ define i64 @get_37() {
 ; CHECK-LABEL: get_37:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $pso
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !38)
@@ -417,7 +417,7 @@ define i64 @get_40() {
 ; CHECK-LABEL: get_40:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $s40
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !39)
@@ -428,7 +428,7 @@ define i64 @get_41() {
 ; CHECK-LABEL: get_41:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $dba0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !40)
@@ -439,7 +439,7 @@ define i64 @get_42() {
 ; CHECK-LABEL: get_42:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $dba1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !41)
@@ -450,7 +450,7 @@ define i64 @get_43() {
 ; CHECK-LABEL: get_43:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $dwa0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !42)
@@ -461,7 +461,7 @@ define i64 @get_44() {
 ; CHECK-LABEL: get_44:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $dwa1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !43)
@@ -472,7 +472,7 @@ define i64 @get_45() {
 ; CHECK-LABEL: get_45:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $mes
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !44)
@@ -483,7 +483,7 @@ define i64 @get_46() {
 ; CHECK-LABEL: get_46:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ws
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !45)
@@ -494,7 +494,7 @@ define i64 @get_64() {
 ; CHECK-LABEL: get_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $spc_pl0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !46)
@@ -505,7 +505,7 @@ define i64 @get_65() {
 ; CHECK-LABEL: get_65:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $spc_pl1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !47)
@@ -516,7 +516,7 @@ define i64 @get_66() {
 ; CHECK-LABEL: get_66:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $spc_pl2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !48)
@@ -527,7 +527,7 @@ define i64 @get_67() {
 ; CHECK-LABEL: get_67:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $spc_pl3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !49)
@@ -538,7 +538,7 @@ define i64 @get_72() {
 ; CHECK-LABEL: get_72:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ea_pl0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !50)
@@ -549,7 +549,7 @@ define i64 @get_73() {
 ; CHECK-LABEL: get_73:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ea_pl1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !51)
@@ -560,7 +560,7 @@ define i64 @get_74() {
 ; CHECK-LABEL: get_74:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ea_pl2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !52)
@@ -571,7 +571,7 @@ define i64 @get_75() {
 ; CHECK-LABEL: get_75:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ea_pl3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !53)
@@ -582,7 +582,7 @@ define i64 @get_76() {
 ; CHECK-LABEL: get_76:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ev_pl0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !54)
@@ -593,7 +593,7 @@ define i64 @get_77() {
 ; CHECK-LABEL: get_77:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ev_pl1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !55)
@@ -604,7 +604,7 @@ define i64 @get_78() {
 ; CHECK-LABEL: get_78:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ev_pl2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !56)
@@ -615,7 +615,7 @@ define i64 @get_79() {
 ; CHECK-LABEL: get_79:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ev_pl3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !57)
@@ -626,7 +626,7 @@ define i64 @get_80() {
 ; CHECK-LABEL: get_80:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sr_pl0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !58)
@@ -637,7 +637,7 @@ define i64 @get_81() {
 ; CHECK-LABEL: get_81:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sr_pl1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !59)
@@ -648,7 +648,7 @@ define i64 @get_82() {
 ; CHECK-LABEL: get_82:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sr_pl2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !60)
@@ -659,7 +659,7 @@ define i64 @get_83() {
 ; CHECK-LABEL: get_83:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sr_pl3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !61)
@@ -670,7 +670,7 @@ define i64 @get_84() {
 ; CHECK-LABEL: get_84:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $es_pl0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !62)
@@ -681,7 +681,7 @@ define i64 @get_85() {
 ; CHECK-LABEL: get_85:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $es_pl1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !63)
@@ -692,7 +692,7 @@ define i64 @get_86() {
 ; CHECK-LABEL: get_86:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $es_pl2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !64)
@@ -703,7 +703,7 @@ define i64 @get_87() {
 ; CHECK-LABEL: get_87:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $es_pl3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !65)
@@ -714,7 +714,7 @@ define i64 @get_128() {
 ; CHECK-LABEL: get_128:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $spc
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !66)
@@ -725,7 +725,7 @@ define i64 @get_132() {
 ; CHECK-LABEL: get_132:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sps
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !67)
@@ -736,7 +736,7 @@ define i64 @get_136() {
 ; CHECK-LABEL: get_136:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ea
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !68)
@@ -747,7 +747,7 @@ define i64 @get_140() {
 ; CHECK-LABEL: get_140:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $ev
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !69)
@@ -758,7 +758,7 @@ define i64 @get_144() {
 ; CHECK-LABEL: get_144:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $sr
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !70)
@@ -769,7 +769,7 @@ define i64 @get_148() {
 ; CHECK-LABEL: get_148:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    get $r0 = $es
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %1 = call i64 @llvm.read_volatile_register.i64(metadata !71)

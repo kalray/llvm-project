@@ -36,7 +36,7 @@ public:
   }
 
   // Try packetizing. Move solo instructions (debug, inline asm, etc..) above
-  // the packet as needed.
+  // the packet as needed. Those are removed from Packet if they are moved.
   // isLast is true if the packet is the last of the region
   void runOnPacket(std::vector<MachineInstr *> &Packet, bool IsLast,
                    unsigned LastCycle, SUnit *ExitSU);
@@ -61,6 +61,8 @@ public:
   void enterMBB(MachineBasicBlock *MBB) override {
     Packetizer = new KVXPostPacketizer(MBB);
     PostGenericScheduler::enterMBB(MBB);
+    this->MBB = MBB;
+    this->TII = MBB->getParent()->getSubtarget().getInstrInfo();
   }
   void leaveMBB() override {
     delete Packetizer;
@@ -72,6 +74,8 @@ public:
   void leaveRegion() override;
 
 private:
+  MachineBasicBlock *MBB;
+  const TargetInstrInfo *TII;
   std::map<unsigned, std::vector<MachineInstr *>> CycleToMIs;
   unsigned LastCycle;
   KVXPostPacketizer *Packetizer;

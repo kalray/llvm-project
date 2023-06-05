@@ -8,76 +8,80 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
 ; NORMAL-NEXT:    lwz $r2 = 0[$r1]
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 0)
 ; NORMAL-NEXT:    xlo.u $a3 = 96[$r0]
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 1)
 ; NORMAL-NEXT:    xlo.u $a2 = 64[$r0]
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 2)
 ; NORMAL-NEXT:    xlo.u $a1 = 32[$r0]
 ; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 3)
 ; NORMAL-NEXT:    xlo.u $a0 = 0[$r0]
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 4)
 ; NORMAL-NEXT:    sw 0[$r1] = $r2
 ; NORMAL-NEXT:    make $r1 = 0x10000000000000
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 6)
+; NORMAL-NEXT:     # (here cycle 7)
 ; NORMAL-NEXT:    #APP
 ; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
 ; NORMAL-NEXT:    make $r1 = 0x100000
 ; NORMAL-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 8)
+; NORMAL-NEXT:     # (here cycle 9)
 ; NORMAL-NEXT:    #APP
 ; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
 ; NORMAL-NEXT:    xso 32[$r0] = $a1
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 12)
 ; NORMAL-NEXT:    xso 0[$r0] = $a0
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 13)
 ; NORMAL-NEXT:    xso 96[$r0] = $a3
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 14)
 ; NORMAL-NEXT:    xso 64[$r0] = $a2
 ; NORMAL-NEXT:    ret
-; NORMAL-NEXT:    ;;
+; NORMAL-NEXT:    ;; # (end cycle 15)
 ;
 ; VLIW-LABEL: foo:
 ; VLIW:       # %bb.0:
 ; VLIW-NEXT:    lwz $r2 = 0[$r1]
 ; VLIW-NEXT:    make $r3 = 0x10000000000000
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 0)
 ; VLIW-NEXT:    xlo.u $a0 = 0[$r0]
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 1)
 ; VLIW-NEXT:    xlo.u $a1 = 32[$r0]
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 2)
 ; VLIW-NEXT:    xlo.u $a2 = 64[$r0]
 ; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 3)
 ; VLIW-NEXT:    xlo.u $a3 = 96[$r0]
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 4)
 ; VLIW-NEXT:    sw 0[$r1] = $r2
 ; VLIW-NEXT:    make $r1 = 0x100000
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 6)
+; VLIW-NEXT:     # (here cycle 7)
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
 ; VLIW-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 8)
+; VLIW-NEXT:     # (here cycle 9)
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r1
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
 ; VLIW-NEXT:    xso 0[$r0] = $a0
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 12)
 ; VLIW-NEXT:    xso 64[$r0] = $a2
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 13)
 ; VLIW-NEXT:    xso 96[$r0] = $a3
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 14)
 ; VLIW-NEXT:    xso 32[$r0] = $a1
 ; VLIW-NEXT:    ret
-; VLIW-NEXT:    ;;
+; VLIW-NEXT:    ;; # (end cycle 15)
 %3 = bitcast i8* %0 to <1024 x i1>*
 %4 = load <1024 x i1>, <1024 x i1>* %3, align 32
 %5 = load float, float* %1, align 4

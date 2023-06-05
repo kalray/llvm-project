@@ -17,19 +17,19 @@ define <4 x float> @fmm(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   ret <4 x float> %3
 }
@@ -41,19 +41,19 @@ define <4 x float> @fmm_2(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   ret <4 x float> %3
 }
@@ -63,27 +63,27 @@ define <4 x float> @fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fadd fast <4 x float> %4, %2
   ret <4 x float> %5
@@ -94,27 +94,27 @@ define <4 x float> @fmma222w_2(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fadd fast <4 x float> %4, %2
   ret <4 x float> %5
@@ -125,27 +125,27 @@ define <4 x float> @fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fsub fast <4 x float> %2, %4
   ret <4 x float> %5
@@ -156,27 +156,27 @@ define <4 x float> @fmms222w_2(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fsub fast <4 x float> %2, %4
   ret <4 x float> %5
@@ -186,19 +186,19 @@ define <4 x float> @fmm_tn(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_tn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_tn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %3, <4 x float> %1, i32 2, i32 2, i32 2)
   ret <4 x float> %4
@@ -209,19 +209,19 @@ define <4 x float> @fmm_2_tn(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_2_tn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_2_tn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %3, <4 x float> %1, i32 2, i32 2, i32 2)
   ret <4 x float> %4
@@ -231,22 +231,22 @@ define <4 x float> @fmma222w_2_tn(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1-LABEL: fmma222w_2_tn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmma222w_2_tn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %4, <4 x float> %1, i32 2, i32 2, i32 2)
   %6 = fadd fast <4 x float> %5, %2
@@ -257,22 +257,22 @@ define <4 x float> @fmms222w_2_tn(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1-LABEL: fmms222w_2_tn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmms222w_2_tn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %4, <4 x float> %1, i32 2, i32 2, i32 2)
   %6 = fsub fast <4 x float> %2, %5
@@ -286,26 +286,26 @@ define <4 x float> @fmm_nt(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_nt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %3, i32 2, i32 2, i32 2)
   ret <4 x float> %4
@@ -318,26 +318,26 @@ define <4 x float> @fmm_2_nt(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_nt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %3, i32 2, i32 2, i32 2)
   ret <4 x float> %4
@@ -350,29 +350,29 @@ define <4 x float> @fmma222w_2_nt(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_nt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.nt $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %4, i32 2, i32 2, i32 2)
   %6 = fadd fast <4 x float> %5, %2
@@ -386,29 +386,29 @@ define <4 x float> @fmms222w_2_nt(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_nt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.nt $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %4, i32 2, i32 2, i32 2)
   %6 = fsub fast <4 x float> %2, %5
@@ -421,22 +421,22 @@ define <4 x float> @fmm_tt(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_tt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %3, <4 x float> %4, i32 2, i32 2, i32 2)
@@ -449,22 +449,22 @@ define <4 x float> @fmm_2_tt(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_tt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %3, <4 x float> %4, i32 2, i32 2, i32 2)
@@ -476,27 +476,27 @@ define <4 x float> @fmma222w_2_tt(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_tt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tt $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %6 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %4, <4 x float> %5, i32 2, i32 2, i32 2)
@@ -509,27 +509,27 @@ define <4 x float> @fmms222w_2_tt(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_tt:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tt $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %0, i32 2, i32 2)
   %5 = tail call <4 x float> @llvm.matrix.transpose.v4f32(<4 x float> %1, i32 2, i32 2)
   %6 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %4, <4 x float> %5, i32 2, i32 2, i32 2)
@@ -543,19 +543,19 @@ define <4 x float> @fmm_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rn $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -567,19 +567,19 @@ define <4 x float> @fmm_2_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rn $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_2_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -589,27 +589,27 @@ define <4 x float> @fmma222w_rn(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -619,27 +619,27 @@ define <4 x float> @fmma222w_2_rn(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -649,27 +649,27 @@ define <4 x float> @fmms222w_rn(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -679,27 +679,27 @@ define <4 x float> @fmms222w_2_rn(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -708,19 +708,19 @@ define <4 x float> @fmm_tn_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_tn_rn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rn $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_tn_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -729,19 +729,19 @@ define <4 x float> @fmm_2_tn_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_2_tn_rn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rn $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_2_tn_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -750,22 +750,22 @@ define <4 x float> @fmma222w_2_tn_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmma222w_2_tn_rn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmma222w_2_tn_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tn.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -774,22 +774,22 @@ define <4 x float> @fmms222w_2_tn_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmms222w_2_tn_rn:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmms222w_2_tn_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tn.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -801,26 +801,26 @@ define <4 x float> @fmm_nt_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_nt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -832,26 +832,26 @@ define <4 x float> @fmm_2_nt_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_nt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -863,29 +863,29 @@ define <4 x float> @fmma222w_2_nt_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_nt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.nt.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -897,29 +897,29 @@ define <4 x float> @fmms222w_2_nt_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_nt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.nt.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -930,22 +930,22 @@ define <4 x float> @fmm_tt_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rn $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_tt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -956,22 +956,22 @@ define <4 x float> @fmm_2_tt_rn(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rn $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rn $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_tt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rn $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -981,27 +981,27 @@ define <4 x float> @fmma222w_2_tt_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_tt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tt.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -1011,27 +1011,27 @@ define <4 x float> @fmms222w_2_tt_rn(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rn $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_tt_rn:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tt.rn $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -1042,19 +1042,19 @@ define <4 x float> @fmm_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.ru $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1065,19 +1065,19 @@ define <4 x float> @fmm_2_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.ru $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_2_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1087,27 +1087,27 @@ define <4 x float> @fmma222w_ru(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1117,27 +1117,27 @@ define <4 x float> @fmma222w_2_ru(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1147,27 +1147,27 @@ define <4 x float> @fmms222w_ru(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1177,27 +1177,27 @@ define <4 x float> @fmms222w_2_ru(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1206,19 +1206,19 @@ define <4 x float> @fmm_tn_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_tn_ru:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.ru $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_tn_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1227,19 +1227,19 @@ define <4 x float> @fmm_2_tn_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_2_tn_ru:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.ru $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_2_tn_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1248,22 +1248,22 @@ define <4 x float> @fmma222w_2_tn_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmma222w_2_tn_ru:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmma222w_2_tn_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tn.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1272,22 +1272,22 @@ define <4 x float> @fmms222w_2_tn_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmms222w_2_tn_ru:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmms222w_2_tn_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tn.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1299,26 +1299,26 @@ define <4 x float> @fmm_nt_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_nt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1330,26 +1330,26 @@ define <4 x float> @fmm_2_nt_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_nt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1361,29 +1361,29 @@ define <4 x float> @fmma222w_2_nt_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_nt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.nt.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1395,29 +1395,29 @@ define <4 x float> @fmms222w_2_nt_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_nt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.nt.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1428,22 +1428,22 @@ define <4 x float> @fmm_tt_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.ru $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_tt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1454,22 +1454,22 @@ define <4 x float> @fmm_2_tt_ru(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.ru $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.ru $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_tt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.ru $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 1, i32 0)
   ret <4 x float> %3
 }
@@ -1479,27 +1479,27 @@ define <4 x float> @fmma222w_2_tt_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_tt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tt.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1509,27 +1509,27 @@ define <4 x float> @fmms222w_2_tt_ru(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.ru $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_tt_ru:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tt.ru $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 1, i32 0)
   ret <4 x float> %4
 }
@@ -1540,19 +1540,19 @@ define <4 x float> @fmm_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rd $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1563,19 +1563,19 @@ define <4 x float> @fmm_2_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rd $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_2_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1585,27 +1585,27 @@ define <4 x float> @fmma222w_rd(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1615,27 +1615,27 @@ define <4 x float> @fmma222w_2_rd(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1645,27 +1645,27 @@ define <4 x float> @fmms222w_rd(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1675,27 +1675,27 @@ define <4 x float> @fmms222w_2_rd(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1704,19 +1704,19 @@ define <4 x float> @fmm_tn_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_tn_rd:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rd $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_tn_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1725,19 +1725,19 @@ define <4 x float> @fmm_2_tn_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_2_tn_rd:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rd $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_2_tn_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1746,22 +1746,22 @@ define <4 x float> @fmma222w_2_tn_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmma222w_2_tn_rd:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmma222w_2_tn_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tn.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1770,22 +1770,22 @@ define <4 x float> @fmms222w_2_tn_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmms222w_2_tn_rd:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmms222w_2_tn_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tn.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1797,26 +1797,26 @@ define <4 x float> @fmm_nt_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_nt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1828,26 +1828,26 @@ define <4 x float> @fmm_2_nt_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_nt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1859,29 +1859,29 @@ define <4 x float> @fmma222w_2_nt_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_nt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.nt.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1893,29 +1893,29 @@ define <4 x float> @fmms222w_2_nt_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_nt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.nt.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -1926,22 +1926,22 @@ define <4 x float> @fmm_tt_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rd $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_tt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1952,22 +1952,22 @@ define <4 x float> @fmm_2_tt_rd(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rd $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rd $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_tt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rd $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 2, i32 0)
   ret <4 x float> %3
 }
@@ -1977,27 +1977,27 @@ define <4 x float> @fmma222w_2_tt_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_tt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tt.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -2007,27 +2007,27 @@ define <4 x float> @fmms222w_2_tt_rd(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rd $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_tt_rd:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tt.rd $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 2, i32 0)
   ret <4 x float> %4
 }
@@ -2038,19 +2038,19 @@ define <4 x float> @fmm_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rz $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2061,19 +2061,19 @@ define <4 x float> @fmm_2_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r4 = $r0, 32
 ; V1-NEXT:    andd $r5 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r0r1 = $r0, $r2
 ; V1-NEXT:    ord $r2 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rz $r0r1 = $r2, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: fmm_2_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 0, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2083,27 +2083,27 @@ define <4 x float> @fmma222w_rz(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2113,27 +2113,27 @@ define <4 x float> @fmma222w_2_rz(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2143,27 +2143,27 @@ define <4 x float> @fmms222w_rz(<4 x float> %0, <4 x float> %1, <4 x float> %2) 
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2173,27 +2173,27 @@ define <4 x float> @fmms222w_2_rz(<4 x float> %0, <4 x float> %1, <4 x float> %2
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2202,19 +2202,19 @@ define <4 x float> @fmm_tn_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_tn_rz:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rz $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_tn_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2223,19 +2223,19 @@ define <4 x float> @fmm_2_tn_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-LABEL: fmm_2_tn_rz:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmm212w.rz $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: fmm_2_tn_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tn.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 1, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2244,22 +2244,22 @@ define <4 x float> @fmma222w_2_tn_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmma222w_2_tn_rz:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmma222w_2_tn_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tn.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2268,22 +2268,22 @@ define <4 x float> @fmms222w_2_tn_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-LABEL: fmms222w_2_tn_rz:
 ; V1:       # %bb.0:
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ;
 ; V2-LABEL: fmms222w_2_tn_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tn.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 1, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2295,26 +2295,26 @@ define <4 x float> @fmm_nt_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_nt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2326,26 +2326,26 @@ define <4 x float> @fmm_2_nt_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_nt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.nt.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 2, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2357,29 +2357,29 @@ define <4 x float> @fmma222w_2_nt_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_nt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.nt.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2391,29 +2391,29 @@ define <4 x float> @fmms222w_2_nt_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
 ; V1-NEXT:    srld $r7 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
 ; V1-NEXT:    ord $r1 = $r7, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_nt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.nt.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 2, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2424,22 +2424,22 @@ define <4 x float> @fmm_tt_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rz $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_tt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2450,22 +2450,22 @@ define <4 x float> @fmm_2_tt_rz(<4 x float> %0, <4 x float> %1) {
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r4 = $r2, 32
 ; V1-NEXT:    andd $r5 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w.rz $r2r3 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r4, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w.rz $r2r3 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: fmm_2_tt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w.tt.rz $r0r1 = $r0r1, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmm222w(<4 x float> %0, <4 x float> %1, i32 3, i32 3, i32 0)
   ret <4 x float> %3
 }
@@ -2475,27 +2475,27 @@ define <4 x float> @fmma222w_2_tt_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmma212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmma222w_2_tt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmma222w.tt.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2505,27 +2505,27 @@ define <4 x float> @fmms222w_2_tt_rz(<4 x float> %0, <4 x float> %1, <4 x float>
 ; V1:       # %bb.0:
 ; V1-NEXT:    insf $r2 = $r3, 63, 32
 ; V1-NEXT:    srld $r6 = $r2, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r0, $r2
 ; V1-NEXT:    andd $r0 = $r3, 0xffffffff00000000
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ord $r0 = $r6, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    fmms212w.rz $r4r5 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: fmms222w_2_tt_rz:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmms222w.tt.rz $r4r5 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 3, i32 3, i32 0)
   ret <4 x float> %4
 }
@@ -2536,23 +2536,23 @@ define <4 x float> @not_fmma222w(<4 x float> %0, <4 x float> %1, <4 x float> %2)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r8r9 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r6, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r8r9 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    faddwq $r0r1 = $r8r9, $r4r5
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: not_fmma222w:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w $r0r1 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fadd <4 x float> %4, %2
   ret <4 x float> %5
@@ -2564,23 +2564,23 @@ define <4 x float> @not_fmms222w(<4 x float> %0, <4 x float> %1, <4 x float> %2)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    andd $r1 = $r1, 0xffffffff00000000
 ; V1-NEXT:    srld $r6 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    fmm212w $r8r9 = $r0, $r2
 ; V1-NEXT:    ord $r0 = $r6, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    fmma212w $r8r9 = $r0, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    fsbfwq $r0r1 = $r4r5, $r8r9
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: not_fmms222w:
 ; V2:       # %bb.0:
 ; V2-NEXT:    fmm222w $r0r1 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    fsbfwq $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.matrix.multiply.v4f32.v4f32.v4f32(<4 x float> %0, <4 x float> %1, i32 2, i32 2, i32 2)
   %5 = fsub <4 x float> %4, %2
   ret <4 x float> %5

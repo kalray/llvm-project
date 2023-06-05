@@ -42,12 +42,12 @@ define { i64, i64 } @muludt(i64 %a, i64 %b) {
 ; CHECK-LABEL: muludt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    muld $r2 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muludt $r0r1 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %conv = zext i64 %a to i128
   %conv1 = zext i64 %b to i128
@@ -64,11 +64,11 @@ define { i64, i64 } @madduzdt(i64 %a, i64 %b, i64 %c.coerce0, i64 %c.coerce1) {
 ; CHECK-LABEL: madduzdt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    madduzdt $r2r3 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %c.sroa.0.0.vec.insert = insertelement <2 x i64> undef, i64 %c.coerce0, i32 0
   %c.sroa.0.8.vec.insert = insertelement <2 x i64> %c.sroa.0.0.vec.insert, i64 %c.coerce1, i32 1
@@ -86,15 +86,15 @@ define { i64, i64 } @triple_add(i64 %a, i64 %b, i64 %c) {
 ; CHECK-LABEL: triple_add:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r3 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r3, $r2
 ; CHECK-NEXT:    compd.ltu $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    orw $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %add = add i64 %b, %a
   %add1 = add i64 %add, %c
@@ -111,92 +111,92 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; CHECK-LABEL: macc_256:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r2 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    muludt $r8r9 = $r2, $r32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    muludt $r10r11 = $r2, $r33
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    muludt $r16r17 = $r2, $r34
 ; CHECK-NEXT:    addcd.i $r4 = $r8, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    muludt $r2r3 = $r2, $r35
 ; CHECK-NEXT:    addcd $r5 = $r10, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    addcd $r6 = $r16, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    addcd $r7 = $r2, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ld $r15 = 8[$r1]
 ; CHECK-NEXT:    compd.ltu $r36 = $r7, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    madduzdt $r8r9 = $r15, $r32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    madduzdt $r10r11 = $r15, $r33
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    madduzdt $r16r17 = $r15, $r34
 ; CHECK-NEXT:    addcd.i $r5 = $r8, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    madduzdt $r2r3 = $r15, $r35
 ; CHECK-NEXT:    addcd $r6 = $r10, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    addcd $r7 = $r16, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    addcd $r15 = $r2, $r36
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    ld $r36 = 16[$r1]
 ; CHECK-NEXT:    compd.ltu $r37 = $r15, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    madduzdt $r8r9 = $r36, $r32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    madduzdt $r10r11 = $r36, $r33
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    madduzdt $r16r17 = $r36, $r34
 ; CHECK-NEXT:    addcd.i $r6 = $r8, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    madduzdt $r2r3 = $r36, $r35
 ; CHECK-NEXT:    addcd $r7 = $r10, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    addcd $r15 = $r16, $r15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    addcd $r36 = $r2, $r37
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    ld $r1 = 24[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    madduzdt $r8r9 = $r1, $r32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    madduzdt $r10r11 = $r1, $r33
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    madduzdt $r16r17 = $r1, $r34
 ; CHECK-NEXT:    addcd.i $r7 = $r8, $r7
 ; CHECK-NEXT:    compd.ltu $r8 = $r36, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    madduzdt $r2r3 = $r1, $r35
 ; CHECK-NEXT:    addcd $r1 = $r10, $r15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    addcd $r10 = $r16, $r36
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    addcd $r8 = $r2, $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    compd.ltu $r1 = $r8, $r2
 ; CHECK-NEXT:    addcd.i $r32 = $r9, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    addcd $r33 = $r11, $r10
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 38)
 ; CHECK-NEXT:    addcd $r34 = $r17, $r8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 39)
 ; CHECK-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    addcd $r35 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 40)
 ; CHECK-NEXT:    so 32[$r0] = $r32r33r34r35
 ; CHECK-NEXT:    compd.ltu $r1 = $r35, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 41)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 42)
 entry:
   %0 = load <8 x i64>, <8 x i64>* %r
   %1 = load <4 x i64>, <4 x i64>* %b

@@ -11,15 +11,15 @@ define float @fdivf32_normal(float %a, float %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -31,10 +31,10 @@ define float @fdivf32_fast(float %a, float %b) {
 ; CHECK-LABEL: fdivf32_fast:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    frecw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 entry:
   %div = fdiv fast float %a, %b
   ret float %div
@@ -44,10 +44,10 @@ define float @fdivf32_arcp(float %a, float %b) {
 ; CHECK-LABEL: fdivf32_arcp:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    frecw $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 entry:
   %div = fdiv arcp float %a, %b
   ret float %div
@@ -58,7 +58,7 @@ define float @fdiv(float %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    frecw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = fdiv float 1.000000e+00, %0
   ret float %2
 }

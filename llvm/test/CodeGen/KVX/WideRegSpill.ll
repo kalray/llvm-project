@@ -34,78 +34,78 @@ define i32 @a() {
 ; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    make $r1 = 0
 ; CV1-NEXT:    goto .LBB0_3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB0_1: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    xcopyo $a2 = $a1
 ; CV1-NEXT:    sllw $r3 = $r5, 6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    xcopyo $a3 = $a0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    alignv $a1 = $a1, $a2, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    alignv $a0 = $a0, $a3, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    xso 96[$r1] = $a7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    xso 64[$r1] = $a6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    xso 32[$r1] = $a5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    xso 0[$r1] = $a4
 ; CV1-NEXT:    addd $r1 = $r1, 2
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CV1-NEXT:    # Child Loop BB0_5 Depth 2
 ; CV1-NEXT:    maxw $r2 = $r3, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbfw $r4 = $r3, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    muluwd $r5 = $r4, 0xaaaaaaab
 ; CV1-NEXT:    compw.ltu $r6 = $r4, 2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srld $r5 = $r5, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    srlw $r5 = $r5, 1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    msbfw $r4 = $r5, 3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    addw $r4 = $r4, 1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    zxbd $r5 = $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    mulw $r5 = $r5, 171
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    srlw $r5 = $r5, 9
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 12)
 ; CV1-NEXT:    msbfw $r4 = $r5, 3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 13)
 ; CV1-NEXT:    zxbd $r4 = $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 15)
 ; CV1-NEXT:    compw.eq $r5 = $r4, 1
 ; CV1-NEXT:    cb.odd $r6 ? .LBB0_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=1
 ; CV1-NEXT:    make $r6 = 1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    cmoved.even $r5 ? $r6 = 2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cmoved.weqz $r4 ? $r6 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    addw $r3 = $r6, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    addw $r3 = $r3, -3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV1-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV1-NEXT:    # implicit-def: $w0
 ; CV1-NEXT:    addw $r3 = $r3, 3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compw.lt $r4 = $r3, -2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cb.odd $r4 ? .LBB0_5
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    goto .LBB0_2
@@ -118,76 +118,76 @@ define i32 @a() {
 ; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    make $r1 = 0
 ; CV2-NEXT:    goto .LBB0_3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB0_1: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    xcopyo $a3 = $a0
 ; CV2-NEXT:    cmoved.wnez $r4 ? $r4 = 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    xaligno $a1 = $a0..a1, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    xaligno $a0 = $a2..a3, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    xso 96[$r1] = $a7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 64[$r1] = $a6
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    xso 32[$r1] = $a5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    xso 0[$r1] = $a4
 ; CV2-NEXT:    addd $r1 = $r1, 2
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CV2-NEXT:    # Child Loop BB0_5 Depth 2
 ; CV2-NEXT:    maxw $r2 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbfw $r4 = $r3, $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    muluwd $r5 = $r4, 0xaaaaaaab
 ; CV2-NEXT:    compw.ltu $r6 = $r4, 2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    srld $r5 = $r5, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    srlw $r5 = $r5, 1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    msbfw $r4 = $r5, 3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    addw $r4 = $r4, 1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    zxbd $r5 = $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    mulw $r5 = $r5, 171
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    srlw $r5 = $r5, 9
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    msbfw $r4 = $r5, 3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 13)
 ; CV2-NEXT:    zxbd $r5 = $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    compw.eq $r4 = $r5, 1
 ; CV2-NEXT:    cb.odd $r6 ? .LBB0_1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=1
 ; CV2-NEXT:    make $r6 = 1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cmoved.even $r4 ? $r6 = 2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cmoved.weqz $r5 ? $r6 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    addw $r3 = $r6, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    addw $r3 = $r3, -3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CV2-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV2-NEXT:    # implicit-def: $w0
 ; CV2-NEXT:    addw $r3 = $r3, 3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    compw.lt $r4 = $r3, -2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cb.odd $r4 ? .LBB0_5
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB0_2

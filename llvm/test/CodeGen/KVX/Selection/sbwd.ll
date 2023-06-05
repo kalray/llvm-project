@@ -12,7 +12,7 @@ define i64 @SBFWD(i64 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = sext i32 %1 to i64
   %4 = sub nsw i64 %0, %3
   ret i64 %4
@@ -23,7 +23,7 @@ define i64 @SBFUWD(i64 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfuwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = zext i32 %1 to i64
   %4 = sub nsw i64 %0, %3
   ret i64 %4

@@ -11,7 +11,7 @@ define i32 @f_andnwrr(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i32 %a, -1
   %and = and i32 %not_a, %b
@@ -23,7 +23,7 @@ define i32 @f_andnwri(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i32 %a, -1
   %and = and i32 %not_a, 10

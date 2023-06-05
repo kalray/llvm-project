@@ -11,7 +11,7 @@ define i32 @smax32(i32 %l) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r0 = $r0, 31
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %shift = ashr i32 %l, 31 ; 31 -> 0b11111
   ret i32 %shift
 }
@@ -21,7 +21,7 @@ define i64 @smax64(i64 %l) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %shift = ashr i64 %l, 63 ; 63 -> 0b111111
   ret i64 %shift
 }
@@ -31,7 +31,7 @@ define i32 @smin32(i32 %l) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sraw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %shift = ashr i32 %l, 1
   ret i32 %shift
 }
@@ -41,7 +41,7 @@ define i64 @smin64(i64 %l) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %shift = ashr i64 %l, 1
   ret i64 %shift
 }

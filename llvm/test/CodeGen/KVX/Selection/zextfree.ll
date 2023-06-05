@@ -11,7 +11,7 @@ define i64 @maddw_reg(i32 %a, i32 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddw $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul i32 %c, %b
   %add = add i32 %mul, %a
@@ -24,7 +24,7 @@ define i64 @maddw_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddw $r0 = $r1, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul i32 %b, 10
   %add = add i32 %mul, %a
@@ -37,7 +37,7 @@ define i64 @addx2w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx2w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 1
   %add = add i32 %shl, %a
@@ -50,7 +50,7 @@ define i64 @addx4w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx4w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 2
   %add = add i32 %shl, %a
@@ -63,7 +63,7 @@ define i64 @addx8w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx8w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 3
   %add = add i32 %shl, %a
@@ -76,7 +76,7 @@ define i64 @addx16w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %add = add i32 %shl, %a
@@ -89,7 +89,7 @@ define i64 @addx2w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx2w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 1
   %add = add i32 %shl, 16
@@ -102,7 +102,7 @@ define i64 @addx4w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx4w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 2
   %add = add i32 %shl, 16
@@ -115,7 +115,7 @@ define i64 @addx8w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx8w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 3
   %add = add i32 %shl, 16
@@ -128,7 +128,7 @@ define i64 @addx16w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %add = add i32 %shl, 16
@@ -141,7 +141,7 @@ define i64 @sbfx2w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx2w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 1
   %sub = sub i32 %a, %shl
@@ -154,7 +154,7 @@ define i64 @sbfx4w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx4w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 2
   %sub = sub i32 %a, %shl
@@ -167,7 +167,7 @@ define i64 @sbfx8w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx8w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 3
   %sub = sub i32 %a, %shl
@@ -180,7 +180,7 @@ define i64 @sbfx16w_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx16w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %sub = sub i32 %a, %shl
@@ -193,7 +193,7 @@ define i64 @sbfx2w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx2w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 1
   %sub = sub i32 16, %shl
@@ -206,7 +206,7 @@ define i64 @sbfx4w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx4w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 2
   %sub = sub i32 16, %shl
@@ -219,7 +219,7 @@ define i64 @sbfx8w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx8w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 3
   %sub = sub i32 16, %shl
@@ -232,7 +232,7 @@ define i64 @sbfx16w_imm(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfx16w $r0 = $r1, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %sub = sub i32 16, %shl
@@ -245,7 +245,7 @@ define i64 @andw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i32 %b, %a
   %conv = zext i32 %and to i64
@@ -257,7 +257,7 @@ define i64 @andw_imm10(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i32 %a, 10
   %conv = zext i32 %and to i64
@@ -269,7 +269,7 @@ define i64 @andw_imm37(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %and = and i32 %a, 32768
   %conv = zext i32 %and to i64
@@ -281,7 +281,7 @@ define i64 @orw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %b, %a
   %conv = zext i32 %xor to i64
@@ -293,7 +293,7 @@ define i64 @orw_imm10(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %a, 10
   %conv = zext i32 %xor to i64
@@ -305,7 +305,7 @@ define i64 @orw_imm37(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %a, 32768
   %conv = zext i32 %xor to i64
@@ -317,7 +317,7 @@ define i64 @sllw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %a, %b
   %conv = zext i32 %shl to i64
@@ -329,7 +329,7 @@ define i64 @sllw_imm(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %a, 10
   %conv = zext i32 %shl to i64
@@ -341,7 +341,7 @@ define i64 @srlw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %a, %b
   %conv = zext i32 %shr to i64
@@ -353,7 +353,7 @@ define i64 @srlw_imm(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %a, 10
   %conv = zext i32 %shr to i64
@@ -365,7 +365,7 @@ define i64 @xorw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %b, %a
   %conv = zext i32 %xor to i64
@@ -377,7 +377,7 @@ define i64 @xorw_imm10(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %a, 10
   %conv = zext i32 %xor to i64
@@ -389,7 +389,7 @@ define i64 @xorw_imm37(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xorw $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor i32 %a, 32768
   %conv = zext i32 %xor to i64
@@ -401,7 +401,7 @@ define i64 @minw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minuw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ult i32 %a, %b
   %cond = select i1 %cmp, i32 %a, i32 %b
@@ -414,7 +414,7 @@ define i64 @maxw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maxuw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i32 %a, %b
   %cond = select i1 %cmp, i32 %a, i32 %b
@@ -427,7 +427,7 @@ define i64 @mulw_reg(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul i32 %b, %a
   %conv = zext i32 %mul to i64
@@ -439,7 +439,7 @@ define i64 @and_srl_to_extfz(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 9, 8
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %a, 8
   %and = and i32 %shr, 3
@@ -452,7 +452,7 @@ define i64 @shl_i8(i32 %a, i8 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv2 = zext i8 %b to i32
   %shl = shl i32 %a, %conv2
@@ -465,7 +465,7 @@ define i64 @shl_u8(i32 %a, i8 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i8 %b to i32
   %shl = shl i32 %a, %conv
@@ -478,7 +478,7 @@ define i64 @shl_i16(i32 %a, i16 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv2 = zext i16 %b to i32
   %shl = shl i32 %a, %conv2
@@ -491,7 +491,7 @@ define i64 @shl_u16(i32 %a, i16 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i16 %b to i32
   %shl = shl i32 %a, %conv
@@ -504,7 +504,7 @@ define i64 @shl_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %a, %b
   %conv = zext i32 %shl to i64
@@ -516,7 +516,7 @@ define i64 @shl_u32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %a, %b
   %conv = zext i32 %shl to i64
@@ -528,7 +528,7 @@ define i64 @shl_i64(i32 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sh_prom = trunc i64 %b to i32
   %shl = shl i32 %a, %sh_prom
@@ -541,7 +541,7 @@ define i64 @shl_u64(i32 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sh_prom = trunc i64 %b to i32
   %shl = shl i32 %a, %sh_prom
@@ -554,7 +554,7 @@ define i64 @srl_i8(i32 %a, i8 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv2 = zext i8 %b to i32
   %shr = lshr i32 %a, %conv2
@@ -567,7 +567,7 @@ define i64 @srl_u8(i32 %a, i8 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i8 %b to i32
   %shr = lshr i32 %a, %conv
@@ -580,7 +580,7 @@ define i64 @srl_i16(i32 %a, i16 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv2 = zext i16 %b to i32
   %shr = lshr i32 %a, %conv2
@@ -593,7 +593,7 @@ define i64 @srl_u16(i32 %a, i16 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = zext i16 %b to i32
   %shr = lshr i32 %a, %conv
@@ -606,7 +606,7 @@ define i64 @srl_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %a, %b
   %conv = zext i32 %shr to i64
@@ -618,7 +618,7 @@ define i64 @srl_u32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %a, %b
   %conv = zext i32 %shr to i64
@@ -630,7 +630,7 @@ define i64 @srl_i64(i32 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sh_prom = trunc i64 %b to i32
   %shr = lshr i32 %a, %sh_prom
@@ -643,7 +643,7 @@ define i64 @srl_u64(i32 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sh_prom = trunc i64 %b to i32
   %shr = lshr i32 %a, %sh_prom
@@ -656,7 +656,7 @@ define i64 @landw_i64(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i32 %a, 0
   %cmp1 = icmp ne i32 %b, 0
@@ -670,7 +670,7 @@ define i32 @landw_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i32 %a, 0
   %cmp1 = icmp ne i32 %b, 0
@@ -684,7 +684,7 @@ define i64 @lnandw_i64(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i32 %a, 0
   %cmp1 = icmp eq i32 %b, 0
@@ -698,7 +698,7 @@ define i32 @lnandw_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i32 %a, 0
   %cmp1 = icmp eq i32 %b, 0
@@ -712,7 +712,7 @@ define i64 @landd_i64(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i64 %a, 0
   %cmp1 = icmp ne i64 %b, 0
@@ -726,7 +726,7 @@ define i32 @landd_i32(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i64 %a, 0
   %cmp1 = icmp ne i64 %b, 0
@@ -740,7 +740,7 @@ define i64 @lnandd_i64(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i64 %a, 0
   %cmp1 = icmp eq i64 %b, 0
@@ -754,7 +754,7 @@ define i32 @lnandd_i32(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnandd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i64 %a, 0
   %cmp1 = icmp eq i64 %b, 0
@@ -767,16 +767,16 @@ define i64 @lnandd_f16(half %a, half %b){
 ; CHECK-LABEL: lnandd_f16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnhq.oeq $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    andw $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    orw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %cmp = fcmp oeq half %a, 0xH0000
   %cmp1 = fcmp oeq half %b, 0xH0000
@@ -790,7 +790,7 @@ define i64 @lorw_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %or = or i32 %b, %a
   %cmp = icmp ne i32 %or, 0
@@ -803,7 +803,7 @@ define i64 @lord_i64(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %or = or i64 %b, %a
   %cmp = icmp ne i64 %or, 0
@@ -816,7 +816,7 @@ define i64 @lnorw_i32(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %or = or i32 %b, %a
   %cmp = icmp eq i32 %or, 0
@@ -829,7 +829,7 @@ define i64 @lnord_i64(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lnord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %or = or i64 %b, %a
   %cmp = icmp eq i64 %or, 0

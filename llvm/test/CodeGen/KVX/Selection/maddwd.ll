@@ -11,7 +11,7 @@ define i64 @f_maddwdrr(i64 %a, i32 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddwd $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %b64 = sext i32 %b to i64
   %c64 = sext i32 %c to i64
@@ -25,7 +25,7 @@ define i64 @f_maddwdri_1(i64 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    maddwd $r0 = $r1, -11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %b64 = sext i32 %b to i64
   %mul = mul nsw i64 %b64, -11

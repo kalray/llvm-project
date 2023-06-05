@@ -11,7 +11,7 @@ define i32 @ORNWrr(i32 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i32 %0, -1
   %4 = or i32 %3, %1
   ret i32 %4
@@ -22,7 +22,7 @@ define i32 @ORNWri10(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornw $r0 = $r0, -60
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i32 %0, -60
   %3 = xor i32 %2, 59
   ret i32 %3
@@ -33,7 +33,7 @@ define i32 @ORNWri37(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0xffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i32 %0, 137438953471
   %3 = xor i32 %2, -137438953472
   ret i32 %3
@@ -44,7 +44,7 @@ define i32 @ORNWri32(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    notw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i32 %0, 137438953472
   %3 = xor i32 %2, -137438953473
   ret i32 %3
@@ -55,7 +55,7 @@ define <2 x i16> @ORNWrr_v2i16(<2 x i16> %0, <2 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i16> %0, <i16 -1, i16 -1>
   %4 = or <2 x i16> %3, %1
   ret <2 x i16> %4
@@ -66,7 +66,7 @@ define <2 x i16> @ORNWri_v2i16(<2 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornw $r0 = $r0, 0x4ffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i16> %0, <i16 -5, i16 -5>
   %3 = or <2 x i16> %2, <i16 -1, i16 4>
   ret <2 x i16> %3
@@ -77,7 +77,7 @@ define <4 x i8> @ORNWrr_v4i8(<4 x i8> %0, <4 x i8> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <4 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1>
   %4 = or <4 x i8> %3, %1
   ret <4 x i8> %4
@@ -88,7 +88,7 @@ define <4 x i8> @ORNWri_v4i8(<4 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornw $r0 = $r0, 0x4030201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <4 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1>
   %3 = or <4 x i8> %2, <i8 1, i8 2, i8 3, i8 4>
   ret <4 x i8> %3
@@ -99,7 +99,7 @@ define <2 x i8> @ORNWrr_v2i8(<2 x i8> %0, <2 x i8> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i8> %0, <i8 -1, i8 -1>
   %4 = or <2 x i8> %3, %1
   ret <2 x i8> %4
@@ -110,7 +110,7 @@ define <2 x i8> @ORNWri_v2i8(<2 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ornw $r0 = $r0, 0x4ff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i8> %0, <i8 -5, i8 -5>
   %3 = or <2 x i8> %2, <i8 -1, i8 4>
   ret <2 x i8> %3

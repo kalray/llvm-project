@@ -20,66 +20,66 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL:       # %bb.0: # %entry
 ; FP-ALL-NEXT:    addd $r12 = $r12, -64
 ; FP-ALL-NEXT:    get $r16 = $ra
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sd 56[$r12] = $r16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd 48[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 48
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    sd 40[$r12] = $r20
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    sq 24[$r12] = $r18r19
 ; FP-ALL-NEXT:    copyd $r18 = $r1
 ; FP-ALL-NEXT:    copyd $r19 = $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    sxwd $r0 = $r19
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 5)
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 7)
 ; FP-ALL-NEXT:    sbfd $r20 = $r0, $r12
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 8)
 ; FP-ALL-NEXT:    copyd $r12 = $r20
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r0 = $r18
 ; FP-ALL-NEXT:    copyd $r1 = $r20
 ; FP-ALL-NEXT:    call g1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addw $r0 = $r18, $r19
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    addd $r0 = $r0, 31
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    andd $r0 = $r0, -32
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    sbfd $r19 = $r0, $r12
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    copyd $r12 = $r19
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    copyd $r0 = $r18
 ; FP-ALL-NEXT:    copyd $r1 = $r19
 ; FP-ALL-NEXT:    call g1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    lwz $r0 = 0[$r20]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    lwz $r1 = 0[$r19]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    addw $r0 = $r1, $r0
 ; FP-ALL-NEXT:    addd $r12 = $r14, -48
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    lq $r18r19 = 24[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r20 = 40[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    ld $r14 = 48[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    ld $r16 = 56[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    set $ra = $r16
 ; FP-ALL-NEXT:    addd $r12 = $r12, 64
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 8)
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:

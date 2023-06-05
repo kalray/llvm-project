@@ -11,7 +11,7 @@ define double @fmuld(double %0, double %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmuld.rz $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.fmul.f64(double %0, double %1, i32 3, i32 0)
   ret double %3
 }
@@ -22,10 +22,10 @@ define <2 x double> @fmuldp(<2 x double> %0, <2 x double> %1) {
 ; ALL-LABEL: fmuldp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmuld.rn $r0 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmuld.rn $r1 = $r1, $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %3 = extractelement <2 x double> %0, i64 0
   %4 = extractelement <2 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fmul.f64(double %3, double %4, i32 0, i32 0)
@@ -41,14 +41,14 @@ define <4 x double> @fmuldq(<4 x double> %0, <4 x double> %1) {
 ; ALL-LABEL: fmuldq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmuld.rn $r0 = $r0, $r4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmuld.rn $r1 = $r1, $r5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fmuld.rn $r2 = $r2, $r6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fmuld.rn $r3 = $r3, $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <4 x double> %0, i64 0
   %4 = extractelement <4 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fmul.f64(double %3, double %4, i32 0, i32 0)
@@ -73,7 +73,7 @@ define half @fmulh(half %0, half %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhq.ru.s $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call half @llvm.kvx.fmul.f16(half %0, half %1, i32 1, i32 1)
   ret half %3
 }
@@ -85,7 +85,7 @@ define <2 x half> @fmulhp(<2 x half> %0, <2 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhq.ru.s $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x half> @llvm.kvx.fmul.v2f16(<2 x half> %0, <2 x half> %1, i32 1, i32 1)
   ret <2 x half> %3
 }
@@ -97,7 +97,7 @@ define <4 x half> @fmulhq(<4 x half> %0, <4 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhq.ru.s $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x half> @llvm.kvx.fmul.v4f16(<4 x half> %0, <4 x half> %1, i32 1, i32 1)
   ret <4 x half> %3
 }
@@ -109,7 +109,7 @@ define float @fmulw(float %0, float %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulw.rz $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.fmul.f32(float %0, float %1, i32 3, i32 0)
   ret float %3
 }
@@ -121,7 +121,7 @@ define <2 x float> @fmulwp(<2 x float> %0, <2 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulwp.rn $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fmul.v2f32(<2 x float> %0, <2 x float> %1, i32 0, i32 0)
   ret <2 x float> %3
 }

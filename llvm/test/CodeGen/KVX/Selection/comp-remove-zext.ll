@@ -11,7 +11,7 @@ define i32 @foo_i32_i32_lt(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -23,7 +23,7 @@ define i32 @foo_i32_i32_le(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sle i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -35,7 +35,7 @@ define i32 @foo_i32_i32_gt(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -47,7 +47,7 @@ define i32 @foo_i32_i32_ge(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -59,7 +59,7 @@ define i32 @foo_i32_i32_ltu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ult i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -71,7 +71,7 @@ define i32 @foo_i32_i32_leu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ule i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -83,7 +83,7 @@ define i32 @foo_i32_i32_gtu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -95,7 +95,7 @@ define i32 @foo_i32_i32_geu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp uge i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -107,7 +107,7 @@ define i32 @foo_i32_i32_eq(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -119,7 +119,7 @@ define i32 @foo_i32_i32_neq(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i32 %a, %b
   %conv = zext i1 %cmp to i32
@@ -131,7 +131,7 @@ define i64 @foo_i64_i32_lt(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -143,7 +143,7 @@ define i64 @foo_i64_i32_le(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sle i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -155,7 +155,7 @@ define i64 @foo_i64_i32_gt(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -167,7 +167,7 @@ define i64 @foo_i64_i32_ge(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -179,7 +179,7 @@ define i64 @foo_i64_i32_ltu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ltu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ult i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -191,7 +191,7 @@ define i64 @foo_i64_i32_leu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.leu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ule i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -203,7 +203,7 @@ define i64 @foo_i64_i32_gtu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gtu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -215,7 +215,7 @@ define i64 @foo_i64_i32_geu(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.geu $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp uge i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -227,7 +227,7 @@ define i64 @foo_i64_i32_eq(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -239,7 +239,7 @@ define i64 @foo_i64_i32_neq(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne i32 %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -251,7 +251,7 @@ define i32 @foo_i32_f32_lt(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp olt float %a, %b
   %conv = zext i1 %cmp to i32
@@ -263,7 +263,7 @@ define i32 @foo_i32_f32_le(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp ole float %a, %b
   %conv = zext i1 %cmp to i32
@@ -275,7 +275,7 @@ define i32 @foo_i32_f32_gt(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp ogt float %a, %b
   %conv = zext i1 %cmp to i32
@@ -287,7 +287,7 @@ define i32 @foo_i32_f32_ge(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp oge float %a, %b
   %conv = zext i1 %cmp to i32
@@ -299,7 +299,7 @@ define i32 @foo_i32_f32_eq(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp oeq float %a, %b
   %conv = zext i1 %cmp to i32
@@ -311,7 +311,7 @@ define i32 @foo_i32_f32_neq(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp une float %a, %b
   %conv = zext i1 %cmp to i32
@@ -323,7 +323,7 @@ define i64 @foo_i64_f32_lt(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp olt float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -335,7 +335,7 @@ define i64 @foo_i64_f32_le(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp ole float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -347,7 +347,7 @@ define i64 @foo_i64_f32_gt(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp ogt float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -359,7 +359,7 @@ define i64 @foo_i64_f32_ge(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp oge float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -371,7 +371,7 @@ define i64 @foo_i64_f32_eq(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp oeq float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -383,7 +383,7 @@ define i64 @foo_i64_f32_neq(float %a, float %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompw.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = fcmp une float %a, %b
   %conv1 = zext i1 %cmp to i64
@@ -394,10 +394,10 @@ define i32 @foo_i32_f16_eq(half %a, half %b){
 ; CHECK-LABEL: foo_i32_f16_eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = fcmp une half %a, %b
   %conv = zext i1 %cmp to i32
@@ -408,10 +408,10 @@ define i64 @foo_i64_f16_eq(half %a, half %b){
 ; CHECK-LABEL: foo_i64_f16_eq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnhq.une $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = fcmp une half %a, %b
   %conv1 = zext i1 %cmp to i64

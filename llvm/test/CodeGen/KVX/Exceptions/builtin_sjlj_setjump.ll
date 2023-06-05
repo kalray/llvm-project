@@ -12,46 +12,46 @@ define i32 @f_setjmp() {
 ; CHECK-NEXT:    make $r0 = buf
 ; CHECK-NEXT:    make $r1 = .LBB0_2
 ; CHECK-NEXT:    addd $r12 = $r12, -128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 120[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 112[$r12] = $r14
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    so 80[$r12] = $r28r29r30r31
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    so 48[$r12] = $r24r25r26r27
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    sd 8[$r0] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    goto .LBB0_3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_2: # Block address taken
 ; CHECK-NEXT:    make $r0 = 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_3:
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r24r25r26r27 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lo $r28r29r30r31 = 80[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r14 = 112[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ld $r16 = 120[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ;
@@ -60,47 +60,47 @@ define i32 @f_setjmp() {
 ; PIC-NEXT:    pcrel $r1 = @pcrel( .LBB0_2 )
 ; PIC-NEXT:    addd $r12 = $r12, -128
 ; PIC-NEXT:    get $r16 = $ra
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 0)
 ; PIC-NEXT:    sd 120[$r12] = $r16
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 1)
 ; PIC-NEXT:    sd 112[$r12] = $r14
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 2)
 ; PIC-NEXT:    so 80[$r12] = $r28r29r30r31
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 3)
 ; PIC-NEXT:    so 48[$r12] = $r24r25r26r27
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 4)
 ; PIC-NEXT:    so 16[$r12] = $r20r21r22r23
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 5)
 ; PIC-NEXT:    sq 0[$r12] = $r18r19
 ; PIC-NEXT:    pcrel $r0 = @gotaddr()
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 6)
 ; PIC-NEXT:    ld $r0 = @got( buf )[$r0]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 7)
 ; PIC-NEXT:    sd 8[$r0] = $r1
 ; PIC-NEXT:    ;;
 ; PIC-NEXT:  # %bb.1:
 ; PIC-NEXT:    make $r0 = 0
 ; PIC-NEXT:    goto .LBB0_3
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 0)
 ; PIC-NEXT:  .LBB0_2: # Block address taken
 ; PIC-NEXT:    make $r0 = 1
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 0)
 ; PIC-NEXT:  .LBB0_3:
 ; PIC-NEXT:    lq $r18r19 = 0[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 0)
 ; PIC-NEXT:    lo $r20r21r22r23 = 16[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 1)
 ; PIC-NEXT:    lo $r24r25r26r27 = 48[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 2)
 ; PIC-NEXT:    lo $r28r29r30r31 = 80[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 3)
 ; PIC-NEXT:    ld $r14 = 112[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 4)
 ; PIC-NEXT:    ld $r16 = 120[$r12]
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 5)
 ; PIC-NEXT:    set $ra = $r16
 ; PIC-NEXT:    addd $r12 = $r12, 128
-; PIC-NEXT:    ;;
+; PIC-NEXT:    ;; # (end cycle 10)
 ; PIC-NEXT:    ret
 ; PIC-NEXT:    ;;
 

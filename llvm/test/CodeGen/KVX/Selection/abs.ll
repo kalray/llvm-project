@@ -11,7 +11,7 @@ define i32 @absw(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    absw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt i32 %a, 0
   %neg = sub nsw i32 0, %a
@@ -24,7 +24,7 @@ define i64 @absd(i64 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    absd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt i64 %a, 0
   %neg = sub nsw i64 0, %a
@@ -37,7 +37,7 @@ define <2 x i32> @abswp(<2 x i32> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abswp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt <2 x i32> %a, zeroinitializer
   %1 = sub nsw <2 x i32> zeroinitializer, %a
@@ -51,7 +51,7 @@ define <4 x i16> @abshq(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt <4 x i16> %a, zeroinitializer
   %1 = sub <4 x i16> zeroinitializer, %a
@@ -64,7 +64,7 @@ define <4 x i16> @abshq_2(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub <4 x i16> zeroinitializer, %a
   %cmp = icmp slt <4 x i16> %sub, %a
@@ -77,7 +77,7 @@ define <2 x i16> @abshqv2(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt <2 x i16> %a, zeroinitializer
   %1 = sub <2 x i16> zeroinitializer, %a
@@ -90,7 +90,7 @@ define <2 x i16> @abshqv2_2(<2 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    abshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub <2 x i16> zeroinitializer, %a
   %cmp = icmp slt <2 x i16> %sub, %a
@@ -103,7 +103,7 @@ define i32 @absw2(i32 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    absw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw i32 0, %a
   %cmp = icmp slt i32 %sub, %a
@@ -116,7 +116,7 @@ define i64 @abs2(i64 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    absd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw i64 0, %a
   %cmp = icmp slt i64 %sub, %a

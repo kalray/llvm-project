@@ -8,14 +8,14 @@ define void @set_1(i64 %0) {
 ; CHECK-LABEL: set_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ps = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -29,11 +29,11 @@ define void @set_2(i64 %0) {
 ; CHECK-LABEL: set_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pcr = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -48,17 +48,17 @@ define void @set_3(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r0
 ; CHECK-NEXT:    set $ra = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -72,11 +72,11 @@ define void @set_4(i64 %0) {
 ; CHECK-LABEL: set_4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $cs = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -90,11 +90,11 @@ define void @set_5(i64 %0) {
 ; CHECK-LABEL: set_5:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $csit = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -108,11 +108,11 @@ define void @set_6(i64 %0) {
 ; CHECK-LABEL: set_6:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $aespc = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -126,11 +126,11 @@ define void @set_7(i64 %0) {
 ; CHECK-LABEL: set_7:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ls = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -144,11 +144,11 @@ define void @set_8(i64 %0) {
 ; CHECK-LABEL: set_8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $le = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -162,11 +162,11 @@ define void @set_9(i64 %0) {
 ; CHECK-LABEL: set_9:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $lc = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -180,11 +180,11 @@ define void @set_10(i64 %0) {
 ; CHECK-LABEL: set_10:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ipe = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -198,11 +198,11 @@ define void @set_11(i64 %0) {
 ; CHECK-LABEL: set_11:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $men = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -216,11 +216,11 @@ define void @set_12(i64 %0) {
 ; CHECK-LABEL: set_12:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pmc = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -234,11 +234,11 @@ define void @set_13(i64 %0) {
 ; CHECK-LABEL: set_13:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pm0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -252,11 +252,11 @@ define void @set_14(i64 %0) {
 ; CHECK-LABEL: set_14:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pm1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -270,11 +270,11 @@ define void @set_15(i64 %0) {
 ; CHECK-LABEL: set_15:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pm2 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -288,11 +288,11 @@ define void @set_16(i64 %0) {
 ; CHECK-LABEL: set_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pm3 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -306,11 +306,11 @@ define void @set_17(i64 %0) {
 ; CHECK-LABEL: set_17:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $pmsa = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -324,11 +324,11 @@ define void @set_18(i64 %0) {
 ; CHECK-LABEL: set_18:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $tcr = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -342,11 +342,11 @@ define void @set_19(i64 %0) {
 ; CHECK-LABEL: set_19:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $t0v = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -360,11 +360,11 @@ define void @set_20(i64 %0) {
 ; CHECK-LABEL: set_20:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $t1v = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -378,11 +378,11 @@ define void @set_21(i64 %0) {
 ; CHECK-LABEL: set_21:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $t0r = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -396,11 +396,11 @@ define void @set_22(i64 %0) {
 ; CHECK-LABEL: set_22:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $t1r = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -414,11 +414,11 @@ define void @set_23(i64 %0) {
 ; CHECK-LABEL: set_23:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $wdv = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -432,11 +432,11 @@ define void @set_24(i64 %0) {
 ; CHECK-LABEL: set_24:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $wdr = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -450,11 +450,11 @@ define void @set_25(i64 %0) {
 ; CHECK-LABEL: set_25:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ile = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -468,11 +468,11 @@ define void @set_26(i64 %0) {
 ; CHECK-LABEL: set_26:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ill = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -486,11 +486,11 @@ define void @set_27(i64 %0) {
 ; CHECK-LABEL: set_27:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ilr = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -504,14 +504,14 @@ define void @set_28(i64 %0) {
 ; CHECK-LABEL: set_28:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $mmc = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -523,11 +523,11 @@ define void @set_29(i64 %0) {
 ; CHECK-LABEL: set_29:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $tel = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -541,11 +541,11 @@ define void @set_30(i64 %0) {
 ; CHECK-LABEL: set_30:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $teh = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -559,11 +559,11 @@ define void @set_31(i64 %0) {
 ; CHECK-LABEL: set_31:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ixc = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -577,11 +577,11 @@ define void @set_38(i64 %0) {
 ; CHECK-LABEL: set_38:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s38 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -595,11 +595,11 @@ define void @set_39(i64 %0) {
 ; CHECK-LABEL: set_39:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s39 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -613,11 +613,11 @@ define void @set_41(i64 %0) {
 ; CHECK-LABEL: set_41:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $dba0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -631,11 +631,11 @@ define void @set_42(i64 %0) {
 ; CHECK-LABEL: set_42:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $dba1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -649,11 +649,11 @@ define void @set_43(i64 %0) {
 ; CHECK-LABEL: set_43:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $dwa0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -667,11 +667,11 @@ define void @set_44(i64 %0) {
 ; CHECK-LABEL: set_44:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $dwa1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -685,11 +685,11 @@ define void @set_45(i64 %0) {
 ; CHECK-LABEL: set_45:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $mes = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -703,11 +703,11 @@ define void @set_46(i64 %0) {
 ; CHECK-LABEL: set_46:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ws = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -721,11 +721,11 @@ define void @set_47(i64 %0) {
 ; CHECK-LABEL: set_47:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s47 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -739,11 +739,11 @@ define void @set_48(i64 %0) {
 ; CHECK-LABEL: set_48:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s48 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -757,11 +757,11 @@ define void @set_49(i64 %0) {
 ; CHECK-LABEL: set_49:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s49 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -775,11 +775,11 @@ define void @set_50(i64 %0) {
 ; CHECK-LABEL: set_50:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s50 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -793,11 +793,11 @@ define void @set_51(i64 %0) {
 ; CHECK-LABEL: set_51:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s51 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -811,11 +811,11 @@ define void @set_52(i64 %0) {
 ; CHECK-LABEL: set_52:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s52 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -829,11 +829,11 @@ define void @set_53(i64 %0) {
 ; CHECK-LABEL: set_53:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s53 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -847,11 +847,11 @@ define void @set_54(i64 %0) {
 ; CHECK-LABEL: set_54:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s54 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -865,11 +865,11 @@ define void @set_55(i64 %0) {
 ; CHECK-LABEL: set_55:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s55 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -883,11 +883,11 @@ define void @set_56(i64 %0) {
 ; CHECK-LABEL: set_56:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s56 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -901,11 +901,11 @@ define void @set_57(i64 %0) {
 ; CHECK-LABEL: set_57:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s57 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -919,11 +919,11 @@ define void @set_58(i64 %0) {
 ; CHECK-LABEL: set_58:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s58 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -937,11 +937,11 @@ define void @set_59(i64 %0) {
 ; CHECK-LABEL: set_59:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s59 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -955,11 +955,11 @@ define void @set_60(i64 %0) {
 ; CHECK-LABEL: set_60:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s60 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -973,11 +973,11 @@ define void @set_61(i64 %0) {
 ; CHECK-LABEL: set_61:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s61 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -991,11 +991,11 @@ define void @set_62(i64 %0) {
 ; CHECK-LABEL: set_62:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s62 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1009,11 +1009,11 @@ define void @set_63(i64 %0) {
 ; CHECK-LABEL: set_63:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s63 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1027,11 +1027,11 @@ define void @set_64(i64 %0) {
 ; CHECK-LABEL: set_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $spc_pl0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1045,11 +1045,11 @@ define void @set_65(i64 %0) {
 ; CHECK-LABEL: set_65:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $spc_pl1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1063,11 +1063,11 @@ define void @set_66(i64 %0) {
 ; CHECK-LABEL: set_66:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $spc_pl2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1081,11 +1081,11 @@ define void @set_67(i64 %0) {
 ; CHECK-LABEL: set_67:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $spc_pl3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1099,14 +1099,14 @@ define void @set_68(i64 %0) {
 ; CHECK-LABEL: set_68:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $sps_pl0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1118,14 +1118,14 @@ define void @set_69(i64 %0) {
 ; CHECK-LABEL: set_69:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $sps_pl1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1137,14 +1137,14 @@ define void @set_70(i64 %0) {
 ; CHECK-LABEL: set_70:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $sps_pl2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1156,14 +1156,14 @@ define void @set_71(i64 %0) {
 ; CHECK-LABEL: set_71:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $sps_pl3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1175,11 +1175,11 @@ define void @set_72(i64 %0) {
 ; CHECK-LABEL: set_72:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ea_pl0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1193,11 +1193,11 @@ define void @set_73(i64 %0) {
 ; CHECK-LABEL: set_73:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ea_pl1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1211,11 +1211,11 @@ define void @set_74(i64 %0) {
 ; CHECK-LABEL: set_74:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ea_pl2 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1229,11 +1229,11 @@ define void @set_75(i64 %0) {
 ; CHECK-LABEL: set_75:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ea_pl3 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1247,11 +1247,11 @@ define void @set_76(i64 %0) {
 ; CHECK-LABEL: set_76:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ev_pl0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1265,11 +1265,11 @@ define void @set_77(i64 %0) {
 ; CHECK-LABEL: set_77:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ev_pl1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1283,11 +1283,11 @@ define void @set_78(i64 %0) {
 ; CHECK-LABEL: set_78:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ev_pl2 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1301,11 +1301,11 @@ define void @set_79(i64 %0) {
 ; CHECK-LABEL: set_79:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ev_pl3 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1319,11 +1319,11 @@ define void @set_80(i64 %0) {
 ; CHECK-LABEL: set_80:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $sr_pl0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1337,11 +1337,11 @@ define void @set_81(i64 %0) {
 ; CHECK-LABEL: set_81:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $sr_pl1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1355,11 +1355,11 @@ define void @set_82(i64 %0) {
 ; CHECK-LABEL: set_82:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $sr_pl2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1373,11 +1373,11 @@ define void @set_83(i64 %0) {
 ; CHECK-LABEL: set_83:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $sr_pl3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1391,11 +1391,11 @@ define void @set_84(i64 %0) {
 ; CHECK-LABEL: set_84:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $es_pl0 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1409,11 +1409,11 @@ define void @set_85(i64 %0) {
 ; CHECK-LABEL: set_85:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $es_pl1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1427,11 +1427,11 @@ define void @set_86(i64 %0) {
 ; CHECK-LABEL: set_86:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $es_pl2 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1445,11 +1445,11 @@ define void @set_87(i64 %0) {
 ; CHECK-LABEL: set_87:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $es_pl3 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1463,11 +1463,11 @@ define void @set_88(i64 %0) {
 ; CHECK-LABEL: set_88:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s88 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1481,11 +1481,11 @@ define void @set_89(i64 %0) {
 ; CHECK-LABEL: set_89:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s89 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1499,11 +1499,11 @@ define void @set_90(i64 %0) {
 ; CHECK-LABEL: set_90:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s90 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1517,11 +1517,11 @@ define void @set_91(i64 %0) {
 ; CHECK-LABEL: set_91:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s91 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1535,11 +1535,11 @@ define void @set_92(i64 %0) {
 ; CHECK-LABEL: set_92:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s92 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1553,11 +1553,11 @@ define void @set_93(i64 %0) {
 ; CHECK-LABEL: set_93:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s93 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1571,11 +1571,11 @@ define void @set_94(i64 %0) {
 ; CHECK-LABEL: set_94:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s94 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1589,11 +1589,11 @@ define void @set_95(i64 %0) {
 ; CHECK-LABEL: set_95:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s95 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1607,14 +1607,14 @@ define void @set_96(i64 %0) {
 ; CHECK-LABEL: set_96:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $syow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1626,14 +1626,14 @@ define void @set_97(i64 %0) {
 ; CHECK-LABEL: set_97:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $htow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1645,14 +1645,14 @@ define void @set_98(i64 %0) {
 ; CHECK-LABEL: set_98:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $itow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1664,14 +1664,14 @@ define void @set_99(i64 %0) {
 ; CHECK-LABEL: set_99:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $dow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1683,14 +1683,14 @@ define void @set_100(i64 %0) {
 ; CHECK-LABEL: set_100:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $mow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1702,14 +1702,14 @@ define void @set_101(i64 %0) {
 ; CHECK-LABEL: set_101:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $psow = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1721,11 +1721,11 @@ define void @set_104(i64 %0) {
 ; CHECK-LABEL: set_104:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s104 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1739,11 +1739,11 @@ define void @set_105(i64 %0) {
 ; CHECK-LABEL: set_105:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s105 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1757,11 +1757,11 @@ define void @set_106(i64 %0) {
 ; CHECK-LABEL: set_106:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s106 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1775,11 +1775,11 @@ define void @set_107(i64 %0) {
 ; CHECK-LABEL: set_107:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s107 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1793,11 +1793,11 @@ define void @set_128(i64 %0) {
 ; CHECK-LABEL: set_128:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $spc = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1811,14 +1811,14 @@ define void @set_132(i64 %0) {
 ; CHECK-LABEL: set_132:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $sps = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
   store i64 %0, i64* %2, align 8
   %3 = load i64, i64* %2, align 8
@@ -1830,11 +1830,11 @@ define void @set_136(i64 %0) {
 ; CHECK-LABEL: set_136:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ea = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1848,11 +1848,11 @@ define void @set_140(i64 %0) {
 ; CHECK-LABEL: set_140:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $ev = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1866,11 +1866,11 @@ define void @set_144(i64 %0) {
 ; CHECK-LABEL: set_144:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $sr = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1884,11 +1884,11 @@ define void @set_148(i64 %0) {
 ; CHECK-LABEL: set_148:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $es = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1902,11 +1902,11 @@ define void @set_152(i64 %0) {
 ; CHECK-LABEL: set_152:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s152 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1920,11 +1920,11 @@ define void @set_156(i64 %0) {
 ; CHECK-LABEL: set_156:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    set $s156 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
@@ -1938,11 +1938,11 @@ define void @set_168(i64 %0) {
 ; CHECK-LABEL: set_168:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    set $s168 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8

@@ -8,10 +8,10 @@ define float @ffdmsaw(<2 x float> %0, <2 x float> %1, float %2) {
 ; CV2-LABEL: ffdmsaw:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffdmsaw $r2 = $r0, $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call float @llvm.kvx.ffdmsa.f32(<2 x float> %0, <2 x float> %1, float %2, i32 7, i32 0)
   ret float %4
 }
@@ -22,10 +22,10 @@ define <2 x float> @ffdmsawp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 ; CV2-LABEL: ffdmsawp:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffdmsawp $r4 = $r0r1, $r2r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x float> @llvm.kvx.ffdmsa.v2f32(<4 x float> %0, <4 x float> %1, <2 x float> %2, i32 7, i32 0)
   ret <2 x float> %4
 }
@@ -36,11 +36,11 @@ define <4 x float> @ffdmsawq(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
 ; CV2-LABEL: ffdmsawq:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffdmsawq $r8r9 = $r0r1r2r3, $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffdmsa.v4f32(<8 x float> %0, <8 x float> %1, <4 x float> %2, i32 7, i32 0)
   ret <4 x float> %4
 }
@@ -51,11 +51,11 @@ define <4 x float> @ffdmsawq_rn_s(<8 x float> %0, <8 x float> %1, <4 x float> %2
 ; CV2-LABEL: ffdmsawq_rn_s:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffdmsawq.rn.s $r8r9 = $r0r1r2r3, $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffdmsa.v4f32(<8 x float> %0, <8 x float> %1, <4 x float> %2, i32 0, i32 1)
   ret <4 x float> %4
 }

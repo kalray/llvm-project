@@ -10,7 +10,7 @@ define void @await(){
 ; CHECK-LABEL: await:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    await
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -24,7 +24,7 @@ define void @barrier(){
 ; CHECK-LABEL: barrier:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    barrier
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -38,7 +38,7 @@ define i32 @get(){
 ; CHECK-LABEL: get:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    get $r0 = $ps
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -53,7 +53,8 @@ define void @wfxl(){
 ; CHECK-LABEL: wfxl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    wfxl $pm0, $r0
 ; CHECK-NEXT:    ;;
@@ -71,7 +72,8 @@ define void @wfxm(){
 ; CHECK-LABEL: wfxm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    wfxl $pm0, $r0
 ; CHECK-NEXT:    ;;
@@ -89,7 +91,8 @@ define void @set(){
 ; CHECK-LABEL: set:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    set $ps = $r0
 ; CHECK-NEXT:    ;;
@@ -107,7 +110,7 @@ define void @sleep(){
 ; CHECK-LABEL: sleep:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sleep
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -121,7 +124,7 @@ define void @stop(){
 ; CHECK-LABEL: stop:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    stop
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -135,7 +138,7 @@ define void @syncgroup(i64 %sg){
 ; CHECK-LABEL: syncgroup:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    syncgroup $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -149,7 +152,7 @@ define void @waitit(i64 %sg){
 ; CHECK-LABEL: waitit:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    waitit $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

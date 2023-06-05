@@ -8,10 +8,10 @@ define <8 x i8> @selectbo(<8 x i8> %0, <8 x i8> %1, <8 x i8> %2) {
 ; CHECK-LABEL: selectbo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovebo.even $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <8 x i8> @llvm.kvx.select.vec.v8i8(<8 x i8> %0, <8 x i8> %1, <8 x i8> %2, i32 7)
   ret <8 x i8> %4
 }
@@ -23,7 +23,7 @@ define double @selectfd(double %0, double %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.wgtz $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call double @llvm.kvx.select.f64(double %1, double %0, i64 %2, i32 13)
   ret double %4
 }
@@ -37,13 +37,13 @@ define <32 x i8> @selectbv(<32 x i8> %0, <32 x i8> %1, <32 x i8> %2) {
 ; CHECK-NEXT:    cmovebo.eqz $r9 ? $r5 = $r1
 ; CHECK-NEXT:    cmovebo.eqz $r10 ? $r6 = $r2
 ; CHECK-NEXT:    cmovebo.eqz $r11 ? $r7 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    copyd $r2 = $r6
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <32 x i8> %1, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <32 x i8> %2, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -71,11 +71,11 @@ define <16 x i8> @selectbx(<16 x i8> %0, <16 x i8> %1, <16 x i8> %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmovebo.gez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmovebo.gez $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <16 x i8> %1, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <16 x i8> %2, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>

@@ -11,7 +11,7 @@ define double @fnegd(double %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.fneg.f64(double %0)
   ret double %2
 }
@@ -24,7 +24,7 @@ define <2 x double> @fnegdp(<2 x double> %0) {
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    fnegd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x double> %0, i64 0
   %3 = tail call double @llvm.kvx.fneg.f64(double %2)
   %4 = extractelement <2 x double> %0, i64 1
@@ -39,11 +39,11 @@ define <4 x double> @fnegdq(<4 x double> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fnegd $r0 = $r0
 ; CV1-NEXT:    fnegd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fnegd $r2 = $r2
 ; CV1-NEXT:    fnegd $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fnegdq:
 ; CV2:       # %bb.0:
@@ -52,7 +52,7 @@ define <4 x double> @fnegdq(<4 x double> %0) {
 ; CV2-NEXT:    fnegd $r2 = $r2
 ; CV2-NEXT:    fnegd $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <4 x double> %0, i64 0
   %3 = tail call double @llvm.kvx.fneg.f64(double %2)
   %4 = extractelement <4 x double> %0, i64 1
@@ -73,7 +73,7 @@ define half @fnegh(half %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call half @llvm.kvx.fneg.f16(half %0)
   ret half %2
 }
@@ -86,7 +86,7 @@ define <8 x half> @fnegho(<8 x half> %0) {
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    fneghq $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> %2)
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -102,7 +102,7 @@ define <2 x half> @fneghp(<2 x half> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x half> @llvm.kvx.fneg.v2f16(<2 x half> %0)
   ret <2 x half> %2
 }
@@ -114,7 +114,7 @@ define <4 x half> @fneghq(<4 x half> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fneghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> %0)
   ret <4 x half> %2
 }
@@ -124,11 +124,11 @@ define <16 x half> @fneghx(<16 x half> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fneghq $r0 = $r0
 ; CV1-NEXT:    fneghq $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fneghq $r2 = $r2
 ; CV1-NEXT:    fneghq $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fneghx:
 ; CV2:       # %bb.0:
@@ -137,7 +137,7 @@ define <16 x half> @fneghx(<16 x half> %0) {
 ; CV2-NEXT:    fneghq $r2 = $r2
 ; CV2-NEXT:    fneghq $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x half> @llvm.kvx.fneg.v4f16(<4 x half> %2)
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -157,7 +157,7 @@ define float @fnegw(float %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.fneg.f32(float %0)
   ret float %2
 }
@@ -169,11 +169,11 @@ define <8 x float> @fnegwo(<8 x float> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fnegwp $r0 = $r0
 ; CV1-NEXT:    fnegwp $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fnegwp $r2 = $r2
 ; CV1-NEXT:    fnegwp $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fnegwo:
 ; CV2:       # %bb.0:
@@ -182,7 +182,7 @@ define <8 x float> @fnegwo(<8 x float> %0) {
 ; CV2-NEXT:    fnegwp $r2 = $r2
 ; CV2-NEXT:    fnegwp $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> %2)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -204,7 +204,7 @@ define <2 x float> @fnegwp(<2 x float> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> %0)
   ret <2 x float> %2
 }
@@ -215,7 +215,7 @@ define <4 x float> @fnegwq(<4 x float> %0) {
 ; CHECK-NEXT:    fnegwp $r0 = $r0
 ; CHECK-NEXT:    fnegwp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.kvx.fneg.v2f32(<2 x float> %2)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>

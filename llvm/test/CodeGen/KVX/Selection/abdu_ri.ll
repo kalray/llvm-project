@@ -12,10 +12,10 @@ define i64 @abdud(i64 %0) {
 ; ALL-NEXT:    sbfd $r0 = $r0, 0xbeef
 ; ALL-NEXT:    compd.gtu $r1 = $r0, 0xbeef
 ; ALL-NEXT:    addd $r2 = $r0, 0xffffffffffff4111
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = icmp ugt i64 %0, 48879
   %3 = add i64 %0, -48879
   %4 = sub i64 48879, %0
@@ -29,10 +29,10 @@ define i64 @abdud2(i64 %0) {
 ; ALL-NEXT:    addd $r0 = $r0, 0xffffffffffff4111
 ; ALL-NEXT:    compd.ltu $r1 = $r0, 0xbeef
 ; ALL-NEXT:    sbfd $r2 = $r0, 0xbeef
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = icmp ult i64 %0, 48879
   %3 = sub i64 48879, %0
   %4 = add i64 %0, -48879
@@ -45,16 +45,16 @@ define i64 @abdud3(i64 %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minud $r0 = $r0, 0xbeef
 ; V1-NEXT:    maxud $r1 = $r0, 0xbeef
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfd $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abdud3:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdud $r0 = $r0, 0xbeef
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.umax.i64(i64 %0, i64 48879)
   %3 = tail call i64 @llvm.umin.i64(i64 %0, i64 48879)
   %4 = sub nuw i64 %2, %3
@@ -70,16 +70,16 @@ define i64 @abdud3_2(i64 %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minud $r0 = $r0, 0xf00d
 ; V1-NEXT:    maxud $r1 = $r0, 0xf00d
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfd $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abdud3_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdud $r0 = $r0, 0xf00d
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.umax.i64(i64 %0, i64 61453)
   %3 = tail call i64 @llvm.umin.i64(i64 %0, i64 61453)
   %4 = sub nuw i64 %2, %3
@@ -91,16 +91,16 @@ define i64 @abdud3_3(i64 %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minud $r0 = $r0, 0xbaadf00dbaadf00d
 ; V1-NEXT:    maxud $r1 = $r0, 0xbaadf00dbaadf00d
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfd $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abdud3_3:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdud.@ $r0 = $r0, 0xbaadf00d
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.umax.i64(i64 %0, i64 -4995072469926809587)
   %3 = tail call i64 @llvm.umin.i64(i64 %0, i64 -4995072469926809587)
   %4 = sub nuw i64 %2, %3
@@ -113,12 +113,12 @@ define i64 @abdud4(i64 %0) {
 ; ALL-NEXT:    sbfd $r0 = $r0, 0xbeef
 ; ALL-NEXT:    addd $r1 = $r0, 0xffffffffffff4111
 ; ALL-NEXT:    compd.ltu $r2 = $r0, 0xbeef
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = add i64 %0, -48879
   %3 = icmp ult i64 %0, 48879
   %4 = sub i64 48879, %0
@@ -132,10 +132,10 @@ define i32 @abduw(i32 %0) {
 ; ALL-NEXT:    sbfw $r0 = $r0, 0x317ceb
 ; ALL-NEXT:    compw.gtu $r1 = $r0, 0x317ceb
 ; ALL-NEXT:    addw $r2 = $r0, 0xffce8315
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = icmp ugt i32 %0, 3243243
   %3 = add i32 %0, -3243243
   %4 = sub i32 3243243, %0
@@ -149,10 +149,10 @@ define i32 @abduw2(i32 %0) {
 ; ALL-NEXT:    addw $r0 = $r0, 0xffce8315
 ; ALL-NEXT:    compw.ltu $r1 = $r0, 0x317ceb
 ; ALL-NEXT:    sbfw $r2 = $r0, 0x317ceb
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = icmp ult i32 %0, 3243243
   %3 = sub i32 3243243, %0
   %4 = add i32 %0, -3243243
@@ -166,10 +166,10 @@ define i32 @abduw3(i32 %0) {
 ; ALL-NEXT:    addw $r0 = $r0, 0xffce8315
 ; ALL-NEXT:    compw.ltu $r1 = $r0, 0x317ceb
 ; ALL-NEXT:    sbfw $r2 = $r0, 0x317ceb
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = icmp ult i32 %0, 3243243
   %3 = sub i32 3243243, %0
   %4 = add i32 %0, -3243243
@@ -182,16 +182,16 @@ define i32 @abduw4(i32 %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuw $r0 = $r0, 0x317ceb
 ; V1-NEXT:    maxuw $r1 = $r0, 0x317ceb
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfw $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduw4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduw $r0 = $r0, 0x317ceb
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.umax.i32(i32 %0, i32 3243243)
   %3 = tail call i32 @llvm.umin.i32(i32 %0, i32 3243243)
   %4 = sub nuw i32 %2, %3
@@ -207,72 +207,72 @@ define <8 x i8> @abdubo_(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    zxhd $r1 = $r1
 ; V1-NEXT:    srld $r2 = $r1, 48
 ; V1-NEXT:    extfz $r3 = $r1, 47, 32
 ; V1-NEXT:    srlw $r4 = $r1, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    zxhd $r2 = $r2
 ; V1-NEXT:    zxhd $r3 = $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    zxhd $r1 = $r1
 ; V1-NEXT:    zxhd $r4 = $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    insf $r1 = $r4, 15, 8
 ; V1-NEXT:    srld $r2 = $r0, 48
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    srlw $r4 = $r0, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r1 = $r3, 31, 16
 ; V1-NEXT:    extfz $r3 = $r0, 47, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    zxhd $r2 = $r2
 ; V1-NEXT:    zxhd $r3 = $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    zxhd $r0 = $r0
 ; V1-NEXT:    zxhd $r4 = $r4
 ; V1-NEXT:    maxuw $r5 = $r2, 33
 ; V1-NEXT:    maxuw $r6 = $r3, 43
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ; V1-NEXT:    zxhd $r0 = $r0
 ; V1-NEXT:    minuw $r2 = $r2, 33
 ; V1-NEXT:    insf $r6 = $r5, 15, 8
 ; V1-NEXT:    maxuw $r7 = $r4, 13
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ; V1-NEXT:    minuw $r0 = $r0, 12
 ; V1-NEXT:    minuw $r3 = $r3, 43
 ; V1-NEXT:    minuw $r4 = $r4, 13
 ; V1-NEXT:    maxuw $r5 = $r0, 12
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    make $r2 = 0
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    insf $r5 = $r7, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 10)
 ; V1-NEXT:    insf $r0 = $r4, 15, 8
 ; V1-NEXT:    insf $r5 = $r6, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 11)
 ; V1-NEXT:    insf $r0 = $r3, 31, 16
 ; V1-NEXT:    insf $r5 = $r1, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 12)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    ord.@ $r1 = $r5, 0x80808080
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 13)
 ; V1-NEXT:    nxord $r0 = $r5, $r0
 ; V1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 14)
 ; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; V1-NEXT:    sbfd $r1 = $r2, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 15)
 ; V1-NEXT:    xord $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 16)
 ;
 ; V2-LABEL: abdubo_:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdubo $r0 = $r0, 0x212b0d0c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <8 x i8> @llvm.umax.v8i8(<8 x i8> %0, <8 x i8> <i8 12, i8 13, i8 43, i8 33, i8 0, i8 0, i8 0, i8 0>)
   %3 = tail call <8 x i8> @llvm.umin.v8i8(<8 x i8> %0, <8 x i8> <i8 12, i8 13, i8 43, i8 33, i8 0, i8 0, i8 0, i8 0>)
   %4 = sub <8 x i8> %2, %3
@@ -288,83 +288,83 @@ define <8 x i8> @abdubo_at(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    srlw $r1 = $r1, 16
 ; V1-NEXT:    srld $r2 = $r1, 48
 ; V1-NEXT:    extfz $r3 = $r1, 47, 32
 ; V1-NEXT:    zxhd $r4 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    zxhd $r2 = $r2
 ; V1-NEXT:    zxhd $r3 = $r3
 ; V1-NEXT:    srld $r5 = $r0, 48
 ; V1-NEXT:    srlw $r11 = $r0, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    zxhd $r1 = $r1
 ; V1-NEXT:    zxhd $r4 = $r4
 ; V1-NEXT:    maxuw $r6 = $r2, 33
 ; V1-NEXT:    maxuw $r7 = $r3, 43
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    zxhd $r0 = $r0
 ; V1-NEXT:    maxuw $r8 = $r1, 13
 ; V1-NEXT:    extfz $r9 = $r0, 47, 32
 ; V1-NEXT:    maxuw $r10 = $r4, 12
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    zxhd $r0 = $r0
 ; V1-NEXT:    minuw $r2 = $r2, 33
 ; V1-NEXT:    minuw $r3 = $r3, 43
 ; V1-NEXT:    zxhd $r11 = $r11
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    minuw $r1 = $r1, 13
 ; V1-NEXT:    minuw $r4 = $r4, 12
 ; V1-NEXT:    zxhd $r5 = $r5
 ; V1-NEXT:    zxhd $r9 = $r9
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    maxuw $r6 = $r11, 13
 ; V1-NEXT:    insf $r7 = $r6, 15, 8
 ; V1-NEXT:    maxuw $r8 = $r0, 12
 ; V1-NEXT:    insf $r10 = $r8, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ; V1-NEXT:    minuw $r5 = $r5, 33
 ; V1-NEXT:    insf $r8 = $r6, 15, 8
 ; V1-NEXT:    maxuw $r15 = $r5, 33
 ; V1-NEXT:    maxuw $r16 = $r9, 43
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 8)
 ; V1-NEXT:    minuw $r0 = $r0, 12
 ; V1-NEXT:    minuw $r6 = $r9, 43
 ; V1-NEXT:    minuw $r7 = $r11, 13
 ; V1-NEXT:    insf $r10 = $r7, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r3 = $r2, 15, 8
 ; V1-NEXT:    insf $r16 = $r15, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 10)
 ; V1-NEXT:    insf $r4 = $r1, 15, 8
 ; V1-NEXT:    insf $r6 = $r5, 15, 8
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 11)
 ; V1-NEXT:    insf $r0 = $r7, 15, 8
 ; V1-NEXT:    insf $r8 = $r16, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 12)
 ; V1-NEXT:    insf $r0 = $r6, 31, 16
 ; V1-NEXT:    insf $r4 = $r3, 31, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 13)
 ; V1-NEXT:    insf $r0 = $r4, 63, 32
 ; V1-NEXT:    insf $r8 = $r10, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 14)
 ; V1-NEXT:    nxord $r0 = $r8, $r0
 ; V1-NEXT:    ord.@ $r1 = $r8, 0x80808080
 ; V1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 15)
 ; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; V1-NEXT:    sbfd $r1 = $r2, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 16)
 ; V1-NEXT:    xord $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 17)
 ;
 ; V2-LABEL: abdubo_at:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdubo.@ $r0 = $r0, 0x212b0d0c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <8 x i8> @llvm.umax.v8i8(<8 x i8> %0, <8 x i8> <i8 12, i8 13, i8 43, i8 33, i8 12, i8 13, i8 43, i8 33>)
   %3 = tail call <8 x i8> @llvm.umin.v8i8(<8 x i8> %0, <8 x i8> <i8 12, i8 13, i8 43, i8 33, i8 12, i8 13, i8 43, i8 33>)
   %4 = sub <8 x i8> %2, %3
@@ -376,33 +376,33 @@ define <8 x i8> @abdubo2_(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r2 = 0xffdfffd5fff3fff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addhq $r1 = $r1, $r2
 ; V1-NEXT:    srld $r2 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    abshq $r1 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r1, 0x40100401
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: abdubo2_:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxlbhq $r1 = $r0
 ; V2-NEXT:    make $r2 = 0xffdfffd5fff3fff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addhq $r1 = $r1, $r2
 ; V2-NEXT:    srld $r2 = $r0, 32
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    abshq $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r1, 0x40100401
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %2 = zext <8 x i8> %0 to <8 x i16>
   %3 = add nsw <8 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33, i16 0, i16 0, i16 0, i16 0>
   %4 = tail call <8 x i16> @llvm.abs.v8i16(<8 x i16> %3, i1 false)
@@ -417,40 +417,40 @@ define <8 x i8> @abdubo2_at(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x80004000200010
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    make $r2 = 0xffdfffd5fff3fff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    addhq $r0 = $r0, $r2
 ; V1-NEXT:    addhq $r1 = $r1, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    abshq $r0 = $r0
 ; V1-NEXT:    abshq $r1 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x40100401
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: abdubo2_at:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxmbhq $r0 = $r0
 ; V2-NEXT:    zxlbhq $r1 = $r0
 ; V2-NEXT:    make $r2 = 0xffdfffd5fff3fff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addhq $r0 = $r0, $r2
 ; V2-NEXT:    addhq $r1 = $r1, $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    abshq $r0 = $r0
 ; V2-NEXT:    abshq $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V2-NEXT:    sbmm8 $r2 = $r0, 0x40100401
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %2 = zext <8 x i8> %0 to <8 x i16>
   %3 = add nsw <8 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33, i16 -12, i16 -13, i16 -43, i16 -33>
   %4 = tail call <8 x i16> @llvm.abs.v8i16(<8 x i16> %3, i1 false)
@@ -463,22 +463,22 @@ define <8 x i8> @abdubo3_(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r2 = 0xffdfffd5fff3fff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x80004000200010
 ; V1-NEXT:    addhq $r2 = $r1, $r2
 ; V1-NEXT:    make $r3 = 0x21002b000d000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfhq $r1 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    maxhq $r1 = $r2, $r1
 ; V1-NEXT:    abshq $r2 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V1-NEXT:    sbmm8 $r1 = $r2, 0x40100401
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: abdubo3_:
 ; V2:       # %bb.0:
@@ -486,19 +486,19 @@ define <8 x i8> @abdubo3_(<8 x i8> %0) {
 ; V2-NEXT:    zxlbhq $r1 = $r0
 ; V2-NEXT:    make $r2 = 0xffdfffd5fff3fff4
 ; V2-NEXT:    make $r3 = 0x21002b000d000c
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfhq $r1 = $r1, $r3
 ; V2-NEXT:    addhq $r2 = $r1, $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    maxhq $r1 = $r2, $r1
 ; V2-NEXT:    abshq $r2 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V2-NEXT:    sbmm8 $r1 = $r2, 0x40100401
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r1, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %2 = zext <8 x i8> %0 to <8 x i16>
   %3 = add nsw <8 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33, i16 0, i16 0, i16 0, i16 0>
   %4 = sub nsw <8 x i16> <i16 12, i16 13, i16 43, i16 33, i16 0, i16 0, i16 0, i16 0>, %2
@@ -514,24 +514,24 @@ define <8 x i8> @abdubo3_at(<8 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x80004000200010
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    make $r2 = 0xffdfffd5fff3fff4
 ; V1-NEXT:    make $r3 = 0x21002b000d000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r3
 ; V1-NEXT:    sbfhq $r1 = $r1, $r3
 ; V1-NEXT:    addhq $r2 = $r1, $r2
 ; V1-NEXT:    addhq $r4 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    maxhq $r0 = $r4, $r0
 ; V1-NEXT:    maxhq $r1 = $r2, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x40100401
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: abdubo3_at:
 ; V2:       # %bb.0:
@@ -539,21 +539,21 @@ define <8 x i8> @abdubo3_at(<8 x i8> %0) {
 ; V2-NEXT:    zxlbhq $r1 = $r0
 ; V2-NEXT:    make $r2 = 0xffdfffd5fff3fff4
 ; V2-NEXT:    make $r3 = 0x21002b000d000c
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfhq $r0 = $r0, $r3
 ; V2-NEXT:    sbfhq $r1 = $r1, $r3
 ; V2-NEXT:    addhq $r2 = $r1, $r2
 ; V2-NEXT:    addhq $r4 = $r0, $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    maxhq $r0 = $r4, $r0
 ; V2-NEXT:    maxhq $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r1, 0x40100401
 ; V2-NEXT:    sbmm8 $r2 = $r0, 0x40100401
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %2 = zext <8 x i8> %0 to <8 x i16>
   %3 = add nsw <8 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33, i16 -12, i16 -13, i16 -43, i16 -33>
   %4 = sub nsw <8 x i16> <i16 12, i16 13, i16 43, i16 33, i16 12, i16 13, i16 43, i16 33>, %2
@@ -567,21 +567,21 @@ define <4 x i8> @abdubo_v4(<4 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r1 = 0x21002b000d000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
 ; V1-NEXT:    maxuhq $r2 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: abdubo_v4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdubo $r0 = $r0, 0x212b0d0c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i8> @llvm.umax.v4i8(<4 x i8> %0, <4 x i8> <i8 12, i8 13, i8 43, i8 33>)
   %3 = tail call <4 x i8> @llvm.umin.v4i8(<4 x i8> %0, <4 x i8> <i8 12, i8 13, i8 43, i8 33>)
   %4 = sub <4 x i8> %2, %3
@@ -597,27 +597,27 @@ define <4 x i8> @abdubo2_v4(<4 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r1 = 0xffdfffd5fff3fff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addhq $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    abshq $r0 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: abdubo2_v4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxlbhq $r0 = $r0
 ; V2-NEXT:    make $r1 = 0xffdfffd5fff3fff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addhq $r0 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    abshq $r0 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %2 = zext <4 x i8> %0 to <4 x i16>
   %3 = add nsw <4 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33>
   %4 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %3, i1 false)
@@ -632,32 +632,32 @@ define <4 x i8> @abdubo3_v4(<4 x i8> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r1 = 0xffdfffd5fff3fff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addhq $r1 = $r0, $r1
 ; V1-NEXT:    make $r2 = 0x21002b000d000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    maxhq $r0 = $r1, $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: abdubo3_v4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxlbhq $r0 = $r0
 ; V2-NEXT:    make $r1 = 0xffdfffd5fff3fff4
 ; V2-NEXT:    make $r2 = 0x21002b000d000c
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfhq $r0 = $r0, $r2
 ; V2-NEXT:    addhq $r1 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    maxhq $r0 = $r1, $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %2 = zext <4 x i8> %0 to <4 x i16>
   %3 = add nsw <4 x i16> %2, <i16 -12, i16 -13, i16 -43, i16 -33>
   %4 = sub nsw <4 x i16> <i16 12, i16 13, i16 43, i16 33>, %2
@@ -672,21 +672,21 @@ define <2 x i8> @abdubo_v2(<2 x i8> %0) {
 ; V1-LABEL: abdubo_v2:
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    minuhq $r0 = $r0, 0x2b000c
 ; V1-NEXT:    maxuhq $r1 = $r0, 0x2b000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: abdubo_v2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abdubo $r0 = $r0, 0x2b0c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i8> @llvm.umax.v2i8(<2 x i8> %0, <2 x i8> <i8 12, i8 43>)
   %3 = tail call <2 x i8> @llvm.umin.v2i8(<2 x i8> %0, <2 x i8> <i8 12, i8 43>)
   %4 = sub <2 x i8> %2, %3
@@ -701,12 +701,12 @@ define <2 x i8> @abdubo2_v2(<2 x i8> %0) {
 ; ALL-LABEL: abdubo2_v2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    abdhq $r0 = $r0, 0x2b000c
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = zext <2 x i8> %0 to <2 x i16>
   %3 = add nsw <2 x i16> %2, <i16 -12, i16 -43>
   %4 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %3, i1 false)
@@ -720,15 +720,15 @@ define <2 x i8> @abdubo3_v2(<2 x i8> %0) {
 ; ALL-LABEL: abdubo3_v2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20001
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    sbfhq $r0 = $r0, 0x2b000c
 ; ALL-NEXT:    addhq $r1 = $r0, 0xffd5fff4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    maxhq $r0 = $r1, $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = zext <2 x i8> %0 to <2 x i16>
   %3 = add nsw <2 x i16> %2, <i16 -12, i16 -43>
   %4 = sub nsw <2 x i16> <i16 12, i16 43>, %2
@@ -744,16 +744,16 @@ define <4 x i16> @abduhq_(<4 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuhq $r0 = $r0, 0x2b000c
 ; V1-NEXT:    maxuhq $r1 = $r0, 0x2b000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduhq_:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduhq $r0 = $r0, 0x2b000c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.umax.v4i16(<4 x i16> %0, <4 x i16> <i16 12, i16 43, i16 0, i16 0>)
   %3 = tail call <4 x i16> @llvm.umin.v4i16(<4 x i16> %0, <4 x i16> <i16 12, i16 43, i16 0, i16 0>)
   %4 = sub <4 x i16> %2, %3
@@ -769,16 +769,16 @@ define <4 x i16> @abduhq_at(<4 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuhq.@ $r0 = $r0, 0x2b000c
 ; V1-NEXT:    maxuhq.@ $r1 = $r0, 0x2b000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduhq_at:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduhq.@ $r0 = $r0, 0x2b000c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.umax.v4i16(<4 x i16> %0, <4 x i16> <i16 12, i16 43, i16 12, i16 43>)
   %3 = tail call <4 x i16> @llvm.umin.v4i16(<4 x i16> %0, <4 x i16> <i16 12, i16 43, i16 12, i16 43>)
   %4 = sub <4 x i16> %2, %3
@@ -791,26 +791,26 @@ define <4 x i16> @abduhq2_(<4 x i16> %0) {
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
 ; V1-NEXT:    make $r3 = 0
 ; V1-NEXT:    make $r4 = 0xffffffd5fffffff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addwp $r0 = $r2, $r4
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    absw $r0 = $r0
 ; V1-NEXT:    addwp $r1 = $r1, $r3
 ; V1-NEXT:    srld $r2 = $r0, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    absw $r2 = $r2
 ; V1-NEXT:    srld $r3 = $r1, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    insf $r1 = $r3, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; V1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ;
 ; V2-LABEL: abduhq2_:
 ; V2:       # %bb.0:
@@ -818,25 +818,25 @@ define <4 x i16> @abduhq2_(<4 x i16> %0) {
 ; V2-NEXT:    zxlhwp $r2 = $r0
 ; V2-NEXT:    make $r3 = 0
 ; V2-NEXT:    make $r4 = 0xffffffd5fffffff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addwp $r0 = $r2, $r4
 ; V2-NEXT:    addwp $r1 = $r1, $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    absw $r0 = $r0
 ; V2-NEXT:    srld $r2 = $r0, 32
 ; V2-NEXT:    srld $r3 = $r1, 32
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    insf $r1 = $r3, 63, 32
 ; V2-NEXT:    absw $r2 = $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 63, 32
 ; V2-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
 ; V2-NEXT:    insf $r0 = $r1, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 6)
   %2 = zext <4 x i16> %0 to <4 x i32>
   %3 = add nsw <4 x i32> %2, <i32 -12, i32 -43, i32 0, i32 0>
   %4 = tail call <4 x i32> @llvm.abs.v4i32(<4 x i32> %3, i1 false)
@@ -851,59 +851,59 @@ define <4 x i16> @abduhq2_at(<4 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    make $r1 = 0xffffffd5fffffff4
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    copyd $r0 = $r1
 ; V1-NEXT:    sbmm8 $r3 = $r0, 0x804000002010
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    addwp $r0 = $r2, $r0
 ; V1-NEXT:    addwp $r1 = $r3, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    absw $r0 = $r0
 ; V1-NEXT:    absw $r1 = $r1
 ; V1-NEXT:    srld $r2 = $r0, 32
 ; V1-NEXT:    srld $r3 = $r1, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    absw $r2 = $r2
 ; V1-NEXT:    absw $r3 = $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r2, 63, 32
 ; V1-NEXT:    insf $r1 = $r3, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; V1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 7)
 ;
 ; V2-LABEL: abduhq2_at:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxlhwp $r0 = $r0
 ; V2-NEXT:    zxmhwp $r1 = $r0
 ; V2-NEXT:    make $r3 = 0xffffffd5fffffff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addwp $r1 = $r1, $r3
 ; V2-NEXT:    copyd $r2 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    addwp $r0 = $r0, $r2
 ; V2-NEXT:    absw $r1 = $r1
 ; V2-NEXT:    srld $r3 = $r1, 32
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    absw $r0 = $r0
 ; V2-NEXT:    srld $r2 = $r0, 32
 ; V2-NEXT:    absw $r3 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r1 = $r3, 63, 32
 ; V2-NEXT:    absw $r2 = $r2
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    insf $r0 = $r2, 63, 32
 ; V2-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
 ; V2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 6)
 ; V2-NEXT:    insf $r0 = $r1, 63, 32
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 7)
   %2 = zext <4 x i16> %0 to <4 x i32>
   %3 = add nsw <4 x i32> %2, <i32 -12, i32 -43, i32 -12, i32 -43>
   %4 = tail call <4 x i32> @llvm.abs.v4i32(<4 x i32> %3, i1 false)
@@ -916,16 +916,16 @@ define <2 x i16> @abduhq_v2(<2 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuhq $r0 = $r0, 0x2b000c
 ; V1-NEXT:    maxuhq $r1 = $r0, 0x2b000c
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduhq_v2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduhq $r0 = $r0, 0x2b000c
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.umax.v2i16(<2 x i16> %0, <2 x i16> <i16 12, i16 43>)
   %3 = tail call <2 x i16> @llvm.umin.v2i16(<2 x i16> %0, <2 x i16> <i16 12, i16 43>)
   %4 = sub <2 x i16> %2, %3
@@ -941,27 +941,27 @@ define <2 x i16> @abduhq2_v2(<2 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; V1-NEXT:    make $r1 = 0xffffffd5fffffff4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addwp $r0 = $r0, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    abswp $r0 = $r0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: abduhq2_v2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    zxlhwp $r0 = $r0
 ; V2-NEXT:    make $r1 = 0xffffffd5fffffff4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    addwp $r0 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    abswp $r0 = $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %2 = zext <2 x i16> %0 to <2 x i32>
   %3 = add nsw <2 x i32> %2, <i32 -12, i32 -43>
   %4 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %3, i1 false)
@@ -976,16 +976,16 @@ define <2 x i32> @abduwp(<2 x i32> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuwp $r0 = $r0, 12
 ; V1-NEXT:    maxuwp $r1 = $r0, 12
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfwp $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduwp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduwp $r0 = $r0, 12
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.umax.v2i32(<2 x i32> %0, <2 x i32> <i32 12, i32 0>)
   %3 = tail call <2 x i32> @llvm.umin.v2i32(<2 x i32> %0, <2 x i32> <i32 12, i32 0>)
   %4 = sub <2 x i32> %2, %3
@@ -1001,12 +1001,12 @@ define <2 x i32> @abduwp2(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    extfz $r1 = $r0, 63, 32
 ; ALL-NEXT:    zxwd $r2 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    abdd $r0 = $r2, 12
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r0 = $r1, 63, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = zext <2 x i32> %0 to <2 x i64>
   %3 = add nsw <2 x i64> %2, <i64 -12, i64 0>
   %4 = tail call <2 x i64> @llvm.abs.v2i64(<2 x i64> %3, i1 false)
@@ -1021,16 +1021,16 @@ define <2 x i32> @abduwp_at(<2 x i32> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    minuwp.@ $r0 = $r0, 12
 ; V1-NEXT:    maxuwp.@ $r1 = $r0, 12
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfwp $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abduwp_at:
 ; V2:       # %bb.0:
 ; V2-NEXT:    abduwp.@ $r0 = $r0, 0xc
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.umax.v2i32(<2 x i32> %0, <2 x i32> <i32 12, i32 12>)
   %3 = tail call <2 x i32> @llvm.umin.v2i32(<2 x i32> %0, <2 x i32> <i32 12, i32 12>)
   %4 = sub nuw <2 x i32> %2, %3
@@ -1042,13 +1042,13 @@ define <2 x i32> @abduwp2_at(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    zxwd $r0 = $r0
 ; ALL-NEXT:    extfz $r1 = $r0, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    abdd $r0 = $r0, 12
 ; ALL-NEXT:    abdd $r1 = $r1, 12
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r0 = $r1, 63, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = zext <2 x i32> %0 to <2 x i64>
   %3 = add nsw <2 x i64> %2, <i64 -12, i64 -12>
   %4 = tail call <2 x i64> @llvm.abs.v2i64(<2 x i64> %3, i1 false)

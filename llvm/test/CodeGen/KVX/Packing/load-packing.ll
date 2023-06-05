@@ -10,10 +10,10 @@ define i64 @f2(i64* nocapture readonly %a) {
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %0 = load i64, i64* %a, align 8
   %arrayidx1 = getelementptr inbounds i64, i64* %a, i64 1
@@ -27,14 +27,14 @@ define i64 @f4(i64* nocapture readonly %a) {
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    addd $r0 = $r0, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load i64, i64* %a, align 8
   %arrayidx1 = getelementptr inbounds i64, i64* %a, i64 1
@@ -54,16 +54,16 @@ define i64 @f2_2(i64* nocapture readonly %a, i64* nocapture readonly %b) {
 ; CHECK-LABEL: f2_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r0r1 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    addx2d $r1 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 entry:
   %arrayidx = getelementptr inbounds i64, i64* %a, i64 1
   %0 = load i64, i64* %arrayidx, align 8
@@ -84,12 +84,12 @@ define i64 @force(i64 %a, i64 %b, i64 %c, i64 %d) {
 ; CHECK-LABEL: force:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r0 = $r0, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nsw i64 %b, %a
   %add1 = add nsw i64 %add, %c
@@ -101,14 +101,14 @@ define i64 @f4_force(i64* nocapture readonly %a) {
 ; CHECK-LABEL: f4_force:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    addd $r0 = $r0, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load i64, i64* %a, align 8
   %arrayidx1 = getelementptr inbounds i64, i64* %a, i64 1

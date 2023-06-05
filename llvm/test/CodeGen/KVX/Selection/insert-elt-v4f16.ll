@@ -11,7 +11,7 @@ define <4 x half> @ff1(<4 x half> %v, half %val){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecins = insertelement <4 x half> %v, half %val, i32 0
   ret <4 x half> %vecins
@@ -22,7 +22,7 @@ define <4 x half> @ff2(<4 x half> %v, half %val){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecins = insertelement <4 x half> %v, half %val, i32 1
   ret <4 x half> %vecins
@@ -33,7 +33,7 @@ define <4 x half> @ff3(<4 x half> %v, half %val){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 47, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecins = insertelement <4 x half> %v, half %val, i32 2
   ret <4 x half> %vecins
@@ -44,7 +44,7 @@ define <4 x half> @ff4(<4 x half> %v, half %val){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 48
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecins = insertelement <4 x half> %v, half %val, i32 3
   ret <4 x half> %vecins
@@ -54,10 +54,10 @@ define <4 x half> @f1(<4 x half> %v){
 ; CHECK-LABEL: f1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 15, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0x4940
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xH4940, i32 0
   ret <4 x half> %vecins
@@ -67,10 +67,10 @@ define <4 x half> @f2(<4 x half> %v){
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0x494d0000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xH494D, i32 1
   ret <4 x half> %vecins
@@ -80,10 +80,10 @@ define <4 x half> @f3(<4 x half> %v){
 ; CHECK-LABEL: f3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 47, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0x495a00000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xH495A, i32 2
   ret <4 x half> %vecins
@@ -93,10 +93,10 @@ define <4 x half> @f4(<4 x half> %v){
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 63, 48
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0x4966000000000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xH4966, i32 3
   ret <4 x half> %vecins
@@ -106,10 +106,10 @@ define <4 x half> @f5(<4 x half> %v){
 ; CHECK-LABEL: f5:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 15, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc940
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xHC940, i32 0
   ret <4 x half> %vecins
@@ -119,10 +119,10 @@ define <4 x half> @f6(<4 x half> %v){
 ; CHECK-LABEL: f6:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 31, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc94d0000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xHC94D, i32 1
   ret <4 x half> %vecins
@@ -132,10 +132,10 @@ define <4 x half> @f7(<4 x half> %v){
 ; CHECK-LABEL: f7:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 47, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc95a00000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xHC95A, i32 2
   ret <4 x half> %vecins
@@ -145,10 +145,10 @@ define <4 x half> @f8(<4 x half> %v){
 ; CHECK-LABEL: f8:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r0 = $r0, 63, 48
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, 0xc966000000000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %vecins = insertelement <4 x half> %v, half 0xHC966, i32 3
   ret <4 x half> %vecins

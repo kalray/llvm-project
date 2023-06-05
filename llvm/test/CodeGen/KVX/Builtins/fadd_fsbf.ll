@@ -11,7 +11,7 @@ define double @faddd(double %0, double %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddd.rz $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.fadd.f64(double %0, double %1, i32 3, i32 0)
   ret double %3
 }
@@ -23,7 +23,7 @@ define <2 x double> @fadddc(<2 x double> %0, <2 x double> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fadddc.c.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> %0, <2 x double> %1, i32 1, i32 0, i32 0)
   ret <2 x double> %3
 }
@@ -34,10 +34,10 @@ define <4 x double> @fadddcp(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: fadddcp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fadddc.c.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fadddc.c.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x double> @llvm.kvx.faddc.v2f64(<2 x double> %3, <2 x double> %4, i32 1, i32 0, i32 0)
@@ -53,7 +53,7 @@ define <2 x double> @fadddp(<2 x double> %0, <2 x double> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fadddp.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.fadd.v2f64(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   ret <2 x double> %3
 }
@@ -64,10 +64,10 @@ define <4 x double> @fadddq(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: fadddq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fadddp.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fadddp.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x double> @llvm.kvx.fadd.v2f64(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
@@ -83,7 +83,7 @@ define half @faddh(half %0, half %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddhq.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call half @llvm.kvx.fadd.f16(half %0, half %1, i32 7, i32 1)
   ret half %3
 }
@@ -95,7 +95,7 @@ define <2 x half> @faddhp(<2 x half> %0, <2 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddhq.rz.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x half> @llvm.kvx.fadd.v2f16(<2 x half> %0, <2 x half> %1, i32 3, i32 1)
   ret <2 x half> %3
 }
@@ -107,7 +107,7 @@ define <4 x half> @faddhq(<4 x half> %0, <4 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddhq.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x half> @llvm.kvx.fadd.v4f16(<4 x half> %0, <4 x half> %1, i32 7, i32 1)
   ret <4 x half> %3
 }
@@ -119,7 +119,7 @@ define float @faddw(float %0, float %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddw.rz $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.fadd.f32(float %0, float %1, i32 3, i32 0)
   ret float %3
 }
@@ -131,7 +131,7 @@ define <2 x float> @faddwc(<2 x float> %0, <2 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwc.c.rn $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.faddc.v2f32(<2 x float> %0, <2 x float> %1, i32 1, i32 0, i32 0)
   ret <2 x float> %3
 }
@@ -143,7 +143,7 @@ define <4 x float> @faddwcp(<4 x float> %0, <4 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwcp.c.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> %0, <4 x float> %1, i32 1, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -154,10 +154,10 @@ define <8 x float> @faddwcq(<8 x float> %0, <8 x float> %1) {
 ; CHECK-LABEL: faddwcq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwcp.c.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddwcp.c.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.faddc.v4f32(<4 x float> %3, <4 x float> %4, i32 1, i32 0, i32 0)
@@ -172,10 +172,10 @@ define <8 x float> @faddwo(<8 x float> %0, <8 x float> %1) {
 ; CHECK-LABEL: faddwo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwq.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddwq.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.fadd.v4f32(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
@@ -193,7 +193,7 @@ define <2 x float> @faddwp(<2 x float> %0, <2 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwp.rn $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fadd.v2f32(<2 x float> %0, <2 x float> %1, i32 0, i32 0)
   ret <2 x float> %3
 }
@@ -205,7 +205,7 @@ define <4 x float> @faddwq(<4 x float> %0, <4 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwq.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fadd.v4f32(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -215,7 +215,7 @@ define double @fsbfd(double %0, double %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfd.rz $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.fsbf.f64(double %0, double %1, i32 3, i32 0)
   ret double %3
 }
@@ -227,7 +227,7 @@ define <2 x double> @fsbfdc(<2 x double> %0, <2 x double> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfdc.c.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> %0, <2 x double> %1, i32 1, i32 0, i32 0)
   ret <2 x double> %3
 }
@@ -238,10 +238,10 @@ define <4 x double> @fsbfdcp(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: fsbfdcp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfdc.c.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfdc.c.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> %3, <2 x double> %4, i32 1, i32 0, i32 0)
@@ -257,7 +257,7 @@ define <2 x double> @fsbfdp(<2 x double> %0, <2 x double> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfdp.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.fsbf.v2f64(<2 x double> %0, <2 x double> %1, i32 0, i32 0)
   ret <2 x double> %3
 }
@@ -269,7 +269,7 @@ define <2 x double> @fsbfdc2(<2 x double> %0, <2 x double> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfdp.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.fsbfc.v2f64(<2 x double> %0, <2 x double> %1, i32 0, i32 0, i32 0)
   ret <2 x double> %3
 }
@@ -278,10 +278,10 @@ define <4 x double> @fsbfdq(<4 x double> %0, <4 x double> %1) {
 ; CHECK-LABEL: fsbfdq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfdp.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfdp.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x double> %1, <4 x double> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x double> @llvm.kvx.fsbf.v2f64(<2 x double> %3, <2 x double> %4, i32 0, i32 0)
@@ -297,7 +297,7 @@ define half @fsbfh(half %0, half %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfhq.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call half @llvm.kvx.fsbf.f16(half %0, half %1, i32 7, i32 1)
   ret half %3
 }
@@ -309,7 +309,7 @@ define <2 x half> @fsbfhp(<2 x half> %0, <2 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfhq.rz.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x half> @llvm.kvx.fsbf.v2f16(<2 x half> %0, <2 x half> %1, i32 3, i32 1)
   ret <2 x half> %3
 }
@@ -321,7 +321,7 @@ define <4 x half> @fsbfhq(<4 x half> %0, <4 x half> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfhq.s $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x half> @llvm.kvx.fsbf.v4f16(<4 x half> %0, <4 x half> %1, i32 7, i32 1)
   ret <4 x half> %3
 }
@@ -333,7 +333,7 @@ define float @fsbfw(float %0, float %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfw.rz $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.fsbf.f32(float %0, float %1, i32 3, i32 0)
   ret float %3
 }
@@ -345,7 +345,7 @@ define <2 x float> @fsbfwc(<2 x float> %0, <2 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwc.c.rn $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fsbfc.v2f32(<2 x float> %0, <2 x float> %1, i32 1, i32 0, i32 0)
   ret <2 x float> %3
 }
@@ -357,7 +357,7 @@ define <4 x float> @fsbfwcp(<4 x float> %0, <4 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwcp.c.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> %0, <4 x float> %1, i32 1, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -368,10 +368,10 @@ define <8 x float> @fsbfwcq(<8 x float> %0, <8 x float> %1) {
 ; CHECK-LABEL: fsbfwcq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwcp.c.rn.s $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfwcp.c.rn.s $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.fsbfc.v4f32(<4 x float> %3, <4 x float> %4, i32 1, i32 0, i32 1)
@@ -386,10 +386,10 @@ define <8 x float> @fsbfwo(<8 x float> %0, <8 x float> %1) {
 ; CHECK-LABEL: fsbfwo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwq.rn $r0r1 = $r0r1, $r4r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfwq.rn $r2r3 = $r2r3, $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.fsbf.v4f32(<4 x float> %3, <4 x float> %4, i32 0, i32 0)
@@ -407,7 +407,7 @@ define <2 x float> @fsbfwp(<2 x float> %0, <2 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwp.rn $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fsbf.v2f32(<2 x float> %0, <2 x float> %1, i32 0, i32 0)
   ret <2 x float> %3
 }
@@ -419,7 +419,7 @@ define <4 x float> @fsbfwq(<4 x float> %0, <4 x float> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwq.rn $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fsbf.v4f32(<4 x float> %0, <4 x float> %1, i32 0, i32 0)
   ret <4 x float> %3
 }

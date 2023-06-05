@@ -10,10 +10,10 @@ define double @ffmad(double %0, double %1, double %2) {
 ; ALL-LABEL: ffmad:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmad.rz $r2 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call double @llvm.kvx.ffma.f64(double %0, double %1, double %2, i32 3, i32 0)
   ret double %4
 }
@@ -24,14 +24,14 @@ define <2 x double> @ffmadp(<2 x double> %0, <2 x double> %1, <2 x double> %2) {
 ; ALL-LABEL: ffmadp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmad.rn $r4 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmad.rn $r5 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %4 = extractelement <2 x double> %0, i64 0
   %5 = extractelement <2 x double> %1, i64 0
   %6 = extractelement <2 x double> %2, i64 0
@@ -49,22 +49,22 @@ define <4 x double> @ffmadq(<4 x double> %0, <4 x double> %1, <4 x double> %2) {
 ; ALL-LABEL: ffmadq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmad.rn $r8 = $r0, $r4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmad.rn $r9 = $r1, $r5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    ffmad.rn $r10 = $r2, $r6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    ffmad.rn $r11 = $r3, $r7
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    copyd $r0 = $r8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    copyd $r1 = $r9
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    copyd $r2 = $r10
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    copyd $r3 = $r11
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
   %4 = extractelement <4 x double> %0, i64 0
   %5 = extractelement <4 x double> %1, i64 0
   %6 = extractelement <4 x double> %2, i64 0
@@ -93,7 +93,7 @@ define half @ffmah(half %0, half %1, half %2) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %4 = tail call half @llvm.kvx.ffma.f16(half %1, half %2, half %0, i32 1, i32 1)
   ret half %4
 }
@@ -105,7 +105,7 @@ define <2 x half> @ffmahp(<2 x half> %0, <2 x half> %1, <2 x half> %2) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmahq.rz.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x half> @llvm.kvx.ffma.v2f16(<2 x half> %1, <2 x half> %2, <2 x half> %0, i32 3, i32 1)
   ret <2 x half> %4
 }
@@ -117,7 +117,7 @@ define <4 x half> @ffmahq(<4 x half> %0, <4 x half> %1, <4 x half> %2) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmahq.ru.s $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %4 = tail call <4 x half> @llvm.kvx.ffma.v4f16(<4 x half> %1, <4 x half> %2, <4 x half> %0, i32 1, i32 1)
   ret <4 x half> %4
 }
@@ -128,10 +128,10 @@ define float @ffmaw(float %0, float %1, float %2) {
 ; ALL-LABEL: ffmaw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmaw.rz $r2 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call float @llvm.kvx.ffma.f32(float %0, float %1, float %2, i32 3, i32 0)
   ret float %4
 }
@@ -142,34 +142,34 @@ define <8 x float> @ffmawo(<8 x float> %0, <8 x float> %1, <8 x float> %2) {
 ; CV1-LABEL: ffmawo:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmawp.rn $r9 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    ffmawp.rn $r8 = $r0, $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ffmawp.rn $r11 = $r3, $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    ffmawp.rn $r10 = $r2, $r6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    copyd $r0 = $r8
 ; CV1-NEXT:    copyd $r1 = $r9
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r2 = $r10
 ; CV1-NEXT:    copyd $r3 = $r11
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: ffmawo:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmawq.rn $r8r9 = $r0r1, $r4r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ffmawq.rn $r10r11 = $r2r3, $r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    copyd $r2 = $r10
 ; CV2-NEXT:    copyd $r3 = $r11
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x float> %2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -188,10 +188,10 @@ define <2 x float> @ffmawp(<2 x float> %0, <2 x float> %1, <2 x float> %2) {
 ; ALL-LABEL: ffmawp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmawp.rn $r2 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x float> @llvm.kvx.ffma.v2f32(<2 x float> %0, <2 x float> %1, <2 x float> %2, i32 0, i32 0)
   ret <2 x float> %4
 }
@@ -202,22 +202,22 @@ define <4 x float> @ffmawq(<4 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; CV1-LABEL: ffmawq:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmawp.rn $r5 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    ffmawp.rn $r4 = $r0, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: ffmawq:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmawq.rn $r4r5 = $r0r1, $r2r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffma.v4f32(<4 x float> %0, <4 x float> %1, <4 x float> %2, i32 0, i32 0)
   ret <4 x float> %4
 }
@@ -226,22 +226,22 @@ define <8 x half> @ffmaho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
 ; CV1-LABEL: ffmaho:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmahq.ru.s $r5 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    ffmahq.ru.s $r4 = $r0, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: ffmaho:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmaho.ru.s $r4r5 = $r0r1, $r2r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <8 x half> @llvm.kvx.ffma.v8f16(<8 x half> %0, <8 x half> %1, <8 x half> %2, i32 1, i32 1)
   ret <8 x half> %4
 }
@@ -252,34 +252,34 @@ define <16 x half> @ffmahx(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
 ; CV1-LABEL: ffmahx:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmahq.ru.s $r9 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    ffmahq.ru.s $r8 = $r0, $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ffmahq.ru.s $r11 = $r3, $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    ffmahq.ru.s $r10 = $r2, $r6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    copyd $r0 = $r8
 ; CV1-NEXT:    copyd $r1 = $r9
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r2 = $r10
 ; CV1-NEXT:    copyd $r3 = $r11
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: ffmahx:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmaho.ru.s $r8r9 = $r0r1, $r4r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ffmaho.ru.s $r10r11 = $r2r3, $r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    copyd $r2 = $r10
 ; CV2-NEXT:    copyd $r3 = $r11
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <16 x half> %1, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <16 x half> %2, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>

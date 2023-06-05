@@ -11,15 +11,15 @@ define float @f32_add_imm(float %f) {
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    faddw $r0 = $r0, 0x3f800000
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: f32_add_imm:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    make $r1 = 0x3f800000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    faddw $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %add = fadd float %f, 1.000000e+00
   ret float %add
@@ -30,15 +30,15 @@ define double @f64_add_imm(double %d) {
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    faddd $r0 = $r0, 0x3ff0000000000000
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: f64_add_imm:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    make $r1 = 0x3ff0000000000000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    faddd $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %add = fadd double %d, 1.000000e+00
   ret double %add
@@ -49,12 +49,12 @@ define float @f32_comp_imm(float %f) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fnegw $r1 = $r0
 ; CHECK-NEXT:    fcompw.une $r2 = $r0, 0x3f800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = fcmp une float %f, 1.000000e+00
   %fneg = fneg float %f

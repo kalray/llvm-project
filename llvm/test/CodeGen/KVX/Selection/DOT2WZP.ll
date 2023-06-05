@@ -12,7 +12,7 @@ define <2 x i64> @DOT2WZP(<4 x i32> %0, <4 x i32> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dot2wzp $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = mul nsw <4 x i32> %1, %0
   %4 = extractelement <4 x i32> %3, i32 0
   %5 = mul nsw <4 x i32> %1, %0

@@ -12,7 +12,7 @@ define <4 x i32> @cat128(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    copyd $r1 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <2 x i32> %1, <2 x i32> %0, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   ret <4 x i32> %3
 }
@@ -25,7 +25,7 @@ define <8 x i32> @cat256(<4 x i32> %0, <4 x i32> %1) {
 ; ALL-NEXT:    copyd $r2 = $r0
 ; ALL-NEXT:    copyd $r3 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <4 x i32> %1, <4 x i32> %0, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x i32> %3
 }
@@ -34,11 +34,11 @@ define void @cat512(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, 
 ; ALL-LABEL: cat512:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    so 32[$r15] = $r0r1r2r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    so 0[$r15] = $r4r5r6r7
 ; ALL-NEXT:    copyd $r0 = $r15
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %4 = shufflevector <8 x i32> %2, <8 x i32> %1, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   store <16 x i32> %4, <16 x i32>* %0
   ret void

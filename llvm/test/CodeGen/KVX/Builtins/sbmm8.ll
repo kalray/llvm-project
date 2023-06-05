@@ -11,7 +11,7 @@ define i64 @sbmm8(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 %1)
   ret i64 %3
 }
@@ -23,7 +23,7 @@ define i64 @sbmm8ri10(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, -512
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 -512)
   ret i64 %2
 }
@@ -33,7 +33,7 @@ define i64 @sbmm8ri37(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, -513
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 -513)
   ret i64 %2
 }
@@ -43,7 +43,7 @@ define i64 @sbmm8ri64(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2fffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.sbmm8(i64 %0, i64 206158430207)
   ret i64 %2
 }
@@ -53,7 +53,7 @@ define i64 @sbmmt8(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmmt8 $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.sbmmt8(i64 %0, i64 %1)
   ret i64 %3
 }
@@ -65,7 +65,7 @@ define i64 @sbmmt8ri10(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmmt8 $r0 = $r0, 512
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.sbmmt8(i64 %0, i64 512)
   ret i64 %2
 }

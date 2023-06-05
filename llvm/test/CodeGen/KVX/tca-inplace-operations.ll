@@ -8,36 +8,36 @@ define void @convdhv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-LABEL: convdhv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a4 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    convdhv1.rn.sat $a4.hi = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    convdhv0.rn.satu $a4.lo = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    xso 32[$r0] = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    xlo.u $a3 = 224[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    xlo.u $a2 = 192[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xlo.u $a1 = 160[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 14)
 ; ALL-NEXT:    xlo.u $a0 = 128[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    convdhv0.rz.sat $a4.lo = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 18)
 ; ALL-NEXT:    convdhv1.rz.sat $a4.hi = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 19)
 ; ALL-NEXT:    xso 64[$r0] = $a4
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 23)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = load <1024 x i1>, <1024 x i1>* %1
   %5 = tail call <256 x i1> @llvm.kvx.xconvdhv1(<256 x i1> %3, <1024 x i1> %4, i32 0, i32 0)
@@ -62,49 +62,49 @@ define void @convwbv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-LABEL: convwbv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a4 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    convwbv1.rn.sat $a4.y = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    convwbv0.rn.satu $a4.x = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    convwbv2.rd.sat $a4.z = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    xcopyo $a5 = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    convwbv3.rhu.satu $a5.t = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xso 32[$r0] = $a5
 ; ALL-NEXT:    convwbv3.rn.sat $a4.t = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    xso 0[$r0] = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 21)
 ; ALL-NEXT:    xlo.u $a3 = 224[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 22)
 ; ALL-NEXT:    xlo.u $a2 = 192[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 23)
 ; ALL-NEXT:    xlo.u $a1 = 160[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 24)
 ; ALL-NEXT:    xlo.u $a0 = 128[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 25)
 ; ALL-NEXT:    convwbv0.rz.satu $a4.x = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 28)
 ; ALL-NEXT:    convwbv1.rz.satu $a4.y = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 29)
 ; ALL-NEXT:    convwbv2.rz.satu $a4.z = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 30)
 ; ALL-NEXT:    convwbv3.rz.satu $a4.t = $a0a1a2a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 31)
 ; ALL-NEXT:    xso 64[$r0] = $a4
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 35)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = load <1024 x i1>, <1024 x i1>* %1
   %5 = tail call <256 x i1> @llvm.kvx.xconvwbv1(<256 x i1> %3, <1024 x i1> %4, i32 0, i32 0)
@@ -137,49 +137,49 @@ define void @fmma444hw(<256 x i1>* nocapture %0, <512 x i1>* nocapture %1) {
 ; ALL-LABEL: fmma444hw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a6 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a3 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a2 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a4 = 32[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a4, $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a4, $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    xcopyo $a1 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xcopyo $a5 = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    fmma242hw2 $a5.lo = $a2a3, $a4, $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 18)
 ; ALL-NEXT:    xso 32[$r0] = $a5
 ; ALL-NEXT:    fmma242hw3 $a1.hi = $a2a3, $a5, $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 24)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 25)
 ; ALL-NEXT:    xso 64[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 30)
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 31)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 32)
 ; ALL-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a1, $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 35)
 ; ALL-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a1, $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 36)
 ; ALL-NEXT:    fmma242hw2 $a7.lo = $a2a3, $a1, $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 37)
 ; ALL-NEXT:    fmma242hw3 $a7.hi = $a2a3, $a1, $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 38)
 ; ALL-NEXT:    xso 192[$r1] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 42)
 ; ALL-NEXT:    xso 224[$r1] = $a7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 44)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = load <512 x i1>, <512 x i1>* %1
   %5 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
@@ -217,13 +217,13 @@ define void @test(<256 x i1>* nocapture %0) {
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xmovetq $a0.lo = $r2, $r1
 ; ALL-NEXT:    xmovetq $a0.hi = $r2, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xso 0[$r0] = $a0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %2, i64 1, i64 0, i32 1)
   %4 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %3, i64 1, i64 0, i32 0)
@@ -238,32 +238,32 @@ define void @insertwm(<1024 x i1>* nocapture %0, <512 x i1>* nocapture readonly 
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $x1
 ; ALL-NEXT:    xlo.u $a0 = 96[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a2 = 32[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xlo.u $a2 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    xcopyo $a2 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    xcopyo $a3 = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 9)
 ; ALL-NEXT:    xso 64[$r0] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
   %3 = load <1024 x i1>, <1024 x i1>* %0
   %4 = load <512 x i1>, <512 x i1>* %1
   %5 = tail call <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1> %3, <512 x i1> %4, i32 0)
@@ -279,32 +279,32 @@ define void @insertvm(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly 
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $x1
 ; ALL-NEXT:    xlo.u $a0 = 96[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a1 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xcopyo $a1 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 10)
 ; ALL-NEXT:    xcopyo $a2 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    xso 64[$r0] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    # implicit-def: $w0
 ; ALL-NEXT:    xcopyo $a3 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 20)
   %3 = load <1024 x i1>, <1024 x i1>* %0
   %4 = load <256 x i1>, <256 x i1>* %1
   %5 = tail call <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1> %3, <256 x i1> %4, i32 0)
@@ -322,18 +322,18 @@ define void @insertvw(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $w1
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xcopyo $a1 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 32[$r0] = $a1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 8)
   %3 = load <512 x i1>, <512 x i1>* %0
   %4 = load <256 x i1>, <256 x i1>* %1
   %5 = tail call <512 x i1> @llvm.kvx.xinsertvw(<512 x i1> %3, <256 x i1> %4, i32 0)
@@ -348,22 +348,22 @@ define void @movefmw(<512 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-LABEL: movefmw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xso 96[$r0] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 64[$r0] = $a2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
   %3 = load <1024 x i1>, <1024 x i1>* %1
   %4 = tail call <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1> %3, i32 0)
   store <512 x i1> %4, <512 x i1>* %0
@@ -379,22 +379,22 @@ define void @movefmv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-LABEL: movefmv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xso 64[$r0] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
   %3 = load <1024 x i1>, <1024 x i1>* %1
   %4 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %3, i32 0)
   store <256 x i1> %4, <256 x i1>* %0
@@ -416,14 +416,14 @@ define void @movefwv(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1
 ; ALL-LABEL: movefwv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a1 = 32[$r1]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 32[$r0] = $a1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = load <512 x i1>, <512 x i1>* %1
   %4 = tail call <256 x i1> @llvm.kvx.xmovefwv(<512 x i1> %3, i32 0)
   store <256 x i1> %4, <256 x i1>* %0
@@ -439,22 +439,22 @@ define void @buildfvm(<256 x i1>* nocapture readonly %0, <1024 x i1>* nocapture 
 ; ALL-LABEL: buildfvm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a3 = 32[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    xso 32[$r1] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 0[$r1] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 96[$r1] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xcopyo $a2 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 64[$r1] = $a2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 10)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
   %5 = load <256 x i1>, <256 x i1>* %4
@@ -471,34 +471,34 @@ define void @buildfwm(<512 x i1>* nocapture readonly %0, <1024 x i1>* nocapture 
 ; ALL-LABEL: buildfwm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 160[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 128[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xso 160[$r1] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 128[$r1] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xcopyo $a2 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xcopyo $a3 = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 192[$r1] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 9)
 ; ALL-NEXT:    xso 224[$r1] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 10)
 ; ALL-NEXT:    xlo.u $a3 = 96[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    xlo.u $a2 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    xso 32[$r1] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xso 0[$r1] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 14)
 ; ALL-NEXT:    xso 96[$r1] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    xso 64[$r1] = $a2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 16)
   %3 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 2
   %4 = load <512 x i1>, <512 x i1>* %3
   %5 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %4, <512 x i1> %4)
@@ -517,14 +517,14 @@ define void @buildfvw(<256 x i1>* nocapture readonly %0, <512 x i1>* nocapture %
 ; ALL-LABEL: buildfvw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 64[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xso 32[$r1] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xso 0[$r1] = $a0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
   %5 = load <256 x i1>, <256 x i1>* %4
@@ -539,32 +539,32 @@ define void @xcat2048(<2048 x i1>* nocapture %0) {
 ; ALL-LABEL: xcat2048:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xso 96[$r0] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 64[$r0] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    xcopyo $a4 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    xcopyo $a5 = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 9)
 ; ALL-NEXT:    xcopyo $a6 = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 10)
 ; ALL-NEXT:    xcopyo $a7 = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    xso 128[$r0] = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    xso 160[$r0] = $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xso 192[$r0] = $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 14)
 ; ALL-NEXT:    xso 224[$r0] = $a7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 15)
   %2 = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
   store <2048 x i1> %2, <2048 x i1>* %0
   ret void
@@ -576,58 +576,58 @@ define void @xcat4096(<4096 x i1>* nocapture %0) {
 ; ALL-LABEL: xcat4096:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmt44d $a4a5a6a7 = $a60a61a62a63
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xmt44d $a0a1a2a3 = $a56a57a58a59
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xso 160[$r0] = $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    xso 128[$r0] = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    xso 224[$r0] = $a7
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    xso 192[$r0] = $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    xso 32[$r0] = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    xso 0[$r0] = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 9)
 ; ALL-NEXT:    xso 96[$r0] = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 10)
 ; ALL-NEXT:    xso 64[$r0] = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    xcopyo $a8 = $a0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    xcopyo $a9 = $a1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    xcopyo $a10 = $a2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 14)
 ; ALL-NEXT:    xcopyo $a11 = $a3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    xcopyo $a12 = $a4
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    xcopyo $a13 = $a5
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    xcopyo $a14 = $a6
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 18)
 ; ALL-NEXT:    xcopyo $a15 = $a7
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 19)
 ; ALL-NEXT:    xso 384[$r0] = $a12
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 20)
 ; ALL-NEXT:    xso 416[$r0] = $a13
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 21)
 ; ALL-NEXT:    xso 448[$r0] = $a14
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 22)
 ; ALL-NEXT:    xso 480[$r0] = $a15
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 23)
 ; ALL-NEXT:    xso 288[$r0] = $a9
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 24)
 ; ALL-NEXT:    xso 256[$r0] = $a8
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 25)
 ; ALL-NEXT:    xso 352[$r0] = $a11
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 26)
 ; ALL-NEXT:    xso 320[$r0] = $a10
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 27)
   %2 = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
   store <4096 x i1> %2, <4096 x i1>* %0
   ret void

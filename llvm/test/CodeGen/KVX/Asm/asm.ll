@@ -10,14 +10,15 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 returned %A) {
 ; CHECK-LABEL: asm_clobber_single_none:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmovetq $r0r1 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %vecext = extractelement <2 x i64> %v, i32 0
   %vecext1 = extractelement <2 x i64> %v, i32 1
@@ -29,14 +30,15 @@ define i64 @asm_clobber_single_single(i64 returned %A) {
 ; CHECK-LABEL: asm_clobber_single_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmovetq $r2r3 = $r1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %0 = tail call <2 x i64> asm sideeffect "xmovetq $0 = $1, $1", "=r,r,~{$r0}"(i64 %A)
   ret i64 %A
@@ -46,12 +48,13 @@ define i8* @asm_clobber_single_pair(i8* returned %A){
 ; CHECK-LABEL: asm_clobber_single_pair:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "r,~{$r0r1}"(i8* %A)
   ret i8* %A
@@ -62,14 +65,15 @@ define i8* @asm_clobber_single_quad(i8* nocapture readnone %A, i8* %B, i8* readn
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r2
 ; CHECK-NEXT:    copyd $r5 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(i8* %B)
   ret i8* %C
@@ -80,12 +84,13 @@ define <2 x i64> @asm_clobber_double_single(<2 x i64> returned %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "r,~{$r1}"(<2 x i64> %a)
   ret <2 x i64> %a
@@ -96,13 +101,14 @@ define <2 x i64> @asm_clobber_double_double(<2 x i64> returned %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "~{$r0r1}"()
   ret <2 x i64> %a
@@ -113,13 +119,14 @@ define <2 x i64> @asm_clobber_double_quad(<2 x i64> returned %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    copyd $r5 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    copyd $r1 = $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "~{$r0r1r2r3}"()
   ret <2 x i64> %a
@@ -130,31 +137,32 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:     # (here cycle 4)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    addd $r0 = $r6, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    addd $r0 = $r0, $r4
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    faddw $r0 = $r0, $r18
 ; CHECK-NEXT:    ld $r18 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -172,6 +180,7 @@ entry:
 define void @asm_clobber_quad_single(<4 x i64> %a){
 ; CHECK-LABEL: asm_clobber_quad_single:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:     # (here cycle 0)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
@@ -184,6 +193,7 @@ entry:
 define <4 x i64> @asm_clobber_quad_double(<4 x i64> returned %a){
 ; CHECK-LABEL: asm_clobber_quad_double:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:     # (here cycle 0)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
@@ -200,7 +210,8 @@ define <4 x i64> @asm_clobber_quad_quad(<4 x i64> returned %a){
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r1
 ; CHECK-NEXT:    copyd $r7 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r7
@@ -208,7 +219,7 @@ define <4 x i64> @asm_clobber_quad_quad(<4 x i64> returned %a){
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "~{$r0r1r2r3}"()
   ret <4 x i64> %a
@@ -220,14 +231,15 @@ define <4 x i64> @asm_clobber_quad_quad_use(<4 x i64> returned %a){
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:     # (here cycle 1)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r6
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   tail call void asm sideeffect "", "~{$r0},~{$r2r3}"()
   ret <4 x i64> %a
@@ -240,12 +252,13 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g){
 ; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r1
 ; CHECK-NEXT:    copyd $r8 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    copyd $r3 = $r4
 ; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    copyd $r5 = $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    scall $r8
 ; CHECK-NEXT:    ;;

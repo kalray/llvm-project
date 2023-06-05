@@ -11,7 +11,7 @@ define i32 @f1(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 1, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr1 = lshr i32 %v, 1
   %and = and i32 %shr1, 1
@@ -23,7 +23,7 @@ define i32 @f1_2(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 6, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 5
   %and = and i32 %0, 3
@@ -35,7 +35,7 @@ define i32 @f1_3u(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 18, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr i32 %v, 5
   %and = and i32 %shr, 16383
@@ -47,7 +47,7 @@ define i64 @f1d(i64 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 1, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr1 = lshr i64 %v, 1
   %and = and i64 %shr1, 1
@@ -59,7 +59,7 @@ define i64 @f1_2d(i64 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 6, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i64 %v, 5
   %and = and i64 %0, 3
@@ -71,7 +71,7 @@ define i64 @f1_3d(i64 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 60, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i64 %v, 1
   %and = and i64 %0, 1152921504606846975
@@ -83,7 +83,7 @@ define i32 @f3(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 2, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 3
@@ -95,7 +95,7 @@ define i32 @f7(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 3, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 7
@@ -107,7 +107,7 @@ define i32 @f15(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 4, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 15
@@ -119,7 +119,7 @@ define i32 @f31(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 5, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 31
@@ -131,7 +131,7 @@ define i32 @f127(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 7, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 127
@@ -143,7 +143,7 @@ define i32 @f255(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 8, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 255
@@ -155,7 +155,7 @@ define i32 @f511(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 9, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 511
@@ -167,7 +167,7 @@ define i32 @f1023(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 10, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 1023
@@ -179,7 +179,7 @@ define i32 @f2047(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 11, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 2047
@@ -191,7 +191,7 @@ define i32 @f4095(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 12, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 4095
@@ -203,7 +203,7 @@ define i32 @f8191(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 13, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 8191
@@ -215,7 +215,7 @@ define i32 @f16383(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 14, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 16383
@@ -227,7 +227,7 @@ define i32 @f32767(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 15, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 32767
@@ -239,7 +239,7 @@ define i32 @f65535(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 16, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 65535
@@ -251,7 +251,7 @@ define i32 @f131071(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 17, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 131071
@@ -263,7 +263,7 @@ define i32 @f33554431(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 25, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 33554431
@@ -275,7 +275,7 @@ define i32 @f1073741823(i32 %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    extfz $r0 = $r0, 30, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = lshr i32 %v, 1
   %and = and i32 %0, 1073741823

@@ -23,10 +23,10 @@ define <2 x i8> @testBitReverseIntrinsicV2i8(<2 x i8> %arg) {
 ; CHECK-LABEL: testBitReverseIntrinsicV2i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <2 x i8> @llvm.bitreverse.v2i8(<2 x i8> %arg)
   ret <2 x i8> %res
 }
@@ -36,10 +36,10 @@ define <2 x i16> @testBitReverseIntrinsicV2i16(<2 x i16> %arg) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <2 x i16> @llvm.bitreverse.v2i16(<2 x i16> %arg)
   ret <2 x i16> %res
 }
@@ -49,10 +49,10 @@ define <2 x i32> @testBitReverseIntrinsicV2i32(<2 x i32> %arg) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408001020408
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <2 x i32> @llvm.bitreverse.v2i32(<2 x i32> %arg)
   ret <2 x i32> %res
 }
@@ -61,10 +61,10 @@ define <4 x i8> @testBitReverseIntrinsicV4i8(<4 x i8> %arg) {
 ; CHECK-LABEL: testBitReverseIntrinsicV4i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <4 x i8> @llvm.bitreverse.v4i8(<4 x i8> %arg)
   ret <4 x i8> %res
 }
@@ -74,10 +74,10 @@ define <4 x i16> @testBitReverseIntrinsicV4i16(<4 x i16> %arg) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102004080102
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <4 x i16> @llvm.bitreverse.v4i16(<4 x i16> %arg)
   ret <4 x i16> %res
 }
@@ -86,10 +86,10 @@ define <8 x i8> @testBitReverseIntrinsicV8i8(<8 x i8> %arg) {
 ; CHECK-LABEL: testBitReverseIntrinsicV8i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <8 x i8> @llvm.bitreverse.v8i8(<8 x i8> %arg)
   ret <8 x i8> %res
 }
@@ -99,10 +99,10 @@ define i32 @testBitReverseIntrinsici32(i32 %arg) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call i32 @llvm.bitreverse.i32(i32 %arg)
   ret i32 %res
 }
@@ -112,10 +112,10 @@ define i64 @testBitReverseIntrinsici64(i64 %arg) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    make $r1 = 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call i64 @llvm.bitreverse.i64(i64 %arg)
   ret i64 %res
 }

@@ -10,14 +10,14 @@ define i32 @mul(i32 %num) {
 ; CHECK-LABEL: mul:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    pcrel $r1 = @gotaddr()
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r1 = @got( g )[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    mulw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = load i32, i32* @g, align 4
   %mul = mul nsw i32 %0, %num
@@ -28,11 +28,11 @@ define weak i32 @weak() {
 ; CHECK-LABEL: weak:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    pcrel $r1 = @gotaddr()
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r0 = @got( weak )[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r1 = @got( b )[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    igoto $r1
 ; CHECK-NEXT:    ;;
 entry:
@@ -48,17 +48,17 @@ define i32 @main() {
 ; CHECK-NEXT:    make $r1 = 5
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    addd $r0 = $r12, 16
 ; CHECK-NEXT:    call f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

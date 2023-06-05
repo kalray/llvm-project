@@ -11,7 +11,7 @@ define <2 x float> @fmulwc(<2 x float> %0, <2 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulwc.rn $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fcmul.v2f32(<2 x float> %0, <2 x float> %1, i32 0, i32 0, i32 0)
   ret <2 x float> %3
 }
@@ -22,16 +22,16 @@ define <4 x float> @fmulwcp(<4 x float> %0, <4 x float> %1) {
 ; CV1-LABEL: fmulwcp:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fmulwc.rn $r1 = $r1, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fmulwc.rn $r0 = $r0, $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fmulwcp:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmulwcp.rn $r0r1 = $r0r1, $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fcmul.v4f32(<4 x float> %0, <4 x float> %1, i32 0, i32 0, i32 0)
   ret <4 x float> %3
 }
@@ -42,22 +42,22 @@ define <8 x float> @fmulwcq(<8 x float> %0, <8 x float> %1) {
 ; CV1-LABEL: fmulwcq:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fmulwc.rn $r1 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fmulwc.rn $r0 = $r0, $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fmulwc.rn $r3 = $r3, $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    fmulwc.rn $r2 = $r2, $r6
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: fmulwcq:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmulwcp.rn $r0r1 = $r0r1, $r4r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fmulwcp.rn $r2r3 = $r2r3, $r6r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.fcmul.v4f32(<4 x float> %3, <4 x float> %4, i32 0, i32 0, i32 0)

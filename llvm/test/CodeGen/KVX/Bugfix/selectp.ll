@@ -9,14 +9,19 @@ define void @a() {
   ; CHECK-NEXT:   successors: %bb.1(0x80000000)
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit-def $r1 {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     $r0 = MAKEi16 1
   ; CHECK-NEXT:     $r1 = MAKEi16 2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit-def $r0, implicit killed $r0, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
   ; CHECK-NEXT:     $r1 = CMOVEDrr killed $r0, killed $r1, $r0, 8
   ; CHECK-NEXT:     $r0 = MAKEi16 0
   ; CHECK-NEXT:   }
-  ; CHECK-NEXT:   $r1 = COMPWri killed $r1, -2, 2
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r1 = COMPWri killed $r1, -2, 2
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.1 (%ir-block.1):
   ; CHECK-NEXT:   successors: %bb.1(0x40000000), %bb.2(0x40000000)

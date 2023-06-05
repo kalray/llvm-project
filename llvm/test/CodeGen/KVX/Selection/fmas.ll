@@ -8,19 +8,19 @@ define float @ffdmdaw(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmdaw:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    srad $r1 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV2-LABEL: ffdmdaw:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmdaw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = fadd fast float %0, %5
@@ -33,16 +33,16 @@ define float @ffdmdaw_2(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmdaw_2:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fdot2w $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV2-LABEL: ffdmdaw_2:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmdaw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = extractelement <2 x float> %4, i32 1
@@ -55,19 +55,19 @@ define float @ffdmdsw(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmdsw:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    srad $r1 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV2-LABEL: ffdmdsw:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmdsw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = fsub fast float %0, %5
@@ -80,16 +80,16 @@ define float @ffdmdsw_2(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmdsw_2:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fdot2w $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV2-LABEL: ffdmdsw_2:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmdsw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = extractelement <2 x float> %4, i32 1
@@ -102,20 +102,20 @@ define float @ffdmdsw_3(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmdsw_3:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r2 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdsw_3:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmdsw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 1
   %6 = fsub fast float %0, %5
@@ -131,14 +131,14 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    faddwp $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r3
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdawp:
 ; KV2:       # %bb.0:
@@ -146,10 +146,10 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmdawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = fadd fast <2 x float> %5, %0
@@ -165,14 +165,14 @@ define <2 x float> @ffdmdawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    faddwp $r1 = $r2, $r3
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdawp2:
 ; KV2:       # %bb.0:
@@ -180,10 +180,10 @@ define <2 x float> @ffdmdawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmdawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -199,14 +199,14 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    fsbfwp $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfwp $r0 = $r3, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdswp:
 ; KV2:       # %bb.0:
@@ -214,10 +214,10 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = fsub fast <2 x float> %0, %5
@@ -233,14 +233,14 @@ define <2 x float> @ffdmdswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    fsbfwp $r0 = $r3, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfwp $r0 = $r2, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdswp2:
 ; KV2:       # %bb.0:
@@ -248,10 +248,10 @@ define <2 x float> @ffdmdswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 2, i32 3>
   %6 = fsub fast <2 x float> %0, %5
@@ -267,14 +267,14 @@ define <2 x float> @ffdmdswp3(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    faddwp $r1 = $r3, $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfwp $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmdswp3:
 ; KV2:       # %bb.0:
@@ -282,10 +282,10 @@ define <2 x float> @ffdmdswp3(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmdswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -298,19 +298,19 @@ define float @ffdmasw(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmasw:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    srad $r1 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV2-LABEL: ffdmasw:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmasw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = fadd fast float %0, %5
@@ -323,20 +323,20 @@ define float @ffdmasw2(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmasw2:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r2 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmasw2:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmasw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 1
   %6 = fsub fast float %0, %5
@@ -349,20 +349,20 @@ define float @ffdmasw3(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmasw3:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r2 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmasw3:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmasw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = extractelement <2 x float> %4, i32 1
@@ -375,19 +375,19 @@ define float @ffdmsaw(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmsaw:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    srad $r1 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV2-LABEL: ffdmsaw:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmsaw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 0
   %6 = fsub fast float %0, %5
@@ -400,20 +400,20 @@ define float @ffdmsaw2(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmsaw2:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r2 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    faddw $r0 = $r0, $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmsaw2:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmsaw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 1
   %6 = fadd fast float %0, %5
@@ -426,20 +426,20 @@ define float @ffdmsaw3(float %0, <2 x float> %1, <2 x float> %2) {
 ; KV1-LABEL: ffdmsaw3:
 ; KV1:       # %bb.0:
 ; KV1-NEXT:    fmulwp $r1 = $r2, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r2 = $r1, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r1 = $r1, $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddw $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmsaw3:
 ; KV2:       # %bb.0:
 ; KV2-NEXT:    ffdmsaw $r0 = $r2, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <2 x float> %2, %1
   %5 = extractelement <2 x float> %4, i32 1
   %6 = extractelement <2 x float> %4, i32 0
@@ -455,14 +455,14 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    faddwp $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfwp $r0 = $r3, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmaswp:
 ; KV2:       # %bb.0:
@@ -470,10 +470,10 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmaswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = fadd fast <2 x float> %5, %0
@@ -489,14 +489,14 @@ define <2 x float> @ffdmaswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    fsbfwp $r0 = $r3, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r2
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmaswp2:
 ; KV2:       # %bb.0:
@@ -504,10 +504,10 @@ define <2 x float> @ffdmaswp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmaswp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 2, i32 3>
   %6 = fsub fast <2 x float> %0, %5
@@ -523,14 +523,14 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    fsbfwp $r0 = $r2, $r0
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r3
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmsawp:
 ; KV2:       # %bb.0:
@@ -538,10 +538,10 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmsawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = fsub fast <2 x float> %0, %5
@@ -557,14 +557,14 @@ define <2 x float> @ffdmsawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV1-NEXT:    copyd $r5 = $r4
 ; KV1-NEXT:    copyd $r6 = $r1
 ; KV1-NEXT:    copyd $r7 = $r2
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fmulwq $r2r3 = $r4r5, $r6r7
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 1)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r3
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ; KV1-NEXT:    fsbfwp $r0 = $r2, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV2-LABEL: ffdmsawp2:
 ; KV2:       # %bb.0:
@@ -572,10 +572,10 @@ define <2 x float> @ffdmsawp2(<2 x float> %0, <4 x float> %1, <4 x float> %2) {
 ; KV2-NEXT:    copyd $r5 = $r4
 ; KV2-NEXT:    copyd $r6 = $r1
 ; KV2-NEXT:    copyd $r7 = $r2
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
 ; KV2-NEXT:    ffdmsawp $r0 = $r4r5, $r6r7
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 1)
   %4 = fmul fast <4 x float> %2, %1
   %5 = shufflevector <4 x float> %4, <4 x float> undef, <2 x i32> <i32 2, i32 3>
   %6 = fadd fast <2 x float> %0, %5
@@ -588,16 +588,16 @@ define <2 x float> @ffdmawp(<4 x float> %0, <4 x float> %1) {
 ; KV1-LABEL: ffdmawp:
 ; KV1:       # %bb.0: # %entry
 ; KV1-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    faddwp $r0 = $r0, $r1
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV2-LABEL: ffdmawp:
 ; KV2:       # %bb.0: # %entry
 ; KV2-NEXT:    ffdmawp $r0 = $r0r1, $r2r3
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   entry:
   %2 = fmul fast <4 x float> %0, %1
   %3 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>
@@ -610,18 +610,18 @@ define float @ffdmsw(<2 x float> %0, <2 x float> %1) {
 ; KV1-LABEL: ffdmsw:
 ; KV1:       # %bb.0: # %entry
 ; KV1-NEXT:    fmulwp $r0 = $r0, $r1
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    srad $r1 = $r0, 32
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ; KV1-NEXT:    fsbfw $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV2-LABEL: ffdmsw:
 ; KV2:       # %bb.0: # %entry
 ; KV2-NEXT:    ffdmsw $r0 = $r0, $r1
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   entry:
   %2 = fmul fast <2 x float> %0, %1
   %3 = extractelement <2 x float> %2, i32 0
@@ -634,16 +634,16 @@ define <2 x float> @ffdmswp(<4 x float> %0, <4 x float> %1) {
 ; KV1-LABEL: ffdmswp:
 ; KV1:       # %bb.0: # %entry
 ; KV1-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 0)
 ; KV1-NEXT:    fsbfwp $r0 = $r1, $r0
 ; KV1-NEXT:    ret
-; KV1-NEXT:    ;;
+; KV1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV2-LABEL: ffdmswp:
 ; KV2:       # %bb.0: # %entry
 ; KV2-NEXT:    ffdmswp $r0 = $r0r1, $r2r3
 ; KV2-NEXT:    ret
-; KV2-NEXT:    ;;
+; KV2-NEXT:    ;; # (end cycle 0)
   entry:
   %2 = fmul fast <4 x float> %0, %1
   %3 = shufflevector <4 x float> %2, <4 x float> undef, <2 x i32> <i32 0, i32 1>

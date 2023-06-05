@@ -10,21 +10,22 @@ define i64 @asm_clobber_single_none(<2 x i64> %v, i64 %A) {
 ; CHECK-LABEL: asm_clobber_single_none:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 40[$r12] = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 48[$r12] = $r0r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:     # (here cycle 3)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmovetq $r4r5 = $r0, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ld $r0 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sq 16[$r12] = $r4r5
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %v.addr = alloca <2 x i64>, align 16
   %A.addr = alloca i64, align 8
@@ -46,19 +47,20 @@ define i64 @asm_clobber_single_single(i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmovetq $r2r3 = $r1, $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 0[$r12] = $r2r3
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %A.addr = alloca i64, align 8
   %v2i64 = alloca <2 x i64>, align 16
@@ -75,15 +77,16 @@ define i8* @asm_clobber_single_pair(i8* %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %A.addr = alloca i8*, align 8
   store i8* %A, i8** %A.addr, align 8
@@ -98,13 +101,14 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r1
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 8[$r12] = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:     # (here cycle 4)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ;;
@@ -112,7 +116,7 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK-NEXT:    ld $r0 = 8[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %A.addr = alloca i8*, align 8
   %B.addr = alloca i8*, align 8
@@ -130,17 +134,18 @@ define <2 x i64> @asm_clobber_double_single(<2 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_double_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r2r3 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:     # (here cycle 3)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 16[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %a.addr = alloca <2 x i64>, align 16
   store <2 x i64> %a, <2 x i64>* %a.addr, align 16
@@ -154,15 +159,16 @@ define <2 x i64> @asm_clobber_double_double(<2 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_double_double:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 16[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <2 x i64>, align 16
   store <2 x i64> %a, <2 x i64>* %a.addr, align 16
@@ -175,15 +181,16 @@ define <2 x i64> @asm_clobber_double_quad(<2 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_double_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 16[$r12] = $r0r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 16[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <2 x i64>, align 16
   store <2 x i64> %a, <2 x i64>* %a.addr, align 16
@@ -197,43 +204,44 @@ define float @asm_clobber_multiple_quad(float %a, <2 x i64> %b, <4 x i64> %c) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    copyd $r7 = $r6
 ; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw 52[$r12] = $r0
 ; CHECK-NEXT:    copyd $r6 = $r5
 ; CHECK-NEXT:    copyd $r8 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r8r9
 ; CHECK-NEXT:    copyd $r4 = $r3
 ; CHECK-NEXT:    copyd $r5 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    so 0[$r12] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:     # (here cycle 5)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lq $r0r1 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ld $r2 = 0[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    addd $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    addd $r0 = $r0, $r2
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    lwz $r1 = 52[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 52[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -264,14 +272,15 @@ define void @asm_clobber_quad_single(<4 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_quad_single:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
   store <4 x i64> %a, <4 x i64>* %a.addr, align 32
@@ -283,15 +292,16 @@ define <4 x i64> @asm_clobber_quad_double(<4 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_quad_double:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
   store <4 x i64> %a, <4 x i64>* %a.addr, align 32
@@ -305,15 +315,16 @@ define <4 x i64> @asm_clobber_quad_quad(<4 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_quad_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
   store <4 x i64> %a, <4 x i64>* %a.addr, align 32
@@ -326,15 +337,16 @@ define <4 x i64> @asm_clobber_quad_quad_use(<4 x i64> %a) {
 ; CHECK-LABEL: asm_clobber_quad_quad_use:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r12] = $r0r1r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
   store <4 x i64> %a, <4 x i64>* %a.addr, align 32
@@ -349,40 +361,41 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    copyd $r7 = $r1
 ; CHECK-NEXT:    zxwd $r8 = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, -128
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 124[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 112[$r12] = $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sd 104[$r12] = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sd 96[$r12] = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sd 88[$r12] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sd 80[$r12] = $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sd 72[$r12] = $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    sd 64[$r12] = $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    sd 56[$r12] = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    sd 48[$r12] = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    sd 40[$r12] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    sd 32[$r12] = $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sd 24[$r12] = $r6
 ; CHECK-NEXT:    copyd $r1 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r3
 ; CHECK-NEXT:    copyd $r3 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    copyd $r4 = $r5
 ; CHECK-NEXT:    copyd $r5 = $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:     # (here cycle 15)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    scall $r8
 ; CHECK-NEXT:    ;;
@@ -391,7 +404,7 @@ define i64 @local_regs(i32 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g) {
 ; CHECK-NEXT:    sd 64[$r12] = $r0
 ; CHECK-NEXT:    addd $r12 = $r12, 128
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 entry:
   %a.addr = alloca i32, align 4
   %b.addr = alloca i64, align 8

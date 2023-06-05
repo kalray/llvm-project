@@ -21,10 +21,10 @@ define <3 x double> @double_3_ret() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   ret <3 x double> zeroinitializer
 }
@@ -45,7 +45,7 @@ define <3 x i64> @long_3_ret() {
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret <3 x i64> zeroinitializer
 }
@@ -65,7 +65,7 @@ define <3 x float> @float_3_ret() {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret <3 x float> zeroinitializer
 }
@@ -85,7 +85,7 @@ define <3 x i32> @int_3_ret() {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret <3 x i32> zeroinitializer
 }
@@ -105,13 +105,13 @@ define <3 x i1> @bool_3_ret() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb 31[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lbz $r0 = 31[$r12]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   ret <3 x i1> zeroinitializer
 }
@@ -130,7 +130,7 @@ define <3 x half> @half_3_ret() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret <3 x half> zeroinitializer
 }
@@ -149,7 +149,7 @@ define <1 x half> @half_1_ret() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   ret <1 x half> zeroinitializer
 }
@@ -160,10 +160,10 @@ define <5 x half> @half_5_ret() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxhd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   ret <5 x half> zeroinitializer
 }

@@ -11,7 +11,7 @@ define <2 x float> @test_ret_const() #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x400000003f800000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret <2 x float> <float 1.0, float 2.0>
 }
 
@@ -29,7 +29,7 @@ define float @test_extract_1(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %e = extractelement <2 x float> %a, i32 1
   ret float %e
 }
@@ -38,10 +38,10 @@ define float @test_extract_i(<2 x float> %a, i64 %idx) #0 {
 ; CHECK-LABEL: test_extract_i:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r1 = $r1, 5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %e = extractelement <2 x float> %a, i64 %idx
   ret float %e
 }
@@ -51,7 +51,7 @@ define <2 x float> @test_fadd(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fadd <2 x float> %a, %b
   ret <2 x float> %r
 }
@@ -61,15 +61,15 @@ define <2 x float> @test_fadd_imm_0(<2 x float> %a) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    faddwp $r0 = $r0, 0x400000003f800000
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ;
 ; KV3_2-LABEL: test_fadd_imm_0:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    make $r1 = 0x400000003f800000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    faddwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fadd <2 x float> <float 1.0, float 2.0>, %a
   ret <2 x float> %r
 }
@@ -79,15 +79,15 @@ define <2 x float> @test_fadd_imm_1(<2 x float> %a) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    faddwp $r0 = $r0, 0x400000003f800000
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ;
 ; KV3_2-LABEL: test_fadd_imm_1:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    make $r1 = 0x400000003f800000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    faddwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fadd <2 x float> %a, <float 1.0, float 2.0>
   ret <2 x float> %r
 }
@@ -97,7 +97,7 @@ define <2 x float> @test_fsub(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fsub <2 x float> %a, %b
   ret <2 x float> %r
 }
@@ -107,15 +107,15 @@ define <2 x float> @test_fsub_imm(<2 x float> %a) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    faddwp $r0 = $r0, 0xc0000000bf800000
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ;
 ; KV3_2-LABEL: test_fsub_imm:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    make $r1 = 0xc0000000bf800000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    faddwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fsub <2 x float> %a, <float 1.0, float 2.0>
   ret <2 x float> %r
 }
@@ -125,15 +125,15 @@ define <2 x float> @test_fsub_fromimm(<2 x float> %a) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fsbfwp $r0 = $r0, 0x400000003f800000
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ;
 ; KV3_2-LABEL: test_fsub_fromimm:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    make $r1 = 0x400000003f800000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fsbfwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
   %r = fsub <2 x float> <float 1.0, float 2.0>, %a
   ret <2 x float> %r
 }
@@ -143,7 +143,7 @@ define <2 x float> @test_fneg(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fsub <2 x float> <float 0.0, float 0.0>, %a
   ret <2 x float> %r
 }
@@ -153,7 +153,7 @@ define <2 x float> @test_fmul(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmulwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fmul <2 x float> %a, %b
   ret <2 x float> %r
 }
@@ -163,34 +163,34 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fdiv <2 x float> %a, %b
@@ -202,34 +202,34 @@ define <2 x float> @test_frem(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = frem <2 x float> %a, %b
@@ -240,10 +240,10 @@ define void @test_ldst_v2f32(<2 x float>* %a, <2 x float>* %b) {
 ; CHECK-LABEL: test_ldst_v2f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %t1 = load <2 x float>, <2 x float>* %a
   store <2 x float> %t1, <2 x float>* %b, align 16
   ret void
@@ -256,15 +256,15 @@ define <2 x float> @test_call(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @test_callee(<2 x float> %a, <2 x float> %b)
@@ -276,17 +276,17 @@ define <2 x float> @test_call_flipped(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @test_callee(<2 x float> %b, <2 x float> %a)
@@ -299,7 +299,7 @@ define <2 x float> @test_tailcall_flipped(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    goto test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = tail call <2 x float> @test_callee(<2 x float> %b, <2 x float> %a)
   ret <2 x float> %r
 }
@@ -309,7 +309,7 @@ define <2 x float> @test_select(<2 x float> %a, <2 x float> %b, i1 zeroext %c) #
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = select i1 %c, <2 x float> %a, <2 x float> %b
   ret <2 x float> %r
 }
@@ -318,10 +318,10 @@ define <2 x float> @test_select_cc(<2 x float> %a, <2 x float> %b, <2 x float> %
 ; CHECK-LABEL: test_select_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmovewp.even $r2 ? $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %cc = fcmp une <2 x float> %c, %d
   %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
   ret <2 x float> %r
@@ -331,17 +331,17 @@ define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2
 ; CHECK-LABEL: test_select_cc_f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    extfs $r5 = $r4, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; CHECK-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %cc = fcmp une <2 x float> %c, %d
   %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
   ret <2 x double> %r
@@ -351,10 +351,10 @@ define <2 x i1> @test_fcmp_une(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_une:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp une <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -363,10 +363,10 @@ define <2 x i1> @test_fcmp_ueq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ueq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ueq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ueq <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -375,10 +375,10 @@ define <2 x i1> @test_fcmp_ugt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ugt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ugt <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -387,10 +387,10 @@ define <2 x i1> @test_fcmp_uge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_uge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp uge <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -399,10 +399,10 @@ define <2 x i1> @test_fcmp_ult(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ult:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ult <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -411,10 +411,10 @@ define <2 x i1> @test_fcmp_ule(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ule:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ule <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -424,12 +424,12 @@ define <2 x i1> @test_fcmp_uno(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp uno <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -438,10 +438,10 @@ define <2 x i1> @test_fcmp_one(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_one:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp one <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -450,10 +450,10 @@ define <2 x i1> @test_fcmp_oeq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_oeq:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp oeq <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -462,10 +462,10 @@ define <2 x i1> @test_fcmp_ogt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ogt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ogt <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -474,10 +474,10 @@ define <2 x i1> @test_fcmp_oge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_oge:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp oge <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -486,10 +486,10 @@ define <2 x i1> @test_fcmp_olt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_olt:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp olt <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -498,10 +498,10 @@ define <2 x i1> @test_fcmp_ole(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_fcmp_ole:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fcmp ole <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -511,12 +511,12 @@ define <2 x i1> @test_fcmp_ord(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ord <2 x float> %a, %b
   ret <2 x i1> %r
 }
@@ -526,7 +526,7 @@ define <2 x i32> @test_fptosi_i32(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fptosi <2 x float> %a to <2 x i32>
   ret <2 x i32> %r
 }
@@ -536,12 +536,12 @@ define <2 x i64> @test_fptosi_i64(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedd.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fptosi <2 x float> %a to <2 x i64>
   ret <2 x i64> %r
 }
@@ -551,7 +551,7 @@ define <2 x i32> @test_fptoui_2xi32(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fptoui <2 x float> %a to <2 x i32>
   ret <2 x i32> %r
 }
@@ -561,12 +561,12 @@ define <2 x i64> @test_fptoui_2xi64(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedud.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fptoui <2 x float> %a to <2 x i64>
   ret <2 x i64> %r
 }
@@ -575,10 +575,10 @@ define <2 x i16> @test_fptosi_i16(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptosi <2 x float> %a to <2 x i16>
   ret <2 x i16> %r
 }
@@ -587,10 +587,10 @@ define <2 x i16> @test_fptoui_i16(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptoui <2 x float> %a to <2 x i16>
   ret <2 x i16> %r
 }
@@ -599,10 +599,10 @@ define <2 x i8> @test_fptosi_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptosi <2 x float> %a to <2 x i8>
   ret <2 x i8> %r
 }
@@ -611,10 +611,10 @@ define <2 x i8> @test_fptoui_i8(<2 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptoui <2 x float> %a to <2 x i8>
   ret <2 x i8> %r
 }
@@ -623,7 +623,7 @@ define <2 x float> @test_uitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = uitofp <2 x i32> %a to <2 x float>
   ret <2 x float> %r
 }
@@ -633,26 +633,26 @@ define <2 x float> @test_uitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <2 x i64> %a to <2 x float>
@@ -664,7 +664,7 @@ define <2 x float> @test_sitofp_2xi32(<2 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = sitofp <2 x i32> %a to <2 x float>
   ret <2 x float> %r
 }
@@ -674,26 +674,26 @@ define <2 x float> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <2 x i64> %a to <2 x float>
@@ -704,10 +704,10 @@ define <2 x float> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %c = uitofp <2 x i32> %a to <2 x float>
   %r = fadd <2 x float> %b, %c
   ret <2 x float> %r
@@ -717,10 +717,10 @@ define <2 x float> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x float> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %c = sitofp <2 x i32> %a to <2 x float>
   %r = fadd <2 x float> %b, %c
   ret <2 x float> %r
@@ -731,7 +731,7 @@ define <2 x float> @test_fptrunc_2xdouble(<2 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fptrunc <2 x double> %a to <2 x float>
   ret <2 x float> %r
 }
@@ -742,7 +742,7 @@ define <2 x double> @test_fpext_2xdouble(<2 x float> %a) #0 {
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fpext <2 x float> %a to <2 x double>
   ret <2 x double> %r
 }
@@ -793,27 +793,27 @@ define <2 x float> @test_sqrt(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.sqrt.v2f32(<2 x float> %a)
@@ -825,33 +825,33 @@ define <2 x float> @test_powi(<2 x float> %a, i32 %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.powi.v2f32(<2 x float> %a, i32 %b)
@@ -863,27 +863,27 @@ define <2 x float> @test_sin(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.sin.v2f32(<2 x float> %a)
@@ -895,27 +895,27 @@ define <2 x float> @test_cos(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.cos.v2f32(<2 x float> %a)
@@ -927,34 +927,34 @@ define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.pow.v2f32(<2 x float> %a, <2 x float> %b)
@@ -966,27 +966,27 @@ define <2 x float> @test_exp(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.exp.v2f32(<2 x float> %a)
@@ -998,27 +998,27 @@ define <2 x float> @test_exp2(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.exp2.v2f32(<2 x float> %a)
@@ -1030,27 +1030,27 @@ define <2 x float> @test_log(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.log.v2f32(<2 x float> %a)
@@ -1062,27 +1062,27 @@ define <2 x float> @test_log10(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.log10.v2f32(<2 x float> %a)
@@ -1094,27 +1094,27 @@ define <2 x float> @test_log2(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <2 x float> @llvm.log2.v2f32(<2 x float> %a)
@@ -1125,10 +1125,10 @@ define <2 x float> @test_fma(<2 x float> %a, <2 x float> %b, <2 x float> %c) #0 
 ; CHECK-LABEL: test_fma:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ffmawp $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = call <2 x float> @llvm.fma.v2f32(<2 x float> %a, <2 x float> %b, <2 x float> %c)
   ret <2 x float> %r
 }
@@ -1138,7 +1138,7 @@ define <2 x float> @test_fabs(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call <2 x float> @llvm.fabs.v2f32(<2 x float> %a)
   ret <2 x float> %r
 }
@@ -1148,34 +1148,34 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    addd $r12 = $r12, -32
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sd 24[$r12] = $r16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 16[$r12] = $r20
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sq 0[$r12] = $r18r19
 ; KV3_1-NEXT:    copyd $r18 = $r1
 ; KV3_1-NEXT:    copyd $r19 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    srad $r0 = $r19, 32
 ; KV3_1-NEXT:    srad $r1 = $r18, 32
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    copyd $r0 = $r19
 ; KV3_1-NEXT:    copyd $r1 = $r18
 ; KV3_1-NEXT:    copyd $r20 = $r0
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r18r19 = 0[$r12]
 ; KV3_1-NEXT:    insf $r0 = $r20, 63, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ld $r20 = 16[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1183,7 +1183,7 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    fminwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
@@ -1193,7 +1193,7 @@ define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fminwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
@@ -1203,34 +1203,34 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    addd $r12 = $r12, -32
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sd 24[$r12] = $r16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 16[$r12] = $r20
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sq 0[$r12] = $r18r19
 ; KV3_1-NEXT:    copyd $r18 = $r1
 ; KV3_1-NEXT:    copyd $r19 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    srad $r0 = $r19, 32
 ; KV3_1-NEXT:    srad $r1 = $r18, 32
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    copyd $r0 = $r19
 ; KV3_1-NEXT:    copyd $r1 = $r18
 ; KV3_1-NEXT:    copyd $r20 = $r0
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r18r19 = 0[$r12]
 ; KV3_1-NEXT:    insf $r0 = $r20, 63, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ld $r20 = 16[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1238,7 +1238,7 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    fmaxwp $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
@@ -1248,7 +1248,7 @@ define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmaxwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
@@ -1258,10 +1258,10 @@ define <2 x float> @test_copysign(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
   ret <2 x float> %r
 }
@@ -1271,12 +1271,12 @@ define <2 x float> @test_copysign_v2f16(<2 x float> %a, <2 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fwidenlhwp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %tb = fpext <2 x half> %b to <2 x float>
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %tb)
   ret <2 x float> %r
@@ -1287,12 +1287,12 @@ define <2 x float> @test_copysign_v2f64(<2 x double> %b, <2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
 ; CHECK-NEXT:    fabswp $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andd.@ $r0 = $r0, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ord $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %tb = fptrunc <2 x double> %b to <2 x float>
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %tb)
   ret <2 x float> %r
@@ -1303,13 +1303,13 @@ define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = call <2 x float> @llvm.copysign.v2f32(<2 x float> %a, <2 x float> %b)
   %xr = fpext <2 x float> %r to <2 x double>
   ret <2 x double> %xr
@@ -1320,27 +1320,27 @@ define <2 x float> @test_floor(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.floor.v2f32(<2 x float> %a)
@@ -1352,27 +1352,27 @@ define <2 x float> @test_ceil(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.ceil.v2f32(<2 x float> %a)
@@ -1384,27 +1384,27 @@ define <2 x float> @test_trunc(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.trunc.v2f32(<2 x float> %a)
@@ -1416,27 +1416,27 @@ define <2 x float> @test_rint(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.rint.v2f32(<2 x float> %a)
@@ -1448,27 +1448,27 @@ define <2 x float> @test_nearbyint(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.nearbyint.v2f32(<2 x float> %a)
@@ -1480,27 +1480,27 @@ define <2 x float> @test_round(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <2 x float> @llvm.round.v2f32(<2 x float> %a)
@@ -1511,10 +1511,10 @@ define <2 x float> @test_fmuladd(<2 x float> %a, <2 x float> %b, <2 x float> %c)
 ; CHECK-LABEL: test_fmuladd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ffmawp $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = call <2 x float> @llvm.fmuladd.v2f32(<2 x float> %a, <2 x float> %b, <2 x float> %c)
   ret <2 x float> %r
 }
@@ -1524,7 +1524,7 @@ define <2 x float> @test_shufflevector(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %s = shufflevector <2 x float> %a, <2 x float> undef, <2 x i32> <i32 1, i32 0>
   ret <2 x float> %s
 }
@@ -1534,7 +1534,7 @@ define <2 x float> @test_insertelement0(<2 x float> %a, float %x) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <2 x float> %a, float %x, i64 0
   ret <2 x float> %i
 }
@@ -1544,7 +1544,7 @@ define <2 x float> @test_insertelement1(<2 x float> %a, float %x) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <2 x float> %a, float %x, i64 1
   ret <2 x float> %i
 }
@@ -1554,12 +1554,12 @@ define <2 x float> @test_insertelement(<2 x float> %a, float %x, i64 %p) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r3 = $r1, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %i = insertelement <2 x float> %a, float %x, i64 %p
   ret <2 x float> %i
 }
@@ -1569,7 +1569,7 @@ define <2 x float> @shuffle_v2float_0_0(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r0, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 0, i32 0>
   ret <2 x float> %2
@@ -1590,7 +1590,7 @@ define <2 x float> @shuffle_v2float_0_2(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 0, i32 2>
   ret <2 x float> %2
@@ -1600,10 +1600,10 @@ define <2 x float> @shuffle_v2float_0_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_0_3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r1 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 0, i32 3>
   ret <2 x float> %2
@@ -1614,7 +1614,7 @@ define <2 x float> @shuffle_v2float_1_0(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 1, i32 0>
   ret <2 x float> %2
@@ -1625,7 +1625,7 @@ define <2 x float> @shuffle_v2float_1_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8.@ $r0 = $r0, 0x80402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 1, i32 1>
   ret <2 x float> %2
@@ -1635,10 +1635,10 @@ define <2 x float> @shuffle_v2float_1_2(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_1_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804020180402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 1, i32 2>
   ret <2 x float> %2
@@ -1649,10 +1649,10 @@ define <2 x float> @shuffle_v2float_1_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    srad $r1 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 1, i32 3>
   ret <2 x float> %2
@@ -1662,10 +1662,10 @@ define <2 x float> @shuffle_v2float_2_0(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_2_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 2, i32 0>
   ret <2 x float> %2
@@ -1675,12 +1675,12 @@ define <2 x float> @shuffle_v2float_2_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_2_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r0 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r1 = $r0, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 2, i32 1>
   ret <2 x float> %2
@@ -1690,10 +1690,10 @@ define <2 x float> @shuffle_v2float_2_2(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_2_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r0, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 2, i32 2>
   ret <2 x float> %2
@@ -1704,7 +1704,7 @@ define <2 x float> @shuffle_v2float_2_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 2, i32 3>
   ret <2 x float> %2
@@ -1714,10 +1714,10 @@ define <2 x float> @shuffle_v2float_3_0(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK-LABEL: shuffle_v2float_3_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    insf $r1 = $r0, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x804020180402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 3, i32 0>
   ret <2 x float> %2
@@ -1728,10 +1728,10 @@ define <2 x float> @shuffle_v2float_3_1(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srad $r0 = $r1, 32
 ; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 3, i32 1>
   ret <2 x float> %2
@@ -1742,7 +1742,7 @@ define <2 x float> @shuffle_v2float_3_2(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x804020180402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 3, i32 2>
   ret <2 x float> %2
@@ -1753,7 +1753,7 @@ define <2 x float> @shuffle_v2float_3_3(<2 x float> %0, <2 x float> %1) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbmm8.@ $r0 = $r1, 0x80402010
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %2 = shufflevector <2 x float> %0, <2 x float> %1, <2 x i32> <i32 3, i32 3>
   ret <2 x float> %2
@@ -1764,7 +1764,7 @@ define <2 x i32> @fcmp_setoeq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1775,18 +1775,18 @@ define <2 x i32> @fcmp_setoeq_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setoeq_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setoeq_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1798,7 +1798,7 @@ define <2 x i32> @fcmp_setogt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1810,7 +1810,7 @@ define <2 x i32> @fcmp_setogt_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1822,7 +1822,7 @@ define <2 x i32> @fcmp_setoge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1833,18 +1833,18 @@ define <2 x i32> @fcmp_setoge_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setoge_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setoge_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1856,7 +1856,7 @@ define <2 x i32> @fcmp_setolt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1868,7 +1868,7 @@ define <2 x i32> @fcmp_setolt_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1880,7 +1880,7 @@ define <2 x i32> @fcmp_setole(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1891,18 +1891,18 @@ define <2 x i32> @fcmp_setole_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setole_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setole_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1914,7 +1914,7 @@ define <2 x i32> @fcmp_setone(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1926,7 +1926,7 @@ define <2 x i32> @fcmp_setone_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1938,23 +1938,23 @@ define <2 x i32> @fcmp_setord(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setord:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ord <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1965,18 +1965,18 @@ define <2 x i32> @fcmp_setord_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setord_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setord_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ord <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1988,23 +1988,23 @@ define <2 x i32> @fcmp_setuno(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuno:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2015,18 +2015,18 @@ define <2 x i32> @fcmp_setuno_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setuno_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setuno_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uno <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2038,7 +2038,7 @@ define <2 x i32> @fcmp_setueq(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.ueq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2050,7 +2050,7 @@ define <2 x i32> @fcmp_setueq_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2062,7 +2062,7 @@ define <2 x i32> @fcmp_setugt(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ugt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2073,18 +2073,18 @@ define <2 x i32> @fcmp_setugt_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setugt_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setugt_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ugt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2096,7 +2096,7 @@ define <2 x i32> @fcmp_setuge(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2108,7 +2108,7 @@ define <2 x i32> @fcmp_setuge_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2120,7 +2120,7 @@ define <2 x i32> @fcmp_setult(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ult <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2131,18 +2131,18 @@ define <2 x i32> @fcmp_setult_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setult_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setult_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ult <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2154,7 +2154,7 @@ define <2 x i32> @fcmp_setule(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2166,7 +2166,7 @@ define <2 x i32> @fcmp_setule_single(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2178,7 +2178,7 @@ define <2 x i32> @fcmp_setune(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp une <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2189,18 +2189,18 @@ define <2 x i32> @fcmp_setune_single(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setune_single:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setune_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp une <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2212,7 +2212,7 @@ define <2 x i32> @fcmp_setoeq_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2224,7 +2224,7 @@ define <2 x i32> @fcmp_setoeq_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2236,7 +2236,7 @@ define <2 x i32> @fcmp_setogt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2248,7 +2248,7 @@ define <2 x i32> @fcmp_setogt_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2260,7 +2260,7 @@ define <2 x i32> @fcmp_setoge_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2272,7 +2272,7 @@ define <2 x i32> @fcmp_setoge_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2284,7 +2284,7 @@ define <2 x i32> @fcmp_setolt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2296,7 +2296,7 @@ define <2 x i32> @fcmp_setolt_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2308,7 +2308,7 @@ define <2 x i32> @fcmp_setole_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2320,7 +2320,7 @@ define <2 x i32> @fcmp_setole_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2332,7 +2332,7 @@ define <2 x i32> @fcmp_setone_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2344,7 +2344,7 @@ define <2 x i32> @fcmp_setone_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2356,23 +2356,23 @@ define <2 x i32> @fcmp_setord_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setord_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ord <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2383,18 +2383,18 @@ define <2 x i32> @fcmp_setord_single_fast(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setord_single_fast:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setord_single_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ord <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2406,23 +2406,23 @@ define <2 x i32> @fcmp_setuno_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuno_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
 ; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2433,18 +2433,18 @@ define <2 x i32> @fcmp_setuno_single_fast(<2 x float> %a) #0 {
 ; KV3_1-LABEL: fcmp_setuno_single_fast:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    srawps $r0 = $r0, 31
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: fcmp_setuno_single_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uno <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2456,7 +2456,7 @@ define <2 x i32> @fcmp_setueq_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2468,7 +2468,7 @@ define <2 x i32> @fcmp_setueq_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2480,7 +2480,7 @@ define <2 x i32> @fcmp_setugt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2492,7 +2492,7 @@ define <2 x i32> @fcmp_setugt_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2504,7 +2504,7 @@ define <2 x i32> @fcmp_setuge_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2516,7 +2516,7 @@ define <2 x i32> @fcmp_setuge_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2528,7 +2528,7 @@ define <2 x i32> @fcmp_setult_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2540,7 +2540,7 @@ define <2 x i32> @fcmp_setult_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2552,7 +2552,7 @@ define <2 x i32> @fcmp_setule_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2564,7 +2564,7 @@ define <2 x i32> @fcmp_setule_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2576,7 +2576,7 @@ define <2 x i32> @fcmp_setune_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2588,7 +2588,7 @@ define <2 x i32> @fcmp_setune_single_fast(<2 x float> %a) #0 {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>

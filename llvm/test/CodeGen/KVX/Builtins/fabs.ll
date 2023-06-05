@@ -11,7 +11,7 @@ define float @fabsw(float %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.fabs.f32(float %0)
   ret float %2
 }
@@ -23,7 +23,7 @@ define double @fabsd(double %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.fabs.f64(double %0)
   ret double %2
 }
@@ -35,7 +35,7 @@ define half @fabsh(half %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call half @llvm.fabs.f16(half %0)
   ret half %2
 }
@@ -48,7 +48,7 @@ define <8 x half> @fabsho(<8 x half> %0) {
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    fabshq $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x half> @llvm.fabs.v4f16(<4 x half> %2)
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -64,7 +64,7 @@ define <2 x half> @fabshp(<2 x half> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x half> @llvm.fabs.v2f16(<2 x half> %0)
   ret <2 x half> %2
 }
@@ -76,7 +76,7 @@ define <4 x half> @fabshq(<4 x half> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x half> @llvm.fabs.v4f16(<4 x half> %0)
   ret <4 x half> %2
 }
@@ -86,11 +86,11 @@ define <16 x half> @fabshx(<16 x half> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fabshq $r0 = $r0
 ; CV1-NEXT:    fabshq $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fabshq $r2 = $r2
 ; CV1-NEXT:    fabshq $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fabshx:
 ; CV2:       # %bb.0:
@@ -99,7 +99,7 @@ define <16 x half> @fabshx(<16 x half> %0) {
 ; CV2-NEXT:    fabshq $r2 = $r2
 ; CV2-NEXT:    fabshq $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x half> @llvm.fabs.v4f16(<4 x half> %2)
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -119,7 +119,7 @@ define <2 x float> @fabswp(<2 x float> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.fabs.v2f32(<2 x float> %0)
   ret <2 x float> %2
 }
@@ -132,7 +132,7 @@ define <4 x float> @fabswq(<4 x float> %0) {
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.fabs.v2f32(<2 x float> %2)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -146,11 +146,11 @@ define <8 x float> @fabswo(<8 x float> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fabswp $r0 = $r0
 ; CV1-NEXT:    fabswp $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fabswp $r2 = $r2
 ; CV1-NEXT:    fabswp $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fabswo:
 ; CV2:       # %bb.0:
@@ -159,7 +159,7 @@ define <8 x float> @fabswo(<8 x float> %0) {
 ; CV2-NEXT:    fabswp $r2 = $r2
 ; CV2-NEXT:    fabswp $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x float> @llvm.fabs.v2f32(<2 x float> %2)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -180,7 +180,7 @@ define <2 x double> @fabsdp(<2 x double> %0) {
 ; CHECK-NEXT:    fabsd $r0 = $r0
 ; CHECK-NEXT:    fabsd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x double> %0, i64 0
   %3 = tail call double @llvm.fabs.f64(double %2)
   %4 = extractelement <2 x double> %0, i64 1
@@ -195,11 +195,11 @@ define <4 x double> @fabsdq(<4 x double> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fabsd $r0 = $r0
 ; CV1-NEXT:    fabsd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fabsd $r2 = $r2
 ; CV1-NEXT:    fabsd $r3 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fabsdq:
 ; CV2:       # %bb.0:
@@ -208,7 +208,7 @@ define <4 x double> @fabsdq(<4 x double> %0) {
 ; CV2-NEXT:    fabsd $r2 = $r2
 ; CV2-NEXT:    fabsd $r3 = $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <4 x double> %0, i64 0
   %3 = tail call double @llvm.fabs.f64(double %2)
   %4 = extractelement <4 x double> %0, i64 1

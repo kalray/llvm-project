@@ -11,7 +11,7 @@ define float @fminw(float %0, float %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fminw $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.min.f32(float %0, float %1)
   ret float %3
 }
@@ -23,7 +23,7 @@ define double @fmind(double %0, double %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmind $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.min.f64(double %0, double %1)
   ret double %3
 }
@@ -35,7 +35,7 @@ define half @fminh(half %0, half %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fminhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call half @llvm.kvx.min.f16(half %0, half %1)
   ret half %3
 }
@@ -47,7 +47,7 @@ define <2 x half> @fminhp(<2 x half> %0, <2 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fminhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x half> @llvm.kvx.min.v2f16(<2 x half> %0, <2 x half> %1)
   ret <2 x half> %3
 }
@@ -59,7 +59,7 @@ define <4 x half> @fminhq(<4 x half> %0, <4 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fminhq $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x half> @llvm.kvx.min.v4f16(<4 x half> %0, <4 x half> %1)
   ret <4 x half> %3
 }
@@ -72,7 +72,7 @@ define <8 x half> @fminho(<8 x half> %0, <8 x half> %1) {
 ; ALL-NEXT:    fminhq $r0 = $r0, $r2
 ; ALL-NEXT:    fminhq $r1 = $r1, $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x half> @llvm.kvx.min.v4f16(<4 x half> %3, <4 x half> %4)
@@ -88,11 +88,11 @@ define <16 x half> @fminhx(<16 x half> %0, <16 x half> %1) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fminhq $r0 = $r0, $r4
 ; CV1-NEXT:    fminhq $r1 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fminhq $r2 = $r2, $r6
 ; CV1-NEXT:    fminhq $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fminhx:
 ; CV2:       # %bb.0:
@@ -101,7 +101,7 @@ define <16 x half> @fminhx(<16 x half> %0, <16 x half> %1) {
 ; CV2-NEXT:    fminhq $r2 = $r2, $r6
 ; CV2-NEXT:    fminhq $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <16 x half> %0, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <16 x half> %1, <16 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x half> @llvm.kvx.min.v4f16(<4 x half> %3, <4 x half> %4)
@@ -125,7 +125,7 @@ define <2 x float> @fminwp(<2 x float> %0, <2 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fminwp $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.min.v2f32(<2 x float> %0, <2 x float> %1)
   ret <2 x float> %3
 }
@@ -138,7 +138,7 @@ define <4 x float> @fminwq(<4 x float> %0, <4 x float> %1) {
 ; ALL-NEXT:    fminwp $r0 = $r0, $r2
 ; ALL-NEXT:    fminwp $r1 = $r1, $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.min.v2f32(<2 x float> %3, <2 x float> %4)
@@ -154,11 +154,11 @@ define <8 x float> @fminwo(<8 x float> %0, <8 x float> %1) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fminwp $r0 = $r0, $r4
 ; CV1-NEXT:    fminwp $r1 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fminwp $r2 = $r2, $r6
 ; CV1-NEXT:    fminwp $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fminwo:
 ; CV2:       # %bb.0:
@@ -167,7 +167,7 @@ define <8 x float> @fminwo(<8 x float> %0, <8 x float> %1) {
 ; CV2-NEXT:    fminwp $r2 = $r2, $r6
 ; CV2-NEXT:    fminwp $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.min.v2f32(<2 x float> %3, <2 x float> %4)
@@ -192,7 +192,7 @@ define <2 x double> @fmindp(<2 x double> %0, <2 x double> %1) {
 ; ALL-NEXT:    fmind $r0 = $r0, $r2
 ; ALL-NEXT:    fmind $r1 = $r1, $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <2 x double> %0, i64 0
   %4 = extractelement <2 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.min.f64(double %3, double %4)
@@ -209,11 +209,11 @@ define <4 x double> @fmindq(<4 x double> %0, <4 x double> %1) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fmind $r0 = $r0, $r4
 ; CV1-NEXT:    fmind $r1 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fmind $r2 = $r2, $r6
 ; CV1-NEXT:    fmind $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fmindq:
 ; CV2:       # %bb.0:
@@ -222,7 +222,7 @@ define <4 x double> @fmindq(<4 x double> %0, <4 x double> %1) {
 ; CV2-NEXT:    fmind $r2 = $r2, $r6
 ; CV2-NEXT:    fmind $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <4 x double> %0, i64 0
   %4 = extractelement <4 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.min.f64(double %3, double %4)

@@ -10,7 +10,7 @@ define <2 x i64> @stsudp(<2 x i64> %0) {
 ; CHECK-NEXT:    stsud $r0 = $r0, 0xbeef
 ; CHECK-NEXT:    stsud.@ $r1 = $r1, 0xbeeeeeef
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = tail call i64 @llvm.kvx.stsu.i64(i64 %2, i64 48879)
   %4 = extractelement <2 x i64> %0, i64 1
@@ -26,10 +26,10 @@ define i64 @stsud_ri(i64 %0) {
 ; CHECK-LABEL: stsud_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0xdeadbeef
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    stsud $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call i64 @llvm.kvx.stsu.i64(i64 %0, i64 3735928559)
   ret i64 %2
 }
@@ -39,7 +39,7 @@ define i64 @stsud_riat(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsud.@ $r0 = $r0, 0xdeadbeef
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.stsu.i64(i64 %0, i64 -2401053088876216593)
   ret i64 %2
 }
@@ -49,7 +49,7 @@ define i32 @stsuw_ri(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuw $r0 = $r0, 17
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.stsu.i32(i32 %0, i32 17)
   ret i32 %2
 }
@@ -61,7 +61,7 @@ define <2 x i16> @stsuhp(<2 x i16> %0, <2 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i16> @llvm.kvx.stsu.v2i16(<2 x i16> %0, <2 x i16> %1)
   ret <2 x i16> %3
 }
@@ -73,7 +73,7 @@ define <2 x i16> @stsuhpri(<2 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuhq $r0 = $r0, 0x660096
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.stsu.v2i16(<2 x i16> %0, <2 x i16> <i16 150, i16 102>)
   ret <2 x i16> %2
 }
@@ -83,7 +83,7 @@ define <4 x i16> @stsuhq(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %0, <4 x i16> %1)
   ret <4 x i16> %3
 }
@@ -95,7 +95,7 @@ define <4 x i16> @stsuhqri(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuhq $r0 = $r0, 0xc000f
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %0, <4 x i16> <i16 15, i16 12, i16 0, i16 0>)
   ret <4 x i16> %2
 }
@@ -105,7 +105,7 @@ define <4 x i16> @stsuhqriat(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuhq.@ $r0 = $r0, 0xc000f
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %0, <4 x i16> <i16 15, i16 12, i16 15, i16 12>)
   ret <4 x i16> %2
 }
@@ -116,7 +116,7 @@ define <8 x i16> @stsuho(<8 x i16> %0, <8 x i16> %1) {
 ; CHECK-NEXT:    stsuhq $r0 = $r0, $r2
 ; CHECK-NEXT:    stsuhq $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %3, <4 x i16> %4)
@@ -135,7 +135,7 @@ define <16 x i16> @stsuhx(<16 x i16> %0, <16 x i16> %1) {
 ; CHECK-NEXT:    stsuhq $r2 = $r2, $r6
 ; CHECK-NEXT:    stsuhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <16 x i16> %1, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %3, <4 x i16> %4)
@@ -158,29 +158,29 @@ define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, 
 ; CHECK-LABEL: stsuhv:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r32r33r34r35 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    stsuhq $r4 = $r4, $r32
 ; CHECK-NEXT:    stsuhq $r5 = $r5, $r33
 ; CHECK-NEXT:    stsuhq $r6 = $r6, $r34
 ; CHECK-NEXT:    stsuhq $r7 = $r7, $r35
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    stsuhq $r0 = $r8, $r0
 ; CHECK-NEXT:    stsuhq $r1 = $r9, $r1
 ; CHECK-NEXT:    stsuhq $r2 = $r10, $r2
 ; CHECK-NEXT:    stsuhq $r3 = $r11, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
   %4 = load <32 x i16>, <32 x i16>* %1
   %5 = load <32 x i16>, <32 x i16>* %2
   %6 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -223,7 +223,7 @@ define <2 x i32> @stsuwp(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %0, <2 x i32> %1)
   ret <2 x i32> %3
 }
@@ -236,7 +236,7 @@ define <4 x i32> @stsuwq(<4 x i32> %0, <4 x i32> %1) {
 ; CHECK-NEXT:    stsuwp $r0 = $r0, $r2
 ; CHECK-NEXT:    stsuwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %3, <2 x i32> %4)
@@ -255,7 +255,7 @@ define <8 x i32> @stsuwo(<8 x i32> %0, <8 x i32> %1) {
 ; CHECK-NEXT:    stsuwp $r2 = $r2, $r6
 ; CHECK-NEXT:    stsuwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <8 x i32> %1, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %3, <2 x i32> %4)
@@ -278,29 +278,29 @@ define void @stsuwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, 
 ; CHECK-LABEL: stsuwx:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r32r33r34r35 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    stsuwp $r4 = $r4, $r32
 ; CHECK-NEXT:    stsuwp $r5 = $r5, $r33
 ; CHECK-NEXT:    stsuwp $r6 = $r6, $r34
 ; CHECK-NEXT:    stsuwp $r7 = $r7, $r35
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    stsuwp $r0 = $r8, $r0
 ; CHECK-NEXT:    stsuwp $r1 = $r9, $r1
 ; CHECK-NEXT:    stsuwp $r2 = $r10, $r2
 ; CHECK-NEXT:    stsuwp $r3 = $r11, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
   %4 = load <16 x i32>, <16 x i32>* %1
   %5 = load <16 x i32>, <16 x i32>* %2
   %6 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
@@ -343,7 +343,7 @@ define <2 x i32> @stsuwpri(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuwp $r0 = $r0, 999
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %0, <2 x i32> <i32 999, i32 0>)
   ret <2 x i32> %2
 }
@@ -353,7 +353,7 @@ define <2 x i32> @stsuwpriat(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsuwp.@ $r0 = $r0, 0x3e7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %0, <2 x i32> <i32 999, i32 999>)
   ret <2 x i32> %2
 }

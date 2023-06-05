@@ -11,7 +11,7 @@ define float @fwidenhw(half %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fwidenlhw.s $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.fwiden.f32(half %0, i32 1)
   ret float %2
 }
@@ -23,7 +23,7 @@ define <2 x float> @fwidenhwp(<2 x half> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fwidenlhwp.s $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x float> @llvm.kvx.fwiden.v2f32(<2 x half> %0, i32 1)
   ret <2 x float> %2
 }
@@ -36,7 +36,7 @@ define <4 x float> @fwidenhwq(<4 x half> %0) {
 ; ALL-NEXT:    fwidenlhwp.s $r0 = $r0
 ; ALL-NEXT:    fwidenmhwp.s $r1 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half> %0, i32 1)
   ret <4 x float> %2
 }
@@ -48,12 +48,12 @@ define <8 x float> @fwidenhwo(<8 x half> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fwidenlhwp.s $r0 = $r0
 ; ALL-NEXT:    fwidenmhwp.s $r5 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    fwidenlhwp.s $r2 = $r1
 ; ALL-NEXT:    fwidenmhwp.s $r3 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x float> @llvm.kvx.fwiden.v4f32(<4 x half> %2, i32 1)
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -67,7 +67,7 @@ define double @fwidenwd(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fwidenlwd.s $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call double @llvm.kvx.fwiden.f64(float %0, i32 1)
   ret double %2
 }
@@ -80,7 +80,7 @@ define <2 x double> @fwidenwdp(<2 x float> %0) {
 ; ALL-NEXT:    fwidenlwd.s $r0 = $r0
 ; ALL-NEXT:    fwidenmwd.s $r1 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float> %0, i32 1)
   ret <2 x double> %2
 }
@@ -92,12 +92,12 @@ define <4 x double> @fwidenwdq(<4 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fwidenlwd.s $r0 = $r0
 ; ALL-NEXT:    fwidenmwd.s $r5 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    fwidenlwd.s $r2 = $r1
 ; ALL-NEXT:    fwidenmwd.s $r3 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x double> @llvm.kvx.fwiden.v2f64(<2 x float> %2, i32 1)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>

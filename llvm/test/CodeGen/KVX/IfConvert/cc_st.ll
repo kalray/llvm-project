@@ -11,7 +11,7 @@ define void @st(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -28,7 +28,7 @@ define void @sw_weven(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.even $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = and i32 %2, 1
   %5 = icmp eq i32 %4, 0
   br i1 %5, label %6, label %7
@@ -46,7 +46,7 @@ define void @sw_wodd(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.odd $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = and i32 %2, 1
   %5 = icmp eq i32 %4, 0
   br i1 %5, label %7, label %6
@@ -64,7 +64,7 @@ define void @sw_wgtz(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wgtz $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp sgt i32 %2, 0
   br i1 %4, label %5, label %6
 
@@ -81,7 +81,7 @@ define void @sw_wltz(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wltz $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp slt i32 %2, 0
   br i1 %4, label %5, label %6
 
@@ -98,7 +98,7 @@ define void @sw_wlez(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wlez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp slt i32 %2, 1
   br i1 %4, label %5, label %6
 
@@ -115,7 +115,7 @@ define void @sw_wgez(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wgez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp sgt i32 %2, -1
   br i1 %4, label %5, label %6
 
@@ -132,7 +132,7 @@ define void @sw_weqz(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.weqz $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %5, label %6
 
@@ -149,7 +149,7 @@ define void @sw_wnez(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -166,7 +166,7 @@ define void @sw_wnez2(i32* nocapture %0, i32 %1, i32 %2, i32 %3) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? 4[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %5 = icmp eq i32 %2, 0
   br i1 %5, label %8, label %6
 
@@ -183,10 +183,10 @@ define void @sw_and_cond1(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_and_cond1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r2 = $r2, 0xf34d
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = and i32 %2, 62285
   %5 = icmp eq i32 %4, 0
   br i1 %5, label %7, label %6
@@ -203,10 +203,10 @@ define void @sw_compw_cond1(i32* nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_compw_cond1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compw.lt $r2 = $r2, 0xf34e
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.even $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = icmp sgt i32 %2, 62285
   br i1 %4, label %5, label %6
 
@@ -223,7 +223,7 @@ define void @sw_ri27(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x3ffffff[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %7, label %5
 
@@ -241,7 +241,7 @@ define void @sw_ri54(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x4000000[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %7, label %5
 
@@ -259,7 +259,7 @@ define void @sw_ri54_max(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x1fffffffffffff[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %7, label %5
 
@@ -279,7 +279,7 @@ define void @sw_ri54_over_max(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sb 0x20000000000000[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB15_2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -300,7 +300,7 @@ define void @sw_ri54_min(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0xffe0000000000000[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %7, label %5
 
@@ -320,7 +320,7 @@ define void @sw_ri54_sub_min(i8* nocapture %0, i8 %1, i32 %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sb 0xffdfffffffffffff[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB17_2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -341,7 +341,7 @@ define void @sw_rr(i8* nocapture %0, i8 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.dnez $r2 ? [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i64 %2, 0
   br i1 %4, label %6, label %5
 
@@ -360,7 +360,7 @@ define void @sw_rr_scale(i32* nocapture %0, i32 %1, i64 %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB19_2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -383,7 +383,7 @@ define void @sw_rr_scale_offset(i32* nocapture %0, i32 %1, i64 %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB20_2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -406,7 +406,7 @@ define void @sw_rr_offset(i8* nocapture %0, i8 %1, i64 %2) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sb $r2[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB21_2:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -426,10 +426,10 @@ define void @multiple_st(i32* %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: multiple_st:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.wnez $r2 ? 8[$r0] = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %7, label %5
 
@@ -454,13 +454,13 @@ define i32 @select_make(i32* %0, i32 %1, i32 %2) {
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB23_2:
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -481,11 +481,11 @@ define i32 @select_make_inverted(i32* %0, i32 %1, i32 %2) {
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB24_2:
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -506,11 +506,11 @@ define i32 @select_inputs(i32* %0, i32 %1, i32 %2, i32 %a) {
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    copyd $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB25_2:
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -529,7 +529,7 @@ define void @stq_cc(<2 x i64> %0, <2 x i64>* nocapture %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sq.dnez $r3 ? [$r2] = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i64 %2, 0
   br i1 %4, label %6, label %5
 
@@ -547,7 +547,7 @@ define void @sto_cc(<4 x i64> %0, <4 x i64>* nocapture %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    so.dnez $r5 ? [$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i64 %2, 0
   br i1 %4, label %6, label %5
 
@@ -568,16 +568,16 @@ define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a
 ; CHECK-NEXT:    copyd $r7 = $r4
 ; CHECK-NEXT:    copyd $r8 = $r1
 ; CHECK-NEXT:    copyd $r9 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sq 0[$r0] = $r8r9
 ; CHECK-NEXT:    copyq $r6r7 = $r8, $r9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB28_2:
 ; CHECK-NEXT:    copyd $r0 = $r6
 ; CHECK-NEXT:    copyd $r1 = $r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 
@@ -598,25 +598,25 @@ define <4 x i64> @select_inputs_quad(<4 x i64>* %0, <4 x i64> %1, <4 x i64> %a, 
 ; CHECK-NEXT:    copyd $r35 = $r8
 ; CHECK-NEXT:    copyd $r38 = $r3
 ; CHECK-NEXT:    copyd $r39 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r9 ? .LBB29_2
 ; CHECK-NEXT:    copyd $r32 = $r5
 ; CHECK-NEXT:    copyd $r33 = $r6
 ; CHECK-NEXT:    copyd $r36 = $r1
 ; CHECK-NEXT:    copyd $r37 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    so 0[$r0] = $r36r37r38r39
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyo $r32r33r34r35 = $r36r37r38r39
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB29_2:
 ; CHECK-NEXT:    copyd $r0 = $r32
 ; CHECK-NEXT:    copyd $r1 = $r33
 ; CHECK-NEXT:    copyd $r2 = $r34
 ; CHECK-NEXT:    copyd $r3 = $r35
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = icmp eq i32 %2, 0
   br i1 %4, label %6, label %5
 

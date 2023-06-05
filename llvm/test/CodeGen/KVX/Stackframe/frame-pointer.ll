@@ -16,24 +16,24 @@ define dso_local i32 @test(i32 %x) {
 ; FP-ALL:       # %bb.0: # %entry
 ; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    get $r16 = $ra
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sd 24[$r12] = $r16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd 16[$r12] = $r14
 ; FP-ALL-NEXT:    copyd $r1 = $r0
 ; FP-ALL-NEXT:    addd $r14 = $r12, 16
 ; FP-ALL-NEXT:    call g1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    addd $r12 = $r14, -16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r14 = 16[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r16 = 24[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    set $ra = $r16
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:

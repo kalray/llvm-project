@@ -11,10 +11,10 @@ define void @test7(i64 %b, i8 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i8 %c to i64
   %sh_prom = and i64 %conv, 4294967295
@@ -28,10 +28,10 @@ define void @test7b(i64 %b, i8 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sh_prom = zext i8 %c to i64
   %shl = shl i64 %b, %sh_prom
@@ -44,10 +44,10 @@ define void @test7c(i64 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i16 %c to i64
   %sh_prom = and i64 %conv, 4294967295
@@ -61,10 +61,10 @@ define void @test7d(i64 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sh_prom = zext i16 %c to i64
   %shl = shl i64 %b, %sh_prom
@@ -77,10 +77,10 @@ define void @test7e(i64 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sh_prom = zext i32 %c to i64
   %shl = shl i64 %b, %sh_prom
@@ -93,10 +93,10 @@ define void @test7f(i64 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sh_prom = zext i32 %c to i64
   %shl = shl i64 %b, %sh_prom

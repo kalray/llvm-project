@@ -12,7 +12,7 @@ define half @fabsf16(half %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call half @llvm.fabs.f16(half %x)
   ret half %tmp
 }
@@ -23,7 +23,7 @@ define <2 x half> @fabsv2f16(<2 x half> %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call <2 x half> @llvm.fabs.v2f16(<2 x half> %x)
   ret <2 x half> %tmp
 }
@@ -34,7 +34,7 @@ define <4 x half> @fabsv4f16(<4 x half> %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call <4 x half> @llvm.fabs.v4f16(<4 x half> %x)
   ret <4 x half> %tmp
 }
@@ -44,7 +44,7 @@ define float @fabsf32(float %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call float @llvm.fabs.f32(float %x)
   ret float %tmp
 }
@@ -54,7 +54,7 @@ define double @fabsf64(double %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call double @llvm.fabs.f64(double %x)
   ret double %tmp
 }
@@ -64,7 +64,7 @@ define <2 x float> @fabsv2f32(<2 x float> %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call <2 x float> @llvm.fabs.v2f32(<2 x float> %x)
   ret <2 x float> %tmp
 }
@@ -75,7 +75,7 @@ define <2 x double> @fabsv2f64(<2 x double> %x) {
 ; CHECK-NEXT:    fabsd $r0 = $r0
 ; CHECK-NEXT:    fabsd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %tmp = call <2 x double> @llvm.fabs.v2f64(<2 x double> %x)
   ret <2 x double> %tmp
 }
@@ -90,7 +90,7 @@ define double @bitcast_fabsd(double %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast double %x to i64
   %and = and i64 %bc1, 9223372036854775807
   %bc2 = bitcast i64 %and to double
@@ -102,7 +102,7 @@ define float @bitcast_fabsw(float %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast float %x to i32
   %and = and i32 %bc1, 2147483647
   %bc2 = bitcast i32 %and to float
@@ -114,7 +114,7 @@ define half @bitcast_fabsh(half %x) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %bc1 = bitcast half %x to i16
   %and = and i16 %bc1, 32767
   %bc2 = bitcast i16 %and to half

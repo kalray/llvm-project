@@ -11,7 +11,7 @@ define i64 @nandd_rr(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = and i64 %1, %0
   %4 = xor i64 %3, -1
   ret i64 %4
@@ -22,7 +22,7 @@ define i64 @nandd_ri10(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandd $r0 = $r0, 17
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, 17
   %3 = xor i64 %2, -1
   ret i64 %3
@@ -33,7 +33,7 @@ define i64 @nandd_ri37(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandd $r0 = $r0, 0xfffffff317c6324c
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, -55435709876
   %3 = xor i64 %2, -1
   ret i64 %3
@@ -44,7 +44,7 @@ define i64 @nandd_ri64(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandd $r0 = $r0, 0x3f63879cfe5905b4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, 4567643555435709876
   %3 = xor i64 %2, -1
   ret i64 %3
@@ -55,7 +55,7 @@ define i32 @nandw_rr(i32 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = and i32 %1, %0
   %4 = xor i32 %3, -1
   ret i32 %4
@@ -66,7 +66,7 @@ define i32 @nandw_ri10(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandw $r0 = $r0, 17
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, 17
   %3 = xor i32 %2, -1
   ret i32 %3
@@ -77,7 +77,7 @@ define i32 @nandw_ri37(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    nandw $r0 = $r0, 0xb593d1d5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, -1248603691
   %3 = xor i32 %2, -1
   ret i32 %3

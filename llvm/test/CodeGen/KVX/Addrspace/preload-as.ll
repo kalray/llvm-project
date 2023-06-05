@@ -13,7 +13,7 @@ define i8 @preload_i8(i8 addrspace(257)* nocapture readonly %i){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load i8, i8 addrspace(257)* %i, align 1
   ret i8 %0
@@ -24,7 +24,7 @@ define i16 @preload_i16(i16 addrspace(257)* nocapture readonly %i){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load i16, i16 addrspace(257)* %i, align 2
   ret i16 %0
@@ -35,7 +35,7 @@ define i32 @preload_i32(i32 addrspace(257)* nocapture readonly %i){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load i32, i32 addrspace(257)* %i, align 4
   ret i32 %0
@@ -46,7 +46,7 @@ define i64 @preload_i64(i64 addrspace(257)* nocapture readonly %i){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load i64, i64 addrspace(257)* %i, align 8
   ret i64 %0
@@ -57,7 +57,7 @@ define float @fpreload_f32(float addrspace(257)* nocapture readonly %f){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load float, float addrspace(257)* %f, align 4
   ret float %0
@@ -68,7 +68,7 @@ define double @fpreload_f64(double addrspace(257)* nocapture readonly %d){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load double, double addrspace(257)* %d, align 8
   ret double %0
@@ -79,7 +79,7 @@ define <2 x float> @fpreload_v2f32(<2 x float> addrspace(257)* nocapture readonl
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load <2 x float>, <2 x float> addrspace(257)* %v, align 8
   ret <2 x float> %0
@@ -90,7 +90,7 @@ define <4 x float> @fpreload_v4f32(<4 x float> addrspace(257)* nocapture readonl
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq.us $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load <4 x float>, <4 x float> addrspace(257)* %v, align 16
   ret <4 x float> %0
@@ -101,7 +101,7 @@ define i32 @foo_preload_a(%struct.S addrspace(257)* nocapture readonly %s){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %a = getelementptr inbounds %struct.S, %struct.S addrspace(257)* %s, i64 0, i32 0
   %0 = load i32, i32 addrspace(257)* %a, align 4
@@ -113,7 +113,7 @@ define i32 @foo_preload_b(%struct.S addrspace(257)* nocapture readonly %s){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 4[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %b = getelementptr inbounds %struct.S, %struct.S addrspace(257)* %s, i64 0, i32 1
   %0 = load i32, i32 addrspace(257)* %b, align 4
@@ -125,7 +125,7 @@ define i32 @foo_preload_c(%struct.S addrspace(257)* nocapture readonly %s){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 8[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %c = getelementptr inbounds %struct.S, %struct.S addrspace(257)* %s, i64 0, i32 2
   %0 = load i32, i32 addrspace(257)* %c, align 4
@@ -137,7 +137,7 @@ define i32 @foo_preload_d(%struct.S addrspace(257)* nocapture readonly %s){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 12[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %d = getelementptr inbounds %struct.S, %struct.S addrspace(257)* %s, i64 0, i32 3
   %0 = load i32, i32 addrspace(257)* %d, align 4
@@ -149,7 +149,7 @@ define i32 @foo_preload_3(<4 x i32> addrspace(257)* nocapture readonly %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us $r0 = 12[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = load <4 x i32>, <4 x i32> addrspace(257)* %v, align 16
   %vecext = extractelement <4 x i32> %0, i32 3
@@ -160,10 +160,10 @@ define i32 @foo_preload_x(<4 x i32> addrspace(257)* nocapture readonly %v, i32 %
 ; CHECK-LABEL: foo_preload_x:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andw $r1 = $r1, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.us.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = load <4 x i32>, <4 x i32> addrspace(257)* %v, align 16
   %vecext = extractelement <4 x i32> %0, i32 %x

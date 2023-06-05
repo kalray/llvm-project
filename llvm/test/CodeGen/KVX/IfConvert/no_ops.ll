@@ -9,7 +9,7 @@ define void @foo(i1 %v) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %b
 ; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_2: # %e
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

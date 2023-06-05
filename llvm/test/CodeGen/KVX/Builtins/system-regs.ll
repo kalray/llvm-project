@@ -11,14 +11,14 @@ define i32 @add_pm0() {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = a
 ; CHECK-NEXT:    get $r2 = $pm0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = tail call i64 @llvm.read_register.i64(metadata !0)
   %1 = load i32, i32* @a, align 4

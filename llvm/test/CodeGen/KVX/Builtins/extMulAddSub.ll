@@ -10,15 +10,15 @@ define <8 x i32> @maddxhwo_s(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: maddxhwo_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    maddhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -37,15 +37,15 @@ define <8 x i32> @maddxhwo_su(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: maddxhwo_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddsuhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    maddsuhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -62,15 +62,15 @@ define <8 x i32> @maddxhwo_u(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: maddxhwo_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    madduhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    madduhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -87,10 +87,10 @@ define <2 x i32> @maddxhwp_s(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: maddxhwp_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.maddx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 0)
   ret <2 x i32> %4
 }
@@ -101,10 +101,10 @@ define <2 x i32> @maddxhwp_su(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: maddxhwp_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddsuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.maddx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 1)
   ret <2 x i32> %4
 }
@@ -113,10 +113,10 @@ define <2 x i32> @maddxhwp_u(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: maddxhwp_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    madduhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.maddx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 2)
   ret <2 x i32> %4
 }
@@ -125,11 +125,11 @@ define <4 x i32> @maddxhwq_s(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: maddxhwq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.maddx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 0)
   ret <4 x i32> %4
 }
@@ -138,11 +138,11 @@ define <4 x i32> @maddxhwq_su(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: maddxhwq_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddsuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.maddx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 1)
   ret <4 x i32> %4
 }
@@ -151,11 +151,11 @@ define <4 x i32> @maddxhwq_u(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: maddxhwq_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    madduhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.maddx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 2)
   ret <4 x i32> %4
 }
@@ -164,11 +164,11 @@ define <2 x i64> @maddxwdp_s(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: maddxwdp_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.maddx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 0)
   ret <2 x i64> %4
 }
@@ -179,11 +179,11 @@ define <2 x i64> @maddxwdp_su(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: maddxwdp_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddsuwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.maddx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 1)
   ret <2 x i64> %4
 }
@@ -192,11 +192,11 @@ define <2 x i64> @maddxwdp_u(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: maddxwdp_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    madduwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.maddx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 2)
   ret <2 x i64> %4
 }
@@ -205,15 +205,15 @@ define <4 x i64> @maddxwdq_s(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: maddxwdq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    maddwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -230,15 +230,15 @@ define <4 x i64> @maddxwdq_su(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: maddxwdq_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    maddsuwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    maddsuwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -255,15 +255,15 @@ define <4 x i64> @maddxwdq_u(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: maddxwdq_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    madduwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    madduwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -280,15 +280,15 @@ define <8 x i32> @msbfxhwo_s(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: msbfxhwo_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -307,15 +307,15 @@ define <8 x i32> @msbfxhwo_su(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: msbfxhwo_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfsuhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfsuhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -332,15 +332,15 @@ define <8 x i32> @msbfxhwo_u(<8 x i16> %0, <8 x i16> %1, <8 x i32> %2) {
 ; ALL-LABEL: msbfxhwo_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfuhwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfuhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x i32> %2, <8 x i32> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -357,10 +357,10 @@ define <2 x i32> @msbfxhwp_s(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: msbfxhwp_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.msbfx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 0)
   ret <2 x i32> %4
 }
@@ -371,10 +371,10 @@ define <2 x i32> @msbfxhwp_su(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: msbfxhwp_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfsuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.msbfx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 1)
   ret <2 x i32> %4
 }
@@ -383,10 +383,10 @@ define <2 x i32> @msbfxhwp_u(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2) {
 ; ALL-LABEL: msbfxhwp_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i32> @llvm.kvx.msbfx.v2i32(<2 x i16> %0, <2 x i16> %1, <2 x i32> %2, i32 2)
   ret <2 x i32> %4
 }
@@ -395,11 +395,11 @@ define <4 x i32> @msbfxhwq_s(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: msbfxhwq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.msbfx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 0)
   ret <4 x i32> %4
 }
@@ -408,11 +408,11 @@ define <4 x i32> @msbfxhwq_su(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: msbfxhwq_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfsuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.msbfx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 1)
   ret <4 x i32> %4
 }
@@ -421,11 +421,11 @@ define <4 x i32> @msbfxhwq_u(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2) {
 ; ALL-LABEL: msbfxhwq_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfuhwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <4 x i32> @llvm.kvx.msbfx.v4i32(<4 x i16> %0, <4 x i16> %1, <4 x i32> %2, i32 2)
   ret <4 x i32> %4
 }
@@ -434,11 +434,11 @@ define <2 x i64> @msbfxwdp_s(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: msbfxwdp_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.msbfx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 0)
   ret <2 x i64> %4
 }
@@ -449,11 +449,11 @@ define <2 x i64> @msbfxwdp_su(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: msbfxwdp_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfsuwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.msbfx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 1)
   ret <2 x i64> %4
 }
@@ -462,11 +462,11 @@ define <2 x i64> @msbfxwdp_u(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2) {
 ; ALL-LABEL: msbfxwdp_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfuwdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %4 = tail call <2 x i64> @llvm.kvx.msbfx.v2i64(<2 x i32> %0, <2 x i32> %1, <2 x i64> %2, i32 2)
   ret <2 x i64> %4
 }
@@ -475,15 +475,15 @@ define <4 x i64> @msbfxwdq_s(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: msbfxwdq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -500,15 +500,15 @@ define <4 x i64> @msbfxwdq_su(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: msbfxwdq_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfsuwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfsuwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -525,15 +525,15 @@ define <4 x i64> @msbfxwdq_u(<4 x i32> %0, <4 x i32> %1, <4 x i64> %2) {
 ; ALL-LABEL: msbfxwdq_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    msbfuwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    msbfuwdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x i32> %1, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
@@ -550,13 +550,13 @@ define <8 x i32> @mulxhwo_s(<8 x i16> %0, <8 x i16> %1) {
 ; ALL-LABEL: mulxhwo_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulhwq $r2r3 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %3, <4 x i16> %4, i32 0)
@@ -573,13 +573,13 @@ define <8 x i32> @mulxhwo_su(<8 x i16> %0, <8 x i16> %1) {
 ; ALL-LABEL: mulxhwo_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulsuhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulsuhwq $r2r3 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %3, <4 x i16> %4, i32 1)
@@ -594,13 +594,13 @@ define <8 x i32> @mulxhwo_u(<8 x i16> %0, <8 x i16> %1) {
 ; ALL-LABEL: mulxhwo_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    muluhwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    muluhwq $r2r3 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x i16> %1, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %3, <4 x i16> %4, i32 2)
@@ -616,7 +616,7 @@ define <2 x i32> @mulxhwp_s(<2 x i16> %0, <2 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i32> @llvm.kvx.mulx.v2i32(<2 x i16> %0, <2 x i16> %1, i32 0)
   ret <2 x i32> %3
 }
@@ -628,7 +628,7 @@ define <2 x i32> @mulxhwp_su(<2 x i16> %0, <2 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulsuhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i32> @llvm.kvx.mulx.v2i32(<2 x i16> %0, <2 x i16> %1, i32 1)
   ret <2 x i32> %3
 }
@@ -638,7 +638,7 @@ define <2 x i32> @mulxhwp_u(<2 x i16> %0, <2 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    muluhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i32> @llvm.kvx.mulx.v2i32(<2 x i16> %0, <2 x i16> %1, i32 2)
   ret <2 x i32> %3
 }
@@ -648,7 +648,7 @@ define <4 x i32> @mulxhwq_s(<4 x i16> %0, <4 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %0, <4 x i16> %1, i32 0)
   ret <4 x i32> %3
 }
@@ -658,7 +658,7 @@ define <4 x i32> @mulxhwq_su(<4 x i16> %0, <4 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulsuhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %0, <4 x i16> %1, i32 1)
   ret <4 x i32> %3
 }
@@ -668,7 +668,7 @@ define <4 x i32> @mulxhwq_u(<4 x i16> %0, <4 x i16> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    muluhwq $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x i32> @llvm.kvx.mulx.v4i32(<4 x i16> %0, <4 x i16> %1, i32 2)
   ret <4 x i32> %3
 }
@@ -678,7 +678,7 @@ define <2 x i64> @mulxwdp_s(<2 x i32> %0, <2 x i32> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulwdp $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i64> @llvm.kvx.mulx.v2i64(<2 x i32> %0, <2 x i32> %1, i32 0)
   ret <2 x i64> %3
 }
@@ -690,7 +690,7 @@ define <2 x i64> @mulxwdp_su(<2 x i32> %0, <2 x i32> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulsuwdp $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i64> @llvm.kvx.mulx.v2i64(<2 x i32> %0, <2 x i32> %1, i32 1)
   ret <2 x i64> %3
 }
@@ -700,7 +700,7 @@ define <2 x i64> @mulxwdp_u(<2 x i32> %0, <2 x i32> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    muluwdp $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x i64> @llvm.kvx.mulx.v2i64(<2 x i32> %0, <2 x i32> %1, i32 2)
   ret <2 x i64> %3
 }
@@ -709,13 +709,13 @@ define <4 x i64> @mulxwdq_s(<4 x i32> %0, <4 x i32> %1) {
 ; ALL-LABEL: mulxwdq_s:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulwdp $r0r1 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = tail call <4 x i64> @llvm.kvx.mulx.v4i64(<4 x i32> %0, <4 x i32> %1, i32 0)
   ret <4 x i64> %3
 }
@@ -726,13 +726,13 @@ define <4 x i64> @mulxwdq_su(<4 x i32> %0, <4 x i32> %1) {
 ; ALL-LABEL: mulxwdq_su:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    mulsuwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    mulsuwdp $r0r1 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = tail call <4 x i64> @llvm.kvx.mulx.v4i64(<4 x i32> %0, <4 x i32> %1, i32 1)
   ret <4 x i64> %3
 }
@@ -741,13 +741,13 @@ define <4 x i64> @mulxwdq_u(<4 x i32> %0, <4 x i32> %1) {
 ; ALL-LABEL: mulxwdq_u:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    muluwdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    muluwdp $r0r1 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %3 = tail call <4 x i64> @llvm.kvx.mulx.v4i64(<4 x i32> %0, <4 x i32> %1, i32 2)
   ret <4 x i64> %3
 }

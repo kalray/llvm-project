@@ -13,12 +13,12 @@ define i32 @f(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 7
 ; CHECK-NEXT:    make $r2 = 5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wgtz $r0 ? $r1 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = icmp sgt i32 %a, 0
   %cond = select i1 %cmp, i32 5, i32 7
@@ -29,12 +29,12 @@ define i32 @f_select_cc_i32(i32 %c, i32 %c2, i32 %a, i32 %b){
 ; CHECK-LABEL: f_select_cc_i32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = icmp sgt i32 %c, %c2
   %cond = select i1 %cmp, i32 %a, i32 %b
@@ -45,12 +45,12 @@ define i32 @f_select_cc_i64(i64 %c, i64 %c2, i32 %a, i32 %b){
 ; CHECK-LABEL: f_select_cc_i64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compd.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = icmp sgt i64 %c, %c2
   %cond = select i1 %cmp, i32 %a, i32 %b
@@ -64,31 +64,31 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CV1-NEXT:    srlw $r3 = $r0, 16
 ; CV1-NEXT:    srlw $r4 = $r1, 16
 ; CV1-NEXT:    srld $r5 = $r0, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srld $r6 = $r0, 48
 ; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r4
 ; CV1-NEXT:    srld $r8 = $r1, 32
 ; CV1-NEXT:    srld $r9 = $r1, 48
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andw $r2 = $r2, 1
 ; CV1-NEXT:    andw $r7 = $r7, 1
 ; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r8
 ; CV1-NEXT:    fcompnhq.olt $r11 = $r6, $r9
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
 ; CV1-NEXT:    andw $r1 = $r10, 1
 ; CV1-NEXT:    andw $r2 = $r11, 1
 ; CV1-NEXT:    cmoved.wnez $r7 ? $r3 = $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.wnez $r1 ? $r5 = $r8
 ; CV1-NEXT:    cmoved.wnez $r2 ? $r6 = $r9
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
 ; CV1-NEXT:    insf $r5 = $r6, 31, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    insf $r0 = $r5, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ;
 ; CV2-LABEL: f_Select32PAT:
 ; CV2:       # %bb.0: # %entry
@@ -96,31 +96,31 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CV2-NEXT:    srlw $r4 = $r1, 16
 ; CV2-NEXT:    srld $r5 = $r0, 32
 ; CV2-NEXT:    srld $r6 = $r1, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CV2-NEXT:    srld $r7 = $r0, 48
 ; CV2-NEXT:    srld $r8 = $r1, 48
 ; CV2-NEXT:    fcompnhq.olt $r9 = $r3, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    andw $r2 = $r2, 1
 ; CV2-NEXT:    andw $r9 = $r9, 1
 ; CV2-NEXT:    fcompnhq.olt $r10 = $r5, $r6
 ; CV2-NEXT:    fcompnhq.olt $r11 = $r7, $r8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
 ; CV2-NEXT:    cmoved.wnez $r9 ? $r3 = $r4
 ; CV2-NEXT:    andw $r10 = $r10, 1
 ; CV2-NEXT:    andw $r11 = $r11, 1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r3, 31, 16
 ; CV2-NEXT:    cmoved.wnez $r10 ? $r5 = $r6
 ; CV2-NEXT:    cmoved.wnez $r11 ? $r7 = $r8
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r5 = $r7, 31, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    insf $r0 = $r5, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 entry:
   %vecext = extractelement <4 x half> %x, i32 0
   %vecext1 = extractelement <4 x half> %y, i32 0
@@ -149,10 +149,10 @@ define half @f_Select64PAT(i64 %c, half %a, half %b){
 ; CHECK-LABEL: f_Select64PAT:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cmoved.deqz $r0 ? $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq i64 %c, 0
   %cond = select i1 %cmp, half %a, half %b
@@ -163,12 +163,12 @@ define <2 x float> @f_select_cc_v2f32(i32 %c, i32 %c2, <2 x float> %a, <2 x floa
 ; CHECK-LABEL: f_select_cc_v2f32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.even $r0 ? $r2 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = icmp sgt i32 %c, %c2
   %cond = select i1 %cmp, <2 x float> %a, <2 x float> %b

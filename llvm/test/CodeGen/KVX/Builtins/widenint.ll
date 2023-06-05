@@ -11,10 +11,10 @@ define <8 x i16> @widenbho(<8 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxmbhq $r1 = $r0
 ; CHECK-NEXT:    sxlbhq $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %2, i32 0)
   %4 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -30,19 +30,19 @@ define <8 x i16> @widenbho_z(<8 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenbho_z:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxmbhq $r1 = $r0
 ; CV2-NEXT:    zxlbhq $r2 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %2, i32 1)
   %4 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -56,10 +56,10 @@ define <8 x i16> @widenbho_q(<8 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001000
 ; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x800040002000100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %2, i32 2)
   %4 = shufflevector <8 x i8> %0, <8 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -73,7 +73,7 @@ define <2 x i16> @widenbhp(<2 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.widenint.v2i16(<2 x i8> %0, i32 0)
   ret <2 x i16> %2
 }
@@ -85,7 +85,7 @@ define <2 x i16> @widenbhp_z(<2 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.widenint.v2i16(<2 x i8> %0, i32 1)
   ret <2 x i16> %2
 }
@@ -95,7 +95,7 @@ define <2 x i16> @widenbhp_q(<2 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x2000100
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.widenint.v2i16(<2 x i8> %0, i32 2)
   ret <2 x i16> %2
 }
@@ -105,7 +105,7 @@ define <4 x i16> @widenbhq(<4 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxlbhq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %0, i32 0)
   ret <4 x i16> %2
 }
@@ -115,13 +115,13 @@ define <4 x i16> @widenbhq_z(<4 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: widenbhq_z:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxlbhq $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %0, i32 1)
   ret <4 x i16> %2
 }
@@ -131,7 +131,7 @@ define <4 x i16> @widenbhq_q(<4 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x800040002000100
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %0, i32 2)
   ret <4 x i16> %2
 }
@@ -141,22 +141,22 @@ define void @widenbhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r4 = $r2
 ; CV1-NEXT:    sxmbhq $r5 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxlbhq $r8 = $r0
 ; CV1-NEXT:    sxmbhq $r9 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sxlbhq $r6 = $r3
 ; CV1-NEXT:    sxlbhq $r10 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxmbhq $r7 = $r3
 ; CV1-NEXT:    sxmbhq $r11 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: widenbhv:
 ; CV2:       # %bb.0:
@@ -164,18 +164,18 @@ define void @widenbhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0
 ; CV2-NEXT:    sxmbhq $r5 = $r2
 ; CV2-NEXT:    sxlbhq $r8 = $r0
 ; CV2-NEXT:    sxmbhq $r9 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxlbhq $r6 = $r3
 ; CV2-NEXT:    sxmbhq $r7 = $r3
 ; CV2-NEXT:    sxlbhq $r10 = $r1
 ; CV2-NEXT:    sxmbhq $r11 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %3 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %3, i32 0)
   %5 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -208,22 +208,22 @@ define void @widenbhv_z(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r2, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r5 = $r2, 0x80004000200010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r8 = $r0, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r9 = $r0, 0x80004000200010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r6 = $r3, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r10 = $r1, 0x8000400020001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r7 = $r3, 0x80004000200010
 ; CV1-NEXT:    sbmm8 $r11 = $r1, 0x80004000200010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: widenbhv_z:
 ; CV2:       # %bb.0:
@@ -231,18 +231,18 @@ define void @widenbhv_z(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 
 ; CV2-NEXT:    zxmbhq $r5 = $r2
 ; CV2-NEXT:    zxlbhq $r8 = $r0
 ; CV2-NEXT:    zxmbhq $r9 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    zxlbhq $r6 = $r3
 ; CV2-NEXT:    zxmbhq $r7 = $r3
 ; CV2-NEXT:    zxlbhq $r10 = $r1
 ; CV2-NEXT:    zxmbhq $r11 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %3 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %3, i32 1)
   %5 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -275,22 +275,22 @@ define void @widenbhv_q(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r4 = $r2, 0x800040002000100
 ; CHECK-NEXT:    sbmm8 $r5 = $r2, 0x8000400020001000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r8 = $r0, 0x800040002000100
 ; CHECK-NEXT:    sbmm8 $r9 = $r0, 0x8000400020001000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r6 = $r3, 0x800040002000100
 ; CHECK-NEXT:    sbmm8 $r10 = $r1, 0x800040002000100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbmm8 $r7 = $r3, 0x8000400020001000
 ; CHECK-NEXT:    sbmm8 $r11 = $r1, 0x8000400020001000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %3 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %3, i32 2)
   %5 = shufflevector <32 x i8> %1, <32 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -323,13 +323,13 @@ define <16 x i16> @widenbhx(<16 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r4 = $r0
 ; CV1-NEXT:    sxmbhq $r5 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    sxlbhq $r2 = $r1
 ; CV1-NEXT:    sxmbhq $r3 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenbhx:
 ; CV2:       # %bb.0:
@@ -337,11 +337,11 @@ define <16 x i16> @widenbhx(<16 x i8> %0) {
 ; CV2-NEXT:    sxmbhq $r3 = $r1
 ; CV2-NEXT:    sxlbhq $r4 = $r0
 ; CV2-NEXT:    sxmbhq $r5 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %2, i32 0)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -361,12 +361,12 @@ define <16 x i16> @widenbhx_z(<16 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r0, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r5 = $r0, 0x80004000200010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    sbmm8 $r2 = $r1, 0x8000400020001
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x80004000200010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -376,11 +376,11 @@ define <16 x i16> @widenbhx_z(<16 x i8> %0) {
 ; CV2-NEXT:    zxmbhq $r3 = $r1
 ; CV2-NEXT:    zxlbhq $r4 = $r0
 ; CV2-NEXT:    zxmbhq $r5 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.widenint.v4i16(<4 x i8> %2, i32 1)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -400,12 +400,12 @@ define <16 x i16> @widenbhx_q(<16 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r4 = $r0, 0x800040002000100
 ; CHECK-NEXT:    sbmm8 $r5 = $r0, 0x8000400020001000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x800040002000100
 ; CHECK-NEXT:    sbmm8 $r3 = $r1, 0x8000400020001000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -427,13 +427,13 @@ define <8 x i32> @widenhwo(<8 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlhwp $r4 = $r0
 ; CV1-NEXT:    sxmhwp $r5 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    sxlhwp $r2 = $r1
 ; CV1-NEXT:    sxmhwp $r3 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenhwo:
 ; CV2:       # %bb.0:
@@ -441,11 +441,11 @@ define <8 x i32> @widenhwo(<8 x i16> %0) {
 ; CV2-NEXT:    sxmhwp $r3 = $r1
 ; CV2-NEXT:    sxlhwp $r4 = $r0
 ; CV2-NEXT:    sxmhwp $r5 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 0)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -467,12 +467,12 @@ define <8 x i32> @widenhwo_z(<8 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r0, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r5 = $r0, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -482,11 +482,11 @@ define <8 x i32> @widenhwo_z(<8 x i16> %0) {
 ; CV2-NEXT:    zxmhwp $r3 = $r1
 ; CV2-NEXT:    zxlhwp $r4 = $r0
 ; CV2-NEXT:    zxmhwp $r5 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 1)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -506,31 +506,31 @@ define <8 x i32> @widenhwo_q(<8 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r2 = 0x804000002010000
 ; CV1-NEXT:    make $r3 = 0x8040000020100000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r4 = $r0, $r2
 ; CV1-NEXT:    sbmm8 $r5 = $r0, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    sbmm8 $r2 = $r1, $r2
 ; CV1-NEXT:    sbmm8 $r3 = $r1, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: widenhwo_q:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r2 = 0x804000002010000
 ; CV2-NEXT:    make $r3 = 0x8040000020100000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r2 = $r1, $r2
 ; CV2-NEXT:    sbmm8 $r3 = $r1, $r3
 ; CV2-NEXT:    sbmm8 $r4 = $r0, $r2
 ; CV2-NEXT:    sbmm8 $r5 = $r0, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 2)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -550,7 +550,7 @@ define <2 x i32> @widenhwp(<2 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxlhwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %0, i32 0)
   ret <2 x i32> %2
 }
@@ -560,13 +560,13 @@ define <2 x i32> @widenhwp_z(<2 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: widenhwp_z:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxlhwp $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %0, i32 1)
   ret <2 x i32> %2
 }
@@ -575,10 +575,10 @@ define <2 x i32> @widenhwp_q(<2 x i16> %0) {
 ; CHECK-LABEL: widenhwp_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x804000002010000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %0, i32 2)
   ret <2 x i32> %2
 }
@@ -588,10 +588,10 @@ define <4 x i32> @widenhwq(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxmhwp $r1 = $r0
 ; CHECK-NEXT:    sxlhwp $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 0)
   %4 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -605,19 +605,19 @@ define <4 x i32> @widenhwq_z(<4 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: widenhwq_z:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxmhwp $r1 = $r0
 ; CV2-NEXT:    zxlhwp $r2 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 1)
   %4 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -631,13 +631,13 @@ define <4 x i32> @widenhwq_q(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0x804000002010000
 ; CHECK-NEXT:    make $r3 = 0x8040000020100000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, $r3
 ; CHECK-NEXT:    sbmm8 $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %2, i32 2)
   %4 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -651,22 +651,22 @@ define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlhwp $r4 = $r2
 ; CV1-NEXT:    sxmhwp $r5 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxlhwp $r8 = $r0
 ; CV1-NEXT:    sxmhwp $r9 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sxlhwp $r6 = $r3
 ; CV1-NEXT:    sxlhwp $r10 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxmhwp $r7 = $r3
 ; CV1-NEXT:    sxmhwp $r11 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: widenhwx:
 ; CV2:       # %bb.0:
@@ -674,18 +674,18 @@ define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0
 ; CV2-NEXT:    sxmhwp $r5 = $r2
 ; CV2-NEXT:    sxlhwp $r8 = $r0
 ; CV2-NEXT:    sxmhwp $r9 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxlhwp $r6 = $r3
 ; CV2-NEXT:    sxmhwp $r7 = $r3
 ; CV2-NEXT:    sxlhwp $r10 = $r1
 ; CV2-NEXT:    sxmhwp $r11 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %3 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %3, i32 0)
   %5 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -718,22 +718,22 @@ define void @widenhwx_z(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r2, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r5 = $r2, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r8 = $r0, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r9 = $r0, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r6 = $r3, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r10 = $r1, 0x80400000201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r7 = $r3, 0x804000002010
 ; CV1-NEXT:    sbmm8 $r11 = $r1, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: widenhwx_z:
 ; CV2:       # %bb.0:
@@ -741,18 +741,18 @@ define void @widenhwx_z(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
 ; CV2-NEXT:    zxmhwp $r5 = $r2
 ; CV2-NEXT:    zxlhwp $r8 = $r0
 ; CV2-NEXT:    zxmhwp $r9 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    zxlhwp $r6 = $r3
 ; CV2-NEXT:    zxmhwp $r7 = $r3
 ; CV2-NEXT:    zxlhwp $r10 = $r1
 ; CV2-NEXT:    zxmhwp $r11 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %3 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %3, i32 1)
   %5 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -785,47 +785,47 @@ define void @widenhwx_q(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r4 = 0x804000002010000
 ; CV1-NEXT:    make $r5 = 0x8040000020100000
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r8 = $r2, $r4
 ; CV1-NEXT:    sbmm8 $r9 = $r2, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r32 = $r0, $r4
 ; CV1-NEXT:    sbmm8 $r33 = $r0, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r10 = $r3, $r4
 ; CV1-NEXT:    sbmm8 $r34 = $r1, $r4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r11 = $r3, $r5
 ; CV1-NEXT:    sbmm8 $r35 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    so 32[$r15] = $r8r9r10r11
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    so 0[$r15] = $r32r33r34r35
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ;
 ; CV2-LABEL: widenhwx_q:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r4 = 0x804000002010000
 ; CV2-NEXT:    make $r5 = 0x8040000020100000
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r8 = $r2, $r4
 ; CV2-NEXT:    sbmm8 $r9 = $r2, $r5
 ; CV2-NEXT:    sbmm8 $r32 = $r0, $r4
 ; CV2-NEXT:    sbmm8 $r33 = $r0, $r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r10 = $r3, $r4
 ; CV2-NEXT:    sbmm8 $r11 = $r3, $r5
 ; CV2-NEXT:    sbmm8 $r34 = $r1, $r4
 ; CV2-NEXT:    sbmm8 $r35 = $r1, $r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    so 32[$r15] = $r8r9r10r11
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    so 0[$r15] = $r32r33r34r35
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i32> @llvm.kvx.widenint.v2i32(<2 x i16> %3, i32 2)
   %5 = shufflevector <16 x i16> %1, <16 x i16> undef, <2 x i32> <i32 2, i32 3>
@@ -860,18 +860,18 @@ define void @widenwdo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, 
 ; CHECK-NEXT:    srad $r5 = $r2, 32
 ; CHECK-NEXT:    sxwd $r8 = $r0
 ; CHECK-NEXT:    srad $r9 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sxwd $r6 = $r3
 ; CHECK-NEXT:    srad $r7 = $r3, 32
 ; CHECK-NEXT:    sxwd $r10 = $r1
 ; CHECK-NEXT:    srad $r11 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <8 x i32> %1, i64 0
   %4 = tail call i64 @llvm.kvx.widenint.i64(i32 %3, i32 0)
   %5 = extractelement <8 x i32> %1, i64 1
@@ -909,18 +909,18 @@ define void @widenwdo_z(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0
 ; CHECK-NEXT:    srld $r5 = $r2, 32
 ; CHECK-NEXT:    zxwd $r8 = $r0
 ; CHECK-NEXT:    srld $r9 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxwd $r6 = $r3
 ; CHECK-NEXT:    srld $r7 = $r3, 32
 ; CHECK-NEXT:    zxwd $r10 = $r1
 ; CHECK-NEXT:    srld $r11 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <8 x i32> %1, i64 0
   %4 = tail call i64 @llvm.kvx.widenint.i64(i32 %3, i32 1)
   %5 = extractelement <8 x i32> %1, i64 1
@@ -956,18 +956,18 @@ define void @widenwdo_q(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0
 ; CHECK-NEXT:    andd $r5 = $r2, 0xffffffff00000000
 ; CHECK-NEXT:    slld $r8 = $r0, 32
 ; CHECK-NEXT:    andd $r9 = $r0, 0xffffffff00000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slld $r6 = $r3, 32
 ; CHECK-NEXT:    andd $r7 = $r3, 0xffffffff00000000
 ; CHECK-NEXT:    slld $r10 = $r1, 32
 ; CHECK-NEXT:    andd $r11 = $r1, 0xffffffff00000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    so 0[$r15] = $r8r9r10r11
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <8 x i32> %1, i64 0
   %4 = tail call i64 @llvm.kvx.widenint.i64(i32 %3, i32 2)
   %5 = extractelement <8 x i32> %1, i64 1
@@ -1001,10 +1001,10 @@ define <2 x i64> @widenwdp(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 32
 ; CHECK-NEXT:    sxwd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 0)
   %4 = extractelement <2 x i32> %0, i64 1
@@ -1019,10 +1019,10 @@ define <2 x i64> @widenwdp_z(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r1 = $r0, 32
 ; CHECK-NEXT:    zxwd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 1)
   %4 = extractelement <2 x i32> %0, i64 1
@@ -1037,10 +1037,10 @@ define <2 x i64> @widenwdp_q(<2 x i32> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r0, 0xffffffff00000000
 ; CHECK-NEXT:    slld $r2 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <2 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 2)
   %4 = extractelement <2 x i32> %0, i64 1
@@ -1057,11 +1057,11 @@ define <4 x i64> @widenwdq(<4 x i32> %0) {
 ; CHECK-NEXT:    srad $r3 = $r1, 32
 ; CHECK-NEXT:    sxwd $r4 = $r0
 ; CHECK-NEXT:    srad $r5 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 0)
   %4 = extractelement <4 x i32> %0, i64 1
@@ -1084,11 +1084,11 @@ define <4 x i64> @widenwdq_z(<4 x i32> %0) {
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    zxwd $r4 = $r0
 ; CHECK-NEXT:    srld $r5 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 1)
   %4 = extractelement <4 x i32> %0, i64 1
@@ -1111,11 +1111,11 @@ define <4 x i64> @widenwdq_q(<4 x i32> %0) {
 ; CHECK-NEXT:    andd $r3 = $r1, 0xffffffff00000000
 ; CHECK-NEXT:    slld $r4 = $r0, 32
 ; CHECK-NEXT:    andd $r5 = $r0, 0xffffffff00000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i32> %0, i64 0
   %3 = tail call i64 @llvm.kvx.widenint.i64(i32 %2, i32 2)
   %4 = extractelement <4 x i32> %0, i64 1

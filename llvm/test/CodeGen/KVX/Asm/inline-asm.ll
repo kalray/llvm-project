@@ -9,9 +9,10 @@ define void @f() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 28[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:     # (here cycle 2)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    addd $tp = $r0, 0
 ; CHECK-NEXT:    ;;
@@ -19,7 +20,7 @@ define void @f() {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %1 = alloca i32, align 4
   store i32 1234, i32* %1, align 4
   %2 = load i32, i32* %1, align 4
@@ -32,7 +33,7 @@ define i64 @foo(){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.read_register.i64(metadata !0)
   ret i64 %0

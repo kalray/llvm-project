@@ -11,7 +11,7 @@ define i32 @fixedw(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedw.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.fixedw(float %0, i32 3, i32 0, i32 0)
   ret i32 %2
 }
@@ -23,7 +23,7 @@ define i64 @fixedd(double %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedd.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.fixedd(double %0, i32 3, i32 0, i32 0)
   ret i64 %2
 }
@@ -35,7 +35,7 @@ define i32 @fixedw_s(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedw.rn.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.fixedw(float %0, i32 3, i32 0, i32 1)
   ret i32 %2
 }
@@ -45,7 +45,7 @@ define i64 @fixedd_s(double %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedd.rn.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.fixedd(double %0, i32 3, i32 0, i32 1)
   ret i64 %2
 }
@@ -55,7 +55,7 @@ define i32 @fixedw_s_only(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedw.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.fixedw(float %0, i32 3, i32 7, i32 1)
   ret i32 %2
 }
@@ -65,7 +65,7 @@ define i64 @fixedd_s_only(double %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedd.s $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.fixedd(double %0, i32 3, i32 7, i32 1)
   ret i64 %2
 }
@@ -75,7 +75,7 @@ define i32 @fixeduw(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixeduw.rz $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.fixeduw(float %0, i32 3, i32 3, i32 0)
   ret i32 %2
 }
@@ -87,7 +87,7 @@ define i64 @fixedud(double %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedud.rz $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.fixedud(double %0, i32 3, i32 3, i32 0)
   ret i64 %2
 }
@@ -98,10 +98,10 @@ define <2 x double> @fixeddp(<2 x i64> %0) {
 ; ALL-LABEL: fixeddp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedd.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedd.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = bitcast <2 x i64> %0 to <2 x double>
   %3 = extractelement <2 x double> %2, i64 0
   %4 = tail call i64 @llvm.kvx.fixedd(double %3, i32 3, i32 0, i32 0)
@@ -117,14 +117,14 @@ define <4 x double> @fixeddq(<4 x i64> %0) {
 ; ALL-LABEL: fixeddq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedd.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedd.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fixedd.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fixedd.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x i64> %0 to <4 x double>
   %3 = extractelement <4 x double> %2, i64 0
   %4 = tail call i64 @llvm.kvx.fixedd(double %3, i32 3, i32 0, i32 0)
@@ -146,10 +146,10 @@ define <2 x double> @fixedudp(<2 x i64> %0) {
 ; ALL-LABEL: fixedudp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedud.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedud.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = bitcast <2 x i64> %0 to <2 x double>
   %3 = extractelement <2 x double> %2, i64 0
   %4 = tail call i64 @llvm.kvx.fixedud(double %3, i32 3, i32 0, i32 0)
@@ -165,14 +165,14 @@ define <4 x double> @fixedudq(<4 x i64> %0) {
 ; ALL-LABEL: fixedudq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedud.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedud.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fixedud.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fixedud.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x i64> %0 to <4 x double>
   %3 = extractelement <4 x double> %2, i64 0
   %4 = tail call i64 @llvm.kvx.fixedud(double %3, i32 3, i32 0, i32 0)
@@ -194,14 +194,14 @@ define <8 x i32> @fixeduwo(<8 x float> %0) {
 ; ALL-LABEL: fixeduwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixeduwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixeduwp.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fixeduwp.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fixeduwp.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -223,7 +223,7 @@ define <2 x i32> @fixeduwp(<2 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixeduwp.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %0, i32 3, i32 0, i32 0)
   ret <2 x i32> %2
 }
@@ -232,10 +232,10 @@ define <4 x i32> @fixeduwq(<4 x float> %0) {
 ; ALL-LABEL: fixeduwq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixeduwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixeduwp.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.fixeduwp(<2 x float> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -248,14 +248,14 @@ define <8 x i32> @fixedwo(<8 x float> %0) {
 ; ALL-LABEL: fixedwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedwp.rn $r1 = $r1, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fixedwp.rn $r2 = $r2, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fixedwp.rn $r3 = $r3, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
   %2 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 2, i32 3>
@@ -277,7 +277,7 @@ define <2 x i32> @fixedwp(<2 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedwp.rn $r0 = $r0, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %0, i32 3, i32 0, i32 0)
   ret <2 x i32> %2
 }
@@ -286,10 +286,10 @@ define <4 x i32> @fixedwq(<4 x float> %0) {
 ; ALL-LABEL: fixedwq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fixedwp.rn $r0 = $r0, 3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fixedwp.rn $r1 = $r1, 3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.fixedwp(<2 x float> %2, i32 3, i32 0, i32 0)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 2, i32 3>

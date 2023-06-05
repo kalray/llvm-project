@@ -9,7 +9,7 @@ define <4 x float> @ffdmawq(<8 x float> %0, <8 x float> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmawq $r0r1 = $r0r1r2r3, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.ffdma.v4f32(<8 x float> %0, <8 x float> %1, i32 7, i32 0)
   ret <4 x float> %3
 }
@@ -21,7 +21,7 @@ define <4 x float> @ffdmawq_rn_s(<8 x float> %0, <8 x float> %1) {
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmawq.rn.s $r0r1 = $r0r1r2r3, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.ffdma.v4f32(<8 x float> %0, <8 x float> %1, i32 0, i32 1)
   ret <4 x float> %3
 }

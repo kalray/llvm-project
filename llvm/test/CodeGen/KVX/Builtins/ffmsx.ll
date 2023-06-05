@@ -10,20 +10,20 @@ define float @ffmsxhwri1(half %0, float %1) {
 ; CV1-LABEL: ffmsxhwri1:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmshw $r1 = $r0, 0x4500
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: ffmsxhwri1:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r2 = 0x4500
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ffmshw $r1 = $r2, $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %3 = tail call float @llvm.kvx.ffmsx.f32(half %0, half 0xH4500, float %1, i32 7, i32 0)
   ret float %3
 }
@@ -34,12 +34,12 @@ define float @ffmsxhwri2(half %0, float %1) {
 ; ALL-LABEL: ffmsxhwri2:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x4500
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmshw $r1 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %3 = tail call float @llvm.kvx.ffmsx.f32(half 0xH4500, half %0, float %1, i32 7, i32 0)
   ret float %3
 }
@@ -48,10 +48,10 @@ define float @ffmsxhwrr(half %0, half %1, float %2) {
 ; ALL-LABEL: ffmsxhwrr:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmshw $r2 = $r1, $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call float @llvm.kvx.ffmsx.f32(half %0, half %1, float %2, i32 7, i32 0)
   ret float %4
 }
@@ -60,15 +60,15 @@ define <8 x float> @ffmsxhwo(<8 x half> %0, <8 x half> %1, <8 x float> %2) {
 ; ALL-LABEL: ffmsxhwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmshwq $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmshwq $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %4 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %6 = shufflevector <8 x float> %2, <8 x float> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -87,10 +87,10 @@ define <2 x float> @ffmsxhwp(<2 x half> %0, <2 x half> %1, <2 x float> %2) {
 ; ALL-LABEL: ffmsxhwp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmshwq.s $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x float> @llvm.kvx.ffmsx.v2f32(<2 x half> %0, <2 x half> %1, <2 x float> %2, i32 7, i32 1)
   ret <2 x float> %4
 }
@@ -103,12 +103,12 @@ define <2 x float> @ffmsxhwp_2(<2 x half> %0, <2 x half> %1, <2 x float> %2) {
 ; ALL-NEXT:    zxwd $r0 = $r0
 ; ALL-NEXT:    zxwd $r1 = $r1
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmshwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %4 = tail call <2 x float> @llvm.kvx.ffmsx.v2f32(<2 x half> %0, <2 x half> %1, <2 x float> %2, i32 7, i32 0)
   ret <2 x float> %4
 }
@@ -117,11 +117,11 @@ define <4 x float> @ffmsxhwq(<4 x half> %0, <4 x half> %1, <4 x float> %2) {
 ; ALL-LABEL: ffmsxhwq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmshwq $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffmsx.v4f32(<4 x half> %0, <4 x half> %1, <4 x float> %2, i32 7, i32 0)
   ret <4 x float> %4
 }
@@ -130,10 +130,10 @@ define double @ffmsxwd(float %0, float %1, double %2) {
 ; ALL-LABEL: ffmsxwd:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmswd $r2 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call double @llvm.kvx.ffmsx.f64(float %0, float %1, double %2, i32 7, i32 0)
   ret double %4
 }
@@ -144,12 +144,12 @@ define double @ffmsxwdri(float %0, double %1) {
 ; ALL-LABEL: ffmsxwdri:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x40490e56
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmswd $r1 = $r2, $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %3 = tail call double @llvm.kvx.ffmsx.f64(float 0x400921CAC0000000, float %0, double %1, i32 7, i32 0)
   ret double %3
 }
@@ -158,20 +158,20 @@ define double @ffmsxwdri2(float %0, double %1) {
 ; CV1-LABEL: ffmsxwdri2:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ffmswd $r1 = $r0, 0x40490e56
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: ffmsxwdri2:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r2 = 0x40490e56
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ffmswd $r1 = $r0, $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %3 = tail call double @llvm.kvx.ffmsx.f64(float %0, float 0x400921CAC0000000, double %1, i32 7, i32 0)
   ret double %3
 }
@@ -180,11 +180,11 @@ define <2 x double> @ffmsxwdp(<2 x float> %0, <2 x float> %1, <2 x double> %2) {
 ; ALL-LABEL: ffmsxwdp:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmswdp $r2r3 = $r0, $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r2
 ; ALL-NEXT:    copyd $r1 = $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x double> @llvm.kvx.ffmsx.v2f64(<2 x float> %0, <2 x float> %1, <2 x double> %2, i32 7, i32 0)
   ret <2 x double> %4
 }
@@ -195,15 +195,15 @@ define <4 x double> @ffmsxwdq(<4 x float> %0, <4 x float> %1, <4 x double> %2) {
 ; ALL-LABEL: ffmsxwdq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ffmswdp $r6r7 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ffmswdp $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    copyd $r2 = $r6
 ; ALL-NEXT:    copyd $r3 = $r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 5)
   %4 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %6 = shufflevector <4 x double> %2, <4 x double> undef, <2 x i32> <i32 0, i32 1>

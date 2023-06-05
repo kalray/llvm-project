@@ -11,7 +11,7 @@ define float @frecw(float %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    frecw.rz $r0 = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call float @llvm.kvx.frecw(float %0, i32 3, i32 0)
   ret float %2
 }
@@ -25,70 +25,70 @@ define <8 x float> @frecwo(<8 x float> %0) {
 ; CV1-NEXT:    frecw.rz.s $r4 = $r0
 ; CV1-NEXT:    srad $r6 = $r2, 32
 ; CV1-NEXT:    srad $r7 = $r3, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srad $r1 = $r1, 32
 ; CV1-NEXT:    frecw.rz.s $r5 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    frecw.rz.s $r0 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    frecw.rz.s $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    frecw.rz.s $r2 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    frecw.rz.s $r6 = $r6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    frecw.rz.s $r3 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    frecw.rz.s $r7 = $r7
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r4 = $r0, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 13)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    insf $r5 = $r1, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 14)
 ; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 15)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 18)
 ;
 ; CV2-LABEL: frecwo:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srad $r0 = $r0, 32
 ; CV2-NEXT:    frecw.rz.s $r4 = $r0
 ; CV2-NEXT:    srad $r7 = $r3, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srad $r1 = $r1, 32
 ; CV2-NEXT:    frecw.rz.s $r5 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srad $r2 = $r2, 32
 ; CV2-NEXT:    frecw.rz.s $r6 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    frecw.rz.s $r0 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    frecw.rz.s $r1 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    frecw.rz.s $r2 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    frecw.rz.s $r3 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    frecw.rz.s $r7 = $r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    insf $r4 = $r0, 63, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 14)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    insf $r5 = $r1, 63, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    insf $r6 = $r2, 63, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    copyd $r2 = $r6
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 17)
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 18)
   %2 = extractelement <8 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frecw(float %2, i32 3, i32 1)
   %4 = extractelement <8 x float> %0, i64 1
@@ -121,14 +121,14 @@ define <2 x float> @frecwp(<2 x float> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    srad $r0 = $r0, 32
 ; ALL-NEXT:    frecw.rz.s $r1 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    frecw.rz.s $r0 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r1 = $r0, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
   %2 = extractelement <2 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frecw(float %2, i32 3, i32 1)
   %4 = extractelement <2 x float> %0, i64 1
@@ -144,20 +144,20 @@ define <4 x float> @frecwq(<4 x float> %0) {
 ; ALL-NEXT:    srad $r0 = $r0, 32
 ; ALL-NEXT:    frecw.rz.s $r2 = $r0
 ; ALL-NEXT:    srad $r3 = $r1, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    frecw.rz.s $r0 = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    frecw.rz.s $r1 = $r1
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    frecw.rz.s $r3 = $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    insf $r2 = $r0, 63, 32
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 12)
 ; ALL-NEXT:    copyd $r0 = $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    insf $r1 = $r3, 63, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 14)
   %2 = extractelement <4 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frecw(float %2, i32 3, i32 1)
   %4 = extractelement <4 x float> %0, i64 1

@@ -10,10 +10,10 @@ define half @ui32_to_f16(i32 %x){
 ; CHECK-LABEL: ui32_to_f16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %conv = uitofp i32 %x to half
   ret half %conv
@@ -23,12 +23,12 @@ define half @ui64_to_f16(i64 %x){
 ; CHECK-LABEL: ui64_to_f16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %conv = uitofp i64 %x to half
   ret half %conv
@@ -39,7 +39,7 @@ define float @ui32_to_f32(i32 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatuw.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = uitofp i32 %x to float
   ret float %conv
@@ -50,15 +50,15 @@ define float @ui64_to_f32(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -70,10 +70,10 @@ define double @ui32_to_f64(i32 %x){
 ; CHECK-LABEL: ui32_to_f64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = uitofp i32 %x to double
   ret double %conv
@@ -84,7 +84,7 @@ define double @ui64_to_f64(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatud.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = uitofp i64 %x to double
   ret double %conv
@@ -94,10 +94,10 @@ define half @i32_to_f16(i32 %x){
 ; CHECK-LABEL: i32_to_f16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %conv = sitofp i32 %x to half
   ret half %conv
@@ -107,12 +107,12 @@ define half @i64_to_f16(i64 %x){
 ; CHECK-LABEL: i64_to_f16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdw.rn $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fnarrowwh.rn $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %conv = sitofp i64 %x to half
   ret half %conv
@@ -123,7 +123,7 @@ define float @i32_to_f32(i32 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = sitofp i32 %x to float
   ret float %conv
@@ -134,15 +134,15 @@ define float @i64_to_f32(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -154,10 +154,10 @@ define double @i32_to_f64(i32 %x){
 ; CHECK-LABEL: i32_to_f64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sitofp i32 %x to double
   ret double %conv
@@ -168,7 +168,7 @@ define double @i64_to_f64(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = sitofp i64 %x to double
   ret double %conv

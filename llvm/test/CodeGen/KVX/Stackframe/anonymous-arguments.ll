@@ -26,296 +26,296 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-LABEL: add:
 ; FP-NONE:       # %bb.0: # %entry
 ; FP-NONE-NEXT:    addd $r12 = $r12, -96
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    sd 88[$r12] = $r11
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    sd 80[$r12] = $r10
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 2)
 ; FP-NONE-NEXT:    sd 72[$r12] = $r9
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 3)
 ; FP-NONE-NEXT:    sd 64[$r12] = $r8
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 4)
 ; FP-NONE-NEXT:    sd 56[$r12] = $r7
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 5)
 ; FP-NONE-NEXT:    sd 48[$r12] = $r6
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 6)
 ; FP-NONE-NEXT:    sd 40[$r12] = $r5
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 7)
 ; FP-NONE-NEXT:    sd 32[$r12] = $r4
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 8)
 ; FP-NONE-NEXT:    sd 24[$r12] = $r3
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 9)
 ; FP-NONE-NEXT:    sd 16[$r12] = $r2
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 10)
 ; FP-NONE-NEXT:    sd 8[$r12] = $r1
 ; FP-NONE-NEXT:    addd $r1 = $r12, 8
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 11)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r1
 ; FP-NONE-NEXT:    cb.wlez $r0 ? .LBB0_3
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 12)
 ; FP-NONE-NEXT:  # %bb.1: # %for.body.preheader
 ; FP-NONE-NEXT:    addw $r1 = $r0, -1
 ; FP-NONE-NEXT:    ld $r2 = 0[$r12]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    andw $r1 = $r0, 7
 ; FP-NONE-NEXT:    compw.ltu $r3 = $r1, 7
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    cb.even $r3 ? .LBB0_4
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  # %bb.2:
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    goto .LBB0_6
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:  .LBB0_3:
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    goto .LBB0_9
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:  .LBB0_4: # %for.body.preheader.new
 ; FP-NONE-NEXT:    andw $r0 = $r0, -8
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    addw $r0 = $r0, -8
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    srld $r0 = $r0, 3
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 2)
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    addd $r3 = $r0, 1
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 3)
 ; FP-NONE-NEXT:    loopdo $r3, .__LOOPDO_1_END_
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  .LBB0_5: # %for.body
 ; FP-NONE-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-NONE-NEXT:    copyd $r3 = $r2
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    addd $r2 = $r3, 8
 ; FP-NONE-NEXT:    addd $r6 = $r3, 32
 ; FP-NONE-NEXT:    addd $r7 = $r3, 40
 ; FP-NONE-NEXT:    addd $r8 = $r3, 48
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r2
 ; FP-NONE-NEXT:    addd $r2 = $r3, 16
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 2)
 ; FP-NONE-NEXT:    lwz $r4 = 0[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 3)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r2
 ; FP-NONE-NEXT:    addd $r2 = $r3, 24
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 4)
 ; FP-NONE-NEXT:    lwz $r5 = 8[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 5)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r2
 ; FP-NONE-NEXT:    addw $r0 = $r4, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 6)
 ; FP-NONE-NEXT:    lwz $r2 = 16[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 7)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r6
 ; FP-NONE-NEXT:    addw $r0 = $r5, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 8)
 ; FP-NONE-NEXT:    lwz $r6 = 24[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 9)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r7
 ; FP-NONE-NEXT:    addw $r0 = $r2, $r0
 ; FP-NONE-NEXT:    addd $r2 = $r3, 64
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 10)
 ; FP-NONE-NEXT:    lwz $r7 = 32[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 11)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r8
 ; FP-NONE-NEXT:    addw $r0 = $r6, $r0
 ; FP-NONE-NEXT:    addd $r8 = $r3, 56
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 12)
 ; FP-NONE-NEXT:    lwz $r4 = 40[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 13)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r8
 ; FP-NONE-NEXT:    addw $r0 = $r7, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 14)
 ; FP-NONE-NEXT:    lwz $r5 = 48[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 15)
 ; FP-NONE-NEXT:    sd 0[$r12] = $r2
 ; FP-NONE-NEXT:    addw $r0 = $r4, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 16)
 ; FP-NONE-NEXT:    lwz $r3 = 56[$r3]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 17)
 ; FP-NONE-NEXT:    addw $r0 = $r5, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 18)
 ; FP-NONE-NEXT:    addw $r0 = $r3, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 20)
 ; FP-NONE-NEXT:  .__LOOPDO_1_END_:
 ; FP-NONE-NEXT:  .LBB0_6: # %for.cond.cleanup.loopexit.unr-lcssa
 ; FP-NONE-NEXT:    cb.weqz $r1 ? .LBB0_9
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  # %bb.7: # %for.body.epil.preheader
 ; FP-NONE-NEXT:    addw $r1 = $r1, -1
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    addd $r1 = $r2, 8
 ; FP-NONE-NEXT:    addd $r3 = $r1, 1
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  .LBB0_8: # %for.body.epil
 ; FP-NONE-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-NONE-NEXT:    sd 0[$r12] = $r1
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    addd $r1 = $r1, 8
 ; FP-NONE-NEXT:    lwz $r2 = -8[$r1]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    addw $r0 = $r2, $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 4)
 ; FP-NONE-NEXT:  .__LOOPDO_0_END_:
 ; FP-NONE-NEXT:  .LBB0_9: # %for.cond.cleanup
 ; FP-NONE-NEXT:    addd $r12 = $r12, 96
 ; FP-NONE-NEXT:    ret
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ;
 ; FP-ALL-LABEL: add:
 ; FP-ALL:       # %bb.0: # %entry
 ; FP-ALL-NEXT:    addd $r12 = $r12, -128
 ; FP-ALL-NEXT:    get $r16 = $ra
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sd 32[$r12] = $r16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd 24[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 24
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    sd 96[$r14] = $r11
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    sd 88[$r14] = $r10
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    sd 80[$r14] = $r9
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 5)
 ; FP-ALL-NEXT:    sd 72[$r14] = $r8
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    sd 64[$r14] = $r7
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 7)
 ; FP-ALL-NEXT:    sd 56[$r14] = $r6
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 8)
 ; FP-ALL-NEXT:    sd 48[$r14] = $r5
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 9)
 ; FP-ALL-NEXT:    sd 40[$r14] = $r4
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 10)
 ; FP-ALL-NEXT:    sd 32[$r14] = $r3
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 11)
 ; FP-ALL-NEXT:    sd 24[$r14] = $r2
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 12)
 ; FP-ALL-NEXT:    sd 16[$r14] = $r1
 ; FP-ALL-NEXT:    addd $r1 = $r14, 16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 13)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r1
 ; FP-ALL-NEXT:    cb.wlez $r0 ? .LBB0_3
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 14)
 ; FP-ALL-NEXT:  # %bb.1: # %for.body.preheader
 ; FP-ALL-NEXT:    addw $r1 = $r0, -1
 ; FP-ALL-NEXT:    ld $r2 = -8[$r14]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    andw $r1 = $r0, 7
 ; FP-ALL-NEXT:    compw.ltu $r3 = $r1, 7
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    cb.even $r3 ? .LBB0_4
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  # %bb.2:
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    goto .LBB0_6
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:  .LBB0_3:
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    goto .LBB0_9
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:  .LBB0_4: # %for.body.preheader.new
 ; FP-ALL-NEXT:    andw $r0 = $r0, -8
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addw $r0 = $r0, -8
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    srld $r0 = $r0, 3
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    addd $r3 = $r0, 1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    loopdo $r3, .__LOOPDO_1_END_
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_5: # %for.body
 ; FP-ALL-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-ALL-NEXT:    copyd $r3 = $r2
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addd $r2 = $r3, 8
 ; FP-ALL-NEXT:    addd $r6 = $r3, 32
 ; FP-ALL-NEXT:    addd $r7 = $r3, 40
 ; FP-ALL-NEXT:    addd $r8 = $r3, 48
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r2
 ; FP-ALL-NEXT:    addd $r2 = $r3, 16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    lwz $r4 = 0[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r2
 ; FP-ALL-NEXT:    addd $r2 = $r3, 24
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    lwz $r5 = 8[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 5)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r2
 ; FP-ALL-NEXT:    addw $r0 = $r4, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    lwz $r2 = 16[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 7)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r6
 ; FP-ALL-NEXT:    addw $r0 = $r5, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 8)
 ; FP-ALL-NEXT:    lwz $r6 = 24[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 9)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r7
 ; FP-ALL-NEXT:    addw $r0 = $r2, $r0
 ; FP-ALL-NEXT:    addd $r2 = $r3, 64
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 10)
 ; FP-ALL-NEXT:    lwz $r7 = 32[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 11)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r8
 ; FP-ALL-NEXT:    addw $r0 = $r6, $r0
 ; FP-ALL-NEXT:    addd $r8 = $r3, 56
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 12)
 ; FP-ALL-NEXT:    lwz $r4 = 40[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 13)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r8
 ; FP-ALL-NEXT:    addw $r0 = $r7, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 14)
 ; FP-ALL-NEXT:    lwz $r5 = 48[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 15)
 ; FP-ALL-NEXT:    sd -8[$r14] = $r2
 ; FP-ALL-NEXT:    addw $r0 = $r4, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 16)
 ; FP-ALL-NEXT:    lwz $r3 = 56[$r3]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 17)
 ; FP-ALL-NEXT:    addw $r0 = $r5, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 18)
 ; FP-ALL-NEXT:    addw $r0 = $r3, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 20)
 ; FP-ALL-NEXT:  .__LOOPDO_1_END_:
 ; FP-ALL-NEXT:  .LBB0_6: # %for.cond.cleanup.loopexit.unr-lcssa
 ; FP-ALL-NEXT:    cb.weqz $r1 ? .LBB0_9
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  # %bb.7: # %for.body.epil.preheader
 ; FP-ALL-NEXT:    addw $r1 = $r1, -1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addd $r1 = $r2, 8
 ; FP-ALL-NEXT:    addd $r3 = $r1, 1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_8: # %for.body.epil
 ; FP-ALL-NEXT:    # =>This Inner Loop Header: Depth=1
 ; FP-ALL-NEXT:    sd -8[$r14] = $r1
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addd $r1 = $r1, 8
 ; FP-ALL-NEXT:    lwz $r2 = -8[$r1]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    addw $r0 = $r2, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:  .__LOOPDO_0_END_:
 ; FP-ALL-NEXT:  .LBB0_9: # %for.cond.cleanup
 ; FP-ALL-NEXT:    addd $r12 = $r14, -24
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    ld $r14 = 24[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r16 = 32[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    set $ra = $r16
 ; FP-ALL-NEXT:    addd $r12 = $r12, 128
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:

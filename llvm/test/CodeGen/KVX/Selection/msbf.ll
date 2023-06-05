@@ -11,7 +11,7 @@ define i32 @f_msbfwrr(i32 %a, i32 %b, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    msbfw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul nsw i32 %b, %c
   %sub = sub nsw i32 %a, %mul
@@ -23,7 +23,7 @@ define i32 @f_msbfwri(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    msbfw $r0 = $r1, 11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul nsw i32 %b, 11
   %sub = sub nsw i32 %a, %mul
@@ -34,12 +34,12 @@ define i32 @f_msbfwrrr_1(i32 %a, i32 %b){
 ; CHECK-LABEL: f_msbfwrrr_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sbfw $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfw $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %sub = sub nsw i32 %b, %a
   %mul = mul nsw i32 %a, %b
@@ -51,12 +51,12 @@ define i32 @f_msbfwri_1(i32 %a, i32 %b){
 ; CHECK-LABEL: f_msbfwri_1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r2 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfw $r1 = $r2, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %sub = sub nsw i32 %b, 1
   %mul = mul nsw i32 %sub, %a
@@ -69,7 +69,7 @@ define i64 @f_msbfd(i64 %a, i64 %b, i64 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    msbfd $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %mul = mul nsw i64 %b, %c
   %sub = sub nsw i64 %a, %mul
@@ -82,7 +82,7 @@ define i64 @MSBFSUWD(i64 %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfsuwd $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = sext i32 %1 to i64
   %5 = zext i32 %2 to i64
   %6 = mul nsw i64 %5, %4
@@ -95,7 +95,7 @@ define i64 @MSBFSUWD_ri(i64 %0, i32 %1) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    msbfsuwd $r0 = $r1, 0x80000001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   entry:
   %2 = sext i32 %1 to i64
   %3 = mul nsw i64 %2, 2147483649
@@ -108,7 +108,7 @@ define i64 @MSBFUWD(i64 %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfuwd $r0 = $r2, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = zext i32 %1 to i64
   %5 = zext i32 %2 to i64
   %6 = mul nuw nsw i64 %5, %4
@@ -121,7 +121,7 @@ define i64 @MSBFUWD_ri(i64 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfuwd $r0 = $r1, 13
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = zext i32 %1 to i64
   %4 = mul nuw nsw i64 %3, 13
   %5 = sub nsw i64 %0, %4

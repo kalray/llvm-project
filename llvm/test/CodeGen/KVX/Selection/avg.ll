@@ -13,7 +13,7 @@ define i32 @avg_i32(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nsw i32 %b, %a
   %shr = ashr i32 %add, 1
@@ -25,7 +25,7 @@ define i32 @ravg_i32(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgrw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add i32 %a, 1
   %add1 = add i32 %add, %b
@@ -38,7 +38,7 @@ define i32 @avg_i32_ri(i32 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgw $r0 = $r0, 0x13880
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nsw i32 %a, 80000
   %shr = ashr i32 %add, 1
@@ -50,7 +50,7 @@ define i32 @avg_i32_ri_n(i32 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgw $r0 = $r0, 0xfffec77f
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = add nsw i32 %a, -80001
   %shr = ashr i32 %sub, 1
@@ -62,7 +62,7 @@ define i32 @avg_u32_1(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw nsw i32 %b, %a
   %shr = lshr i32 %add, 1
@@ -74,7 +74,7 @@ define i32 @avg_u32_2(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %a1 = zext i32 %a to i64
   %b1 = zext i32 %b to i64
@@ -88,10 +88,10 @@ define i32 @not_avg_u32(i32 %a, i32 %b) {
 ; CHECK-LABEL: not_avg_u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add i32 %b, %a
   %shr = lshr i32 %add, 1
@@ -102,10 +102,10 @@ define i32 @not_avg_u32_ri(i32 %a) {
 ; CHECK-LABEL: not_avg_u32_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r0, 444
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add i32 %a, 444
   %shr = lshr i32 %add, 1
@@ -116,12 +116,12 @@ define i32 @not_ravg_u32(i32 %a, i32 %b) {
 ; CHECK-LABEL: not_ravg_u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add i32 %a, 1
   %add1 = add i32 %add, %b
@@ -135,12 +135,12 @@ define i32 @ravg_u32(i32 %a, i32 %b) {
 ; CHECK-LABEL: ravg_u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw i32 %a, 1
   %add1 = add nuw i32 %add, %b
@@ -153,7 +153,7 @@ define i32 @ravg_u32_2(i32 %a, i32 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgruw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %a1 = zext i32 %a to i64
   %b1 = zext i32 %b to i64
@@ -169,7 +169,7 @@ define <2 x i32> @avg_v2i32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i32> %b, %a
   %shr = ashr <2 x i32> %add, <i32 1, i32 1>
@@ -181,7 +181,7 @@ define <2 x i32> @avg_v2i32_ri_(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgwp $r0 = $r0, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i32> %a, <i32 32, i32 0>
   %shr = ashr <2 x i32> %add, <i32 1, i32 1>
@@ -193,7 +193,7 @@ define <2 x i32> @avg_v2i32_ri_at(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgwp.@ $r0 = $r0, -33
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i32> %a, <i32 -33, i32 -33>
   %shr = ashr <2 x i32> %add, <i32 1, i32 1>
@@ -205,7 +205,7 @@ define <2 x i32> @ravg_v2i32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgrwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i32> %a, <i32 1, i32 1>
   %add1 = add <2 x i32> %add, %b
@@ -219,7 +219,7 @@ define <2 x i32> @ravg_v2i32_ri_(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgrwp $r0 = $r0, -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <2 x i32> %a, <i32  0, i32 1>
   %shr = ashr <2 x i32> %add1, <i32 1, i32 1>
@@ -237,7 +237,7 @@ define <2 x i32> @ravg_v2i32_ri_at(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgwp.@ $r0 = $r0, -32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <2 x i32> %a, <i32 -32, i32 -32>
   %shr = ashr <2 x i32> %add1, <i32 1, i32 1>
@@ -249,7 +249,7 @@ define <2 x i32> @avg_v2u32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguwp $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i32> %b, %a
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -260,10 +260,10 @@ define <2 x i32> @not_avg_v2u32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: not_avg_v2u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addwp $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i32> %b, %a
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -275,7 +275,7 @@ define <2 x i32> @avg_v2u32_ri_(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguwp $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i32> %a, <i32 3, i32 0>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -286,10 +286,10 @@ define <2 x i32> @not_avg_v2u32_ri_(<2 x i32> %a) {
 ; CHECK-LABEL: not_avg_v2u32_ri_:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addwp $r0 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i32> %a, <i32 3, i32 0>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -301,7 +301,7 @@ define <2 x i32> @avg_v2u32_ri_at(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguwp.@ $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i32> %a, <i32 3, i32 3>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -312,10 +312,10 @@ define <2 x i32> @not_avg_v2u32_ri_at(<2 x i32> %a) {
 ; CHECK-LABEL: not_avg_v2u32_ri_at:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addwp.@ $r0 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i32> %a, <i32 3, i32 3>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -326,10 +326,10 @@ define <2 x i32> @avg_v2u32_rr(<2 x i32> %a) {
 ; CHECK-LABEL: avg_v2u32_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x300000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avguwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add nuw <2 x i32> %a, <i32 0, i32 3>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -340,12 +340,12 @@ define <2 x i32> @not_avg_v2u32_rr(<2 x i32> %a) {
 ; CHECK-LABEL: not_avg_v2u32_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x300000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addwp $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add <2 x i32> %a, <i32 0, i32 3>
   %shr = lshr <2 x i32> %add, <i32 1, i32 1>
@@ -357,12 +357,12 @@ define <2 x i32> @ravg_v2u32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: ravg_v2u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addwp $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addwp.@ $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <2 x i32> %a, <i32 1, i32 1>
   %add1 = add nuw <2 x i32> %add, %b
@@ -374,12 +374,12 @@ define <2 x i32> @not_ravg_v2u32(<2 x i32> %a, <2 x i32> %b) {
 ; CHECK-LABEL: not_ravg_v2u32:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addwp $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addwp.@ $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add <2 x i32> %a, <i32 1, i32 1>
   %add1 = add <2 x i32> %add, %b
@@ -392,7 +392,7 @@ define <2 x i32> @ravg_v2u32_ri_(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgruwp $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <2 x i32> %a, <i32 4, i32 1>
   %shr = lshr <2 x i32> %add1, <i32 1, i32 1>
@@ -403,12 +403,12 @@ define <2 x i32> @not_ravg_v2u32_ri_(<2 x i32> %a) {
 ; CHECK-LABEL: not_ravg_v2u32_ri_:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x100000004
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addwp $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlwps $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add1 = add <2 x i32> %a, <i32 4, i32 1>
   %shr = lshr <2 x i32> %add1, <i32 1, i32 1>
@@ -421,7 +421,7 @@ define <2 x i32> @ravg_v2u32_ri_at(<2 x i32> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguwp.@ $r0 = $r0, 4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <2 x i32> %a, <i32 4, i32 4>
   %shr = lshr <2 x i32> %add1, <i32 1, i32 1>
@@ -433,7 +433,7 @@ define <2 x i16> @avg_v2i16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i16> %b, %a
   %shr = ashr <2 x i16> %add, <i16 1, i16 1>
@@ -445,7 +445,7 @@ define <2 x i16> @avg_v2i16_ri(<2 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq $r0 = $r0, 0x30007
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i16> %a, <i16 7, i16 3>
   %shr = ashr <2 x i16> %add, <i16 1, i16 1>
@@ -457,7 +457,7 @@ define <2 x i16> @ravg_v2i16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgrhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i16> %a, <i16 1, i16 1>
   %add1 = add <2 x i16> %add, %b
@@ -470,7 +470,7 @@ define <2 x i16> @ravg_v2i16_ri(<2 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq $r0 = $r0, 0x818000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <2 x i16> %a, <i16 -32768, i16 129>
   %shr = ashr <2 x i16> %add1, <i16 1, i16 1>
@@ -482,7 +482,7 @@ define <2 x i16> @avg_v2u16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i16> %b, %a
   %shr = lshr <2 x i16> %add, <i16 1, i16 1>
@@ -493,10 +493,10 @@ define <2 x i16> @not_avg_v2u16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: not_avg_v2u16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addhq $r0 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i16> %b, %a
   %shr = lshr <2 x i16> %add, <i16 1, i16 1>
@@ -508,7 +508,7 @@ define <2 x i16> @avg_v2u16_ri(<2 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i16> %a, <i16 -1, i16 128>
   %shr = lshr <2 x i16> %add, <i16 1, i16 1>
@@ -518,10 +518,10 @@ define <2 x i16> @not_avg_v2u16_ri(<2 x i16> %a) {
 ; CHECK-LABEL: not_avg_v2u16_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addhq $r0 = $r0, 0x80ffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i16> %a, <i16 -1, i16 128>
   %shr = lshr <2 x i16> %add, <i16 1, i16 1>
@@ -533,12 +533,12 @@ define <2 x i16> @ravg_v2u16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: ravg_v2u16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addhq $r0 = $r0, 0x10001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <2 x i16> %a, <i16 1, i16 1>
   %add1 = add nuw <2 x i16> %add, %b
@@ -550,12 +550,12 @@ define <2 x i16> @not_ravg_v2u16(<2 x i16> %a, <2 x i16> %b) {
 ; CHECK-LABEL: not_ravg_v2u16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addhq $r0 = $r0, 0x10001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add <2 x i16> %a, <i16 1, i16 1>
   %add1 = add <2 x i16> %add, %b
@@ -568,7 +568,7 @@ define <2 x i16> @ravg_v2u16_ri(<2 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq $r0 = $r0, 0x810000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <2 x i16> %a, <i16 0, i16 129>
   %shr = lshr <2 x i16> %add1, <i16 1, i16 1>
@@ -580,7 +580,7 @@ define <4 x i16> @avg_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i16> %b, %a
   %shr = ashr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -592,7 +592,7 @@ define <4 x i16> @avg_v4i16_ri_(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq $r0 = $r0, 0x807fff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i16> %a, <i16 32767, i16 128, i16 0, i16 0>
   %shr = ashr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -604,7 +604,7 @@ define <4 x i16> @avg_v4i16_ri_at(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq.@ $r0 = $r0, 0x807fff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i16> %a, <i16 32767, i16 128, i16 32767, i16 128>
   %shr = ashr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -616,7 +616,7 @@ define <4 x i16> @ravg_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avgrhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
   %add1 = add <4 x i16> %add, %b
@@ -629,7 +629,7 @@ define <4 x i16> @ravg_v4i16_ri_at(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avghq.@ $r0 = $r0, 0x818000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <4 x i16> %a, <i16 -32768, i16 129, i16 -32768, i16 129>
   %shr = ashr <4 x i16> %add1, <i16 1, i16 1, i16 1, i16 1>
@@ -641,7 +641,7 @@ define <4 x i16> @avg_v4u16(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i16> %b, %a
   %shr = lshr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -653,7 +653,7 @@ define <4 x i16> @avg_v4u16_ri_(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i16> %a, <i16 -1, i16 128, i16 0, i16 0>
   %shr = lshr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -665,7 +665,7 @@ define <4 x i16> @avg_v4u16_ri_at(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq.@ $r0 = $r0, 0x80ffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i16> %a, <i16 -1, i16 128, i16 -1, i16 128>
   %shr = lshr <4 x i16> %add, <i16 1, i16 1, i16 1, i16 1>
@@ -676,12 +676,12 @@ define <4 x i16> @ravg_v4u16(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: ravg_v4u16:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addhq.@ $r0 = $r0, 0x10001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <4 x i16> %a, <i16 1, i16 1, i16 1, i16 1>
   %add1 = add nuw <4 x i16> %add, %b
@@ -694,10 +694,10 @@ define <4 x i16> @ravg_v4u16_ri_(<4 x i16> %a) {
 ; CHECK-LABEL: ravg_v4u16_ri_:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x1000100000081
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avguhq $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add1 = add nuw <4 x i16> %a, <i16 129, i16 0, i16 1, i16 1>
   %shr = lshr <4 x i16> %add1, <i16 1, i16 1, i16 1, i16 1>
@@ -709,7 +709,7 @@ define <4 x i16> @ravg_v4u16_ri_at(<4 x i16> %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    avguhq.@ $r0 = $r0, 0x810000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <4 x i16> %a, <i16 0, i16 129, i16 0, i16 129>
   %shr = lshr <4 x i16> %add1, <i16 1, i16 1, i16 1, i16 1>
@@ -721,10 +721,10 @@ define <2 x i32> @ravg_v2i32_ri_NOT(<2 x i32> %a) {
 ; CHECK-LABEL: ravg_v2i32_ri_NOT:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x180000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avgwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add1 = add <2 x i32> %a, <i32  -2147483648, i32 1>
   %shr = ashr <2 x i32> %add1, <i32 1, i32 1>
@@ -735,10 +735,10 @@ define <2 x i32> @ravg_v2i32_ri_NOT2(<2 x i32> %a) {
 ; CHECK-LABEL: ravg_v2i32_ri_NOT2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0x200000001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avgwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %add1 = add <2 x i32> %a, <i32  1, i32 2>
   %shr = ashr <2 x i32> %add1, <i32 1, i32 1>
@@ -750,10 +750,10 @@ define i16 @avg_i16(i16 %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avgw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i16 %a to i32
   %conv1 = sext i16 %b to i32
@@ -769,14 +769,14 @@ define i16 @ravg_i16(i16 %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxhd $r0 = $r0
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %conv = sext i16 %a to i32
   %conv1 = sext i16 %b to i32
@@ -791,10 +791,10 @@ define i16 @avg_i16_ri(i16 %a) {
 ; CHECK-LABEL: avg_i16_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avgw $r0 = $r0, 7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i16 %a to i32
   %add = add nsw i32 %conv, 7
@@ -807,10 +807,10 @@ define i16 @avg_i16_ri_n(i16 %a) {
 ; CHECK-LABEL: avg_i16_ri_n:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avgw $r0 = $r0, 0x1fff9
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i16 %a to i32
   %sub = add nsw i32 %conv, 131065
@@ -824,10 +824,10 @@ define i16 @avg_u16(i16 %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avguw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = zext i16 %a to i32
   %conv1 = zext i16 %b to i32
@@ -843,14 +843,14 @@ define i16 @ravg_u16(i16 %a, i16 %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r0 = $r0
 ; CHECK-NEXT:    zxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    srlw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %conv = zext i16 %a to i32
   %conv1 = zext i16 %b to i32
@@ -865,10 +865,10 @@ define i16 @avg_u16_ri(i16 %a) {
 ; CHECK-LABEL: avg_u16_ri:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    avguw $r0 = $r0, 140
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = zext i16 %a to i32
   %add = add nuw nsw i32 %conv, 140
@@ -882,29 +882,29 @@ define <2 x i8> @avg_v2i8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: avg_v2i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i8> %b, %a
   %shr = ashr <2 x i8> %add, <i8 1, i8 1>
@@ -915,29 +915,29 @@ define <2 x i8> @avg_v2i8_ri(<2 x i8> %a) {
 ; KV3_1-LABEL: avg_v2i8_ri:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x30007
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: avg_v2i8_ri:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 775
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i8> %a, <i8 7, i8 3>
   %shr = ashr <2 x i8> %add, <i8 1, i8 1>
@@ -949,31 +949,31 @@ define <2 x i8> @ravg_v2i8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x10001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v2i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgrbo $r0 = $r1, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <2 x i8> %a, <i8 1, i8 1>
   %add1 = add <2 x i8> %add, %b
@@ -985,29 +985,29 @@ define <2 x i8> @ravg_v2i8_ri(<2 x i8> %a) {
 ; KV3_1-LABEL: ravg_v2i8_ri:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x810080
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sxbd $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: ravg_v2i8_ri:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 0xffff8180
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <2 x i8> %a, <i8 128, i8 -127>
   %shr = ashr <2 x i8> %add1, <i8 1, i8 1>
@@ -1019,29 +1019,29 @@ define <2 x i8> @avg_v2u8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: avg_v2u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i8> %b, %a
   %shr = lshr <2 x i8> %add, <i8 1, i8 1>
@@ -1053,31 +1053,31 @@ define <2 x i8> @not_avg_v2u8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: not_avg_v2u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r1, $r0
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i8> %b, %a
   %shr = lshr <2 x i8> %add, <i8 1, i8 1>
@@ -1088,29 +1088,29 @@ define <2 x i8> @avg_v2u8_ri(<2 x i8> %a) {
 ; KV3_1-LABEL: avg_v2u8_ri:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x8000ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: avg_v2u8_ri:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0xffff80ff
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <2 x i8> %a, <i8 -1, i8 128>
   %shr = lshr <2 x i8> %add, <i8 1, i8 1>
@@ -1120,31 +1120,31 @@ define <2 x i8> @not_avg_v2u8_ri(<2 x i8> %a) {
 ; KV3_1-LABEL: not_avg_v2u8_ri:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x8000ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: not_avg_v2u8_ri:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r0, 0xffff80ff
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %add = add <2 x i8> %a, <i8 -1, i8 128>
   %shr = lshr <2 x i8> %add, <i8 1, i8 1>
@@ -1157,35 +1157,35 @@ define <2 x i8> @ravg_v2u8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x10001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v2u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    addbo $r0 = $r0, 257
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <2 x i8> %a, <i8 1, i8 1>
   %add1 = add nuw <2 x i8> %add, %b
@@ -1198,35 +1198,35 @@ define <2 x i8> @not_ravg_v2u8(<2 x i8> %a, <2 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x10001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: not_ravg_v2u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    addbo $r0 = $r0, 257
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add <2 x i8> %a, <i8 1, i8 1>
   %add1 = add <2 x i8> %add, %b
@@ -1239,29 +1239,29 @@ define <2 x i8> @ravg_v2u8_ri(<2 x i8> %a) {
 ; KV3_1-LABEL: ravg_v2u8_ri:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x810000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r1, 15, 8
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: ravg_v2u8_ri:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0xffff8100
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <2 x i8> %a, <i8 0, i8 129>
   %shr = lshr <2 x i8> %add1, <i8 1, i8 1>
@@ -1273,39 +1273,39 @@ define <4 x i8> @avg_v4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV3_2-LABEL: avg_v4i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i8> %b, %a
   %shr = ashr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1316,39 +1316,39 @@ define <4 x i8> @avg_v4i8_ri_(<4 x i8> %a) {
 ; KV3_1-LABEL: avg_v4i8_ri_:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x40007f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV3_2-LABEL: avg_v4i8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 0x407f
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i8> %a, <i8 127, i8 64, i8 0, i8 0>
   %shr = ashr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1359,39 +1359,39 @@ define <4 x i8> @avg_v4i8_ri_2(<4 x i8> %a) {
 ; KV3_1-LABEL: avg_v4i8_ri_2:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x7f001f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV3_2-LABEL: avg_v4i8_ri_2:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 0x7f1f7f1f
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i8> %a, <i8 31, i8 127, i8 31, i8 127>
   %shr = ashr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1403,41 +1403,41 @@ define <4 x i8> @ravg_v4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x10001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV3_2-LABEL: ravg_v4i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgrbo $r0 = $r1, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <4 x i8> %a, <i8 1, i8 1, i8 1, i8 1>
   %add1 = add <4 x i8> %add, %b
@@ -1449,39 +1449,39 @@ define <4 x i8> @ravg_v4i8_ri_at(<4 x i8> %a) {
 ; KV3_1-LABEL: ravg_v4i8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x800081
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sxbd $r2 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV3_2-LABEL: ravg_v4i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 0x80818081
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <4 x i8> %a, <i8 -127, i8 128, i8 -127, i8 128>
   %shr = ashr <4 x i8> %add1, <i8 1, i8 1, i8 1, i8 1>
@@ -1493,38 +1493,38 @@ define <4 x i8> @avg_v4u8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: avg_v4u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i8> %b, %a
   %shr = lshr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1535,38 +1535,38 @@ define <4 x i8> @avg_v4u8_ri_(<4 x i8> %a) {
 ; KV3_1-LABEL: avg_v4u8_ri_:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, 0x8000ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: avg_v4u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0x80ff
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i8> %a, <i8 -1, i8 128, i8 0, i8 0>
   %shr = lshr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1577,38 +1577,38 @@ define <4 x i8> @avg_v4u8_ri_at(<4 x i8> %a) {
 ; KV3_1-LABEL: avg_v4u8_ri_at:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x8000ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: avg_v4u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0x80ff80ff
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <4 x i8> %a, <i8 -1, i8 128, i8 -1, i8 128>
   %shr = lshr <4 x i8> %add, <i8 1, i8 1, i8 1, i8 1>
@@ -1621,44 +1621,44 @@ define <4 x i8> @ravg_v4u8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    sxlbhq $r1 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x10001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ;
 ; KV3_2-LABEL: ravg_v4u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    addbo $r0 = $r0, 0x1010101
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <4 x i8> %a, <i8 1, i8 1, i8 1, i8 1>
   %add1 = add nuw <4 x i8> %add, %b
@@ -1671,38 +1671,38 @@ define <4 x i8> @ravg_v4u8_ri_(<4 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    make $r1 = 0x1000100000081
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq $r0 = $r0, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v4u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0x1010081
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <4 x i8> %a, <i8 129, i8 0, i8 1, i8 1>
   %shr = lshr <4 x i8> %add1, <i8 1, i8 1, i8 1, i8 1>
@@ -1713,38 +1713,38 @@ define <4 x i8> @ravg_v4u8_ri_2(<4 x i8> %a) {
 ; KV3_1-LABEL: ravg_v4u8_ri_2:
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    addhq.@ $r0 = $r0, 0x810000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    srlw $r1 = $r0, 24
 ; KV3_1-NEXT:    extfz $r2 = $r0, 23, 16
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andw $r0 = $r0, 254
 ; KV3_1-NEXT:    andw $r1 = $r1, 254
 ; KV3_1-NEXT:    andw $r2 = $r2, 254
 ; KV3_1-NEXT:    andw $r3 = $r3, 254
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srlw $r0 = $r0, 1
 ; KV3_1-NEXT:    srlw $r1 = $r1, 1
 ; KV3_1-NEXT:    srlw $r2 = $r2, 1
 ; KV3_1-NEXT:    srlw $r3 = $r3, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    insf $r2 = $r1, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r0 = $r2, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v4u8_ri_2:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0x81008100
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <4 x i8> %a, <i8 0, i8 129, i8 0, i8 129>
   %shr = lshr <4 x i8> %add1, <i8 1, i8 1, i8 1, i8 1>
@@ -1758,62 +1758,62 @@ define <8 x i8> @avg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    sxbd $r4 = $r4
 ; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
 ; KV3_1-NEXT:    srlw $r2 = $r0, 24
 ; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
 ; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
 ; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 11)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 12)
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 13)
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 14)
 ;
 ; KV3_2-LABEL: avg_v8i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <8 x i8> %b, %a
   %shr = ashr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -1825,65 +1825,65 @@ define <8 x i8> @avg_v8i8_ri_(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f437f43
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    sxbd $r4 = $r4
 ; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
 ; KV3_1-NEXT:    srlw $r2 = $r0, 24
 ; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
 ; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
 ; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 11)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 12)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 13)
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 14)
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 15)
 ;
 ; KV3_2-LABEL: avg_v8i8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo $r0 = $r0, 0x7f437f43
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <8 x i8> %a, <i8 67, i8 127, i8 67, i8 127, i8 0, i8 0, i8 0, i8 0>
   %shr = ashr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -1895,65 +1895,65 @@ define <8 x i8> @avg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f437f437f437f43
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    sxbd $r4 = $r4
 ; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
 ; KV3_1-NEXT:    srlw $r2 = $r0, 24
 ; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
 ; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
 ; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 11)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 12)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 13)
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 14)
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 15)
 ;
 ; KV3_2-LABEL: avg_v8i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo.@ $r0 = $r0, 0x7f437f43
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <8 x i8> %a, <i8 67, i8 127, i8 67, i8 127, i8 67, i8 127, i8 67, i8 127>
   %shr = ashr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -1966,72 +1966,72 @@ define <8 x i8> @ravg_v8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
 ; KV3_1-NEXT:    make $r2 = 0x101010101010101
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    andd.@ $r1 = $r2, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r2
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    sxbd $r4 = $r4
 ; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
 ; KV3_1-NEXT:    srlw $r2 = $r0, 24
 ; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
 ; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
 ; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 11)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 12)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 13)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 14)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 15)
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 16)
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 17)
 ;
 ; KV3_2-LABEL: ravg_v8i8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgrbo $r0 = $r1, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add <8 x i8> %a, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
   %add1 = add <8 x i8> %add, %b
@@ -2044,65 +2044,65 @@ define <8 x i8> @ravg_v8i8_ri_at(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x81e081e081e081e0
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    extfz $r1 = $r0, 55, 48
 ; KV3_1-NEXT:    srld $r2 = $r0, 56
 ; KV3_1-NEXT:    extfz $r3 = $r0, 47, 40
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    extfz $r4 = $r0, 39, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sxbd $r1 = $r1
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    sraw $r1 = $r1, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    sxbd $r4 = $r4
 ; KV3_1-NEXT:    extfz $r5 = $r0, 23, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    insf $r1 = $r2, 15, 8
 ; KV3_1-NEXT:    srlw $r2 = $r0, 24
 ; KV3_1-NEXT:    sraw $r4 = $r4, 1
 ; KV3_1-NEXT:    sxbd $r5 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    extfz $r3 = $r0, 15, 8
 ; KV3_1-NEXT:    insf $r4 = $r3, 15, 8
 ; KV3_1-NEXT:    sraw $r5 = $r5, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    sxbd $r2 = $r2
 ; KV3_1-NEXT:    sxbd $r3 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    sxbd $r0 = $r0
 ; KV3_1-NEXT:    sraw $r2 = $r2, 1
 ; KV3_1-NEXT:    sraw $r3 = $r3, 1
 ; KV3_1-NEXT:    insf $r4 = $r1, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 11)
 ; KV3_1-NEXT:    sraw $r0 = $r0, 1
 ; KV3_1-NEXT:    insf $r5 = $r2, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 12)
 ; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 13)
 ; KV3_1-NEXT:    insf $r0 = $r5, 31, 16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 14)
 ; KV3_1-NEXT:    insf $r0 = $r4, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 15)
 ;
 ; KV3_2-LABEL: ravg_v8i8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgbo.@ $r0 = $r0, 0x81e081e0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add <8 x i8> %a, <i8 -32, i8 129, i8 -32, i8 129, i8 -32, i8 129, i8 -32, i8 129>
   %shr = ashr <8 x i8> %add1, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -2115,30 +2115,30 @@ define <8 x i8> @avg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
 ; KV3_2-LABEL: avg_v8u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <8 x i8> %b, %a
   %shr = lshr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -2150,33 +2150,33 @@ define <8 x i8> @avg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7fff7fff
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: avg_v8u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo $r0 = $r0, 0x7fff7fff
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <8 x i8> %a, <i8 -1, i8 127, i8 -1, i8 127, i8 0, i8 0, i8 0, i8 0>
   %shr = lshr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -2188,33 +2188,33 @@ define <8 x i8> @avg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x7f017f017f017f01
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: avg_v8u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo.@ $r0 = $r0, 0x7f017f01
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add = add nuw <8 x i8> %a, <i8 1, i8 127, i8 1, i8 127, i8 1, i8 127, i8 1, i8 127>
   %shr = lshr <8 x i8> %add, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -2228,44 +2228,44 @@ define <8 x i8> @ravg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
 ; KV3_1-NEXT:    make $r1 = 0x101010101010101
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r0, 0x7f7f7f7f
 ; KV3_1-NEXT:    andd.@ $r3 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r2, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 9)
 ;
 ; KV3_2-LABEL: ravg_v8u8:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    addbo $r0 = $r0, $r1
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    addbo.@ $r0 = $r0, 0x1010101
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    srlbos $r0 = $r0, 1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 entry:
   %add = add nuw <8 x i8> %a, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
   %add1 = add nuw <8 x i8> %add, %b
@@ -2279,35 +2279,35 @@ define <8 x i8> @ravg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x101010101010281
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v8u8_ri_:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    make $r1 = 0x101010101010281
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    avgubo $r0 = $r1, $r0
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %add1 = add nuw <8 x i8> %a, <i8 129, i8 2, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
   %shr = lshr <8 x i8> %add1, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>
@@ -2319,33 +2319,33 @@ define <8 x i8> @ravg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    make $r1 = 0x8100810081008100
 ; KV3_1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    xord $r0 = $r0, $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r1, 0x7f7f7f7f
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0x80808080
 ; KV3_1-NEXT:    addd $r1 = $r3, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    xord $r0 = $r1, $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srld $r0 = $r0, 1
 ; KV3_1-NEXT:    srld $r1 = $r1, 1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
 ; KV3_1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
 ; KV3_2-LABEL: ravg_v8u8_ri_at:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    avgubo.@ $r0 = $r0, 0x81008100
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %add1 = add nuw <8 x i8> %a, <i8 0, i8 129, i8 0, i8 129, i8 0, i8 129, i8 0, i8 129>
   %shr = lshr <8 x i8> %add1, <i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1, i8 1>

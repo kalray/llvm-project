@@ -13,33 +13,33 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    make $r0 = 0x2710
 ; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
 ; CHECK-NEXT:    call polybench_alloc_data
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    make $r0 = 0x2710
 ; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call polybench_alloc_data
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r0 = 0x2710
 ; CHECK-NEXT:    make $r1 = 8
 ; CHECK-NEXT:    call polybench_alloc_data
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r0 = 0x2710
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    call init_array
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0x1387
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_2 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_4 Depth 2
@@ -51,238 +51,238 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    # Child Loop BB0_16 Depth 2
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_2: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r6r7 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sd 8[$r2] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    lq $r4r5 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    addd $r3 = $r3, 16
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
 ; CHECK-NEXT:    ld $r5 = 24[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    sd 16[$r2] = $r4
 ; CHECK-NEXT:    addd $r2 = $r2, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.3: # %.preheader6
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 8[$r3] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r2 = $r2, 16
 ; CHECK-NEXT:    ld $r4 = 16[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sd 16[$r3] = $r4
 ; CHECK-NEXT:    addd $r3 = $r3, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.5: # %.preheader5
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_6: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r6r7 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sd 8[$r2] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    lq $r4r5 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    addd $r3 = $r3, 16
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
 ; CHECK-NEXT:    ld $r5 = 24[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    sd 16[$r2] = $r4
 ; CHECK-NEXT:    addd $r2 = $r2, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  # %bb.7: # %.preheader4
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_8: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 8[$r3] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r2 = $r2, 16
 ; CHECK-NEXT:    ld $r4 = 16[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sd 16[$r3] = $r4
 ; CHECK-NEXT:    addd $r3 = $r3, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  # %bb.9: # %.preheader3
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_10: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r6r7 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sd 8[$r2] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    lq $r4r5 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    addd $r3 = $r3, 16
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
 ; CHECK-NEXT:    ld $r5 = 24[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    sd 16[$r2] = $r4
 ; CHECK-NEXT:    addd $r2 = $r2, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_4_END_:
 ; CHECK-NEXT:  # %bb.11: # %.preheader2
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_12: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 8[$r3] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r2 = $r2, 16
 ; CHECK-NEXT:    ld $r4 = 16[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sd 16[$r3] = $r4
 ; CHECK-NEXT:    addd $r3 = $r3, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_5_END_:
 ; CHECK-NEXT:  # %bb.13: # %.preheader1
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_14: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r6r7 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sd 8[$r2] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    lq $r4r5 = 8[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    addd $r3 = $r3, 16
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
 ; CHECK-NEXT:    ld $r5 = 24[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    faddd $r4 = $r4, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fmuld $r4 = $r4, 0x3fd555475a31a4be
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    sd 16[$r2] = $r4
 ; CHECK-NEXT:    addd $r2 = $r2, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_6_END_:
 ; CHECK-NEXT:  # %bb.15: # %.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_7_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_16: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 8[$r3] = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r2 = $r2, 16
 ; CHECK-NEXT:    ld $r4 = 16[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sd 16[$r3] = $r4
 ; CHECK-NEXT:    addd $r3 = $r3, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_7_END_:
 ; CHECK-NEXT:  # %bb.17: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    addw $r0 = $r0, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compw.eq $r2 = $r0, 100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.even $r2 ? .LBB0_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.18:
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = tail call i8* @polybench_alloc_data(i64 10000, i32 8)

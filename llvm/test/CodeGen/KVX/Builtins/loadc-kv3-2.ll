@@ -9,7 +9,7 @@ define <8 x i32> @loadc256_mt(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -25,7 +25,7 @@ define <8 x i32> @loadc256_mf(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -39,7 +39,7 @@ define <8 x i32> @loadc256_mtc(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -53,7 +53,7 @@ define <8 x i32> @loadc256_mfc(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r5 ? $r0r1r2r3 = [$r4]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -67,7 +67,7 @@ define <4 x i32> @loadc128_mt(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r3 ? $r0r1r2r3 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
@@ -83,7 +83,7 @@ define <4 x i32> @loadc128_mf(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r3 ? $r0r1r2r3 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
@@ -99,7 +99,7 @@ define <4 x i32> @loadc128_mtc(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r3 ? $r0r1r2r3 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
@@ -115,7 +115,7 @@ define <4 x i32> @loadc128_mfc(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r3 ? $r0r1r2r3 = [$r2]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
@@ -131,7 +131,7 @@ define <2 x i32> @loadc64_mt(<2 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r2 ? $r0r1r2r3 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
@@ -147,7 +147,7 @@ define <2 x i32> @loadc64_mf(<2 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r2 ? $r0r1r2r3 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
@@ -163,7 +163,7 @@ define <2 x i32> @loadc64_mtc(<2 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r2 ? $r0r1r2r3 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
@@ -179,7 +179,7 @@ define <2 x i32> @loadc64_mfc(<2 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r2 ? $r0r1r2r3 = [$r1]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>

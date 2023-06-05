@@ -9,36 +9,36 @@ define i32 @square(i32 %0) {
 ; FP-NONE:       # %bb.0:
 ; FP-NONE-NEXT:    mulw $r1 = $r0, $r0
 ; FP-NONE-NEXT:    addd $r12 = $r12, -32
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    sw 28[$r12] = $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    copyd $r0 = $r1
 ; FP-NONE-NEXT:    addd $r12 = $r12, 32
 ; FP-NONE-NEXT:    ret
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 2)
 ;
 ; FP-ALL-LABEL: square:
 ; FP-ALL:       # %bb.0:
 ; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    get $r16 = $ra
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sd 24[$r12] = $r16
 ; FP-ALL-NEXT:    mulw $r1 = $r0, $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd 16[$r12] = $r14
 ; FP-ALL-NEXT:    addd $r14 = $r12, 16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    sw -4[$r14] = $r0
 ; FP-ALL-NEXT:    copyd $r0 = $r1
 ; FP-ALL-NEXT:    addd $r12 = $r14, -16
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    ld $r14 = 16[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r16 = 24[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    set $ra = $r16
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
   %2 = alloca i32, align 4

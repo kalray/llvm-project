@@ -11,7 +11,7 @@ define i64 @addcd(i64 %0, i64 %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addcd $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.addcd(i64 %0, i64 %1, i32 0)
   ret i64 %3
 }
@@ -23,7 +23,7 @@ define i64 @addcdi(i64 %0, i64 %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addcd.i $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.addcd(i64 %0, i64 %1, i32 1)
   ret i64 %3
 }

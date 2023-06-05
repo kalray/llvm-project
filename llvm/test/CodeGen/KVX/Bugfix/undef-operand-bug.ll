@@ -6,7 +6,7 @@ define void @zext_dagcombine_fail() {
 ; CHECK-LABEL: zext_dagcombine_fail:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
@@ -14,7 +14,7 @@ define void @zext_dagcombine_fail() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.3: # %.preheader3
@@ -22,12 +22,12 @@ define void @zext_dagcombine_fail() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.5:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6:
@@ -35,7 +35,7 @@ define void @zext_dagcombine_fail() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8:
@@ -43,10 +43,10 @@ define void @zext_dagcombine_fail() {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_10:
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

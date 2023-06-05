@@ -8,18 +8,18 @@ define void @xfscalewo_test(<256 x i1>* nocapture %0, i32 %1) {
 ; CHECK-LABEL: xfscalewo_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xfscalewo $a0 = $a0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xfscalewo.s $a0 = $a0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xfscalewo.rn $a0 = $a0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xfscalewo.rn.s $a0 = $a0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> %3, i32 %1, i32 7, i32 0)
   %5 = tail call <256 x i1> @llvm.kvx.xfscalewo(<256 x i1> %4, i32 %1, i32 7, i32 1)
@@ -35,12 +35,12 @@ define void @xclampwo_test(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xclampwo_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xclampwo $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xclampwo(<256 x i1> %2, <256 x i1> %2, <256 x i1> %2)
   store <256 x i1> %3, <256 x i1>* %0
@@ -53,24 +53,24 @@ define void @xffma44hw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture read
 ; CHECK-LABEL: xffma44hw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a2 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xffma44hw $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xffma44hw.s $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xffma44hw.ru $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xffma44hw.rz.s $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = load <512 x i1>, <512 x i1>* %0
   %5 = tail call <512 x i1> @llvm.kvx.xffma44hw(<256 x i1> %3, <256 x i1> %3, <512 x i1> %4, i32 7, i32 0)
@@ -87,22 +87,22 @@ define void @xfmma484hw_test(<512 x i1>* nocapture %0) {
 ; CHECK-LABEL: xfmma484hw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xfmma484hw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xfmma484hw.s $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xfmma484hw.rn $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xfmma484hw.rz.s $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
   %2 = load <512 x i1>, <512 x i1>* %0
   %3 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %2, <512 x i1> %2, <512 x i1> %2, i32 7, i32 0)
   %4 = tail call <512 x i1> @llvm.kvx.xfmma484hw(<512 x i1> %3, <512 x i1> %3, <512 x i1> %3, i32 7, i32 1)
@@ -118,38 +118,38 @@ define void @xfnarrow44wh_test(<256 x i1>* nocapture %0, <512 x i1>* nocapture r
 ; CHECK-LABEL: xfnarrow44wh_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xfnarrow44wh $a0 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xfnarrow44wh.s $a0 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 32[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    xfnarrow44wh.rz $a0 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xfnarrow44wh.ru.s $a0 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 96[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 35)
   %3 = load <512 x i1>, <512 x i1>* %1
   %4 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %3, i32 7, i32 0)
   store <256 x i1> %4, <256 x i1>* %0
@@ -174,49 +174,49 @@ define void @xmadd44bw_test(<256 x i1>* nocapture readonly %0, <512 x i1>* nocap
 ; CHECK-LABEL: xmadd44bw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a4 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xmadd44bw0 $a0a1 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xmaddsu44bw1 $a2a3 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    xmaddu44bw0 $a2a3 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 40)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 44)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    xmaddsu44bw1 $a0a1 = $a4, $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 46)
 ; CHECK-NEXT:    xso 32[$r1] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 50)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 51)
   %3 = load <256 x i1>, <256 x i1>* %0
   %4 = load <512 x i1>, <512 x i1>* %1
   %5 = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<256 x i1> %3, <256 x i1> %3, <512 x i1> %4, i32 0)
@@ -241,18 +241,18 @@ define void @xmaddifwo_test(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xmaddifwo_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmaddifwo $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xmaddifwo.s $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xmaddifwo.rn $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xmaddifwo.rz.s $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> %2, <256 x i1> %2, <256 x i1> %2, i32 7, i32 0)
   %4 = tail call <256 x i1> @llvm.kvx.xmaddifwo(<256 x i1> %3, <256 x i1> %3, <256 x i1> %3, i32 7, i32 1)
@@ -268,24 +268,24 @@ define void @xmma4164bw_test(<512 x i1>* nocapture %0) {
 ; CHECK-LABEL: xmma4164bw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xmma4164bw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xmma4164bw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xmmasu4164bw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xmmau4164bw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    xmmaus4164bw $a0a1 = $a0a1, $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 31)
   %2 = load <512 x i1>, <512 x i1>* %0
   %3 = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> %2, <512 x i1> %2, <512 x i1> %2, i32 0)
   %4 = tail call <512 x i1> @llvm.kvx.xmma4164bw(<512 x i1> %3, <512 x i1> %3, <512 x i1> %3, i32 0)
@@ -302,24 +302,24 @@ define void @xmma484bw_test(<512 x i1>* nocapture %0, <256 x i1>* nocapture read
 ; CHECK-LABEL: xmma484bw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a2 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xmma484bw $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xmmasu484bw $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xmmau484bw $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xmmaus484bw $a0a1 = $a2, $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = load <512 x i1>, <512 x i1>* %0
   %5 = tail call <512 x i1> @llvm.kvx.xmma484bw(<256 x i1> %3, <256 x i1> %3, <512 x i1> %4, i32 0)
@@ -336,18 +336,18 @@ define void @xmsbfifwo_test(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xmsbfifwo_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmsbfifwo $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xmsbfifwo.s $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xmsbfifwo.rn $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xmsbfifwo.rz.s $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %2, <256 x i1> %2, <256 x i1> %2, i32 7, i32 0)
   %4 = tail call <256 x i1> @llvm.kvx.xmsbfifwo(<256 x i1> %3, <256 x i1> %3, <256 x i1> %3, i32 7, i32 1)
@@ -363,18 +363,18 @@ define void @xsx48bw_test(<1024 x i1>* nocapture %0, <256 x i1>* nocapture reado
 ; CHECK-LABEL: xsx48bw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsx48bw $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = tail call <1024 x i1> @llvm.kvx.xsx48bw(<256 x i1> %3)
   store <1024 x i1> %4, <1024 x i1>* %0
@@ -387,18 +387,18 @@ define void @xzx48bw_test(<1024 x i1>* nocapture %0, <256 x i1>* nocapture reado
 ; CHECK-LABEL: xzx48bw_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xzx48bw $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = tail call <1024 x i1> @llvm.kvx.xzx48bw(<256 x i1> %3)
   store <1024 x i1> %4, <1024 x i1>* %0
@@ -411,18 +411,18 @@ define void @xtrunc48wb_test(<1024 x i1>* nocapture readonly %0, <256 x i1>* noc
 ; CHECK-LABEL: xtrunc48wb_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xtrunc48wb $a0 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
   %3 = load <1024 x i1>, <1024 x i1>* %0
   %4 = tail call <256 x i1> @llvm.kvx.xtrunc48wb(<1024 x i1> %3)
   store <256 x i1> %4, <256 x i1>* %1
@@ -435,24 +435,24 @@ define void @xmt44d_test(<1024 x i1>* nocapture %0) {
 ; CHECK-LABEL: xmt44d_test:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
   %2 = load <1024 x i1>, <1024 x i1>* %0
   %3 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %2)
   store <1024 x i1> %3, <1024 x i1>* %0
@@ -465,22 +465,22 @@ define void @xload256(<256 x i1>* %0) {
 ; CHECK-LABEL: xload256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo.s $a0 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xlo.u $a0 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xlo.us $a0 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %2 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
   %3 = bitcast <256 x i1>* %2 to i8*
   %4 = tail call <256 x i1> @llvm.kvx.xload256(i8* nonnull %3, i32 0)
@@ -505,18 +505,18 @@ define void @xloadc256(<256 x i1>* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.mt $r1 ? $a0 = 32[$r0]
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.s.mf $r1 ? $a0 = 96[$r0]
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo.u.mtc $r1 ? $a0 = 96[$r0]
 ; CHECK-NEXT:    make $r1 = 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xlo.us.mfc $r1 ? $a0 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
   %3 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
   %4 = bitcast <256 x i1>* %3 to i8*
   %5 = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> undef, i8* nonnull %4, i64 %1, i32 0, i32 4)
@@ -539,22 +539,22 @@ define void @xloads1024(<1024 x i1>* %0) {
 ; CHECK-LABEL: xloads1024:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.q0 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.q1 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo.s.q2 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xlo.us.q3 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %2 = bitcast <1024 x i1>* %0 to i8*
   %3 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, i8* %2, i32 0, i32 0)
   %4 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> %3, i8* %2, i32 0, i32 1)
@@ -571,24 +571,24 @@ define void @xloadsc1024(<1024 x i1>* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
 ; CHECK-NEXT:    xlo.mt.q0 $r1 ? $a0a1a2a3 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    xlo.s.mf.q1 $r1 ? $a0a1a2a3 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    xlo.u.mtc.q2 $r1 ? $a0a1a2a3 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xlo.us.mfc.q3 $r1 ? $a0a1a2a3 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %3 = bitcast <1024 x i1>* %0 to i8*
   %4 = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, i8* %3, i64 %1, i32 0, i32 4, i32 0)
   %5 = icmp eq i64 %1, 0
@@ -607,22 +607,22 @@ define void @xload512(<512 x i1>* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    addx64d $r1 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 96[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 128[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 160[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
   %3 = bitcast <512 x i1>* %0 to i8*
   %4 = tail call <512 x i1> @llvm.kvx.xload512(i8* %3, i32 0)
   %5 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
@@ -642,39 +642,39 @@ define void @xload1024(<1024 x i1>* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    slld $r1 = $r1, 7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    addd $r1 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 160[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 128[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 224[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 192[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xlo.s $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo.s $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xlo.s $a2 = 64[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xlo.s $a3 = 96[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 288[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 256[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 352[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 320[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %3 = bitcast <1024 x i1>* %0 to i8*
   %4 = tail call <1024 x i1> @llvm.kvx.xload1024(i8* %3, i32 0)
   %5 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 1
@@ -693,35 +693,35 @@ define void @xloadc512(<512 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xloadc512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r2 = $r0, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.dnez $r1 ? $a0 = [$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.dnez $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
 ; CHECK-NEXT:    addd $r2 = $r0, 192
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo.s.weqz $r1 ? $a0 = [$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xlo.s.weqz $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xlo.u.mtc $r1 ? $a0 = [$r2]
 ; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xlo.u.mtc $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    addd $r1 = $r0, 128
 ; CHECK-NEXT:    make $r2 = 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r1]
 ; CHECK-NEXT:    srld $r2 = $r2, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xlo.us.mfc $r2 ? $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
   %3 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
   %4 = bitcast <512 x i1>* %3 to i8*
   %5 = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> undef, i8* nonnull %4, i64 %1, i32 0, i32 0)
@@ -747,62 +747,62 @@ define void @xloadc1024(<1024 x i1>* %0, <4 x i32> %1) {
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
 ; CHECK-NEXT:    addd $r4 = $r0, 384
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a0 = [$r1]
 ; CHECK-NEXT:    srld $r5 = $r3, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a2 = 64[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a2 = 96[$r1]
 ; CHECK-NEXT:    srld $r1 = $r2, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xlo.s.weqz $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a2 = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xlo.s.weqz $r2 ? $a2 = 32[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xlo.s.weqz $r2 ? $a3 = 64[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xlo.s.weqz $r2 ? $a1 = 96[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xlo.u.mtc $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a1 = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xlo.u.mtc $r1 ? $a2 = 32[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xlo.u.mtc $r3 ? $a3 = 64[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xlo.u.mtc $r5 ? $a1 = 96[$r4]
 ; CHECK-NEXT:    addd $r4 = $r0, 256
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a1 = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xcopyo $a5 = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xlo.us.mfc $r1 ? $a5 = 32[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    xlo.us.mfc $r3 ? $a2 = 64[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xlo.us.mfc $r5 ? $a1 = 96[$r4]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 32[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 38)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 41)
   %3 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 1
   %4 = bitcast <1024 x i1>* %3 to i8*
   %5 = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> undef, i8* nonnull %4, <4 x i32> %1, i32 0, i32 0)
@@ -823,10 +823,10 @@ define void @xstore256(<256 x i1>* nocapture readonly %0, i8* %1) {
 ; CHECK-LABEL: xstore256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = load <256 x i1>, <256 x i1>* %0
   tail call void @llvm.kvx.xstore256(<256 x i1> %3, i8* %1)
   ret void
@@ -839,10 +839,10 @@ define void @xstorec256(<256 x i1>* nocapture readonly %0, i8* %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    make $r0 = 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso.mt $r0 ? [$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %4 = load <256 x i1>, <256 x i1>* %0
   tail call void @llvm.kvx.xstorec256(<256 x i1> %4, i8* %1, i64 1, i32 4)
   ret void
@@ -854,10 +854,10 @@ define void @xloadStore256(<256 x i1> addrspace(257)* %0) {
 ; CHECK-LABEL: xloadStore256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.us $a0 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(257)* %0, i64 1
   %3 = load volatile <256 x i1>, <256 x i1> addrspace(257)* %2
   store volatile <256 x i1> %3, <256 x i1> addrspace(257)* %0
@@ -868,14 +868,14 @@ define void @xloadStore512(<512 x i1> addrspace(258)* %0) {
 ; CHECK-LABEL: xloadStore512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.s $a0 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.s $a1 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(258)* %0, i64 1
   %3 = load volatile <512 x i1>, <512 x i1> addrspace(258)* %2
   store volatile <512 x i1> %3, <512 x i1> addrspace(258)* %0
@@ -886,22 +886,22 @@ define void @xloadStore1024(<1024 x i1> addrspace(256)* %0) {
 ; CHECK-LABEL: xloadStore1024:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.u $a0 = 192[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.u $a1 = 224[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.u $a2 = 128[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo.u $a3 = 160[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 32[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 0[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 96[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
   %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* %0, i64 1
   %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(256)* %2
   store volatile <1024 x i1> %3, <1024 x i1> addrspace(256)* %0
@@ -912,14 +912,14 @@ define void @xsendo(<256 x i1>* nocapture readonly %0) {
 ; CHECK-LABEL: xsendo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsendo.f $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xsendo.b $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
   %2 = load <256 x i1>, <256 x i1>* %0
   tail call void @llvm.kvx.xsendo(<256 x i1> %2, i32 1)
   %3 = load <256 x i1>, <256 x i1>* %0
@@ -933,14 +933,14 @@ define void @xrecvo(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xrecvo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xrecvo.f $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xrecvo.b $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %2 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1)
   store <256 x i1> %2, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0)
@@ -955,30 +955,30 @@ define void @xsendrecvo(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xsendrecvo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsendrecvo.f.f $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xsendrecvo.b.f $a1, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo $a1 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 128[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xsendrecvo.f.b $a1, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 96[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xsendrecvo.b.b $a1, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xso 160[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xsendrecvo(<256 x i1> %2, i32 1, i32 1)
   %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
@@ -1005,34 +1005,34 @@ define void @xcopyv(<1024 x i1>* nocapture %0) {
 ; CHECK-LABEL: xcopyv:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xcopyv.td $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 480[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 448[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 416[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 384[$r0] = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 224[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 192[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xso 160[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xso 128[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
   %2 = load <1024 x i1>, <1024 x i1>* %0
   %3 = tail call <1024 x i1> @llvm.kvx.xcopyv(<1024 x i1> %2, i32 0)
   %4 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 3
@@ -1049,34 +1049,34 @@ define void @xcopyx(<512 x i1>* nocapture %0) {
 ; CHECK-LABEL: xcopyx:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xcopyx.zd $a4a5 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xcopyx.ud $a6a7 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xcopyx.tq $a0a1 = $a0a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 288[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 256[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %2 = load <512 x i1>, <512 x i1>* %0
   %3 = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> %2, i32 0)
   %4 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
@@ -1099,16 +1099,16 @@ define void @xfminmaxhx(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xfminmaxhx:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xfmaxhx $a1 = $a0, $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xfminhx $a0 = $a1, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
   %2 = load <256 x i1>, <256 x i1>* %0
   %3 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
   %4 = load <256 x i1>, <256 x i1>* %3
@@ -1126,28 +1126,28 @@ define void @xsplatov(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly 
 ; CHECK-LABEL: xsplatov:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a4 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xsplatov.td $a4a5a6a7 = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = tail call <1024 x i1> @llvm.kvx.xsplatov(<256 x i1> %3, i32 0)
   store <1024 x i1> %4, <1024 x i1>* %0
@@ -1163,31 +1163,31 @@ define void @xsplatox(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %
 ; CHECK-LABEL: xsplatox:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a6 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatox $a0a1 = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xsplatox.zd $a2a3 = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xsplatox.ud $a4a5 = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    xsplatox.tq $a0a1 = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 224[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 192[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
   %3 = load <256 x i1>, <256 x i1>* %1
   %4 = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> %3, i32 0)
   store <512 x i1> %4, <512 x i1>* %0
@@ -1209,18 +1209,18 @@ define void @xsplatdo(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: xsplatdo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 511
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatdo $a1 = 0x1fffffffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xsplatdo $a2 = 0x18ffffffff9c
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %2 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 511)
   store <256 x i1> %2, <256 x i1>* %0
   %3 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 137438953471)
@@ -1238,14 +1238,14 @@ define void @xalign512o(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly
 ; CHECK-LABEL: xalign512o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xaligno $a0 = $a0..a1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
   %4 = load <512 x i1>, <512 x i1>* %1
   %5 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %4, i64 %2)
   store <256 x i1> %5, <256 x i1>* %0
@@ -1258,18 +1258,18 @@ define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readon
 ; CHECK-LABEL: xalign1024o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a2 = 64[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xaligno $a0 = $a0..a3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
   %4 = load <1024 x i1>, <1024 x i1>* %1
   %5 = tail call <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1> %4, i64 %2)
   store <256 x i1> %5, <256 x i1>* %0
@@ -1282,16 +1282,16 @@ define void @xalign2048o(<256 x i1>* nocapture %0, i64 %1) {
 ; CHECK-LABEL: xalign2048o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xaligno $a0 = $a0..a7, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
   %3 = tail call <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1> zeroinitializer, i64 %1)
   store <256 x i1> %3, <256 x i1>* %0
   ret void
@@ -1303,20 +1303,20 @@ define void @xalign4096o(<256 x i1>* nocapture %0, i64 %1) {
 ; CHECK-LABEL: xalign4096o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xaligno $a0 = $a0..a15, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
   %3 = tail call <256 x i1> @llvm.kvx.xaligno.v4096i1(<4096 x i1> zeroinitializer, i64 %1)
   store <256 x i1> %3, <256 x i1>* %0
   ret void
@@ -1328,12 +1328,12 @@ define void @xpreload512(<512 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xpreload512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0..a1, $r1 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = bitcast <512 x i1>* %0 to i8*
   %4 = tail call <512 x i1> @llvm.kvx.xpreload.v512i1(<512 x i1> undef, i8* %3, i64 %1, i32 0, i32 0)
   store <512 x i1> %4, <512 x i1>* %0
@@ -1346,16 +1346,16 @@ define void @xpreload1024(<1024 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xpreload1024:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.us.q $a0..a3, $r1 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = bitcast <1024 x i1>* %0 to i8*
   %4 = tail call <1024 x i1> @llvm.kvx.xpreload.v1024i1(<1024 x i1> undef, i8* %3, i64 %1, i32 3, i32 1)
   store <1024 x i1> %4, <1024 x i1>* %0
@@ -1368,24 +1368,24 @@ define void @xpreload2048(<2048 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xpreload2048:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.s.w $a0..a7, $r1 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
   %3 = bitcast <2048 x i1>* %0 to i8*
   %4 = tail call <2048 x i1> @llvm.kvx.xpreload.v2048i1(<2048 x i1> undef, i8* %3, i64 %1, i32 1, i32 3)
   store <2048 x i1> %4, <2048 x i1>* %0
@@ -1398,40 +1398,40 @@ define void @xpreload4096(<4096 x i1>* %0, i64 %1) {
 ; CHECK-LABEL: xpreload4096:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.u.b $a0..a15, $r1 = [$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 416[$r0] = $a13
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 384[$r0] = $a12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 480[$r0] = $a15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 448[$r0] = $a14
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 288[$r0] = $a9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xso 256[$r0] = $a8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xso 352[$r0] = $a11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xso 320[$r0] = $a10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
   %3 = bitcast <4096 x i1>* %0 to i8*
   %4 = tail call <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1> undef, i8* %3, i64 %1, i32 2, i32 5)
   store <4096 x i1> %4, <4096 x i1>* %0
@@ -1444,11 +1444,11 @@ define <4 x i64> @xaccess512o(<512 x i1>* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: xaccess512o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a1, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <512 x i1>, <512 x i1>* %0
@@ -1462,15 +1462,15 @@ define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: xaccess1024o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a2 = 64[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <1024 x i1>, <1024 x i1>* %0
@@ -1484,13 +1484,13 @@ define <4 x i64> @xaccess2048o(i64 %0) {
 ; CHECK-LABEL: xaccess2048o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a7, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <4 x i64> @llvm.kvx.xaccesso.v2048i1(<2048 x i1> zeroinitializer, i64 %0)
@@ -1503,17 +1503,17 @@ define <4 x i64> @xaccess4096o(i64 %0) {
 ; CHECK-LABEL: xaccess4096o:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xaccesso $r0r1r2r3 = $a0..a15, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = tail call <4 x i64> @llvm.kvx.xaccesso.v4096i1(<4096 x i1> zeroinitializer, i64 %0)
@@ -1526,26 +1526,26 @@ define void @binOps(<256 x i1>* nocapture %0) {
 ; CHECK-LABEL: binOps:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xandno $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xando $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xnando $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xnoro $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xnxoro $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    xorno $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xoro $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xxoro $a0 = $a0, $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 36)
   %2 = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 0)
   %3 = tail call <256 x i1> @llvm.kvx.xandno(<256 x i1> %2, <256 x i1> %2)
   %4 = tail call <256 x i1> @llvm.kvx.xando(<256 x i1> %3, <256 x i1> %3)
@@ -1579,27 +1579,27 @@ define void @xcat2048(<2048 x i1>* nocapture %0) {
 ; CHECK-LABEL: xcat2048:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %2 = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
   store <2048 x i1> %2, <2048 x i1>* %0
   ret void
@@ -1611,45 +1611,45 @@ define void @xcat4096(<4096 x i1>* nocapture %0) {
 ; CHECK-LABEL: xcat4096:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xsplatov $a0a1a2a3 = $a0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
 ; CHECK-NEXT:    xcopyv $a12a13a14a15 = $a4a5a6a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xso 416[$r0] = $a13
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xso 384[$r0] = $a12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xso 480[$r0] = $a15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xso 448[$r0] = $a14
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    xso 288[$r0] = $a9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    xso 256[$r0] = $a8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    xso 352[$r0] = $a11
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xso 320[$r0] = $a10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
   %2 = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
   store <4096 x i1> %2, <4096 x i1>* %0
   ret void

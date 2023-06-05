@@ -11,7 +11,7 @@ define float @fmulxhw(half %0, half %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhw.s $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call float @llvm.kvx.fmulx.f32(half %0, half %1, i32 7, i32 1)
   ret float %3
 }
@@ -22,13 +22,13 @@ define <8 x float> @fmulxhwo(<8 x half> %0, <8 x half> %1) {
 ; ALL-LABEL: fmulxhwo:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhwq.s $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulhwq.s $r2r3 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <8 x half> %0, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = shufflevector <8 x half> %1, <8 x half> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %5 = tail call <4 x float> @llvm.kvx.fmulx.v4f32(<4 x half> %3, <4 x half> %4, i32 7, i32 1)
@@ -46,7 +46,7 @@ define <2 x float> @fmulxhwp(<2 x half> %0, <2 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhwq.s $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x float> @llvm.kvx.fmulx.v2f32(<2 x half> %0, <2 x half> %1, i32 7, i32 1)
   ret <2 x float> %3
 }
@@ -58,7 +58,7 @@ define <4 x float> @fmulxhwq(<4 x half> %0, <4 x half> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulhwq.s $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <4 x float> @llvm.kvx.fmulx.v4f32(<4 x half> %0, <4 x half> %1, i32 7, i32 1)
   ret <4 x float> %3
 }
@@ -68,7 +68,7 @@ define double @fmulxwd(float %0, float %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulwd.s $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call double @llvm.kvx.fmulx.f64(float %0, float %1, i32 7, i32 1)
   ret double %3
 }
@@ -80,7 +80,7 @@ define <2 x double> @fmulxwdp(<2 x float> %0, <2 x float> %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulwdp.s $r0r1 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call <2 x double> @llvm.kvx.fmulx.v2f64(<2 x float> %0, <2 x float> %1, i32 7, i32 1)
   ret <2 x double> %3
 }
@@ -91,13 +91,13 @@ define <4 x double> @fmulxwdq(<4 x float> %0, <4 x float> %1) {
 ; ALL-LABEL: fmulxwdq:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    fmulwdp.s $r4r5 = $r0, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulwdp.s $r2r3 = $r1, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    copyd $r0 = $r4
 ; ALL-NEXT:    copyd $r1 = $r5
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x double> @llvm.kvx.fmulx.v2f64(<2 x float> %3, <2 x float> %4, i32 7, i32 1)

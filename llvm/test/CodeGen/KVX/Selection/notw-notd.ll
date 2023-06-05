@@ -11,7 +11,7 @@ define i32 @f_i32(i32 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %neg = xor i32 %x, -1
   ret i32 %neg
@@ -22,7 +22,7 @@ define i64 @f_i64(i64 %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %neg = xor i64 %x, -1
   ret i64 %neg
@@ -33,7 +33,7 @@ define <2 x i32> @f_v2i32_imp(<2 x i32> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %neg = xor <2 x i32> %x, <i32 -1, i32 -1>
   ret <2 x i32> %neg
@@ -44,7 +44,7 @@ define <2 x i32> @f_v2i32_exp(<2 x i32> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor <2 x i32> %x, <i32 -1, i32 -1>
   ret <2 x i32> %xor
@@ -55,7 +55,7 @@ define <2 x i16> @f_v2i16_imp(<2 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %neg = xor <2 x i16> %x, <i16 -1, i16 -1>
   ret <2 x i16> %neg
@@ -66,7 +66,7 @@ define <2 x i16> @f_v2i16_exp(<2 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor <2 x i16> %x, <i16 -1, i16 -1>
   ret <2 x i16> %xor
@@ -77,7 +77,7 @@ define <4 x i16> @f_v4i16_imp(<4 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %neg = xor <4 x i16> %x, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %neg
@@ -88,7 +88,7 @@ define <4 x i16> @f_v4i16_exp(<4 x i16> %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %xor = xor <4 x i16> %x, <i16 -1, i16 -1, i16 -1, i16 -1>
   ret <4 x i16> %xor

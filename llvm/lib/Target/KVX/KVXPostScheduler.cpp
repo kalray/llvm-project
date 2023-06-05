@@ -164,6 +164,7 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
                                     bool IsLast, unsigned LastCycle,
                                     SUnit *ExitSU) {
   assert(!Packet.empty());
+  bool HasMCycles = Packet.front()->getOpcode() == KVX::MCYCLESp;
 
 #ifndef NDEBUG
   const Function &F = MBB->getParent()->getFunction();
@@ -178,14 +179,17 @@ void KVXPostPacketizer::runOnPacket(std::vector<MachineInstr *> &Packet,
 #endif
 
 #ifndef NDEBUG
-  if (Packet.size() > 1)
+  if (Packet.size() > (HasMCycles ? 2 : 1))
     for (MachineInstr *MI : Packet)
       assert(!TII->isSoloInstruction(*MI) &&
              "The solo instruction is not alone in the packet!");
 #endif
 
+  auto MaybeSoloMII = Packet.begin();
+  if (HasMCycles)
+    MaybeSoloMII++;
   MachineInstr *SoloMI =
-      TII->isSoloInstruction(*Packet.front()) ? Packet.front() : nullptr;
+      TII->isSoloInstruction(**MaybeSoloMII) ? *MaybeSoloMII : nullptr;
 
   // The packet might have unscheduled solo instructions such as DBG_VALUE
   // or DBG_LABEL. These instructions are not scheduled (so they are not part
@@ -321,6 +325,14 @@ void KVXPostScheduler::leaveRegion() {
   for (auto &Pair : CycleToMIs) {
     auto &Packet = Pair.second;
     unsigned Cycle = Pair.first;
+    MachineInstr *First = Packet.front();
+    MachineInstr *AnnotMI =
+        BuildMI(*MBB, First->getIterator(), First->getDebugLoc(),
+                TII->get(KVX::MCYCLESp))
+            .addImm(Cycle);
+    // Do not packetize MCYCLESp if the packet has inline asm
+    if (!First->isInlineAsm())
+      Packet.insert(Packet.begin(), AnnotMI);
     Packetizer->runOnPacket(Packet, Cycle == LastCycle, LastCycle,
                             &DAG->ExitSU);
   }

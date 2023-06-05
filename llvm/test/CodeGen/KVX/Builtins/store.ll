@@ -11,7 +11,7 @@ define void @storebc(i8 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sb 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   store i8 %a, i8* %ptr
   ret void
@@ -21,13 +21,13 @@ define i32 @storebc_r(i8 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storebc_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -47,7 +47,7 @@ define void @storebl(i64 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sb 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i8
   store i8 %0, i8* %ptr
@@ -58,13 +58,13 @@ define i32 @storebl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storebl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -79,7 +79,7 @@ define void @storehs(i16 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i16*
   store i16 %a, i16* %0
@@ -90,13 +90,13 @@ define i32 @storehs_r(i16 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storehs_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -112,7 +112,7 @@ define void @storehl(i64 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i16
   %1 = bitcast i8* %ptr to i16*
@@ -124,13 +124,13 @@ define i32 @storehl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storehl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -145,7 +145,7 @@ define void @storewi(i32 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i32*
   store i32 %a, i32* %0
@@ -156,13 +156,13 @@ define i32 @storewi_r(i32 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storewi_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -178,7 +178,7 @@ define void @storewl(i64 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i32
   %1 = bitcast i8* %ptr to i32*
@@ -190,13 +190,13 @@ define i32 @storewl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storewl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -211,7 +211,7 @@ define void @storedl(i64 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i64*
   store i64 %a, i64* %0
@@ -222,13 +222,13 @@ define i32 @storedl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storedl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -243,7 +243,7 @@ define void @storeq(i128 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i128*
   store i128 %a, i128* %0
@@ -254,13 +254,13 @@ define i32 @storeq_r(i128 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storeq_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ord $r3 = $r3, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -278,7 +278,7 @@ define void @storehf(half %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to half*
   store half %a, half* %0
@@ -289,13 +289,13 @@ define i32 @storehf_r(half %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storehf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -312,7 +312,7 @@ define void @storewf(float %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to float*
   store float %a, float* %0
@@ -323,13 +323,13 @@ define i32 @storewf_r(float %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storewf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -346,7 +346,7 @@ define void @storedf(double %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to double*
   store double %a, double* %0
@@ -357,13 +357,13 @@ define i32 @storedf_r(double %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: storedf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -380,7 +380,7 @@ define void @store64(<2 x i32> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <2 x i32>*
   store <2 x i32> %a, <2 x i32>* %0
@@ -391,13 +391,13 @@ define i32 @store64_r(<2 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: store64_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -413,7 +413,7 @@ define void @store64h(<4 x i16> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <4 x i16>*
   store <4 x i16> %a, <4 x i16>* %0
@@ -424,13 +424,13 @@ define i32 @store64h_r(<4 x i16> %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: store64h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ord $r2 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -446,7 +446,7 @@ define void @store128(<4 x i32> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <4 x i32>*
   store <4 x i32> %a, <4 x i32>* %0
@@ -457,13 +457,13 @@ define i32 @store128_r(<4 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: store128_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ord $r3 = $r3, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -479,7 +479,7 @@ define void @store128h(<8 x i16> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <8 x i16>*
   store <8 x i16> %a, <8 x i16>* %0
@@ -490,13 +490,13 @@ define i32 @store128h_r(<8 x i16> %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: store128h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ord $r3 = $r3, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -512,7 +512,7 @@ define void @store256(<8 x i32> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <8 x i32>*
   store <8 x i32> %a, <8 x i32>* %0
@@ -523,13 +523,13 @@ define i32 @store256_r(<8 x i32> %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK-LABEL: store256_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r5 = 0[$r5]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ord $r5 = $r5, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -547,7 +547,7 @@ define void @store256h(<16 x i16> %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to <16 x i16>*
   store <16 x i16> %a, <16 x i16>* %0
@@ -558,13 +558,13 @@ define i32 @store256h_r(<16 x i16> %a, i8* %ptr, i32* nocapture readonly %load) 
 ; CHECK-LABEL: store256h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r5 = 0[$r5]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ord $r5 = $r5, $r5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -579,10 +579,10 @@ define void @store_vol(i32 %a, i8* %ptr) {
 ; CHECK-LABEL: store_vol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = bitcast i8* %ptr to i32*
   store volatile i32 %a, i32* %0
@@ -595,7 +595,7 @@ define void @store_novol(i32 %a, i8* nocapture %ptr) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast i8* %ptr to i32*
   store i32 %a, i32* %0
@@ -607,13 +607,13 @@ define i32 @store_r_vol(i32 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    sxwd $r3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r3
 ; CHECK-NEXT:    ord $r0 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 0[$r1] = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -632,13 +632,13 @@ define i32 @store_r_novol(i32 %a, i8* %ptr, i32* nocapture readonly %load) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    sxwd $r3 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r1] = $r3
 ; CHECK-NEXT:    ord $r0 = $r2, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 0[$r1] = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %0 = load i32, i32* %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
@@ -654,20 +654,20 @@ define void @ready_then_store(i32* nocapture readonly %addr0, i32* nocapture rea
 ; CHECK-LABEL: ready_then_store:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lws $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lws $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sw 0[$r3] = $r0
 ; CHECK-NEXT:    ord $r6 = $r0, $r1
 ; CHECK-NEXT:    ord $r6 = $r2, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sw 0[$r4] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sw 0[$r5] = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = load i32, i32* %addr0
   %1 = load i32, i32* %addr1
@@ -690,18 +690,18 @@ define void @load_then_store(i32* nocapture readonly %addr0, i32* nocapture read
 ; CHECK-LABEL: load_then_store:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sw 0[$r3] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 0[$r4] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw 0[$r5] = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load i32, i32* %addr0
   %1 = load i32, i32* %addr1
@@ -717,10 +717,10 @@ define void @store_imm(i32* %addr, i32 %sv, i32 %ready) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %conv = sext i32 %sv to i64
   %arrayidx = getelementptr inbounds i32, i32* %addr, i64 1

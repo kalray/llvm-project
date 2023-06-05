@@ -10,12 +10,12 @@ define i16 @clear_lower_16(i16 %0, i16 %1) {
 ; CHECK-LABEL: clear_lower_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = shl nsw i16 -1, %1
   %4 = and i16 %3, %0
   ret i16 %4
@@ -25,12 +25,12 @@ define i16 @clear2_lower_16(i16 %0, i16 %1) {
 ; CHECK-LABEL: clear2_lower_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = lshr i16 %0, %1
   %4 = shl nsw i16 %3, %1
   ret i16 %4
@@ -41,10 +41,10 @@ define i32 @clear_lower_32(i32 %0, i32 %1) {
 ; CHECK-LABEL: clear_lower_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl nsw i32 -1, %1
   %4 = and i32 %3, %0
   ret i32 %4
@@ -54,10 +54,10 @@ define i32 @clear2_lower_32(i32 %0, i32 %1) {
 ; CHECK-LABEL: clear2_lower_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = lshr i32 %0, %1
   %4 = shl nsw i32 %3, %1
   ret i32 %4
@@ -67,10 +67,10 @@ define i64 @clear_lower_64(i64 %0, i64 %1) {
 ; CHECK-LABEL: clear_lower_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl nsw i64 -1, %1
   %4 = and i64 %3, %0
   ret i64 %4
@@ -80,10 +80,10 @@ define i64 @clear2_lower_64(i64 %0, i64 %1) {
 ; CHECK-LABEL: clear2_lower_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = lshr i64 %0, %1
   %4 = shl nsw i64 %3, %1
   ret i64 %4
@@ -93,12 +93,12 @@ define i16 @clear_upper_16(i16 %0, i16 %1) {
 ; CHECK-LABEL: clear_upper_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = lshr i16 -1, %1
   %4 = and i16 %3, %0
   ret i16 %4
@@ -108,12 +108,12 @@ define i16 @clear2_upper_16(i16 %0, i16 %1) {
 ; CHECK-LABEL: clear2_upper_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = shl i16 %0, %1
   %4 = lshr i16 %3, %1
   ret i16 %4
@@ -124,10 +124,10 @@ define i32 @clear_upper_32(i32 %0, i32 %1) {
 ; CHECK-LABEL: clear_upper_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = lshr i32 -1, %1
   %4 = and i32 %3, %0
   ret i32 %4
@@ -137,10 +137,10 @@ define i32 @clear2_upper_32(i32 %0, i32 %1) {
 ; CHECK-LABEL: clear2_upper_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srlw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i32 %0, %1
   %4 = lshr i32 %3, %1
   ret i32 %4
@@ -150,10 +150,10 @@ define i64 @clear_upper_64(i64 %0, i64 %1) {
 ; CHECK-LABEL: clear_upper_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = lshr i64 -1, %1
   %4 = and i64 %3, %0
   ret i64 %4
@@ -163,10 +163,10 @@ define i64 @clear2_upper_64(i64 %0, i64 %1) {
 ; CHECK-LABEL: clear2_upper_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slld $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %0, %1
   %4 = lshr i64 %3, %1
   ret i64 %4

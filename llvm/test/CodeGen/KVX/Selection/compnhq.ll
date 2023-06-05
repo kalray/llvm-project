@@ -11,7 +11,7 @@ define <4 x i16> @eq(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -23,7 +23,7 @@ define <4 x i16> @neq(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -35,7 +35,7 @@ define <4 x i16> @gt(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -47,7 +47,7 @@ define <4 x i16> @lt(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -59,7 +59,7 @@ define <4 x i16> @gte(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -71,7 +71,7 @@ define <4 x i16> @lte(<4 x i16> %a, <4 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sle <4 x i16> %a, %b
   %sext = sext <4 x i1> %cmp to <4 x i16>
@@ -83,7 +83,7 @@ define <2 x i16> @v2_eq(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp eq <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>
@@ -95,7 +95,7 @@ define <2 x i16> @v2_neq(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ne <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>
@@ -107,7 +107,7 @@ define <2 x i16> @v2_gt(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>
@@ -119,7 +119,7 @@ define <2 x i16> @v2_lt(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp slt <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>
@@ -131,7 +131,7 @@ define <2 x i16> @v2_gte(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sge <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>
@@ -143,7 +143,7 @@ define <2 x i16> @v2_lte(<2 x i16> %a, <2 x i16> %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sle <2 x i16> %a, %b
   %sext = sext <2 x i1> %cmp to <2 x i16>

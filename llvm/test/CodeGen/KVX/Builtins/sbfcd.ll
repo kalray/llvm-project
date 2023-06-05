@@ -11,7 +11,7 @@ define i64 @sbfcd(i64 %0, i64 %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbfcd $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.sbfcd(i64 %0, i64 %1, i32 0)
   ret i64 %3
 }
@@ -23,7 +23,7 @@ define i64 @sbfcdi(i64 %0, i64 %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    sbfcd.i $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.kvx.sbfcd(i64 %0, i64 %1, i32 1)
   ret i64 %3
 }

@@ -11,7 +11,7 @@ define i64 @f1(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16d $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 4
   %add = add nsw i64 %shl, %a
@@ -23,7 +23,7 @@ define i64 @f2(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16d $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 4
   %add = add nsw i64 %shl, %a
@@ -35,7 +35,7 @@ define i32 @f3(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %add = add nsw i32 %shl, %a
@@ -47,7 +47,7 @@ define i32 @f4(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %add = add nsw i32 %shl, %a
@@ -59,7 +59,7 @@ define i64 @f5(i64 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16uwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 4
   %conv = zext i32 %shl to i64
@@ -72,7 +72,7 @@ define i64 @f6(i64 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16uwd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 4
   %conv = zext i32 %shl to i64
@@ -85,7 +85,7 @@ define i64 @f7(i64 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16wd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 4
   %conv = sext i32 %shl to i64
@@ -98,7 +98,7 @@ define i64 @f8(i64 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16wd $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 4
   %conv = sext i32 %shl to i64
@@ -111,7 +111,7 @@ define i64 @f1imm(i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16d $r0 = $r0, 0x1beeeeef
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 4
   %add = add nsw i64 %shl, 468643567
@@ -123,7 +123,7 @@ define i64 @f2imm(i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16d.@ $r0 = $r0, 0x1beeeeef
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i64 %b, 4
   %add = add nsw i64 %shl, 2012808794214428399
@@ -135,7 +135,7 @@ define i32 @f3imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %add = add nsw i32 %shl, -23456
@@ -147,7 +147,7 @@ define i32 @f4imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16w $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl i32 %b, 4
   %sub = add nsw i32 %shl, -23456
@@ -159,7 +159,7 @@ define i64 @f5imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16uwd $r0 = $r0, 0x1e240
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 4
   %conv = zext i32 %shl to i64
@@ -172,7 +172,7 @@ define i64 @f6imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16uwd $r0 = $r0, 0x1e240
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nuw i32 %b, 4
   %conv = zext i32 %shl to i64
@@ -185,7 +185,7 @@ define i64 @f7imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 4
   %conv = sext i32 %shl to i64
@@ -198,7 +198,7 @@ define i64 @f8imm(i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx16wd $r0 = $r0, 0xffffa460
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl nsw i32 %b, 4
   %conv = sext i32 %shl to i64

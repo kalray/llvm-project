@@ -14,18 +14,18 @@ define half @fmaxh(half %a, half %b) {
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
 ; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fmaxf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -33,7 +33,7 @@ define half @fmaxh(half %a, half %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmaxhq $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call half @llvm.maxnum.f16(half %a, half %b)
   ret half %res
 }
@@ -43,7 +43,7 @@ define half @fmaxh_fast(half %a, half %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmaxhq $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call fast half @llvm.maxnum.f16(half %a, half %b)
   ret half %res
 }
@@ -53,15 +53,15 @@ define float @fmaxw(float %a, float %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fmaxf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -69,7 +69,7 @@ define float @fmaxw(float %a, float %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmaxw $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call float @llvm.maxnum.f32(float %a, float %b)
   ret float %res
 }
@@ -79,7 +79,7 @@ define float @fmaxw_fast(float %a, float %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmaxw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call fast float @llvm.maxnum.f32(float %a, float %b)
   ret float %res
 }
@@ -91,15 +91,15 @@ define double @fmaxd(double %a, double %b) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    call fmax
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -107,7 +107,7 @@ define double @fmaxd(double %a, double %b) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    fmaxd $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = call double @llvm.maxnum.f64(double %a, double %b)
   ret double %res
 }
@@ -117,7 +117,7 @@ define double @fmaxd_fast(double %a, double %b) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmaxd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call fast double @llvm.maxnum.f64(double %a, double %b)
   ret double %res
 }

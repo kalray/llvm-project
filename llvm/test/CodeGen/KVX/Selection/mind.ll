@@ -11,7 +11,7 @@ define i64 @f1(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mind $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %a, %b
   %b.a = select i1 %cmp, i64 %b, i64 %a
@@ -23,7 +23,7 @@ define i64 @f2(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mind $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i64 %a, %b
   %cond = select i1 %cmp, i64 %b, i64 %a
@@ -35,7 +35,7 @@ define i64 @f3(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minud $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i64 %a, %b
   %b.a = select i1 %cmp, i64 %b, i64 %a
@@ -47,7 +47,7 @@ define i64 @f4(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minud $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i64 %a, %b
   %cond = select i1 %cmp, i64 %b, i64 %a
@@ -59,7 +59,7 @@ define i64 @f5(i64 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    mind $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt i64 %a, 10
   %cond = select i1 %0, i64 %a, i64 10

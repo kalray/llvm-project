@@ -11,21 +11,21 @@ define i32 @acswapw(i32* %0, i32 %1, i32 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw 0[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapw:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapw $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i32* %0 to i8*
   %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %5
@@ -38,21 +38,21 @@ define i32 @acswapw10(i32* %0, i32 %1, i32 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw 80[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapw10:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapw $r0, 80[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i32, i32* %0, i64 20
   %5 = bitcast i32* %4 to i8*
   %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
@@ -64,21 +64,21 @@ define i32 @acswapw37(i32* %0, i32 %1, i32 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw 0xffffffffc[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapw37:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapw $r0, 0xffffffffc[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i32, i32* %0, i64 17179869183
   %5 = bitcast i32* %4 to i8*
   %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
@@ -90,21 +90,21 @@ define i32 @acswapw64(i32* %0, i32 %1, i32 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw 0x1000000010[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapw64:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapw $r0, 0x1000000010[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i32, i32* %0, i64 17179869188
   %5 = bitcast i32* %4 to i8*
   %6 = tail call i32 @llvm.kvx.acswapw(i8* nonnull %5, i32 %1, i32 %2, i32 1, i32 0)
@@ -117,22 +117,22 @@ define i32 @acswapwxs(i32* %0, i32 %1, i32 %2, i32 %3) {
 ; CV1-NEXT:    sxwd $r2 = $r3
 ; CV1-NEXT:    copyd $r4 = $r1
 ; CV1-NEXT:    copyd $r5 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw.xs $r2[$r0] = $r4r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapwxs:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    addx4wd $r0 = $r3, $r0
 ; CV2-NEXT:    copyd $r4 = $r1
 ; CV2-NEXT:    copyd $r5 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapw $r0, [$r0] = $r4r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %5 = sext i32 %3 to i64
   %6 = getelementptr inbounds i32, i32* %0, i64 %5
   %7 = bitcast i32* %6 to i8*
@@ -145,21 +145,21 @@ define i64 @acswapd(i64* %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapd:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapd $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i64* %0 to i8*
   %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %5
@@ -172,21 +172,21 @@ define i64 @acswapd10(i64* %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 160[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapd10:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapd $r0, 160[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i64, i64* %0, i64 20
   %5 = bitcast i64* %4 to i8*
   %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
@@ -198,21 +198,21 @@ define i64 @acswapd37(i64* %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 0xffffffff8[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapd37:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapd $r0, 0xffffffff8[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i64, i64* %0, i64 8589934591
   %5 = bitcast i64* %4 to i8*
   %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
@@ -224,21 +224,21 @@ define i64 @acswapd64(i64* %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r2 = $r1
 ; CV1-NEXT:    copyd $r3 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 0x1000000010[$r0] = $r2r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapd64:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    copyd $r3 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapd $r0, 0x1000000010[$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds i64, i64* %0, i64 8589934594
   %5 = bitcast i64* %4 to i8*
   %6 = tail call i64 @llvm.kvx.acswapd(i8* nonnull %5, i64 %1, i64 %2, i32 1, i32 0)
@@ -250,22 +250,22 @@ define i64 @acswapdxs(i64* %0, i64 %1, i64 %2, i64 %3) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    copyd $r4 = $r1
 ; CV1-NEXT:    copyd $r5 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd.xs $r3[$r0] = $r4r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: acswapdxs:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    addx8d $r0 = $r3, $r0
 ; CV2-NEXT:    copyd $r4 = $r1
 ; CV2-NEXT:    copyd $r5 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    acswapd $r0, [$r0] = $r4r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %5 = getelementptr inbounds i64, i64* %0, i64 %3
   %6 = bitcast i64* %5 to i8*
   %7 = tail call i64 @llvm.kvx.acswapd(i8* %6, i64 %1, i64 %2, i32 1, i32 0)
@@ -276,10 +276,10 @@ define i64 @aladdd(i8* %0, i64 %1) {
 ; CHECK-LABEL: aladdd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    aladdd 0[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = tail call i64 @llvm.kvx.aladdd(i8* %0, i64 %1)
   ret i64 %3
 }
@@ -290,10 +290,10 @@ define i32 @aladdw(i8* %0, i32 %1) {
 ; CHECK-LABEL: aladdw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    aladdw 0[$r0] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = tail call i32 @llvm.kvx.aladdw(i8* %0, i32 %1)
   ret i32 %3
 }
@@ -305,7 +305,7 @@ define i64 @alclrdrr(i8* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrd $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.alclr.i64(i8* %0)
   ret i64 %2
 }
@@ -317,7 +317,7 @@ define i64 @alcldri10(i64* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrd $r0 = 80[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i64, i64* %0, i64 10
   %3 = bitcast i64* %2 to i8*
   %4 = tail call i64 @llvm.kvx.alclr.i64(i8* nonnull %3)
@@ -329,7 +329,7 @@ define i64 @alcldri37(i64* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrd $r0 = 800[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i64, i64* %0, i64 100
   %3 = bitcast i64* %2 to i8*
   %4 = tail call i64 @llvm.kvx.alclr.i64(i8* nonnull %3)
@@ -340,18 +340,18 @@ define i64 @alcldrixs(i64* %0, i32 %1) {
 ; CV1-LABEL: alcldrixs:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    alclrd.xs $r0 = $r1[$r0]
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: alcldrixs:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    addx8wd $r0 = $r1, $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    alclrd $r0 = 0[$r0]
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %3 = sext i32 %1 to i64
   %4 = getelementptr inbounds i64, i64* %0, i64 %3
   %5 = bitcast i64* %4 to i8*
@@ -364,7 +364,7 @@ define i32 @alclrw(i8* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrw $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.alclr.i32(i8* %0)
   ret i32 %2
 }
@@ -376,7 +376,7 @@ define i32 @alclrwi10(i32* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrw $r0 = 40[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i32, i32* %0, i64 10
   %3 = bitcast i32* %2 to i8*
   %4 = tail call i32 @llvm.kvx.alclr.i32(i8* nonnull %3)
@@ -388,7 +388,7 @@ define i32 @alclwri37(i32* %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alclrw $r0 = 400[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i32, i32* %0, i64 100
   %3 = bitcast i32* %2 to i8*
   %4 = tail call i32 @llvm.kvx.alclr.i32(i8* nonnull %3)
@@ -399,18 +399,18 @@ define i32 @alclwrixs(i32* %0, i32 %1) {
 ; CV1-LABEL: alclwrixs:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    alclrw.xs $r0 = $r1[$r0]
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: alclwrixs:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    addx4wd $r0 = $r1, $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    alclrw $r0 = 0[$r0]
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %3 = sext i32 %1 to i64
   %4 = getelementptr inbounds i32, i32* %0, i64 %3
   %5 = bitcast i32* %4 to i8*

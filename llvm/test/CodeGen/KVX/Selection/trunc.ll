@@ -13,10 +13,10 @@ define void @f1(i64 %b, i16 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addw $r0 = $r0, $r1
 ; CHECK-NEXT:    make $r1 = a
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = trunc i64 %b to i16
   %conv1 = add i16 %0, %c

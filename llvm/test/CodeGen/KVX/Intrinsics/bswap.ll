@@ -11,7 +11,7 @@ define i16 @bswapi16(i16 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 258
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i16 @llvm.bswap.i16(i16 %a)
   ret i16 %res
 }
@@ -21,7 +21,7 @@ define i32 @bswapi32(i32 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i32 @llvm.bswap.i32(i32 %a)
   ret i32 %res
 }
@@ -31,7 +31,7 @@ define i64 @bswapi64(i64 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i64 @llvm.bswap.i64(i64 %a)
   ret i64 %res
 }
@@ -41,7 +41,7 @@ define <2 x i16> @bswapv2i16(<2 x i16> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i16> @llvm.bswap.v2i16(<2 x i16> %a)
   ret <2 x i16> %res
 }
@@ -51,7 +51,7 @@ define <4 x i16> @bswapv4i16(<4 x i16> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x4080102004080102
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <4 x i16> @llvm.bswap.v4i16(<4 x i16> %a)
   ret <4 x i16> %res
 }
@@ -61,7 +61,7 @@ define <2 x i32> @bswapv2i32(<2 x i32> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408001020408
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i32> @llvm.bswap.v2i32(<2 x i32> %a)
   ret <2 x i32> %res
 }
@@ -72,7 +72,7 @@ define <2 x i64> @bswapv2i64(<2 x i64> %a) {
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x102040810204080
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i64> @llvm.bswap.v2i64(<2 x i64> %a)
   ret <2 x i64> %res
 }
@@ -83,7 +83,7 @@ define <4 x i32> @bswapv4i32(<4 x i32> %a) {
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1020408001020408
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1020408001020408
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <4 x i32> @llvm.bswap.v4i32(<4 x i32> %a)
   ret <4 x i32> %res
 }
@@ -93,11 +93,11 @@ define <4 x i64> @bswapv4i64(<4 x i64> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x102040810204080
 ; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x102040810204080
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x102040810204080
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x102040810204080
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <4 x i64> @llvm.bswap.v4i64(<4 x i64> %a)
   ret <4 x i64> %res
 }

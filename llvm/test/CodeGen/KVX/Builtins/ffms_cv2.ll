@@ -8,11 +8,11 @@ define <8 x half> @ffmsho(<8 x half> %0, <8 x half> %1, <8 x half> %2) {
 ; CV2-LABEL: ffmsho:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmsho.ru.s $r4r5 = $r0r1, $r2r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <8 x half> @llvm.kvx.ffms.v8f16(<8 x half> %0, <8 x half> %1, <8 x half> %2, i32 1, i32 1)
   ret <8 x half> %4
 }
@@ -23,16 +23,16 @@ define <16 x half> @ffmshx(<16 x half> %0, <16 x half> %1, <16 x half> %2) {
 ; CV2-LABEL: ffmshx:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ffmsho.ru.s $r8r9 = $r0r1, $r4r5
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ffmsho.ru.s $r10r11 = $r2r3, $r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r8
 ; CV2-NEXT:    copyd $r1 = $r9
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    copyd $r2 = $r10
 ; CV2-NEXT:    copyd $r3 = $r11
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %4 = shufflevector <16 x half> %0, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %5 = shufflevector <16 x half> %1, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %6 = shufflevector <16 x half> %2, <16 x half> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>

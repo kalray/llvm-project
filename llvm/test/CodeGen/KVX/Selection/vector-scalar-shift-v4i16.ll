@@ -11,7 +11,7 @@ define <4 x i16> @ashiftR_imm(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = ashr <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
   ret <4 x i16> %shr
@@ -22,7 +22,7 @@ define <4 x i16> @lshiftR_imm(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shr = lshr <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
   ret <4 x i16> %shr
@@ -33,7 +33,7 @@ define <4 x i16> @shiftL_imm(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %shl = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 3>
   ret <4 x i16> %shl
@@ -44,7 +44,7 @@ define <4 x i16> @ashiftR(<4 x i16> %a, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srahqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i32 %c to i16
   %1 = insertelement <4 x i16> undef, i16 %0, i32 0
@@ -58,7 +58,7 @@ define <4 x i16> @lshiftR(<4 x i16> %a, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i32 %c to i16
   %1 = insertelement <4 x i16> undef, i16 %0, i32 0
@@ -72,7 +72,7 @@ define <4 x i16> @shiftL(<4 x i16> %a, i32 %c){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i32 %c to i16
   %1 = insertelement <4 x i16> undef, i16 %0, i32 0
@@ -90,33 +90,33 @@ define <4 x i16> @ashiftR_imm_vec(<4 x i16> %a){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    srahqs $r1 = $r0, 3
 ; CV1-NEXT:    srahqs $r2 = $r0, 4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srahqs $r0 = $r0, 2
 ; CV1-NEXT:    copyd $r3 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r3 = $r2, 15, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r1 = $r3, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r1, 47, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: ashiftR_imm_vec:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    srahqs $r0 = $r0, 2
 ; CV2-NEXT:    srahqs $r1 = $r0, 3
 ; CV2-NEXT:    srahqs $r2 = $r0, 4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r3 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    insf $r3 = $r2, 15, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r1 = $r3, 31, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r1, 47, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 entry:
   %shr = ashr <4 x i16> %a, <i16 4, i16 3, i16 3, i16 2>
   ret <4 x i16> %shr
@@ -127,31 +127,31 @@ define <4 x i16> @lshiftR_imm_vec(<4 x i16> %a){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    srlhqs $r1 = $r0, 2
 ; CV1-NEXT:    srlhqs $r2 = $r0, 1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srlhqs $r1 = $r0, 3
 ; CV1-NEXT:    insf $r2 = $r1, 15, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlhqs $r0 = $r0, 4
 ; CV1-NEXT:    insf $r1 = $r2, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r1, 47, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: lshiftR_imm_vec:
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    srlhqs $r1 = $r0, 2
 ; CV2-NEXT:    srlhqs $r2 = $r0, 1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srlhqs $r0 = $r0, 4
 ; CV2-NEXT:    srlhqs $r1 = $r0, 3
 ; CV2-NEXT:    insf $r2 = $r1, 15, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    insf $r1 = $r2, 31, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r1, 47, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 entry:
   %shr = lshr <4 x i16> %a, <i16 2, i16 1, i16 3, i16 4>
   ret <4 x i16> %shr
@@ -162,16 +162,16 @@ define <4 x i16> @shiftL_imm_vec(<4 x i16> %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sllhqs $r0 = $r0, 5
 ; CHECK-NEXT:    sllhqs $r1 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r2 = $r2, 15, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r1 = $r2, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r1, 47, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %shl = shl <4 x i16> %a, <i16 3, i16 3, i16 3, i16 5>
   ret <4 x i16> %shl
@@ -182,21 +182,21 @@ define <4 x i16> @ashiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV1-NEXT:    srahqs $r3 = $r0, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srahqs $r2 = $r0, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r2 = $r3, 15, 0
 ; CV1-NEXT:    extfz $r3 = $r1, 35, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    extfz $r1 = $r1, 51, 48
 ; CV1-NEXT:    srahqs $r3 = $r0, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    srahqs $r0 = $r0, $r1
 ; CV1-NEXT:    insf $r3 = $r2, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: ashiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
@@ -204,18 +204,18 @@ define <4 x i16> @ashiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV2-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV2-NEXT:    srahqs $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 35, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srahqs $r2 = $r0, $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srahqs $r0 = $r0, $r1
 ; CV2-NEXT:    insf $r2 = $r3, 15, 0
 ; CV2-NEXT:    srahqs $r3 = $r0, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r3 = $r2, 31, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r3, 47, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 entry:
   %shr = ashr <4 x i16> %a, %b
   ret <4 x i16> %shr
@@ -226,21 +226,21 @@ define <4 x i16> @lshiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV1-NEXT:    srlhqs $r3 = $r0, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srlhqs $r2 = $r0, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r2 = $r3, 15, 0
 ; CV1-NEXT:    extfz $r3 = $r1, 35, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    extfz $r1 = $r1, 51, 48
 ; CV1-NEXT:    srlhqs $r3 = $r0, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    srlhqs $r0 = $r0, $r1
 ; CV1-NEXT:    insf $r3 = $r2, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: lshiftR_rr_vec:
 ; CV2:       # %bb.0: # %entry
@@ -248,18 +248,18 @@ define <4 x i16> @lshiftR_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV2-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV2-NEXT:    srlhqs $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 35, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srlhqs $r2 = $r0, $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srlhqs $r0 = $r0, $r1
 ; CV2-NEXT:    insf $r2 = $r3, 15, 0
 ; CV2-NEXT:    srlhqs $r3 = $r0, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r3 = $r2, 31, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r3, 47, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 entry:
   %shr = lshr <4 x i16> %a, %b
   ret <4 x i16> %shr
@@ -270,21 +270,21 @@ define <4 x i16> @shiftL_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV1-NEXT:    sllhqs $r3 = $r0, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sllhqs $r2 = $r0, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r2 = $r3, 15, 0
 ; CV1-NEXT:    extfz $r3 = $r1, 35, 32
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    extfz $r1 = $r1, 51, 48
 ; CV1-NEXT:    sllhqs $r3 = $r0, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sllhqs $r0 = $r0, $r1
 ; CV1-NEXT:    insf $r3 = $r2, 31, 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: shiftL_rr_vec:
 ; CV2:       # %bb.0: # %entry
@@ -292,18 +292,18 @@ define <4 x i16> @shiftL_rr_vec(<4 x i16> %a, <4 x i16> %b){
 ; CV2-NEXT:    extfz $r2 = $r1, 19, 16
 ; CV2-NEXT:    sllhqs $r3 = $r0, $r1
 ; CV2-NEXT:    extfz $r4 = $r1, 35, 32
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sllhqs $r2 = $r0, $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllhqs $r0 = $r0, $r1
 ; CV2-NEXT:    insf $r2 = $r3, 15, 0
 ; CV2-NEXT:    sllhqs $r3 = $r0, $r4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r3 = $r2, 31, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r3, 47, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 entry:
   %shl = shl <4 x i16> %a, %b
   ret <4 x i16> %shl

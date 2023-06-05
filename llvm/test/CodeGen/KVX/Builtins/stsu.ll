@@ -13,7 +13,7 @@ define <2 x i64> @stsudp(<2 x i64> %0, <2 x i64> %1) {
 ; ALL-NEXT:    stsud $r0 = $r0, $r2
 ; ALL-NEXT:    stsud $r1 = $r1, $r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <2 x i64> %0, i64 0
   %4 = extractelement <2 x i64> %1, i64 0
   %5 = tail call i64 @llvm.kvx.stsu.i64(i64 %3, i64 %4)
@@ -32,11 +32,11 @@ define <4 x i64> @stsudq(<4 x i64> %0, <4 x i64> %1) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    stsud $r0 = $r0, $r4
 ; CV1-NEXT:    stsud $r1 = $r1, $r5
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    stsud $r2 = $r2, $r6
 ; CV1-NEXT:    stsud $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: stsudq:
 ; CV2:       # %bb.0:
@@ -45,7 +45,7 @@ define <4 x i64> @stsudq(<4 x i64> %0, <4 x i64> %1) {
 ; CV2-NEXT:    stsud $r2 = $r2, $r6
 ; CV2-NEXT:    stsud $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = extractelement <4 x i64> %0, i64 0
   %4 = extractelement <4 x i64> %1, i64 0
   %5 = tail call i64 @llvm.kvx.stsu.i64(i64 %3, i64 %4)
@@ -69,57 +69,57 @@ define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8
 ; CV1-LABEL: stsudo:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    lo $r32r33r34r35 = 32[$r1]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    stsud $r4 = $r4, $r32
 ; CV1-NEXT:    stsud $r5 = $r5, $r33
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    stsud $r0 = $r8, $r0
 ; CV1-NEXT:    stsud $r1 = $r9, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    stsud $r6 = $r6, $r34
 ; CV1-NEXT:    stsud $r7 = $r7, $r35
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV1-NEXT:    stsud $r2 = $r10, $r2
 ; CV1-NEXT:    stsud $r3 = $r11, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: stsudo:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    lo $r32r33r34r35 = 32[$r1]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    stsud $r4 = $r4, $r32
 ; CV2-NEXT:    stsud $r5 = $r5, $r33
 ; CV2-NEXT:    stsud $r6 = $r6, $r34
 ; CV2-NEXT:    stsud $r7 = $r7, $r35
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    stsud $r0 = $r8, $r0
 ; CV2-NEXT:    stsud $r1 = $r9, $r1
 ; CV2-NEXT:    stsud $r2 = $r10, $r2
 ; CV2-NEXT:    stsud $r3 = $r11, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 8)
   %4 = load <8 x i64>, <8 x i64>* %1
   %5 = load <8 x i64>, <8 x i64>* %2
   %6 = extractelement <8 x i64> %4, i64 0
@@ -163,7 +163,7 @@ define i32 @stsuw(i32 %0, i32 %1) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    stsuw $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %3 = tail call i32 @llvm.kvx.stsu.i32(i32 %0, i32 %1)
   ret i32 %3
 }

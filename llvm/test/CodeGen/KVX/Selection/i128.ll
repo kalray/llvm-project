@@ -11,12 +11,12 @@ define i128 @add(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = add nsw i128 %1, %0
   ret i128 %3
 }
@@ -27,10 +27,10 @@ define i128 @sub(i128 %0, i128 %1) {
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    compd.ltu $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = sub nsw i128 %0, %1
   ret i128 %3
 }
@@ -39,15 +39,15 @@ define i128 @mul(i128 %0, i128 %1) {
 ; CHECK-LABEL: mul:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muludt $r4r5 = $r2, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maddd $r5 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    maddd $r5 = $r3, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r1 = $r5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = mul nsw i128 %1, %0
   ret i128 %3
 }
@@ -58,7 +58,7 @@ define i128 @instxor(i128 %0, i128 %1) {
 ; CHECK-NEXT:    xord $r0 = $r2, $r0
 ; CHECK-NEXT:    xord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %1, %0
   ret i128 %3
 }
@@ -69,7 +69,7 @@ define i128 @nxor(i128 %0, i128 %1) {
 ; CHECK-NEXT:    nxord $r0 = $r0, $r2
 ; CHECK-NEXT:    nxord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %0, %1
   %4 = xor i128 %3, -1
   ret i128 %4
@@ -81,7 +81,7 @@ define i128 @nand(i128 %0, i128 %1) {
 ; CHECK-NEXT:    nandd $r0 = $r2, $r0
 ; CHECK-NEXT:    nandd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = and i128 %1, %0
   %4 = xor i128 %3, -1
   ret i128 %4
@@ -93,7 +93,7 @@ define i128 @nor(i128 %0, i128 %1) {
 ; CHECK-NEXT:    nord $r0 = $r2, $r0
 ; CHECK-NEXT:    nord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
   %4 = xor i128 %3, -1
   ret i128 %4
@@ -105,7 +105,7 @@ define i128 @nor_2(i128 %0, i128 %1) {
 ; CHECK-NEXT:    nord $r0 = $r2, $r0
 ; CHECK-NEXT:    nord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
   %4 = xor i128 %3, -1
   ret i128 %4
@@ -117,7 +117,7 @@ define i128 @andn_1(i128 %0, i128 %1) {
 ; CHECK-NEXT:    andnd $r0 = $r0, $r2
 ; CHECK-NEXT:    andnd $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %0, -1
   %4 = and i128 %3, %1
   ret i128 %4
@@ -129,7 +129,7 @@ define i128 @andn_2(i128 %0, i128 %1) {
 ; CHECK-NEXT:    andnd $r0 = $r2, $r0
 ; CHECK-NEXT:    andnd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %1, -1
   %4 = and i128 %3, %0
   ret i128 %4
@@ -141,7 +141,7 @@ define i128 @and(i128 %0, i128 %1) {
 ; CHECK-NEXT:    andd $r0 = $r2, $r0
 ; CHECK-NEXT:    andd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = and i128 %1, %0
   ret i128 %3
 }
@@ -152,7 +152,7 @@ define i128 @or(i128 %0, i128 %1) {
 ; CHECK-NEXT:    ord $r0 = $r2, $r0
 ; CHECK-NEXT:    ord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
   ret i128 %3
 }
@@ -162,10 +162,10 @@ define i32 @land(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ord $r1 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    landd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ne i128 %0, 0
   %4 = icmp ne i128 %1, 0
   %5 = and i1 %3, %4
@@ -178,10 +178,10 @@ define i32 @lor(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ord $r0 = $r2, $r0
 ; CHECK-NEXT:    ord $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = or i128 %1, %0
   %4 = icmp ne i128 %3, 0
   %5 = zext i1 %4 to i32
@@ -192,14 +192,14 @@ define i128 @sext_1_1(i8 %0) {
 ; CHECK-LABEL: sext_1_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    negw $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = and i8 %0, 1
   %3 = zext i8 %2 to i32
   %4 = sub nsw i32 0, %3
@@ -212,14 +212,14 @@ define i128 @sext_1_2(i8 %0, i8 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxbd $r0 = $r0
 ; CHECK-NEXT:    zxbd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    landw $r0 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = icmp ne i8 %0, 0
   %4 = icmp ne i8 %1, 0
   %5 = and i1 %3, %4
@@ -231,10 +231,10 @@ define i128 @sext_8(i8 %0) {
 ; CHECK-LABEL: sext_8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r1 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = sext i8 %0 to i128
   ret i128 %2
 }
@@ -243,10 +243,10 @@ define i128 @sext_16(i16 %0) {
 ; CHECK-LABEL: sext_16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r1 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = sext i16 %0 to i128
   ret i128 %2
 }
@@ -255,10 +255,10 @@ define i128 @sext_32(i32 %0) {
 ; CHECK-LABEL: sext_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r1 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = sext i32 %0 to i128
   ret i128 %2
 }
@@ -268,7 +268,7 @@ define i128 @sext_64(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r1 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = sext i64 %0 to i128
   ret i128 %2
 }
@@ -279,7 +279,7 @@ define i128 @zext_8(i8 %0) {
 ; CHECK-NEXT:    andd $r0 = $r0, 255
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = zext i8 %0 to i128
   ret i128 %2
 }
@@ -290,7 +290,7 @@ define i128 @zext_16(i16 %0) {
 ; CHECK-NEXT:    clrf $r0 = $r0, 63, 16
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = zext i16 %0 to i128
   ret i128 %2
 }
@@ -301,7 +301,7 @@ define i128 @zext_32(i32 %0) {
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = zext i32 %0 to i128
   ret i128 %2
 }
@@ -311,7 +311,7 @@ define i128 @zext_64(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = zext i64 %0 to i128
   ret i128 %2
 }
@@ -320,15 +320,15 @@ define i128 @MADDDT(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MADDDT:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muldt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %4 = sext i64 %1 to i128
   %5 = sext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -340,15 +340,15 @@ define i128 @MADDSUDT_1(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MADDSUDT_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulsudt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %4 = zext i64 %1 to i128
   %5 = sext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -360,15 +360,15 @@ define i128 @MADDSUDT_2(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MADDSUDT_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulsudt $r2r3 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %4 = sext i64 %1 to i128
   %5 = zext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -380,15 +380,15 @@ define i128 @MADDUDT(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MADDUDT:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muludt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %4 = zext i64 %1 to i128
   %5 = zext i64 %2 to i128
   %6 = mul nuw nsw i128 %5, %4
@@ -400,14 +400,14 @@ define i128 @MADDUZDT(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MADDUZDT:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muludt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    compd.ltu $r1 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %4 = lshr i128 %0, 64
   %5 = zext i64 %1 to i128
   %6 = zext i64 %2 to i128
@@ -420,14 +420,14 @@ define i128 @MSBFDT(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MSBFDT:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muldt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    compd.ltu $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %4 = sext i64 %1 to i128
   %5 = sext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -439,14 +439,14 @@ define i128 @MSBFSUDT_1(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MSBFSUDT_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulsudt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    compd.ltu $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %4 = zext i64 %1 to i128
   %5 = sext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -458,14 +458,14 @@ define i128 @MSBFSUDT_2(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MSBFSUDT_2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    mulsudt $r2r3 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    compd.ltu $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %4 = sext i64 %1 to i128
   %5 = zext i64 %2 to i128
   %6 = mul nsw i128 %5, %4
@@ -477,14 +477,14 @@ define i128 @MSBFUDT(i128 %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: MSBFUDT:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    muludt $r2r3 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    compd.ltu $r3 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfd $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %4 = zext i64 %1 to i128
   %5 = zext i64 %2 to i128
   %6 = mul nuw nsw i128 %5, %4
@@ -497,7 +497,7 @@ define i128 @ld(i128* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = load i128, i128* %0
   ret i128 %2
 }
@@ -507,7 +507,7 @@ define void @st(i128 %0, i128* nocapture %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   store i128 %0, i128* %1
   ret void
 }
@@ -518,7 +518,7 @@ define i128 @not(i128 %0) {
 ; CHECK-NEXT:    notd $r0 = $r0
 ; CHECK-NEXT:    notd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor i128 %0, -1
   ret i128 %2
 }
@@ -528,12 +528,12 @@ define i128 @neg(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    negd $r0 = $r0
 ; CHECK-NEXT:    compd.ne $r2 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r1 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    negd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %2 = sub nsw i128 0, %0
   ret i128 %2
 }
@@ -543,7 +543,7 @@ define i32 @lnot(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -554,7 +554,7 @@ define i32 @lnot_eqz(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -565,7 +565,7 @@ define i32 @nez(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp ne i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -575,10 +575,10 @@ define i32 @gez(i128 %0) {
 ; CHECK-LABEL: gez:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r1, 63
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xorw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = lshr i128 %0, 127
   %3 = trunc i128 %2 to i32
   %4 = xor i32 %3, 1
@@ -590,7 +590,7 @@ define i32 @u_gez(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret i32 1
 }
 
@@ -599,10 +599,10 @@ define i32 @gtz(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.gt $r0 = $r1, 0
 ; CHECK-NEXT:    compd.ne $r2 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.deqz $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -613,7 +613,7 @@ define i32 @u_gtz(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp ne i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -624,7 +624,7 @@ define i32 @ltz(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r1, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = lshr i128 %0, 127
   %3 = trunc i128 %2 to i32
   ret i32 %3
@@ -635,7 +635,7 @@ define i32 @u_ltz(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret i32 0
 }
 
@@ -644,10 +644,10 @@ define i32 @lez(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.lt $r0 = $r1, 0
 ; CHECK-NEXT:    compd.eq $r2 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.deqz $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = icmp slt i128 %0, 1
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -658,7 +658,7 @@ define i32 @u_lez(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lnord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
   %3 = zext i1 %2 to i32
   ret i32 %3
@@ -669,10 +669,10 @@ define i32 @eq(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xord $r0 = $r0, $r2
 ; CHECK-NEXT:    xord $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lnord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp eq i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -683,10 +683,10 @@ define i32 @ne(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xord $r0 = $r0, $r2
 ; CHECK-NEXT:    xord $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ne i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -698,10 +698,10 @@ define i32 @gt(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.gt $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.gtu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp sgt i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -713,10 +713,10 @@ define i32 @u_gt(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.gtu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.gtu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ugt i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -728,10 +728,10 @@ define i32 @ge(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.ge $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.geu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp sge i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -743,10 +743,10 @@ define i32 @uge(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.geu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.geu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp uge i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -758,10 +758,10 @@ define i32 @lt(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.lt $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp slt i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -773,10 +773,10 @@ define i32 @ult(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.ltu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ult i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -788,10 +788,10 @@ define i32 @le(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.le $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.leu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp sle i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -803,10 +803,10 @@ define i32 @ule(i128 %0, i128 %1) {
 ; CHECK-NEXT:    compd.leu $r0 = $r1, $r3
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r3
 ; CHECK-NEXT:    compd.leu $r2 = $r0, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.wnez $r1 ? $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ule i128 %0, %1
   %4 = zext i1 %3 to i32
   ret i32 %4
@@ -818,7 +818,7 @@ define i128 @shl_64(i128 %0) {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = shl i128 %0, 64
   ret i128 %2
 }
@@ -829,7 +829,7 @@ define i128 @lshr_64(i128 %0) {
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = lshr i128 %0, 64
   ret i128 %2
 }
@@ -838,10 +838,10 @@ define i128 @ashr_64(i128 %0) {
 ; CHECK-LABEL: ashr_64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r1 = $r0, 63
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = ashr i128 %0, 64
   ret i128 %2
 }
@@ -851,15 +851,15 @@ define i128 @shl(i128 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __ashlti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = zext i32 %1 to i128
@@ -872,15 +872,15 @@ define i128 @lshr(i128 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __lshrti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = zext i32 %1 to i128
@@ -893,15 +893,15 @@ define i128 @ashr(i128 %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __ashrti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = zext i32 %1 to i128
@@ -914,15 +914,15 @@ define i128 @sdiv(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __divti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = sdiv i128 %0, %1
@@ -934,15 +934,15 @@ define i128 @udiv(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __udivti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = udiv i128 %0, %1
@@ -954,15 +954,15 @@ define i128 @sudiv(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __udivti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = udiv i128 %0, %1
@@ -974,15 +974,15 @@ define i128 @usdiv(i128 %0, i128 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call __udivti3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = udiv i128 %0, %1

@@ -16,11 +16,11 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r1 = 360[$r0]
 ; CHECK-NEXT:    make $r4 = 15
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r2r3 = 0[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    lwz $r0 = 24[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Loop Header: Depth=1
@@ -29,233 +29,233 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    make $r4 = 0
 ; CHECK-NEXT:    goto .LBB0_3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=2
 ; CHECK-NEXT:    compw.gt $r5 = $r5, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.even $r5 ? .LBB0_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Loop Header: Depth=2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 3
 ; CHECK-NEXT:    copyd $r5 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compw.lt $r1 = $r5, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cb.odd $r1 ? .LBB0_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=2
 ; CHECK-NEXT:    srsw $r1 = $r5, 1
 ; CHECK-NEXT:    addw $r9 = $r4, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r4 = $r4, $r1
 ; CHECK-NEXT:    sxwd $r6 = $r9
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sxwd $r7 = $r4
 ; CHECK-NEXT:    addw $r8 = $r4, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addx4wd $r8 = $r9, $r3
 ; CHECK-NEXT:    addx4wd $r10 = $r8, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addx4wd $r9 = $r9, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # Parent Loop BB0_3 Depth=2
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=3
 ; CHECK-NEXT:    lwz $r11 = 0[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = -4[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 0[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 4[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 4[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.lt $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 4[$r10] = $r11
 ; CHECK-NEXT:    cb.even $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.6: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 8[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 4[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 8[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 12[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 12[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 8[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 16[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 12[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 16[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 20[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 20[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 6
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 12[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 24[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 20[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 24[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 28[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 28[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 8
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 16[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 32[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 28[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 32[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 36[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 36[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 10
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 20[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 40[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 36[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 40[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 44[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 44[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 12
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 24[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    lwz $r11 = 48[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 44[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 48[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lwz $r17 = 52[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 52[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    addd $r15 = $r6, 14
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    compd.ge $r15 = $r15, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    sw 28[$r10] = $r11
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:  # %bb.12: # in Loop: Header=BB0_5 Depth=3
 ; CHECK-NEXT:    addd $r6 = $r6, 16
 ; CHECK-NEXT:    lwz $r11 = 56[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r15 = 52[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r16 = 56[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r9 = $r9, 64
 ; CHECK-NEXT:    lwz $r17 = 60[$r9]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r8 = $r8, 64
 ; CHECK-NEXT:    fmulw $r11 = $r11, $r15
 ; CHECK-NEXT:    lwz $r15 = 60[$r8]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmulw $r15 = $r15, $r17
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    fsbfw $r11 = $r11, $r16
 ; CHECK-NEXT:    addd $r16 = $r10, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    fsbfw $r11 = $r15, $r11
 ; CHECK-NEXT:    compd.lt $r15 = $r6, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sw 32[$r10] = $r11
 ; CHECK-NEXT:    copyd $r10 = $r16
 ; CHECK-NEXT:    cb.odd $r15 ? .LBB0_5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_13: # %.split

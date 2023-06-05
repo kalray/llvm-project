@@ -18,28 +18,28 @@ define i32 @h() {
 ; FP-NONE-NEXT:    make $r0 = 0
 ; FP-NONE-NEXT:    addd $r12 = $r12, -96
 ; FP-NONE-NEXT:    get $r16 = $ra
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    sd 88[$r12] = $r16
 ; FP-NONE-NEXT:    copyd $r1 = $r0
 ; FP-NONE-NEXT:    copyd $r2 = $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 1)
 ; FP-NONE-NEXT:    copyd $r3 = $r0
 ; FP-NONE-NEXT:    make $r4 = 9
 ; FP-NONE-NEXT:    copyd $r5 = $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 2)
 ; FP-NONE-NEXT:    so 32[$r12] = $r0r1r2r3
 ; FP-NONE-NEXT:    addd $r0 = $r12, 0
 ; FP-NONE-NEXT:    copyd $r6 = $r0
 ; FP-NONE-NEXT:    copyd $r7 = $r0
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 3)
 ; FP-NONE-NEXT:    so 0[$r12] = $r4r5r6r7
 ; FP-NONE-NEXT:    call i
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 4)
 ; FP-NONE-NEXT:    ld $r16 = 88[$r12]
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    set $ra = $r16
 ; FP-NONE-NEXT:    addd $r12 = $r12, 96
-; FP-NONE-NEXT:    ;;
+; FP-NONE-NEXT:    ;; # (end cycle 5)
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;;
 ;
@@ -48,35 +48,35 @@ define i32 @h() {
 ; FP-ALL-NEXT:    make $r0 = 0
 ; FP-ALL-NEXT:    addd $r12 = $r12, -96
 ; FP-ALL-NEXT:    get $r16 = $ra
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sd 88[$r12] = $r16
 ; FP-ALL-NEXT:    make $r4 = 9
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sd 80[$r12] = $r14
 ; FP-ALL-NEXT:    copyd $r1 = $r0
 ; FP-ALL-NEXT:    copyd $r2 = $r0
 ; FP-ALL-NEXT:    addd $r14 = $r12, 80
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    copyd $r3 = $r0
 ; FP-ALL-NEXT:    copyd $r5 = $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 3)
 ; FP-ALL-NEXT:    so -48[$r14] = $r0r1r2r3
 ; FP-ALL-NEXT:    addd $r0 = $r14, -80
 ; FP-ALL-NEXT:    copyd $r6 = $r0
 ; FP-ALL-NEXT:    copyd $r7 = $r0
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 4)
 ; FP-ALL-NEXT:    so -80[$r14] = $r4r5r6r7
 ; FP-ALL-NEXT:    call i
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 5)
 ; FP-ALL-NEXT:    addd $r12 = $r14, -80
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:    ld $r14 = 80[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    ld $r16 = 88[$r12]
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    set $ra = $r16
 ; FP-ALL-NEXT:    addd $r12 = $r12, 96
-; FP-ALL-NEXT:    ;;
+; FP-ALL-NEXT:    ;; # (end cycle 6)
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:

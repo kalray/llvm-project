@@ -11,7 +11,7 @@ define i32 @f1(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, %b
   %b.a = select i1 %cmp, i32 %b, i32 %a
@@ -23,7 +23,7 @@ define i32 @f2(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp sgt i32 %a, %b
   %cond = select i1 %cmp, i32 %b, i32 %a
@@ -35,7 +35,7 @@ define i32 @f3(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minuw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i32 %a, %b
   %b.a = select i1 %cmp, i32 %b, i32 %a
@@ -47,7 +47,7 @@ define i32 @f4(i32 %a, i32 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minuw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %cmp = icmp ugt i32 %a, %b
   %cond = select i1 %cmp, i32 %b, i32 %a
@@ -59,7 +59,7 @@ define i32 @f5(i32 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    minw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = icmp slt i32 %a, 10
   %cond = select i1 %0, i32 %a, i32 10

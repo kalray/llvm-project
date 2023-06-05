@@ -10,10 +10,10 @@ define i8 @int_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
   %5 = getelementptr inbounds i8, i8* %0, i64 %4
@@ -25,10 +25,10 @@ define i16 @int_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
   %5 = getelementptr inbounds i16, i16* %0, i64 %4
@@ -40,10 +40,10 @@ define i32 @int_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
   %5 = getelementptr inbounds i32, i32* %0, i64 %4
@@ -55,10 +55,10 @@ define i64 @int_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
   %5 = getelementptr inbounds i64, i64* %0, i64 %4
@@ -70,10 +70,10 @@ define i8 @uint_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
   %4 = getelementptr inbounds i8, i8* %0, i64 %3
   %5 = load i8, i8* %4, align 1
@@ -84,10 +84,10 @@ define i16 @uint_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
   %4 = getelementptr inbounds i16, i16* %0, i64 %3
   %5 = load i16, i16* %4, align 2
@@ -98,10 +98,10 @@ define i32 @uint_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
   %4 = getelementptr inbounds i32, i32* %0, i64 %3
   %5 = load i32, i32* %4, align 4
@@ -112,10 +112,10 @@ define i64 @uint_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
   %4 = getelementptr inbounds i64, i64* %0, i64 %3
   %5 = load i64, i64* %4, align 8
@@ -126,10 +126,10 @@ define i8 @short_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
   %5 = getelementptr inbounds i8, i8* %0, i64 %4
@@ -141,10 +141,10 @@ define i16 @short_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
   %5 = getelementptr inbounds i16, i16* %0, i64 %4
@@ -156,10 +156,10 @@ define i32 @short_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
   %5 = getelementptr inbounds i32, i32* %0, i64 %4
@@ -171,10 +171,10 @@ define i64 @short_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
   %5 = getelementptr inbounds i64, i64* %0, i64 %4
@@ -186,10 +186,10 @@ define i8 @ushort_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
   %4 = getelementptr inbounds i8, i8* %0, i64 %3
   %5 = load i8, i8* %4, align 1
@@ -200,10 +200,10 @@ define i16 @ushort_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
   %4 = getelementptr inbounds i16, i16* %0, i64 %3
   %5 = load i16, i16* %4, align 2
@@ -214,10 +214,10 @@ define i32 @ushort_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
   %4 = getelementptr inbounds i32, i32* %0, i64 %3
   %5 = load i32, i32* %4, align 4
@@ -228,10 +228,10 @@ define i64 @ushort_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
   %4 = getelementptr inbounds i64, i64* %0, i64 %3
   %5 = load i64, i64* %4, align 8
@@ -242,10 +242,10 @@ define i8 @char_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
   %5 = getelementptr inbounds i8, i8* %0, i64 %4
@@ -257,10 +257,10 @@ define i16 @char_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
   %5 = getelementptr inbounds i16, i16* %0, i64 %4
@@ -272,10 +272,10 @@ define i32 @char_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
   %5 = getelementptr inbounds i32, i32* %0, i64 %4
@@ -287,10 +287,10 @@ define i64 @char_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
   %5 = getelementptr inbounds i64, i64* %0, i64 %4
@@ -302,10 +302,10 @@ define i8 @uchar_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lbz $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
   %4 = getelementptr inbounds i8, i8* %0, i64 %3
   %5 = load i8, i8* %4, align 1
@@ -316,10 +316,10 @@ define i16 @uchar_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lhz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
   %4 = getelementptr inbounds i16, i16* %0, i64 %3
   %5 = load i16, i16* %4, align 2
@@ -330,10 +330,10 @@ define i32 @uchar_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
   %4 = getelementptr inbounds i32, i32* %0, i64 %3
   %5 = load i32, i32* %4, align 4
@@ -344,10 +344,10 @@ define i64 @uchar_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld.xs $r0 = $r1[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
   %4 = getelementptr inbounds i64, i64* %0, i64 %3
   %5 = load i64, i64* %4, align 8

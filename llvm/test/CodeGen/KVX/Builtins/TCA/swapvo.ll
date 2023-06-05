@@ -17,48 +17,48 @@ define i32 @main() {
 ; CV1-NEXT:    make $r5 = 1
 ; CV1-NEXT:    addd $r12 = $r12, -64
 ; CV1-NEXT:    get $r16 = $ra
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 56[$r12] = $r16
 ; CV1-NEXT:    make $r6 = 2
 ; CV1-NEXT:    make $r7 = 3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    copyd $r0 = $r5
 ; CV1-NEXT:    copyd $r1 = $r6
 ; CV1-NEXT:    copyd $r2 = $r7
 ; CV1-NEXT:    make $r3 = 4
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    xmovetq $a0.lo = $r0, $r1
 ; CV1-NEXT:    xmovetq $a0.hi = $r2, $r3
 ; CV1-NEXT:    xmovefo $r0r1r2r3 = $a0
 ; CV1-NEXT:    make $r4 = 0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    make $r0 = .L.str
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    xso 0[$r12] = $a0
 ; CV1-NEXT:    copyd $r1 = $r4
 ; CV1-NEXT:    copyd $r2 = $r5
 ; CV1-NEXT:    copyd $r3 = $r6
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r4 = $r7
 ; CV1-NEXT:    call printf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    xlo.u $a0 = 0[$r12]
 ; CV1-NEXT:    make $r0 = .L.str.1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    xmovefo $r4r5r6r7 = $a0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    copyd $r1 = $r4
 ; CV1-NEXT:    copyd $r2 = $r5
 ; CV1-NEXT:    copyd $r3 = $r6
 ; CV1-NEXT:    copyd $r4 = $r7
 ; CV1-NEXT:    call printf
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    ld $r16 = 56[$r12]
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 64
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -67,48 +67,48 @@ define i32 @main() {
 ; CV2-NEXT:    make $r5 = 1
 ; CV2-NEXT:    addd $r12 = $r12, -64
 ; CV2-NEXT:    get $r16 = $ra
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 56[$r12] = $r16
 ; CV2-NEXT:    make $r6 = 2
 ; CV2-NEXT:    make $r7 = 3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    copyd $r0 = $r5
 ; CV2-NEXT:    copyd $r1 = $r6
 ; CV2-NEXT:    copyd $r2 = $r7
 ; CV2-NEXT:    make $r3 = 4
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    xmovetq $a0.lo = $r0, $r1
 ; CV2-NEXT:    xmovetq $a0.hi = $r2, $r3
 ; CV2-NEXT:    xmovefo $r0r1r2r3 = $a0
 ; CV2-NEXT:    make $r4 = 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    make $r0 = .L.str
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 0[$r12] = $a0
 ; CV2-NEXT:    copyd $r1 = $r4
 ; CV2-NEXT:    copyd $r2 = $r5
 ; CV2-NEXT:    copyd $r3 = $r6
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    copyd $r4 = $r7
 ; CV2-NEXT:    call printf
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    xlo $a0 = 0[$r12]
 ; CV2-NEXT:    make $r0 = .L.str.1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    xmovefo $r4r5r6r7 = $a0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    copyd $r1 = $r4
 ; CV2-NEXT:    copyd $r2 = $r5
 ; CV2-NEXT:    copyd $r3 = $r6
 ; CV2-NEXT:    copyd $r4 = $r7
 ; CV2-NEXT:    call printf
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    ld $r16 = 56[$r12]
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    set $ra = $r16
 ; CV2-NEXT:    addd $r12 = $r12, 64
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
 entry:

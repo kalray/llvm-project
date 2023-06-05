@@ -21,7 +21,7 @@ define half @f2(<4 x half> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srlw $r0 = $r0, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecext = extractelement <4 x half> %v, i32 1
   ret half %vecext
@@ -32,7 +32,7 @@ define half @f3(<4 x half> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srld $r0 = $r0, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecext = extractelement <4 x half> %v, i32 2
   ret half %vecext
@@ -43,7 +43,7 @@ define half @f4(<4 x half> %v){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    srld $r0 = $r0, 48
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %vecext = extractelement <4 x half> %v, i32 3
   ret half %vecext
@@ -53,12 +53,12 @@ define half @fidx(<4 x half> %v, i32 %idx){
 ; CHECK-LABEL: fidx:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sllw $r1 = $r1, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %vecext = extractelement <4 x half> %v, i32 %idx
   ret half %vecext

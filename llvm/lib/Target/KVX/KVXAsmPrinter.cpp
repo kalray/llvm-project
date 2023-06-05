@@ -82,12 +82,22 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   if (emitPseudoExpansionLowering(*OutStreamer, MI))
     return;
 
+  // Some MCYCLESp are not bundled: print them separately
+  if (MI->getOpcode() == KVX::MCYCLESp) {
+    unsigned Cycles = MI->getOperand(0).getImm();
+    OutStreamer->emitRawText("\t        # (here cycle " +
+                             std::to_string(Cycles) + ")");
+    return;
+  }
+
   SmallVector<MCInst, 8> Bundle;
   if (MI->isBundle()) {
     // Sort instructions in bundle.
     for (auto MII = ++MI->getIterator();
          MII != MI->getParent()->instr_end() && MII->isInsideBundle(); ++MII) {
       switch (MII->getOpcode()) {
+      case KVX::MCYCLESp:
+        continue;
       case KVX::IMPLICIT_DEF:
         if (isVerbose())
           AsmPrinter::emitImplicitDef(&*MII);
@@ -110,6 +120,16 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
     LowerKVXMachineInstrToMCInst(MI, TmpInst, *this);
     EmitToStreamer(*OutStreamer, TmpInst);
   }
+
+  std::string BundleEnd = "\t;;";
+  auto NextMII = std::next(MI->getIterator());
+  if (NextMII != MI->getParent()->end() &&
+      NextMII->getOpcode() == KVX::MCYCLESp) {
+    // Special treatment of MCYCLESp
+    unsigned Cycles = NextMII->getOperand(0).getImm();
+    BundleEnd += "      # (end cycle " + std::to_string(Cycles) + ")";
+  }
+
   // TODO: Implement ELF object emitter.
   // MC target streamer requires implementing both ASM writter
   // as object file writer. KVX only really implements the ASM
@@ -117,7 +137,7 @@ void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   // To avoid test crashes dumping a stack trace, avoid
   // using emitRawText when requested to emit object files.
   if (OutStreamer->hasRawTextSupport())
-    OutStreamer->emitRawText(StringRef("\t;;"));
+    OutStreamer->emitRawText(BundleEnd);
 }
 
 bool KVXAsmPrinter::PrintAsmOperand(const MachineInstr *MI, unsigned OpNo,

@@ -11,7 +11,7 @@ define i64 @f_andndrr(i64 %a, i64 %b){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i64 %a, -1
   %and = and i64 %not_a, %b
@@ -23,7 +23,7 @@ define i64 @f_andndri10(i64 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnd $r0 = $r0, 10
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i64 %a, -1
   %and = and i64 %not_a, 10
@@ -35,7 +35,7 @@ define i64 @f_andndri37(i64 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnd $r0 = $r0, 0xfffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i64 %a, -1
   %and = and i64 %not_a, 68719476735
@@ -47,7 +47,7 @@ define i64 @f_andndri64(i64 %a){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andnd $r0 = $r0, 0x3fffffffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %not_a = xor i64 %a, -1
   %and = and i64 %not_a, 274877906943

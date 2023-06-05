@@ -9,6 +9,7 @@ define void @storecbc(i8 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 8, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -27,6 +28,7 @@ define void @storecbl(i64 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 8, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -42,6 +44,7 @@ define void @storechs(i16 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -58,6 +61,7 @@ define void @storechl(i64 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -73,6 +77,7 @@ define void @storecwi(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -89,6 +94,7 @@ define void @storecwl(i64 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -104,6 +110,7 @@ define void @storecdl(i64 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -119,6 +126,7 @@ define void @storecq(i128 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r2, killed $p0, 128, killed $r3, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -137,6 +145,7 @@ define void @storechf(half %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -154,6 +163,7 @@ define void @storecwf(float %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -171,6 +181,7 @@ define void @storecdf(double %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -188,6 +199,7 @@ define void @storec64(<2 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r2, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -205,6 +217,7 @@ define void @storec128(<4 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r2, killed $p0, 128, killed $r3, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -220,12 +233,17 @@ define i32 @storecbc_r(i8 %a, i8* %ptr, i32* nocapture readonly %load, i64 %cond
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 8, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -246,12 +264,17 @@ define i32 @storecbl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 8, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -269,12 +292,17 @@ define i32 @storechs_r(i16 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -293,12 +321,17 @@ define i32 @storechl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -316,12 +349,17 @@ define i32 @storecwi_r(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -340,12 +378,17 @@ define i32 @storecwl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -363,12 +406,17 @@ define i32 @storecdl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -386,12 +434,17 @@ define i32 @storecq_r(i128 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0, implicit killed $r4 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r3 = READYp1r killed $r3
   ; CHECK-NEXT:     STORECp killed $r2, killed $p0, 128, killed $r4, 2, -1, internal $r3
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r3
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -410,12 +463,17 @@ define i32 @storechf_r(half %a, i8* %ptr, i32* nocapture readonly %load, i64 %co
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 16, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -433,12 +491,17 @@ define i32 @storecwf_r(float %a, i8* %ptr, i32* nocapture readonly %load, i64 %c
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -456,12 +519,17 @@ define i32 @storecdf_r(double %a, i8* %ptr, i32* nocapture readonly %load, i64 %
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -479,12 +547,17 @@ define i32 @storec64_r(<2 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i6
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2, implicit killed $r1, implicit killed $r0, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r2 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 64, killed $r3, 2, -1, internal $r2
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r2
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -504,12 +577,17 @@ define i32 @storec128_r(<4 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r3 = LWZri10 0, killed $r3, 0 :: (load (s32) from %ir.load)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3, implicit killed $r2, implicit killed $p0, implicit killed $r4 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r3 = READYp1r killed $r3
   ; CHECK-NEXT:     STORECp killed $r2, killed $p0, 128, killed $r4, 2, -1, internal $r3
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     $r0 = COPYD killed $r3
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
@@ -529,6 +607,7 @@ define void @storec256_dltz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 2, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -547,6 +626,7 @@ define void @storec256_dnez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 0, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -563,6 +643,7 @@ define void @storec256_deqz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 1, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -579,6 +660,7 @@ define void @storec256_dgez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 3, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -595,6 +677,7 @@ define void @storec256_dlez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 4, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -611,6 +694,7 @@ define void @storec256_dgtz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 5, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -627,6 +711,7 @@ define void @storec256_odd(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 6, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -643,6 +728,7 @@ define void @storec256_even(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 7, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -659,6 +745,7 @@ define void @storec256_wnez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 8, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -675,6 +762,7 @@ define void @storec256_weqz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 9, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -691,6 +779,7 @@ define void @storec256_wltz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 10, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -707,6 +796,7 @@ define void @storec256_wgez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 11, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -723,6 +813,7 @@ define void @storec256_wlez(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 12, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -739,6 +830,7 @@ define void @storec256_wgtz(<8 x i32> %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     STORECp killed $r4, killed $q0, 256, killed $r5, 13, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -754,9 +846,16 @@ define void @storec_vol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r0 = SXWD killed $r0
-  ; CHECK-NEXT:   STORECpv $r1, $r0, 32, $r2, 11, -1
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit $r1, implicit $r0, implicit $r2 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     STORECpv $r1, $r0, 32, $r2, 11, -1
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 2
   ; CHECK-NEXT:     STORECpv killed $r1, killed $r0, 32, killed $r2, 11, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -775,9 +874,16 @@ define void @storec_novol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r0 = SXWD killed $r0
-  ; CHECK-NEXT:   STORECp $r1, $r0, 32, $r2, 11, -1
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit $r1, implicit $r0, implicit $r2 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     STORECp $r1, $r0, 32, $r2, 11, -1
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 2
   ; CHECK-NEXT:     STORECp killed $r1, killed $r0, 32, killed $r2, 11, -1
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -795,14 +901,17 @@ define i32 @storec_r_vol(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 %c
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit-def $r4, implicit killed $r2, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
   ; CHECK-NEXT:     $r4 = SXWD killed $r0
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r4, implicit $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r0 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECpv $r1, $r4, 32, $r3, 11, -1, internal $r0
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r4, implicit killed $r3, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     STORECpv killed $r1, killed $r4, 32, killed $r3, 11, -1, $r0
   ; CHECK-NEXT:     RET implicit $ra, implicit killed $r0
   ; CHECK-NEXT:   }
@@ -823,14 +932,17 @@ define i32 @storec_r_novol(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit-def $r4, implicit killed $r2, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
   ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.load)
   ; CHECK-NEXT:     $r4 = SXWD killed $r0
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r2, implicit $r1, implicit $r4, implicit $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
   ; CHECK-NEXT:     $r0 = READYp1r killed $r2
   ; CHECK-NEXT:     STORECp $r1, $r4, 32, $r3, 11, -1, internal $r0
   ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit killed $r1, implicit killed $r4, implicit killed $r3, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
   ; CHECK-NEXT:     STORECp killed $r1, killed $r4, 32, killed $r3, 11, -1, $r0
   ; CHECK-NEXT:     RET implicit $ra, implicit killed $r0
   ; CHECK-NEXT:   }
@@ -850,15 +962,29 @@ define void @ready_then_storec(i32* nocapture readonly %addr0, i32* nocapture re
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5, $r6
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r0 = LWSri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
-  ; CHECK-NEXT:   $r1 = LWSri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
-  ; CHECK-NEXT:   $r2 = LWSri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWSri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LWSri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r2 = LWSri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit-def $r7, implicit killed $r0, implicit $r1, implicit $r2, implicit killed $r3, implicit $r6 {
+  ; CHECK-NEXT:     MCYCLESp 5
   ; CHECK-NEXT:     $r7 = READYp3r $r0, $r1, $r2
   ; CHECK-NEXT:     STORECp killed $r3, killed $r0, 32, $r6, 11, -1, internal $r7
   ; CHECK-NEXT:   }
-  ; CHECK-NEXT:   STORECp killed $r4, killed $r1, 32, $r6, 11, -1, $r7
+  ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $r1, implicit $r6, implicit $r7 {
+  ; CHECK-NEXT:     MCYCLESp 6
+  ; CHECK-NEXT:     STORECp killed $r4, killed $r1, 32, $r6, 11, -1, $r7
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT:   BUNDLE implicit killed $r5, implicit killed $r2, implicit killed $r6, implicit killed $r7, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 7
   ; CHECK-NEXT:     STORECp killed $r5, killed $r2, 32, killed $r6, 11, -1, killed $r7
   ; CHECK-NEXT:     RET implicit $ra
   ; CHECK-NEXT:   }
@@ -892,12 +1018,30 @@ define void @load_then_storec(i32* nocapture readonly %addr0, i32* nocapture rea
   ; CHECK-NEXT:   successors: %bb.2(0x80000000)
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
   ; CHECK-NEXT: {{  $}}
-  ; CHECK-NEXT:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
-  ; CHECK-NEXT:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
-  ; CHECK-NEXT:   $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
-  ; CHECK-NEXT:   SWri10 0, killed $r3, killed $r0 :: (store (s32) into %ir.to0)
-  ; CHECK-NEXT:   SWri10 0, killed $r4, killed $r1 :: (store (s32) into %ir.to1)
-  ; CHECK-NEXT:   SWri10 0, killed $r5, killed $r2 :: (store (s32) into %ir.to2)
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.addr2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.addr0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.addr1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit killed $r3, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     SWri10 0, killed $r3, killed $r0 :: (store (s32) into %ir.to0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit killed $r4, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 4
+  ; CHECK-NEXT:     SWri10 0, killed $r4, killed $r1 :: (store (s32) into %ir.to1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit killed $r5, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 5
+  ; CHECK-NEXT:     SWri10 0, killed $r5, killed $r2 :: (store (s32) into %ir.to2)
+  ; CHECK-NEXT:   }
   ; CHECK-NEXT: {{  $}}
   ; CHECK-NEXT: bb.2.if.end:
   ; CHECK-NEXT:   RET implicit $ra

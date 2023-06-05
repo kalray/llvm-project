@@ -15,21 +15,21 @@ define i64 @ADDCWCrr(i64 %c1, i64 %c2) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCWCrr:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    addd $r1 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r1, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfd $r0 = $r2, $r0
 ; V2-NEXT:    zxwd $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 entry:
   %i2 = and i64 %c2, -4294967296
   %r = add i64 %c2, %c1
@@ -46,21 +46,21 @@ define i64 @SBFCWCrr(i64 %c1, i64 %c2) {
 ; V1:       # %bb.0: # %entry
 ; V1-NEXT:    sbfwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: SBFCWCrr:
 ; V2:       # %bb.0: # %entry
 ; V2-NEXT:    sbfd $r0 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r0, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    zxwd $r0 = $r0
 ; V2-NEXT:    addd $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 entry:
   %i1 = and i64 %c1, -4294967296
   %r = sub i64 %c1, %c2
@@ -77,31 +77,31 @@ define i64 @ADDCHCP(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addhcp.c $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCHCP:
 ; V2:       # %bb.0:
 ; V2-NEXT:    clrf $r2 = $r1, 31, 47
 ; V2-NEXT:    addd $r3 = $r1, $r0
 ; V2-NEXT:    clrf $r4 = $r0, 47, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    addd $r2 = $r2, $r0
 ; V2-NEXT:    clrf $r3 = $r3, 63, 16
 ; V2-NEXT:    sbfd $r4 = $r4, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sbfd $r0 = $r0, $r1
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
 ; V2-NEXT:    clrf $r4 = $r4, 47, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    ord $r1 = $r2, $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    ord $r1 = $r1, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %0, 4294901760
   %4 = add i64 %1, %0
   %5 = and i64 %0, -281474976710656
@@ -124,21 +124,21 @@ define i64 @ADDCHCP_half(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addhcp.c $r0 = $r0, $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCHCP_half:
 ; V2:       # %bb.0:
 ; V2-NEXT:    addd $r0 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r0, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    clrf $r0 = $r0, 63, 16
 ; V2-NEXT:    sbfd $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %0, 4294901760
   %4 = add i64 %1, %0
   %5 = sub i64 %1, %3
@@ -153,21 +153,21 @@ define i64 @ADDCWC(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCWC:
 ; V2:       # %bb.0:
 ; V2-NEXT:    addd $r1 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r1, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfd $r0 = $r2, $r0
 ; V2-NEXT:    zxwd $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
   %4 = add i64 %1, %0
   %5 = sub i64 %0, %3
@@ -182,7 +182,7 @@ define i64 @SBFCHCP(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbfhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: SBFCHCP:
 ; V2:       # %bb.0:
@@ -190,23 +190,23 @@ define i64 @SBFCHCP(i64 %0, i64 %1) {
 ; V2-NEXT:    clrf $r3 = $r0, 47, 0
 ; V2-NEXT:    sbfd $r4 = $r0, $r1
 ; V2-NEXT:    clrf $r5 = $r1, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    adduwd $r0 = $r5, $r0
 ; V2-NEXT:    addd $r1 = $r3, $r1
 ; V2-NEXT:    sbfd $r2 = $r2, $r1
 ; V2-NEXT:    clrf $r3 = $r4, 63, 16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    clrf $r1 = $r1, 47, 0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r2 = $r2, $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    ord $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %0, 281470681743360
   %4 = and i64 %0, -281474976710656
   %5 = and i64 %1, 4294901760
@@ -229,21 +229,21 @@ define i64 @SBFCHCP_half(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbfhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: SBFCHCP_half:
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfd $r1 = $r0, $r1
 ; V2-NEXT:    clrf $r2 = $r1, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    adduwd $r0 = $r2, $r0
 ; V2-NEXT:    clrf $r1 = $r1, 63, 16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, 4294901760
   %4 = sub i64 %1, %0
   %5 = add i64 %3, %0
@@ -258,21 +258,21 @@ define i64 @SBFCWC(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbfwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: SBFCWC:
 ; V2:       # %bb.0:
 ; V2-NEXT:    sbfd $r0 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r0, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    zxwd $r0 = $r0
 ; V2-NEXT:    addd $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %0, -4294967296
   %4 = sub i64 %0, %1
   %5 = add i64 %3, %1
@@ -287,22 +287,22 @@ define i64 @MULCWC(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r2 = $r1, 32
 ; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muluwd $r4 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    muld $r3 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    maddd $r4 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    msbfd $r3 = $r2, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r0 = $r3, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = lshr i64 %1, 32
   %4 = lshr i64 %0, 32
   %5 = mul i64 %1, %0
@@ -323,19 +323,19 @@ define %"struct.std::complex.1" @MULCWDC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    mulwd $r2 = $r1, $r0
 ; CHECK-NEXT:    clrf $r3 = $r1, 31, 0
 ; CHECK-NEXT:    srld $r4 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, $r4
 ; CHECK-NEXT:    negd $r3 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r3 = $r3, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    msbfwd $r2 = $r3, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    maddwd $r1 = $r3, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %1, -4294967296
   %4 = shl i64 %0, 32
   %5 = ashr exact i64 %4, 32
@@ -361,20 +361,20 @@ define i64 @MULWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r1, 32
 ; CHECK-NEXT:    srld $r3 = $r0, 32
 ; CHECK-NEXT:    muld $r4 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muld $r0 = $r2, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    msbfuwd $r4 = $r2, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    maddd $r0 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r0 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %1, 32
   %4 = lshr i64 %0, 32
   %5 = mul i64 %1, %0
@@ -395,17 +395,17 @@ define %"struct.std::complex.1" @MULWDC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    mulwd $r2 = $r1, $r0
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    srld $r4 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfwd $r2 = $r3, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    mulwd $r3 = $r3, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddwd $r3 = $r1, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %3 = shl i64 %0, 32
   %4 = ashr exact i64 %3, 32
   %5 = ashr i64 %0, 32
@@ -428,31 +428,31 @@ define i64 @ADDCHCP_2(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addhcp.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCHCP_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    clrf $r2 = $r0, 31, 47
 ; V2-NEXT:    addd $r3 = $r0, $r1
 ; V2-NEXT:    clrf $r4 = $r1, 47, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    clrf $r1 = $r1, 15, 31
 ; V2-NEXT:    addd $r2 = $r2, $r1
 ; V2-NEXT:    clrf $r3 = $r3, 63, 16
 ; V2-NEXT:    sbfd $r4 = $r4, $r0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sbfd $r0 = $r1, $r0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
 ; V2-NEXT:    clrf $r4 = $r4, 47, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    ord $r1 = $r2, $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    ord $r1 = $r1, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %1, 4294901760
   %4 = add i64 %0, %1
   %5 = and i64 %0, 281470681743360
@@ -475,21 +475,21 @@ define i64 @ADDCWC_2(i64 %0, i64 %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    addwc.c $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: ADDCWC_2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    addd $r1 = $r0, $r1
 ; V2-NEXT:    clrf $r2 = $r1, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sbfd $r0 = $r2, $r0
 ; V2-NEXT:    zxwd $r1 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
   %4 = add i64 %0, %1
   %5 = sub i64 %0, %3
@@ -505,24 +505,24 @@ define i64 @SBFCHCP_2(i64 %0, i64 %1) {
 ; V1-NEXT:    clrf $r2 = $r1, 31, 47
 ; V1-NEXT:    sbfd $r4 = $r1, $r0
 ; V1-NEXT:    clrf $r5 = $r0, 47, 0
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addd $r1 = $r5, $r1
 ; V1-NEXT:    sbfd $r2 = $r2, $r0
 ; V1-NEXT:    clrf $r3 = $r1, 15, 31
 ; V1-NEXT:    clrf $r4 = $r4, 63, 16
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    clrf $r1 = $r1, 47, 0
 ; V1-NEXT:    clrf $r2 = $r2, 31, 47
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    adduwd $r0 = $r3, $r0
 ; V1-NEXT:    ord $r2 = $r2, $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    clrf $r0 = $r0, 15, 31
 ; V1-NEXT:    ord $r1 = $r2, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    ord $r0 = $r1, $r0
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: SBFCHCP_2:
 ; V2:       # %bb.0:
@@ -530,23 +530,23 @@ define i64 @SBFCHCP_2(i64 %0, i64 %1) {
 ; V2-NEXT:    sbfd $r3 = $r1, $r0
 ; V2-NEXT:    clrf $r4 = $r0, 47, 0
 ; V2-NEXT:    clrf $r5 = $r1, 15, 31
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    adduwd $r0 = $r5, $r0
 ; V2-NEXT:    addd $r1 = $r4, $r1
 ; V2-NEXT:    sbfd $r2 = $r2, $r0
 ; V2-NEXT:    clrf $r3 = $r3, 63, 16
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    clrf $r1 = $r1, 47, 0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    ord $r2 = $r2, $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    ord $r1 = $r2, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %1, 4294901760
   %4 = sub i64 %0, %1
   %5 = and i64 %0, -281474976710656
@@ -569,15 +569,15 @@ define i64 @SBFCWC_2(i64 %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfd $r1 = $r1, $r0
 ; CHECK-NEXT:    clrf $r2 = $r1, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r2, $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clrf $r0 = $r0, 31, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
   %4 = sub i64 %0, %1
   %5 = add i64 %3, %0
@@ -594,36 +594,36 @@ define i64 @MULCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    sxwd $r2 = $r0
 ; CHECK-NEXT:    sxwd $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sxwd $r0 = $r0
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    floatd.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    floatd.rn $r3 = $r3, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    floatd.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    floatd.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmuld $r4 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    fmuld $r3 = $r0, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ffmad $r4 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    ffmsd $r3 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    fixedd.rz $r0 = $r4, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    fixedd.rz $r1 = $r3, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    zxwd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    ord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 20)
   %3 = trunc i64 %0 to i32
   %4 = lshr i64 %0, 32
   %5 = trunc i64 %4 to i32
@@ -655,13 +655,13 @@ define { i64, i64 } @MULCWDC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    dot2wd $r2 = $r1, $r0
 ; CHECK-NEXT:    srld $r3 = $r0, 32
 ; CHECK-NEXT:    srld $r4 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwd $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    msbfwd $r1 = $r4, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = shl i64 %0, 32
   %4 = ashr exact i64 %3, 32
   %5 = ashr i64 %0, 32
@@ -685,20 +685,20 @@ define i64 @MULWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    srld $r2 = $r0, 32
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    muld $r4 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    muld $r0 = $r3, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    msbfuwd $r4 = $r3, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    maddd $r0 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r0 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %0, 32
   %4 = lshr i64 %1, 32
   %5 = mul i64 %1, %0
@@ -719,17 +719,17 @@ define { i64, i64 } @MULWDC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    mulwd $r2 = $r1, $r0
 ; CHECK-NEXT:    srld $r3 = $r1, 32
 ; CHECK-NEXT:    srld $r4 = $r0, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfwd $r2 = $r3, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    mulwd $r3 = $r0, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    maddwd $r3 = $r1, $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %3 = shl i64 %0, 32
   %4 = ashr exact i64 %3, 32
   %5 = ashr i64 %0, 32
@@ -752,18 +752,18 @@ define <4 x i16> @ADDCHCP_3(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbfhq $r0 = $r1, $r0
 ; CHECK-NEXT:    addhq $r2 = $r0, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    srld $r1 = $r0, 48
 ; CHECK-NEXT:    extfz $r3 = $r2, 47, 32
 ; CHECK-NEXT:    srlw $r4 = $r0, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r4, 31, 16
 ; CHECK-NEXT:    insf $r3 = $r1, 31, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = add <4 x i16> %0, %1
   %4 = sub <4 x i16> %0, %1
   %5 = shufflevector <4 x i16> %3, <4 x i16> %4, <4 x i32> <i32 0, i32 5, i32 2, i32 7>
@@ -774,14 +774,14 @@ define <2 x i32> @ADDCWC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: ADDCWC_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    negw $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <2 x i32> %1, i32 1
   %4 = sub nsw i32 0, %3
   %5 = insertelement <2 x i32> %1, i32 %4, i32 1
@@ -794,18 +794,18 @@ define <4 x i16> @SBFCHCP_3(<4 x i16> %0, <4 x i16> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addhq $r0 = $r0, $r1
 ; CHECK-NEXT:    sbfhq $r2 = $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    zxhd $r0 = $r2
 ; CHECK-NEXT:    srld $r1 = $r0, 48
 ; CHECK-NEXT:    extfz $r3 = $r2, 47, 32
 ; CHECK-NEXT:    srlw $r4 = $r0, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r4, 31, 16
 ; CHECK-NEXT:    insf $r3 = $r1, 31, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = sub <4 x i16> %0, %1
   %4 = add <4 x i16> %0, %1
   %5 = shufflevector <4 x i16> %3, <4 x i16> %4, <4 x i32> <i32 0, i32 5, i32 2, i32 7>
@@ -816,14 +816,14 @@ define <2 x i32> @SBFCWC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: SBFCWC_3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    negw $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r1 = $r2, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfwp $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <2 x i32> %1, i32 1
   %4 = sub nsw i32 0, %3
   %5 = insertelement <2 x i32> %1, i32 %4, i32 1
@@ -837,18 +837,18 @@ define <2 x i32> @MULCWC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-NEXT:    mulw $r2 = $r1, $r0
 ; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    srad $r4 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulw $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    maddw $r2 = $r4, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    msbfw $r0 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r2 = $r0, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = extractelement <2 x i32> %0, i32 0
   %4 = extractelement <2 x i32> %1, i32 0
   %5 = mul nsw i32 %4, %3
@@ -869,20 +869,20 @@ define <2 x i64> @MULCWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sxwd $r4 = $r0
 ; V1-NEXT:    sxwd $r6 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    muld $r2 = $r6, $r4
 ; V1-NEXT:    extfs $r3 = $r1, 63, 32
 ; V1-NEXT:    extfs $r5 = $r0, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    muld $r1 = $r3, $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    maddd $r2 = $r3, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    msbfd $r1 = $r6, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: MULCWDC_3:
 ; V2:       # %bb.0:
@@ -890,18 +890,18 @@ define <2 x i64> @MULCWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    sxwd $r4 = $r0
 ; V2-NEXT:    extfs $r5 = $r0, 63, 32
 ; V2-NEXT:    sxwd $r6 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    muld $r2 = $r6, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    muld $r1 = $r3, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    maddd $r2 = $r3, $r5
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    msbfd $r1 = $r6, $r5
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    copyd $r0 = $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = sext <2 x i32> %0 to <2 x i64>
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = extractelement <2 x i64> %3, i32 0
@@ -925,18 +925,18 @@ define <2 x i32> @MULWC_3(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-NEXT:    mulw $r2 = $r1, $r0
 ; CHECK-NEXT:    srad $r3 = $r0, 32
 ; CHECK-NEXT:    srad $r4 = $r1, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulw $r0 = $r4, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    msbfw $r2 = $r4, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    maddw $r0 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r2 = $r0, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = extractelement <2 x i32> %0, i32 0
   %4 = extractelement <2 x i32> %1, i32 0
   %5 = mul nsw i32 %4, %3
@@ -957,20 +957,20 @@ define <2 x i64> @MULWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sxwd $r4 = $r0
 ; V1-NEXT:    sxwd $r6 = $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    muld $r2 = $r6, $r4
 ; V1-NEXT:    extfs $r3 = $r1, 63, 32
 ; V1-NEXT:    extfs $r5 = $r0, 63, 32
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    muld $r1 = $r3, $r4
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    msbfd $r2 = $r3, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    maddd $r1 = $r6, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: MULWDC_3:
 ; V2:       # %bb.0:
@@ -978,18 +978,18 @@ define <2 x i64> @MULWDC_3(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    sxwd $r4 = $r0
 ; V2-NEXT:    extfs $r5 = $r0, 63, 32
 ; V2-NEXT:    sxwd $r6 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    muld $r2 = $r6, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    muld $r1 = $r3, $r4
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    msbfd $r2 = $r3, $r5
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    maddd $r1 = $r6, $r5
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    copyd $r0 = $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 5)
   %3 = sext <2 x i32> %0 to <2 x i64>
   %4 = sext <2 x i32> %1 to <2 x i64>
   %5 = extractelement <2 x i64> %3, i32 0

@@ -8,10 +8,10 @@ define void @dflushsw(i64 %0, i64 %1) {
 ; CHECK-LABEL: dflushsw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dflushsw.l1 $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    dflushsw.l2 $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   tail call void @llvm.kvx.dflushsw(i64 %0, i64 %1, i32 0)
   tail call void @llvm.kvx.dflushsw(i64 %0, i64 %1, i32 1)
   ret void
@@ -23,10 +23,10 @@ define void @dinvalsw(i64 %0, i64 %1) {
 ; CHECK-LABEL: dinvalsw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dinvalsw.l1 $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    dinvalsw.l2 $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   tail call void @llvm.kvx.dinvalsw(i64 %0, i64 %1, i32 0)
   tail call void @llvm.kvx.dinvalsw(i64 %0, i64 %1, i32 1)
   ret void
@@ -38,10 +38,10 @@ define void @dpurgesw(i64 %0, i64 %1) {
 ; CHECK-LABEL: dpurgesw:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    dpurgesw.l1 $r1, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    dpurgesw.l2 $r1, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   tail call void @llvm.kvx.dpurgesw(i64 %0, i64 %1, i32 0)
   tail call void @llvm.kvx.dpurgesw(i64 %0, i64 %1, i32 1)
   ret void
@@ -54,10 +54,10 @@ define i32 @acswapw(i32* %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapw $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i32* %0 to i8*
   %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 1, i32 0)
   ret i32 %5
@@ -70,10 +70,10 @@ define i32 @acswapwv(i32* %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapw.v $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i32* %0 to i8*
   %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 0, i32 0)
   ret i32 %5
@@ -84,10 +84,10 @@ define i32 @acswapwg(i32* %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapw.g $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i32* %0 to i8*
   %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 1, i32 1)
   ret i32 %5
@@ -98,10 +98,10 @@ define i32 @acswapwvg(i32* %0, i32 %1, i32 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapw.v.g $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i32* %0 to i8*
   %5 = tail call i32 @llvm.kvx.acswapw(i8* %4, i32 %1, i32 %2, i32 0, i32 1)
   ret i32 %5
@@ -112,10 +112,10 @@ define i64 @acswapd(i64* %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapd $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i64* %0 to i8*
   %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 1, i32 0)
   ret i64 %5
@@ -128,10 +128,10 @@ define i64 @acswapdv(i64* %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapd.v $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i64* %0 to i8*
   %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 0, i32 0)
   ret i64 %5
@@ -142,10 +142,10 @@ define i64 @acswapdg(i64* %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapd.g $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i64* %0 to i8*
   %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 1, i32 1)
   ret i64 %5
@@ -156,10 +156,10 @@ define i64 @acswapdvg(i64* %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapd.v.g $r0, [$r0] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast i64* %0 to i8*
   %5 = tail call i64 @llvm.kvx.acswapd(i8* %4, i64 %1, i64 %2, i32 0, i32 1)
   ret i64 %5
@@ -172,10 +172,10 @@ define <2 x i64> @acswapq(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq $r0r1, [$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast <2 x i64>* %0 to i8*
   %5 = tail call <2 x i64> @llvm.kvx.acswapq(i8* %4, <2 x i64> %1, <2 x i64> %2, i32 1, i32 0)
   ret <2 x i64> %5
@@ -190,10 +190,10 @@ define <2 x i64> @acswapqv(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq.v $r0r1, [$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast <2 x i64>* %0 to i8*
   %5 = tail call <2 x i64> @llvm.kvx.acswapq(i8* %4, <2 x i64> %1, <2 x i64> %2, i32 0, i32 0)
   ret <2 x i64> %5
@@ -206,10 +206,10 @@ define <2 x i64> @acswapqg(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq.g $r0r1, [$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast <2 x i64>* %0 to i8*
   %5 = tail call <2 x i64> @llvm.kvx.acswapq(i8* %4, <2 x i64> %1, <2 x i64> %2, i32 1, i32 1)
   ret <2 x i64> %5
@@ -222,10 +222,10 @@ define <2 x i64> @acswapqvg(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq.v.g $r0r1, [$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = bitcast <2 x i64>* %0 to i8*
   %5 = tail call <2 x i64> @llvm.kvx.acswapq(i8* %4, <2 x i64> %1, <2 x i64> %2, i32 0, i32 1)
   ret <2 x i64> %5
@@ -238,12 +238,12 @@ define <2 x i64> @acswapqvgr(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2, i32 %3) 
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r4 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    acswapq.v.g $r0r1, [$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %5 = sext i32 %3 to i64
   %6 = getelementptr inbounds <2 x i64>, <2 x i64>* %0, i64 %5
   %7 = bitcast <2 x i64>* %6 to i8*
@@ -258,10 +258,10 @@ define <2 x i64> @acswapqvgri27(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq.v.g $r0r1, 240[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds <2 x i64>, <2 x i64>* %0, i64 15
   %5 = bitcast <2 x i64>* %4 to i8*
   %6 = tail call <2 x i64> @llvm.kvx.acswapq(i8* nonnull %5, <2 x i64> %1, <2 x i64> %2, i32 0, i32 1)
@@ -275,10 +275,10 @@ define <2 x i64> @acswapqvgri54(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %2) {
 ; CHECK-NEXT:    copyd $r5 = $r2
 ; CHECK-NEXT:    copyd $r6 = $r3
 ; CHECK-NEXT:    copyd $r7 = $r4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    acswapq.v.g $r0r1, 0x1000000030[$r0] = $r4r5r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = getelementptr inbounds <2 x i64>, <2 x i64>* %0, i64 4294967299
   %5 = bitcast <2 x i64>* %4 to i8*
   %6 = tail call <2 x i64> @llvm.kvx.acswapq(i8* nonnull %5, <2 x i64> %1, <2 x i64> %2, i32 0, i32 1)
@@ -290,7 +290,7 @@ define i32 @alw(i32* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alw $r0 = [$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = bitcast i32* %0 to i8*
   %3 = tail call i32 @llvm.kvx.alw(i8* %2, i32 0)
   ret i32 %3
@@ -303,7 +303,7 @@ define i32 @alw_ri10(i32* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alw $r0 = 4[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i32, i32* %0, i64 1
   %3 = bitcast i32* %2 to i8*
   %4 = tail call i32 @llvm.kvx.alw(i8* nonnull %3, i32 0)
@@ -315,7 +315,7 @@ define i32 @alw_ri27(i32* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alw $r0 = 0xfa0[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i32, i32* %0, i64 1000
   %3 = bitcast i32* %2 to i8*
   %4 = tail call i32 @llvm.kvx.alw(i8* nonnull %3, i32 0)
@@ -327,7 +327,7 @@ define i32 @alw_ri64(i32* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alw $r0 = 0x861c46800[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i32, i32* %0, i64 9000000000
   %3 = bitcast i32* %2 to i8*
   %4 = tail call i32 @llvm.kvx.alw(i8* nonnull %3, i32 0)
@@ -339,7 +339,7 @@ define i32 @alw_g(i32* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    alw.g $r0 = [$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = bitcast i32* %0 to i8*
   %3 = tail call i32 @llvm.kvx.alw(i8* %2, i32 1)
   ret i32 %3
@@ -350,7 +350,7 @@ define i64 @ald(i64* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ald $r0 = [$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = bitcast i64* %0 to i8*
   %3 = tail call i64 @llvm.kvx.ald(i8* %2, i32 0)
   ret i64 %3
@@ -363,7 +363,7 @@ define i64 @ald_ri10(i64* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ald $r0 = 8[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i64, i64* %0, i64 1
   %3 = bitcast i64* %2 to i8*
   %4 = tail call i64 @llvm.kvx.ald(i8* nonnull %3, i32 0)
@@ -375,7 +375,7 @@ define i64 @ald_ri27(i64* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ald $r0 = 0x1f40[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i64, i64* %0, i64 1000
   %3 = bitcast i64* %2 to i8*
   %4 = tail call i64 @llvm.kvx.ald(i8* nonnull %3, i32 0)
@@ -387,7 +387,7 @@ define i64 @ald_ri64(i64* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ald $r0 = 0x10c388d000[$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = getelementptr inbounds i64, i64* %0, i64 9000000000
   %3 = bitcast i64* %2 to i8*
   %4 = tail call i64 @llvm.kvx.ald(i8* nonnull %3, i32 0)
@@ -399,7 +399,7 @@ define i64 @ald_g(i64* readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ald.g $r0 = [$r0]
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = bitcast i64* %0 to i8*
   %3 = tail call i64 @llvm.kvx.ald(i8* %2, i32 1)
   ret i64 %3
@@ -410,7 +410,7 @@ define void @asw(i32* %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asw [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = bitcast i32* %0 to i8*
   tail call void @llvm.kvx.asw(i8* %3, i32 %1, i32 0)
   ret void
@@ -423,7 +423,7 @@ define void @asw_ri10(i32* %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asw 4[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i32, i32* %0, i64 1
   %4 = bitcast i32* %3 to i8*
   tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
@@ -435,7 +435,7 @@ define void @asw_ri27(i32* %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asw 0xfa0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i32, i32* %0, i64 1000
   %4 = bitcast i32* %3 to i8*
   tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
@@ -447,7 +447,7 @@ define void @asw_ri54(i32* %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asw 0x861c46800[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i32, i32* %0, i64 9000000000
   %4 = bitcast i32* %3 to i8*
   tail call void @llvm.kvx.asw(i8* nonnull %4, i32 %1, i32 0)
@@ -459,7 +459,7 @@ define void @asw_g(i32* %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asw.g [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = bitcast i32* %0 to i8*
   tail call void @llvm.kvx.asw(i8* %3, i32 %1, i32 1)
   ret void
@@ -470,7 +470,7 @@ define void @asd(i64* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asd [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = bitcast i64* %0 to i8*
   tail call void @llvm.kvx.asd(i8* %3, i64 %1, i32 0)
   ret void
@@ -483,7 +483,7 @@ define void @asd_ri10(i64* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asd 8[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i64, i64* %0, i64 1
   %4 = bitcast i64* %3 to i8*
   tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
@@ -495,7 +495,7 @@ define void @asd_ri27(i64* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asd 0x1f40[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i64, i64* %0, i64 1000
   %4 = bitcast i64* %3 to i8*
   tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
@@ -507,7 +507,7 @@ define void @asd_ri54(i64* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asd 0x10c388d000[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i64, i64* %0, i64 9000000000
   %4 = bitcast i64* %3 to i8*
   tail call void @llvm.kvx.asd(i8* nonnull %4, i64 %1, i32 0)
@@ -519,7 +519,7 @@ define void @asd_g(i64* %0, i64 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    asd.g [$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = bitcast i64* %0 to i8*
   tail call void @llvm.kvx.asd(i8* %3, i64 %1, i32 1)
   ret void
@@ -529,29 +529,29 @@ define void @dpurgel(<8 x i64>* %0, i64 %1) {
 ; CHECK-LABEL: dpurgel:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    dpurgel 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ld $r1 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    dpurgel.xs $r1[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    dpurgel 320[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    dpurgel 0x10000[$r0]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %3 = alloca <8 x i64>*
   %4 = alloca i64
   store <8 x i64>* %0, <8 x i64>** %3
@@ -581,29 +581,29 @@ define void @dflushl(<8 x i64>* %0, i64 %1) {
 ; CHECK-LABEL: dflushl:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    dflushl 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ld $r1 = 16[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    dflushl.xs $r1[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    dflushl 320[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    ld $r0 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    dflushl 0x10000[$r0]
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 15)
   %3 = alloca <8 x i64>*
   %4 = alloca i64
   store <8 x i64>* %0, <8 x i64>** %3
@@ -634,7 +634,7 @@ define <4 x i16> @zxlbhq(<8 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxlbhq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.zxlbhq(<8 x i8> %0)
   ret <4 x i16> %2
 }
@@ -646,7 +646,7 @@ define <4 x i16> @zxmbhq(<8 x i8> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxmbhq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.zxmbhq(<8 x i8> %0)
   ret <4 x i16> %2
 }
@@ -658,7 +658,7 @@ define <2 x i32> @zxlhwp(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxlhwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.zxlhwp(<4 x i16> %0)
   ret <2 x i32> %2
 }
@@ -670,7 +670,7 @@ define <2 x i32> @zxmhwp(<4 x i16> %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxmhwp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.zxmhwp(<4 x i16> %0)
   ret <2 x i32> %2
 }

@@ -15,10 +15,10 @@ declare void @llvm.write_register.i64(metadata, i64) #0
 define i64 @rule3_c(i64 %a, i64 %b, i64 %c) {
 ; ALL-LABEL: rule3_c:
 ; ALL:         set $cs = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    addcd $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   tail call void @llvm.write_register.i64(metadata !0, i64 %a) #0
   %0 = tail call i64 @llvm.kvx.addcd(i64 %b, i64 %c, i32 0)
@@ -30,10 +30,10 @@ declare i64 @llvm.kvx.addcd(i64, i64, i32)
 define i64 @rule3_ci(i64 %a, i64 %b, i64 %c) {
 ; ALL-LABEL: rule3_ci:
 ; ALL:         set $cs = $r0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    addcd.i $r0 = $r1, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   tail call void @llvm.write_register.i64(metadata !0, i64 %a) #0
   %0 = tail call i64 @llvm.kvx.addcd(i64 %b, i64 %c, i32 1) ; 1 = ".i"
@@ -46,18 +46,18 @@ entry:
 define float @rule4_set(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set:
 ; CHECK:         set $cs = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; RELAXED-LABEL: rule4_set:
 ; RELAXED:         set $cs = $r0
 ; RELAXED-NEXT:    faddw $r1 = $r1, $r2
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 0)
 ; RELAXED-NEXT:    copyd $r0 = $r1
 ; RELAXED-NEXT:    ret
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 4)
 entry:
   tail call void @llvm.write_register.i64(metadata !0, i64 %a) #0
   %add = fadd float %b, %c
@@ -69,18 +69,18 @@ declare float @llvm.kvx.fadd.f32(float, float, i32, i32) #2
 define float @rule4_set_builtins_only(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_set_builtins_only:
 ; CHECK:         set $cs = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddw.rn $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; RELAXED-LABEL: rule4_set_builtins_only:
 ; RELAXED:         set $cs = $r0
 ; RELAXED-NEXT:    faddw.rn $r1 = $r1, $r2
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 0)
 ; RELAXED-NEXT:    copyd $r0 = $r1
 ; RELAXED-NEXT:    ret
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 4)
 entry:
   tail call void @llvm.write_register.i64(metadata !0, i64 %a) #0
   %add = tail call float @llvm.kvx.fadd.f32(float %b, float %c, i32 0, i32 0)
@@ -89,24 +89,26 @@ entry:
 
 define float @rule4_wfxm(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxm:
-; CHECK:         #APP
+; CHECK:          # (here cycle 0)
+; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    wfxm $cs, $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; RELAXED-LABEL: rule4_wfxm:
 ; RELAXED:         faddw $r1 = $r1, $r2
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 0)
+; RELAXED-NEXT:     # (here cycle 1)
 ; RELAXED-NEXT:    #APP
 ; RELAXED-NEXT:    wfxm $cs, $r0
 ; RELAXED-NEXT:    ;;
 ; RELAXED-NEXT:    #NO_APP
 ; RELAXED-NEXT:    copyd $r0 = $r1
 ; RELAXED-NEXT:    ret
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 4)
 entry:
   tail call void asm sideeffect "wfxm $$cs, $0", "r,~{$cs}"(i64 %a)
   %add = fadd float %b, %c
@@ -117,10 +119,10 @@ define float @rule4_wfxm_builtins_only(i64 %a, float %b, float %c) {
 ; ALL-LABEL: rule4_wfxm_builtins_only:
 ; ALL:         wfxl $cs, $r0
 ; ALL-NEXT:    faddw.rn $r1 = $r1, $r2
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 4)
 entry:
   %add = tail call float @llvm.kvx.fadd.f32(float %b, float %c, i32 0, i32 0)
   tail call void @llvm.kvx.wfx(i32 4, i64 %a, i32 0)
@@ -130,18 +132,18 @@ entry:
 define float @rule4_wfxl(i64 %a, float %b, float %c) {
 ; CHECK-LABEL: rule4_wfxl:
 ; CHECK:         wfxl $cs, $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddw $r0 = $r1, $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ;
 ; RELAXED-LABEL: rule4_wfxl:
 ; RELAXED:         wfxl $cs, $r0
 ; RELAXED-NEXT:    faddw $r1 = $r1, $r2
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 0)
 ; RELAXED-NEXT:    copyd $r0 = $r1
 ; RELAXED-NEXT:    ret
-; RELAXED-NEXT:    ;;
+; RELAXED-NEXT:    ;; # (end cycle 4)
 entry:
   tail call void @llvm.kvx.wfx(i32 4, i64 %a, i32 0)
   %add = fadd float %b, %c

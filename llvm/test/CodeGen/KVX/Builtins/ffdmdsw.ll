@@ -8,10 +8,10 @@ define float @ffdmdsw(<2 x float> %0, <2 x float> %1, float %2) {
 ; V2-LABEL: ffdmdsw:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdsw $r2 = $r0, $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call float @llvm.kvx.ffdmds.f32(<2 x float> %0, <2 x float> %1, float %2, i32 7, i32 0)
   ret float %4
 }
@@ -22,10 +22,10 @@ define <2 x float> @ffdmdswp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 ; V2-LABEL: ffdmdswp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdswp $r4 = $r0r1, $r2r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <2 x float> @llvm.kvx.ffdmds.v2f32(<4 x float> %0, <4 x float> %1, <2 x float> %2, i32 7, i32 0)
   ret <2 x float> %4
 }
@@ -36,11 +36,11 @@ define <4 x float> @ffdmdswq(<8 x float> %0, <8 x float> %1, <4 x float> %2) {
 ; V2-LABEL: ffdmdswq:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdswq $r8r9 = $r0r1r2r3, $r4r5r6r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffdmds.v4f32(<8 x float> %0, <8 x float> %1, <4 x float> %2, i32 7, i32 0)
   ret <4 x float> %4
 }
@@ -51,11 +51,11 @@ define <4 x float> @ffdmdswq_rn_s(<8 x float> %0, <8 x float> %1, <4 x float> %2
 ; V2-LABEL: ffdmdswq_rn_s:
 ; V2:       # %bb.0:
 ; V2-NEXT:    ffdmdswq.rn.s $r8r9 = $r0r1r2r3, $r4r5r6r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    copyd $r0 = $r8
 ; V2-NEXT:    copyd $r1 = $r9
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 4)
   %4 = tail call <4 x float> @llvm.kvx.ffdmds.v4f32(<8 x float> %0, <8 x float> %1, <4 x float> %2, i32 0, i32 1)
   ret <4 x float> %4
 }

@@ -11,7 +11,7 @@ define i32 @test1(float %f){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fixedw.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = fptosi float %f to i32
   ret i32 %conv
@@ -22,7 +22,7 @@ define float @test2(i32 %i){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    floatw.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %conv = sitofp i32 %i to float
   ret float %conv

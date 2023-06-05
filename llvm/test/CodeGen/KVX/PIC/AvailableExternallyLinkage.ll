@@ -19,14 +19,14 @@ define linkonce_odr void @_ZNSt9exceptionC2ERKS_(i32 (...) *** %addr) unnamed_ad
 ; CHECK-LABEL: _ZNSt9exceptionC2ERKS_:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    pcrel $r1 = @gotaddr()
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r1 = @got( _ZTVSt9exception )[$r1]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r1 = $r1, 16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   store i32 (...)** bitcast (i8** getelementptr inbounds ({ [5 x i8*] }, { [5 x i8*] }* @_ZTVSt9exception, i64 0, inrange i32 0, i64 2) to i32 (...)**), i32 (...)*** %addr, align 8
   ret void
 }

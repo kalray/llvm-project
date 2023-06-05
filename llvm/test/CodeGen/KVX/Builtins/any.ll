@@ -11,7 +11,7 @@ define i64 @anybo_nez(<8 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compd.ne $r0 = $r0, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.any.v8i8(<8 x i8> %0, i32 0)
   ret i64 %2
 }
@@ -23,20 +23,20 @@ define i64 @anybo_eqz(<8 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
 ; CV1-NEXT:    andnd.@ $r1 = $r0, 0x80808080
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    compd.ne $r0 = $r0, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: anybo_eqz:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnbo.eq $r0 = $r0, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    compd.ne $r0 = $r0, 0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i64 @llvm.kvx.any.v8i8(<8 x i8> %0, i32 1)
   ret i64 %2
 }
@@ -46,10 +46,10 @@ define i64 @anybv_nez(<32 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
@@ -66,25 +66,25 @@ define i64 @anybv_eqz(<32 x i8> %0) {
 ; CV1-NEXT:    addd $r3 = $r3, 0xfefefefefefefeff
 ; CV1-NEXT:    andnd.@ $r4 = $r3, 0x80808080
 ; CV1-NEXT:    andnd.@ $r5 = $r2, 0x80808080
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r1 = $r1, 0xfefefefefefefeff
 ; CV1-NEXT:    addd $r2 = $r2, 0xfefefefefefefeff
 ; CV1-NEXT:    andnd.@ $r6 = $r1, 0x80808080
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
 ; CV1-NEXT:    andd $r2 = $r2, $r5
 ; CV1-NEXT:    andd $r3 = $r3, $r4
 ; CV1-NEXT:    andnd.@ $r7 = $r0, 0x80808080
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    andd $r0 = $r0, $r7
 ; CV1-NEXT:    andd $r1 = $r1, $r6
 ; CV1-NEXT:    lord $r2 = $r2, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    lord $r0 = $r0, $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    orw $r0 = $r0, $r2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: anybv_eqz:
 ; CV2:       # %bb.0:
@@ -92,13 +92,13 @@ define i64 @anybv_eqz(<32 x i8> %0) {
 ; CV2-NEXT:    compnbo.eq $r1 = $r1, 0
 ; CV2-NEXT:    compnbo.eq $r2 = $r2, 0
 ; CV2-NEXT:    compnbo.eq $r3 = $r3, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lord $r0 = $r0, $r1
 ; CV2-NEXT:    lord $r2 = $r2, $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    orw $r0 = $r0, $r2
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23>
@@ -112,7 +112,7 @@ define i64 @anybx_nez(<16 x i8> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %4 = tail call i64 @llvm.kvx.any2.v8i8(<8 x i8> %2, <8 x i8> %3, i32 0)
@@ -127,24 +127,24 @@ define i64 @anybx_eqz(<16 x i8> %0) {
 ; CV1-NEXT:    addd $r1 = $r1, 0xfefefefefefefeff
 ; CV1-NEXT:    andnd.@ $r2 = $r1, 0x80808080
 ; CV1-NEXT:    andnd.@ $r3 = $r0, 0x80808080
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
 ; CV1-NEXT:    andd $r1 = $r1, $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r0 = $r0, $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: anybx_eqz:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnbo.eq $r0 = $r0, 0
 ; CV2-NEXT:    compnbo.eq $r1 = $r1, 0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lord $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %4 = tail call i64 @llvm.kvx.any2.v8i8(<8 x i8> %2, <8 x i8> %3, i32 1)
@@ -156,7 +156,7 @@ define i64 @anydp_nez(<2 x i64> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = extractelement <2 x i64> %0, i64 1
   %4 = tail call i64 @llvm.kvx.any2.i64(i64 %2, i64 %3, i32 0)
@@ -170,7 +170,7 @@ define i64 @anydp_eqz(<2 x i64> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lnandd $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i64> %0, i64 0
   %3 = extractelement <2 x i64> %0, i64 1
   %4 = tail call i64 @llvm.kvx.any2.i64(i64 %2, i64 %3, i32 1)
@@ -182,10 +182,10 @@ define i64 @anydq_nez(<4 x i64> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = extractelement <4 x i64> %0, i64 1
   %4 = extractelement <4 x i64> %0, i64 2
@@ -201,10 +201,10 @@ define i64 @anydq_eqz(<4 x i64> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lnandd $r0 = $r0, $r1
 ; ALL-NEXT:    lnandd $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = extractelement <4 x i64> %0, i64 0
   %3 = extractelement <4 x i64> %0, i64 1
   %4 = extractelement <4 x i64> %0, i64 2
@@ -218,7 +218,7 @@ define i64 @anyho_nez(<8 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = tail call i64 @llvm.kvx.any2.v4i16(<4 x i16> %2, <4 x i16> %3, i32 0)
@@ -232,10 +232,10 @@ define i64 @anyho_eqz(<8 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.eq $r0 = $r0, 0
 ; ALL-NEXT:    compnhq.eq $r1 = $r1, 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = tail call i64 @llvm.kvx.any2.v4i16(<4 x i16> %2, <4 x i16> %3, i32 1)
@@ -247,7 +247,7 @@ define i64 @anyhq_nez(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compd.ne $r0 = $r0, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.any.v4i16(<4 x i16> %0, i32 0)
   ret i64 %2
 }
@@ -258,10 +258,10 @@ define i64 @anyhq_eqz(<4 x i16> %0) {
 ; ALL-LABEL: anyhq_eqz:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnhq.eq $r0 = $r0, 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    compd.ne $r0 = $r0, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call i64 @llvm.kvx.any.v4i16(<4 x i16> %0, i32 1)
   ret i64 %2
 }
@@ -271,10 +271,10 @@ define i64 @anyhx_nez(<16 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
@@ -292,13 +292,13 @@ define i64 @anyhx_eqz(<16 x i16> %0) {
 ; ALL-NEXT:    compnhq.eq $r1 = $r1, 0
 ; ALL-NEXT:    compnhq.eq $r2 = $r2, 0
 ; ALL-NEXT:    compnhq.eq $r3 = $r3, 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 8, i32 9, i32 10, i32 11>
@@ -312,10 +312,10 @@ define i64 @anywo_nez(<8 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
@@ -333,13 +333,13 @@ define i64 @anywo_eqz(<8 x i32> %0) {
 ; ALL-NEXT:    compnwp.eq $r1 = $r1, 0
 ; ALL-NEXT:    compnwp.eq $r2 = $r2, 0
 ; ALL-NEXT:    compnwp.eq $r3 = $r3, 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    lord $r0 = $r0, $r1
 ; ALL-NEXT:    lord $r2 = $r2, $r3
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    orw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 2)
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 4, i32 5>
@@ -353,7 +353,7 @@ define i64 @anywp_nez(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compd.ne $r0 = $r0, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.any.v2i32(<2 x i32> %0, i32 0)
   ret i64 %2
 }
@@ -364,10 +364,10 @@ define i64 @anywp_eqz(<2 x i32> %0) {
 ; ALL-LABEL: anywp_eqz:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    compnwp.eq $r0 = $r0, 0
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    compd.ne $r0 = $r0, 0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call i64 @llvm.kvx.any.v2i32(<2 x i32> %0, i32 1)
   ret i64 %2
 }

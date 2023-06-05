@@ -11,7 +11,7 @@ define i32 @CLRF_bottom_int(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r0 = $r0, 0xfffff000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, -4096
   ret i32 %2
 }
@@ -21,7 +21,7 @@ define i32 @CLRF_top_int(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r0 = $r0, 0xfffff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, 1048575
   ret i32 %2
 }
@@ -31,7 +31,7 @@ define i32 @CLRF_center_int(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r0 = $r0, 0xf000000f
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, -268435441
   ret i32 %2
 }
@@ -41,7 +41,7 @@ define i32 @CLRF_sides_int(i32 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r0 = $r0, 0x200000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i32 %0, 2097152
   ret i32 %2
 }
@@ -51,7 +51,7 @@ define i64 @CLRF_bottom_long(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r0 = $r0, 35, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, -68719476736
   ret i64 %2
 }
@@ -61,7 +61,7 @@ define i64 @CLRF_top_long(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r0 = $r0, 63, 40
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, 1099511627775
   ret i64 %2
 }
@@ -71,7 +71,7 @@ define i64 @CLRF_center_long(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r0 = $r0, 47, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, -281474976645121
   ret i64 %2
 }
@@ -81,7 +81,7 @@ define i64 @CLRF_sides_long(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r0 = $r0, 0, 31
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = and i64 %0, 4294967294
   ret i64 %2
 }

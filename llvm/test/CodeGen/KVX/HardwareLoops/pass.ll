@@ -11,14 +11,14 @@ define void @imm_imm_positive_bump(i32* nocapture %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    make $r2 = 100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -44,14 +44,14 @@ define void @imm_imm_negative_bump(i32* nocapture %x){
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 99
 ; CHECK-NEXT:    make $r2 = 100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -76,22 +76,22 @@ define void @imm_nonzero_reg_positive_bump(i32* nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_nonzero_reg_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r2 = $r1, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB2_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r1 = 3
 ; CHECK-NEXT:    addd $r2 = $r1, -3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB2_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
 ; CHECK-NEXT:  .LBB2_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -121,20 +121,20 @@ define void @imm_nonzero_reg_negative_bump(i32* nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_nonzero_reg_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r2 = $r1, 99
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB3_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r1 = 99
 ; CHECK-NEXT:    sbfwd $r2 = $r1, 100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  .LBB3_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -168,14 +168,14 @@ define void @imm_zero_reg_positive_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    zxwd $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB4_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_4_END_:
 ; CHECK-NEXT:  .LBB4_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -209,16 +209,16 @@ define void @imm_zero_reg_negative_bump(i32* nocapture %x, i32 %n){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    sbfwd $r2 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, 4
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .__LOOPDO_5_END_:
 ; CHECK-NEXT:  .LBB5_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -249,21 +249,21 @@ define void @reg_imm_nonzero_negative_bump(i32* nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_nonzero_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r2 = $r1, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB6_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r2 = $r1, -2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB6_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_6_END_:
 ; CHECK-NEXT:  .LBB6_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -293,20 +293,20 @@ define void @reg_imm_nonzero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_nonzero_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r2 = $r1, 99
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r2 ? .LBB7_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r1 = $r1
 ; CHECK-NEXT:    sbfwd $r2 = $r1, 100
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_7_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB7_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_7_END_:
 ; CHECK-NEXT:  .LBB7_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -340,7 +340,7 @@ define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sbfx4wd $r0 = $r1, $r0
 ; CHECK-NEXT:    sbfwd $r2 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_8_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB8_2: # %for.body
@@ -348,7 +348,7 @@ define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, -4
 ; CHECK-NEXT:    addw $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_8_END_:
 ; CHECK-NEXT:  .LBB8_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -382,16 +382,16 @@ define void @reg_imm_zero_negative_bump(i32* nocapture %x, i32 %start){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    zxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r2 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_9_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB9_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_9_END_:
 ; CHECK-NEXT:  .LBB9_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -421,15 +421,15 @@ define void @reg_reg_positive_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-LABEL: reg_reg_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ge $r3 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r3 ? .LBB10_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    addx4wd $r0 = $r1, $r0
 ; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfwd $r2 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_10_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB10_2: # %for.body
@@ -437,7 +437,7 @@ define void @reg_reg_positive_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-NEXT:    sw 0[$r0] = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, 4
 ; CHECK-NEXT:    addw $r1 = $r1, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_10_END_:
 ; CHECK-NEXT:  .LBB10_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret
@@ -468,23 +468,23 @@ define void @reg_reg_negative_bump(i32* nocapture %x, i32 %start, i32 %end){
 ; CHECK-LABEL: reg_reg_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r3 = $r1, $r2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.odd $r3 ? .LBB11_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    sxwd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfwd $r2 = $r2, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addd $r2 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_11_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB11_2: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw.xs $r1[$r0] = $r1
 ; CHECK-NEXT:    addd $r1 = $r1, -1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_11_END_:
 ; CHECK-NEXT:  .LBB11_3: # %for.cond.cleanup
 ; CHECK-NEXT:    ret

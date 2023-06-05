@@ -104,6 +104,8 @@ def I1INVALSp : KVX_PSEUDO<(outs), (ins AddrRR:$addr), []>;
 let Constraints = "$output = $newsp" in
 def SPCHECKp : KVX_PSEUDO<(outs SingleReg:$output), (ins SingleReg:$newsp, SingleReg:$check), []>;
 
+def MCYCLESp: KVX_PSEUDO<(outs), (ins Wrapped64:$cycle), [], "MCYCLESp $cycle">;
+
 let Constraints = "$out1 = $in2, $out2 = $in1" in
 let Size = 8 in
 def SWAP64p : KVX_PSEUDO_W_SCHEDINFO<(outs SingleReg:$out1, SingleReg:$out2),

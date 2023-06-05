@@ -11,15 +11,15 @@ define i64 @satw(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satdw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satw:
 ; V2:       # %bb.0:
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffff80000000
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    mind $r0 = $r0, 0x7fffffff
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 2147483647
   %3 = icmp sgt i64 %0, -2147483648
   %4 = select i1 %3, i64 %0, i64 -2147483648
@@ -32,15 +32,15 @@ define i64 @satw2(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satdw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satw2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 0x7fffffff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffff80000000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 2147483647
   %3 = icmp sgt i64 %0, -2147483648
   %4 = select i1 %2, i64 2147483647, i64 %0
@@ -53,15 +53,15 @@ define i64 @sath(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satdh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: sath:
 ; V2:       # %bb.0:
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffffffff8000
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    mind $r0 = $r0, 0x7fff
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 32767
   %3 = icmp sgt i64 %0, -32768
   %4 = select i1 %3, i64 %0, i64 -32768
@@ -74,15 +74,15 @@ define i64 @sath2(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satdh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: sath2:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 0x7fff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffffffff8000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 32767
   %3 = icmp sgt i64 %0, -32768
   %4 = select i1 %2, i64 32767, i64 %0
@@ -94,18 +94,18 @@ define i32 @not_sath3(i32 %0) {
 ; CHECK-LABEL: not_sath3:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maxw $r0 = $r0, 0xffff8000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    minw $r0 = $r0, 0x7fff
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: not_sath3:
 ; V2:       # %bb.0:
 ; V2-NEXT:    maxw $r0 = $r0, 0xffff8000
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    minw $r0 = $r0, 0x7fff
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 32767
   %3 = icmp sgt i32 %0, -32768
   %4 = select i1 %3, i32 %0, i32 -32768
@@ -117,18 +117,18 @@ define i32 @not_sath4(i32 %0) {
 ; CHECK-LABEL: not_sath4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 0x7fff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, 0xffff8000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: not_sath4:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 0x7fff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, 0xffff8000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 32767
   %3 = icmp sgt i32 %0, -32768
   %4 = select i1 %2, i32 32767, i32 %0
@@ -141,18 +141,18 @@ define i32 @satd_w2b(i32 %0) {
 ; CHECK-LABEL: satd_w2b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, -2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w2b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, -2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 1
   %3 = icmp sgt i32 %0, -2
   %4 = select i1 %2, i32 1, i32 %0
@@ -166,15 +166,15 @@ define i64 @satd_2b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_2b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, -2
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 1
   %3 = icmp sgt i64 %0, -2
   %4 = select i1 %2, i64 1, i64 %0
@@ -186,18 +186,18 @@ define i32 @satd_w3b(i32 %0) {
 ; CHECK-LABEL: satd_w3b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, -4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w3b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, -4
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 3
   %3 = icmp sgt i32 %0, -4
   %4 = select i1 %2, i32 3, i32 %0
@@ -211,15 +211,15 @@ define i64 @satd_3b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_3b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, -4
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 3
   %3 = icmp sgt i64 %0, -4
   %4 = select i1 %2, i64 3, i64 %0
@@ -231,18 +231,18 @@ define i32 @satd_w4b(i32 %0) {
 ; CHECK-LABEL: satd_w4b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, -8
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w4b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, -8
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0,7
   %3 = icmp sgt i32 %0, -8
   %4 = select i1 %2, i32 7, i32 %0
@@ -256,15 +256,15 @@ define i64 @satd_4b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_4b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, -8
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0,7
   %3 = icmp sgt i64 %0, -8
   %4 = select i1 %2, i64 7, i64 %0
@@ -276,18 +276,18 @@ define i32 @satd_w8b(i32 %0) {
 ; CHECK-LABEL: satd_w8b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 127
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, -128
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w8b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 127
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, -128
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 127
   %3 = icmp sgt i32 %0, -128
   %4 = select i1 %2, i32 127, i32 %0
@@ -301,15 +301,15 @@ define i64 @satd_8b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 8
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_8b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 127
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, -128
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 127
   %3 = icmp sgt i64 %0, -128
   %4 = select i1 %2, i64 127, i64 %0
@@ -321,18 +321,18 @@ define i32 @satd_w15b(i32 %0) {
 ; CHECK-LABEL: satd_w15b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 0x3fff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, 0xffffc000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w15b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 0x3fff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, 0xffffc000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 16383
   %3 = icmp sgt i32 %0, -16384
   %4 = select i1 %2, i32 16383, i32 %0
@@ -345,15 +345,15 @@ define i64 @satd_15b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 15
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_15b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 0x3fff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffffffffc000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 16383
   %3 = icmp sgt i64 %0, -16384
   %4 = select i1 %2, i64 16383, i64 %0
@@ -365,18 +365,18 @@ define i32 @satd_w31b(i32 %0) {
 ; CHECK-LABEL: satd_w31b:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    minw $r0 = $r0, 0x3fffffff
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    maxw $r0 = $r0, 0xc0000000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: satd_w31b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    minw $r0 = $r0, 0x3fffffff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxw $r0 = $r0, 0xc0000000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i32 %0, 1073741823
   %3 = icmp sgt i32 %0, -1073741824
   %4 = select i1 %2, i32 1073741823, i32 %0
@@ -390,15 +390,15 @@ define i64 @satd_31b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 31
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_31b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 0x3fffffff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffffffc0000000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0, 1073741823
   %3 = icmp sgt i64 %0, -1073741824
   %4 = select i1 %2, i64 1073741823, i64 %0
@@ -411,15 +411,15 @@ define i64 @satd_40b(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    satd $r0 = $r0, 40
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: satd_40b:
 ; V2:       # %bb.0:
 ; V2-NEXT:    mind $r0 = $r0, 0x7fffffffff
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    maxd $r0 = $r0, 0xffffff8000000000
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = icmp sgt i64 %0,549755813887
   %3 = icmp sgt i64 %0, -549755813888
   %4 = select i1 %2, i64 549755813887, i64 %0

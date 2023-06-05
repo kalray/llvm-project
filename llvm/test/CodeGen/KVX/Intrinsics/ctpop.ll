@@ -10,10 +10,10 @@ define i8 @ctpopi8(i8 %a) {
 ; CHECK-LABEL: ctpopi8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxbd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call i8 @llvm.ctpop.i8(i8 %a)
   ret i8 %res
 }
@@ -22,10 +22,10 @@ define i16 @ctpopi16(i16 %a) {
 ; CHECK-LABEL: ctpopi16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxhd $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call i16 @llvm.ctpop.i16(i16 %a)
   ret i16 %res
 }
@@ -35,7 +35,7 @@ define i32 @cbsw(i32 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cbsw $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i32 @llvm.ctpop.i32(i32 %a)
   ret i32 %res
 }
@@ -45,7 +45,7 @@ define i64 @cbsd(i64 %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call i64 @llvm.ctpop.i64(i64 %a)
   ret i64 %res
 }
@@ -54,12 +54,12 @@ define <2 x i8> @ctpopv2i8(<2 x i8> %a) {
 ; CHECK-LABEL: ctpopv2i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbswp $r0 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %res = call <2 x i8> @llvm.ctpop.v2i8(<2 x i8> %a)
   ret <2 x i8> %res
 }
@@ -68,22 +68,22 @@ define <2 x i16> @ctpopv2i16(<2 x i16> %a) {
 ; CV1-LABEL: ctpopv2i16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    cbswp $r0 = $r0
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: ctpopv2i16:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxlhwp $r0 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cbswp $r0 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
   %res = call <2 x i16> @llvm.ctpop.v2i16(<2 x i16> %a)
   ret <2 x i16> %res
 }
@@ -93,7 +93,7 @@ define <2 x i32> @cbswp(<2 x i32> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i32> @llvm.ctpop.v2i32(<2 x i32> %a)
   ret <2 x i32> %res
 }
@@ -104,7 +104,7 @@ define <2 x i64> @ctpopv2i64(<2 x i64> %a) {
 ; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    cbsd $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <2 x i64> @llvm.ctpop.v2i64(<2 x i64> %a)
   ret <2 x i64> %res
 }
@@ -114,16 +114,16 @@ define <4 x i8> @ctpopv4i8(<4 x i8> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x800000004
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    cbswp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %res = call <4 x i8> @llvm.ctpop.v4i8(<4 x i8> %a)
   ret <4 x i8> %res
 }
@@ -133,31 +133,31 @@ define <4 x i16> @ctpop4i16(<4 x i16> %a) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    cbswp $r0 = $r0
 ; CV1-NEXT:    cbswp $r1 = $r1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r1, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: ctpop4i16:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxlhwp $r0 = $r0
 ; CV2-NEXT:    zxmhwp $r1 = $r0
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cbswp $r0 = $r0
 ; CV2-NEXT:    cbswp $r1 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r1, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
   %res = call <4 x i16> @llvm.ctpop.v4i16(<4 x i16> %a)
   ret <4 x i16> %res
 }
@@ -168,7 +168,7 @@ define <4 x i32> @cbswpx2(<4 x i32> %a) {
 ; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    cbswp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %res = call <4 x i32> @llvm.ctpop.v4i32(<4 x i32> %a)
   ret <4 x i32> %res
 }
@@ -178,11 +178,11 @@ define <4 x i64> @ctpopv4i64(<4 x i64> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    cbsd $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbsd $r2 = $r2
 ; CHECK-NEXT:    cbsd $r3 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <4 x i64> @llvm.ctpop.v4i64(<4 x i64> %a)
   ret <4 x i64> %res
 }
@@ -193,54 +193,54 @@ define <8 x i8> @ctpopv8i8(<8 x i8> %a) {
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x200000001
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x800000004
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x200000001
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x800000004
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cbswp $r1 = $r1
 ; CV1-NEXT:    cbswp $r3 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cbswp $r0 = $r0
 ; CV1-NEXT:    cbswp $r2 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x1001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x1001
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    insf $r1 = $r3, 31, 16
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r1, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: ctpopv8i8:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x200000001
 ; CV2-NEXT:    srld $r1 = $r0, 32
 ; CV2-NEXT:    sbmm8 $r3 = $r0, 0x800000004
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cbswp $r0 = $r0
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x200000001
 ; CV2-NEXT:    sbmm8 $r2 = $r1, 0x800000004
 ; CV2-NEXT:    cbswp $r3 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV2-NEXT:    cbswp $r1 = $r1
 ; CV2-NEXT:    cbswp $r2 = $r2
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x1001
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r3, 31, 16
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x1001
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r1 = $r2, 31, 16
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r1, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 5)
   %res = call <8 x i8> @llvm.ctpop.v8i8(<8 x i8> %a)
   ret <8 x i8> %res
 }
@@ -250,26 +250,26 @@ define <8 x i16> @ctpopv8i16(<8 x i16> %a) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x804000002010
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    cbswp $r0 = $r0
 ; CV1-NEXT:    cbswp $r2 = $r2
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cbswp $r1 = $r1
 ; CV1-NEXT:    cbswp $r3 = $r3
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV1-NEXT:    sbmm8 $r2 = $r2, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x20100201
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    insf $r0 = $r2, 63, 32
 ; CV1-NEXT:    insf $r1 = $r3, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 6)
 ;
 ; CV2-LABEL: ctpopv8i16:
 ; CV2:       # %bb.0:
@@ -277,22 +277,22 @@ define <8 x i16> @ctpopv8i16(<8 x i16> %a) {
 ; CV2-NEXT:    zxlhwp $r1 = $r1
 ; CV2-NEXT:    zxmhwp $r2 = $r0
 ; CV2-NEXT:    zxmhwp $r3 = $r1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cbswp $r0 = $r0
 ; CV2-NEXT:    cbswp $r2 = $r2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CV2-NEXT:    cbswp $r1 = $r1
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x20100201
 ; CV2-NEXT:    cbswp $r3 = $r3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r2, 63, 32
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x20100201
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r1 = $r3, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 4)
   %res = call <8 x i16> @llvm.ctpop.v8i16(<8 x i16> %a)
   ret <8 x i16> %res
 }
@@ -302,11 +302,11 @@ define <8 x i32> @ctpopwo(<8 x i32> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cbswp $r0 = $r0
 ; CHECK-NEXT:    cbswp $r1 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cbswp $r2 = $r2
 ; CHECK-NEXT:    cbswp $r3 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %res = call <8 x i32> @llvm.ctpop.v8i32(<8 x i32> %a)
   ret <8 x i32> %res
 }
@@ -332,7 +332,7 @@ define i64 @cbsdl(i64 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.ctpop.i64(i64 %a)
   ret i64 %0
@@ -343,7 +343,7 @@ define i64 @cbsdll(i64 %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cbsd $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = tail call i64 @llvm.ctpop.i64(i64 %a)
   ret i64 %0

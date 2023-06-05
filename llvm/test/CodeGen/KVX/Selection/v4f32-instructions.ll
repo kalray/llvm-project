@@ -12,7 +12,7 @@ define <4 x float> @test_ret_const() #0 {
 ; CHECK-NEXT:    make $r0 = 0x400000003f800000
 ; CHECK-NEXT:    make $r1 = 0x400000003f800000
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   ret <4 x float> <float 1.0, float 2.0, float 1.0, float 2.0>
 }
 
@@ -30,7 +30,7 @@ define float @test_extract_1(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r0 = $r0, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %e = extractelement <4 x float> %a, i32 1
   ret float %e
 }
@@ -40,13 +40,13 @@ define float @test_extract_i(<4 x float> %a, i64 %idx) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r2 = $r2, 1
 ; CHECK-NEXT:    srlw $r3 = $r2, 1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmoved.odd $r3 ? $r0 = $r1
 ; CHECK-NEXT:    sllw $r1 = $r2, 5
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %e = extractelement <4 x float> %a, i64 %idx
   ret float %e
 }
@@ -56,7 +56,7 @@ define <4 x float> @test_fadd(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fadd <4 x float> %a, %b
   ret <4 x float> %r
 }
@@ -65,12 +65,12 @@ define <4 x float> @test_fadd_imm_0(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_0:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x400000003f800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fadd <4 x float> <float 1.0, float 2.0, float 1.0, float 2.0>, %a
   ret <4 x float> %r
 }
@@ -79,12 +79,12 @@ define <4 x float> @test_fadd_imm_1(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fadd_imm_1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x400000003f800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fadd <4 x float> %a, <float 1.0, float 2.0, float 1.0, float 2.0>
   ret <4 x float> %r
 }
@@ -94,7 +94,7 @@ define <4 x float> @test_fsub(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fsbfwq $r0r1 = $r2r3, $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fsub <4 x float> %a, %b
   ret <4 x float> %r
 }
@@ -103,12 +103,12 @@ define <4 x float> @test_fsub_imm(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0xc0000000bf800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fsub <4 x float> %a, <float 1.0, float 2.0, float 1.0, float 2.0>
   ret <4 x float> %r
 }
@@ -117,12 +117,12 @@ define <4 x float> @test_fsub_fromimm(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fsub_fromimm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 0x400000003f800000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r2 = $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fsbfwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fsub <4 x float> <float 1.0, float 2.0, float 1.0, float 2.0>, %a
   ret <4 x float> %r
 }
@@ -133,7 +133,7 @@ define <4 x float> @test_fneg(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fnegwp $r0 = $r0
 ; CHECK-NEXT:    fnegwp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fsub <4 x float> <float 0.0, float 0.0, float 0.0, float 0.0>, %a
   ret <4 x float> %r
 }
@@ -143,7 +143,7 @@ define <4 x float> @test_fmul(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = fmul <4 x float> %a, %b
   ret <4 x float> %r
 }
@@ -153,53 +153,53 @@ define <4 x float> @test_fdiv(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r22, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fdiv <4 x float> %a, %b
@@ -211,53 +211,53 @@ define <4 x float> @test_frem(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r22, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = frem <4 x float> %a, %b
@@ -268,10 +268,10 @@ define void @test_ldst_v4f32(<4 x float>* %a, <4 x float>* %b) {
 ; CHECK-LABEL: test_ldst_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %t1 = load <4 x float>, <4 x float>* %a
   store <4 x float> %t1, <4 x float>* %b, align 16
   ret void
@@ -284,15 +284,15 @@ define <4 x float> @test_call(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @test_callee(<4 x float> %a, <4 x float> %b)
@@ -304,20 +304,20 @@ define <4 x float> @test_call_flipped(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    copyd $r2 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    call test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @test_callee(<4 x float> %b, <4 x float> %a)
@@ -332,7 +332,7 @@ define <4 x float> @test_tailcall_flipped(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    copyd $r2 = $r0
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    goto test_callee
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = tail call <4 x float> @test_callee(<4 x float> %b, <4 x float> %a)
   ret <4 x float> %r
 }
@@ -343,7 +343,7 @@ define <4 x float> @test_select(<4 x float> %a, <4 x float> %b, i1 zeroext %c) #
 ; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = select i1 %c, <4 x float> %a, <4 x float> %b
   ret <4 x float> %r
 }
@@ -353,11 +353,11 @@ define <4 x float> @test_select_cc(<4 x float> %a, <4 x float> %b, <4 x float> %
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r6
 ; CHECK-NEXT:    fcompnwp.une $r5 = $r5, $r7
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %cc = fcmp une <4 x float> %c, %d
   %r = select <4 x i1> %cc, <4 x float> %a, <4 x float> %b
   ret <4 x float> %r
@@ -368,52 +368,52 @@ define <4 x double> @test_select_cc_f32_f32(<4 x double> %a, <4 x double> %b, <4
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fcompnwp.une $r8 = $r8, $r10
 ; KV3_1-NEXT:    fcompnwp.une $r9 = $r9, $r11
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sxwd $r8 = $r8
 ; KV3_1-NEXT:    sxwd $r9 = $r9
 ; KV3_1-NEXT:    srld $r10 = $r9, 32
 ; KV3_1-NEXT:    srld $r11 = $r8, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sxwd $r10 = $r10
 ; KV3_1-NEXT:    sxwd $r11 = $r11
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
 ; KV3_1-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    copyd $r0 = $r4
 ; KV3_1-NEXT:    copyd $r1 = $r5
 ; KV3_1-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
 ; KV3_1-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    copyd $r2 = $r6
 ; KV3_1-NEXT:    copyd $r3 = $r7
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: test_select_cc_f32_f32:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    fcompnwp.une $r8 = $r8, $r10
 ; KV3_2-NEXT:    fcompnwp.une $r9 = $r9, $r11
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    sxwd $r8 = $r8
 ; KV3_2-NEXT:    sxwd $r9 = $r9
 ; KV3_2-NEXT:    srld $r10 = $r9, 32
 ; KV3_2-NEXT:    srld $r11 = $r8, 32
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
 ; KV3_2-NEXT:    cmoved.dnez $r9 ? $r6 = $r2
 ; KV3_2-NEXT:    sxwd $r10 = $r10
 ; KV3_2-NEXT:    sxwd $r11 = $r11
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    copyd $r0 = $r4
 ; KV3_2-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
 ; KV3_2-NEXT:    cmoved.dnez $r10 ? $r7 = $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:    copyd $r1 = $r5
 ; KV3_2-NEXT:    copyd $r2 = $r6
 ; KV3_2-NEXT:    copyd $r3 = $r7
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 4)
   %cc = fcmp une <4 x float> %c, %d
   %r = select <4 x i1> %cc, <4 x double> %a, <4 x double> %b
   ret <4 x double> %r
@@ -424,13 +424,13 @@ define <4 x i1> @test_fcmp_une(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.une $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp une <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -440,13 +440,13 @@ define <4 x i1> @test_fcmp_ueq(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ueq $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.ueq $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ueq <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -456,13 +456,13 @@ define <4 x i1> @test_fcmp_ugt(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r2, $r0
 ; CHECK-NEXT:    fcompnwp.ult $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ugt <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -472,13 +472,13 @@ define <4 x i1> @test_fcmp_uge(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.uge $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp uge <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -488,13 +488,13 @@ define <4 x i1> @test_fcmp_ult(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.ult $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.ult $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ult <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -504,13 +504,13 @@ define <4 x i1> @test_fcmp_ule(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.uge $r0 = $r2, $r0
 ; CHECK-NEXT:    fcompnwp.uge $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ule <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -520,19 +520,19 @@ define <4 x i1> @test_fcmp_uno(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_1-NEXT:    andd $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd $r0 = $r0, $r3
 ; KV3_1-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV3_2-LABEL: test_fcmp_uno:
 ; KV3_2:       # %bb.0:
@@ -540,16 +540,16 @@ define <4 x i1> @test_fcmp_uno(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd $r0 = $r0, $r3
 ; KV3_2-NEXT:    andd $r1 = $r1, $r4
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; KV3_2-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 3)
   %r = fcmp uno <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -559,13 +559,13 @@ define <4 x i1> @test_fcmp_one(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.one $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp one <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -575,13 +575,13 @@ define <4 x i1> @test_fcmp_oeq(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp oeq <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -591,13 +591,13 @@ define <4 x i1> @test_fcmp_ogt(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; CHECK-NEXT:    fcompnwp.olt $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ogt <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -607,13 +607,13 @@ define <4 x i1> @test_fcmp_oge(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.oge $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp oge <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -623,13 +623,13 @@ define <4 x i1> @test_fcmp_olt(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; CHECK-NEXT:    fcompnwp.olt $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp olt <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -639,13 +639,13 @@ define <4 x i1> @test_fcmp_ole(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; CHECK-NEXT:    fcompnwp.oge $r1 = $r3, $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %r = fcmp ole <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -655,19 +655,19 @@ define <4 x i1> @test_fcmp_ord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    ord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r0 = $r1, 31, 16
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV3_2-LABEL: test_fcmp_ord:
 ; KV3_2:       # %bb.0:
@@ -675,16 +675,16 @@ define <4 x i1> @test_fcmp_ord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r4
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; KV3_2-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    insf $r0 = $r1, 31, 16
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 3)
   %r = fcmp ord <4 x float> %a, %b
   ret <4 x i1> %r
 }
@@ -693,10 +693,10 @@ define <4 x i32> @test_fptosi_i32(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptosi <4 x float> %a to <4 x i32>
   ret <4 x i32> %r
 }
@@ -706,18 +706,18 @@ define <4 x i64> @test_fptosi_i64(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fixedd.rz $r3 = $r2, 0
 ; CHECK-NEXT:    fwidenmwd $r4 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fixedd.rz $r1 = $r4, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fixedd.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptosi <4 x float> %a to <4 x i64>
   ret <4 x i64> %r
 }
@@ -726,10 +726,10 @@ define <4 x i32> @test_fptoui_2xi32(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_2xi32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptoui <4 x float> %a to <4 x i32>
   ret <4 x i32> %r
 }
@@ -739,18 +739,18 @@ define <4 x i64> @test_fptoui_2xi64(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
 ; CHECK-NEXT:    fwidenmwd $r2 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fixedud.rz $r3 = $r2, 0
 ; CHECK-NEXT:    fwidenmwd $r4 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedud.rz $r2 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fixedud.rz $r1 = $r4, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fixedud.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
   %r = fptoui <4 x float> %a to <4 x i64>
   ret <4 x i64> %r
 }
@@ -759,16 +759,16 @@ define <4 x i16> @test_fptosi_i16(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %r = fptosi <4 x float> %a to <4 x i16>
   ret <4 x i16> %r
 }
@@ -777,16 +777,16 @@ define <4 x i16> @test_fptoui_i16(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r1, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %r = fptoui <4 x float> %a to <4 x i16>
   ret <4 x i16> %r
 }
@@ -795,16 +795,16 @@ define <4 x i8> @test_fptosi_i8(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptosi_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixedwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %r = fptosi <4 x float> %a to <4 x i8>
   ret <4 x i8> %r
 }
@@ -813,16 +813,16 @@ define <4 x i8> @test_fptoui_i8(<4 x float> %a) #0 {
 ; CHECK-LABEL: test_fptoui_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fixeduwp.rz $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fixeduwp.rz $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 6)
   %r = fptoui <4 x float> %a to <4 x i8>
   ret <4 x i8> %r
 }
@@ -830,10 +830,10 @@ define <4 x float> @test_uitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = uitofp <4 x i32> %a to <4 x float>
   ret <4 x float> %r
 }
@@ -843,44 +843,44 @@ define <4 x float> @test_uitofp_2xi64(<4 x i64> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatundisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r21, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = uitofp <4 x i64> %a to <4 x float>
@@ -891,10 +891,10 @@ define <4 x float> @test_sitofp_2xi32(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatwp.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = sitofp <4 x i32> %a to <4 x float>
   ret <4 x float> %r
 }
@@ -904,44 +904,44 @@ define <4 x float> @test_sitofp_2xi64(<4 x i64> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __floatdisf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r19, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r21, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = sitofp <4 x i64> %a to <4 x float>
@@ -952,12 +952,12 @@ define <4 x float> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_uitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddwq $r0r1 = $r2r3, $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %c = uitofp <4 x i32> %a to <4 x float>
   %r = fadd <4 x float> %b, %c
   ret <4 x float> %r
@@ -967,12 +967,12 @@ define <4 x float> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x float> %b) #0 {
 ; CHECK-LABEL: test_sitofp_2xi32_fadd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatwp.rn $r1 = $r1, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    faddwq $r0r1 = $r2r3, $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
   %c = sitofp <4 x i32> %a to <4 x float>
   %r = fadd <4 x float> %b, %c
   ret <4 x float> %r
@@ -982,11 +982,11 @@ define <4 x float> @test_fptrunc_2xdouble(<4 x double> %a) #0 {
 ; CHECK-LABEL: test_fptrunc_2xdouble:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnarrowdwp $r3 = $r2r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowdwp $r0 = $r0r1
 ; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fptrunc <4 x double> %a to <4 x float>
   ret <4 x float> %r
 }
@@ -996,11 +996,11 @@ define <4 x double> @test_fpext_2xdouble(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    fwidenmwd $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = fpext <4 x float> %a to <4 x double>
   ret <4 x double> %r
 }
@@ -1051,43 +1051,43 @@ define <4 x float> @test_sqrt(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call sqrtf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.sqrt.v4f32(<4 x float> %a)
@@ -1099,52 +1099,52 @@ define <4 x float> @test_powi(<4 x float> %a, i32 %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r2
 ; CHECK-NEXT:    copyd $r19 = $r1
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call __powisf2
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r22, 63, 32
 ; CHECK-NEXT:    insf $r19 = $r21, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.powi.v4f32(<4 x float> %a, i32 %b)
@@ -1156,43 +1156,43 @@ define <4 x float> @test_sin(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.sin.v4f32(<4 x float> %a)
@@ -1204,43 +1204,43 @@ define <4 x float> @test_cos(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call cosf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.cos.v4f32(<4 x float> %a)
@@ -1252,53 +1252,53 @@ define <4 x float> @test_pow(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
 ; CHECK-NEXT:    copyd $r19 = $r2
 ; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call powf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r22, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.pow.v4f32(<4 x float> %a, <4 x float> %b)
@@ -1310,43 +1310,43 @@ define <4 x float> @test_exp(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call expf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.exp.v4f32(<4 x float> %a)
@@ -1358,43 +1358,43 @@ define <4 x float> @test_exp2(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call exp2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.exp2.v4f32(<4 x float> %a)
@@ -1406,43 +1406,43 @@ define <4 x float> @test_log(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call logf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.log.v4f32(<4 x float> %a)
@@ -1454,43 +1454,43 @@ define <4 x float> @test_log10(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call log10f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.log10.v4f32(<4 x float> %a)
@@ -1502,43 +1502,43 @@ define <4 x float> @test_log2(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
  %r = call <4 x float> @llvm.log2.v4f32(<4 x float> %a)
@@ -1549,22 +1549,22 @@ define <4 x float> @test_fma(<4 x float> %a, <4 x float> %b, <4 x float> %c) #0 
 ; KV3_1-LABEL: test_fma:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    copyd $r0 = $r4
 ; KV3_1-NEXT:    copyd $r1 = $r5
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: test_fma:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    ffmawq $r4r5 = $r0r1, $r2r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    copyd $r0 = $r4
 ; KV3_2-NEXT:    copyd $r1 = $r5
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 4)
   %r = call <4 x float> @llvm.fma.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
@@ -1575,7 +1575,7 @@ define <4 x float> @test_fabs(<4 x float> %a) #0 {
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call <4 x float> @llvm.fabs.v4f32(<4 x float> %a)
   ret <4 x float> %r
 }
@@ -1585,55 +1585,55 @@ define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    addd $r12 = $r12, -64
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sd 56[$r12] = $r16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 48[$r12] = $r22
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sq 32[$r12] = $r20r21
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sq 16[$r12] = $r18r19
 ; KV3_1-NEXT:    copyd $r18 = $r3
 ; KV3_1-NEXT:    copyd $r19 = $r2
 ; KV3_1-NEXT:    copyd $r20 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srad $r1 = $r19, 32
 ; KV3_1-NEXT:    copyd $r21 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    srad $r0 = $r21, 32
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    copyd $r0 = $r21
 ; KV3_1-NEXT:    copyd $r1 = $r19
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    srad $r0 = $r20, 32
 ; KV3_1-NEXT:    srad $r1 = $r18, 32
 ; KV3_1-NEXT:    copyd $r19 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    insf $r19 = $r22, 63, 32
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    copyd $r0 = $r20
 ; KV3_1-NEXT:    copyd $r1 = $r18
 ; KV3_1-NEXT:    copyd $r21 = $r0
 ; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r18r19 = 16[$r12]
 ; KV3_1-NEXT:    copyd $r0 = $r19
 ; KV3_1-NEXT:    copyd $r1 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r20r21 = 32[$r12]
 ; KV3_1-NEXT:    insf $r1 = $r21, 63, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ld $r22 = 48[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    ld $r16 = 56[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 64
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1642,7 +1642,7 @@ define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fminwp $r0 = $r0, $r2
 ; KV3_2-NEXT:    fminwp $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call <4 x float> @llvm.minnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
@@ -1653,7 +1653,7 @@ define <4 x float> @test_minnum_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fminwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fminwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <4 x float> @llvm.minnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
@@ -1663,55 +1663,55 @@ define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    addd $r12 = $r12, -64
 ; KV3_1-NEXT:    get $r16 = $ra
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sd 56[$r12] = $r16
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    sd 48[$r12] = $r22
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sq 32[$r12] = $r20r21
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sq 16[$r12] = $r18r19
 ; KV3_1-NEXT:    copyd $r18 = $r3
 ; KV3_1-NEXT:    copyd $r19 = $r2
 ; KV3_1-NEXT:    copyd $r20 = $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    srad $r1 = $r19, 32
 ; KV3_1-NEXT:    copyd $r21 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    srad $r0 = $r21, 32
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    copyd $r0 = $r21
 ; KV3_1-NEXT:    copyd $r1 = $r19
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    srad $r0 = $r20, 32
 ; KV3_1-NEXT:    srad $r1 = $r18, 32
 ; KV3_1-NEXT:    copyd $r19 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    insf $r19 = $r22, 63, 32
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    copyd $r0 = $r20
 ; KV3_1-NEXT:    copyd $r1 = $r18
 ; KV3_1-NEXT:    copyd $r21 = $r0
 ; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r18r19 = 16[$r12]
 ; KV3_1-NEXT:    copyd $r0 = $r19
 ; KV3_1-NEXT:    copyd $r1 = $r0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    lq $r20r21 = 32[$r12]
 ; KV3_1-NEXT:    insf $r1 = $r21, 63, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ld $r22 = 48[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    ld $r16 = 56[$r12]
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    set $ra = $r16
 ; KV3_1-NEXT:    addd $r12 = $r12, 64
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
 ;
@@ -1720,7 +1720,7 @@ define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fmaxwp $r0 = $r0, $r2
 ; KV3_2-NEXT:    fmaxwp $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %r = call <4 x float> @llvm.maxnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
@@ -1731,7 +1731,7 @@ define <4 x float> @test_maxnum_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fmaxwp $r0 = $r0, $r2
 ; CHECK-NEXT:    fmaxwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <4 x float> @llvm.maxnum.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
@@ -1743,11 +1743,11 @@ define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fabswp $r1 = $r1
 ; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
   ret <4 x float> %r
 }
@@ -1757,16 +1757,16 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_1-NEXT:    fwidenlhwp $r4 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fabswp $r1 = $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
 ; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ord $r1 = $r1, $r2
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_copysign_v4f16:
 ; KV3_2:       # %bb.0:
@@ -1774,14 +1774,14 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    fabswp $r1 = $r1
 ; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
 ; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
   %tb = fpext <4 x half> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
@@ -1794,20 +1794,20 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_1-NEXT:    copyd $r5 = $r3
 ; KV3_1-NEXT:    copyd $r6 = $r4
 ; KV3_1-NEXT:    copyd $r7 = $r5
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fabswp $r1 = $r1
 ; KV3_1-NEXT:    fnarrowdwp $r3 = $r6r7
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fnarrowdwp $r2 = $r4r5
 ; KV3_1-NEXT:    andd.@ $r3 = $r3, 0x80000000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    ord $r1 = $r1, $r3
 ; KV3_1-NEXT:    andd.@ $r2 = $r2, 0x80000000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ;
 ; KV3_2-LABEL: test_copysign_v4f64:
 ; KV3_2:       # %bb.0:
@@ -1815,20 +1815,20 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_2-NEXT:    copyd $r5 = $r3
 ; KV3_2-NEXT:    copyd $r6 = $r4
 ; KV3_2-NEXT:    copyd $r7 = $r5
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fabswp $r0 = $r0
 ; KV3_2-NEXT:    fabswp $r1 = $r1
 ; KV3_2-NEXT:    fnarrowdwp $r3 = $r6r7
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    fnarrowdwp $r2 = $r4r5
 ; KV3_2-NEXT:    andd.@ $r3 = $r3, 0x80000000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    ord $r1 = $r1, $r3
 ; KV3_2-NEXT:    andd.@ $r2 = $r2, 0x80000000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 4)
   %tb = fptrunc <4 x double> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %tb)
   ret <4 x float> %r
@@ -1841,17 +1841,17 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    fabswp $r1 = $r1
 ; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    fwidenmwd $r3 = $r1
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenlwd $r0 = $r0
 ; CHECK-NEXT:    fwidenmwd $r1 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
   %xr = fpext <4 x float> %r to <4 x double>
   ret <4 x double> %xr
@@ -1862,16 +1862,16 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_1-NEXT:    fwidenlhwp $r4 = $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fabswp $r1 = $r1
 ; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
 ; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ord $r1 = $r1, $r2
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_copysign_fp16:
 ; KV3_2:       # %bb.0:
@@ -1879,14 +1879,14 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    fabswp $r1 = $r1
 ; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
 ; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r2
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 2)
   %eb = fpext <4 x half> %b to <4 x float>
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %eb)
   ret <4 x float> %r
@@ -1897,43 +1897,43 @@ define <4 x float> @test_floor(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.floor.v4f32(<4 x float> %a)
@@ -1945,43 +1945,43 @@ define <4 x float> @test_ceil(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call ceilf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.ceil.v4f32(<4 x float> %a)
@@ -1993,43 +1993,43 @@ define <4 x float> @test_trunc(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call truncf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.trunc.v4f32(<4 x float> %a)
@@ -2041,43 +2041,43 @@ define <4 x float> @test_rint(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call rintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.rint.v4f32(<4 x float> %a)
@@ -2089,43 +2089,43 @@ define <4 x float> @test_nearbyint(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call nearbyintf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.nearbyint.v4f32(<4 x float> %a)
@@ -2137,43 +2137,43 @@ define <4 x float> @test_round(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 40[$r12] = $r20r21
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 24[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r1
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    srad $r0 = $r18, 32
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r19
 ; CHECK-NEXT:    copyd $r21 = $r0
 ; CHECK-NEXT:    call roundf
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r21, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r20, 63, 32
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 24[$r12]
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = call <4 x float> @llvm.round.v4f32(<4 x float> %a)
@@ -2184,22 +2184,22 @@ define <4 x float> @test_fmuladd(<4 x float> %a, <4 x float> %b, <4 x float> %c)
 ; KV3_1-LABEL: test_fmuladd:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    ffmawp $r5 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ffmawp $r4 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    copyd $r0 = $r4
 ; KV3_1-NEXT:    copyd $r1 = $r5
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: test_fmuladd:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    ffmawq $r4r5 = $r0r1, $r2r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    copyd $r0 = $r4
 ; KV3_2-NEXT:    copyd $r1 = $r5
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 4)
   %r = call <4 x float> @llvm.fmuladd.v4f32(<4 x float> %a, <4 x float> %b, <4 x float> %c)
   ret <4 x float> %r
 }
@@ -2210,10 +2210,10 @@ define <4 x float> @test_shufflevector(<4 x float> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x804020180402010
 ; CHECK-NEXT:    sbmm8 $r2 = $r1, 0x804020180402010
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %s = shufflevector <4 x float> %a, <4 x float> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
   ret <4 x float> %s
 }
@@ -2223,7 +2223,7 @@ define <4 x float> @test_insertelement0(<4 x float> %a, float %x) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r2, 31, 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x float> %a, float %x, i64 0
   ret <4 x float> %i
 }
@@ -2233,7 +2233,7 @@ define <4 x float> @test_insertelement1(<4 x float> %a, float %x) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r0 = $r2, 63, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %i = insertelement <4 x float> %a, float %x, i64 1
   ret <4 x float> %i
 }
@@ -2245,14 +2245,14 @@ define <4 x float> @test_insertelement(<4 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-NEXT:    insf $r3 = $r3, 63, 31
 ; CHECK-NEXT:    make $r4 = 0x300000002
 ; CHECK-NEXT:    make $r5 = 0x100000000
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compnwp.eq $r3 = $r5, $r3
 ; CHECK-NEXT:    compnwp.eq $r4 = $r4, $r3
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmovewp.eqz $r3 ? $r0 = $r2
 ; CHECK-NEXT:    cmovewp.eqz $r4 ? $r1 = $r2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 2)
   %i = insertelement <4 x float> %a, float %x, i64 %p
   ret <4 x float> %i
 }
@@ -2263,26 +2263,26 @@ define <4 x i32> @fcmp_setoeq(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoeq:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2294,26 +2294,26 @@ define <4 x i32> @fcmp_setoeq_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoeq_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2325,26 +2325,26 @@ define <4 x i32> @fcmp_setogt(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setogt:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2357,7 +2357,7 @@ define <4 x i32> @fcmp_setogt_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2369,26 +2369,26 @@ define <4 x i32> @fcmp_setoge(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoge:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2400,26 +2400,26 @@ define <4 x i32> @fcmp_setoge_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoge_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2431,26 +2431,26 @@ define <4 x i32> @fcmp_setolt(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setolt:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2463,7 +2463,7 @@ define <4 x i32> @fcmp_setolt_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2475,26 +2475,26 @@ define <4 x i32> @fcmp_setole(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setole:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2506,26 +2506,26 @@ define <4 x i32> @fcmp_setole_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setole_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2537,26 +2537,26 @@ define <4 x i32> @fcmp_setone(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.one $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setone:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.one $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2569,7 +2569,7 @@ define <4 x i32> @fcmp_setone_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2581,25 +2581,25 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    ord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: fcmp_setord:
 ; KV3_2:       # %bb.0: # %entry
@@ -2607,11 +2607,11 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ord <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2623,26 +2623,26 @@ define <4 x i32> @fcmp_setord_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setord_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ord <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2654,25 +2654,25 @@ define <4 x i32> @fcmp_setuno(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_1-NEXT:    andd $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd $r0 = $r0, $r3
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: fcmp_setuno:
 ; KV3_2:       # %bb.0: # %entry
@@ -2680,11 +2680,11 @@ define <4 x i32> @fcmp_setuno(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd $r0 = $r0, $r3
 ; KV3_2-NEXT:    andd $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2696,26 +2696,26 @@ define <4 x i32> @fcmp_setuno_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuno_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uno <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2727,26 +2727,26 @@ define <4 x i32> @fcmp_setueq(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.ueq $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.ueq $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setueq:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.ueq $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ueq $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2759,7 +2759,7 @@ define <4 x i32> @fcmp_setueq_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2771,26 +2771,26 @@ define <4 x i32> @fcmp_setugt(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.ult $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.ult $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setugt:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.ult $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.ult $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ugt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2802,26 +2802,26 @@ define <4 x i32> @fcmp_setugt_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setugt_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ugt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2833,26 +2833,26 @@ define <4 x i32> @fcmp_setuge(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.uge $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuge:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2865,7 +2865,7 @@ define <4 x i32> @fcmp_setuge_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2877,26 +2877,26 @@ define <4 x i32> @fcmp_setult(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.ult $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.ult $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setult:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.ult $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ult <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2908,26 +2908,26 @@ define <4 x i32> @fcmp_setult_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setult_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ult <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2939,26 +2939,26 @@ define <4 x i32> @fcmp_setule(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.uge $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setule:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.uge $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2971,7 +2971,7 @@ define <4 x i32> @fcmp_setule_single(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -2983,26 +2983,26 @@ define <4 x i32> @fcmp_setune(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setune:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp une <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3014,26 +3014,26 @@ define <4 x i32> @fcmp_setune_single(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setune_single:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp une <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3045,26 +3045,26 @@ define <4 x i32> @fcmp_setoeq_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoeq_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3077,7 +3077,7 @@ define <4 x i32> @fcmp_setoeq_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3089,26 +3089,26 @@ define <4 x i32> @fcmp_setogt_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setogt_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3121,7 +3121,7 @@ define <4 x i32> @fcmp_setogt_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3133,26 +3133,26 @@ define <4 x i32> @fcmp_setoge_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setoge_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3165,7 +3165,7 @@ define <4 x i32> @fcmp_setoge_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3177,26 +3177,26 @@ define <4 x i32> @fcmp_setolt_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setolt_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3209,7 +3209,7 @@ define <4 x i32> @fcmp_setolt_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3221,26 +3221,26 @@ define <4 x i32> @fcmp_setole_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setole_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3253,7 +3253,7 @@ define <4 x i32> @fcmp_setole_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3265,26 +3265,26 @@ define <4 x i32> @fcmp_setone_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.one $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setone_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.one $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3297,7 +3297,7 @@ define <4 x i32> @fcmp_setone_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3309,25 +3309,25 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    ord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: fcmp_setord_fast:
 ; KV3_2:       # %bb.0: # %entry
@@ -3335,11 +3335,11 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ord <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3351,26 +3351,26 @@ define <4 x i32> @fcmp_setord_single_fast(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setord_single_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ord <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3382,25 +3382,25 @@ define <4 x i32> @fcmp_setuno_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_1-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r2
 ; KV3_1-NEXT:    andd $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.ult $r3 = $r0, $r2
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    andd $r0 = $r0, $r3
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 5)
 ;
 ; KV3_2-LABEL: fcmp_setuno_fast:
 ; KV3_2:       # %bb.0: # %entry
@@ -3408,11 +3408,11 @@ define <4 x i32> @fcmp_setuno_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.uge $r1 = $r1, $r3
 ; KV3_2-NEXT:    fcompnwp.ult $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.ult $r4 = $r1, $r3
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andd $r0 = $r0, $r3
 ; KV3_2-NEXT:    andd $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3424,26 +3424,26 @@ define <4 x i32> @fcmp_setuno_single_fast(<4 x float> %a) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_1-NEXT:    fcompnwp.une $r1 = $r1, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuno_single_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
 ; KV3_2-NEXT:    fcompnwp.une $r1 = $r1, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uno <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3455,26 +3455,26 @@ define <4 x i32> @fcmp_setueq_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setueq_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oeq $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3487,7 +3487,7 @@ define <4 x i32> @fcmp_setueq_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3499,26 +3499,26 @@ define <4 x i32> @fcmp_setugt_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setugt_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3531,7 +3531,7 @@ define <4 x i32> @fcmp_setugt_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3543,26 +3543,26 @@ define <4 x i32> @fcmp_setuge_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setuge_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3575,7 +3575,7 @@ define <4 x i32> @fcmp_setuge_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3587,26 +3587,26 @@ define <4 x i32> @fcmp_setult_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.olt $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setult_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.olt $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3619,7 +3619,7 @@ define <4 x i32> @fcmp_setult_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3631,26 +3631,26 @@ define <4 x i32> @fcmp_setule_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.oge $r1 = $r3, $r1
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setule_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.oge $r0 = $r2, $r0
 ; KV3_2-NEXT:    fcompnwp.oge $r1 = $r3, $r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3663,7 +3663,7 @@ define <4 x i32> @fcmp_setule_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = -1
 ; CHECK-NEXT:    make $r1 = -1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3675,26 +3675,26 @@ define <4 x i32> @fcmp_setune_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1:       # %bb.0: # %entry
 ; KV3_1-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.one $r1 = $r1, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    extfs $r0 = $r0, 0, 0
 ; KV3_1-NEXT:    extfs $r1 = $r1, 0, 0
 ; KV3_1-NEXT:    srld $r2 = $r1, 32
 ; KV3_1-NEXT:    srld $r3 = $r0, 32
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    extfs $r2 = $r2, 0, 0
 ; KV3_1-NEXT:    extfs $r3 = $r3, 0, 0
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    insf $r0 = $r3, 63, 32
 ; KV3_1-NEXT:    insf $r1 = $r2, 63, 32
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: fcmp_setune_fast:
 ; KV3_2:       # %bb.0: # %entry
 ; KV3_2-NEXT:    fcompnwp.one $r0 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.one $r1 = $r1, $r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une <4 x float> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3707,7 +3707,7 @@ define <4 x i32> @fcmp_setune_single_fast(<4 x float> %a) #0 {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une <4 x float> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i32>
@@ -3720,16 +3720,16 @@ define <4 x float> @fms(<4 x float>, <4 x float>, <4 x float>) {
 ; KV3_1-LABEL: fms:
 ; KV3_1:       # %bb.0:
 ; KV3_1-NEXT:    ffmswp $r1 = $r5, $r3
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    ffmswp $r0 = $r4, $r2
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ;
 ; KV3_2-LABEL: fms:
 ; KV3_2:       # %bb.0:
 ; KV3_2-NEXT:    ffmswq $r0r1 = $r4r5, $r2r3
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:    ;; # (end cycle 0)
   %4 = fmul fast <4 x float> %2, %1
   %5 = fsub fast <4 x float> %0, %4
   ret <4 x float> %5

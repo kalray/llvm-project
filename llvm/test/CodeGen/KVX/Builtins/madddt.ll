@@ -10,7 +10,7 @@ define <2 x i64> @madddt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    madddt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.madddt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -20,15 +20,15 @@ define <2 x i64> @madddt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    madddt $r0r1 = $r2, 42
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: madddt_ri:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r3 = 42
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    madddt $r0r1 = $r2, $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.madddt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -40,7 +40,7 @@ define <2 x i64> @maddsudt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddsudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.maddsudt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -50,15 +50,15 @@ define <2 x i64> @maddsudt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    maddsudt $r0r1 = $r2, 42
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: maddsudt_ri:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r3 = 42
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    maddsudt $r0r1 = $r2, $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.maddsudt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -70,7 +70,7 @@ define <2 x i64> @maddudt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    maddudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.maddudt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -80,15 +80,15 @@ define <2 x i64> @maddudt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    maddudt $r0r1 = $r2, 42
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: maddudt_ri:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r3 = 42
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    maddudt $r0r1 = $r2, $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.maddudt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -100,7 +100,7 @@ define <2 x i64> @madduzdt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    madduzdt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.madduzdt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -110,15 +110,15 @@ define <2 x i64> @madduzdt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    madduzdt $r0r1 = $r2, 42
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: madduzdt_ri:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r3 = 42
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    madduzdt $r0r1 = $r2, $r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.madduzdt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -130,7 +130,7 @@ define <2 x i64> @msbfdt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfdt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.msbfdt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -139,10 +139,10 @@ define <2 x i64> @msbfdt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: msbfdt_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 42
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfdt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.msbfdt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -154,7 +154,7 @@ define <2 x i64> @msbfsudt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfsudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.msbfsudt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -163,10 +163,10 @@ define <2 x i64> @msbfsudt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: msbfsudt_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 42
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfsudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.msbfsudt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -178,7 +178,7 @@ define <2 x i64> @msbfudt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.msbfudt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -187,10 +187,10 @@ define <2 x i64> @msbfudt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: msbfudt_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 42
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfudt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.msbfudt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }
@@ -202,7 +202,7 @@ define <2 x i64> @msbfuzdt_rr(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    msbfuzdt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   %4 = tail call <2 x i64> @llvm.kvx.msbfuzdt(<2 x i64> %0, i64 %1, i64 %2)
   ret <2 x i64> %4
 }
@@ -211,10 +211,10 @@ define <2 x i64> @msbfuzdt_ri(<2 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-LABEL: msbfuzdt_ri:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r3 = 42
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    msbfuzdt $r0r1 = $r2, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 1)
   %4 = tail call <2 x i64> @llvm.kvx.msbfuzdt(<2 x i64> %0, i64 %1, i64 42)
   ret <2 x i64> %4
 }

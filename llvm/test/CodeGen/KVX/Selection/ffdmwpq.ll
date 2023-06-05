@@ -10,14 +10,14 @@ define <4 x float> @ffdmdawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-LABEL: ffdmdawq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r1 = $r7, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r0 = $r6, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmawp $r1 = $r9, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    ffmawp $r0 = $r8, $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: ffdmdawq:
 ; V2:       # %bb.0:
@@ -25,10 +25,10 @@ define <4 x float> @ffdmdawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V2-NEXT:    copyd $r7 = $r3
 ; V2-NEXT:    copyd $r10 = $r6
 ; V2-NEXT:    copyd $r11 = $r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmdawq $r0r1 = $r8r9r10r11, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <4 x float> %4, %2
   %7 = fmul fast <4 x float> %3, %1
   %8 = fadd fast <4 x float> %7, %0
@@ -40,19 +40,19 @@ define <2 x float> @ffdmdawp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ; V1-LABEL: ffdmdawp:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r0 = $r3, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r0 = $r4, $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: ffdmdawp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r3 = $r1
 ; V2-NEXT:    copyd $r5 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmdawp $r0 = $r4r5, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <2 x float> %4, %2
   %7 = fmul fast <2 x float> %3, %1
   %8 = fadd fast <2 x float> %7, %0
@@ -64,14 +64,14 @@ define <4 x float> @ffdmdswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-LABEL: ffdmdswq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmswp $r1 = $r7, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmswp $r0 = $r6, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmswp $r1 = $r9, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    ffmswp $r0 = $r8, $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: ffdmdswq:
 ; V2:       # %bb.0:
@@ -79,10 +79,10 @@ define <4 x float> @ffdmdswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V2-NEXT:    copyd $r7 = $r3
 ; V2-NEXT:    copyd $r10 = $r6
 ; V2-NEXT:    copyd $r11 = $r7
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmdswq $r0r1 = $r8r9r10r11, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <4 x float> %3, %1
   %7 = fmul fast <4 x float> %4, %2
   %8 = fadd fast <4 x float> %7, %6
@@ -94,19 +94,19 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ; V1-LABEL: ffdmdswp:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmswp $r0 = $r1, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmswp $r0 = $r2, $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: ffdmdswp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r3 = $r1
 ; V2-NEXT:    copyd $r5 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmdswp $r0 = $r4r5, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <2 x float> %3, %1
   %7 = fmul fast <2 x float> %4, %2
   %8 = fadd fast <2 x float> %7, %6
@@ -118,23 +118,23 @@ define <4 x float> @ffdmaswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-LABEL: ffdmaswq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmswp $r1 = $r3, $r7
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmswp $r0 = $r2, $r6
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmawp $r1 = $r9, $r5
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    ffmawp $r0 = $r8, $r4
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: ffdmaswq:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r10 = $r2
 ; V2-NEXT:    copyd $r11 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmsawq $r0r1 = $r8r9r10r11, $r4r5r6r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <4 x float> %4, %2
   %7 = fmul fast <4 x float> %1, %3
   %8 = fsub fast <4 x float> %0, %7
@@ -146,18 +146,18 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ; V1-LABEL: ffdmaswp:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmswp $r0 = $r3, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r0 = $r4, $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: ffdmaswp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r5 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmsawp $r0 = $r4r5, $r2r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <2 x float> %4, %2
   %7 = fmul fast <2 x float> %1, %3
   %8 = fsub fast <2 x float> %0, %7
@@ -169,23 +169,23 @@ define <4 x float> @ffdmsawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-LABEL: ffdmsawq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r1 = $r7, $r3
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmawp $r0 = $r6, $r2
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    ffmswp $r1 = $r5, $r9
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    ffmswp $r0 = $r4, $r8
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: ffdmsawq:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r10 = $r2
 ; V2-NEXT:    copyd $r11 = $r3
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmaswq $r0r1 = $r4r5r6r7, $r8r9r10r11
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <4 x float> %3, %1
   %7 = fadd fast <4 x float> %6, %0
   %8 = fmul fast <4 x float> %2, %4
@@ -197,18 +197,18 @@ define <2 x float> @ffdmsawp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
 ; V1-LABEL: ffdmsawp:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r0 = $r3, $r1
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    ffmswp $r0 = $r4, $r2
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: ffdmsawp:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r5 = $r1
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ffdmaswp $r0 = $r2r3, $r4r5
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %6 = fmul fast <2 x float> %3, %1
   %7 = fadd fast <2 x float> %6, %0
   %8 = fmul fast <2 x float> %2, %4
