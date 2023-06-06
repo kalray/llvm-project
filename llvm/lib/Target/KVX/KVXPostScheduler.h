@@ -54,7 +54,9 @@ private:
 /// KVXPostScheduler is PostGenericScheduler with extra bundling feature
 class KVXPostScheduler : public PostGenericScheduler {
 public:
-  KVXPostScheduler(const MachineSchedContext *C) : PostGenericScheduler(C) {}
+  KVXPostScheduler(const MachineSchedContext *C,
+                   bool DisableCycleEmission = false)
+      : PostGenericScheduler(C), DisableCycleEmission(DisableCycleEmission) {}
 
   ~KVXPostScheduler() override = default;
 
@@ -79,6 +81,7 @@ private:
   std::map<unsigned, std::vector<MachineInstr *>> CycleToMIs;
   unsigned LastCycle;
   KVXPostPacketizer *Packetizer;
+  bool DisableCycleEmission;
 };
 
 std::unique_ptr<ScheduleDAGMutation> createKVXPrologEpilogDAGMutation();

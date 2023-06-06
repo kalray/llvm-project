@@ -40,6 +40,10 @@ static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(false),
     cl::desc("Disable Load/Store Packing Pass for KVX target"));
 
+static cl::opt<bool> DisableCycleEmission(
+    "disable-kvx-cycles", cl::Hidden, cl::init(false),
+    cl::desc("Disable machine-cycle emission on KVX target"));
+
 static cl::opt<std::string>
     StackLimitRegister("fstack-limit-register",
                        cl::desc("verify stack with a register for KVX"));
@@ -201,8 +205,9 @@ KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
   if (DisableBundling)
     return new KVXScheduleDAGMI(C, std::make_unique<PostGenericScheduler>(C),
                                 /*RemoveKillFlags=*/true, true);
-  return new KVXScheduleDAGMI(C, std::make_unique<KVXPostScheduler>(C),
-                              /*RemoveKillFlags=*/true, false);
+  return new KVXScheduleDAGMI(
+      C, std::make_unique<KVXPostScheduler>(C, DisableCycleEmission),
+      /*RemoveKillFlags=*/true, false);
 }
 
 void KVXPassConfig::addIRPasses() {

@@ -326,13 +326,15 @@ void KVXPostScheduler::leaveRegion() {
     auto &Packet = Pair.second;
     unsigned Cycle = Pair.first;
     MachineInstr *First = Packet.front();
-    MachineInstr *AnnotMI =
-        BuildMI(*MBB, First->getIterator(), First->getDebugLoc(),
-                TII->get(KVX::MCYCLESp))
-            .addImm(Cycle);
-    // Do not packetize MCYCLESp if the packet has inline asm
-    if (!First->isInlineAsm())
-      Packet.insert(Packet.begin(), AnnotMI);
+    if (!DisableCycleEmission) {
+      MachineInstr *AnnotMI =
+          BuildMI(*MBB, First->getIterator(), First->getDebugLoc(),
+                  TII->get(KVX::MCYCLESp))
+              .addImm(Cycle);
+      // Do not packetize MCYCLESp if the packet has inline asm
+      if (!First->isInlineAsm())
+        Packet.insert(Packet.begin(), AnnotMI);
+    }
     Packetizer->runOnPacket(Packet, Cycle == LastCycle, LastCycle,
                             &DAG->ExitSU);
   }
