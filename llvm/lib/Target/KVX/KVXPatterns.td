@@ -2541,3 +2541,12 @@ def : Pat<(v4f64 (insert_subvector v4f64:$v0, v2f64:$v1, (i64 2))),
           (v4f64 (REG_SEQUENCE QuadReg,
                    (v2f64 (EXTRACT_SUBREG QuadReg:$v0, sub_q0)), sub_q0,
                    PairedReg:$v1, sub_q1))>;
+
+def : Pat<(v8f16 (insert_subvector v8f16:$v0, v4f16:$v1, (i64 0))),
+          (v8f16 (REG_SEQUENCE PairedReg, SingleReg:$v1, sub_d0,
+                    (v4f16 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)), sub_d1))>;
+
+def : Pat<(v8f16 (insert_subvector v8f16:$v0, v4f16:$v1, (i64 4))),
+          (v8f16 (REG_SEQUENCE PairedReg,
+                    (v4f16 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
+                    SingleReg:$v1, sub_d1))>;
