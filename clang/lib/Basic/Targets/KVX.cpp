@@ -1796,11 +1796,14 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__preload", "__attribute__((address_space(257)))");
   Builder.defineMacro("__speculate", "__attribute__((address_space(258)))");
 
+  Builder.defineMacro("__kvx_v2qi", VECTOR_TYPE(char, 2));
+  Builder.defineMacro("__kvx_v4qi", VECTOR_TYPE(char, 4));
   Builder.defineMacro("__kvx_v8qi", VECTOR_TYPE(char, 8));
   Builder.defineMacro("__kvx_v16qi", VECTOR_TYPE(char, 16));
   Builder.defineMacro("__kvx_v32qi", VECTOR_TYPE(char, 32));
   Builder.defineMacro("__kvx_v64qi", VECTOR_TYPE(char, 64));
 
+  Builder.defineMacro("__kvx_v2hi", VECTOR_TYPE(short, 2));
   Builder.defineMacro("__kvx_v4hi", VECTOR_TYPE(short, 4));
   Builder.defineMacro("__kvx_v8hi", VECTOR_TYPE(short, 8));
   Builder.defineMacro("__kvx_v16hi", VECTOR_TYPE(short, 16));
@@ -1814,6 +1817,28 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__kvx_v2di", VECTOR_TYPE(long, 2));
   Builder.defineMacro("__kvx_v4di", VECTOR_TYPE(long, 4));
   Builder.defineMacro("__kvx_v8di", VECTOR_TYPE(long, 8));
+
+  Builder.defineMacro("__kvx_v2qu", VECTOR_TYPE(unsigned char, 2));
+  Builder.defineMacro("__kvx_v4qu", VECTOR_TYPE(unsigned char, 4));
+  Builder.defineMacro("__kvx_v8qu", VECTOR_TYPE(unsigned char, 8));
+  Builder.defineMacro("__kvx_v16qu", VECTOR_TYPE(unsigned char, 16));
+  Builder.defineMacro("__kvx_v32qu", VECTOR_TYPE(unsigned char, 32));
+  Builder.defineMacro("__kvx_v64qu", VECTOR_TYPE(unsigned char, 64));
+
+  Builder.defineMacro("__kvx_v2hu", VECTOR_TYPE(unsigned short, 2));
+  Builder.defineMacro("__kvx_v4hu", VECTOR_TYPE(unsigned short, 4));
+  Builder.defineMacro("__kvx_v8hu", VECTOR_TYPE(unsigned short, 8));
+  Builder.defineMacro("__kvx_v16hu", VECTOR_TYPE(unsigned short, 16));
+  Builder.defineMacro("__kvx_v32hu", VECTOR_TYPE(unsigned short, 32));
+
+  Builder.defineMacro("__kvx_v2su", VECTOR_TYPE(unsigned int, 2));
+  Builder.defineMacro("__kvx_v4su", VECTOR_TYPE(unsigned int, 4));
+  Builder.defineMacro("__kvx_v8su", VECTOR_TYPE(unsigned int, 8));
+  Builder.defineMacro("__kvx_v16su", VECTOR_TYPE(unsigned int, 16));
+
+  Builder.defineMacro("__kvx_v2du", VECTOR_TYPE(unsigned long, 2));
+  Builder.defineMacro("__kvx_v4du", VECTOR_TYPE(unsigned long, 4));
+  Builder.defineMacro("__kvx_v8du", VECTOR_TYPE(unsigned long, 8));
 
   Builder.defineMacro("__kvx_v4hf", VECTOR_TYPE(_Float16, 4));
   Builder.defineMacro("__kvx_v8hf", VECTOR_TYPE(_Float16, 8));
