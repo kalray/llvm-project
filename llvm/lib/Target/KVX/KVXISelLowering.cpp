@@ -917,6 +917,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
       setOperationAction(I, VT, Action);
   }
 
+  for (MVT VT : {MVT::v4i8, MVT::v8i8, MVT::v4i16, MVT::v4f16, MVT::v8f16,
+                 MVT::v4f64, MVT::v4i64})
+    setOperationAction(ISD::INSERT_SUBVECTOR, VT, Legal);
+
   setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_VOID, MVT::Other, Custom);

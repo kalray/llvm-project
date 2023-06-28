@@ -2501,6 +2501,27 @@ def : Pat<(v4096i1 (int_kvx_xsplat Wrapped64:$v)),
 
 }
 
+def : Pat<(v4i8 (insert_subvector v4i8:$v0, v2i8:$v1, (i64 0))),
+          (v4i8 (INSF SingleReg:$v0, SingleReg:$v1, 15, 0))>;
+
+def : Pat<(v4i8 (insert_subvector v4i8:$v0, v2i8:$v1, (i64 2))),
+          (v4i8 (INSF SingleReg:$v0, SingleReg:$v1, 31, 16))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 0))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 15, 0))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 2))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 31, 16))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 4))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 47, 32))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 6))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 63, 48))>;
+
+def : Pat<(v8i8 (insert_subvector v8i8:$v0, v4i8:$v1, (i64 0))),
+          (v8i8 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0))>;
+
 def : Pat<(v8i8 (insert_subvector (v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 4)) ), v2i8:$v2, (i64 6))),
           (v8i8 (INSF SingleReg:$v0, (INSF SingleReg:$v1, SingleReg:$v2, 31, 16), 63, 32))>;
 
@@ -2515,6 +2536,15 @@ def : Pat<(v8i8 (insert_subvector v8i8:$v0, v2i8:$v1, (i64 6))),
 
 def : Pat<(v8i8 (concat_vectors v4i8:$v0, (v4i8 undef))),
           (v8i8 (COPY SingleReg:$v0))>;
+
+def : Pat<(v4f16 (insert_subvector v4f16:$v0, v2f16:$v1, (i64 0))),
+          (v4f16 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0))>;
+
+def : Pat<(v4f16 (insert_subvector v4f16:$v0, v2f16:$v1, (i64 2))),
+          (v4f16 (INSF SingleReg:$v0, SingleReg:$v1, 63, 32))>;
+
+def : Pat<(v4i16 (insert_subvector v4i16:$v0, v2i16:$v1, (i64 0))),
+          (v4i16 (INSF SingleReg:$v0, SingleReg:$v1, 31, 0))>;
 
 def : Pat<(v4i16 (insert_subvector v4i16:$v0, v2i16:$v1, (i64 2))),
           (v4i16 (INSF SingleReg:$v0, SingleReg:$v1, 63, 32))>;
