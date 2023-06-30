@@ -1663,7 +1663,6 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
     llvm_unreachable("Synthetic enumerators which should never get here");
 
   case Attribute::None:            return 0;
-  case Attribute::MPPANative:
   case Attribute::ZExt:            return 1 << 0;
   case Attribute::SExt:            return 1 << 1;
   case Attribute::NoReturn:        return 1 << 2;
