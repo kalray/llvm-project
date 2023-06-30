@@ -1663,6 +1663,7 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
     llvm_unreachable("Synthetic enumerators which should never get here");
 
   case Attribute::None:            return 0;
+  case Attribute::MPPANative:
   case Attribute::ZExt:            return 1 << 0;
   case Attribute::SExt:            return 1 << 1;
   case Attribute::NoReturn:        return 1 << 2;
@@ -1724,12 +1725,6 @@ static uint64_t getRawAttributeMask(Attribute::AttrKind Val) {
   case Attribute::WillReturn:
     return 1ULL << 62;
   case Attribute::NoFree:
-    // return 1ULL << 63; // Temporary fix, should be fixed in next LLVM version
-    llvm::errs() << "Kalray temporarily disabled the raw attribute"
-                    " 'nofree', ignoring it.\n";
-    return 0; // TODO: NoFree is used in optimization passes.
-    // Use something useless for us, such as SwiftSelf.
-  case Attribute::MPPANative:
     return 1ULL << 63;
   default:
     // Other attributes are not supported in the raw format,
