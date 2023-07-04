@@ -6,11 +6,13 @@ target triple = "kvx-kalray-cos"
 define i8 @loadcbc(i8 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcbc
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 8, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 8, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %conv = zext i8 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -24,11 +26,13 @@ declare i64 @llvm.kvx.loadc.u.i64(i64, i64*, i32, i64, i32, i32, i32)
 define i64 @loadcbl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcbl
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 8, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 8, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
@@ -38,11 +42,13 @@ entry:
 define i16 @loadchs(i16 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchs
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %conv = zext i16 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -54,11 +60,13 @@ entry:
 define i64 @loadchl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchl
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
@@ -68,11 +76,13 @@ entry:
 define i32 @loadcwi(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwi
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %conv = zext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -84,11 +94,13 @@ entry:
 define i64 @loadcwl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwl
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
@@ -98,11 +110,13 @@ entry:
 define i64 @loadcdl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcdl
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -112,11 +126,13 @@ entry:
 define i128 @loadcq(i128 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcq
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
-  ; CHECK:     $p0 = LOADCup killed $r2, killed $p0, 128, killed $r3, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LOADCup killed $r2, killed $p0, 128, killed $r3, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i128 %a to <2 x i64>
   %1 = bitcast i8* %ptr to <2 x i64>*
@@ -130,11 +146,13 @@ declare <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64>, <2 x i64>*, i32, i64, i32, 
 define half @loadchf(half %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 16, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to half*
   %1 = tail call half @llvm.kvx.loadc.u.f16(half %a, half* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
@@ -146,11 +164,13 @@ declare half @llvm.kvx.loadc.u.f16(half, half*, i32, i64, i32, i32, i32)
 define float @loadcwf(float %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to float*
   %1 = tail call float @llvm.kvx.loadc.u.f32(float %a, float* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
@@ -162,11 +182,13 @@ declare float @llvm.kvx.loadc.u.f32(float, float*, i32, i64, i32, i32, i32)
 define double @loadcdf(double %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcdf
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to double*
   %1 = tail call double @llvm.kvx.loadc.u.f64(double %a, double* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -178,11 +200,13 @@ declare double @llvm.kvx.loadc.u.f64(double, double*, i32, i64, i32, i32, i32)
 define <2 x i32> @loadc64(<2 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc64
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 64, killed $r2, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to <2 x i32>*
   %1 = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32> %a, <2 x i32>* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
@@ -194,11 +218,13 @@ declare <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32>, <2 x i32>*, i32, i64, i32, 
 define <4 x i32> @loadc128(<4 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc128
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
-  ; CHECK:     $p0 = LOADCup killed $r2, killed $p0, 128, killed $r3, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r2, implicit killed $p0, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LOADCup killed $r2, killed $p0, 128, killed $r3, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = bitcast i8* %ptr to <2 x i64>*
@@ -210,11 +236,13 @@ entry:
 define i64 @loadcwls(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwls
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 1, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 1, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 1, i32 2, i32 -1)
@@ -224,11 +252,13 @@ entry:
 define i64 @loadcwlu(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwlu
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 2, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 2, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 2, i32 2, i32 -1)
@@ -238,11 +268,13 @@ entry:
 define i64 @loadcwlus(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwlus
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 3, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 3, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i8* %ptr to i64*
   %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 3, i32 2, i32 -1)
@@ -252,11 +284,13 @@ entry:
 define <8 x i32> @loadc256_dltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dltz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 2, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 2, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -270,11 +304,13 @@ declare <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64>, <4 x i64>*, i32, i64, i32, 
 define <8 x i32> @loadc256_dnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dnez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 0, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 0, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -286,11 +322,13 @@ entry:
 define <8 x i32> @loadc256_deqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_deqz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 1, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 1, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -302,11 +340,13 @@ entry:
 define <8 x i32> @loadc256_dgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dgez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 3, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 3, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -318,11 +358,13 @@ entry:
 define <8 x i32> @loadc256_dlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dlez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 4, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 4, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -334,11 +376,13 @@ entry:
 define <8 x i32> @loadc256_dgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dgtz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 5, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 5, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -350,11 +394,13 @@ entry:
 define <8 x i32> @loadc256_odd(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_odd
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 6, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 6, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -366,11 +412,13 @@ entry:
 define <8 x i32> @loadc256_even(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_even
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 7, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 7, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -382,11 +430,13 @@ entry:
 define <8 x i32> @loadc256_wnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wnez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 8, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 8, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -398,11 +448,13 @@ entry:
 define <8 x i32> @loadc256_weqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_weqz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 9, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 9, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -414,11 +466,13 @@ entry:
 define <8 x i32> @loadc256_wltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wltz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 10, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 10, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -430,11 +484,13 @@ entry:
 define <8 x i32> @loadc256_wgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wgez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 11, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 11, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -446,11 +502,13 @@ entry:
 define <8 x i32> @loadc256_wlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wlez
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 12, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 12, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -462,11 +520,13 @@ entry:
 define <8 x i32> @loadc256_wgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wgtz
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
-  ; CHECK:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
-  ; CHECK:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 13, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r4, implicit killed $q0, implicit killed $r5, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOADCup killed $r4, killed $q0, 256, killed $r5, 0, 13, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0, implicit internal $r1, implicit internal $r2, implicit internal $r3
+  ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
   %1 = bitcast i8* %ptr to <4 x i64>*
@@ -478,12 +538,17 @@ entry:
 define i32 @loadc_vol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_vol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r0 = SXWD killed $r0
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCupv killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r0 = LOADCupv killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %conv = sext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*
@@ -497,12 +562,17 @@ declare i64 @llvm.kvx.loadc.u.vol.i64(i64, i64*, i32, i64, i32, i32, i32)
 define i32 @loadc_novol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_novol
   ; CHECK: bb.0.entry:
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r0 = SXWD killed $r0
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = SXWD killed $r0
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1, implicit killed $r0, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r0 = LOADCup killed $r1, killed $r0, 32, killed $r2, 0, 11, -1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
 entry:
   %conv = sext i32 %a to i64
   %0 = bitcast i8* %ptr to i64*

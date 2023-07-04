@@ -2685,6 +2685,13 @@ class FFM_FAMILY<string OpcStr, RegisterClass RC_OUT, RegisterClass RC_IN, Instr
      itin>;
 
 let Predicates = [IsV2] in {
+defm ADDRBOD : I<"addrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ADDRHQD : I<"addrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ADDRWPD : I<"addrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ADDURBOD : I<"addurbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ADDURHQD : I<"addurhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ADDURWPD : I<"addurwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
 defm FFDMAWQ : I<"ffdmawq", MAU_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0>;

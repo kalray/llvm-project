@@ -6,12 +6,17 @@ target triple = "kvx-kalray-cos"
 define i64 @ready_int(i32* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_int
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load i32, i32* %0
   %3 = tail call i64 (...) @llvm.kvx.ready(i32 %2)
   ret i64 %3
@@ -22,12 +27,17 @@ declare i64 @llvm.kvx.ready(...)
 define i64 @ready_long(i64* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_long
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load i64, i64* %0
   %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
   ret i64 %3
@@ -36,12 +46,17 @@ define i64 @ready_long(i64* nocapture readonly %0) {
 define i64 @ready_v2i8(<2 x i8>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2i8
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x i8>* %0 to half*
   %3 = load half, half* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(half %3)
@@ -51,12 +66,17 @@ define i64 @ready_v2i8(<2 x i8>* nocapture readonly %0) {
 define i64 @ready_v2i16(<2 x i16>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2i16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x i16>* %0 to i32*
   %3 = load i32, i32* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
@@ -66,12 +86,17 @@ define i64 @ready_v2i16(<2 x i16>* nocapture readonly %0) {
 define i64 @ready_v2i32(<2 x i32>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2i32
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x i32>* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -81,12 +106,17 @@ define i64 @ready_v2i32(<2 x i32>* nocapture readonly %0) {
 define i64 @ready_v2i64(<2 x i64>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2i64
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load <2 x i64>, <2 x i64>* %0
   %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
   ret i64 %3
@@ -95,12 +125,17 @@ define i64 @ready_v2i64(<2 x i64>* nocapture readonly %0) {
 define i64 @ready_v4i8(<4 x i8>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4i8
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x i8>* %0 to i32*
   %3 = load i32, i32* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
@@ -110,12 +145,17 @@ define i64 @ready_v4i8(<4 x i8>* nocapture readonly %0) {
 define i64 @ready_v4i16(<4 x i16>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4i16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x i16>* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -125,12 +165,17 @@ define i64 @ready_v4i16(<4 x i16>* nocapture readonly %0) {
 define i64 @ready_v4i32(<4 x i32>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4i32
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x i32>* %0 to <2 x i64>*
   %3 = load <2 x i64>, <2 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
@@ -140,12 +185,17 @@ define i64 @ready_v4i32(<4 x i32>* nocapture readonly %0) {
 define i64 @ready_v4i64(<4 x i64>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4i64
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $q0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $q0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load <4 x i64>, <4 x i64>* %0
   %3 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %2)
   ret i64 %3
@@ -154,12 +204,17 @@ define i64 @ready_v4i64(<4 x i64>* nocapture readonly %0) {
 define i64 @ready_v8i8(<8 x i8>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v8i8
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <8 x i8>* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -169,12 +224,17 @@ define i64 @ready_v8i8(<8 x i8>* nocapture readonly %0) {
 define i64 @ready__Float16(half* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready__Float16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load half, half* %0
   %3 = tail call i64 (...) @llvm.kvx.ready(half %2)
   ret i64 %3
@@ -183,12 +243,17 @@ define i64 @ready__Float16(half* nocapture readonly %0) {
 define i64 @ready_float(float* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_float
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load float, float* %0
   %3 = fpext float %2 to double
   %4 = bitcast double %3 to i64
@@ -199,12 +264,17 @@ define i64 @ready_float(float* nocapture readonly %0) {
 define i64 @ready_double(double* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_double
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast double* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -214,12 +284,17 @@ define i64 @ready_double(double* nocapture readonly %0) {
 define i64 @ready_v2f16(<2 x half>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2f16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x half>* %0 to i32*
   %3 = load i32, i32* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
@@ -229,12 +304,17 @@ define i64 @ready_v2f16(<2 x half>* nocapture readonly %0) {
 define i64 @ready_v2f32(<2 x float>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2f32
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x float>* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -244,12 +324,17 @@ define i64 @ready_v2f32(<2 x float>* nocapture readonly %0) {
 define i64 @ready_v2f64(<2 x double>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v2f64
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <2 x double>* %0 to <2 x i64>*
   %3 = load <2 x i64>, <2 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
@@ -259,12 +344,17 @@ define i64 @ready_v2f64(<2 x double>* nocapture readonly %0) {
 define i64 @ready_v4f16(<4 x half>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4f16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x half>* %0 to i64*
   %3 = load i64, i64* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
@@ -274,12 +364,17 @@ define i64 @ready_v4f16(<4 x half>* nocapture readonly %0) {
 define i64 @ready_v4f32(<4 x float>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4f32
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x float>* %0 to <2 x i64>*
   %3 = load <2 x i64>, <2 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
@@ -289,12 +384,17 @@ define i64 @ready_v4f32(<4 x float>* nocapture readonly %0) {
 define i64 @ready_v4f64(<4 x double>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v4f64
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $q0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $q0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <4 x double>* %0 to <4 x i64>*
   %3 = load <4 x i64>, <4 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %3)
@@ -304,12 +404,17 @@ define i64 @ready_v4f64(<4 x double>* nocapture readonly %0) {
 define i64 @ready___int128(i128* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready___int128
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast i128* %0 to <2 x i64>*
   %3 = load <2 x i64>, <2 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
@@ -319,12 +424,17 @@ define i64 @ready___int128(i128* nocapture readonly %0) {
 define i64 @ready_v8i16(<8 x i16>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v8i16
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $p0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $p0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <8 x i16>* %0 to <2 x i64>*
   %3 = load <2 x i64>, <2 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
@@ -334,12 +444,17 @@ define i64 @ready_v8i16(<8 x i16>* nocapture readonly %0) {
 define i64 @ready_v8i32(<8 x i32>* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_v8i32
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $q0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q0, implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q0 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $q0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $q0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = bitcast <8 x i32>* %0 to <4 x i64>*
   %3 = load <4 x i64>, <4 x i64>* %2
   %4 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %3)
@@ -349,12 +464,17 @@ define i64 @ready_v8i32(<8 x i32>* nocapture readonly %0) {
 define i64 @ready_char(i8* nocapture readonly %0) {
   ; CHECK-LABEL: name: ready_char
   ; CHECK: bb.0 (%ir-block.1):
-  ; CHECK:   liveins: $r0
-  ; CHECK:   $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
-  ; CHECK:     $r0 = READYp1r killed $r0
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r0 = READYp1r killed $r0
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %2 = load i8, i8* %0
   %3 = sext i8 %2 to i32
   %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
@@ -364,13 +484,21 @@ define i64 @ready_char(i8* nocapture readonly %0) {
 define i64 @ready_int_v4f32(i32* nocapture readonly %0, <4 x float>* nocapture readonly %1) {
   ; CHECK-LABEL: name: ready_int_v4f32
   ; CHECK: bb.0 (%ir-block.2):
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
-  ; CHECK:   $p2 = LQri10 0, killed $r1, 0 :: (load (s128) from %ir.4)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $p2, implicit $ra {
-  ; CHECK:     $r0 = READYp2r killed $r0, killed $p2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $p2 = LQri10 0, killed $r1, 0 :: (load (s128) from %ir.4)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $p2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
+  ; CHECK-NEXT:     $r0 = READYp2r killed $r0, killed $p2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %3 = load i32, i32* %0
   %4 = bitcast <4 x float>* %1 to <2 x i64>*
   %5 = load <2 x i64>, <2 x i64>* %4
@@ -381,13 +509,21 @@ define i64 @ready_int_v4f32(i32* nocapture readonly %0, <4 x float>* nocapture r
 define i64 @ready_long_int(i64* nocapture readonly %0, i32* nocapture readonly %1) {
   ; CHECK-LABEL: name: ready_long_int
   ; CHECK: bb.0 (%ir-block.2):
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.0)
-  ; CHECK:   $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.1)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit $ra {
-  ; CHECK:     $r0 = READYp2r killed $r0, killed $r1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r0, 0 :: (load (s64) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
+  ; CHECK-NEXT:     $r0 = READYp2r killed $r0, killed $r1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %3 = load i64, i64* %0
   %4 = load i32, i32* %1
   %5 = tail call i64 (...) @llvm.kvx.ready(i64 %3, i32 %4)
@@ -397,13 +533,21 @@ define i64 @ready_long_int(i64* nocapture readonly %0, i32* nocapture readonly %
 define i64 @ready_float_v8i8(float* nocapture readonly %0, <8 x i8>* nocapture readonly %1) {
   ; CHECK-LABEL: name: ready_float_v8i8
   ; CHECK: bb.0 (%ir-block.2):
-  ; CHECK:   liveins: $r0, $r1
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
-  ; CHECK:   $r1 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.6)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit $ra {
-  ; CHECK:     $r0 = READYp2r killed $r0, killed $r1
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.6)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 4
+  ; CHECK-NEXT:     $r0 = READYp2r killed $r0, killed $r1
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %3 = load float, float* %0
   %4 = fpext float %3 to double
   %5 = bitcast double %4 to i64
@@ -416,14 +560,25 @@ define i64 @ready_float_v8i8(float* nocapture readonly %0, <8 x i8>* nocapture r
 define i64 @ready_int_long_float(i32* nocapture readonly %0, i64* nocapture readonly %1, float* nocapture readonly %2) {
   ; CHECK-LABEL: name: ready_int_long_float
   ; CHECK: bb.0 (%ir-block.3):
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
-  ; CHECK:   $r1 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.1)
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = READYp3r killed $r0, killed $r1, killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LWZri10 0, killed $r0, 0 :: (load (s32) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 5
+  ; CHECK-NEXT:     $r0 = READYp3r killed $r0, killed $r1, killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %4 = load i32, i32* %0
   %5 = load i64, i64* %1
   %6 = load float, float* %2
@@ -436,14 +591,25 @@ define i64 @ready_int_long_float(i32* nocapture readonly %0, i64* nocapture read
 define i64 @ready___int128_v8i8_v2i64(i128* nocapture readonly %0, <8 x i8>* nocapture readonly %1, <2 x i64>* nocapture readonly %2) {
   ; CHECK-LABEL: name: ready___int128_v8i8_v2i64
   ; CHECK: bb.0 (%ir-block.3):
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $p4 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.4)
-  ; CHECK:   $r0 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.6)
-  ; CHECK:   $p2 = LQri10 0, killed $r2, 0 :: (load (s128) from %ir.2)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $p4, implicit killed $r0, implicit killed $p2, implicit $ra {
-  ; CHECK:     $r0 = READYp3r killed $p4, killed $r0, killed $p2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $p4, implicit-def $r4, implicit-def $r5, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $p4 = LQri10 0, killed $r0, 0 :: (load (s128) from %ir.4)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r0 = LDri10 0, killed $r1, 0 :: (load (s64) from %ir.6)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $p2, implicit-def $r2, implicit-def $r3, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $p2 = LQri10 0, killed $r2, 0 :: (load (s128) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $p4, implicit killed $r0, implicit killed $p2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 5
+  ; CHECK-NEXT:     $r0 = READYp3r killed $p4, killed $r0, killed $p2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %4 = bitcast i128* %0 to <2 x i64>*
   %5 = load <2 x i64>, <2 x i64>* %4
   %6 = bitcast <8 x i8>* %1 to i64*
@@ -456,14 +622,25 @@ define i64 @ready___int128_v8i8_v2i64(i128* nocapture readonly %0, <8 x i8>* noc
 define i64 @ready_char_short_double(i8* nocapture readonly %0, i16* nocapture readonly %1, double* nocapture readonly %2) {
   ; CHECK-LABEL: name: ready_char_short_double
   ; CHECK: bb.0 (%ir-block.3):
-  ; CHECK:   liveins: $r0, $r1, $r2
-  ; CHECK:   $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
-  ; CHECK:   $r1 = LHSri10 0, killed $r1, 0 :: (load (s16) from %ir.1)
-  ; CHECK:   $r2 = LDri10 0, killed $r2, 0 :: (load (s64) from %ir.8)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = READYp3r killed $r0, killed $r1, killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LHSri10 0, killed $r1, 0 :: (load (s16) from %ir.1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r2 = LDri10 0, killed $r2, 0 :: (load (s64) from %ir.8)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 5
+  ; CHECK-NEXT:     $r0 = READYp3r killed $r0, killed $r1, killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %4 = load i8, i8* %0
   %5 = sext i8 %4 to i32
   %6 = load i16, i16* %1
@@ -477,15 +654,29 @@ define i64 @ready_char_short_double(i8* nocapture readonly %0, i16* nocapture re
 define i64 @ready_char_short_int_long(i8* nocapture readonly %0, i16* nocapture readonly %1, i32* nocapture readonly %2, i64* nocapture readonly %3) {
   ; CHECK-LABEL: name: ready_char_short_int_long
   ; CHECK: bb.0 (%ir-block.4):
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
-  ; CHECK:   $r1 = LHSri10 0, killed $r1, 0 :: (load (s16) from %ir.1)
-  ; CHECK:   $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.2)
-  ; CHECK:   $r3 = LDri10 0, killed $r3, 0 :: (load (s64) from %ir.3)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit killed $r3, implicit $ra {
-  ; CHECK:     $r0 = READYp4r killed $r0, killed $r1, killed $r2, killed $r3
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LBSri10 0, killed $r0, 0 :: (load (s8) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LHSri10 0, killed $r1, 0 :: (load (s16) from %ir.1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r2 = LWZri10 0, killed $r2, 0 :: (load (s32) from %ir.2)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r3, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r3 = LDri10 0, killed $r3, 0 :: (load (s64) from %ir.3)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit killed $r3, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 6
+  ; CHECK-NEXT:     $r0 = READYp4r killed $r0, killed $r1, killed $r2, killed $r3
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %5 = load i8, i8* %0
   %6 = sext i8 %5 to i32
   %7 = load i16, i16* %1
@@ -499,15 +690,29 @@ define i64 @ready_char_short_int_long(i8* nocapture readonly %0, i16* nocapture 
 define i64 @ready__Float16_float_double_v4i64(half* nocapture readonly %0, float* nocapture readonly %1, double* nocapture readonly %2, <4 x i64>* nocapture readonly %3) {
   ; CHECK-LABEL: name: ready__Float16_float_double_v4i64
   ; CHECK: bb.0 (%ir-block.4):
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.0)
-  ; CHECK:   $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.1)
-  ; CHECK:   $r2 = LDri10 0, killed $r2, 0 :: (load (s64) from %ir.9)
-  ; CHECK:   $q4 = LOri10 0, killed $r3, 0 :: (load (s256) from %ir.3)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit killed $q4, implicit $ra {
-  ; CHECK:     $r0 = READYp4r killed $r0, killed $r1, killed $r2, killed $q4
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $r0 = LHZri10 0, killed $r0, 0 :: (load (s16) from %ir.0)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $r1 = LWZri10 0, killed $r1, 0 :: (load (s32) from %ir.1)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $r2 = LDri10 0, killed $r2, 0 :: (load (s64) from %ir.9)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $q4, implicit-def $p4, implicit-def $r4, implicit-def $r5, implicit-def $p6, implicit-def $r6, implicit-def $r7, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $q4 = LOri10 0, killed $r3, 0 :: (load (s256) from %ir.3)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $r0, implicit killed $r1, implicit killed $r2, implicit killed $q4, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 6
+  ; CHECK-NEXT:     $r0 = READYp4r killed $r0, killed $r1, killed $r2, killed $q4
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %5 = load half, half* %0
   %6 = load float, float* %1
   %7 = fpext float %6 to double
@@ -522,15 +727,29 @@ define i64 @ready__Float16_float_double_v4i64(half* nocapture readonly %0, float
 define i64 @ready_v8f32_v4i32___int128_char(<8 x float>* nocapture readonly %0, <4 x i32>* nocapture readonly %1, i128* nocapture readonly %2, i8* nocapture readonly %3) {
   ; CHECK-LABEL: name: ready_v8f32_v4i32___int128_char
   ; CHECK: bb.0 (%ir-block.4):
-  ; CHECK:   liveins: $r0, $r1, $r2, $r3
-  ; CHECK:   $q4 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.5)
-  ; CHECK:   $p0 = LQri10 0, killed $r1, 0 :: (load (s128) from %ir.7)
-  ; CHECK:   $p8 = LQri10 0, killed $r2, 0 :: (load (s128) from %ir.9)
-  ; CHECK:   $r2 = LBSri10 0, killed $r3, 0 :: (load (s8) from %ir.3)
-  ; CHECK:   BUNDLE implicit-def $r0, implicit killed $q4, implicit killed $p0, implicit killed $p8, implicit killed $r2, implicit $ra {
-  ; CHECK:     $r0 = READYp4r killed $q4, killed $p0, killed $p8, killed $r2
-  ; CHECK:     RET implicit $ra, implicit internal $r0
-  ; CHECK:   }
+  ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
+  ; CHECK-NEXT: {{  $}}
+  ; CHECK-NEXT:   BUNDLE implicit-def $q4, implicit-def $p4, implicit-def $r4, implicit-def $r5, implicit-def $p6, implicit-def $r6, implicit-def $r7, implicit killed $r0 {
+  ; CHECK-NEXT:     MCYCLESp 0
+  ; CHECK-NEXT:     $q4 = LOri10 0, killed $r0, 0 :: (load (s256) from %ir.5)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $p0, implicit-def $r0, implicit-def $r1, implicit killed $r1 {
+  ; CHECK-NEXT:     MCYCLESp 1
+  ; CHECK-NEXT:     $p0 = LQri10 0, killed $r1, 0 :: (load (s128) from %ir.7)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $p8, implicit-def $r8, implicit-def $r9, implicit killed $r2 {
+  ; CHECK-NEXT:     MCYCLESp 2
+  ; CHECK-NEXT:     $p8 = LQri10 0, killed $r2, 0 :: (load (s128) from %ir.9)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r2, implicit killed $r3 {
+  ; CHECK-NEXT:     MCYCLESp 3
+  ; CHECK-NEXT:     $r2 = LBSri10 0, killed $r3, 0 :: (load (s8) from %ir.3)
+  ; CHECK-NEXT:   }
+  ; CHECK-NEXT:   BUNDLE implicit-def $r0, implicit killed $q4, implicit killed $p0, implicit killed $p8, implicit killed $r2, implicit $ra {
+  ; CHECK-NEXT:     MCYCLESp 6
+  ; CHECK-NEXT:     $r0 = READYp4r killed $q4, killed $p0, killed $p8, killed $r2
+  ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
+  ; CHECK-NEXT:   }
   %5 = bitcast <8 x float>* %0 to <4 x i64>*
   %6 = load <4 x i64>, <4 x i64>* %5
   %7 = bitcast <4 x i32>* %1 to <2 x i64>*
