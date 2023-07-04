@@ -313,3 +313,153 @@ KVXTTIImpl::getPopcntSupport(unsigned IntTyWidthInBit) const {
     return TargetTransformInfo::PSK_Software;
   }
 }
+
+bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
+
+  Type *OpTyp = II->getOperand(0)->getType();
+  if (OpTyp->isFloatTy())
+    return true;
+
+  switch (II->getIntrinsicID()) {
+  default:
+  case Intrinsic::vector_reduce_add:
+    return false;
+  // These reductions haven't been implemented:
+  case Intrinsic::vector_reduce_and:
+  case Intrinsic::vector_reduce_or:
+  case Intrinsic::vector_reduce_smax:
+  case Intrinsic::vector_reduce_smin:
+  case Intrinsic::vector_reduce_umax:
+  case Intrinsic::vector_reduce_umin:
+  case Intrinsic::vector_reduce_xor:
+  // These reductions are not present in KVX
+  case Intrinsic::vector_reduce_fadd:
+  case Intrinsic::vector_reduce_fmax:
+  case Intrinsic::vector_reduce_fmin:
+  case Intrinsic::vector_reduce_fmul:
+  case Intrinsic::vector_reduce_mul:
+    return true;
+  }
+}
+
+InstructionCost
+KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
+                                       Optional<FastMathFlags> FMF,
+                                       TTI::TargetCostKind CostKind) {
+
+  auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
+  if (Ty->isFloatingPointTy() || Sz > 512 || Opcode != Instruction::Add)
+    return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
+
+  if (Sz < 64)
+    return 2 + ST->isV1();
+
+  auto Ret = Log2_32(Sz / 32);
+
+  if (ST->isV1() && !(Ty->getScalarSizeInBits() == 64))
+    Ret += Ty->getElementCount().getFixedValue();
+
+  return Ret;
+}
+
+InstructionCost KVXTTIImpl::getArithmeticInstrCost(
+    unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
+    TTI::OperandValueKind Opd1Info, TTI::OperandValueKind Opd2Info,
+    TTI::OperandValueProperties Opd1PropInfo,
+    TTI::OperandValueProperties Opd2PropInfo, ArrayRef<const Value *> Args,
+    const Instruction *CxtI) {
+
+  if (Ty->isFloatingPointTy() || (Ty->getScalarSizeInBits() > 64))
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
+                                         Opd2Info, Opd1PropInfo, Opd2PropInfo);
+
+  auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
+  auto Min = 1lu + (Sz < 64);
+  return std::max(Min, Sz / 256);
+}
+
+InstructionCost
+KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
+                                  TTI::TargetCostKind CostKind) {
+
+#define REDUCTION(type, Type)                                                  \
+  case Intrinsic::vector_reduce_##type:                                        \
+    return getArithmeticReductionCost(                                         \
+        Instruction::Type, static_cast<VectorType *>(ICA.getArgTypes()[0]),    \
+        FastMathFlags::getFast(), CostKind);
+  auto Opcode = ICA.getID();
+  switch (Opcode) {
+    REDUCTION(add, Add)
+  default:
+    break;
+  }
+  auto Cost = BaseT::getIntrinsicInstrCost(ICA, CostKind);
+  return Cost;
+}
+
+InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
+                                                     VectorType *VecTy,
+                                                     unsigned Index) {
+  auto IC = BaseT::getExtractWithExtendCost(Opcode, Dst, VecTy, Index);
+  LLVM_DEBUG(dbgs() << "getExtractWithExtendCost: " << IC << Opcode << ' '
+                    << *Dst << ' ' << Index << '\n');
+  return IC;
+}
+
+InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
+                                               Type *CondTy,
+                                               CmpInst::Predicate VecPred,
+                                               TTI::TargetCostKind CostKind,
+                                               const Instruction *I) {
+  if (!ValTy->isVectorTy())
+    return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
+                                     I);
+
+  // FIXME: Make vector select / compare costs absurd blocking until properly
+  // handled during lowering.
+  return InstructionCost(70000);
+}
+
+InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
+                                             Type *Src,
+                                             TTI::CastContextHint CCH,
+                                             TTI::TargetCostKind CostKind,
+                                             const Instruction *I) {
+  switch (Opcode) {
+  // FIXME: Forbid bitvector casts until properly handled in backend during
+  // lowering.
+  case Instruction::BitCast:
+    if (Src->isVectorTy() && !Dst->isVectorTy() &&
+        Src->getScalarSizeInBits() == 1)
+      return 70000;
+    return 0;
+  case Instruction::Trunc:
+    return 0;
+
+  default:
+    LLVM_FALLTHROUGH;
+  case Instruction::FPExt:
+  case Instruction::FPTrunc:
+    return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);
+
+  case Instruction::SExt:
+  case Instruction::ZExt:
+    // Using [SZ]X[LM] SIMD up to 4 instructions per cycle can generate
+    // up to 256 bits of extended value of doubled size.
+
+    unsigned Cost = 0;
+    for (auto *T = Src; T != Dst;) {
+      T = T->getExtendedType();
+      Cost += std::max(1lu, T->getPrimitiveSizeInBits().getFixedSize() / 256);
+    }
+
+    if (Dst->getScalarSizeInBits() != 64)
+      return Cost;
+
+    if (!Dst->isVectorTy())
+      return 1;
+    return std::min(
+        static_cast<VectorType *>(Dst)->getElementCount().getKnownMinValue(),
+        Cost);
+  }
+}

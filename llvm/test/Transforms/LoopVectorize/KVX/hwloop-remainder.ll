@@ -26,7 +26,7 @@ define void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly
 ; CHECK-NEXT:    [[SCEVGEP67:%.*]] = bitcast i16* [[SCEVGEP6]] to i8*
 ; CHECK-NEXT:    [[TMP14:%.*]] = mul nsw i64 [[TMP11]], [[TMP8]]
 ; CHECK-NEXT:    [[TMP15:%.*]] = zext i32 [[TMP0]] to i64
-; CHECK-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[TMP9]], 8
+; CHECK-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[TMP9]], 16
 ; CHECK-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
 ; CHECK:       vector.memcheck:
 ; CHECK-NEXT:    [[BOUND0:%.*]] = icmp ult i8* [[SCEVGEP1]], [[SCEVGEP67]]
@@ -34,10 +34,10 @@ define void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly
 ; CHECK-NEXT:    [[FOUND_CONFLICT:%.*]] = and i1 [[BOUND0]], [[BOUND1]]
 ; CHECK-NEXT:    br i1 [[FOUND_CONFLICT]], label [[SCALAR_PH]], label [[VECTOR_PH:%.*]]
 ; CHECK:       vector.ph:
-; CHECK-NEXT:    [[N_MOD_VF:%.*]] = urem i64 [[TMP9]], 8
+; CHECK-NEXT:    [[N_MOD_VF:%.*]] = urem i64 [[TMP9]], 16
 ; CHECK-NEXT:    [[N_VEC:%.*]] = sub i64 [[TMP9]], [[N_MOD_VF]]
-; CHECK-NEXT:    [[BROADCAST_SPLATINSERT:%.*]] = insertelement <8 x i32> poison, i32 [[TMP7]], i32 0
-; CHECK-NEXT:    [[BROADCAST_SPLAT:%.*]] = shufflevector <8 x i32> [[BROADCAST_SPLATINSERT]], <8 x i32> poison, <8 x i32> zeroinitializer
+; CHECK-NEXT:    [[BROADCAST_SPLATINSERT:%.*]] = insertelement <16 x i32> poison, i32 [[TMP7]], i32 0
+; CHECK-NEXT:    [[BROADCAST_SPLAT:%.*]] = shufflevector <16 x i32> [[BROADCAST_SPLATINSERT]], <16 x i32> poison, <16 x i32> zeroinitializer
 ; CHECK-NEXT:    br label [[VECTOR_BODY:%.*]]
 ; CHECK:       vector.body:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i64 [ 0, [[VECTOR_PH]] ], [ [[INDEX_NEXT:%.*]], [[VECTOR_BODY]] ]
@@ -45,15 +45,15 @@ define void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly
 ; CHECK-NEXT:    [[TMP17:%.*]] = add nsw i64 [[TMP16]], [[TMP14]]
 ; CHECK-NEXT:    [[TMP18:%.*]] = getelementptr inbounds i16, i16* [[TMP2]], i64 [[TMP17]]
 ; CHECK-NEXT:    [[TMP19:%.*]] = getelementptr inbounds i16, i16* [[TMP18]], i32 0
-; CHECK-NEXT:    [[TMP20:%.*]] = bitcast i16* [[TMP19]] to <8 x i16>*
-; CHECK-NEXT:    [[WIDE_LOAD:%.*]] = load <8 x i16>, <8 x i16>* [[TMP20]], align 2, !alias.scope !0
-; CHECK-NEXT:    [[TMP21:%.*]] = sext <8 x i16> [[WIDE_LOAD]] to <8 x i32>
-; CHECK-NEXT:    [[TMP22:%.*]] = mul nsw <8 x i32> [[TMP21]], [[BROADCAST_SPLAT]]
+; CHECK-NEXT:    [[TMP20:%.*]] = bitcast i16* [[TMP19]] to <16 x i16>*
+; CHECK-NEXT:    [[WIDE_LOAD:%.*]] = load <16 x i16>, <16 x i16>* [[TMP20]], align 2, !alias.scope !0
+; CHECK-NEXT:    [[TMP21:%.*]] = sext <16 x i16> [[WIDE_LOAD]] to <16 x i32>
+; CHECK-NEXT:    [[TMP22:%.*]] = mul nsw <16 x i32> [[TMP21]], [[BROADCAST_SPLAT]]
 ; CHECK-NEXT:    [[TMP23:%.*]] = getelementptr inbounds i32, i32* [[TMP1]], i64 [[TMP17]]
 ; CHECK-NEXT:    [[TMP24:%.*]] = getelementptr inbounds i32, i32* [[TMP23]], i32 0
-; CHECK-NEXT:    [[TMP25:%.*]] = bitcast i32* [[TMP24]] to <8 x i32>*
-; CHECK-NEXT:    store <8 x i32> [[TMP22]], <8 x i32>* [[TMP25]], align 4, !alias.scope !3, !noalias !0
-; CHECK-NEXT:    [[INDEX_NEXT]] = add nuw i64 [[INDEX]], 8
+; CHECK-NEXT:    [[TMP25:%.*]] = bitcast i32* [[TMP24]] to <16 x i32>*
+; CHECK-NEXT:    store <16 x i32> [[TMP22]], <16 x i32>* [[TMP25]], align 4, !alias.scope !3, !noalias !0
+; CHECK-NEXT:    [[INDEX_NEXT]] = add nuw i64 [[INDEX]], 16
 ; CHECK-NEXT:    [[TMP26:%.*]] = icmp eq i64 [[INDEX_NEXT]], [[N_VEC]]
 ; CHECK-NEXT:    br i1 [[TMP26]], label [[MIDDLE_BLOCK:%.*]], label [[VECTOR_BODY]], !llvm.loop [[LOOP5:![0-9]+]]
 ; CHECK:       middle.block:

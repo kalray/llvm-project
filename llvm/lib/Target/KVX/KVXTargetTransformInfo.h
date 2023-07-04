@@ -65,6 +65,49 @@ public:
   TargetTransformInfo::PopcntSupportKind
   getPopcntSupport(unsigned IntTyWidthInBit) const;
 
+  bool shouldExpandReduction(const IntrinsicInst *II) const;
+
+  bool preferInLoopReduction(unsigned Opcode, Type *Ty,
+                             TTI::ReductionFlags Flags) const {
+    return !ST->isV1();
+  }
+
+  InstructionCost getArithmeticReductionCost(
+      unsigned Opcode, VectorType *Ty, Optional<FastMathFlags> FMF,
+      TTI::TargetCostKind CostKind = TTI::TCK_RecipThroughput);
+
+  InstructionCost getArithmeticInstrCost(
+      unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
+      TTI::OperandValueKind Opd1Info = TTI::OK_AnyValue,
+      TTI::OperandValueKind Opd2Info = TTI::OK_AnyValue,
+      TTI::OperandValueProperties Opd1PropInfo = TTI::OP_None,
+      TTI::OperandValueProperties Opd2PropInfo = TTI::OP_None,
+      ArrayRef<const Value *> Args = ArrayRef<const Value *>(),
+      const Instruction *CxtI = nullptr);
+
+  bool isTypeLegal(Type *Ty) const { return true; }
+  bool
+  shouldMaximizeVectorBandwidth(TargetTransformInfo::RegisterKind K) const {
+    return true;
+  };
+
+  InstructionCost getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
+                                        TTI::TargetCostKind CostKind);
+
+  InstructionCost getExtractWithExtendCost(unsigned Opcode, Type *Dst,
+                                           VectorType *VecTy,
+                                           unsigned Index = -1);
+  InstructionCost
+  getCastInstrCost(unsigned Opcode, Type *Dst, Type *Src,
+                   TTI::CastContextHint CCH,
+                   TTI::TargetCostKind CostKind = TTI::TCK_SizeAndLatency,
+                   const Instruction *I = nullptr);
+
+  InstructionCost getCmpSelInstrCost(unsigned Opcode, Type *ValTy, Type *CondTy,
+                                     CmpInst::Predicate VecPred,
+                                     TTI::TargetCostKind CostKind,
+                                     const Instruction *I = nullptr);
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };
