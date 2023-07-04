@@ -57,11 +57,6 @@ public:
                      const TargetTransformInfo::LSRCost &C2) const;
   unsigned getInliningThresholdMultiplier() const;
 
-  unsigned getNumberOfRegisters(unsigned ClassID) const;
-  TypeSize getRegisterBitWidth(bool Vector) const {
-    return TypeSize::Fixed(Vector ? 256 : 64);
-  }
-
   TargetTransformInfo::PopcntSupportKind
   getPopcntSupport(unsigned IntTyWidthInBit) const;
 
@@ -76,6 +71,44 @@ public:
       unsigned Opcode, VectorType *Ty, Optional<FastMathFlags> FMF,
       TTI::TargetCostKind CostKind = TTI::TCK_RecipThroughput);
 
+  bool
+  shouldMaximizeVectorBandwidth(TargetTransformInfo::RegisterKind K) const {
+    return true;
+  };
+  bool enableAggressiveInterleaving(bool LoopHasReductions) const {
+    return true;
+  }
+  bool enableInterleavedAccessVectorization() const { return true; }
+
+  unsigned getNumberOfRegisters(unsigned ClassID) const;
+  TypeSize getRegisterBitWidth(bool Vector) const {
+    return TypeSize::Fixed(Vector ? 256 : 64);
+  }
+
+  const char *getRegisterClassName(unsigned ClassID) const;
+
+  unsigned getRegisterClassForType(bool Vector, Type *Ty) const;
+
+  unsigned getMaxInterleaveFactor(unsigned VF) const { return 3; }
+
+  unsigned getRegUsageForType(Type *Ty) const {
+    return Ty->getPrimitiveSizeInBits() / 64;
+  }
+
+  InstructionCost getVectorInstrCost(unsigned Opcode, Type *Ty,
+                                     unsigned Index) const {
+    if (Opcode == Instruction::ShuffleVector)
+      return TargetTransformInfoImplBase::getVectorInstrCost(Opcode, Ty, Index);
+
+    return 1;
+  }
+
+  InstructionCost getScalarizationOverhead(VectorType *Ty,
+                                           const APInt &DemandedElts,
+                                           bool Insert, bool Extract);
+
+  bool isTypeLegal(Type *Ty) const { return true; }
+
   InstructionCost getArithmeticInstrCost(
       unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
       TTI::OperandValueKind Opd1Info = TTI::OK_AnyValue,
@@ -85,11 +118,6 @@ public:
       ArrayRef<const Value *> Args = ArrayRef<const Value *>(),
       const Instruction *CxtI = nullptr);
 
-  bool isTypeLegal(Type *Ty) const { return true; }
-  bool
-  shouldMaximizeVectorBandwidth(TargetTransformInfo::RegisterKind K) const {
-    return true;
-  };
 
   InstructionCost getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
                                         TTI::TargetCostKind CostKind);

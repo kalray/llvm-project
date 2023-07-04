@@ -288,8 +288,6 @@ unsigned KVXTTIImpl::getInliningThresholdMultiplier() const {
   }
 }
 
-unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const { return 64; }
-
 bool KVXTTIImpl::isLSRCostLess(const TargetTransformInfo::LSRCost &C1,
                                const TargetTransformInfo::LSRCost &C2) const {
   // Care first for num-regs then number of inst.
@@ -342,6 +340,89 @@ bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
   }
 }
 
+unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const {
+  #define REG(X) \
+  case KVX::X ## RegRegClassID: \
+    return KVX::X ## RegRegClass.getNumRegs()
+
+  switch (ClassID) {
+    REG(Copro);
+    REG(Block);
+    REG(Vector);
+    REG(Wide);
+    REG(Matrix);
+    REG(Buffer8);
+    REG(Buffer16);
+    REG(Paired);
+    REG(Quad);
+    REG(System);
+    default:
+      return 64;
+  }
+}
+
+const char *KVXTTIImpl::getRegisterClassName(unsigned ClassID) const {
+  #define REGNAME(X) \
+  case KVX::X ## RegRegClassID: \
+    return "KVX::" # X  "RegRegClass"
+
+  switch (ClassID) {
+    REGNAME(Copro);
+    REGNAME(Block);
+    REGNAME(Vector);
+    REGNAME(Wide);
+    REGNAME(Matrix);
+    REGNAME(Buffer8);
+    REGNAME(Buffer16);
+    REGNAME(Paired);
+    REGNAME(Quad);
+    REGNAME(System);
+    default:
+      return "KVX::SingleRegRegClass";
+  }
+}
+
+unsigned KVXTTIImpl::getRegisterClassForType(bool Vector, Type *Ty) const {
+  if (!Ty) {
+    if (!Vector)
+      return KVX::SingleRegRegClassID;
+    return KVX::QuadRegRegClassID;
+  }
+
+  if (Ty->isVectorTy() && Ty->getScalarSizeInBits() == 1) {
+    switch (Ty->getPrimitiveSizeInBits()) {
+    case 64:
+      return KVX::CoproRegRegClassID;
+    case 128:
+      return KVX::BlockRegRegClassID;
+    case 256:
+      return KVX::VectorRegRegClassID;
+    case 512:
+      return KVX::WideRegRegClassID;
+    case 1024:
+      return KVX::MatrixRegRegClassID;
+    case 2048:
+      return KVX::Buffer8RegRegClassID;
+    case 4096:
+      return KVX::Buffer16RegRegClassID;
+    default:
+      return KVX::SingleRegRegClassID;
+    }
+  }
+
+  unsigned Size = Ty->getPrimitiveSizeInBits();
+  if (Size <= 64)
+    return KVX::SingleRegRegClassID;
+
+  if (Size <= 128)
+    return KVX::PairedRegRegClassID;
+
+  if (Size <= 256)
+    return KVX::QuadRegRegClassID;
+
+  return KVX::SingleRegRegClassID;
+}
+
 InstructionCost
 KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
                                        Optional<FastMathFlags> FMF,
@@ -368,14 +449,46 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
     TTI::OperandValueProperties Opd1PropInfo,
     TTI::OperandValueProperties Opd2PropInfo, ArrayRef<const Value *> Args,
     const Instruction *CxtI) {
-
-  if (Ty->isFloatingPointTy() || (Ty->getScalarSizeInBits() > 64))
+  if (CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
-                                         Opd2Info, Opd1PropInfo, Opd2PropInfo);
+                                         Opd2Info, Opd1PropInfo, Opd2PropInfo,
+                                         Args, CxtI);
+  // Legalize the type.
+  std::pair<InstructionCost, MVT> LT = TLI->getTypeLegalizationCost(DL, Ty);
 
-  auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
-  auto Min = 1lu + (Sz < 64);
-  return std::max(Min, Sz / 256);
+  auto *FVTy = dyn_cast<FixedVectorType>(Ty);
+  unsigned Cost, TypeSize = Ty->getScalarSizeInBits(),
+                 NumElems = FVTy ? FVTy->getNumElements() : 1;
+
+  int ISD = TLI->InstructionOpcodeToISD(Opcode);
+  assert(ISD && "Invalid opcode");
+
+  switch (ISD) {
+  case ISD::FMUL:
+  case ISD::FADD:
+    Cost = (TypeSize * NumElems) / getRegisterBitWidth(false); // bitwidth/64
+    Cost = Cost ? Cost : 1;
+    return LT.first * 2 * Cost;
+  }
+  return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info, Opd2Info,
+                                       Opd1PropInfo, Opd2PropInfo, Args, CxtI);
+}
+
+InstructionCost KVXTTIImpl::getScalarizationOverhead(VectorType *Ty,
+                                                     const APInt &DemandedElts,
+                                                     bool Insert,
+                                                     bool Extract) {
+  unsigned Size, ScalarSize = Ty->getScalarSizeInBits(),
+                 RegWidth = getRegisterBitWidth(false);
+
+  // non-complex insert/extract cases
+  auto *FVTy = dyn_cast<FixedVectorType>(Ty);
+  Size = ScalarSize * (FVTy ? FVTy->getNumElements() : 1);
+  if (Size == RegWidth || Size == RegWidth * 2 || Size == RegWidth * 4) {
+    return 1;
+  }
+
+  return BaseT::getScalarizationOverhead(Ty, DemandedElts, Insert, Extract);
 }
 
 InstructionCost
