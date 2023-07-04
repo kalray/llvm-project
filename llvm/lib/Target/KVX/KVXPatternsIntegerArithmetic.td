@@ -1063,6 +1063,22 @@ defm : COMP_Pat<setge,   comparison_ge, comparison_le>;
 defm : COMP_Pat<setlt,   comparison_lt, comparison_gt>;
 defm : COMP_Pat<setle,   comparison_le, comparison_ge>;
 
+multiclass VEC_COMP_Pat<ValueType InVT, Instruction I> {
+  def : Pat <(i64 (int_kvx_vec_cmp InVT:$v0, InVT:$v1, i32:$cmp)),
+             (i64 (I SingleReg:$v0, SingleReg:$v1, ComparisonMod:$cmp))>;
+}
+defm : VEC_COMP_Pat<v8i8, COMPNBO>, Requires<[IsV2]>;
+defm : VEC_COMP_Pat<v4i16, COMPNHQ>;
+defm : VEC_COMP_Pat<v2i32, COMPNWP>;
+
+multiclass VEC_COMP_Pat_Sub64<ValueType InVT, Instruction I, Instruction Ext> {
+  def : Pat <(i32 (int_kvx_vec_cmp InVT:$v0, InVT:$v1, i32:$cmp)),
+             (i32 (Ext (I SingleReg:$v0, SingleReg:$v1, ComparisonMod:$cmp)))>;
+}
+defm : VEC_COMP_Pat_Sub64<v2i8, COMPNBO, ZXHD>, Requires<[IsV2]>;
+defm : VEC_COMP_Pat_Sub64<v4i8, COMPNBO, ZXWD>, Requires<[IsV2]>;
+defm : VEC_COMP_Pat_Sub64<v2i16, COMPNHQ, ZXWD>;
+
 // TODO: add ri variants
 multiclass DOT2_RR_SingleReg<SDNode ExtMul, Instruction RR> {
 def : Pat<(i64 (add ( ExtMul

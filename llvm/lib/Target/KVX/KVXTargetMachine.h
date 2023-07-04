@@ -44,6 +44,7 @@ public:
 
   bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
   unsigned getSjLjDataSize() const override { return 64; }
+  bool isV1() const { return TargetCPU == "kv3-1"; }
 };
 
 } // end namespace llvm

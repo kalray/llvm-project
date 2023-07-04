@@ -25,6 +25,7 @@
 #include "llvm/MC/TargetRegistry.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Target/TargetOptions.h"
+#include "llvm/Transforms/Scalar.h"
 
 using namespace llvm;
 
@@ -247,10 +248,15 @@ void KVXPassConfig::addPreEmitPass() {
 }
 
 bool KVXPassConfig::addPreISel() {
-  if (TM->getOptLevel() >= CodeGenOpt::Default && !DisableLOOPDO) {
+  auto Opt = TM->getOptLevel();
+  if (Opt >= CodeGenOpt::Default && !DisableLOOPDO) {
     addPass(createHardwareLoopsPass());
     addPass(createKVXHardwareLoopsPreparePass());
   }
+
+  if (Opt > CodeGenOpt::None)
+    addPass(createKVXCodeGenPreparePass(getKVXTargetMachine().isV1()));
+
   return false;
 }
 

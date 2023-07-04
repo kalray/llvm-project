@@ -246,6 +246,9 @@ def int_kvx_alignv : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty
 //===----------------------------------------------------------------------===//
 // Overloaded intrinsics
 //===----------------------------------------------------------------------===//
+
+def int_kvx_vec_cmp : Intrinsic<[llvm_anyint_ty], [llvm_anyvector_ty, LLVMMatchType<1>, llvm_i32_ty], [IntrNoMem, IntrWillReturn]>;
+
 def int_kvx_abd: Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_abs : Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_alclr: Intrinsic<[llvm_anyint_ty], [llvm_ptr_ty], [IntrArgMemOnly]>;

@@ -15,25 +15,26 @@ tablegen(LLVM KVXGenDFAPacketizer.inc -gen-dfa-packetizer)
 add_public_tablegen_target(KVXCommonTableGen)
 
 add_llvm_target(KVXCodeGen
-    KVXISelDAGToDAG.cpp
-    KVXISelLowering.cpp
-    KVXTCAIselLowering.cpp
     KVXAsmPrinter.cpp
+    KVXCodeGenPrepare.cpp
     KVXExpandPseudoInsts.cpp
-    KVXInstrInfo.cpp
-    KVXRegisterInfo.cpp
-    KVXTargetMachine.cpp
     KVXFrameLowering.cpp
-    KVXTargetObjectFile.cpp
-    KVXSubtarget.cpp
-    KVXMCInstLower.cpp
-    KVXLoadStorePacking.cpp
-    KVXVLIWPacketizer.cpp
+    KVXGenerated.cpp
     KVXHardwareLoops.cpp
     KVXHardwareLoopsPrepare.cpp
-    KVXTargetTransformInfo.cpp
+    KVXInstrInfo.cpp
+    KVXISelDAGToDAG.cpp
+    KVXISelLowering.cpp
+    KVXLoadStorePacking.cpp
+    KVXMCInstLower.cpp
     KVXPostScheduler.cpp
-    KVXGenerated.cpp
+    KVXRegisterInfo.cpp
+    KVXSubtarget.cpp
+    KVXTargetMachine.cpp
+    KVXTargetObjectFile.cpp
+    KVXTargetTransformInfo.cpp
+    KVXTCAIselLowering.cpp
+    KVXVLIWPacketizer.cpp
 
     LINK_COMPONENTS
     Analysis

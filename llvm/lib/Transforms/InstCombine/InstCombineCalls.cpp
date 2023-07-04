@@ -2486,17 +2486,6 @@ Instruction *InstCombinerImpl::visitCallInst(CallInst &CI) {
     Value *Arg = II->getArgOperand(0);
     Value *Vect;
     if (match(Arg, m_ZExtOrSExtOrSelf(m_Value(Vect)))) {
-      // https://phab.kalray.eu/T20872
-      // KVX temporary hack: This normalizationm breaks kvx backend. Alike
-      // hexagon it could promote the v[248]i1 to v[248]i8. However it can't
-      // bitcast v2i8 to i16, as that is also illegal. Alike arm, it will have
-      // to add a custom isd node that takes the promoted v2i8 vector and
-      // promotes it to i32. Most probably the best is detect this as a pattern
-      // and replace it by intrinsics, such that the actual predicate
-      // element-size are preserved.
-      if (II->getParent()->getParent()->getParent()->getTargetTriple().find(
-              "kvx") != StringLiteral::npos)
-        return nullptr;
       if (auto *FTy = dyn_cast<FixedVectorType>(Vect->getType()))
         if (FTy->getElementType() == Builder.getInt1Ty()) {
           Value *Res = Builder.CreateBitCast(
