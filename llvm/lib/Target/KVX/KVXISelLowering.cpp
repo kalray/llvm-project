@@ -929,10 +929,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EH_SJLJ_SETJMP, MVT::i32, Custom);
   setOperationAction(ISD::EH_SJLJ_SETUP_DISPATCH, MVT::Other, Custom);
 
-  for (auto I :
-       {ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS, ISD::FADD, ISD::FCOPYSIGN,
-        ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::INTRINSIC_WO_CHAIN,
-        ISD::LOAD, ISD::MUL, ISD::SRA, ISD::STORE, ISD::ZERO_EXTEND})
+  auto RedAction = Subtarget.isV1() ? Expand : Legal;
+  for (MVT VT :
+       {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16, MVT::v2i32}) {
+    setOperationAction(ISD::VECREDUCE_ADD, VT, RedAction);
+  }
+
+  for (auto I : {ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS, ISD::FADD,
+                 ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG,
+                 ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL, ISD::SRA,
+                 ISD::STORE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -973,6 +979,8 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     TARGET_NODE_CASE(ZEXT_MUL)
     TARGET_NODE_CASE(SRS)
     TARGET_NODE_CASE(SRSNEG)
+    TARGET_NODE_CASE(VECREDUCE_ADD_SEXT)
+    TARGET_NODE_CASE(VECREDUCE_ADD_ZEXT)
   default:
     return NULL;
   }
@@ -1484,9 +1492,32 @@ static SDValue manualPromoteTruncOp(SDValue &Op, SelectionDAG &DAG,
 }
 
 SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
-  switch (Op.getOpcode()) {
+  const unsigned Opcode = Op.getOpcode();
+  switch (Opcode) {
   default:
     report_fatal_error("unimplemented operand");
+  case KVXISD::VECREDUCE_ADD_SEXT:
+  case KVXISD::VECREDUCE_ADD_ZEXT: {
+    auto Op0 = Op->getOperand(0);
+    EVT IVT = Op0->getValueType(0);
+    if (!IVT.isPow2VectorType())
+      return SDValue();
+
+    if (IVT.getFixedSizeInBits() <= 64)
+      return Op;
+
+    SDLoc Loc = SDLoc(Op);
+    auto Halfs = DAG.SplitVector(Op0, Loc);
+    auto VT = Op->getValueType(0);
+    if (!Halfs.first->getValueType(0).isVector())
+      return DAG.getNode(ISD::ADD, Loc, VT, {Halfs.first, Halfs.second});
+
+    auto Lower = DAG.getNode(Opcode, Loc, VT, Halfs.first);
+    auto Upper = DAG.getNode(Opcode, Loc, VT, Halfs.second);
+    SDValue R = DAG.getNode(ISD::ADD, Loc, VT, {Lower, Upper});
+    R->print(errs());
+    return R;
+  }
   case ISD::ADD: { // TODO: Add v4i64
     if (Op.getSimpleValueType() != MVT::v2i64)
       return SDValue();
@@ -2881,6 +2912,34 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   return SDValue();
 }
 
+static SDValue combineVecRedAdd(SDNode *N, SelectionDAG &DAG) {
+  auto Op = N->getOperand(0);
+  unsigned Opcode;
+  switch (Op->getOpcode()) {
+  case ISD::ANY_EXTEND:
+  case ISD::ANY_EXTEND_VECTOR_INREG:
+  case ISD::SIGN_EXTEND:
+  case ISD::SIGN_EXTEND_INREG:
+  case ISD::SIGN_EXTEND_VECTOR_INREG:
+    Opcode = KVXISD::VECREDUCE_ADD_SEXT;
+    break;
+  case ISD::ZERO_EXTEND_VECTOR_INREG:
+  case ISD::ZERO_EXTEND:
+    Opcode = KVXISD::VECREDUCE_ADD_ZEXT;
+    break;
+  default:
+    return SDValue();
+  }
+
+  Op = Op.getOperand(0);
+  auto RedVT = N->getValueType(0);
+  if (RedVT == MVT::i64 || RedVT == MVT::i32)
+    return DAG.getNode(Opcode, SDLoc(N), RedVT, Op);
+
+  auto Red = DAG.getNode(Opcode, SDLoc(N), MVT::i64, Op);
+  return DAG.getZExtOrTrunc(Red, SDLoc(N), RedVT);
+}
+
 // This expands int_kvx_shl/int_kvx_shr nodes to sdnodes.
 static SDValue combineShifts(SDNode *N, SelectionDAG &Dag,
                              const SmallVector<unsigned, 4> Opcodes) {
@@ -3560,6 +3619,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineStore(N, DCI, DAG);
   case ISD::ZERO_EXTEND:
     return combineZext(N, DAG);
+  case ISD::VECREDUCE_ADD:
+    return (Subtarget.isV1()) ? SDValue() : combineVecRedAdd(N, DAG);
   }
 
   return SDValue();

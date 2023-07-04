@@ -51,6 +51,8 @@ def KVX_szext_mul  :  SDNode<"KVXISD::SZEXT_MUL", SDT_KVX_X_YY, []>;
 def KVX_zext_mul :  SDNode<"KVXISD::ZEXT_MUL", SDT_KVX_X_YY, []>;
 def KVX_srs   : SDNode<"KVXISD::SRS",    SDT_KVX_X_XY, []>;
 def KVX_srsneg: SDNode<"KVXISD::SRSNEG", SDT_KVX_X_XY, []>;
+def KVX_vecreduce_add_sext  :  SDNode<"KVXISD::VECREDUCE_ADD_SEXT", SDTVecReduce, []>;
+def KVX_vecreduce_add_zext  :  SDNode<"KVXISD::VECREDUCE_ADD_ZEXT", SDTVecReduce, []>;
 //===----------------------------------------------------------------------===//
 // Selection DAG patterns using custom DAG nodes.
 //===----------------------------------------------------------------------===//

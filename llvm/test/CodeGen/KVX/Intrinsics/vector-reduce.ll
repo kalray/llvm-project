@@ -47,39 +47,9 @@ define i64 @longSextAdd(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longSextAdd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    zxbd $r1 = $r0
-; CV2-NEXT:    srld $r2 = $r0, 32
-; CV2-NEXT:    extfz $r3 = $r0, 15, 8
-; CV2-NEXT:    extfz $r6 = $r0, 23, 16
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlw $r0 = $r0, 24
-; CV2-NEXT:    zxbd $r4 = $r2
-; CV2-NEXT:    extfz $r5 = $r2, 15, 8
-; CV2-NEXT:    extfz $r7 = $r2, 23, 16
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxbd $r1 = $r1
-; CV2-NEXT:    srlw $r2 = $r2, 24
-; CV2-NEXT:    sxbd $r3 = $r3
-; CV2-NEXT:    sxbd $r4 = $r4
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    sxbd $r0 = $r0
-; CV2-NEXT:    sxbd $r5 = $r5
-; CV2-NEXT:    sxbd $r6 = $r6
-; CV2-NEXT:    sxbd $r7 = $r7
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sxbd $r2 = $r2
-; CV2-NEXT:    addwd $r3 = $r5, $r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addwd $r0 = $r7, $r6
-; CV2-NEXT:    addwd $r2 = $r4, $r1
-; CV2-NEXT:    addwd $r9 = $r2, $r0
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addd $r0 = $r2, $r0
-; CV2-NEXT:    addd $r1 = $r3, $r9
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    addd $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i64>
   %3 = tail call i64 @llvm.vector.reduce.add.v8i64(<8 x i64> %2)
   ret i64 %3
@@ -117,23 +87,11 @@ define i64 @longAddSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longAddSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i64
   ret i64 %3
@@ -171,23 +129,11 @@ define i64 @longReduceSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longReduceSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i64
   ret i64 %3
@@ -236,39 +182,9 @@ define i64 @longSextReduce(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longSextReduce:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    zxbd $r1 = $r0
-; CV2-NEXT:    srld $r2 = $r0, 32
-; CV2-NEXT:    extfz $r3 = $r0, 15, 8
-; CV2-NEXT:    extfz $r6 = $r0, 23, 16
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlw $r0 = $r0, 24
-; CV2-NEXT:    zxbd $r4 = $r2
-; CV2-NEXT:    extfz $r5 = $r2, 15, 8
-; CV2-NEXT:    extfz $r7 = $r2, 23, 16
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxbd $r1 = $r1
-; CV2-NEXT:    srlw $r2 = $r2, 24
-; CV2-NEXT:    sxbd $r3 = $r3
-; CV2-NEXT:    sxbd $r4 = $r4
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    sxbd $r0 = $r0
-; CV2-NEXT:    sxbd $r5 = $r5
-; CV2-NEXT:    sxbd $r6 = $r6
-; CV2-NEXT:    sxbd $r7 = $r7
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sxbd $r2 = $r2
-; CV2-NEXT:    addwd $r3 = $r5, $r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addwd $r0 = $r7, $r6
-; CV2-NEXT:    addwd $r2 = $r4, $r1
-; CV2-NEXT:    addwd $r9 = $r2, $r0
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addd $r0 = $r2, $r0
-; CV2-NEXT:    addd $r1 = $r3, $r9
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    addd $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i64>
   %3 = tail call i64 @llvm.vector.reduce.add.v8i64(<8 x i64> %2)
   ret i64 %3
@@ -317,39 +233,9 @@ define i64 @longLoopSextReduceVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longLoopSextReduceVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    zxbd $r1 = $r0
-; CV2-NEXT:    srld $r2 = $r0, 32
-; CV2-NEXT:    extfz $r3 = $r0, 15, 8
-; CV2-NEXT:    extfz $r6 = $r0, 23, 16
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlw $r0 = $r0, 24
-; CV2-NEXT:    zxbd $r4 = $r2
-; CV2-NEXT:    extfz $r5 = $r2, 15, 8
-; CV2-NEXT:    extfz $r7 = $r2, 23, 16
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxbd $r1 = $r1
-; CV2-NEXT:    srlw $r2 = $r2, 24
-; CV2-NEXT:    sxbd $r3 = $r3
-; CV2-NEXT:    sxbd $r4 = $r4
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    sxbd $r0 = $r0
-; CV2-NEXT:    sxbd $r5 = $r5
-; CV2-NEXT:    sxbd $r6 = $r6
-; CV2-NEXT:    sxbd $r7 = $r7
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sxbd $r2 = $r2
-; CV2-NEXT:    addwd $r3 = $r5, $r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addwd $r0 = $r7, $r6
-; CV2-NEXT:    addwd $r2 = $r4, $r1
-; CV2-NEXT:    addwd $r9 = $r2, $r0
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addd $r0 = $r2, $r0
-; CV2-NEXT:    addd $r1 = $r3, $r9
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    addd $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i64>
   %3 = tail call i64 @llvm.vector.reduce.add.v8i64(<8 x i64> %2)
   ret i64 %3
@@ -387,23 +273,11 @@ define i64 @longLoopReduceSextVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: longLoopReduceSextVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i64
   ret i64 %3
@@ -454,39 +328,9 @@ define i64 @longLoopSextReduceArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    zxbd $r1 = $r0
-; CV2-NEXT:    srld $r2 = $r0, 32
-; CV2-NEXT:    extfz $r3 = $r0, 15, 8
-; CV2-NEXT:    extfz $r4 = $r0, 23, 16
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    srlw $r0 = $r0, 24
-; CV2-NEXT:    zxbd $r5 = $r2
-; CV2-NEXT:    extfz $r6 = $r2, 15, 8
-; CV2-NEXT:    extfz $r7 = $r2, 23, 16
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sxbd $r1 = $r1
-; CV2-NEXT:    srlw $r2 = $r2, 24
-; CV2-NEXT:    sxbd $r3 = $r3
-; CV2-NEXT:    sxbd $r5 = $r5
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sxbd $r0 = $r0
-; CV2-NEXT:    sxbd $r4 = $r4
-; CV2-NEXT:    sxbd $r6 = $r6
-; CV2-NEXT:    sxbd $r7 = $r7
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    sxbd $r2 = $r2
-; CV2-NEXT:    addwd $r3 = $r6, $r3
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addwd $r0 = $r7, $r4
-; CV2-NEXT:    addwd $r2 = $r5, $r1
-; CV2-NEXT:    addwd $r9 = $r2, $r0
-; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    addd $r0 = $r2, $r0
-; CV2-NEXT:    addd $r1 = $r3, $r9
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    addd $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 10)
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = load <8 x i8>, ptr %0
   %3 = sext <8 x i8> %2 to <8 x i64>
   %4 = tail call i64 @llvm.vector.reduce.add.v8i64(<8 x i64> %3)
@@ -529,23 +373,11 @@ define i64 @longLoopReduceSextArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    ;; # (end cycle 4)
   %2 = load <8 x i8>, ptr %0
   %3 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %2)
   %4 = sext i8 %3 to i64
@@ -577,24 +409,9 @@ define i32 @intSextAdd(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intSextAdd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxmbhq $r0 = $r0
-; CV2-NEXT:    sxlbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sxlhwp $r0 = $r0
-; CV2-NEXT:    sxmhwp $r1 = $r0
-; CV2-NEXT:    sxlhwp $r2 = $r1
-; CV2-NEXT:    sxmhwp $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    addwp $r0 = $r2, $r0
-; CV2-NEXT:    addwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i32>
   %3 = tail call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> %2)
   ret i32 %3
@@ -632,23 +449,11 @@ define i32 @intAddSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intAddSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i32
   ret i32 %3
@@ -686,23 +491,11 @@ define i32 @intReduceSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intReduceSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i32
   ret i32 %3
@@ -733,24 +526,9 @@ define i32 @intSextReduce(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intSextReduce:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxmbhq $r0 = $r0
-; CV2-NEXT:    sxlbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sxlhwp $r0 = $r0
-; CV2-NEXT:    sxmhwp $r1 = $r0
-; CV2-NEXT:    sxlhwp $r2 = $r1
-; CV2-NEXT:    sxmhwp $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    addwp $r0 = $r2, $r0
-; CV2-NEXT:    addwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i32>
   %3 = tail call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> %2)
   ret i32 %3
@@ -783,24 +561,9 @@ define i32 @intLoopSextReduceVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intLoopSextReduceVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxmbhq $r0 = $r0
-; CV2-NEXT:    sxlbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sxlhwp $r0 = $r0
-; CV2-NEXT:    sxmhwp $r1 = $r0
-; CV2-NEXT:    sxlhwp $r2 = $r1
-; CV2-NEXT:    sxmhwp $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    addwp $r0 = $r2, $r0
-; CV2-NEXT:    addwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i32>
   %3 = tail call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> %2)
   ret i32 %3
@@ -838,23 +601,11 @@ define i32 @intLoopReduceSextVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: intLoopReduceSextVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i32
   ret i32 %3
@@ -889,24 +640,9 @@ define i32 @intLoopSextReduceArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sxmbhq $r0 = $r0
-; CV2-NEXT:    sxlbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sxlhwp $r0 = $r0
-; CV2-NEXT:    sxmhwp $r1 = $r0
-; CV2-NEXT:    sxlhwp $r2 = $r1
-; CV2-NEXT:    sxmhwp $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addwp $r0 = $r2, $r0
-; CV2-NEXT:    addwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = load <8 x i8>, ptr %0
   %3 = sext <8 x i8> %2 to <8 x i32>
   %4 = tail call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> %3)
@@ -949,23 +685,11 @@ define i32 @intLoopReduceSextArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    ;; # (end cycle 4)
   %2 = load <8 x i8>, ptr %0
   %3 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %2)
   %4 = sext i8 %3 to i32
@@ -993,21 +717,9 @@ define i16 @shortSextAdd(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortSextAdd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxlbhq $r0 = $r0
-; CV2-NEXT:    sxmbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i16>
   %3 = tail call i16 @llvm.vector.reduce.add.v8i16(<8 x i16> %2)
   ret i16 %3
@@ -1045,23 +757,11 @@ define i16 @shortAddSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortAddSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i16
   ret i16 %3
@@ -1099,23 +799,11 @@ define i16 @shortReduceSext(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortReduceSext:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i16
   ret i16 %3
@@ -1142,21 +830,9 @@ define i16 @shortSextReduce(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortSextReduce:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxlbhq $r0 = $r0
-; CV2-NEXT:    sxmbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i16>
   %3 = tail call i16 @llvm.vector.reduce.add.v8i16(<8 x i16> %2)
   ret i16 %3
@@ -1185,21 +861,9 @@ define i16 @shortLoopSextReduceVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortLoopSextReduceVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sxlbhq $r0 = $r0
-; CV2-NEXT:    sxmbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = sext <8 x i8> %0 to <8 x i16>
   %3 = tail call i16 @llvm.vector.reduce.add.v8i16(<8 x i16> %2)
   ret i16 %3
@@ -1237,23 +901,11 @@ define i16 @shortLoopReduceSextVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: shortLoopReduceSextVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   %3 = sext i8 %2 to i16
   ret i16 %3
@@ -1284,21 +936,9 @@ define i16 @shortLoopSextReduceArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sxlbhq $r0 = $r0
-; CV2-NEXT:    sxmbhq $r1 = $r0
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addhq $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = load <8 x i8>, ptr %0
   %3 = sext <8 x i8> %2 to <8 x i16>
   %4 = tail call i16 @llvm.vector.reduce.add.v8i16(<8 x i16> %3)
@@ -1341,23 +981,11 @@ define i16 @shortLoopReduceSextArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srld $r1 = $r0, 32
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    ;; # (end cycle 4)
   %2 = load <8 x i8>, ptr %0
   %3 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %2)
   %4 = sext i8 %3 to i16
@@ -1394,21 +1022,9 @@ define i8 @charAdd(<8 x i8> %0) {
 ;
 ; CV2-LABEL: charAdd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   ret i8 %2
 }
@@ -1443,21 +1059,9 @@ define i8 @charReduce(<8 x i8> %0) {
 ;
 ; CV2-LABEL: charReduce:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   ret i8 %2
 }
@@ -1492,21 +1096,9 @@ define i8 @charLoopReduceVector(<8 x i8> %0) {
 ;
 ; CV2-LABEL: charLoopReduceVector:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %0)
   ret i8 %2
 }
@@ -1545,21 +1137,9 @@ define i8 @charLoopReduceArray(ptr %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    ld $r0 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    zxhd $r0 = $r0
-; CV2-NEXT:    srlw $r1 = $r0, 16
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    zxbd $r0 = $r0
-; CV2-NEXT:    extfz $r1 = $r0, 15, 8
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    addrbod $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    ;; # (end cycle 3)
   %2 = load <8 x i8>, ptr %0
   %3 = tail call i8 @llvm.vector.reduce.add.v8i8(<8 x i8> %2)
   ret i8 %3

@@ -51,6 +51,8 @@ enum NodeType : unsigned {
   TAIL,
   SRS,
   SRSNEG,
+  VECREDUCE_ADD_SEXT,
+  VECREDUCE_ADD_ZEXT,
 };
 } // namespace KVXISD
 
