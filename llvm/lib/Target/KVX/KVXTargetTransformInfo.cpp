@@ -538,7 +538,41 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
                                              TTI::CastContextHint CCH,
                                              TTI::TargetCostKind CostKind,
                                              const Instruction *I) {
+#define assertM(COND, TXT)                                                     \
+  if (!(COND)) {                                                               \
+    llvm::errs() << TXT << '\n';                                               \
+    abort();                                                                   \
+  }
+  // Sanity check
+  assertM(Dst->isSized() && Src->isSized(), "Cast with non-sized types");
+
   switch (Opcode) {
+  case Instruction::BitCast:
+    assertM(Dst->getPrimitiveSizeInBits() == Src->getPrimitiveSizeInBits(),
+            "Bitcast of types of different size.") break;
+  case Instruction::FPTrunc:
+  case Instruction::Trunc:
+    assertM(Dst->getPrimitiveSizeInBits() < Src->getPrimitiveSizeInBits(),
+            "Truncated type is not smaller than original.") break;
+  case Instruction::SExt:
+  case Instruction::ZExt:
+  case Instruction::FPExt:
+    assertM(Dst->getPrimitiveSizeInBits() > Src->getPrimitiveSizeInBits(),
+            "Extended type is not larger than original.") break;
+  default:
+    break;
+  }
+
+  if (!(isPowerOf2_32(Src->getScalarSizeInBits()) &&
+        isPowerOf2_32(Dst->getScalarSizeInBits())))
+    return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);
+
+  // How many bits of the output can we generate per bundle?
+  unsigned BitWidth = 256;
+  bool IsFP = false;
+  switch (Opcode) {
+  default:
+    return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);
   // FIXME: Forbid bitvector casts until properly handled in backend during
   // lowering.
   case Instruction::BitCast:
@@ -546,33 +580,45 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
         Src->getScalarSizeInBits() == 1)
       return 70000;
     return 0;
-  case Instruction::Trunc:
-    return 0;
 
-  default:
-    LLVM_FALLTHROUGH;
   case Instruction::FPExt:
+    IsFP = true;
+    BitWidth = 128; // 2 x LITLE
+    break;
+
   case Instruction::FPTrunc:
-    return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);
+    IsFP = true;
+    BitWidth = 64; // 2 x LITLE
+    std::swap(Src, Dst);
+    break;
+
+  case Instruction::Trunc:
+    BitWidth = 128; // 4 x TINY 2X -> 2X
+    std::swap(Src, Dst);
+    break;
 
   case Instruction::SExt:
   case Instruction::ZExt:
-    // Using [SZ]X[LM] SIMD up to 4 instructions per cycle can generate
-    // up to 256 bits of extended value of doubled size.
-
-    unsigned Cost = 0;
-    for (auto *T = Src; T != Dst;) {
-      T = T->getExtendedType();
-      Cost += std::max(1lu, T->getPrimitiveSizeInBits().getFixedSize() / 256);
-    }
-
-    if (Dst->getScalarSizeInBits() != 64)
-      return Cost;
-
-    if (!Dst->isVectorTy())
-      return 1;
-    return std::min(
-        static_cast<VectorType *>(Dst)->getElementCount().getKnownMinValue(),
-        Cost);
+    // 4 x TINY -> 256
+    break;
   }
+
+  if (!IsFP && !Dst->isVectorTy())
+    return 1;
+
+  unsigned Cost = 0;
+  for (unsigned SrcSz = Src->getPrimitiveSizeInBits(),
+                DstSz = Dst->getPrimitiveSizeInBits();
+       SrcSz < DstSz; DstSz /= 2)
+    Cost += std::max(1u, DstSz / BitWidth);
+
+  if (IsFP || Dst->getScalarSizeInBits() != 64)
+    return Cost;
+
+  if (!Dst->isVectorTy())
+    return 1;
+
+  return std::min(
+      static_cast<VectorType *>(Dst)->getElementCount().getKnownMinValue(),
+      Cost);
 }

@@ -6294,9 +6294,19 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
       InstructionCost VecCost = 0;
       // Check if the values are candidates to demote.
       if (!MinBWs.count(VL0) || VecTy != SrcVecTy) {
+        // If we have computed a smaller type for the expression, the update
+        // VecTy may happen to be smaller/equal sized than a ext/cast value.
+        // Update Opcode accordingly. Avoid passing the instruction if changed.
+        unsigned Opcode = ShuffleOrOp;
+        Instruction *CastIstr = VL0;
+        if (VecTy->getScalarSizeInBits() <= SrcVecTy->getScalarSizeInBits()) {
+          Opcode = CastInst::getCastOpcode(VecTy, false, SrcVecTy, false);
+          if (Opcode != ShuffleOrOp)
+            CastIstr = nullptr;
+        }
         VecCost = CommonCost + TTI->getCastInstrCost(
-                                   E->getOpcode(), VecTy, SrcVecTy,
-                                   TTI::getCastContextHint(VL0), CostKind, VL0);
+                                   Opcode, VecTy, SrcVecTy,
+                                   TTI::getCastContextHint(VL0), CostKind, CastIstr);
       }
       LLVM_DEBUG(dumpTreeCosts(E, CommonCost, VecCost, ScalarCost));
       return VecCost - ScalarCost;
@@ -6572,13 +6582,23 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
             cast<CmpInst>(E->getAltOp())->getPredicate(), CostKind,
             E->getAltOp());
       } else {
+        auto Op = E->getOpcode();
+        bool Signed = false;
+        switch (Op){
+          case Instruction::SExt:
+          case Instruction::FPToSI:
+          case Instruction::SIToFP:
+            Signed = true;
+        }
         Type *Src0SclTy = E->getMainOp()->getOperand(0)->getType();
         Type *Src1SclTy = E->getAltOp()->getOperand(0)->getType();
         auto *Src0Ty = FixedVectorType::get(Src0SclTy, VL.size());
         auto *Src1Ty = FixedVectorType::get(Src1SclTy, VL.size());
-        VecCost = TTI->getCastInstrCost(E->getOpcode(), VecTy, Src0Ty,
+        Op = CastInst::getCastOpcode(Src0Ty, Signed, VecTy, Signed);
+        VecCost = TTI->getCastInstrCost(Op, VecTy, Src0Ty,
                                         TTI::CastContextHint::None, CostKind);
-        VecCost += TTI->getCastInstrCost(E->getAltOpcode(), VecTy, Src1Ty,
+        Op = CastInst::getCastOpcode(Src1Ty, Signed, VecTy, Signed);
+        VecCost += TTI->getCastInstrCost(Op, VecTy, Src1Ty,
                                          TTI::CastContextHint::None, CostKind);
       }
 

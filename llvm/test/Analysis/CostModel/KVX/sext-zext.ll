@@ -7,7 +7,7 @@ target triple = "kvx-kalray-cos"
 define void @sext() {
 ; ALL-LABEL: 'sext'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi16 = sext i8 undef to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %i8toi32 = sext i8 undef to i32
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi32 = sext i8 undef to i32
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi64 = sext i8 undef to i64
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i16toi32 = sext i16 undef to i32
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i16toi64 = sext i16 undef to i64
@@ -87,7 +87,7 @@ entry:
 define void @zext() {
 ; ALL-LABEL: 'zext'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi16 = zext i8 undef to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %i8toi32 = zext i8 undef to i32
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi32 = zext i8 undef to i32
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i8toi64 = zext i8 undef to i64
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i16toi32 = zext i16 undef to i32
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i16toi64 = zext i16 undef to i64
