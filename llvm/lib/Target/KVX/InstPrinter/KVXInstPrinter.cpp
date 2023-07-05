@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXInstPrinter.h"
+#include "KVXInstrInfo.h"
 #include "llvm/MC/MCAsmInfo.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
@@ -171,52 +172,55 @@ void KVXInstPrinter::printRectifyMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
-void KVXInstPrinter::printScalarcondMod(
-    const MCInst *MI, unsigned OpNo,
-    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+void KVXInstPrinter::printScalarcondMod(const MCInst *MI, unsigned OpNo,
+                                        raw_ostream &O) {
+  using ScalarcondMod = KVX::ScalarcondMod;
+
   const MCOperand &MO = MI->getOperand(OpNo);
-  int variant = MO.getImm();
-  switch (variant) {
-  case 0:
+  auto Variant = static_cast<ScalarcondMod>(MO.getImm());
+  if (!(Variant >= ScalarcondMod::DNEZ && Variant <= ScalarcondMod::WGTZ))
+    report_fatal_error("Unhandled value for Scalarcond modifier");
+  switch (Variant) {
+  case ScalarcondMod::DNEZ:
     O << ".dnez";
     break;
-  case 1:
+  case ScalarcondMod::DEQZ:
     O << ".deqz";
     break;
-  case 2:
+  case ScalarcondMod::DLTZ:
     O << ".dltz";
     break;
-  case 3:
+  case ScalarcondMod::DGEZ:
     O << ".dgez";
     break;
-  case 4:
+  case ScalarcondMod::DLEZ:
     O << ".dlez";
     break;
-  case 5:
+  case ScalarcondMod::DGTZ:
     O << ".dgtz";
     break;
-  case 6:
+  case ScalarcondMod::ODD:
     O << ".odd";
     break;
-  case 7:
+  case ScalarcondMod::EVEN:
     O << ".even";
     break;
-  case 8:
+  case ScalarcondMod::WNEZ:
     O << ".wnez";
     break;
-  case 9:
+  case ScalarcondMod::WEQZ:
     O << ".weqz";
     break;
-  case 10:
+  case ScalarcondMod::WLTZ:
     O << ".wltz";
     break;
-  case 11:
+  case ScalarcondMod::WGEZ:
     O << ".wgez";
     break;
-  case 12:
+  case ScalarcondMod::WLEZ:
     O << ".wlez";
     break;
-  case 13:
+  case ScalarcondMod::WGTZ:
     O << ".wgtz";
     break;
   }
@@ -263,52 +267,55 @@ void KVXInstPrinter::printSimplecondMod(
     report_fatal_error("Unexpected simple condition value: ");
 }
 
-void KVXInstPrinter::printComparisonMod(
-    const MCInst *MI, unsigned OpNo,
-    /*const MCSubtargetInfo &STI,*/ raw_ostream &O) {
+void KVXInstPrinter::printComparisonMod(const MCInst *MI, unsigned OpNo,
+                                        raw_ostream &O) {
+  using ComparisonMod = KVX::ComparisonMod;
+
   const MCOperand &MO = MI->getOperand(OpNo);
-  int variant = MO.getImm();
-  switch (variant) {
-  case 0:
+  ComparisonMod Variant = static_cast<ComparisonMod>(MO.getImm());
+  if (!(Variant >= ComparisonMod::NE && Variant <= ComparisonMod::NONE))
+    report_fatal_error("Unhandled value for Comparison modifier");
+  switch (Variant) {
+  case ComparisonMod::NE:
     O << ".ne";
     break;
-  case 1:
+  case ComparisonMod::EQ:
     O << ".eq";
     break;
-  case 2:
+  case ComparisonMod::LT:
     O << ".lt";
     break;
-  case 3:
+  case ComparisonMod::GE:
     O << ".ge";
     break;
-  case 4:
+  case ComparisonMod::LE:
     O << ".le";
     break;
-  case 5:
+  case ComparisonMod::GT:
     O << ".gt";
     break;
-  case 6:
+  case ComparisonMod::LTU:
     O << ".ltu";
     break;
-  case 7:
+  case ComparisonMod::GEU:
     O << ".geu";
     break;
-  case 8:
+  case ComparisonMod::LEU:
     O << ".leu";
     break;
-  case 9:
+  case ComparisonMod::GTU:
     O << ".gtu";
     break;
-  case 10:
+  case ComparisonMod::ALL:
     O << ".all";
     break;
-  case 11:
+  case ComparisonMod::NALL:
     O << ".nall";
     break;
-  case 12:
+  case ComparisonMod::ANY:
     O << ".any";
     break;
-  case 13:
+  case ComparisonMod::NONE:
     O << ".none";
     break;
   }

@@ -45,6 +45,14 @@ static cl::opt<bool> DisableCycleEmission(
     "disable-kvx-cycles", cl::Hidden, cl::init(false),
     cl::desc("Disable machine-cycle emission on KVX target"));
 
+static cl::opt<bool>
+    EnablePipeliner("enable-kvx-pipeliner", cl::Hidden, cl::init(false),
+                    cl::desc("Enable MachinePipeliner Pass for KVX target"));
+
+static cl::opt<bool>
+    DisablePipeliner("disable-kvx-pipeliner", cl::Hidden, cl::init(false),
+                     cl::desc("Disable MachinePipeliner Pass for KVX target"));
+
 static cl::opt<std::string>
     StackLimitRegister("fstack-limit-register",
                        cl::desc("verify stack with a register for KVX"));
@@ -229,6 +237,9 @@ void KVXPassConfig::addPreRegAlloc() {
       addPass(createKVXLoadStorePackingPass());
     if (!DisableLOOPDO)
       addPass(createKVXHardwareLoopsPass());
+    if ((getOptLevel() >= CodeGenOpt::Aggressive || EnablePipeliner) &&
+        !DisablePipeliner)
+      addPass(&MachinePipelinerID);
   }
 }
 

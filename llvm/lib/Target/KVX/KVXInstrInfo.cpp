@@ -607,6 +607,26 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
   return true;
 }
 
+bool KVXInstrInfo::analyzeBranchPipeliner(MachineBasicBlock &MBB,
+                                          MachineBasicBlock *&TBB,
+                                          MachineBasicBlock *&FBB,
+                                          SmallVectorImpl<MachineOperand> &Cond,
+                                          bool AllowModify) const {
+  MachineInstr *MI = &*MBB.instr_rbegin();
+  if (MI->getOpcode() == KVX::ENDLOOP) {
+    LLVM_DEBUG(dbgs() << "Hardware loop with ENDLOOP branch.\n");
+    TBB = MI->getOperand(0).getMBB();
+    FBB = MI->getOperand(1).getMBB();
+    Cond.push_back(MachineOperand::CreateImm(KVX::ENDLOOP));
+    Cond.push_back(MI->getOperand(0));
+    Cond.push_back(MI->getOperand(1));
+    Cond.push_back(MI->getOperand(2));
+    return false;
+  }
+
+  return analyzeBranch(MBB, TBB, FBB, Cond, AllowModify);
+}
+
 unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
                                     MachineBasicBlock *TBB,
                                     MachineBasicBlock *FBB,
@@ -617,8 +637,8 @@ unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
 
   // Shouldn't be a fall through.
   assert(TBB && "InsertBranch must not be told to insert a fallthrough");
-  assert((Cond.size() == 3 || Cond.size() == 0 || Cond.size() == 1) &&
-         "KVX branch conditions have two components!");
+  assert(Cond.size() <= 4 && Cond.size() != 2 &&
+         "Unhandled size for Cond array");
 
   // Unconditional branch / GOTO.
   if (Cond.empty()) {
@@ -637,10 +657,25 @@ unsigned KVXInstrInfo::insertBranch(MachineBasicBlock &MBB,
     return 1;
   }
 
+  // ENDLOOP
+  if (Cond.size() == 4 && Cond[0].isImm() && Cond[0].getImm() == KVX::ENDLOOP) {
+    MachineInstr &MI = *BuildMI(&MBB, DL, get(KVX::ENDLOOP))
+                            .addMBB(TBB)
+                            .addMBB(FBB)
+                            .add(Cond[3]); // Cond[3] is the MCSymbol
+    if (BytesAdded)
+      *BytesAdded += MI.getDesc().Size;
+    return 1;
+  }
+
   // Either a one or two-way conditional branch.
   unsigned Opc = Cond[0].getImm();
   MachineInstr &CondMI =
-      *BuildMI(&MBB, DL, get(Opc)).add(Cond[1]).addMBB(TBB).add(Cond[2]);
+      *BuildMI(&MBB, DL, get(Opc))
+           .addUse(Cond[1].getReg(), getKillRegState(Cond[1].isKill()),
+                   Cond[1].getSubReg())
+           .addMBB(TBB)
+           .add(Cond[2]);
   if (BytesAdded)
     *BytesAdded += CondMI.getDesc().Size;
 
@@ -663,6 +698,13 @@ unsigned KVXInstrInfo::removeBranch(MachineBasicBlock &MBB,
   MachineBasicBlock::iterator I = MBB.getLastNonDebugInstr();
   if (I == MBB.end())
     return 0;
+
+  if (I->getOpcode() == KVX::ENDLOOP) {
+    if (BytesRemoved)
+      *BytesRemoved = getInstSizeInBytes(*I);
+    I->eraseFromParent();
+    return 1;
+  }
 
   if (!I->getDesc().isUnconditionalBranch() &&
       !I->getDesc().isConditionalBranch())
@@ -803,9 +845,9 @@ static int getFirstMemOpPos(const MachineInstr &MI) {
   return MI.mayLoad() ? 1 : 0;
 }
 
-bool KVXInstrInfo::getBaseAndOffsetPosition(const MachineInstr &MI,
+static bool getBaseAndOffsetPositionGeneric(const MachineInstr &MI,
                                             unsigned &BasePos,
-                                            unsigned &OffsetPos) const {
+                                            unsigned &OffsetPos) {
   if (!MI.mayLoadOrStore() || hasOnlyBaseMemOp(MI))
     return false;
 
@@ -815,6 +857,22 @@ bool KVXInstrInfo::getBaseAndOffsetPosition(const MachineInstr &MI,
 
   OffsetPos = FirstMemOpPos;
   BasePos = OffsetPos + 1;
+
+  return true;
+}
+
+// Used by MachinePipeliner
+bool KVXInstrInfo::getBaseAndOffsetPosition(const MachineInstr &MI,
+                                            unsigned &BasePos,
+                                            unsigned &OffsetPos) const {
+  if (!getBaseAndOffsetPositionGeneric(MI, BasePos, OffsetPos))
+    return false;
+
+  // Check that they are indeed registers to prevent cases such as
+  // (LWZp 0, %stack.0.x) messing with MachinePipeliner
+  if (!MI.getOperand(BasePos).isReg() || !MI.getOperand(OffsetPos).isReg())
+    return false;
+
   return true;
 }
 
@@ -874,7 +932,7 @@ bool KVXInstrInfo::getMemOperandsWithOffsetWidth(
     return true;
   }
 
-  if (!getBaseAndOffsetPosition(MI, BasePos, OffsetPos))
+  if (!getBaseAndOffsetPositionGeneric(MI, BasePos, OffsetPos))
     return false;
 
   // We are unable to get an immediate for the offset since it is a register
@@ -926,6 +984,373 @@ bool KVXInstrInfo::areMemAccessesTriviallyDisjoint(
   int64_t LowWidth = (LowOffset == Offset1) ? Width1 : Width2;
 
   return (LowOffset + LowWidth <= HighOffset);
+}
+
+bool KVXInstrInfo::getIncrementValue(const MachineInstr &MI, int &Value) const {
+  switch (MI.getOpcode()) {
+  case KVX::ADDDri10:
+  case KVX::ADDDri37:
+  case KVX::ADDWri10:
+  case KVX::ADDWri37:
+    break;
+  default:
+    return false;
+  }
+
+  int64_t Imm = MI.getOperand(2).getImm();
+  assert(isInt<32>(Imm) && "Increment value should not be more than 32 bits");
+  if (!isInt<32>(Imm))
+    return false;
+
+  Value = Imm;
+  return true;
+}
+
+// MachinePipeliner debug
+#define MP_DEBUG(expr)                                                         \
+  DEBUG_WITH_TYPE("pipeliner", dbgs() << "KVX pipelining: " << expr)
+
+/// Holds information about trip count on our target
+class KVXTripCount {
+  /// Instruction defining the trip-count value
+  MachineInstr *DefMI;
+  /// The LOOPDO instruction
+  MachineInstr *LoopdoMI;
+  /// The actual trip-count value if known statically
+  Optional<int> TC;
+
+  const KVXInstrInfo *TII;
+  MachineBasicBlock *TripCountBB;
+  MachineFunction *MF;
+
+public:
+  /// Create a KVXTripCount from the instruction defining it.
+  /// If that instruction is a MAKE the trip count is known statically
+  KVXTripCount(MachineInstr *DefMI, MachineInstr *LoopdoMI,
+               const KVXInstrInfo *TII)
+      : DefMI(DefMI), LoopdoMI(LoopdoMI), TII(TII),
+        TripCountBB(DefMI->getParent()), MF(TripCountBB->getParent()) {
+    MP_DEBUG("Analyzing trip count with this DefMI: "; DefMI->dump());
+    assert(DefMI->getOpcode() != KVX::MAKEi64 && "Unexpected MAKEi64");
+    switch (DefMI->getOpcode()) {
+    case KVX::MAKEi16:
+    case KVX::MAKEi43:
+      int64_t Imm = DefMI->getOperand(1).getImm();
+      assert(isInt<32>(Imm));
+      TC = Imm;
+      return;
+    }
+
+    MP_DEBUG("Not a MAKE: we do not know the value statically\n");
+    TC = None;
+    assert(!TC.hasValue());
+  }
+
+  /// Return true/false if the trip count is greater/lower than Val.
+  /// nullopt if the trip count is not known statically
+  Optional<bool> isGreaterThan(int Val) {
+    if (!TC.hasValue())
+      return None;
+    return Optional<bool>(TC > Val);
+  }
+
+  /// Get the register holding the trip-count value
+  Register getReg() { return DefMI->getOperand(0).getReg(); }
+
+  /// Smartly adjust the trip-count value by OriginalTC + Value:
+  ///   - If the value is statically known (from a MAKE), just change it
+  ///   - If the value was produced from an ADDDri, add the adjustment to the
+  ///     immediate
+  ///   - Else, generate an ADDDri to perform the adjustment
+  ///
+  /// The new trip-count value is stored in a fresh register to avoid breaking
+  /// code in the case where the trip-count value register is used more than
+  /// once.
+  void adjust(int Value) {
+    // Value known statically: just modify it.
+    if (TC.hasValue()) {
+      int NewTC = TC.getValue() + Value;
+      TC = NewTC;
+
+      auto DefMII = DefMI->getIterator();
+      DefMI = MF->CloneMachineInstr(DefMI);
+      TripCountBB->insert(DefMII, DefMI);
+
+      Register Fresh =
+          MF->getRegInfo().createVirtualRegister(&KVX::SingleRegRegClass);
+      DefMI->getOperand(0).setReg(Fresh);
+      LoopdoMI->getOperand(0).setReg(Fresh);
+
+      modifyImmediate(DefMI, 1, NewTC,
+                      {KVX::MAKEi16, KVX::MAKEi43, KVX::MAKEi64}, {16, 43, 64});
+
+      return;
+    }
+
+    // Value not known statically.
+    // If it is defined by an ADDDri, we can adjust the immediate
+    switch (DefMI->getOpcode()) {
+    case KVX::ADDDri10:
+    case KVX::ADDDri37:
+    case KVX::ADDDri64:
+      int64_t NewValue = DefMI->getOperand(2).getImm() + Value;
+
+      auto DefMII = DefMI->getIterator();
+      DefMI = MF->CloneMachineInstr(DefMI);
+      TripCountBB->insert(DefMII, DefMI);
+
+      Register Fresh =
+          MF->getRegInfo().createVirtualRegister(&KVX::SingleRegRegClass);
+      DefMI->getOperand(0).setReg(Fresh);
+      LoopdoMI->getOperand(0).setReg(Fresh);
+
+      modifyImmediate(DefMI, 2, NewValue,
+                      {KVX::ADDDri10, KVX::ADDDri37, KVX::ADDDri64},
+                      {10, 37, 64});
+      return;
+    }
+
+    // Nothing is known: build an ADDDri to make the adjustment
+    unsigned Opcode = isInt<10>(Value) ? KVX::ADDDri10 : KVX::ADDDri37;
+    Register NewTC =
+        MF->getRegInfo().createVirtualRegister(&KVX::SingleRegRegClass);
+    MachineInstr *NewDefMI =
+        BuildMI(*MF, DefMI->getDebugLoc(), TII->get(Opcode), NewTC)
+            .addReg(DefMI->getOperand(0).getReg())
+            .addImm(Value);
+
+    if (DefMI->isPHI()) {
+      /* We cannot insert in the middle of PHI instructions: we must skip them
+       */
+      auto Where = TripCountBB->SkipPHIsAndLabels(DefMI->getIterator());
+      /* All PHIs (including DefMI) have been skipped. We can insert just
+       * there.*/
+      TripCountBB->insert(Where, NewDefMI);
+    } else
+      TripCountBB->insertAfter(DefMI->getIterator(), NewDefMI);
+
+    DefMI = NewDefMI;
+    LoopdoMI->getOperand(0).setReg(NewTC);
+  }
+
+private:
+  /// Change the immediate-operand ImmOp of MI to NewValue.
+  /// If the new value is adapted to the immediate format, just modify it.
+  /// If it is not, replace MI with a clone that has the new opcode and the new
+  /// value.
+  /// OPri and BitLimits must be sorted from smallest to highest.
+  void modifyImmediate(MachineInstr *&MI, unsigned ImmOp, int64_t NewValue,
+                       std::vector<unsigned> OPri,
+                       std::vector<unsigned> BitLimits) {
+    assert(MI->getOperand(ImmOp).isImm() && "No immediate operand found!");
+
+    unsigned NewOpcode = -1;
+    unsigned NumBits = APInt(64, NewValue).getActiveBits();
+    for (int I = 0; I < static_cast<int>(BitLimits.size()); I++) {
+      if (NumBits <= BitLimits[I]) {
+        NewOpcode = OPri[I];
+        break;
+      }
+    }
+    assert(NewOpcode != -1u && "Could not find a fitting format");
+
+    if (NewOpcode == MI->getOpcode()) {
+      // No need to change the opcode: just modify the instruction in place
+      MI->getOperand(ImmOp).setImm(NewValue);
+      return;
+    }
+
+    // Clone the MI, then set the immediate to the new value
+    MachineInstr *NewMI = MF->CloneMachineInstr(MI);
+    NewMI->getOperand(ImmOp).setImm(NewValue);
+    TripCountBB->insertAfter(MI->getIterator(), NewMI);
+    MI->eraseFromParent();
+    MI = NewMI;
+  }
+};
+
+/// Scans the preheader to find the LOOPDO instruction and the instruction
+/// definining the trip count.
+static bool scanPreheader(MachineBasicBlock *Preheader,
+                          MachineInstr *&LoopInstr,
+                          MachineInstr *&TripCountDef) {
+  if (!Preheader) {
+    MP_DEBUG("no preheader was given to scan");
+    return false;
+  }
+
+  if (!Preheader->size()) {
+    MP_DEBUG("the preheader is empty, nothing to scan");
+    return false;
+  }
+
+  // Find the trip-count register: the one used by LOOPDO
+  // LOOPDO should be the first terminator of the Preheader
+  auto FirstTerminatorII = Preheader->getFirstTerminator();
+  if (FirstTerminatorII == Preheader->end()) {
+    MP_DEBUG("No LOOPDO found in preheader");
+    return false;
+  }
+
+  LoopInstr = &*FirstTerminatorII;
+  if (LoopInstr->getOpcode() != KVX::LOOPDO) {
+    MP_DEBUG("The first terminator of the preheader is not a LOOPDO");
+    return false;
+  }
+  Register TripCountReg = LoopInstr->getOperand(0).getReg();
+
+  // Find the instruction defining the trip-count reg
+  // Start from Preheader, then seek upwards the predecessor blocks
+  SmallVector<MachineBasicBlock *, 4> ToExploreBBs = {Preheader};
+  SmallSet<MachineBasicBlock *, 4> ExploredBBs = {};
+  while (!ToExploreBBs.empty()) {
+    MachineBasicBlock *ToExploreBB = ToExploreBBs.pop_back_val();
+    for (auto II = ToExploreBB->instr_rbegin(); II != ToExploreBB->instr_rend();
+         II++) {
+      if (!II->getNumOperands())
+        continue;
+      MachineOperand &MO = II->getOperand(0);
+      if (MO.isReg() && MO.isDef() && MO.getReg() == TripCountReg) {
+        TripCountDef = &*II;
+        return true;
+      }
+    }
+    ExploredBBs.insert(ToExploreBB);
+    for (auto *MBB : ToExploreBB->predecessors())
+      if (!ExploredBBs.contains(MBB))
+        ToExploreBBs.push_back(MBB);
+  }
+
+  MP_DEBUG("could not find the instruction defining the trip-count reg\n");
+  return false;
+}
+
+class KVXPipelinerLoopInfo : public TargetInstrInfo::PipelinerLoopInfo {
+  MachineFunction *MF;
+  const KVXInstrInfo *TII;
+  KVXTripCount TC;
+  MachineInstr *LoopdoMI;
+  DebugLoc DL;
+
+public:
+  /// KVXPipelinerLoopInfo constructor.
+  /// TripCountDefMI: instruction defining the trip count
+  KVXPipelinerLoopInfo(MachineFunction *MF, MachineInstr *TripCountDefMI,
+                       MachineInstr *LoopdoMI)
+      : MF(MF), TII(MF->getSubtarget<KVXSubtarget>().getInstrInfo()),
+        TC(TripCountDefMI, LoopdoMI, TII), LoopdoMI(LoopdoMI),
+        DL(LoopdoMI->getDebugLoc()) {}
+
+  /// Not used by LLVM. Dead code.
+  bool shouldIgnoreForPipelining(const MachineInstr *MI) const override {
+    return false;
+  };
+
+  /// Returns true (or false) if the loop trip count is greater (or not)
+  /// than TC.
+  /// Returns nullopt if the trip count is not known statically.
+  /// In that case, generates a COMPD for the comparison and fill Cond with
+  /// operands to be later used in TII->insertBranch
+  Optional<bool> createTripCountGreaterCondition(
+      int TC, MachineBasicBlock &MBB,
+      SmallVectorImpl<MachineOperand> &Cond) override {
+    Optional<bool> IsGT = this->TC.isGreaterThan(TC);
+    if (IsGT.hasValue()) {
+      return IsGT;
+    }
+
+    Register CompReg =
+        MF->getRegInfo().createVirtualRegister(&KVX::SingleRegRegClass);
+
+    unsigned CompOp = isInt<10>(TC) ? KVX::COMPDri10 : KVX::COMPDri37;
+    MachineInstr *Compare =
+        BuildMI(&MBB, DL, TII->get(CompOp), CompReg)
+            .addReg(this->TC.getReg())
+            .addImm(TC)
+            .addImm(static_cast<int>(KVX::ComparisonMod::GT));
+
+    Cond.push_back(MachineOperand::CreateImm(KVX::CB));
+    Cond.push_back(Compare->getOperand(0));
+    Cond.push_back(
+        MachineOperand::CreateImm(static_cast<int>(KVX::ScalarcondMod::EVEN)));
+
+    return None;
+  }
+
+  void adjustTripCount(int TripCountAdjust) override {
+    TC.adjust(TripCountAdjust);
+  }
+
+  void setPreheader(MachineBasicBlock *NewPreheader) override {
+    auto II = NewPreheader->getFirstTerminator();
+
+    if (II->getOpcode() == KVX::CB) {
+      // Normally, the LOOPDO should be inserted between the CB and the last
+      // terminator: CB; LOOPDO; GOTO;
+      // But that does not behave well with register allocation when the
+      // loop-count is spilled.
+      // To prevent that, we create a fresh basic block to insert the LOOPDO
+
+      /** Create a FreshBB and place the LOOPDO inside */
+      MachineBasicBlock *FreshBB = MF->CreateMachineBasicBlock();
+      MachineBasicBlock *FallthroughBB = NewPreheader->getFallThrough();
+      MF->insert(FallthroughBB->getIterator(), FreshBB);
+      FreshBB->splice(FreshBB->instr_begin(), LoopdoMI->getParent(), LoopdoMI);
+
+      /** Transform NewPreheader -> Fallthrough into NewPreheader -> Fresh ->
+       * Fallthrough */
+      NewPreheader->replaceSuccessor(FallthroughBB, FreshBB);
+      FreshBB->addSuccessor(FallthroughBB, BranchProbability::getOne());
+
+      /** Possibly modify GOTO from NewPreheader to point to FreshBB */
+      MachineInstr *LastMI = &*NewPreheader->instr_rbegin();
+      if (LastMI->getOpcode() == KVX::GOTO)
+        LastMI->getOperand(0).setMBB(FreshBB);
+
+      /** Update PHI instructions from FallthroughBB, as we just changed its
+       * predecessor */
+      for (auto &Phi : FallthroughBB->phis())
+        for (auto &Op : Phi.operands())
+          if (Op.isMBB() && Op.getMBB() == NewPreheader)
+            Op.setMBB(FreshBB);
+
+      return;
+    }
+
+    NewPreheader->splice(II, LoopdoMI->getParent(), LoopdoMI);
+  }
+
+  void disposed() override { LoopdoMI->eraseFromParent(); }
+};
+
+std::unique_ptr<TargetInstrInfo::PipelinerLoopInfo>
+KVXInstrInfo::analyzeLoopForPipelining(MachineBasicBlock *LoopBB) const {
+
+  if (LoopBB->pred_size() != 2) {
+    MP_DEBUG("LoopBB must have exactly two predecessors: itself and the "
+             "preheader\n");
+    return nullptr;
+  }
+
+  if (LoopBB->size() > 10000) {
+    MP_DEBUG("LoopBB is too big: " << LoopBB->size() << " > 10000\n");
+    return nullptr;
+  }
+
+  auto PredIter = LoopBB->predecessors().begin();
+  if (*PredIter == LoopBB)
+    PredIter++;
+  MachineBasicBlock *PreheaderBB = *PredIter;
+  assert(PreheaderBB != LoopBB);
+
+  MachineInstr *LoopdoMI, *TripCountMI;
+  if (!scanPreheader(PreheaderBB, LoopdoMI, TripCountMI)) {
+    MP_DEBUG("unable to scan preheader\n");
+    return nullptr;
+  }
+
+  return std::make_unique<KVXPipelinerLoopInfo>(LoopBB->getParent(),
+                                                TripCountMI, LoopdoMI);
 }
 
 MachineBasicBlock *

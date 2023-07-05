@@ -26,6 +26,42 @@ namespace llvm {
 
 class KVXSubtarget;
 
+namespace KVX {
+enum class ComparisonMod {
+  NE = 0,
+  EQ = 1,
+  LT = 2,
+  GE = 3,
+  LE = 4,
+  GT = 5,
+  LTU = 6,
+  GEU = 7,
+  LEU = 8,
+  GTU = 9,
+  ALL = 10,
+  NALL = 11,
+  ANY = 12,
+  NONE = 13
+};
+
+enum class ScalarcondMod {
+  DNEZ = 0,
+  DEQZ = 1,
+  DLTZ = 2,
+  DGEZ = 3,
+  DLEZ = 4,
+  DGTZ = 5,
+  ODD = 6,
+  EVEN = 7,
+  WNEZ = 8,
+  WEQZ = 9,
+  WLTZ = 10,
+  WGEZ = 11,
+  WLEZ = 12,
+  WGTZ = 13
+};
+} // namespace KVX
+
 class KVXInstrInfo : public KVXGenInstrInfo {
 
   const KVXSubtarget &Subtarget;
@@ -60,6 +96,11 @@ public:
                      SmallVectorImpl<MachineOperand> &Cond,
                      bool AllowModify) const override;
 
+  bool analyzeBranchPipeliner(MachineBasicBlock &MBB, MachineBasicBlock *&TBB,
+                              MachineBasicBlock *&FBB,
+                              SmallVectorImpl<MachineOperand> &Cond,
+                              bool AllowModify) const override;
+
   unsigned insertBranch(MachineBasicBlock &MBB, MachineBasicBlock *TBB,
                         MachineBasicBlock *FBB, ArrayRef<MachineOperand> Cond,
                         const DebugLoc &DL, int *BytesAdded = nullptr) const
@@ -91,6 +132,8 @@ public:
 
   bool areMemAccessesTriviallyDisjoint(const MachineInstr &MIa,
                                        const MachineInstr &MIb) const override;
+
+  bool getIncrementValue(const MachineInstr &MI, int &Value) const override;
 
   MachineBasicBlock *getBranchDestBlock(const MachineInstr &MI) const override;
 
@@ -132,6 +175,11 @@ public:
                                     RegScavenger *RS = nullptr) const override;
 
   bool isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const override;
+
+  std::unique_ptr<PipelinerLoopInfo>
+  analyzeLoopForPipelining(MachineBasicBlock *LoopBB) const override;
+
+  int getPipelinerMaxMII() const override { return 100; }
 };
 
 } // namespace llvm

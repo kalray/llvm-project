@@ -638,6 +638,22 @@ public:
     return true;
   }
 
+  /// Version of analyseBranch specifically called by MachinePipeliner and
+  /// ModuloSchedule. This variation allows these passes to recognize hardware
+  /// loops without enabling CFG optimizations which might be too complex to
+  /// handle for hardware loops.
+  virtual bool analyzeBranchPipeliner(MachineBasicBlock &MBB,
+                                      MachineBasicBlock *&TBB,
+                                      MachineBasicBlock *&FBB,
+                                      SmallVectorImpl<MachineOperand> &Cond,
+                                      bool AllowModify = false) const {
+    return analyzeBranch(MBB, TBB, FBB, Cond, AllowModify);
+  }
+
+  /// Specifies the maximum MII MachinePipeliner will consider. The bigger it
+  /// is, the bigger the analyzed loops can be.
+  virtual int getPipelinerMaxMII() const { return 27; }
+
   /// Represents a predicate at the MachineFunction level.  The control flow a
   /// MachineBranchPredicate represents is:
   ///
