@@ -69,20 +69,19 @@ define internal fastcc void @init_array(double* nocapture %alpha, double* nocapt
 ; CHECK-NEXT:  .LBB0_6: # %for.body18
 ; CHECK-NEXT:    # Parent Loop BB0_5 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    copyd $r5 = $r4
+; CHECK-NEXT:    addd $r5 = $r4, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r4 = $r5, 1
+; CHECK-NEXT:    sxwd $r6 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxwd $r6 = $r4
-; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    floatd.rn $r6 = $r6, 0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fmuld $r6 = $r2, $r6
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    fmuld $r6 = $r6, 0x3fd0000000000000
-; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    sd.xs $r5[$r3] = $r6
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    sd.xs $r4[$r3] = $r6
+; CHECK-NEXT:    copyd $r4 = $r5
+; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.7: # %for.inc31
 ; CHECK-NEXT:    # in Loop: Header=BB0_5 Depth=1

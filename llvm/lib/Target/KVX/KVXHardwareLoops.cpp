@@ -49,6 +49,85 @@ INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
 INITIALIZE_PASS_END(KVXHardwareLoops, KVXHARDWARELOOPS_NAME,
                     KVXHARDWARELOOPS_DESC, false, false)
 
+/// Transformation required by MachinePipeliner (else it will not pipeline the
+/// loop).
+///
+/// Extracts the ENDLOOP from Exiting and changes the successors of Header and
+/// Exiting blocks so that the loop has only one MBB by removing the
+/// Exiting->Header edge and adding Header->Header edge.
+void KVXHardwareLoops::turnIntoOneMBBLoop(MachineLoop *Loop) const {
+  LLVM_DEBUG(dbgs() << "Transform it into a one-MBB loop..\n");
+
+  if (Loop->getNumBlocks() != 2) {
+    LLVM_DEBUG(dbgs() << "\tThe loop has not exactly 2 MBBs: bailing out\n");
+    return;
+  }
+
+  MachineBasicBlock *Header = Loop->getHeader();
+
+  /** Find the Exiting, Exit blocks and the edge probabilities */
+
+  MachineBasicBlock *Exiting = Loop->getExitingBlock();
+  if (!Exiting) {
+    LLVM_DEBUG(
+        dbgs() << "\tNo exiting block found in hardware loop, bailing out\n");
+    return;
+  }
+
+  if (Exiting->size() != 1) {
+    LLVM_DEBUG(dbgs() << "\tExiting block does not have exactly 1 instruction, "
+                         "bailing out\n");
+    return;
+  }
+
+  bool ExitingHasTwoSuccessors = Exiting->succ_size() == 2;
+  if (!ExitingHasTwoSuccessors) {
+    LLVM_DEBUG(dbgs() << "\tExiting block does not have exactly two "
+                         "successors, bainling out\n");
+    return;
+  }
+
+  auto FindExit = Exiting->succ_begin();
+  if (*FindExit == Header)
+    FindExit++;
+  assert(*FindExit != Header && "Two successor edges to the same header?");
+
+  MachineBasicBlock *Exit = *FindExit;
+
+  auto LoopProbability = MBPI->getEdgeProbability(Exiting, Header);
+  auto ExitProbability = MBPI->getEdgeProbability(Exiting, Exit);
+
+  /**
+   * Extract ENDLOOP from Exiting, insert it at the end of Header
+   * Replace it with a GOTO to Exit
+   */
+
+  MachineInstr *EndloopMI = Exiting->remove(&*Exiting->begin());
+  Header->push_back(EndloopMI);
+  MachineBasicBlock *FBB = EndloopMI->getOperand(1).getMBB();
+  EndloopMI->getOperand(1).setMBB(Exiting);
+
+  BuildMI(Exiting, EndloopMI->getDebugLoc(), TII->get(KVX::GOTO)).addMBB(FBB);
+
+  /**
+   * Remove Exiting->Header edge, then create new Header->Header edge with
+   * the right probability and assign the exit probability to Header->Exiting
+   */
+
+  Exiting->removeSuccessor(Header);
+  Exiting->normalizeSuccProbs();
+
+  Header->setSuccProbability(Header->succ_begin(), ExitProbability);
+  Header->addSuccessor(Header, LoopProbability);
+  Header->validateSuccProbs();
+
+  /** Update Header PHI instructions */
+  for (auto &Phi : Header->phis())
+    for (auto &Op : Phi.operands())
+      if (Op.isMBB() && Op.getMBB() == Exiting)
+        Op.setMBB(Header);
+}
+
 bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
   bool Changed = false;
   for (auto *SubLoop : *Loop)
@@ -199,6 +278,7 @@ bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
     LLVM_DEBUG(dbgs() << "Erasing the loopdo pseudo.\n");
     LoopdoPseudo->eraseFromParent();
 
+    turnIntoOneMBBLoop(Loop);
     return true;
   }
   auto InsertPos = Prehead->getLastNonDebugInstr();
@@ -217,6 +297,7 @@ bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
     LLVM_DEBUG(dbgs() << "\tErasing the loopdo pseudo.\n");
     LoopdoPseudo->eraseFromParent();
 
+    turnIntoOneMBBLoop(Loop);
     return true;
   }
 
@@ -232,6 +313,8 @@ bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
   LLVM_DEBUG(dbgs() << "\tErasing the loopdo pseudo. Preheader now:\n";
              Prehead->dump());
   LoopdoPseudo->eraseFromParent();
+
+  turnIntoOneMBBLoop(Loop);
   return true;
 }
 
@@ -241,9 +324,10 @@ bool KVXHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
   MachineLoopInfo &MLI = getAnalysis<MachineLoopInfo>();
   TII = MF.getSubtarget<KVXSubtarget>().getInstrInfo();
   MRI = std::addressof(MF.getRegInfo());
+  MBPI = &getAnalysis<MachineBranchProbabilityInfo>();
 
   for (auto &Loop : MLI)
-    Changed = runOnLoop(Loop);
+    Changed |= runOnLoop(Loop);
 
   return Changed;
 }

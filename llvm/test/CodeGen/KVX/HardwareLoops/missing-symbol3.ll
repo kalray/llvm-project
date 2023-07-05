@@ -130,6 +130,7 @@ define i32 @f()  {
 ; CHECK-NEXT:  .LBB0_13: # %for.body.for.body_crit_edge
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    lwz $r2 = 0[$r0]
+; CHECK-NEXT:    addd $r3 = $r1, -32
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw -4[$r1] = $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -160,7 +161,7 @@ define i32 @f()  {
 ; CHECK-NEXT:    lwz $r2 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 21)
 ; CHECK-NEXT:    sw -32[$r1] = $r2
-; CHECK-NEXT:    addd $r1 = $r1, -32
+; CHECK-NEXT:    copyd $r1 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_14: # %for.end

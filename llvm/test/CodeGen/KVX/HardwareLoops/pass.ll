@@ -20,7 +20,7 @@ define void @imm_imm_positive_bump(i32* nocapture %x){
 ; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.2: # %for.body.split
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -53,7 +53,7 @@ define void @imm_imm_negative_bump(i32* nocapture %x){
 ; CHECK-NEXT:    addd $r1 = $r1, -1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.2: # %for.body.split
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

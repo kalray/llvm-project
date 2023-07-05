@@ -59,7 +59,7 @@ define i32 @d() {
 ; CHECK-NEXT:    sw 0[$r20] = $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.3: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.3: # %for.body.split
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    call f
 ; CHECK-NEXT:    ;;

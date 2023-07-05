@@ -64,7 +64,7 @@ define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) loc
 ; CHECK-NEXT:    addd $r2 = $r2, 1
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:  # %bb.2: # %.split
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %4

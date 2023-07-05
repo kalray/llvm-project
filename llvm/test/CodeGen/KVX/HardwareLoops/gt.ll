@@ -23,7 +23,7 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.2: # %for.body.split
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -60,7 +60,7 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-NEXT:    addd $r1 = $r1, -4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.2: # %for.cond.cleanup
+; CHECK-NEXT:  # %bb.2: # %for.body.split
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

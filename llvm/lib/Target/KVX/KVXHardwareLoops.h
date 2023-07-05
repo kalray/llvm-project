@@ -11,6 +11,7 @@
 #define LLVM_LIB_TARGET_KVX_KVXHARDWARELOOPS_H
 
 #include "llvm/ADT/StringRef.h"
+#include "llvm/CodeGen/MachineBranchProbabilityInfo.h"
 #include "llvm/CodeGen/MachineDominators.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
@@ -30,6 +31,7 @@ public:
 
   const KVXInstrInfo *TII;
   MachineRegisterInfo *MRI;
+  MachineBranchProbabilityInfo *MBPI;
 
   KVXHardwareLoops() : MachineFunctionPass(ID) {
     auto *PR = PassRegistry::getPassRegistry();
@@ -43,11 +45,14 @@ public:
     AU.addRequired<MachineDominatorTree>();
     AU.addRequired<LoopInfoWrapperPass>();
     AU.addRequired<MachineLoopInfo>();
+    AU.addRequired<MachineBranchProbabilityInfo>();
+
     MachineFunctionPass::getAnalysisUsage(AU);
   }
 
 private:
   StringRef getPassName() const override;
+  void turnIntoOneMBBLoop(MachineLoop *Loop) const;
 };
 
 #endif // LLVM_LIB_TARGET_KVX_KVXHARDWARELOOPS_H
