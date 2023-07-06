@@ -386,16 +386,6 @@ def : Pat<(sub v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_at:$IMM))), (ADDHQri Si
 def kvx_vecreduce_add_sext : PatFrags<(ops node:$op),
             [(vecreduce_add node:$op), (KVX_vecreduce_add_sext node:$op)]>;
 
-def v8i8SubVecAcc : PatFrag<(ops),
-      (add (v4i16 (sext (v4i8(extract_subvector v8i8:$v, (i64 0))))),
-           (v4i16 (sext (v4i8(extract_subvector v8i8:$v, (i64 4))))))>;
-
-def v2i16SubVecAc : PatFrag<(ops),
-     (v4i16 (build_vector
-      (i32 (vector_extract v8i8SubVecAcc, (i64 2))),
-      (i32 (vector_extract v8i8SubVecAcc, (i64 3))),
-      (i32 undef), (i32 undef)))>;
-
 let Predicates = [IsV2] in {
 // ADDRBOD
 foreach vt = [i32, i64] in {
@@ -407,14 +397,6 @@ def : Pat<(vt (kvx_vecreduce_add_sext v4i8:$v)),
 
 def : Pat<(vt (kvx_vecreduce_add_sext v2i8:$v)),
           (ADDRBOD (ZXHD SingleReg:$v))>;
-
-def : Pat<(vt (vector_extract (v4i16 (add
-                (v4i16 (add v8i8SubVecAcc, v2i16SubVecAc)),
-                (v4i16 (build_vector
-                    (i32 (vector_extract (v4i16 (add v8i8SubVecAcc, v2i16SubVecAc)), (i64 1))),
-                    (i32 undef), (i32 undef), (i32 undef))))),
-            (i64 0))),
-          (ADDRBOD SingleReg:$v)>;
 
 // ADDRHQD
 def : Pat<(vt (kvx_vecreduce_add_sext v4i16:$v) ),
@@ -447,13 +429,6 @@ def : Pat<(vt (KVX_vecreduce_add_zext v4i8:$v)),
 def : Pat<(vt (KVX_vecreduce_add_zext v2i8:$v)),
           (ADDURBOD (ZXHD SingleReg:$v))>;
 
-def : Pat<(vt (vector_extract (v4i16 (add
-                (v4i16 (add v8i8SubVecAcc, v2i16SubVecAc)),
-                (v4i16 (build_vector
-                    (i32 (vector_extract (v4i16 (add v8i8SubVecAcc, v2i16SubVecAc)), (i64 1))),
-                    (i32 undef), (i32 undef), (i32 undef))))),
-            (i64 0))),
-          (ADDURBOD SingleReg:$v)>;
 
 // ADDURHQD
 def : Pat<(vt (KVX_vecreduce_add_zext v4i16:$v) ),
