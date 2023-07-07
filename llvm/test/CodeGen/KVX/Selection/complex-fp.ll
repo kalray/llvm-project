@@ -334,7 +334,7 @@ define { i64, i64 } @FSBFCDC(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xord $r1 = $r1, -9223372036854775808
+; CHECK-NEXT:    xord $r1 = $r1, 0x8000000000000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %5 = bitcast i64 %1 to double
@@ -748,7 +748,7 @@ define { i64, i64 } @FSBFCDC_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xord $r1 = $r1, -9223372036854775808
+; CHECK-NEXT:    xord $r1 = $r1, 0x8000000000000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %5 = bitcast i64 %0 to double

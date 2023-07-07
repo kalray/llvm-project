@@ -158,7 +158,7 @@ entry:
 define signext i64 @uadd_sat64_ri64(i64 signext %a) {
 ; KVXV1-LABEL: uadd_sat64_ri64:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    minud $r0 = $r0, -9223372036854775808
+; KVXV1-NEXT:    minud $r0 = $r0, 0x8000000000000000
 ; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    addd $r0 = $r0, 0x7fffffffffffffff
 ; KVXV1-NEXT:    ret
