@@ -136,13 +136,13 @@ declare <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1>, i32, i32)
 define void @fmma444hw(<256 x i1>* nocapture %0, <512 x i1>* nocapture %1) {
 ; ALL-LABEL: fmma444hw:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    xlo.u $a6 = 64[$r0]
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a3 = 32[$r1]
-; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    xlo.u $a2 = 0[$r1]
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    xlo.u $a4 = 32[$r0]
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    xlo.u $a6 = 64[$r0]
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
 ; ALL-NEXT:    ;; # (end cycle 4)

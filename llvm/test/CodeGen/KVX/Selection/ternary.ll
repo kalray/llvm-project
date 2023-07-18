@@ -184,10 +184,10 @@ define i64 @Int64TernaryGlobalReg(i1 %value, i64 %v1){
 ; CHECK-NEXT:    ld $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load i64, i64* @g1, align 8
   %cond = select i1 %value, i64 %0, i64 %v1
@@ -338,10 +338,10 @@ define double @FloatTernaryGlobalReg(i1 %value, double %v1){
 ; CHECK-NEXT:    ld $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load double, double* @gf1, align 8
   %cond = select i1 %value, double %0, double %v1
@@ -492,10 +492,10 @@ define i32 @Int32TernaryGlobalReg(i1 %value, i32 %v1){
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.wnez $r0 ? $r1 = $r2
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r0 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = load i32, i32* @gi32_1, align 4
   %cond = select i1 %value, i32 %0, i32 %v1

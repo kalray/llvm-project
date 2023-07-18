@@ -360,10 +360,10 @@ define void @test_fmma242hw0(<256 x i1>* %p0){
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 9)
   %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw0(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, <256 x i1>* %p0, align 32
@@ -377,10 +377,10 @@ define void @test_fmma242hw1(<256 x i1>* %p0){
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 9)
   %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw1(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, <256 x i1>* %p0, align 32
@@ -847,113 +847,113 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
 ; CHECK-NEXT:    xcopyo $a10 = $a8
 ; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a4, $a10
-; CHECK-NEXT:    ;; # (end cycle 36)
+; CHECK-NEXT:    ;; # (end cycle 39)
 ; CHECK-NEXT:    xcopyo $a5 = $a10
-; CHECK-NEXT:    ;; # (end cycle 42)
+; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    fmma242hw2 $a5.lo = $a6a7, $a10, $a8
-; CHECK-NEXT:    ;; # (end cycle 43)
+; CHECK-NEXT:    ;; # (end cycle 46)
 ; CHECK-NEXT:    xcopyo $a9 = $a5
-; CHECK-NEXT:    ;; # (end cycle 49)
-; CHECK-NEXT:    fmma242hw3 $a9.hi = $a6a7, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 50)
-; CHECK-NEXT:    fmma242hw0 $a10.lo = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 51)
-; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a5, $a9
 ; CHECK-NEXT:    ;; # (end cycle 52)
-; CHECK-NEXT:    fmma242hw2 $a11.lo = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 53)
-; CHECK-NEXT:    fmma242hw3 $a11.hi = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 54)
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    fmma242hw3 $a9.hi = $a6a7, $a10, $a9
 ; CHECK-NEXT:    ;; # (end cycle 56)
-; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 60)
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    fmma242hw0 $a10.lo = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 62)
+; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 63)
+; CHECK-NEXT:    fmma242hw2 $a11.lo = $a6a7, $a5, $a9
 ; CHECK-NEXT:    ;; # (end cycle 64)
+; CHECK-NEXT:    fmma242hw3 $a11.hi = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 65)
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 66)
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 70)
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 74)
 ; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 68)
+; CHECK-NEXT:    ;; # (end cycle 78)
 ; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 72)
+; CHECK-NEXT:    ;; # (end cycle 82)
 ; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 76)
+; CHECK-NEXT:    ;; # (end cycle 86)
 ; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 80)
+; CHECK-NEXT:    ;; # (end cycle 90)
 ; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 84)
+; CHECK-NEXT:    ;; # (end cycle 94)
 ; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 88)
+; CHECK-NEXT:    ;; # (end cycle 98)
 ; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 92)
+; CHECK-NEXT:    ;; # (end cycle 102)
 ; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 96)
+; CHECK-NEXT:    ;; # (end cycle 106)
 ; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 100)
+; CHECK-NEXT:    ;; # (end cycle 110)
 ; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 104)
+; CHECK-NEXT:    ;; # (end cycle 114)
 ; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 108)
+; CHECK-NEXT:    ;; # (end cycle 118)
 ; CHECK-NEXT:    mma444uhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 112)
+; CHECK-NEXT:    ;; # (end cycle 122)
 ; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 116)
+; CHECK-NEXT:    ;; # (end cycle 126)
 ; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 120)
+; CHECK-NEXT:    ;; # (end cycle 130)
 ; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 124)
+; CHECK-NEXT:    ;; # (end cycle 134)
 ; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 128)
+; CHECK-NEXT:    ;; # (end cycle 138)
 ; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 132)
+; CHECK-NEXT:    ;; # (end cycle 142)
 ; CHECK-NEXT:    xmma484bw $a6a7 = $a10a11, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 133)
+; CHECK-NEXT:    ;; # (end cycle 143)
 ; CHECK-NEXT:    xmma484subw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 137)
-; CHECK-NEXT:    xmma484ubw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 141)
-; CHECK-NEXT:    xmma484usbw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 145)
-; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 146)
-; CHECK-NEXT:    fscalewv $a4 = $a5
 ; CHECK-NEXT:    ;; # (end cycle 147)
-; CHECK-NEXT:    fnarrow44wh.rn.s $a5 = $a6a7
-; CHECK-NEXT:    ;; # (end cycle 149)
-; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
+; CHECK-NEXT:    xmma484ubw $a6a7 = $a6a7, $a9, $a9
 ; CHECK-NEXT:    ;; # (end cycle 151)
+; CHECK-NEXT:    xmma484usbw $a6a7 = $a6a7, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 155)
+; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    ;; # (end cycle 156)
+; CHECK-NEXT:    fscalewv $a4 = $a5
+; CHECK-NEXT:    ;; # (end cycle 157)
+; CHECK-NEXT:    fnarrow44wh.rn.s $a5 = $a6a7
+; CHECK-NEXT:    ;; # (end cycle 159)
+; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
+; CHECK-NEXT:    ;; # (end cycle 161)
 ; CHECK-NEXT:    xmovetq $a4.lo = $r8, $r9
 ; CHECK-NEXT:    xmovetq $a4.hi = $r10, $r11
 ; CHECK-NEXT:    xmovefo $r8r9r10r11 = $a4
-; CHECK-NEXT:    ;; # (end cycle 155)
-; CHECK-NEXT:    fscalewv.relu $a4 = $a4
-; CHECK-NEXT:    ;; # (end cycle 158)
-; CHECK-NEXT:    xlo.us $a4 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 159)
-; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 128[$r4]
-; CHECK-NEXT:    ;; # (end cycle 160)
-; CHECK-NEXT:    xlo.u.odd.q0 $r0 ? $a0a1a2a3 = 160[$r4]
-; CHECK-NEXT:    ;; # (end cycle 163)
-; CHECK-NEXT:    xso 0[$r4] = $a4
-; CHECK-NEXT:    ;; # (end cycle 164)
-; CHECK-NEXT:    xso.even $r33 ? 32[$r4] = $a4
 ; CHECK-NEXT:    ;; # (end cycle 165)
-; CHECK-NEXT:    xso 32[$r5] = $a7
-; CHECK-NEXT:    ;; # (end cycle 166)
-; CHECK-NEXT:    xso 0[$r5] = $a6
-; CHECK-NEXT:    ;; # (end cycle 167)
-; CHECK-NEXT:    xso 32[$r6] = $a1
+; CHECK-NEXT:    fscalewv.relu $a4 = $a4
 ; CHECK-NEXT:    ;; # (end cycle 168)
-; CHECK-NEXT:    xso 0[$r6] = $a0
+; CHECK-NEXT:    xlo.us $a4 = 0[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 169)
-; CHECK-NEXT:    xso 96[$r6] = $a3
+; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 128[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 170)
+; CHECK-NEXT:    xlo.u.odd.q0 $r0 ? $a0a1a2a3 = 160[$r4]
+; CHECK-NEXT:    ;; # (end cycle 173)
+; CHECK-NEXT:    xso 0[$r4] = $a4
+; CHECK-NEXT:    ;; # (end cycle 174)
+; CHECK-NEXT:    xso.even $r33 ? 32[$r4] = $a4
+; CHECK-NEXT:    ;; # (end cycle 175)
+; CHECK-NEXT:    xso 32[$r5] = $a7
+; CHECK-NEXT:    ;; # (end cycle 176)
+; CHECK-NEXT:    xso 0[$r5] = $a6
+; CHECK-NEXT:    ;; # (end cycle 177)
+; CHECK-NEXT:    xso 32[$r6] = $a1
+; CHECK-NEXT:    ;; # (end cycle 178)
+; CHECK-NEXT:    xso 0[$r6] = $a0
+; CHECK-NEXT:    ;; # (end cycle 179)
+; CHECK-NEXT:    xso 96[$r6] = $a3
+; CHECK-NEXT:    ;; # (end cycle 180)
 ; CHECK-NEXT:    xso 64[$r6] = $a2
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ;; # (end cycle 171)
+; CHECK-NEXT:    ;; # (end cycle 181)
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 172)
+; CHECK-NEXT:    ;; # (end cycle 182)
   %8 = load volatile <256 x i1>, <256 x i1>* %4
   %9 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %8, i64 0, i64 1, i32 1)
   store volatile <256 x i1> %9, <256 x i1>* %4
@@ -1141,13 +1141,13 @@ entry:
 define void @fmma444hw(<256 x i1>* nocapture %v, <512 x i1>* nocapture %w) {
 ; CHECK-LABEL: fmma444hw:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xlo.u $a6 = 64[$r0]
-; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.u $a3 = 32[$r1]
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.u $a2 = 0[$r1]
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.u $a4 = 32[$r0]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    xlo.u $a6 = 64[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 4)

@@ -326,7 +326,7 @@ defvar WE5NB = WE6;
 
 defvar WE1_RR = WE1 # READ_RR;
 defvar WE1_ID = WE1 # READ_ID;
-defvar WE1_RRx2 = WE1 # READ_RRx2;
+defvar WE1_RRx3 = WE1 # READ_RRx3;
 defvar WE1_RRx4 = WE1 # READ_RRx4;
 
 defvar WE2_RR = WE2 # READ_RR;
@@ -343,26 +343,35 @@ defvar WE3_RRx2_E1_RRx2 = WE3 # READ_RRx2_E1_RRx2;
 
 defvar WE3NB_RRx2 = WE3NB # READ_RRx2;
 defvar WE3NB_RRx2_ID = WE3NB_RRx2 # READ_ID;
+defvar WE3NB_RRx3 = WE3NB # READ_RRx3;
 
-defvar WE4_RRx2 = WE4 # READ_RRx2;
+defvar WE4_RRx3 = WE4 # READ_RRx3;
 
-defvar WE4NB_RRx2 = WE4NB # READ_RRx2;
+defvar WE4NB_RRx3 = WE4NB # READ_RRx3;
 
 defvar WE5_RRx2 = WE5 # READ_RRx2;
 
-defvar WE5NB_RRx2 = WE5NB # READ_RRx2;
+defvar WE5NB_RRx3 = WE5NB # READ_RRx3;
 
-defvar WSFU_RRx2 = WSFU # READ_RRx2;
+defvar WSFU_RRx3 = WSFU # READ_RRx3;
 
 defvar NOOP = []<int>;
 
+/**
+ * Note: most of the itineraries below have for example WE1_RRx3 instead of WE1_RRx2
+ * This is because some instructions have accumulators: these have 4 operands instead of 3
+ * The extra operand must be accounted for in the operand list, otherwise LLVM assumes
+ * the latency is always 1.
+ * Having this extra information does no harm to the instructions that have only 3 operands.
+ */
+
 // ALU_LITE -> ALU_TINY
-defm ALU_SWITCH_LITE_TINY: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2, /*CV2*/ALU_TINY_ITIN_RT>;
+defm ALU_SWITCH_LITE_TINY: DataXY<ALU_LITE_ITIN_RT, WE1_RRx3, /*CV2*/ALU_TINY_ITIN_RT>;
 
 // MAU + AUXR -> MAU
 defm MAU_SWITCH_AUXR_EMPTY: DataXYVariants<MAU_AUXR_ITIN_RT, [
-  LatOpsVariant<"INT", WE2_RRx2>,
-  LatOpsVariant<"FP", WE4_RRx2>],
+  LatOpsVariant<"INT", WE2_RRx3>,
+  LatOpsVariant<"FP", WE4_RRx3>],
   /*CV2*/MAU_ITIN_RT>;
 
 // Common
@@ -373,18 +382,18 @@ defm ALL: DataSingleVariants<ALL_ITIN_RT, [
   LatOpsVariant<"RR", WE1_RR>], 8 /*ISSUE*/>;
 
 defm ALU_NOP: DataSingle<NOP_ITIN_RT, NOOP>;
-defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx2>;
+defm ALU_TINY: DataXY<ALU_TINY_ITIN_RT, WE1_RRx3>;
 defm ALU_TINY_X2: DataSingle<ALU_TINY_X2_ITIN_RT, WE1_RRx4, 2 /*ISSUE*/>;
-defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE3NB_RRx2>;
-defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE3NB_RRx2>;
+defm ALU_TINY_CRWH: DataSingle<ALU_TINY_CRWH_ITIN_RT, WE3NB_RRx3>;
+defm ALU_TINY_CRWL: DataSingle<ALU_TINY_CRWL_ITIN_RT, WE3NB_RRx3>;
 defm ALU_TINY_CRRP: DataSingle<ALU_TINY_CRRP_ITIN_RT, READ_RR>;
-defm ALU_TINY_CRRP_CRWL_CRWH: DataSingle<ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT, WE3NB_RRx2>;
+defm ALU_TINY_CRRP_CRWL_CRWH: DataSingle<ALU_TINY_CRRP_CRWL_CRWH_ITIN_RT, WE3NB_RRx3>;
 defm ALU_TINY_CRWL_CRWH: DataXY<ALU_TINY_CRWL_CRWH_ITIN_RT, WE3NB>;
-defm ALU_LITE: DataXY<ALU_LITE_ITIN_RT, WE1_RRx2>;
-defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE3NB_RRx2>;
-defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE3NB_RRx2>;
+defm ALU_LITE: DataXY<ALU_LITE_ITIN_RT, WE1_RRx3>;
+defm ALU_LITE_CRWL: DataSingle<ALU_LITE_CRWL_ITIN_RT, WE3NB_RRx3>;
+defm ALU_LITE_CRWH: DataSingle<ALU_LITE_CRWH_ITIN_RT, WE3NB_RRx3>;
 defm ALU_FULL: DataXY<ALU_FULL_ITIN_RT, WE1_RRx4>; // x4 because of system regs uses on ADDCD/ADDCDI/SBFCD/SBFCDI
-defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx2>;
+defm ALU_FULL_SFU: DataSingle<ALU_FULL_ITIN_RT, WSFU_RRx3>;
 
 defm BCU: DataSingle<BCU_ITIN_RT, READ_ID>;
 
@@ -404,8 +413,8 @@ defm BCU_TINY_TINY_MAU_XNOP: DataSingleVariants<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, 
 ]>;
 
 defm TCA: DataXYVariants<TCA_ITIN_RT, [
-  LatOpsVariant<"INT", WE3NB_RRx2, /*CV2*/ WE3NB_RRx2>,
-  LatOpsVariant<"FP", WE5NB_RRx2, /*CV2*/ WE4NB_RRx2>
+  LatOpsVariant<"INT", WE3NB_RRx3, /*CV2*/ WE3NB_RRx3>,
+  LatOpsVariant<"FP", WE5NB_RRx3, /*CV2*/ WE4NB_RRx3>
 ]>;
 
 // NOTE : stores have up to 5 operands
@@ -440,14 +449,14 @@ defm LSU_AUXR_AUXW: DataXYVariants<LSU_AUXR_AUXW_ITIN_RT, [
 ]>;
 
 defm MAU: DataXYVariants<MAU_ITIN_RT, [
-  LatOpsVariant<"INT", WE2_RRx2>,
-  LatOpsVariant<"FP", WE4_RRx2>
+  LatOpsVariant<"INT", WE2_RRx3>,
+  LatOpsVariant<"FP", WE4_RRx3>
 ]>;
 
 defm MAU_AUXR: DataXYVariants<MAU_AUXR_ITIN_RT, [
   LatOpsVariant<"INT", WE2_RRx3>,
   LatOpsVariant<"INT_AV1", WE2_E1_RRx2>,
-  LatOpsVariant<"FP", WE4_RRx2>
+  LatOpsVariant<"FP", WE4_RRx3>
 ]>;
 
 def KVXItinList {
