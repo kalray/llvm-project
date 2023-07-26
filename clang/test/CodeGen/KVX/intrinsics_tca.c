@@ -76,9 +76,9 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xmoveoto(vt);
   vt = __builtin_kvx_xmovefo(lv);
   __kvx_x512 buf = __builtin_kvx_xcat512(lv, v[0]);
-  lv2 = __builtin_kvx_xalign512o(buf, 16);
+  lv2 = __builtin_kvx_xaligno512(buf, 16);
   __kvx_x512 buf2 = __builtin_kvx_xcat512(lv, lv2);
-  vt = __builtin_kvx_xaccess512o(buf2, 1);
+  vt = __builtin_kvx_xaccesso512(buf2, 1);
   __kvx_x1024 lm = m[0];
   lv = __builtin_kvx_xconvdhv0(lv, lm, ".RN.sat");
   lv = __builtin_kvx_xconvdhv1(lv, lm, ".Ru.satu");

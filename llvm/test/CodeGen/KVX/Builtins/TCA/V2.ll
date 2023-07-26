@@ -1234,8 +1234,8 @@ define void @xsplatdo(<256 x i1>* nocapture %0) {
 
 declare <256 x i1> @llvm.kvx.xsplatdo(i64)
 
-define void @xalign512o(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1, i64 %2) {
-; CHECK-LABEL: xalign512o:
+define void @xaligno512(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1, i64 %2) {
+; CHECK-LABEL: xaligno512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1254,8 +1254,8 @@ define void @xalign512o(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly
 
 declare <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1>, i64)
 
-define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1, i64 %2) {
-; CHECK-LABEL: xalign1024o:
+define void @xaligno1024(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1, i64 %2) {
+; CHECK-LABEL: xaligno1024:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1278,8 +1278,8 @@ define void @xalign1024o(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readon
 
 declare <256 x i1> @llvm.kvx.xaligno.v1024i1(<1024 x i1>, i64)
 
-define void @xalign2048o(<256 x i1>* nocapture %0, i64 %1) {
-; CHECK-LABEL: xalign2048o:
+define void @xaligno2048(<256 x i1>* nocapture %0, i64 %1) {
+; CHECK-LABEL: xaligno2048:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1299,8 +1299,8 @@ define void @xalign2048o(<256 x i1>* nocapture %0, i64 %1) {
 
 declare <256 x i1> @llvm.kvx.xaligno.v2048i1(<2048 x i1>, i64)
 
-define void @xalign4096o(<256 x i1>* nocapture %0, i64 %1) {
-; CHECK-LABEL: xalign4096o:
+define void @xaligno4096(<256 x i1>* nocapture %0, i64 %1) {
+; CHECK-LABEL: xaligno4096:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1440,8 +1440,8 @@ define void @xpreload4096(<4096 x i1>* %0, i64 %1) {
 
 declare <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1>, i8*, i64, i32, i32)
 
-define <4 x i64> @xaccess512o(<512 x i1>* nocapture readonly %0, i64 %1) {
-; CHECK-LABEL: xaccess512o:
+define <4 x i64> @xaccesso512(<512 x i1>* nocapture readonly %0, i64 %1) {
+; CHECK-LABEL: xaccesso512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1458,8 +1458,8 @@ define <4 x i64> @xaccess512o(<512 x i1>* nocapture readonly %0, i64 %1) {
 
 declare <4 x i64> @llvm.kvx.xaccesso.v512i1(<512 x i1>, i64)
 
-define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
-; CHECK-LABEL: xaccess1024o:
+define <4 x i64> @xaccesso1024(<1024 x i1>* nocapture readonly %0, i64 %1) {
+; CHECK-LABEL: xaccesso1024:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a3 = 96[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1480,8 +1480,8 @@ define <4 x i64> @xaccess1024o(<1024 x i1>* nocapture readonly %0, i64 %1) {
 
 declare <4 x i64> @llvm.kvx.xaccesso.v1024i1(<1024 x i1>, i64)
 
-define <4 x i64> @xaccess2048o(i64 %0) {
-; CHECK-LABEL: xaccess2048o:
+define <4 x i64> @xaccesso2048(i64 %0) {
+; CHECK-LABEL: xaccesso2048:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -1499,8 +1499,8 @@ define <4 x i64> @xaccess2048o(i64 %0) {
 
 declare <4 x i64> @llvm.kvx.xaccesso.v2048i1(<2048 x i1>, i64)
 
-define <4 x i64> @xaccess4096o(i64 %0) {
-; CHECK-LABEL: xaccess4096o:
+define <4 x i64> @xaccesso4096(i64 %0) {
+; CHECK-LABEL: xaccesso4096:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xsplatdo $a0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
