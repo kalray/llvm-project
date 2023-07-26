@@ -3784,8 +3784,8 @@ define <8 x half> @test_copysign(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    fabshq $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80008000
+; CHECK-NEXT:    andd $r2 = $r2, 0x80008000.@
+; CHECK-NEXT:    andd $r3 = $r3, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -3803,8 +3803,8 @@ define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fabshq $r0 = $r0
 ; CV1-NEXT:    fabshq $r1 = $r1
-; CV1-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CV1-NEXT:    andd.@ $r3 = $r4, 0x80008000
+; CV1-NEXT:    andd $r2 = $r2, 0x80008000.@
+; CV1-NEXT:    andd $r3 = $r4, 0x80008000.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ord $r0 = $r0, $r2
 ; CV1-NEXT:    ord $r1 = $r1, $r3
@@ -3818,8 +3818,8 @@ define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV2-NEXT:    fnarrowwhq $r2 = $r2r3
 ; CV2-NEXT:    fnarrowwhq $r4 = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CV2-NEXT:    andd.@ $r3 = $r4, 0x80008000
+; CV2-NEXT:    andd $r2 = $r2, 0x80008000.@
+; CV2-NEXT:    andd $r3 = $r4, 0x80008000.@
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    ord $r0 = $r0, $r2
 ; CV2-NEXT:    ord $r1 = $r1, $r3
@@ -3835,8 +3835,8 @@ define <8 x float> @test_copysign_extended(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    fabshq $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80008000
-; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80008000
+; CHECK-NEXT:    andd $r2 = $r2, 0x80008000.@
+; CHECK-NEXT:    andd $r3 = $r3, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
 ; CHECK-NEXT:    ord $r4 = $r0, $r2
@@ -5186,11 +5186,11 @@ define <8 x half> @test_insertelement7(<8 x half> %a, half %x) #0 {
 define <8 x half> @test_insertelement(<8 x half> %a, half %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r3 = $r3, 0x10001
+; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x10001.@
 ; CHECK-NEXT:    make $r4 = 0x7000600050004
 ; CHECK-NEXT:    make $r5 = 0x3000200010000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x2010201
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x2010201.@
 ; CHECK-NEXT:    compnhq.eq $r3 = $r5, $r3
 ; CHECK-NEXT:    compnhq.eq $r4 = $r4, $r3
 ; CHECK-NEXT:    ;; # (end cycle 1)

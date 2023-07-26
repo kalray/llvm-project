@@ -132,7 +132,7 @@ define <4 x i16> @test_add(<4 x i16> %a, <4 x i16> %b) {
 define <4 x i16> @test_add_imm_0(<4 x i16> %a) {
 ; ALL-LABEL: test_add_imm_0:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addhq.@ $r0 = $r0, 0x20001
+; ALL-NEXT:    addhq $r0 = $r0, 0x20001.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %r = add <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %a
@@ -142,7 +142,7 @@ define <4 x i16> @test_add_imm_0(<4 x i16> %a) {
 define <4 x i16> @test_add_imm_1(<4 x i16> %a) {
 ; ALL-LABEL: test_add_imm_1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addhq.@ $r0 = $r0, 0x20001
+; ALL-NEXT:    addhq $r0 = $r0, 0x20001.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %r = add <4 x i16> %a, <i16 1, i16 2, i16 1, i16 2>
@@ -162,7 +162,7 @@ define <4 x i16> @test_sub(<4 x i16> %a, <4 x i16> %b) {
 define <4 x i16> @test_sub_imm(<4 x i16> %a) {
 ; ALL-LABEL: test_sub_imm:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addhq.@ $r0 = $r0, 0xfffeffff
+; ALL-NEXT:    addhq $r0 = $r0, 0xfffeffff.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> %a, <i16 1, i16 2, i16 1, i16 2>
@@ -172,7 +172,7 @@ define <4 x i16> @test_sub_imm(<4 x i16> %a) {
 define <4 x i16> @test_sub_fromimm(<4 x i16> %a) {
 ; ALL-LABEL: test_sub_fromimm:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
+; ALL-NEXT:    sbfhq $r0 = $r0, 0x20001.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %r = sub <4 x i16> <i16 1, i16 2, i16 1, i16 2>, %a
@@ -798,8 +798,8 @@ define <4 x i16> @test_insertelement3(<4 x i16> %a, i16 %x) {
 define <4 x i16> @test_insertelement(<4 x i16> %a, i16 %x, i64 %p) {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
-; ALL-NEXT:    sbmm8.@ $r2 = $r2, 0x10001
+; ALL-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; ALL-NEXT:    sbmm8 $r2 = $r2, 0x10001.@
 ; ALL-NEXT:    make $r3 = 0x3000200010000
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    compnhq.eq $r2 = $r3, $r2
@@ -848,7 +848,7 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
+; V2-NEXT:    andd $r0 = $r0, 0x10001.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = icmp eq <4 x i16> %0, zeroinitializer
@@ -898,7 +898,7 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
+; V2-NEXT:    andd $r0 = $r0, 0x10001.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <4 x i16> %1, %0
@@ -945,7 +945,7 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x10001
+; V2-NEXT:    andd $r0 = $r0, 0x10001.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <4 x i16> %1, %0
@@ -1018,7 +1018,7 @@ define <4 x i16> @abdhq_ri_(<4 x i16> %0) {
 define <4 x i16> @abdhq_ri_at(<4 x i16> %0) {
 ; ALL-LABEL: abdhq_ri_at:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    abdhq.@ $r0 = $r0, 0x10000f
+; ALL-NEXT:    abdhq $r0 = $r0, 0x10000f.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 15, i16 16>, %0
@@ -1117,7 +1117,7 @@ define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
 define <4 x i16> @splat(i32 %0) {
 ; ALL-LABEL: splat:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x2010201.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = trunc i32 %0 to i16
@@ -1129,7 +1129,7 @@ define <4 x i16> @splat(i32 %0) {
 define <4 x i16> @splat_0(<4 x i16> %0) {
 ; ALL-LABEL: splat_0:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x2010201.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
@@ -1139,7 +1139,7 @@ define <4 x i16> @splat_0(<4 x i16> %0) {
 define <4 x i16> @splat_1(<4 x i16> %0) {
 ; ALL-LABEL: splat_1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8040804.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
@@ -1149,7 +1149,7 @@ define <4 x i16> @splat_1(<4 x i16> %0) {
 define <4 x i16> @splat_1_32(i32 %0) {
 ; ALL-LABEL: splat_1_32:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8040804.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i32 %0, 16
@@ -1162,7 +1162,7 @@ define <4 x i16> @splat_1_32(i32 %0) {
 define <4 x i16> @splat_1_64(i64 %0) {
 ; ALL-LABEL: splat_1_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x8040804
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x8040804.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 16
@@ -1175,7 +1175,7 @@ define <4 x i16> @splat_1_64(i64 %0) {
 define <4 x i16> @splat_2(<4 x i16> %0) {
 ; ALL-LABEL: splat_2:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20102010.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
@@ -1185,7 +1185,7 @@ define <4 x i16> @splat_2(<4 x i16> %0) {
 define <4 x i16> @splat_2_64(i64 %0) {
 ; ALL-LABEL: splat_2_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x20102010
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x20102010.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 32
@@ -1198,7 +1198,7 @@ define <4 x i16> @splat_2_64(i64 %0) {
 define <4 x i16> @splat_3(<4 x i16> %0) {
 ; ALL-LABEL: splat_3:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x80408040.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
@@ -1208,7 +1208,7 @@ define <4 x i16> @splat_3(<4 x i16> %0) {
 define <4 x i16> @splat_3_64(i64 %0) {
 ; ALL-LABEL: splat_3_64:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80408040
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x80408040.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = lshr i64 %0, 48
@@ -1270,9 +1270,9 @@ declare <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
 define <4 x i16> @add_splat_const_op1(<4 x i16> %vx) #0 {
 ; ALL-LABEL: add_splat_const_op1:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
+; ALL-NEXT:    addhq $r0 = $r0, 0x2a002a.@
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x2010201
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x2010201.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 1)
   %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer

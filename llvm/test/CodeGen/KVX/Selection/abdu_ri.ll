@@ -98,7 +98,7 @@ define i64 @abdud3_3(i64 %0) {
 ;
 ; V2-LABEL: abdud3_3:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdud.@ $r0 = $r0, 0xbaadf00d
+; V2-NEXT:    abdud $r0 = $r0, 0xbaadf00d.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.umax.i64(i64 %0, i64 -4995072469926809587)
@@ -205,11 +205,11 @@ declare i32 @llvm.umin.i32(i32, i32)
 define <8 x i8> @abdubo_(<8 x i8> %0) {
 ; V1-LABEL: abdubo_:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    make $r1 = 0x212b0d0c
 ; V1-NEXT:    sllhqs $r3 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; V1-NEXT:    sllhqs $r2 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
@@ -224,10 +224,10 @@ define <8 x i8> @abdubo_(<8 x i8> %0) {
 ; V1-NEXT:    ord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    nxord $r0 = $r2, $r0
-; V1-NEXT:    ord.@ $r1 = $r2, 0x80808080
-; V1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
+; V1-NEXT:    ord $r1 = $r2, 0x80808080.@
+; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
+; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    xord $r0 = $r0, $r1
@@ -252,11 +252,11 @@ declare <8 x i8> @llvm.umin.v8i8(<8 x i8>, <8 x i8>)
 define <8 x i8> @abdubo_at(<8 x i8> %0) {
 ; V1-LABEL: abdubo_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    make $r1 = 0x212b0d0c212b0d0c
 ; V1-NEXT:    sllhqs $r3 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; V1-NEXT:    sllhqs $r2 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
@@ -271,10 +271,10 @@ define <8 x i8> @abdubo_at(<8 x i8> %0) {
 ; V1-NEXT:    ord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    nxord $r0 = $r2, $r0
-; V1-NEXT:    ord.@ $r1 = $r2, 0x80808080
-; V1-NEXT:    andd.@ $r3 = $r0, 0x7f7f7f7f
+; V1-NEXT:    ord $r1 = $r2, 0x80808080.@
+; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
+; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    xord $r0 = $r0, $r1
@@ -283,7 +283,7 @@ define <8 x i8> @abdubo_at(<8 x i8> %0) {
 ;
 ; V2-LABEL: abdubo_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdubo.@ $r0 = $r0, 0x212b0d0c
+; V2-NEXT:    abdubo $r0 = $r0, 0x212b0d0c.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <8 x i8> @llvm.umax.v8i8(<8 x i8> %0, <8 x i8> <i8 12, i8 13, i8 43, i8 33, i8 12, i8 13, i8 43, i8 33>)
@@ -688,8 +688,8 @@ declare <4 x i16> @llvm.umin.v4i16(<4 x i16>, <4 x i16>)
 define <4 x i16> @abduhq_at(<4 x i16> %0) {
 ; V1-LABEL: abduhq_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    minuhq.@ $r0 = $r0, 0x2b000c
-; V1-NEXT:    maxuhq.@ $r1 = $r0, 0x2b000c
+; V1-NEXT:    minuhq $r0 = $r0, 0x2b000c.@
+; V1-NEXT:    maxuhq $r1 = $r0, 0x2b000c.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfhq $r0 = $r0, $r1
 ; V1-NEXT:    ret
@@ -697,7 +697,7 @@ define <4 x i16> @abduhq_at(<4 x i16> %0) {
 ;
 ; V2-LABEL: abduhq_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abduhq.@ $r0 = $r0, 0x2b000c
+; V2-NEXT:    abduhq $r0 = $r0, 0x2b000c.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.umax.v4i16(<4 x i16> %0, <4 x i16> <i16 12, i16 43, i16 12, i16 43>)
@@ -913,8 +913,8 @@ declare <2 x i64> @llvm.abs.v2i64(<2 x i64>, i1 immarg)
 define <2 x i32> @abduwp_at(<2 x i32> %0) {
 ; V1-LABEL: abduwp_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    minuwp.@ $r0 = $r0, 12
-; V1-NEXT:    maxuwp.@ $r1 = $r0, 12
+; V1-NEXT:    minuwp $r0 = $r0, 12.@
+; V1-NEXT:    maxuwp $r1 = $r0, 12.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    sbfwp $r0 = $r0, $r1
 ; V1-NEXT:    ret
@@ -922,7 +922,7 @@ define <2 x i32> @abduwp_at(<2 x i32> %0) {
 ;
 ; V2-LABEL: abduwp_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abduwp.@ $r0 = $r0, 0xc
+; V2-NEXT:    abduwp $r0 = $r0, 0xc.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.umax.v2i32(<2 x i32> %0, <2 x i32> <i32 12, i32 12>)

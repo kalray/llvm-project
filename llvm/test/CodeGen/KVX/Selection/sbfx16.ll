@@ -108,7 +108,7 @@ entry:
 define i64 @f1imm_at(i64 %b){
 ; CHECK-LABEL: f1imm_at:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfx16d.@ $r0 = $r0, 0x1beeeeef
+; CHECK-NEXT:    sbfx16d $r0 = $r0, 0x1beeeeef.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

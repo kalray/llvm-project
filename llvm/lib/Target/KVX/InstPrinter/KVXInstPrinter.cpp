@@ -577,7 +577,7 @@ void KVXInstPrinter::printCoherencyMod(const MCInst *MI, unsigned OpNo,
 // 64-bits hexa value.
 template <int Threshold>
 void KVXInstPrinter::printHexaBitsImm32(const MCInst *MI, unsigned OpNo,
-                                        raw_ostream &O) {
+                                        raw_ostream &O, bool SplatAt) {
   int64_t imm = MI->getOperand(OpNo).getImm();
 
   if (std::abs(imm) <= Threshold) {
@@ -586,6 +586,9 @@ void KVXInstPrinter::printHexaBitsImm32(const MCInst *MI, unsigned OpNo,
     uint64_t i = imm & ((1ULL << 32) - 1);
     O << formatHex(i);
   }
+
+  if (SplatAt)
+    O << ".@";
 }
 
 void KVXInstPrinter::printCacheLevelMod(const MCInst *MI, unsigned OpNo,

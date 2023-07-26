@@ -464,7 +464,7 @@ define <8 x i8> @azext(<8 x i8> %a, <8 x i8> %b){
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r1, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0x1010101
+; CV1-NEXT:    andd $r0 = $r0, 0x1010101.@
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 5)
 ;
@@ -472,7 +472,7 @@ define <8 x i8> @azext(<8 x i8> %a, <8 x i8> %b){
 ; CV2:       # %bb.0: # %entry
 ; CV2-NEXT:    compnbo.eq $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    andd.@ $r0 = $r0, 0x1010101
+; CV2-NEXT:    andd $r0 = $r0, 0x1010101.@
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
 entry:

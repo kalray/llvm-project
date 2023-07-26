@@ -43,6 +43,10 @@ def Wrapped64W : Operand<i64>, ImmLeaf<i64, [{return isInt<32>(Imm);}]>;
 def Unsigned64W : Operand<i64>, ImmLeaf<i64, [{return isUInt<32>(Imm);}]>;
 }
 
+let PrintMethod = "printHexaBitsImm32Splat" in {
+def Wrapped32Splat : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm);}]>;
+}
+
 // Ensures that Imm - 1 is still a Wrapped32. Used for AVGR.
 def Wrapped32PlusOne : Operand<i32>, ImmLeaf<i32, [{return isInt<32>(Imm-1);}]>;
 

@@ -52,7 +52,7 @@ define <16 x i8> @shiftbx_last(<16 x i8> %0, i8 %1) {
 ; CHECK-LABEL: shiftbx_last:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r2, 7, 0
-; CHECK-NEXT:    sbmm8.@ $r3 = $r2, 0x1010101
+; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x1010101.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x101010101010180
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -108,7 +108,7 @@ define <32 x i8> @shiftbv_one(<32 x i8> %0, i8 %1) {
 define <32 x i8> @shiftbv_last(<32 x i8> %0, i8 %1) {
 ; CHECK-LABEL: shiftbv_last:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r1 = $r4, 0x1010101
+; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x1010101.@
 ; CHECK-NEXT:    insf $r3 = $r4, 7, 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r3, 0x101010101010180
@@ -218,7 +218,7 @@ define void @shiftbt_last(<64 x i8>* noalias nocapture sret(<64 x i8>) align 32 
 ; CHECK-NEXT:    ld $r0 = 56[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 7, 0
-; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x1010101
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1010101.@
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x101010101010180
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -287,7 +287,7 @@ define <8 x i16> @shiftho_last(<8 x i16> %0, i16 %1) {
 ; CHECK-LABEL: shiftho_last:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r2, 15, 0
-; CHECK-NEXT:    sbmm8.@ $r3 = $r2, 0x2010201
+; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x2010201.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x201020102018040
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -343,7 +343,7 @@ define <16 x i16> @shifthx_one(<16 x i16> %0, i16 %1) {
 define <16 x i16> @shifthx_last(<16 x i16> %0, i16 %1) {
 ; CHECK-LABEL: shifthx_last:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r1 = $r4, 0x2010201
+; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x2010201.@
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r3, 0x201020102018040
@@ -460,7 +460,7 @@ define void @shifthv_last(<32 x i16>* noalias nocapture sret(<32 x i16>) align 3
 ; CHECK-NEXT:    sxbd $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 0
-; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x201020102018040
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -844,7 +844,7 @@ define <8 x half> @shiftfho_last(<8 x half> %0, half %1) {
 ; CHECK-LABEL: shiftfho_last:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r2, 15, 0
-; CHECK-NEXT:    sbmm8.@ $r3 = $r2, 0x2010201
+; CHECK-NEXT:    sbmm8 $r3 = $r2, 0x2010201.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r1, 0x201020102018040
 ; CHECK-NEXT:    copyd $r1 = $r3
@@ -900,7 +900,7 @@ define <16 x half> @shiftfhx_one(<16 x half> %0, half %1) {
 define <16 x half> @shiftfhx_last(<16 x half> %0, half %1) {
 ; CHECK-LABEL: shiftfhx_last:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r1 = $r4, 0x2010201
+; CHECK-NEXT:    sbmm8 $r1 = $r4, 0x2010201.@
 ; CHECK-NEXT:    insf $r3 = $r4, 15, 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbmm8 $r0 = $r3, 0x201020102018040
@@ -1092,7 +1092,7 @@ define void @shiftfhv_last(<32 x half>* noalias nocapture sret(<32 x half>) alig
 ; CHECK-NEXT:    fnarrowwh.rn $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r1, 31, 16
-; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804080408040201
 ; CHECK-NEXT:    copyd $r2 = $r1

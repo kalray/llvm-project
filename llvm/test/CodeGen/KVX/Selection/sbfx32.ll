@@ -180,7 +180,7 @@ define i64 @f2imm(i64 %b){
 ;
 ; V2-LABEL: f2imm:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    sbfx32d.@ $r0 = $r0, 0x1beeeeef
+; V2-NEXT:    sbfx32d $r0 = $r0, 0x1beeeeef.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
 entry:

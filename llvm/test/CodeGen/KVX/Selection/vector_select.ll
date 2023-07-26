@@ -109,7 +109,7 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    andd $r3 = $r3, $r4
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmovehq.even $r3 ? $r2 = $r1
 ; CV1-NEXT:    ;; # (end cycle 8)
@@ -176,7 +176,7 @@ define void @test_v4_select(<4 x i8> * %m, <4 x i8> * %n){
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    andd $r3 = $r3, $r4
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmovehq.even $r3 ? $r2 = $r1
 ; CV1-NEXT:    ;; # (end cycle 8)
@@ -238,8 +238,8 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CV1-NEXT:    andd $r4 = $r4, $r6
 ; CV1-NEXT:    andd $r6 = $r7, $r8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    andd.@ $r4 = $r4, 0xff00ff
-; CV1-NEXT:    andd.@ $r6 = $r6, 0xff00ff
+; CV1-NEXT:    andd $r4 = $r4, 0xff00ff.@
+; CV1-NEXT:    andd $r6 = $r6, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmovehq.even $r4 ? $r2 = $r1
 ; CV1-NEXT:    cmovehq.even $r6 ? $r3 = $r5
@@ -319,8 +319,8 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CV1-NEXT:    sxlbhq $r17 = $r4
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.eq $r7 = $r2, $r7
-; CV1-NEXT:    andd.@ $r10 = $r10, 0xff00ff
-; CV1-NEXT:    andd.@ $r11 = $r11, 0xff00ff
+; CV1-NEXT:    andd $r10 = $r10, 0xff00ff.@
+; CV1-NEXT:    andd $r11 = $r11, 0xff00ff.@
 ; CV1-NEXT:    compnhq.eq $r15 = $r1, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmovehq.even $r11 ? $r3 = $r5
@@ -333,8 +333,8 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CV1-NEXT:    andd $r7 = $r15, $r16
 ; CV1-NEXT:    sbmm8 $r9 = $r6, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    andd.@ $r5 = $r5, 0xff00ff
-; CV1-NEXT:    andd.@ $r6 = $r7, 0xff00ff
+; CV1-NEXT:    andd $r5 = $r5, 0xff00ff.@
+; CV1-NEXT:    andd $r6 = $r7, 0xff00ff.@
 ; CV1-NEXT:    insf $r9 = $r3, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    cmovehq.even $r6 ? $r1 = $r17
@@ -424,8 +424,8 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV1-NEXT:    andd $r39 = $r39, $r40
 ; CV1-NEXT:    sxlbhq $r40 = $r4
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    andd.@ $r16 = $r16, 0xff00ff
-; CV1-NEXT:    andd.@ $r39 = $r39, 0xff00ff
+; CV1-NEXT:    andd $r16 = $r16, 0xff00ff.@
+; CV1-NEXT:    andd $r39 = $r39, 0xff00ff.@
 ; CV1-NEXT:    compnhq.gt $r41 = $r40, $r2
 ; CV1-NEXT:    compnhq.gt $r44 = $r4, $r2
 ; CV1-NEXT:    ;; # (end cycle 10)
@@ -439,8 +439,8 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV1-NEXT:    compnhq.gt $r36 = $r6, $r2
 ; CV1-NEXT:    ;; # (end cycle 12)
 ; CV1-NEXT:    insf $r5 = $r9, 63, 32
-; CV1-NEXT:    andd.@ $r9 = $r16, 0xff00ff
-; CV1-NEXT:    andd.@ $r16 = $r17, 0xff00ff
+; CV1-NEXT:    andd $r9 = $r16, 0xff00ff.@
+; CV1-NEXT:    andd $r16 = $r17, 0xff00ff.@
 ; CV1-NEXT:    compnhq.gt $r17 = $r43, $r2
 ; CV1-NEXT:    ;; # (end cycle 13)
 ; CV1-NEXT:    cmovehq.even $r16 ? $r1 = $r40
@@ -451,13 +451,13 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV1-NEXT:    sbmm8 $r4 = $r1, 0x40100401
 ; CV1-NEXT:    sbmm8 $r8 = $r8, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    sxmbhq $r7 = $r7
 ; CV1-NEXT:    sxlbhq $r42 = $r7
 ; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    compnhq.gt $r2 = $r7, $r2
 ; CV1-NEXT:    insf $r4 = $r8, 63, 32
-; CV1-NEXT:    andd.@ $r8 = $r9, 0xff00ff
+; CV1-NEXT:    andd $r8 = $r9, 0xff00ff.@
 ; CV1-NEXT:    compnhq.gt $r9 = $r42, $r2
 ; CV1-NEXT:    ;; # (end cycle 17)
 ; CV1-NEXT:    andd $r2 = $r33, $r2
@@ -468,8 +468,8 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV1-NEXT:    sbmm8 $r1 = $r10, 0x40100401
 ; CV1-NEXT:    sbmm8 $r6 = $r15, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 19)
-; CV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff
-; CV1-NEXT:    andd.@ $r2 = $r8, 0xff00ff
+; CV1-NEXT:    andd $r1 = $r2, 0xff00ff.@
+; CV1-NEXT:    andd $r2 = $r8, 0xff00ff.@
 ; CV1-NEXT:    insf $r6 = $r1, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 20)
 ; CV1-NEXT:    cmovehq.even $r2 ? $r3 = $r42

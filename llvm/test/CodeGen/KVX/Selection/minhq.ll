@@ -33,7 +33,7 @@ entry:
 define  <4 x i16> @minhq_splat(<4 x i16> %a) {
 ; CHECK-LABEL: minhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    minhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -45,7 +45,7 @@ entry:
 define  <4 x i16> @minhq_splat2(<4 x i16> %a) {
 ; CHECK-LABEL: minhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    minhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -81,7 +81,7 @@ entry:
 define  <4 x i16> @minuhq_splat(<4 x i16> %a) {
 ; CHECK-LABEL: minuhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    minuhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -93,7 +93,7 @@ entry:
 define  <4 x i16> @minuhq_splat2(<4 x i16> %a) {
 ; CHECK-LABEL: minuhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    minuhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -201,7 +201,7 @@ entry:
 define  <3 x i16> @v3_minhq_splat(<3 x i16> %a) {
 ; CHECK-LABEL: v3_minhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    minhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -213,7 +213,7 @@ entry:
 define  <3 x i16> @v3_minhq_splat2(<3 x i16> %a) {
 ; CHECK-LABEL: v3_minhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    minhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -249,7 +249,7 @@ entry:
 define  <3 x i16> @v3_minuhq_splat(<3 x i16> %a, <3 x i16> %b) {
 ; CHECK-LABEL: v3_minuhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    minuhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -261,7 +261,7 @@ entry:
 define  <3 x i16> @v3_minuhq_splat2(<3 x i16> %a) {
 ; CHECK-LABEL: v3_minuhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    minuhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

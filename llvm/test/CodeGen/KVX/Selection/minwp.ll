@@ -33,7 +33,7 @@ entry:
 define  <2 x i32> @minwp_splat(<2 x i32> %a) {
 ; CHECK-LABEL: minwp_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minwp.@ $r0 = $r0, 20
+; CHECK-NEXT:    minwp $r0 = $r0, 20.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -57,7 +57,7 @@ entry:
 define  <2 x i32> @minuwp_splat(<2 x i32> %a) {
 ; CHECK-LABEL: minuwp_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    minuwp.@ $r0 = $r0, 20
+; CHECK-NEXT:    minuwp $r0 = $r0, 20.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

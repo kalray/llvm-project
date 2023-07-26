@@ -33,7 +33,7 @@ entry:
 define  <4 x i16> @maxhq_splat(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: maxhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    maxhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -45,7 +45,7 @@ entry:
 define  <4 x i16> @maxhq_splat2(<4 x i16> %a) {
 ; CHECK-LABEL: maxhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    maxhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -81,7 +81,7 @@ entry:
 define  <4 x i16> @maxuhq_splat(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: maxuhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    maxuhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -93,7 +93,7 @@ entry:
 define  <4 x i16> @maxuhq_splat2(<4 x i16> %a) {
 ; CHECK-LABEL: maxuhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    maxuhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -201,7 +201,7 @@ entry:
 define  <3 x i16> @v3_maxhq_splat(<3 x i16> %a) {
 ; CHECK-LABEL: v3_maxhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    maxhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -213,7 +213,7 @@ entry:
 define  <3 x i16> @v3_maxhq_splat2(<3 x i16> %a) {
 ; CHECK-LABEL: v3_maxhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    maxhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -249,7 +249,7 @@ entry:
 define  <3 x i16> @v3_maxuhq_splat(<3 x i16> %a, <3 x i16> %b) {
 ; CHECK-LABEL: v3_maxuhq_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuhq.@ $r0 = $r0, 0x140014
+; CHECK-NEXT:    maxuhq $r0 = $r0, 0x140014.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -261,7 +261,7 @@ entry:
 define  <3 x i16> @v3_maxuhq_splat2(<3 x i16> %a) {
 ; CHECK-LABEL: v3_maxuhq_splat2:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuhq.@ $r0 = $r0, 0x16000b
+; CHECK-NEXT:    maxuhq $r0 = $r0, 0x16000b.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

@@ -322,7 +322,7 @@ multiclass MC_BINOP_64<string OpcStr, PatFrags p> {
               /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
               [(set i64:$r, (p i64:$op0, Signed10:$op1))], /*IsAtomicSwap*/ 0, /*added complexity*/ 2>;
 
-  defm ri32s: I <OpcStr # ".@", /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg, Wrapped32], /*Mods=*/[],
+  defm ri32s: I <OpcStr, /*itin=*/ALU_TINY_X_, /*Ops=*/[SingleReg, Wrapped32Splat], /*Mods=*/[],
               /*MemOps=*/[], /*CC=*/[], /*Out=*/[SingleReg], /*InPlace=*/0, /*pattern=*/
               []>;
 
@@ -384,8 +384,8 @@ multiclass MC_11<string OpcStr> {
      [/* no straightforward pattern */],
      ALU_TINY_Y_>;
   def ri32s: KVX_INSTRUCTION_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
-     !strconcat (OpcStr, ".@ $a1 = $a2, $a3"),
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32Splat:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"),
      [/* no straightforward pattern */],
      ALU_TINY_X_>;
 }
@@ -404,8 +404,8 @@ multiclass MC_12_SWITCH<string OpcStr> {
      !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY>;
   def ri32s : KVX_INSTRUCTION_X
-    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32:$a3),
-     !strconcat (OpcStr, ".@ $a1 = $a2, $a3"), [],
+    <(outs SingleReg:$a1), (ins SingleReg:$a2, Wrapped32Splat:$a3),
+     !strconcat (OpcStr, " $a1 = $a2, $a3"), [],
      ALU_SWITCH_LITE_TINY_X_>;
   def ri37 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a1), (ins SingleReg:$a2, Signed37:$a3),
@@ -448,7 +448,7 @@ multiclass ADD_SBF_SD_FAMILY<string OpcStr> {
   // Only CV2
   def ri_cv2 : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     !strconcat (OpcStr, " $a2 = $a3, $a4$a1"),
      [/* no straightforward pattern */],
      ALU_TINY_X_>, Requires<[IsV2]>;
 }
@@ -637,7 +637,7 @@ multiclass MC_17<string OpcStr> {
      ALU_LITE>;
   def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     !strconcat (OpcStr, " $a2 = $a3, $a4$a1"),
      [/* no straightforward pattern */],
      ALU_LITE_X_>;
 }
@@ -744,7 +744,7 @@ multiclass MC_17_SWITCH<string OpcStr> {
      ALU_SWITCH_LITE_TINY>;
   def ri : KVX_INSTRUCTION_X
     <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, Splat32Mod:$a1),
-     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     !strconcat (OpcStr, " $a2 = $a3, $a4$a1"),
      [/* no straightforward pattern */],
      ALU_SWITCH_LITE_TINY_X_>;
 }

@@ -127,17 +127,17 @@ declare i32 @llvm.abs.i32(i32, i1 immarg)
 define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 ; V1-LABEL: v8i8abds_rr:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r2 = $r0, 0x4000200004000100
 ; V1-NEXT:    sbmm8 $r3 = $r1, 0x4000200004000100
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; V1-NEXT:    sbfshq $r2 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfshq $r0 = $r1, $r0
 ; V1-NEXT:    srlhqs $r1 = $r2, 8
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    ord $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
@@ -167,17 +167,17 @@ define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x4000200004000100
 ; V1-NEXT:    make $r2 = 0x1004ff01
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; V1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r3 = $r2, 0x4000200004000100
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfshq $r0 = $r2, $r0
 ; V1-NEXT:    sbfshq $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    ord $r0 = $r0, $r1
@@ -208,17 +208,17 @@ define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
 define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x4000200004000100
 ; V1-NEXT:    make $r2 = 0x1004ff011004ff01
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; V1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r3 = $r2, 0x4000200004000100
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfshq $r0 = $r2, $r0
 ; V1-NEXT:    sbfshq $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    ord $r0 = $r0, $r1
@@ -238,7 +238,7 @@ define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 ;
 ; V2-LABEL: v8i8abds_ri_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdsbo.@ $r0 = $r0, 0x1004ff01
+; V2-NEXT:    abdsbo $r0 = $r0, 0x1004ff01.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> %0, <8 x i8> <i8 1, i8 -1, i8 4, i8 16, i8 1, i8 -1, i8 4, i8 16>)
@@ -249,17 +249,17 @@ define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 define <8 x i8> @v8i8abds_ri_at_2(<8 x i8> %0) #0 {
 ; V1-LABEL: v8i8abds_ri_at_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    make $r1 = 0x1004ff011004ff01
 ; V1-NEXT:    sbmm8 $r3 = $r0, 0x4000200004000100
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; V1-NEXT:    sbmm8 $r2 = $r1, 0x4000200004000100
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbfshq $r0 = $r0, $r1
 ; V1-NEXT:    sbfshq $r2 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r2, 8
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    ord $r0 = $r0, $r1
@@ -279,7 +279,7 @@ define <8 x i8> @v8i8abds_ri_at_2(<8 x i8> %0) #0 {
 ;
 ; V2-LABEL: v8i8abds_ri_at_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdsbo.@ $r0 = $r0, 0x1004ff01
+; V2-NEXT:    abdsbo $r0 = $r0, 0x1004ff01.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <8 x i8> @llvm.ssub.sat.v8i8(<8 x i8> <i8 1, i8 -1, i8 4, i8 16, i8 1, i8 -1, i8 4, i8 16>, <8 x i8> %0)
@@ -569,7 +569,7 @@ define <2 x i32> @v2i32abds_ri_at(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp.@ $r0 = $r0, -1
+; V2-NEXT:    abdswp $r0 = $r0, -1.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> %0, <2 x i32> <i32 -1, i32 -1>)
@@ -580,7 +580,7 @@ define <2 x i32> @v2i32abds_ri_at(<2 x i32> %0) {
 define <2 x i32> @v2i32abds_ri_at_2(<2 x i32> %0) {
 ; V1-LABEL: v2i32abds_ri_at_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfswp.@ $r0 = $r0, -1
+; V1-NEXT:    sbfswp $r0 = $r0, -1.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    abswp $r0 = $r0
 ; V1-NEXT:    ret
@@ -588,7 +588,7 @@ define <2 x i32> @v2i32abds_ri_at_2(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_at_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp.@ $r0 = $r0, -1
+; V2-NEXT:    abdswp $r0 = $r0, -1.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> <i32 -1, i32 -1>, <2 x i32> %0)
@@ -765,7 +765,7 @@ define i64 @abdsd_ri_at(i64 %0, i64 %1) {
 ;
 ; V2-LABEL: abdsd_ri_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdsd.@ $r0 = $r0, 0xdeadbeef
+; V2-NEXT:    abdsd $r0 = $r0, 0xdeadbeef.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %3 = tail call i64 @llvm.ssub.sat.i64(i64 -2401053088876216593, i64 %0)
@@ -817,7 +817,7 @@ define <4 x i16> @v4i16abds_ri_(<4 x i16> %0) {
 define <4 x i16> @v4i16abds_ri_at(<4 x i16> %0) {
 ; V1-LABEL: v4i16abds_ri_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfshq.@ $r0 = $r0, 0x100004
+; V1-NEXT:    sbfshq $r0 = $r0, 0x100004.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    abshq $r0 = $r0
 ; V1-NEXT:    ret
@@ -825,7 +825,7 @@ define <4 x i16> @v4i16abds_ri_at(<4 x i16> %0) {
 ;
 ; V2-LABEL: v4i16abds_ri_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdshq.@ $r0 = $r0, 0x100004
+; V2-NEXT:    abdshq $r0 = $r0, 0x100004.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16> <i16 4, i16 16, i16 4, i16 16>, <4 x i16> %0)

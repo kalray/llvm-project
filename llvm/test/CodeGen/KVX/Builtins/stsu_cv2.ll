@@ -8,7 +8,7 @@ define <2 x i64> @stsudp(<2 x i64> %0) {
 ; CHECK-LABEL: stsudp:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    stsud $r0 = $r0, 0xbeef
-; CHECK-NEXT:    stsud.@ $r1 = $r1, 0xbeeeeeef
+; CHECK-NEXT:    stsud $r1 = $r1, 0xbeeeeeef.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = extractelement <2 x i64> %0, i64 0
@@ -37,7 +37,7 @@ define i64 @stsud_ri(i64 %0) {
 define i64 @stsud_riat(i64 %0) {
 ; CHECK-LABEL: stsud_riat:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    stsud.@ $r0 = $r0, 0xdeadbeef
+; CHECK-NEXT:    stsud $r0 = $r0, 0xdeadbeef.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call i64 @llvm.kvx.stsu.i64(i64 %0, i64 -2401053088876216593)
@@ -103,7 +103,7 @@ define <4 x i16> @stsuhqri(<4 x i16> %0) {
 define <4 x i16> @stsuhqriat(<4 x i16> %0) {
 ; CHECK-LABEL: stsuhqriat:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    stsuhq.@ $r0 = $r0, 0xc000f
+; CHECK-NEXT:    stsuhq $r0 = $r0, 0xc000f.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %0, <4 x i16> <i16 15, i16 12, i16 15, i16 12>)
@@ -351,7 +351,7 @@ define <2 x i32> @stsuwpri(<2 x i32> %0) {
 define <2 x i32> @stsuwpriat(<2 x i32> %0) {
 ; CHECK-LABEL: stsuwpriat:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    stsuwp.@ $r0 = $r0, 0x3e7
+; CHECK-NEXT:    stsuwp $r0 = $r0, 0x3e7.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %0, <2 x i32> <i32 999, i32 999>)

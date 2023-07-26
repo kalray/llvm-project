@@ -59,7 +59,7 @@ define <2 x i8> @ctlzv2i8(<2 x i8> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord.@ $r0 = $r0, 0x800000
+; CHECK-NEXT:    ord $r0 = $r0, 0x800000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -75,7 +75,7 @@ define <2 x i16> @ctlzv2i16(<2 x i16> %a) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord.@ $r0 = $r0, 0x8000
+; CHECK-NEXT:    ord $r0 = $r0, 0x8000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -113,8 +113,8 @@ define <4 x i8> @ctlzv4i8(<4 x i8> %a) {
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x800000004000000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord.@ $r0 = $r0, 0x800000
-; CHECK-NEXT:    ord.@ $r1 = $r1, 0x800000
+; CHECK-NEXT:    ord $r0 = $r0, 0x800000.@
+; CHECK-NEXT:    ord $r1 = $r1, 0x800000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
@@ -135,8 +135,8 @@ define <4 x i16> @ctlzv4i16(<4 x i16> %a) {
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x804000002010000
 ; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x8040000020100000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord.@ $r0 = $r0, 0x8000
-; CHECK-NEXT:    ord.@ $r1 = $r1, 0x8000
+; CHECK-NEXT:    ord $r0 = $r0, 0x8000.@
+; CHECK-NEXT:    ord $r1 = $r1, 0x8000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clzwp $r0 = $r0
 ; CHECK-NEXT:    clzwp $r1 = $r1
@@ -183,13 +183,13 @@ define <8 x i8> @ctlzv8i8(<8 x i8> %a) {
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x2000000010000000
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
-; CV1-NEXT:    ord.@ $r1 = $r1, 0x800000
+; CV1-NEXT:    ord $r1 = $r1, 0x800000.@
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x800000004000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord.@ $r0 = $r0, 0x800000
+; CV1-NEXT:    ord $r0 = $r0, 0x800000.@
 ; CV1-NEXT:    clzwp $r1 = $r1
-; CV1-NEXT:    ord.@ $r2 = $r2, 0x800000
-; CV1-NEXT:    ord.@ $r3 = $r3, 0x800000
+; CV1-NEXT:    ord $r2 = $r2, 0x800000.@
+; CV1-NEXT:    ord $r3 = $r3, 0x800000.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    clzwp $r2 = $r2
 ; CV1-NEXT:    clzwp $r3 = $r3
@@ -215,13 +215,13 @@ define <8 x i8> @ctlzv8i8(<8 x i8> %a) {
 ; CV2-NEXT:    sbmm8 $r2 = $r0, 0x2000000010000000
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x200000001000000
-; CV2-NEXT:    ord.@ $r1 = $r1, 0x800000
+; CV2-NEXT:    ord $r1 = $r1, 0x800000.@
 ; CV2-NEXT:    sbmm8 $r3 = $r0, 0x800000004000000
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    ord.@ $r0 = $r0, 0x800000
+; CV2-NEXT:    ord $r0 = $r0, 0x800000.@
 ; CV2-NEXT:    clzwp $r1 = $r1
-; CV2-NEXT:    ord.@ $r2 = $r2, 0x800000
-; CV2-NEXT:    ord.@ $r3 = $r3, 0x800000
+; CV2-NEXT:    ord $r2 = $r2, 0x800000.@
+; CV2-NEXT:    ord $r3 = $r3, 0x800000.@
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV2-NEXT:    clzwp $r2 = $r2
@@ -250,13 +250,13 @@ define <8 x i16> @ctlzv8i16(<8 x i16> %a) {
 ; CV1-NEXT:    sbmm8 $r2 = $r0, 0x8040000020100000
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x804000002010000
-; CV1-NEXT:    ord.@ $r2 = $r2, 0x8000
+; CV1-NEXT:    ord $r2 = $r2, 0x8000.@
 ; CV1-NEXT:    sbmm8 $r3 = $r1, 0x8040000020100000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord.@ $r0 = $r0, 0x8000
-; CV1-NEXT:    ord.@ $r1 = $r1, 0x8000
+; CV1-NEXT:    ord $r0 = $r0, 0x8000.@
+; CV1-NEXT:    ord $r1 = $r1, 0x8000.@
 ; CV1-NEXT:    clzwp $r2 = $r2
-; CV1-NEXT:    ord.@ $r3 = $r3, 0x8000
+; CV1-NEXT:    ord $r3 = $r3, 0x8000.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    clzwp $r0 = $r0
 ; CV1-NEXT:    clzwp $r3 = $r3
@@ -280,13 +280,13 @@ define <8 x i16> @ctlzv8i16(<8 x i16> %a) {
 ; CV2-NEXT:    sbmm8 $r2 = $r0, 0x8040000020100000
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x804000002010000
-; CV2-NEXT:    ord.@ $r2 = $r2, 0x8000
+; CV2-NEXT:    ord $r2 = $r2, 0x8000.@
 ; CV2-NEXT:    sbmm8 $r3 = $r1, 0x8040000020100000
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    ord.@ $r0 = $r0, 0x8000
-; CV2-NEXT:    ord.@ $r1 = $r1, 0x8000
+; CV2-NEXT:    ord $r0 = $r0, 0x8000.@
+; CV2-NEXT:    ord $r1 = $r1, 0x8000.@
 ; CV2-NEXT:    clzwp $r2 = $r2
-; CV2-NEXT:    ord.@ $r3 = $r3, 0x8000
+; CV2-NEXT:    ord $r3 = $r3, 0x8000.@
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    clzwp $r0 = $r0
 ; CV2-NEXT:    sbmm8 $r2 = $r2, 0x100001

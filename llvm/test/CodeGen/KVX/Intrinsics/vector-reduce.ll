@@ -3387,17 +3387,17 @@ define i64 @maxrbqd(<4 x i8> %0) {
 define i64 @maxrbvd(<32 x i8> %0) {
 ; CV1-LABEL: maxrbvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r4 = $r3, 8
 ; CV1-NEXT:    sllhqs $r5 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; CV1-NEXT:    maxhq $r4 = $r5, $r4
 ; CV1-NEXT:    sllhqs $r6 = $r2, 8
 ; CV1-NEXT:    sllhqs $r7 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    maxhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r4, 8
 ; CV1-NEXT:    maxhq $r5 = $r7, $r6
@@ -3407,10 +3407,10 @@ define i64 @maxrbvd(<32 x i8> %0) {
 ; CV1-NEXT:    srlhqs $r2 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ord $r0 = $r0, $r2
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    maxhq $r0 = $r0, $r1
@@ -3474,8 +3474,8 @@ define i64 @maxrbvd(<32 x i8> %0) {
 define i64 @maxrbxd(<16 x i8> %0) {
 ; CV1-LABEL: maxrbxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -4020,17 +4020,17 @@ define i64 @maxurbqd(<4 x i8> %0) {
 define i64 @maxurbvd(<32 x i8> %0) {
 ; CV1-LABEL: maxurbvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r4 = $r3, 8
 ; CV1-NEXT:    sllhqs $r5 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; CV1-NEXT:    maxuhq $r4 = $r5, $r4
 ; CV1-NEXT:    sllhqs $r6 = $r2, 8
 ; CV1-NEXT:    sllhqs $r7 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    maxuhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r4, 8
 ; CV1-NEXT:    maxuhq $r5 = $r7, $r6
@@ -4040,10 +4040,10 @@ define i64 @maxurbvd(<32 x i8> %0) {
 ; CV1-NEXT:    srlhqs $r2 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ord $r0 = $r0, $r2
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    maxuhq $r0 = $r0, $r1
@@ -4107,8 +4107,8 @@ define i64 @maxurbvd(<32 x i8> %0) {
 define i64 @maxurbxd(<16 x i8> %0) {
 ; CV1-LABEL: maxurbxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -4652,17 +4652,17 @@ define i64 @minrbqd(<4 x i8> %0) {
 define i64 @minrbvd(<32 x i8> %0) {
 ; CV1-LABEL: minrbvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r4 = $r3, 8
 ; CV1-NEXT:    sllhqs $r5 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; CV1-NEXT:    minhq $r4 = $r5, $r4
 ; CV1-NEXT:    sllhqs $r6 = $r2, 8
 ; CV1-NEXT:    sllhqs $r7 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    minhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r4, 8
 ; CV1-NEXT:    minhq $r5 = $r7, $r6
@@ -4672,10 +4672,10 @@ define i64 @minrbvd(<32 x i8> %0) {
 ; CV1-NEXT:    srlhqs $r2 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ord $r0 = $r0, $r2
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    minhq $r0 = $r0, $r1
@@ -4739,8 +4739,8 @@ define i64 @minrbvd(<32 x i8> %0) {
 define i64 @minrbxd(<16 x i8> %0) {
 ; CV1-LABEL: minrbxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -5283,17 +5283,17 @@ define i64 @minurbqd(<4 x i8> %0) {
 define i64 @minurbvd(<32 x i8> %0) {
 ; CV1-LABEL: minurbvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
-; CV1-NEXT:    andd.@ $r3 = $r3, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; CV1-NEXT:    andd $r3 = $r3, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r4 = $r3, 8
 ; CV1-NEXT:    sllhqs $r5 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; CV1-NEXT:    minuhq $r4 = $r5, $r4
 ; CV1-NEXT:    sllhqs $r6 = $r2, 8
 ; CV1-NEXT:    sllhqs $r7 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    minuhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r4, 8
 ; CV1-NEXT:    minuhq $r5 = $r7, $r6
@@ -5303,10 +5303,10 @@ define i64 @minurbvd(<32 x i8> %0) {
 ; CV1-NEXT:    srlhqs $r2 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ord $r0 = $r0, $r2
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    minuhq $r0 = $r0, $r1
@@ -5368,8 +5368,8 @@ define i64 @minurbvd(<32 x i8> %0) {
 define i64 @minurbxd(<16 x i8> %0) {
 ; CV1-LABEL: minurbxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    sllhqs $r2 = $r1, 8
 ; CV1-NEXT:    sllhqs $r3 = $r0, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -5842,7 +5842,7 @@ define i64 @andrbpd(<2 x i8> %0) {
 ;
 ; CV2-LABEL: andrbpd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sbmm8.@ $r0 = $r0, 0x1010201
+; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1010201.@
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andrbod $r0 = $r0
 ; CV2-NEXT:    ret

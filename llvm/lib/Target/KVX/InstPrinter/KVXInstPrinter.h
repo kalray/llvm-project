@@ -88,7 +88,14 @@ public:
   void printCoherencyMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   template <int Threshold = 1024>
-  void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printHexaBitsImm32(const MCInst *MI, unsigned OpNo, raw_ostream &O,
+                          bool SplatAt = false);
+
+  template <int Threshold = 1024>
+  void printHexaBitsImm32Splat(const MCInst *MI, unsigned OpNo,
+                               raw_ostream &O) {
+    return printHexaBitsImm32(MI, OpNo, O, true);
+  }
 
   void printCacheLevelMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 

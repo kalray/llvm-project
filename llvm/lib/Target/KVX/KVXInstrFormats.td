@@ -92,9 +92,10 @@ multiclass I <string asm,
          bit IsAtomicSwap = 0,
          int AddedComplex = 0> {
 
-    // Filter out Qindex for generating the asm string from Mods and keep it in the dag
-    defvar Mods = !filter(i, ModsAll, !ne(i, QindexMod));
+    // Filter out Qindex and Splat32Mod for generating the asm string from Mods and keep it in the dag
+    defvar Mods = !filter(i, ModsAll, !and(!ne(i, QindexMod),!ne(i, Splat32Mod)));
     defvar Qindex = !filter(i, ModsAll, !eq(i, QindexMod));
+    defvar Splat32 = !filter(i, ModsAll, !eq(i, Splat32Mod));
     defvar EmptyList = []<string>;
     defvar EmptyOutDag = !dag(outs, []<DAGOperand>, []<string>);
     defvar EmptyInDag = !dag(ins, []<DAGOperand>, []<string>);
@@ -164,12 +165,17 @@ multiclass I <string asm,
     defvar QindexStr = !if(!empty(Qindex), "", "$mod" # !cast<string>(!size(Mods)));
     defvar CC_Qindex_str = !if(!empty(CC), QindexStr, "$cond" # QindexStr # " $val ?");
 
+    if !and(!not(!empty(Splat32)), !not(!empty(Qindex))) then {
+      def : KVX_Error<"There should not be Splat32 and Qindex in the same instruction">;
+    }
+    defvar Splat32Str = !if(!empty(Splat32), "", "$mod" # !cast<string>(!size(Mods)));
+
     defvar OutStr = !cond(!empty(Out) : "",
                           true : " $r");
 
     defvar OpsStr = !cond(!empty(Ops): "",
                           !eq(!size(Ops), 1): " $op0",
-                          !eq(!size(Ops), 2): " $op0, $op1",
+                          !eq(!size(Ops), 2): " $op0, $op1" # Splat32Str,
                           !eq(!size(Ops), 3): " $op0, $op1, $op2");
 
     defvar MemOpStr = !cond(!empty(MemOps) : "",

@@ -1917,7 +1917,7 @@ define <4 x half> @test_copysign(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
-; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
+; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1935,7 +1935,7 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
+; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1961,7 +1961,7 @@ define <4 x half> @test_copysign_v4f64(<4 x half> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
+; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -1975,7 +1975,7 @@ define <4 x float> @test_copysign_extended(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_copysign_extended:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabshq $r0 = $r0
-; CHECK-NEXT:    andd.@ $r1 = $r1, 0x80008000
+; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r1 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -2421,8 +2421,8 @@ define <4 x half> @test_insertelement3(<4 x half> %a, half %x) #0 {
 define <4 x half> @test_insertelement(<4 x half> %a, half %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    sbmm8.@ $r1 = $r1, 0x2010201
-; CHECK-NEXT:    sbmm8.@ $r2 = $r2, 0x10001
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; CHECK-NEXT:    sbmm8 $r2 = $r2, 0x10001.@
 ; CHECK-NEXT:    make $r3 = 0x3000200010000
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compnhq.eq $r2 = $r3, $r2

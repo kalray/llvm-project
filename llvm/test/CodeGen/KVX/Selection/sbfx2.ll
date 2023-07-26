@@ -147,7 +147,7 @@ entry:
 define i64 @f2imm(i64 %b){
 ; CHECK-LABEL: f2imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfx2d.@ $r0 = $r0, 0x1beeeeef
+; CHECK-NEXT:    sbfx2d $r0 = $r0, 0x1beeeeef.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

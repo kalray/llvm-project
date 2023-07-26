@@ -185,7 +185,7 @@ define <4 x i8> @test_add_imm_0(<4 x i8> %a) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addhq.@ $r0 = $r0, 0x20001
+; CV1-NEXT:    addhq $r0 = $r0, 0x20001.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -205,7 +205,7 @@ define <4 x i8> @test_add_imm_1(<4 x i8> %a) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addhq.@ $r0 = $r0, 0x20001
+; CV1-NEXT:    addhq $r0 = $r0, 0x20001.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -246,7 +246,7 @@ define <4 x i8> @test_sub_imm(<4 x i8> %a) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addhq.@ $r0 = $r0, 0xfffeffff
+; CV1-NEXT:    addhq $r0 = $r0, 0xfffeffff.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -266,7 +266,7 @@ define <4 x i8> @test_sub_fromimm(<4 x i8> %a) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
+; CV1-NEXT:    sbfhq $r0 = $r0, 0x20001.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -719,7 +719,7 @@ define <4 x i8> @test_select_cc(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> 
 ; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.lt $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
+; CV1-NEXT:    andd $r2 = $r2, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.even $r2 ? $r0 = $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -1239,7 +1239,7 @@ define <4 x i8> @abdbo_ri(<4 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfhq.@ $r0 = $r0, 0x10000f
+; CV1-NEXT:    sbfhq $r0 = $r0, 0x10000f.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -1266,7 +1266,7 @@ define <4 x i8> @add_splat_const_op1(<4 x i8> %vx) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addhq.@ $r0 = $r0, 0x2a002a
+; CV1-NEXT:    addhq $r0 = $r0, 0x2a002a.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -1326,7 +1326,7 @@ define <4 x i8> @test_div_4(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srahqs $r1 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srlhqs $r1 = $r1, 6
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -1358,7 +1358,7 @@ define <4 x i8> @test_div_32(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srahqs $r1 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srlhqs $r1 = $r1, 3
 ; CV1-NEXT:    ;; # (end cycle 3)

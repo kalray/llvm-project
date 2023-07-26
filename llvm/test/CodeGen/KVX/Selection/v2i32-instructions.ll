@@ -584,7 +584,7 @@ entry:
 define <2 x i32> @shuffle_v2i32_1_1(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: shuffle_v2i32_1_1:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8.@ $r0 = $r0, 0x80402010
+; ALL-NEXT:    sbmm8 $r0 = $r0, 0x80402010.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
 entry:
@@ -712,7 +712,7 @@ entry:
 define <2 x i32> @shuffle_v2i32_3_3(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: shuffle_v2i32_3_3:
 ; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    sbmm8.@ $r0 = $r1, 0x80402010
+; ALL-NEXT:    sbmm8 $r0 = $r1, 0x80402010.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
 entry:
@@ -736,7 +736,7 @@ define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    ord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x1
+; V2-NEXT:    andd $r0 = $r0, 0x1.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = icmp eq <2 x i32> %0, zeroinitializer
@@ -786,7 +786,7 @@ define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.ne $r0 = $r0, $r1
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x1
+; V2-NEXT:    andd $r0 = $r0, 0x1.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <2 x i32> %1, %0
@@ -833,7 +833,7 @@ define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.eq $r0 = $r0, $r1
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    andd.@ $r0 = $r0, 0x1
+; V2-NEXT:    andd $r0 = $r0, 0x1.@
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %3 = or <2 x i32> %1, %0
@@ -906,7 +906,7 @@ define <2 x i32> @abdwp_ri_(<2 x i32> %0) {
 define <2 x i32> @abdwp_ri_at(<2 x i32> %0) {
 ; ALL-LABEL: abdwp_ri_at:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    abdwp.@ $r0 = $r0, 0xf
+; ALL-NEXT:    abdwp $r0 = $r0, 0xf.@
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 0)
   %2 = sub nsw <2 x i32> <i32 15, i32 15>, %0

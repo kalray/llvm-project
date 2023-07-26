@@ -33,7 +33,7 @@ entry:
 define <2 x i32> @maxwp_splat(<2 x i32> %a) {
 ; CHECK-LABEL: maxwp_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxwp.@ $r0 = $r0, 20
+; CHECK-NEXT:    maxwp $r0 = $r0, 20.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -57,7 +57,7 @@ entry:
 define <2 x i32> @maxuwp_splat(<2 x i32> %a) {
 ; CHECK-LABEL: maxuwp_splat:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    maxuwp.@ $r0 = $r0, 20
+; CHECK-NEXT:    maxuwp $r0 = $r0, 20.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

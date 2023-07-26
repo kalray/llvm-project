@@ -22,7 +22,7 @@ define i64 @anybo_eqz(<8 x i8> %0) {
 ; CV1-LABEL: anybo_eqz:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
-; CV1-NEXT:    andnd.@ $r1 = $r0, 0x80808080
+; CV1-NEXT:    andnd $r1 = $r0, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -64,17 +64,17 @@ define i64 @anybv_eqz(<32 x i8> %0) {
 ; CV1-LABEL: anybv_eqz:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r3 = $r3, 0xfefefefefefefeff
-; CV1-NEXT:    andnd.@ $r4 = $r3, 0x80808080
-; CV1-NEXT:    andnd.@ $r5 = $r2, 0x80808080
+; CV1-NEXT:    andnd $r4 = $r3, 0x80808080.@
+; CV1-NEXT:    andnd $r5 = $r2, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r1 = $r1, 0xfefefefefefefeff
 ; CV1-NEXT:    addd $r2 = $r2, 0xfefefefefefefeff
-; CV1-NEXT:    andnd.@ $r6 = $r1, 0x80808080
+; CV1-NEXT:    andnd $r6 = $r1, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
 ; CV1-NEXT:    andd $r2 = $r2, $r5
 ; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    andnd.@ $r7 = $r0, 0x80808080
+; CV1-NEXT:    andnd $r7 = $r0, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    andd $r0 = $r0, $r7
 ; CV1-NEXT:    andd $r1 = $r1, $r6
@@ -125,8 +125,8 @@ define i64 @anybx_eqz(<16 x i8> %0) {
 ; CV1-LABEL: anybx_eqz:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r1 = $r1, 0xfefefefefefefeff
-; CV1-NEXT:    andnd.@ $r2 = $r1, 0x80808080
-; CV1-NEXT:    andnd.@ $r3 = $r0, 0x80808080
+; CV1-NEXT:    andnd $r2 = $r1, 0x80808080.@
+; CV1-NEXT:    andnd $r3 = $r0, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r0 = $r0, 0xfefefefefefefeff
 ; CV1-NEXT:    andd $r1 = $r1, $r2

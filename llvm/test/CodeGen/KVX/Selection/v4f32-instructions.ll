@@ -1741,8 +1741,8 @@ define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
-; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; CHECK-NEXT:    andd $r2 = $r2, 0x80000000.@
+; CHECK-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -1760,8 +1760,8 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fabswp $r1 = $r1
-; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
-; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_1-NEXT:    andd $r2 = $r3, 0x80000000.@
+; KV3_1-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ord $r1 = $r1, $r2
@@ -1775,8 +1775,8 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
-; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_2-NEXT:    andd $r2 = $r3, 0x80000000.@
+; KV3_2-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r2
@@ -1800,10 +1800,10 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fnarrowdwp $r2 = $r4r5
-; KV3_1-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; KV3_1-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    ord $r1 = $r1, $r3
-; KV3_1-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; KV3_1-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r2
 ; KV3_1-NEXT:    ret
@@ -1821,10 +1821,10 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_2-NEXT:    fnarrowdwp $r3 = $r6r7
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    fnarrowdwp $r2 = $r4r5
-; KV3_2-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; KV3_2-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    ord $r1 = $r1, $r3
-; KV3_2-NEXT:    andd.@ $r2 = $r2, 0x80000000
+; KV3_2-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
@@ -1839,8 +1839,8 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    fabswp $r1 = $r1
-; CHECK-NEXT:    andd.@ $r2 = $r2, 0x80000000
-; CHECK-NEXT:    andd.@ $r3 = $r3, 0x80000000
+; CHECK-NEXT:    andd $r2 = $r2, 0x80000000.@
+; CHECK-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ord $r0 = $r0, $r2
 ; CHECK-NEXT:    ord $r1 = $r1, $r3
@@ -1865,8 +1865,8 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fabswp $r0 = $r0
 ; KV3_1-NEXT:    fabswp $r1 = $r1
-; KV3_1-NEXT:    andd.@ $r2 = $r3, 0x80000000
-; KV3_1-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_1-NEXT:    andd $r2 = $r3, 0x80000000.@
+; KV3_1-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    ord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ord $r1 = $r1, $r2
@@ -1880,8 +1880,8 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    fwidenmhwp $r3 = $r2
 ; KV3_2-NEXT:    fwidenlhwp $r4 = $r2
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd.@ $r2 = $r3, 0x80000000
-; KV3_2-NEXT:    andd.@ $r3 = $r4, 0x80000000
+; KV3_2-NEXT:    andd $r2 = $r3, 0x80000000.@
+; KV3_2-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    ord $r0 = $r0, $r3
 ; KV3_2-NEXT:    ord $r1 = $r1, $r2
