@@ -12,6 +12,7 @@
 ; CHECK-NEXT: Profile summary info
 ; CHECK-NEXT: Create Garbage Collector Module Metadata
 ; CHECK-NEXT: Machine Branch Probability Analysis
+; CHECK-NEXT: Default Regalloc Eviction Advisor
 ; CHECK-NEXT: ModulePass Manager
 ; CHECK-NEXT: Pre-ISel Intrinsic Lowering
 ; CHECK-NEXT: FunctionPass Manager
@@ -37,25 +38,22 @@
 ; CHECK-NEXT: Shadow Stack GC Lowering
 ; CHECK-NEXT: Lower constant intrinsics
 ; CHECK-NEXT: Remove unreachable blocks from the CFG
-; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Natural Loop Information
 ; CHECK-NEXT: Post-Dominator Tree Construction
 ; CHECK-NEXT: Branch Probability Analysis
 ; CHECK-NEXT: Block Frequency Analysis
 ; CHECK-NEXT: Constant Hoisting
+; CHECK-NEXT: Replace intrinsics with calls to vector library
 ; CHECK-NEXT: Partially inline calls to library functions
-; CHECK-NEXT: Instrument function entry/exit with calls to e.g. mcount() (post inlining)
+; CHECK-NEXT: Expand vector predication intrinsics
 ; CHECK-NEXT: Scalarize Masked Memory Intrinsics
 ; CHECK-NEXT: Expand reduction intrinsics
-; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Natural Loop Information
+; CHECK-NEXT: TLS Variable Hoist
 ; CHECK-NEXT: CodeGen Prepare
-; CHECK-NEXT: Rewrite Symbols
-; CHECK-NEXT: FunctionPass Manager
 ; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Exception handling preparation
-; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Natural Loop Information
 ; CHECK-NEXT: Scalar Evolution Analysis
 ; CHECK-NEXT: Lazy Branch Probability Analysis
@@ -63,6 +61,7 @@
 ; CHECK-NEXT: Optimization Remark Emitter
 ; CHECK-NEXT: Hardware Loop Insertion
 ; CHECK-NEXT: KVX Hardware loops Prepare
+; CHECK-NEXT: KVX CodeGen Prepare
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
 ; CHECK-NEXT: Module Verifier
@@ -89,6 +88,7 @@
 ; CHECK-NEXT: Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Common Subexpression Elimination
 ; CHECK-NEXT: MachinePostDominator Tree Construction
+; CHECK-NEXT: Machine Cycle Info Analysis
 ; CHECK-NEXT: Machine code sinking
 ; CHECK-NEXT: Peephole Optimizations
 ; CHECK-NEXT: Remove dead machine instructions
@@ -128,9 +128,11 @@
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: Greedy Register Allocator
 ; CHECK-NEXT: Virtual Register Rewriter
+; CHECK-NEXT: Register Allocation Pass Scoring
 ; CHECK-NEXT: Stack Slot Coloring
 ; CHECK-NEXT: Machine Copy Propagation Pass
 ; CHECK-NEXT: Machine Loop Invariant Code Motion
+; CHECK-NEXT: Remove Redundant DEBUG_VALUE analysis
 ; CHECK-NEXT: Fixup Statepoint Caller Saved
 ; CHECK-NEXT: PostRA Machine Sink
 ; CHECK-NEXT: Machine Block Frequency Analysis
@@ -168,6 +170,7 @@
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
+; CHECK-NEXT: Insert CFI remember/restore state instructions
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: KVX Assembly Printer

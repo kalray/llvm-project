@@ -19,11 +19,9 @@
 ; CHECK-NEXT: Shadow Stack GC Lowering
 ; CHECK-NEXT: Lower constant intrinsics
 ; CHECK-NEXT: Remove unreachable blocks from the CFG
-; CHECK-NEXT: Instrument function entry/exit with calls to e.g. mcount() (post inlining)
+; CHECK-NEXT: Expand vector predication intrinsics
 ; CHECK-NEXT: Scalarize Masked Memory Intrinsics
 ; CHECK-NEXT: Expand reduction intrinsics
-; CHECK-NEXT: Rewrite Symbols
-; CHECK-NEXT: FunctionPass Manager
 ; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Exception handling preparation
 ; CHECK-NEXT: Safe Stack instrumentation pass
@@ -44,6 +42,7 @@
 ; CHECK-NEXT: Eliminate PHI nodes for register allocation
 ; CHECK-NEXT: Two-Address instruction pass
 ; CHECK-NEXT: Fast Register Allocator
+; CHECK-NEXT: Remove Redundant DEBUG_VALUE analysis
 ; CHECK-NEXT: Fixup Statepoint Caller Saved
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
@@ -60,6 +59,7 @@
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
+; CHECK-NEXT: Insert CFI remember/restore state instructions
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: KVX Assembly Printer

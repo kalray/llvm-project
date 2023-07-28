@@ -54,6 +54,7 @@
 ; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Dominator Tree Construction
 ; CHECK-NEXT: Exception handling preparation
+; CHECK-NEXT: KVX CodeGen Prepare
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
 ; CHECK-NEXT: Module Verifier
@@ -150,6 +151,7 @@
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
+; CHECK-NEXT: Insert CFI remember/restore state instructions
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: KVX Assembly Printer

@@ -72,8 +72,8 @@ define <8 x i8> @insert_lower_v8i8(<4 x i8> %0, <8 x i8> %1) {
   ret <8 x i8> %4
 }
 
-define <8 x i8> @insert_higqer_v8i8(<4 x i8> %0, <8 x i8> %1) {
-; CHECK-LABEL: insert_higqer_v8i8:
+define <8 x i8> @insert_higher_v8i8(<4 x i8> %0, <8 x i8> %1) {
+; CHECK-LABEL: insert_higher_v8i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r0, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
