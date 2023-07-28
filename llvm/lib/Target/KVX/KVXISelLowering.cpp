@@ -1515,7 +1515,6 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     auto Lower = DAG.getNode(Opcode, Loc, VT, Halfs.first);
     auto Upper = DAG.getNode(Opcode, Loc, VT, Halfs.second);
     SDValue R = DAG.getNode(ISD::ADD, Loc, VT, {Lower, Upper});
-    R->print(errs());
     return R;
   }
   case ISD::ADD: { // TODO: Add v4i64
@@ -4122,7 +4121,7 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
         Ptr, Lv, SizeInfo, Cond, VariantMod, ScalarcondMod, LsomaskMod, Chain};
 
     auto *New = DAG.getMachineNode(InstrID, SDLoc(Op),
-                                   {Lv.getValueType(), MVT::Other}, NewOps);
+                                   {Op->getValueType(0), MVT::Other}, NewOps);
     return SDValue(New, 0);
   }
   }
