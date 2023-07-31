@@ -540,7 +540,8 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
                                              const Instruction *I) {
 #define assertM(COND, TXT)                                                     \
   if (!(COND)) {                                                               \
-    llvm::errs() << TXT << '\n';                                               \
+    errs() << TXT << ":" << *Src << " == (" << Opcode << ") ==> " << *Dst      \
+           << '\n';                                                            \
     abort();                                                                   \
   }
   // Sanity check

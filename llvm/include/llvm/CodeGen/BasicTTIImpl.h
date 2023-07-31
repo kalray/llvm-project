@@ -2327,9 +2327,10 @@ public:
     InstructionCost RedCost = thisT()->getArithmeticReductionCost(
         Instruction::Add, ExtTy, None, CostKind);
     InstructionCost MulCost = 0;
+    unsigned ExtOp =
+        CastInst::getCastOpcode(Ty, !IsUnsigned, ExtTy, !IsUnsigned);
     InstructionCost ExtCost = thisT()->getCastInstrCost(
-        IsUnsigned ? Instruction::ZExt : Instruction::SExt, ExtTy, Ty,
-        TTI::CastContextHint::None, CostKind);
+        ExtOp, ExtTy, Ty, TTI::CastContextHint::None, CostKind);
     if (IsMLA) {
       MulCost =
           thisT()->getArithmeticInstrCost(Instruction::Mul, ExtTy, CostKind);

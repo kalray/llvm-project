@@ -5808,6 +5808,26 @@ static bool isAlternateInstruction(const Instruction *I,
   return I->getOpcode() == AltOp->getOpcode();
 }
 
+static bool updatedCast(Type *Src, Type *Dst, unsigned &Opcode) {
+  bool Signed = false;
+  switch (Opcode) {
+  case Instruction::SExt:
+    Signed = true;
+    break;
+  case Instruction::Trunc:
+  case Instruction::ZExt:
+  case Instruction::FPTrunc:
+  case Instruction::FPExt:
+    break;
+  default:
+    return false;
+  }
+  unsigned NewOpcode = CastInst::getCastOpcode(Src, Signed, Dst, Signed);
+  bool R = Opcode != NewOpcode;
+  Opcode = NewOpcode;
+  return R;
+}
+
 InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
                                       ArrayRef<Value *> VectorizedVals) {
   ArrayRef<Value*> VL = E->Scalars;
@@ -5821,12 +5841,14 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
     ScalarTy = IE->getOperand(1)->getType();
   auto *VecTy = FixedVectorType::get(ScalarTy, VL.size());
   TTI::TargetCostKind CostKind = TTI::TCK_RecipThroughput;
-
+  bool ReducedType = false;
   // If we have computed a smaller type for the expression, update VecTy so
   // that the costs will be accurate.
-  if (MinBWs.count(VL[0]))
+  if (MinBWs.count(VL[0])) {
     VecTy = FixedVectorType::get(
         IntegerType::get(F->getContext(), MinBWs[VL[0]].first), VL.size());
+        ReducedType = true;
+  }
   unsigned EntryVF = E->getVectorFactor();
   auto *FinalVecTy = FixedVectorType::get(VecTy->getElementType(), EntryVF);
 
@@ -6294,16 +6316,17 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
       InstructionCost VecCost = 0;
       // Check if the values are candidates to demote.
       if (!MinBWs.count(VL0) || VecTy != SrcVecTy) {
+        // Quick fix for https://github.com/llvm/llvm-project/issues/64252
         // If we have computed a smaller type for the expression, the update
         // VecTy may happen to be smaller/equal sized than a ext/cast value.
         // Update Opcode accordingly. Avoid passing the instruction if changed.
-        unsigned Opcode = ShuffleOrOp;
+
+        unsigned Opcode = E->getOpcode();
         Instruction *CastIstr = VL0;
-        if (VecTy->getScalarSizeInBits() <= SrcVecTy->getScalarSizeInBits()) {
-          Opcode = CastInst::getCastOpcode(VecTy, false, SrcVecTy, false);
-          if (Opcode != ShuffleOrOp)
+        if (ReducedType)
+          if (updatedCast(SrcVecTy, VecTy, Opcode))
             CastIstr = nullptr;
-        }
+
         VecCost = CommonCost + TTI->getCastInstrCost(
                                    Opcode, VecTy, SrcVecTy,
                                    TTI::getCastContextHint(VL0), CostKind, CastIstr);
@@ -6582,23 +6605,15 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
             cast<CmpInst>(E->getAltOp())->getPredicate(), CostKind,
             E->getAltOp());
       } else {
-        auto Op = E->getOpcode();
-        bool Signed = false;
-        switch (Op){
-          case Instruction::SExt:
-          case Instruction::FPToSI:
-          case Instruction::SIToFP:
-            Signed = true;
-        }
         Type *Src0SclTy = E->getMainOp()->getOperand(0)->getType();
         Type *Src1SclTy = E->getAltOp()->getOperand(0)->getType();
         auto *Src0Ty = FixedVectorType::get(Src0SclTy, VL.size());
         auto *Src1Ty = FixedVectorType::get(Src1SclTy, VL.size());
-        Op = CastInst::getCastOpcode(Src0Ty, Signed, VecTy, Signed);
-        VecCost = TTI->getCastInstrCost(Op, VecTy, Src0Ty,
+        VecCost = (VecTy == Src0Ty) ? 0 :
+          TTI->getCastInstrCost(E->getOpcode(), VecTy, Src0Ty,
                                         TTI::CastContextHint::None, CostKind);
-        Op = CastInst::getCastOpcode(Src1Ty, Signed, VecTy, Signed);
-        VecCost += TTI->getCastInstrCost(Op, VecTy, Src1Ty,
+        VecCost += (VecTy == Src1Ty) ? 0 :
+          TTI->getCastInstrCost(E->getAltOpcode(), VecTy, Src1Ty,
                                          TTI::CastContextHint::None, CostKind);
       }
 

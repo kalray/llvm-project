@@ -1,6 +1,15 @@
 ; This not failing is enough
 ; RUN: opt -slp-vectorizer -S --disable-symbolication %s
 
+; RUN: opt -mcpu=kv3-1 -loop-vectorize --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 -loop-vectorize --disable-symbolication -S %s
+
+; RUN: opt -mcpu=kv3-1 -loop-vectorize --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 -loop-vectorize --disable-symbolication -S %s
+
+; RUN: opt -mcpu=kv3-1 --aggressive-instcombine --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 --aggressive-instcombine --disable-symbolication -S %s
+
 target triple = "kvx-kalray-cos"
 
 @b = global i32 0
@@ -60,3 +69,133 @@ for.cond:
   br label %for.cond
 }
 
+@z = global ptr null
+@c2 = global i32 0
+
+define i32 @d() {
+  %1 = load i32, ptr @a
+  %2 = icmp eq i32 %1, 0
+  br i1 %2, label %19, label %3
+
+3:
+  %4 = load ptr, ptr @z
+  %5 = sext i32 %1 to i64
+  br label %6
+
+6:
+  %7 = phi i64 [ %5, %3 ], [ %14, %6 ]
+  %8 = phi i32 [ undef, %3 ], [ %13, %6 ]
+  %9 = getelementptr inbounds i32, ptr %4, i64 %7
+  %10 = load i32, ptr %9
+  %11 = trunc i64 %7 to i32
+  %12 = mul i32 %10, %11
+  %13 = add i32 %12, %8
+  %14 = add nsw i64 %7, 1
+  %15 = trunc i64 %14 to i32
+  store i32 %15, ptr @a
+  %16 = icmp eq i32 %15, 0
+  br i1 %16, label %17, label %6
+
+17:
+  %18 = phi i32 [ %13, %6 ]
+  br label %19
+
+19:
+  %20 = phi i32 [ undef, %0 ], [ %18, %17 ]
+  store i32 %20, ptr @c2
+  ret i32 undef
+}
+
+@a3 = global float 0.000000e+00
+@b3 = global i32 0
+
+define i32 @agressiveinstcombine() {
+  %1 = load float, ptr @a3
+  %2 = fptosi float %1 to i32
+  %3 = call i32 @llvm.smin.i32(i32 %2, i32 127)
+  %4 = call i32 @llvm.smax.i32(i32 %3, i32 -128)
+  store i32 %4, ptr @b3
+  ret i32 undef
+}
+
+declare i32 @llvm.smin.i32(i32, i32)
+
+declare i32 @llvm.smax.i32(i32, i32)
+
+@bb = global i32 0, align 4
+@zz = global ptr null, align 8
+
+define i32 @foo() {
+entry:
+  %.pr = load i32, ptr @bb, align 4
+  %tobool.not4 = icmp eq i32 %.pr, 0
+  br i1 %tobool.not4, label %for.end, label %for.body.lr.ph
+
+for.body.lr.ph:
+  %0 = load ptr, ptr @zz, align 8
+  %1 = sext i32 %.pr to i64
+  br label %for.body
+
+for.body:
+  %indvars.iv = phi i64 [ %1, %for.body.lr.ph ], [ %indvars.iv.next, %for.body ]
+  %c.05 = phi i32 [ undef, %for.body.lr.ph ], [ %spec.select, %for.body ]
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
+  %2 = load i32, ptr %arrayidx, align 4
+  %tobool1.not = icmp ne i32 %2, 0
+  %inc = zext i1 %tobool1.not to i32
+  %spec.select = add nsw i32 %c.05, %inc
+  %indvars.iv.next = add nsw i64 %indvars.iv, 1
+  %3 = trunc i64 %indvars.iv.next to i32
+  store i32 %3, ptr @bb, align 4
+  %tobool.not = icmp eq i32 %3, 0
+  br i1 %tobool.not, label %for.end.loopexit, label %for.body
+
+for.end.loopexit:
+  %spec.select.lcssa = phi i32 [ %spec.select, %for.body ]
+  br label %for.end
+
+for.end:
+  %c.0.lcssa = phi i32 [ undef, %entry ], [ %spec.select.lcssa, %for.end.loopexit ]
+  ret i32 %c.0.lcssa
+}
+
+define void @loopvecfail() {
+entry:
+  br label %for.body
+
+for.body:                                         ; preds = %for.body, %entry
+  %indvars.iv = phi i64 [ undef, %entry ], [ %indvars.iv.next, %for.body ]
+  %c.05 = phi i32 [ undef, %entry ], [ %spec.select, %for.body ]
+  %inc = zext i1 undef to i32
+  %spec.select = add nsw i32 %c.05, %inc
+  %indvars.iv.next = add nsw i64 %indvars.iv, 1
+  %0 = trunc i64 %indvars.iv.next to i32
+  %tobool.not = icmp eq i32 %0, 0
+  br i1 %tobool.not, label %for.end.loopexit, label %for.body
+
+for.end.loopexit:                                 ; preds = %for.body
+  %spec.select.lcssa = phi i32 [ %spec.select, %for.body ]
+  ret void
+}
+
+define i32 @slpfail() {
+entry:
+  %rem.1 = srem i32 undef, 2
+  %idxprom.1 = sext i32 %rem.1 to i64
+  %arrayidx.1 = getelementptr inbounds i16, ptr @c, i64 %idxprom.1
+  %rem.6 = srem i32 undef, 2
+  %idxprom.6 = sext i32 %rem.6 to i64
+  %arrayidx.6 = getelementptr inbounds i16, ptr @c, i64 %idxprom.6
+  unreachable
+}
+
+define fastcc void @Fax3Encode2DRow(ptr %rp) #0 {
+entry:
+  %idxprom = zext i32 undef to i64
+  %arrayidx18 = getelementptr inbounds i8, ptr %rp, i64 %idxprom
+  %idx.ext.i150 = sext i32 0 to i64
+  %add.ptr.i151 = getelementptr inbounds i8, ptr %rp, i64 %idx.ext.i150
+  unreachable
+}
+
+attributes #0 = { "stack-protector-buffer-size"="8" }
