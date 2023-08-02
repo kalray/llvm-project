@@ -1,11 +1,9 @@
 ; This not failing is enough
-; RUN: opt -slp-vectorizer -S --disable-symbolication %s
-
 ; RUN: opt -mcpu=kv3-1 -loop-vectorize --disable-symbolication -S %s
 ; RUN: opt -mcpu=kv3-2 -loop-vectorize --disable-symbolication -S %s
 
-; RUN: opt -mcpu=kv3-1 -loop-vectorize --disable-symbolication -S %s
-; RUN: opt -mcpu=kv3-2 -loop-vectorize --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-1 -slp-vectorizer --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 -slp-vectorizer --disable-symbolication -S %s
 
 ; RUN: opt -mcpu=kv3-1 --aggressive-instcombine --disable-symbolication -S %s
 ; RUN: opt -mcpu=kv3-2 --aggressive-instcombine --disable-symbolication -S %s

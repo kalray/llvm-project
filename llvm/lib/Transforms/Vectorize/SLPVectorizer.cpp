@@ -5808,10 +5808,16 @@ static bool isAlternateInstruction(const Instruction *I,
   return I->getOpcode() == AltOp->getOpcode();
 }
 
+// This resolves the cast opcode for when we decide it is possible to operate
+// with less bits than the original type. Fixes upstream bug and should be
+// reverted when conflicted with upstream commit:
+// 0a68cd23049de778a4440168c855aff38f202940 .
 static bool updatedCast(Type *Src, Type *Dst, unsigned &Opcode) {
   bool Signed = false;
   switch (Opcode) {
   case Instruction::SExt:
+  case Instruction::FPToSI:
+  case Instruction::SIToFP:
     Signed = true;
     break;
   case Instruction::Trunc:
@@ -5841,13 +5847,12 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
     ScalarTy = IE->getOperand(1)->getType();
   auto *VecTy = FixedVectorType::get(ScalarTy, VL.size());
   TTI::TargetCostKind CostKind = TTI::TCK_RecipThroughput;
-  bool ReducedType = false;
   // If we have computed a smaller type for the expression, update VecTy so
   // that the costs will be accurate.
-  if (MinBWs.count(VL[0])) {
-    VecTy = FixedVectorType::get(
-        IntegerType::get(F->getContext(), MinBWs[VL[0]].first), VL.size());
-        ReducedType = true;
+  auto It = MinBWs.find(VL.front());
+  if (It != MinBWs.end()) {
+    ScalarTy = IntegerType::get(F->getContext(), It->second.first);
+    VecTy = FixedVectorType::get(ScalarTy, VL.size());
   }
   unsigned EntryVF = E->getVectorFactor();
   auto *FinalVecTy = FixedVectorType::get(VecTy->getElementType(), EntryVF);
@@ -5939,6 +5944,16 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
       return 0;
     if (isa<InsertElementInst>(VL[0]))
       return InstructionCost::getInvalid();
+    // The gather nodes use small bitwidth only if all operands use the same
+    // bitwidth. Otherwise - use the original one.
+    if (It != MinBWs.end() && any_of(VL.drop_front(), [&](Value *V) {
+          auto VIt = MinBWs.find(V);
+          return VIt == MinBWs.end() || VIt->second.first != It->second.first ||
+                 VIt->second.second != It->second.second;
+        })) {
+      ScalarTy = VL.front()->getType();
+      VecTy = FixedVectorType::get(ScalarTy, VL.size());
+    }
     SmallVector<int> Mask;
     SmallVector<const TreeEntry *> Entries;
     Optional<TargetTransformInfo::ShuffleKind> Shuffle =
@@ -6301,10 +6316,19 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
     case Instruction::Trunc:
     case Instruction::FPTrunc:
     case Instruction::BitCast: {
-      Type *SrcTy = VL0->getOperand(0)->getType();
+      unsigned CastOpcode = ShuffleOrOp;
+      Instruction *CastIstr = VL0;
+      Type *SrcScalarTy = VL0->getOperand(0)->getType();
+      // Quick fix for https://github.com/llvm/llvm-project/issues/64252
+      // If we have computed a smaller type for the expression, the update
+      // VecTy may happen to be smaller/equal sized than a ext/cast value.
+      // Update Opcode accordingly. Avoid passing the instruction if changed.
+      if (updatedCast(SrcScalarTy, ScalarTy, CastOpcode))
+        CastIstr = nullptr;
+
       InstructionCost ScalarEltCost =
-          TTI->getCastInstrCost(E->getOpcode(), ScalarTy, SrcTy,
-                                TTI::getCastContextHint(VL0), CostKind, VL0);
+          TTI->getCastInstrCost(CastOpcode, ScalarTy, SrcScalarTy,
+                                TTI::getCastContextHint(VL0), CostKind, CastIstr);
       if (NeedToShuffleReuses) {
         CommonCost -= (EntryVF - VL.size()) * ScalarEltCost;
       }
@@ -6312,23 +6336,13 @@ InstructionCost BoUpSLP::getEntryCost(const TreeEntry *E,
       // Calculate the cost of this instruction.
       InstructionCost ScalarCost = VL.size() * ScalarEltCost;
 
-      auto *SrcVecTy = FixedVectorType::get(SrcTy, VL.size());
+      auto *SrcVecTy = FixedVectorType::get(SrcScalarTy, VL.size());
       InstructionCost VecCost = 0;
       // Check if the values are candidates to demote.
       if (!MinBWs.count(VL0) || VecTy != SrcVecTy) {
-        // Quick fix for https://github.com/llvm/llvm-project/issues/64252
-        // If we have computed a smaller type for the expression, the update
-        // VecTy may happen to be smaller/equal sized than a ext/cast value.
-        // Update Opcode accordingly. Avoid passing the instruction if changed.
-
-        unsigned Opcode = E->getOpcode();
-        Instruction *CastIstr = VL0;
-        if (ReducedType)
-          if (updatedCast(SrcVecTy, VecTy, Opcode))
-            CastIstr = nullptr;
 
         VecCost = CommonCost + TTI->getCastInstrCost(
-                                   Opcode, VecTy, SrcVecTy,
+                                   CastOpcode, VecTy, SrcVecTy,
                                    TTI::getCastContextHint(VL0), CostKind, CastIstr);
       }
       LLVM_DEBUG(dumpTreeCosts(E, CommonCost, VecCost, ScalarCost));
