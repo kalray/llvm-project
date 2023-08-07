@@ -2999,111 +2999,43 @@ define <16 x i16> @mul_add_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1, <16 x i16
 }
 
 define <32 x i8> @mul_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1) {
-; V1-LABEL: mul_v32i8_v32i8:
-; V1:       # %bb.0:
-; V1-NEXT:    sxmbhq $r8 = $r0
-; V1-NEXT:    sxmbhq $r9 = $r4
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r4 = $r4
-; V1-NEXT:    mulhq $r8 = $r9, $r8
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    mulhq $r0 = $r4, $r0
-; V1-NEXT:    sxmbhq $r4 = $r1
-; V1-NEXT:    sxmbhq $r9 = $r5
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    mulhq $r4 = $r9, $r4
-; V1-NEXT:    sxlbhq $r5 = $r5
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    mulhq $r1 = $r5, $r1
-; V1-NEXT:    sbmm8 $r5 = $r8, 0x40100401
-; V1-NEXT:    sxmbhq $r8 = $r2
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    sxmbhq $r9 = $r6
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    sxlbhq $r6 = $r6
-; V1-NEXT:    mulhq $r8 = $r9, $r8
-; V1-NEXT:    sxmbhq $r9 = $r7
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    mulhq $r2 = $r6, $r2
-; V1-NEXT:    sxlbhq $r3 = $r3
-; V1-NEXT:    sxmbhq $r6 = $r3
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V1-NEXT:    mulhq $r6 = $r9, $r6
-; V1-NEXT:    sxlbhq $r7 = $r7
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    mulhq $r3 = $r7, $r3
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    insf $r0 = $r5, 63, 32
-; V1-NEXT:    insf $r1 = $r4, 63, 32
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V1-NEXT:    sbmm8 $r4 = $r8, 0x40100401
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    sbmm8 $r5 = $r6, 0x40100401
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    insf $r2 = $r4, 63, 32
-; V1-NEXT:    insf $r3 = $r5, 63, 32
-; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 13)
-;
-; V2-LABEL: mul_v32i8_v32i8:
-; V2:       # %bb.0:
-; V2-NEXT:    sxlbhq $r0 = $r0
-; V2-NEXT:    sxlbhq $r4 = $r4
-; V2-NEXT:    sxmbhq $r8 = $r0
-; V2-NEXT:    sxmbhq $r9 = $r4
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxlbhq $r5 = $r5
-; V2-NEXT:    mulhq $r8 = $r9, $r8
-; V2-NEXT:    sxmbhq $r9 = $r5
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    mulhq $r0 = $r4, $r0
-; V2-NEXT:    sxlbhq $r1 = $r1
-; V2-NEXT:    sxmbhq $r4 = $r1
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    mulhq $r4 = $r9, $r4
-; V2-NEXT:    sxlbhq $r6 = $r6
-; V2-NEXT:    sxmbhq $r9 = $r6
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V2-NEXT:    mulhq $r1 = $r5, $r1
-; V2-NEXT:    sxlbhq $r2 = $r2
-; V2-NEXT:    sxmbhq $r5 = $r2
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V2-NEXT:    mulhq $r5 = $r9, $r5
-; V2-NEXT:    sxlbhq $r7 = $r7
-; V2-NEXT:    sxmbhq $r9 = $r7
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V2-NEXT:    mulhq $r2 = $r6, $r2
-; V2-NEXT:    sxlbhq $r3 = $r3
-; V2-NEXT:    sxmbhq $r6 = $r3
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    insf $r1 = $r4, 63, 32
-; V2-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V2-NEXT:    mulhq $r6 = $r9, $r6
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V2-NEXT:    mulhq $r3 = $r7, $r3
-; V2-NEXT:    sbmm8 $r7 = $r8, 0x40100401
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    insf $r0 = $r7, 63, 32
-; V2-NEXT:    insf $r2 = $r5, 63, 32
-; V2-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    insf $r3 = $r6, 63, 32
-; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 11)
+; CHECK-LABEL: mul_v32i8_v32i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    mulhq $r0 = $r4, $r0
+; CHECK-NEXT:    srlhqs $r4 = $r1, 8
+; CHECK-NEXT:    srlhqs $r8 = $r0, 8
+; CHECK-NEXT:    andd.@ $r9 = $r4, 0xff00ff00
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    mulhq $r8 = $r9, $r8
+; CHECK-NEXT:    andd.@ $r9 = $r5, 0xff00ff00
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; CHECK-NEXT:    mulhq $r4 = $r9, $r4
+; CHECK-NEXT:    andd.@ $r9 = $r6, 0xff00ff00
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ord $r0 = $r0, $r8
+; CHECK-NEXT:    mulhq $r1 = $r5, $r1
+; CHECK-NEXT:    srlhqs $r5 = $r2, 8
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    mulhq $r5 = $r9, $r5
+; CHECK-NEXT:    andd.@ $r9 = $r7, 0xff00ff00
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CHECK-NEXT:    mulhq $r2 = $r6, $r2
+; CHECK-NEXT:    srlhqs $r6 = $r3, 8
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ord $r1 = $r1, $r4
+; CHECK-NEXT:    mulhq $r3 = $r7, $r3
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0xff00ff
+; CHECK-NEXT:    mulhq $r6 = $r9, $r6
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ord $r2 = $r2, $r5
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ord $r3 = $r3, $r6
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 9)
   %3 = mul <32 x i8> %1, %0
   ret <32 x i8> %3
 }
@@ -3111,97 +3043,77 @@ define <32 x i8> @mul_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1) {
 define <32 x i8> @mul_v32i8_i8(<32 x i8> %0, i8 %1) {
 ; V1-LABEL: mul_v32i8_i8:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x1010101
-; V1-NEXT:    sxmbhq $r5 = $r0
+; V1-NEXT:    sbmm8.@ $r4 = $r4, 0x1010101
+; V1-NEXT:    srlhqs $r5 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x8000400020001
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    mulhq $r5 = $r4, $r5
-; V1-NEXT:    sxmbhq $r6 = $r1
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    mulhq $r0 = $r4, $r0
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    sxmbhq $r7 = $r2
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sxlbhq $r3 = $r3
-; V1-NEXT:    mulhq $r6 = $r4, $r6
-; V1-NEXT:    sxmbhq $r8 = $r3
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    andd.@ $r6 = $r4, 0xff00ff00
+; V1-NEXT:    srlhqs $r7 = $r1, 8
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    mulhq $r1 = $r4, $r1
-; V1-NEXT:    sbmm8 $r5 = $r5, 0x40100401
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; V1-NEXT:    srlhqs $r2 = $r2, 8
+; V1-NEXT:    mulhq $r8 = $r4, $r2
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; V1-NEXT:    srlhqs $r3 = $r3, 8
+; V1-NEXT:    mulhq $r4 = $r4, $r3
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    mulhq $r5 = $r6, $r5
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    insf $r0 = $r5, 63, 32
-; V1-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V1-NEXT:    mulhq $r7 = $r4, $r7
+; V1-NEXT:    andd.@ $r4 = $r4, 0xff00ff
+; V1-NEXT:    mulhq $r7 = $r6, $r7
 ; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    mulhq $r2 = $r4, $r2
+; V1-NEXT:    ord $r0 = $r0, $r5
+; V1-NEXT:    mulhq $r2 = $r6, $r2
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    insf $r1 = $r6, 63, 32
-; V1-NEXT:    mulhq $r8 = $r4, $r8
+; V1-NEXT:    ord $r1 = $r1, $r7
+; V1-NEXT:    mulhq $r3 = $r6, $r3
+; V1-NEXT:    andd.@ $r6 = $r8, 0xff00ff
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V1-NEXT:    mulhq $r3 = $r4, $r3
-; V1-NEXT:    sbmm8 $r4 = $r7, 0x40100401
+; V1-NEXT:    ord $r2 = $r6, $r2
 ; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    insf $r2 = $r4, 63, 32
-; V1-NEXT:    sbmm8 $r5 = $r8, 0x40100401
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    insf $r3 = $r5, 63, 32
+; V1-NEXT:    ord $r3 = $r4, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 12)
+; V1-NEXT:    ;; # (end cycle 10)
 ;
 ; V2-LABEL: mul_v32i8_i8:
 ; V2:       # %bb.0:
-; V2-NEXT:    sxlbhq $r0 = $r0
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x1010101
-; V2-NEXT:    sxmbhq $r5 = $r0
-; V2-NEXT:    sxmbhq $r6 = $r1
+; V2-NEXT:    sbmm8.@ $r4 = $r4, 0x1010101
+; V2-NEXT:    srlhqs $r5 = $r0, 8
+; V2-NEXT:    srlhqs $r7 = $r1, 8
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxlbhq $r1 = $r1
-; V2-NEXT:    sxlbhq $r2 = $r2
-; V2-NEXT:    zxlbhq $r4 = $r4
-; V2-NEXT:    sxmbhq $r7 = $r2
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sxlbhq $r3 = $r3
-; V2-NEXT:    mulhq $r5 = $r4, $r5
-; V2-NEXT:    sxmbhq $r8 = $r3
-; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    mulhq $r0 = $r4, $r0
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    mulhq $r6 = $r4, $r6
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V2-NEXT:    andd.@ $r6 = $r4, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    mulhq $r1 = $r4, $r1
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; V2-NEXT:    srlhqs $r2 = $r2, 8
+; V2-NEXT:    mulhq $r8 = $r4, $r2
+; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; V2-NEXT:    srlhqs $r3 = $r3, 8
+; V2-NEXT:    mulhq $r4 = $r4, $r3
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    mulhq $r5 = $r6, $r5
 ; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    mulhq $r7 = $r4, $r7
+; V2-NEXT:    andd.@ $r4 = $r4, 0xff00ff
+; V2-NEXT:    mulhq $r7 = $r6, $r7
 ; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V2-NEXT:    mulhq $r2 = $r4, $r2
+; V2-NEXT:    ord $r0 = $r0, $r5
+; V2-NEXT:    mulhq $r2 = $r6, $r2
 ; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    mulhq $r8 = $r4, $r8
+; V2-NEXT:    ord $r1 = $r1, $r7
+; V2-NEXT:    mulhq $r3 = $r6, $r3
+; V2-NEXT:    andd.@ $r6 = $r8, 0xff00ff
 ; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    mulhq $r3 = $r4, $r3
-; V2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
-; V2-NEXT:    sbmm8 $r5 = $r6, 0x40100401
-; V2-NEXT:    sbmm8 $r6 = $r7, 0x40100401
+; V2-NEXT:    ord $r2 = $r6, $r2
 ; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    insf $r0 = $r4, 63, 32
-; V2-NEXT:    insf $r1 = $r5, 63, 32
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V2-NEXT:    sbmm8 $r7 = $r8, 0x40100401
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    insf $r2 = $r6, 63, 32
-; V2-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    insf $r3 = $r7, 63, 32
+; V2-NEXT:    ord $r3 = $r4, $r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 12)
+; V2-NEXT:    ;; # (end cycle 10)
   %3 = insertelement <32 x i8> undef, i8 %1, i32 0
   %4 = shufflevector <32 x i8> %3, <32 x i8> undef, <32 x i32> zeroinitializer
   %5 = mul <32 x i8> %4, %0
@@ -4645,142 +4557,112 @@ define <32 x i8> @sub_v32i8_i8(<32 x i8> %0, i8 %1) {
 define <32 x i8> @mul_add_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1, <32 x i8> %2) {
 ; V1-LABEL: mul_add_v32i8_v32i8:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxmbhq $r15 = $r3
-; V1-NEXT:    sxmbhq $r16 = $r7
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxlbhq $r3 = $r3
-; V1-NEXT:    sxlbhq $r7 = $r7
-; V1-NEXT:    mulhq $r15 = $r16, $r15
-; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    mulhq $r3 = $r7, $r3
-; V1-NEXT:    sxmbhq $r16 = $r2
-; V1-NEXT:    sxmbhq $r17 = $r6
+; V1-NEXT:    srlhqs $r7 = $r2, 8
+; V1-NEXT:    srlhqs $r15 = $r3, 8
+; V1-NEXT:    andd.@ $r16 = $r7, 0xff00ff00
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    mulhq $r15 = $r16, $r15
+; V1-NEXT:    andd.@ $r16 = $r6, 0xff00ff00
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; V1-NEXT:    mulhq $r7 = $r16, $r7
+; V1-NEXT:    andd.@ $r16 = $r4, 0xff00ff00
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    mulhq $r7 = $r17, $r16
-; V1-NEXT:    sxmbhq $r16 = $r0
-; V1-NEXT:    sxmbhq $r17 = $r4
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r4 = $r4
-; V1-NEXT:    mulhq $r16 = $r17, $r16
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    mulhq $r0 = $r4, $r0
-; V1-NEXT:    sxmbhq $r4 = $r5
-; V1-NEXT:    sxmbhq $r17 = $r1
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    mulhq $r4 = $r4, $r17
-; V1-NEXT:    sxlbhq $r5 = $r5
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    mulhq $r1 = $r5, $r1
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    sxlbhq $r6 = $r6
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    mulhq $r2 = $r6, $r2
-; V1-NEXT:    sbmm8 $r5 = $r16, 0x40100401
-; V1-NEXT:    andd.@ $r6 = $r8, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    insf $r0 = $r5, 63, 32
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    xord $r0 = $r0, $r8
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    andd.@ $r5 = $r0, 0x7f7f7f7f
-; V1-NEXT:    sbmm8 $r15 = $r15, 0x40100401
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
-; V1-NEXT:    insf $r1 = $r4, 63, 32
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    addd $r5 = $r5, $r6
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V1-NEXT:    sbmm8 $r4 = $r7, 0x40100401
-; V1-NEXT:    andd.@ $r6 = $r1, 0x7f7f7f7f
-; V1-NEXT:    andd.@ $r7 = $r9, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    xord $r1 = $r1, $r9
-; V1-NEXT:    insf $r2 = $r4, 63, 32
-; V1-NEXT:    insf $r3 = $r15, 63, 32
-; V1-NEXT:    addd $r4 = $r6, $r7
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    xord $r2 = $r2, $r10
-; V1-NEXT:    andd.@ $r6 = $r2, 0x7f7f7f7f
+; V1-NEXT:    ord $r3 = $r3, $r15
+; V1-NEXT:    srlhqs $r6 = $r0, 8
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    mulhq $r0 = $r4, $r0
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    andd.@ $r2 = $r2, 0xff00ff
+; V1-NEXT:    mulhq $r4 = $r16, $r6
+; V1-NEXT:    srlhqs $r6 = $r1, 8
+; V1-NEXT:    andd.@ $r16 = $r5, 0xff00ff00
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; V1-NEXT:    mulhq $r1 = $r5, $r1
+; V1-NEXT:    ord $r2 = $r2, $r7
 ; V1-NEXT:    andd.@ $r7 = $r10, 0x7f7f7f7f
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ord $r0 = $r0, $r4
+; V1-NEXT:    mulhq $r4 = $r16, $r6
+; V1-NEXT:    andd.@ $r6 = $r8, 0x7f7f7f7f
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    xord $r0 = $r0, $r8
+; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; V1-NEXT:    andd.@ $r5 = $r0, 0x7f7f7f7f
 ; V1-NEXT:    andd.@ $r8 = $r3, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    andd.@ $r1 = $r1, 0x80808080
+; V1-NEXT:    ;; # (end cycle 8)
+; V1-NEXT:    ord $r1 = $r1, $r4
 ; V1-NEXT:    xord $r3 = $r3, $r11
-; V1-NEXT:    addd $r6 = $r6, $r7
+; V1-NEXT:    addd $r4 = $r5, $r6
+; V1-NEXT:    andd.@ $r6 = $r9, 0x7f7f7f7f
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
+; V1-NEXT:    xord $r1 = $r1, $r9
+; V1-NEXT:    andd.@ $r5 = $r1, 0x7f7f7f7f
 ; V1-NEXT:    andd.@ $r9 = $r11, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    xord $r0 = $r5, $r0
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    andd.@ $r1 = $r1, 0x80808080
+; V1-NEXT:    xord $r2 = $r2, $r10
+; V1-NEXT:    addd $r5 = $r5, $r6
+; V1-NEXT:    andd.@ $r6 = $r2, 0x7f7f7f7f
+; V1-NEXT:    ;; # (end cycle 11)
 ; V1-NEXT:    andd.@ $r2 = $r2, 0x80808080
 ; V1-NEXT:    andd.@ $r3 = $r3, 0x80808080
+; V1-NEXT:    addd $r6 = $r6, $r7
 ; V1-NEXT:    addd $r7 = $r8, $r9
-; V1-NEXT:    ;; # (end cycle 16)
-; V1-NEXT:    xord $r1 = $r4, $r1
+; V1-NEXT:    ;; # (end cycle 12)
+; V1-NEXT:    xord $r0 = $r4, $r0
+; V1-NEXT:    xord $r1 = $r5, $r1
 ; V1-NEXT:    xord $r2 = $r6, $r2
 ; V1-NEXT:    xord $r3 = $r7, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 17)
+; V1-NEXT:    ;; # (end cycle 13)
 ;
 ; V2-LABEL: mul_add_v32i8_v32i8:
 ; V2:       # %bb.0:
-; V2-NEXT:    sxlbhq $r3 = $r3
-; V2-NEXT:    sxlbhq $r7 = $r7
-; V2-NEXT:    sxmbhq $r15 = $r3
-; V2-NEXT:    sxmbhq $r16 = $r7
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxlbhq $r6 = $r6
-; V2-NEXT:    mulhq $r15 = $r16, $r15
-; V2-NEXT:    sxmbhq $r16 = $r6
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sxlbhq $r2 = $r2
 ; V2-NEXT:    mulhq $r3 = $r7, $r3
-; V2-NEXT:    sxmbhq $r7 = $r2
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    sxlbhq $r5 = $r5
+; V2-NEXT:    srlhqs $r7 = $r2, 8
+; V2-NEXT:    srlhqs $r15 = $r3, 8
+; V2-NEXT:    andd.@ $r16 = $r7, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    mulhq $r15 = $r16, $r15
+; V2-NEXT:    andd.@ $r16 = $r6, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    andd.@ $r3 = $r3, 0xff00ff
 ; V2-NEXT:    mulhq $r7 = $r16, $r7
-; V2-NEXT:    sxmbhq $r16 = $r5
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    sxlbhq $r1 = $r1
+; V2-NEXT:    andd.@ $r16 = $r5, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    mulhq $r2 = $r6, $r2
-; V2-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V2-NEXT:    sxmbhq $r6 = $r1
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sxlbhq $r4 = $r4
-; V2-NEXT:    mulhq $r6 = $r16, $r6
-; V2-NEXT:    sbmm8 $r7 = $r7, 0x40100401
-; V2-NEXT:    sxmbhq $r16 = $r4
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    sxlbhq $r0 = $r0
-; V2-NEXT:    mulhq $r1 = $r5, $r1
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V2-NEXT:    sxmbhq $r5 = $r0
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    insf $r2 = $r7, 63, 32
-; V2-NEXT:    mulhq $r5 = $r16, $r5
-; V2-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    mulhq $r0 = $r4, $r0
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V2-NEXT:    addbo $r2 = $r2, $r10
-; V2-NEXT:    sbmm8 $r4 = $r15, 0x40100401
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    insf $r1 = $r6, 63, 32
-; V2-NEXT:    insf $r3 = $r4, 63, 32
-; V2-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V2-NEXT:    addbo $r1 = $r1, $r9
+; V2-NEXT:    ord $r3 = $r3, $r15
+; V2-NEXT:    srlhqs $r6 = $r1, 8
+; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    addbo $r3 = $r3, $r11
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    insf $r0 = $r5, 63, 32
-; V2-NEXT:    ;; # (end cycle 11)
+; V2-NEXT:    mulhq $r6 = $r16, $r6
+; V2-NEXT:    andd.@ $r16 = $r4, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    mulhq $r1 = $r5, $r1
+; V2-NEXT:    andd.@ $r2 = $r2, 0xff00ff
+; V2-NEXT:    srlhqs $r5 = $r0, 8
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    mulhq $r0 = $r4, $r0
+; V2-NEXT:    ord $r2 = $r2, $r7
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; V2-NEXT:    addbo $r2 = $r2, $r10
+; V2-NEXT:    mulhq $r4 = $r16, $r5
+; V2-NEXT:    ;; # (end cycle 7)
+; V2-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; V2-NEXT:    ord $r1 = $r1, $r6
+; V2-NEXT:    ;; # (end cycle 8)
+; V2-NEXT:    ord $r0 = $r0, $r4
+; V2-NEXT:    addbo $r1 = $r1, $r9
+; V2-NEXT:    ;; # (end cycle 9)
 ; V2-NEXT:    addbo $r0 = $r0, $r8
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 12)
+; V2-NEXT:    ;; # (end cycle 10)
   %4 = mul <32 x i8> %1, %0
   %5 = add <32 x i8> %4, %2
   ret <32 x i8> %5
@@ -7866,120 +7748,47 @@ define <16 x i16> @p_mul_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <1
 }
 
 define <32 x i8> @p_mul_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>* nocapture readonly %1) {
-; V1-LABEL: p_mul_v32i8_v32i8:
-; V1:       # %bb.0:
-; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sxlbhq $r5 = $r5
-; V1-NEXT:    sxmbhq $r10 = $r5
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    sxmbhq $r11 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    mulhq $r1 = $r1, $r5
-; V1-NEXT:    sxmbhq $r8 = $r4
-; V1-NEXT:    sxmbhq $r9 = $r0
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r4 = $r4
-; V1-NEXT:    mulhq $r8 = $r9, $r8
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    mulhq $r0 = $r0, $r4
-; V1-NEXT:    sxlbhq $r6 = $r6
-; V1-NEXT:    sxmbhq $r15 = $r6
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    sxmbhq $r5 = $r2
-; V1-NEXT:    mulhq $r9 = $r11, $r10
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    mulhq $r2 = $r2, $r6
-; V1-NEXT:    sxmbhq $r4 = $r7
-; V1-NEXT:    sxlbhq $r7 = $r7
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    sxlbhq $r3 = $r3
-; V1-NEXT:    mulhq $r5 = $r5, $r15
-; V1-NEXT:    sxmbhq $r6 = $r3
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V1-NEXT:    mulhq $r4 = $r6, $r4
-; V1-NEXT:    sbmm8 $r8 = $r8, 0x40100401
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    mulhq $r3 = $r3, $r7
-; V1-NEXT:    sbmm8 $r9 = $r9, 0x40100401
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V1-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    insf $r0 = $r8, 63, 32
-; V1-NEXT:    insf $r1 = $r9, 63, 32
-; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    insf $r2 = $r5, 63, 32
-; V1-NEXT:    insf $r3 = $r4, 63, 32
-; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 16)
-;
-; V2-LABEL: p_mul_v32i8_v32i8:
-; V2:       # %bb.0:
-; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    lo $r0r1r2r3 = 0[$r1]
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sxlbhq $r4 = $r4
-; V2-NEXT:    sxmbhq $r8 = $r4
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    sxlbhq $r0 = $r0
-; V2-NEXT:    sxlbhq $r1 = $r1
-; V2-NEXT:    sxmbhq $r9 = $r0
-; V2-NEXT:    sxmbhq $r10 = $r1
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    mulhq $r8 = $r9, $r8
-; V2-NEXT:    sxmbhq $r9 = $r5
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    mulhq $r0 = $r0, $r4
-; V2-NEXT:    sxlbhq $r4 = $r5
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    sxlbhq $r2 = $r2
-; V2-NEXT:    mulhq $r5 = $r10, $r9
-; V2-NEXT:    sxmbhq $r9 = $r6
-; V2-NEXT:    sxmbhq $r10 = $r2
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V2-NEXT:    mulhq $r1 = $r1, $r4
-; V2-NEXT:    sxlbhq $r4 = $r6
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V2-NEXT:    mulhq $r6 = $r10, $r9
-; V2-NEXT:    sxlbhq $r7 = $r7
-; V2-NEXT:    sxmbhq $r9 = $r7
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V2-NEXT:    mulhq $r2 = $r2, $r4
-; V2-NEXT:    sxlbhq $r3 = $r3
-; V2-NEXT:    sxmbhq $r4 = $r3
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    insf $r1 = $r5, 63, 32
-; V2-NEXT:    mulhq $r4 = $r4, $r9
-; V2-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    sbmm8 $r2 = $r2, 0x40100401
-; V2-NEXT:    mulhq $r3 = $r3, $r7
-; V2-NEXT:    sbmm8 $r7 = $r8, 0x40100401
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    insf $r0 = $r7, 63, 32
-; V2-NEXT:    insf $r2 = $r6, 63, 32
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    insf $r3 = $r4, 63, 32
-; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 15)
+; CHECK-LABEL: p_mul_v32i8_v32i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r1]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CHECK-NEXT:    srlhqs $r4 = $r4, 8
+; CHECK-NEXT:    mulhq $r8 = $r0, $r4
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0xff00ff00
+; CHECK-NEXT:    srlhqs $r5 = $r5, 8
+; CHECK-NEXT:    mulhq $r9 = $r1, $r5
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0xff00ff00
+; CHECK-NEXT:    mulhq $r10 = $r2, $r6
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    mulhq $r0 = $r0, $r4
+; CHECK-NEXT:    srlhqs $r4 = $r6, 8
+; CHECK-NEXT:    srlhqs $r6 = $r7, 8
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    mulhq $r1 = $r1, $r5
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0xff00ff00
+; CHECK-NEXT:    mulhq $r5 = $r3, $r7
+; CHECK-NEXT:    andd.@ $r7 = $r10, 0xff00ff
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    mulhq $r2 = $r2, $r4
+; CHECK-NEXT:    andd.@ $r4 = $r8, 0xff00ff
+; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ord $r0 = $r4, $r0
+; CHECK-NEXT:    mulhq $r3 = $r3, $r6
+; CHECK-NEXT:    andd.@ $r5 = $r5, 0xff00ff
+; CHECK-NEXT:    andd.@ $r6 = $r9, 0xff00ff
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ord $r1 = $r6, $r1
+; CHECK-NEXT:    ord $r2 = $r7, $r2
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ord $r3 = $r5, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 13)
   %3 = load <32 x i8>, <32 x i8>* %0, align 32
   %4 = load <32 x i8>, <32 x i8>* %1, align 32
   %5 = mul <32 x i8> %4, %3
@@ -7987,108 +7796,46 @@ define <32 x i8> @p_mul_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 }
 
 define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture readonly %1) {
-; V1-LABEL: p_mul_v32i8_i8:
-; V1:       # %bb.0:
-; V1-NEXT:    lbz $r1 = 0[$r1]
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbmm8 $r0 = $r1, 0x1010101
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sxmbhq $r1 = $r4
-; V1-NEXT:    sbmm8 $r2 = $r0, 0x8000400020001
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sxlbhq $r0 = $r4
-; V1-NEXT:    mulhq $r1 = $r2, $r1
-; V1-NEXT:    sxlbhq $r4 = $r5
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    sxmbhq $r3 = $r5
-; V1-NEXT:    mulhq $r4 = $r2, $r4
-; V1-NEXT:    sxmbhq $r5 = $r6
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    mulhq $r3 = $r2, $r3
-; V1-NEXT:    sxlbhq $r6 = $r6
-; V1-NEXT:    sxmbhq $r8 = $r7
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    mulhq $r0 = $r2, $r0
-; V1-NEXT:    sxlbhq $r7 = $r7
-; V1-NEXT:    sbmm8 $r9 = $r1, 0x40100401
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sbmm8 $r1 = $r4, 0x40100401
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    mulhq $r5 = $r2, $r5
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V1-NEXT:    insf $r1 = $r3, 63, 32
-; V1-NEXT:    mulhq $r6 = $r2, $r6
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    insf $r0 = $r9, 63, 32
-; V1-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V1-NEXT:    mulhq $r8 = $r2, $r8
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    sbmm8 $r2 = $r6, 0x40100401
-; V1-NEXT:    mulhq $r4 = $r2, $r7
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    insf $r2 = $r5, 63, 32
-; V1-NEXT:    sbmm8 $r6 = $r8, 0x40100401
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    sbmm8 $r3 = $r4, 0x40100401
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    insf $r3 = $r6, 63, 32
-; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 15)
-;
-; V2-LABEL: p_mul_v32i8_i8:
-; V2:       # %bb.0:
-; V2-NEXT:    lbz $r1 = 0[$r1]
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sbmm8 $r0 = $r1, 0x1010101
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    zxlbhq $r0 = $r0
-; V2-NEXT:    sxmbhq $r1 = $r4
-; V2-NEXT:    sxlbhq $r2 = $r4
-; V2-NEXT:    sxmbhq $r3 = $r5
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sxlbhq $r4 = $r5
-; V2-NEXT:    sxmbhq $r5 = $r6
-; V2-NEXT:    sxlbhq $r6 = $r6
-; V2-NEXT:    sxmbhq $r8 = $r7
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    mulhq $r1 = $r0, $r1
-; V2-NEXT:    sxlbhq $r7 = $r7
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    mulhq $r2 = $r0, $r2
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    mulhq $r3 = $r0, $r3
-; V2-NEXT:    sbmm8 $r9 = $r1, 0x40100401
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    mulhq $r4 = $r0, $r4
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    mulhq $r5 = $r0, $r5
-; V2-NEXT:    sbmm8 $r10 = $r3, 0x40100401
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    sbmm8 $r1 = $r4, 0x40100401
-; V2-NEXT:    mulhq $r6 = $r0, $r6
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    insf $r1 = $r10, 63, 32
-; V2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
-; V2-NEXT:    mulhq $r8 = $r0, $r8
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    sbmm8 $r0 = $r2, 0x40100401
-; V2-NEXT:    sbmm8 $r2 = $r6, 0x40100401
-; V2-NEXT:    mulhq $r7 = $r0, $r7
-; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    insf $r0 = $r9, 63, 32
-; V2-NEXT:    insf $r2 = $r4, 63, 32
-; V2-NEXT:    sbmm8 $r5 = $r8, 0x40100401
-; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    sbmm8 $r3 = $r7, 0x40100401
-; V2-NEXT:    ;; # (end cycle 15)
-; V2-NEXT:    insf $r3 = $r5, 63, 32
-; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 16)
+; CHECK-LABEL: p_mul_v32i8_i8:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lbz $r1 = 0[$r1]
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sbmm8.@ $r0 = $r1, 0x1010101
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    mulhq $r1 = $r0, $r4
+; CHECK-NEXT:    srlhqs $r4 = $r4, 8
+; CHECK-NEXT:    andd.@ $r8 = $r0, 0xff00ff00
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    mulhq $r2 = $r0, $r5
+; CHECK-NEXT:    srlhqs $r5 = $r5, 8
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CHECK-NEXT:    mulhq $r3 = $r0, $r6
+; CHECK-NEXT:    srlhqs $r6 = $r6, 8
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    mulhq $r0 = $r0, $r7
+; CHECK-NEXT:    andd.@ $r2 = $r2, 0xff00ff
+; CHECK-NEXT:    srlhqs $r7 = $r7, 8
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; CHECK-NEXT:    mulhq $r4 = $r8, $r4
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    mulhq $r5 = $r8, $r5
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    mulhq $r6 = $r8, $r6
+; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ord $r0 = $r1, $r4
+; CHECK-NEXT:    ord $r1 = $r2, $r5
+; CHECK-NEXT:    mulhq $r7 = $r8, $r7
+; CHECK-NEXT:    andd.@ $r8 = $r0, 0xff00ff
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ord $r2 = $r3, $r6
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ord $r3 = $r8, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 13)
   %3 = load <32 x i8>, <32 x i8>* %0, align 32
   %4 = load i8, i8* %1, align 1
   %5 = insertelement <32 x i8> undef, i8 %4, i32 0
@@ -9459,93 +9206,78 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    lo $r32r33r34r35 = 0[$r2]
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxmbhq $r0 = $r7
-; V1-NEXT:    sxmbhq $r15 = $r4
+; V1-NEXT:    srlhqs $r3 = $r6, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sxmbhq $r1 = $r11
-; V1-NEXT:    sxmbhq $r16 = $r8
+; V1-NEXT:    mulhq $r1 = $r10, $r6
+; V1-NEXT:    andd.@ $r6 = $r10, 0xff00ff00
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    mulhq $r0 = $r1, $r0
-; V1-NEXT:    sxmbhq $r1 = $r5
-; V1-NEXT:    sxlbhq $r5 = $r5
+; V1-NEXT:    srlhqs $r4 = $r4, 8
+; V1-NEXT:    andd.@ $r8 = $r8, 0xff00ff00
+; V1-NEXT:    mulhq $r10 = $r8, $r4
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    sxlbhq $r9 = $r9
-; V1-NEXT:    mulhq $r15 = $r16, $r15
-; V1-NEXT:    sxmbhq $r16 = $r9
+; V1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; V1-NEXT:    mulhq $r3 = $r6, $r3
+; V1-NEXT:    srlhqs $r6 = $r5, 8
 ; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    mulhq $r1 = $r16, $r1
-; V1-NEXT:    sxlbhq $r4 = $r4
-; V1-NEXT:    sxlbhq $r8 = $r8
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxlbhq $r3 = $r7
-; V1-NEXT:    mulhq $r5 = $r9, $r5
-; V1-NEXT:    sxmbhq $r7 = $r6
-; V1-NEXT:    ;; # (end cycle 8)
 ; V1-NEXT:    mulhq $r4 = $r8, $r4
-; V1-NEXT:    sxlbhq $r6 = $r6
-; V1-NEXT:    sxmbhq $r9 = $r10
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    mulhq $r7 = $r9, $r7
-; V1-NEXT:    sxlbhq $r8 = $r10
-; V1-NEXT:    andd.@ $r9 = $r32, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    sbmm8 $r5 = $r5, 0x40100401
+; V1-NEXT:    andd.@ $r8 = $r9, 0xff00ff00
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    ord $r1 = $r1, $r3
+; V1-NEXT:    mulhq $r5 = $r9, $r5
+; V1-NEXT:    andd.@ $r9 = $r11, 0xff00ff00
+; V1-NEXT:    ;; # (end cycle 8)
 ; V1-NEXT:    mulhq $r6 = $r8, $r6
-; V1-NEXT:    andd.@ $r8 = $r33, 0x7f7f7f7f
-; V1-NEXT:    sxlbhq $r11 = $r11
+; V1-NEXT:    andd.@ $r8 = $r10, 0xff00ff
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    mulhq $r0 = $r11, $r7
+; V1-NEXT:    ord $r3 = $r8, $r4
+; V1-NEXT:    andd.@ $r5 = $r5, 0xff00ff
+; V1-NEXT:    srlhqs $r7 = $r7, 8
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ord $r4 = $r5, $r6
+; V1-NEXT:    andd.@ $r5 = $r33, 0x7f7f7f7f
+; V1-NEXT:    mulhq $r6 = $r9, $r7
+; V1-NEXT:    andd.@ $r8 = $r3, 0x7f7f7f7f
 ; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    mulhq $r3 = $r11, $r3
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V1-NEXT:    sbmm8 $r10 = $r15, 0x40100401
+; V1-NEXT:    andd.@ $r0 = $r0, 0xff00ff
+; V1-NEXT:    xord $r4 = $r33, $r4
+; V1-NEXT:    andd.@ $r7 = $r4, 0x7f7f7f7f
+; V1-NEXT:    andd.@ $r9 = $r32, 0x7f7f7f7f
 ; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    insf $r4 = $r10, 63, 32
-; V1-NEXT:    insf $r5 = $r1, 63, 32
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    andd.@ $r1 = $r5, 0x7f7f7f7f
-; V1-NEXT:    xord $r5 = $r33, $r5
-; V1-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V1-NEXT:    sbmm8 $r7 = $r7, 0x40100401
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    addd $r1 = $r8, $r1
-; V1-NEXT:    xord $r4 = $r32, $r4
-; V1-NEXT:    andd.@ $r5 = $r5, 0x80808080
-; V1-NEXT:    andd.@ $r8 = $r4, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    addd $r1 = $r9, $r8
+; V1-NEXT:    xord $r3 = $r32, $r3
 ; V1-NEXT:    andd.@ $r4 = $r4, 0x80808080
-; V1-NEXT:    xord $r5 = $r1, $r5
-; V1-NEXT:    insf $r6 = $r7, 63, 32
-; V1-NEXT:    ;; # (end cycle 16)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; V1-NEXT:    andd.@ $r7 = $r6, 0x7f7f7f7f
-; V1-NEXT:    andd.@ $r8 = $r34, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 17)
-; V1-NEXT:    addd $r0 = $r8, $r7
-; V1-NEXT:    xord $r1 = $r34, $r6
-; V1-NEXT:    insf $r3 = $r0, 63, 32
-; V1-NEXT:    xord $r4 = $r1, $r4
-; V1-NEXT:    ;; # (end cycle 18)
+; V1-NEXT:    addd $r5 = $r5, $r7
+; V1-NEXT:    addd $r7 = $r9, $r8
+; V1-NEXT:    ;; # (end cycle 13)
+; V1-NEXT:    ord $r0 = $r0, $r6
+; V1-NEXT:    andd.@ $r3 = $r3, 0x80808080
+; V1-NEXT:    andd.@ $r8 = $r1, 0x7f7f7f7f
+; V1-NEXT:    andd.@ $r9 = $r34, 0x7f7f7f7f
+; V1-NEXT:    ;; # (end cycle 14)
+; V1-NEXT:    xord $r1 = $r34, $r1
+; V1-NEXT:    addd $r3 = $r9, $r8
+; V1-NEXT:    xord $r4 = $r7, $r3
+; V1-NEXT:    xord $r5 = $r5, $r4
+; V1-NEXT:    ;; # (end cycle 15)
+; V1-NEXT:    xord $r0 = $r35, $r0
 ; V1-NEXT:    andd.@ $r1 = $r1, 0x80808080
-; V1-NEXT:    xord $r3 = $r35, $r3
-; V1-NEXT:    andd.@ $r7 = $r3, 0x7f7f7f7f
+; V1-NEXT:    andd.@ $r7 = $r0, 0x7f7f7f7f
 ; V1-NEXT:    andd.@ $r8 = $r35, 0x7f7f7f7f
-; V1-NEXT:    ;; # (end cycle 19)
-; V1-NEXT:    addd $r0 = $r8, $r7
-; V1-NEXT:    andd.@ $r1 = $r3, 0x80808080
-; V1-NEXT:    xord $r6 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 20)
-; V1-NEXT:    xord $r7 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 21)
+; V1-NEXT:    ;; # (end cycle 16)
+; V1-NEXT:    andd.@ $r0 = $r0, 0x80808080
+; V1-NEXT:    addd $r1 = $r8, $r7
+; V1-NEXT:    xord $r6 = $r3, $r1
+; V1-NEXT:    ;; # (end cycle 17)
+; V1-NEXT:    xord $r7 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 18)
 ; V1-NEXT:    so 0[$r2] = $r4r5r6r7
 ; V1-NEXT:    copyd $r0 = $r4
 ; V1-NEXT:    copyd $r1 = $r5
 ; V1-NEXT:    copyd $r2 = $r6
-; V1-NEXT:    ;; # (end cycle 22)
+; V1-NEXT:    ;; # (end cycle 19)
 ; V1-NEXT:    copyd $r3 = $r7
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 23)
+; V1-NEXT:    ;; # (end cycle 20)
 ;
 ; V2-LABEL: p_mul_add_v32i8_v32i8:
 ; V2:       # %bb.0:
@@ -9555,68 +9287,54 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    lo $r32r33r34r35 = 0[$r2]
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    sxmbhq $r0 = $r7
-; V2-NEXT:    sxmbhq $r3 = $r6
-; V2-NEXT:    sxlbhq $r6 = $r6
-; V2-NEXT:    sxlbhq $r7 = $r7
+; V2-NEXT:    srlhqs $r15 = $r5, 8
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    sxmbhq $r1 = $r11
-; V2-NEXT:    sxmbhq $r15 = $r10
-; V2-NEXT:    sxmbhq $r16 = $r8
-; V2-NEXT:    sxmbhq $r17 = $r9
+; V2-NEXT:    mulhq $r3 = $r8, $r4
+; V2-NEXT:    srlhqs $r4 = $r4, 8
+; V2-NEXT:    andd.@ $r8 = $r8, 0xff00ff00
+; V2-NEXT:    andd.@ $r16 = $r9, 0xff00ff00
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    mulhq $r0 = $r1, $r0
-; V2-NEXT:    sxmbhq $r1 = $r4
-; V2-NEXT:    sxlbhq $r4 = $r4
-; V2-NEXT:    sxlbhq $r9 = $r9
+; V2-NEXT:    mulhq $r0 = $r11, $r7
+; V2-NEXT:    srlhqs $r7 = $r7, 8
 ; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    mulhq $r3 = $r15, $r3
-; V2-NEXT:    sxlbhq $r5 = $r5
-; V2-NEXT:    sxlbhq $r8 = $r8
-; V2-NEXT:    sxmbhq $r15 = $r5
+; V2-NEXT:    mulhq $r1 = $r10, $r6
+; V2-NEXT:    andd.@ $r3 = $r3, 0xff00ff
+; V2-NEXT:    srlhqs $r6 = $r6, 8
 ; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; V2-NEXT:    mulhq $r1 = $r16, $r1
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    sbmm8 $r3 = $r3, 0x40100401
+; V2-NEXT:    andd.@ $r0 = $r0, 0xff00ff
 ; V2-NEXT:    mulhq $r5 = $r9, $r5
-; V2-NEXT:    sxlbhq $r9 = $r10
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V2-NEXT:    ;; # (end cycle 7)
+; V2-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; V2-NEXT:    mulhq $r4 = $r8, $r4
-; V2-NEXT:    sxlbhq $r8 = $r11
+; V2-NEXT:    andd.@ $r8 = $r10, 0xff00ff00
+; V2-NEXT:    andd.@ $r10 = $r11, 0xff00ff00
+; V2-NEXT:    ;; # (end cycle 8)
+; V2-NEXT:    andd.@ $r5 = $r5, 0xff00ff
+; V2-NEXT:    mulhq $r9 = $r16, $r15
 ; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    sbmm8 $r5 = $r5, 0x40100401
-; V2-NEXT:    mulhq $r15 = $r17, $r15
+; V2-NEXT:    ord $r3 = $r3, $r4
+; V2-NEXT:    mulhq $r6 = $r8, $r6
 ; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    sbmm8 $r4 = $r4, 0x40100401
-; V2-NEXT:    mulhq $r6 = $r9, $r6
+; V2-NEXT:    addbo $r4 = $r32, $r3
+; V2-NEXT:    ord $r5 = $r5, $r9
+; V2-NEXT:    mulhq $r7 = $r10, $r7
 ; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    insf $r4 = $r1, 63, 32
-; V2-NEXT:    mulhq $r7 = $r8, $r7
-; V2-NEXT:    sbmm8 $r9 = $r15, 0x40100401
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    addbo $r4 = $r32, $r4
-; V2-NEXT:    insf $r5 = $r9, 63, 32
-; V2-NEXT:    sbmm8 $r6 = $r6, 0x40100401
-; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    sbmm8 $r1 = $r7, 0x40100401
+; V2-NEXT:    ord $r1 = $r1, $r6
 ; V2-NEXT:    addbo $r5 = $r33, $r5
-; V2-NEXT:    insf $r6 = $r3, 63, 32
+; V2-NEXT:    ;; # (end cycle 12)
+; V2-NEXT:    ord $r0 = $r0, $r7
+; V2-NEXT:    addbo $r6 = $r34, $r1
+; V2-NEXT:    ;; # (end cycle 13)
+; V2-NEXT:    addbo $r7 = $r35, $r0
 ; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    insf $r1 = $r0, 63, 32
-; V2-NEXT:    addbo $r6 = $r34, $r6
-; V2-NEXT:    ;; # (end cycle 15)
-; V2-NEXT:    addbo $r7 = $r35, $r1
-; V2-NEXT:    ;; # (end cycle 16)
 ; V2-NEXT:    so 0[$r2] = $r4r5r6r7
 ; V2-NEXT:    copyd $r0 = $r4
 ; V2-NEXT:    copyd $r1 = $r5
 ; V2-NEXT:    copyd $r2 = $r6
-; V2-NEXT:    ;; # (end cycle 17)
+; V2-NEXT:    ;; # (end cycle 15)
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 18)
+; V2-NEXT:    ;; # (end cycle 16)
   %4 = load <32 x i8>, <32 x i8>* %0, align 32
   %5 = load <32 x i8>, <32 x i8>* %1, align 32
   %6 = mul <32 x i8> %5, %4

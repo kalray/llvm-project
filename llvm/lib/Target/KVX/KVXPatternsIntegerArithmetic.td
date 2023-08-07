@@ -91,6 +91,37 @@ defm : ZEFPat<(and (srl i32:$v, Wrapped32:$shiftc), isMask:$andm), (EXTFZWp Sing
 //  Integer Instructions - Patterns
 //===----------------------------------------------------------------------===//
 
+// Separate each v8i8 vector into odd and even elements
+// placed in two v4i16 vectors.
+// Perform the 16-bit operation on each v4i16 vector.
+// Then move the values back in position to form back the v8i8.
+multiclass Emulate_v8i8_with_v4i16<SDNode irnode, Instruction hqrr>{
+  if !not(!empty(!filter(x, [smin, smax, umin, umax], !eq(irnode, x)))) then {
+    def : Pat<(irnode v8i8:$a, v8i8:$b), (ORDrr
+              (hqrr
+                    (ANDDri32s SingleReg:$a, (i32 0xff00ff00)),
+                    (ANDDri32s SingleReg:$b, (i32 0xff00ff00))),
+              (SRLHQSri (hqrr (SLLHQSri SingleReg:$a, (i32 8)),
+                              (SLLHQSri SingleReg:$b, (i32 8))),
+                        (i32 8)))>;
+  } else if !not(!empty(!filter(x,
+      [saddsat, ssubsat], !eq(irnode, x)))) then {
+    def : Pat<(irnode v8i8:$a, v8i8:$b), (ORDrr
+              (ANDDri32s (hqrr (ANDDri32s SingleReg:$a, (i32 0xff00ff00)),
+                               (ANDDri32s SingleReg:$b, (i32 0xff00ff00))),
+                         (i32 0xff00ff00)),
+              (SRLHQSri (hqrr (SLLHQSri SingleReg:$a, (i32 8)),
+                              (SLLHQSri SingleReg:$b, (i32 8))),
+                        (i32 8)))>;
+  } else if !eq(irnode, mul) then {
+    def : Pat<(irnode v8i8:$a, v8i8:$b), (ORDrr
+              (ANDDri32s (hqrr SingleReg:$a, SingleReg:$b), (i32 0x00ff00ff)),
+              (hqrr 
+                (ANDDri32s SingleReg:$a, (i32 0xff00ff00)),
+                (SRLHQSri SingleReg:$b, (i32 8))))>;
+  }
+}
+
 // ABDD
 def : Pat<(i64 (abs (sub Signed10:$lhs, i64:$rhs))), (i64 (ABDDri10 SingleReg:$rhs, Signed10:$lhs))>;
 def : Pat<(i64 (abs (add i64:$rhs, Signed10:$lhs))), (i64 (ABDDri10 SingleReg:$rhs, (get_neg_imm $lhs)))>;
@@ -126,6 +157,30 @@ def : Pat<(v2i8 (abs (sub v2i8:$lhs, v2i8:$rhs))), (v2i8 (ABDBOrr SingleReg:$rhs
 def : Pat<(v4i8 (abs (sub v4i8:$lhs, v4i8:$rhs))), (v4i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>;
 def : Pat<(v8i8 (abs (sub v8i8:$lhs, v8i8:$rhs))), (v8i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>;
 }
+
+def : Pat<(v8i8 (abs (sub v8i8:$lhs, v8i8:$rhs))),
+          (INSF
+            // Compute elements 7..4 and place them in high 32 bits
+            (SBMM8ri32s
+                  (SBFHQrr
+                        (MINUHQrr
+                              (SBMM8ri64 $lhs, (MAKEi64 0x80004000200010)),
+                              (SBMM8ri64 $rhs, (MAKEi64 0x80004000200010))),
+                        (MAXUHQrr
+                              (SBMM8ri64 $lhs, (MAKEi64 0x80004000200010)),
+                              (SBMM8ri64 $rhs, (MAKEi64 0x80004000200010)))),
+                  0x40100401),
+            // Compute elements 3..0 and place them in low 32 bits
+            (SBMM8ri37
+                  (SBFHQrr
+                        (MINUHQrr
+                              (SBMM8ri64 $lhs, (MAKEi64 0x08000400020001)),
+                              (SBMM8ri64 $rhs, (MAKEi64 0x08000400020001))),
+                        (MAXUHQrr
+                              (SBMM8ri64 $lhs, (MAKEi64 0x08000400020001)),
+                              (SBMM8ri64 $rhs, (MAKEi64 0x08000400020001)))),
+                  0x0000000040100401),
+            31, 0)>, Requires<[IsV1]>;
 
 // ABDHQ
 def : Pat<(v2i16 (abs (sub (v2i16 (is_imm_vec:$IMM)), v2i16:$rhs))), (v2i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
@@ -467,6 +522,8 @@ def : Pat<(v8i8(saddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_:$IMM)) ) ),
 def : Pat<(v8i8(saddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
            (ADDSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v8i8(saddsat v8i8:$v0, v8i8:$v1)), (ADDSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+
+defm ADDSBO : Emulate_v8i8_with_v4i16<saddsat, ADDSHQrr>, Requires<[IsV1]>;
 
 // ADDSD
 def : Pat<(i64(saddsat i64:$v, Signed10:$i)), (ADDSDri10 SingleReg:$v, Signed10:$i)>, Requires<[IsV1]>;
@@ -1441,7 +1498,9 @@ multiclass Word_RR_RIsplat_select_B <SDNode irnode, Instruction rinode, Instruct
   def : Pat<(irnode v8i8:$v1, v8i8:$v2), (rrnode SingleReg:$v1, SingleReg:$v2)>;
 }
 
-defm MAXBO : Word_RR_RIsplat_select_B<smax, MAXBOri, MAXBOrr>;
+// MAXBO
+defm MAXBO : Word_RR_RIsplat_select_B<smax, MAXBOri, MAXBOrr>, Requires<[IsV2]>;
+defm MAXBO : Emulate_v8i8_with_v4i16<smax, MAXHQrr>, Requires<[IsV1]>;
 
 multiclass Word_RR_RIsplat_select_H <SDNode irnode, Instruction rinode, Instruction rrnode>
 {
@@ -1465,6 +1524,7 @@ def : Pat<(umax i64:$v1, Wrapped64:$v2), (MAXUDri64 SingleReg:$v1, Wrapped64:$v2
 
 // MAXUBO
 defm MAXUBO : Word_RR_RIsplat_select_B<umax, MAXUBOri, MAXUBOrr>, Requires<[IsV2]>;
+defm MAXUBO : Emulate_v8i8_with_v4i16<umax, MAXUHQrr>, Requires<[IsV1]>;
 
 // MAXUHQ
 defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
@@ -1500,6 +1560,7 @@ def : Pat<(smin i64:$v1, Wrapped64:$v2), (MINDri64 SingleReg:$v1, Wrapped64:$v2)
 
 // MINBO
 defm MINBO : Word_RR_RIsplat_select_B<smin, MINBOri, MINBOrr>, Requires<[IsV2]>;
+defm MINBO : Emulate_v8i8_with_v4i16<smin, MINHQrr>, Requires<[IsV1]>;
 
 // MINHQ
 defm MINHQ : Word_RR_RIsplat_select_H<smin, MINHQri, MINHQrr>;
@@ -1512,6 +1573,7 @@ def : Pat<(umin i64:$v1, Wrapped64:$v2), (MINUDri64 SingleReg:$v1, Wrapped64:$v2
 
 // MINUBO
 defm MINUBO : Word_RR_RIsplat_select_B<umin, MINUBOri, MINUBOrr>, Requires<[IsV2]>;
+defm MINUBO : Emulate_v8i8_with_v4i16<umin, MINUHQrr>, Requires<[IsV1]>;
 
 // MINUHQ
 defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
@@ -1624,6 +1686,9 @@ def : Pat<(v2i64(KVX_sext_mul i64:$rs1, i64:$rs2)), (v2i64(MULDTrr SingleReg:$rs
 // MULHQ
 def : Pat<(mul v2i16:$rs1, v2i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(mul v4i16:$rs1, v4i16:$rs2), (MULHQrr SingleReg:$rs1, SingleReg:$rs2)>;
+
+// MULBO
+defm MULBO : Emulate_v8i8_with_v4i16<mul, MULHQrr>;
 
 // MULHWQ
 def : Pat<(v2i32(KVX_sext_mul v2i16:$v0, v2i16:$v1)), (v2i32(EXTRACT_SUBREG (v4i32 (MULHWQ SingleReg:$v0, SingleReg:$v1)), sub_d0))>;
@@ -1984,6 +2049,8 @@ def : Pat<(v8i8(ssubsat (v8i8(is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$v0) ),
            (SBFSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(v8i8(ssubsat v8i8:$v1, v8i8:$v0)), (SBFSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
+defm SBFSBO : Emulate_v8i8_with_v4i16<ssubsat, SBFSHQrr>, Requires<[IsV1]>;
+
 // SBFSHQ
 def : Pat<(ssubsat (v2i16(is_imm_vec:$IMM)), v2i16:$rs1), (SBFSHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(ssubsat v2i16:$rs1, v2i16:$rs2), (SBFSHQrr SingleReg:$rs2, SingleReg:$rs1)>;
@@ -2022,7 +2089,7 @@ def : Pat<(i64(usubsat Wrapped64W:$i, i64:$v)), (SBFUSDri SingleReg:$v, (i32(tru
 def : Pat<(i64(usubsat UnsignedSplat32Imm:$i, i64:$v)), (SBFUSDri SingleReg:$v, (i32(trunc_imm_32 $i)), splat32_at)>;
 def : Pat<(i64(usubsat i64:$v1, i64:$v0)), (SBFUSDrr SingleReg:$v0, SingleReg:$v1)>;
 
-// SBFUHQ
+// SBFUSHQ
 def : Pat<(v2i16(usubsat (v2i16(is_imm_vec:$IMM)), v2i16:$v0) ),
            (SBFUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
 def : Pat<(v2i16(usubsat v2i16:$v1, v2i16:$v0)), (SBFUSHQrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;

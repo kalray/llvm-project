@@ -809,8 +809,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                  ISD::UINT_TO_FP, ISD::UMAX, ISD::UMIN, ISD::VSELECT}) {
     setOperationPromotedToType(I, MVT::v2i8, MVT::v2i16);
     setOperationPromotedToType(I, MVT::v4i8, MVT::v4i16);
-    setOperationPromotedToType(I, MVT::v8i8, MVT::v8i16);
   }
+
+  for (auto I :
+       {ISD::ABS, ISD::ADD, ISD::FP_TO_SINT, ISD::FP_TO_UINT, ISD::SETCC,
+        ISD::SINT_TO_FP, ISD::SUB, ISD::UINT_TO_FP, ISD::VSELECT})
+    setOperationPromotedToType(I, MVT::v8i8, MVT::v8i16);
 
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
     setOperationAction(I, MVT::v8i8, Legal);
@@ -833,13 +837,18 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::USHLSAT, MVT::i32, Legal);
 
   if (!Subtarget.isV1()) {
-    for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
-                   ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSHLSAT,
-                   ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN,
-                   ISD::USHLSAT, ISD::USUBSAT, ISD::VSELECT})
-      for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
-                      MVT::v4i8, MVT::v4i16, MVT::v8i8})
+    for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
+                    MVT::v4i8, MVT::v4i16})
+      for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
+                     ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSHLSAT,
+                     ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN,
+                     ISD::USHLSAT, ISD::USUBSAT, ISD::VSELECT})
         setOperationAction(I, VT, Legal);
+
+    for (auto I : {ISD::ABS, ISD::ADD, ISD::SETCC, ISD::SHL, ISD::SRA, ISD::SRL,
+                   ISD::SSHLSAT, ISD::SUB, ISD::UADDSAT, ISD::USHLSAT,
+                   ISD::USUBSAT, ISD::VSELECT})
+      setOperationAction(I, MVT::v8i8, Legal);
 
   } else {
     // Fall-back to hq in cv1 using dag-combine
@@ -920,6 +929,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (MVT VT : {MVT::v4i8, MVT::v8i8, MVT::v4i16, MVT::v4f16, MVT::v8f16,
                  MVT::v4f64, MVT::v4i64})
     setOperationAction(ISD::INSERT_SUBVECTOR, VT, Legal);
+
+  // In CV1, fall back to hq with specialized patterns
+  for (auto I : {ISD::SMAX, ISD::SMIN, ISD::UMAX, ISD::UMIN, ISD::MUL,
+                 ISD::SADDSAT, ISD::SSUBSAT})
+    setOperationAction(I, MVT::v8i8, Legal);
 
   setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
