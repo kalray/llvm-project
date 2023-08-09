@@ -6584,10 +6584,8 @@ Optional<InstructionCost> LoopVectorizationCostModel::getReductionPatternCost(
         CostKind);
 
     InstructionCost ExtCost =
-        (VectorTy == ExtType)
-            ? 0
-            : TTI.getCastInstrCost(RedOp->getOpcode(), VectorTy, ExtType,
-                                   TTI::CastContextHint::None, CostKind, RedOp);
+        TTI.getCastInstrCost(RedOp->getOpcode(), VectorTy, ExtType,
+                             TTI::CastContextHint::None, CostKind, RedOp);
     if (RedCost.isValid() && RedCost < BaseCost + ExtCost)
       return I == RetI ? RedCost : 0;
   } else if (RedOp &&

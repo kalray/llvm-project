@@ -63,9 +63,7 @@ public:
   bool shouldExpandReduction(const IntrinsicInst *II) const;
 
   bool preferInLoopReduction(unsigned Opcode, Type *Ty,
-                             TTI::ReductionFlags Flags) const {
-    return !ST->isV1();
-  }
+                             TTI::ReductionFlags Flags) const;
 
   InstructionCost getArithmeticReductionCost(
       unsigned Opcode, VectorType *Ty, Optional<FastMathFlags> FMF,

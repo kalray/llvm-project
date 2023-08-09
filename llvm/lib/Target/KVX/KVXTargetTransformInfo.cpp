@@ -340,6 +340,29 @@ bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
   }
 }
 
+bool KVXTTIImpl::preferInLoopReduction(unsigned Opcode, Type *Ty,
+                                       TTI::ReductionFlags Flags) const {
+
+  if (Ty->isFloatTy())
+    return false;
+
+  switch (Opcode) {
+  case ISD::ADD:
+    return true;
+  // These reductions haven't been implemented:
+  case ISD::AND:
+  case ISD::OR:
+  case ISD::XOR:
+  case ISD::SMAX:
+  case ISD::SMIN:
+  case ISD::UMAX:
+  case ISD::UMIN:
+  // Any other is not supported.
+  default:
+    return false;
+  }
+}
+
 unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const {
   #define REG(X) \
   case KVX::X ## RegRegClassID: \
