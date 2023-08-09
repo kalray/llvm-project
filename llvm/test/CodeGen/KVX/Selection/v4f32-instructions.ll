@@ -264,7 +264,7 @@ define <4 x float> @test_frem(<4 x float> %a, <4 x float> %b) #0 {
   ret <4 x float> %r
 }
 
-define void @test_ldst_v4f32(<4 x float>* %a, <4 x float>* %b) {
+define void @test_ldst_v4f32(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
@@ -272,8 +272,8 @@ define void @test_ldst_v4f32(<4 x float>* %a, <4 x float>* %b) {
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <4 x float>, <4 x float>* %a
-  store <4 x float> %t1, <4 x float>* %b, align 16
+  %t1 = load <4 x float>, ptr %a
+  store <4 x float> %t1, ptr %b, align 16
   ret void
 }
 
@@ -3733,4 +3733,49 @@ define <4 x float> @fms(<4 x float>, <4 x float>, <4 x float>) {
   %4 = fmul fast <4 x float> %2, %1
   %5 = fsub fast <4 x float> %0, %4
   ret <4 x float> %5
+}
+
+define void @subvec0fp(ptr %0) {
+; CHECK-LABEL: subvec0fp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:  .LBB142_1: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    sq 0[$r0] = $r0r1
+; CHECK-NEXT:    goto .LBB142_1
+; CHECK-NEXT:    ;; # (end cycle 0)
+  br label %2
+
+2:
+  %3 = shufflevector <4 x float> zeroinitializer, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %4 = fadd <2 x float> zeroinitializer, %3
+  %5 = shufflevector <2 x float> %4, <2 x float> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
+  %6 = shufflevector <4 x float> %5, <4 x float> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  store <4 x float> %6, ptr undef, align 16
+  br label %2
+}
+
+define void @subvec2fp(ptr %0) {
+; CHECK-LABEL: subvec2fp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:  .LBB143_1: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    sq 0[$r0] = $r0r1
+; CHECK-NEXT:    goto .LBB143_1
+; CHECK-NEXT:    ;; # (end cycle 0)
+  br label %2
+
+2:
+  %3 = shufflevector <4 x float> zeroinitializer, <4 x float> undef, <2 x i32> <i32 0, i32 1>
+  %4 = fadd <2 x float> zeroinitializer, %3
+  %5 = shufflevector <2 x float> %4, <2 x float> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
+  %6 = shufflevector <4 x float> %5, <4 x float> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+  store <4 x float> %6, ptr undef, align 16
+  br label %2
 }

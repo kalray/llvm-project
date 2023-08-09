@@ -2554,20 +2554,40 @@ def : Pat<(v4i16 (insert_subvector v4i16:$v0, v2i16:$v1, (i64 2))),
 def : Pat<(v4i16 (concat_vectors v2i16:$v0, (v2i16 undef))),
           (v4i16 (COPY SingleReg:$v0))>;
 
+def : Pat<(v4i32 (insert_subvector v4i32:$v0, v2i32:$v1, (i64 0))),
+          (v4i32 (REG_SEQUENCE PairedReg,
+                   (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)), sub_d1,
+                   SingleReg:$v1, sub_d0))>;
+
 def : Pat<(v4i32 (insert_subvector v4i32:$v0, v2i32:$v1, (i64 2))),
           (v4i32 (REG_SEQUENCE PairedReg,
                    (v2i32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
                    SingleReg:$v1, sub_d1))>;
+
+def : Pat<(v4f32 (insert_subvector v4f32:$v0, v2f32:$v1, (i64 0))),
+          (v4f32 (REG_SEQUENCE PairedReg,
+                   (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_d1)), sub_d1,
+                   SingleReg:$v1, sub_d0))>;
 
 def : Pat<(v4f32 (insert_subvector v4f32:$v0, v2f32:$v1, (i64 2))),
           (v4f32 (REG_SEQUENCE PairedReg,
                    (v2f32 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
                    SingleReg:$v1, sub_d1))>;
 
+def : Pat<(v4i64 (insert_subvector v4i64:$v0, v2i64:$v1, (i64 0))),
+          (v4i64 (REG_SEQUENCE QuadReg,
+                   (v2i64 (EXTRACT_SUBREG QuadReg:$v0, sub_q1)), sub_q1,
+                   PairedReg:$v1, sub_q0))>;
+
 def : Pat<(v4i64 (insert_subvector v4i64:$v0, v2i64:$v1, (i64 2))),
           (v4i64 (REG_SEQUENCE QuadReg,
                    (v2i64 (EXTRACT_SUBREG QuadReg:$v0, sub_q0)), sub_q0,
                    PairedReg:$v1, sub_q1))>;
+
+def : Pat<(v4f64 (insert_subvector v4f64:$v0, v2f64:$v1, (i64 0))),
+          (v4f64 (REG_SEQUENCE QuadReg,
+                   (v2f64 (EXTRACT_SUBREG QuadReg:$v0, sub_q1)), sub_q1,
+                   PairedReg:$v1, sub_q0))>;
 
 def : Pat<(v4f64 (insert_subvector v4f64:$v0, v2f64:$v1, (i64 2))),
           (v4f64 (REG_SEQUENCE QuadReg,

@@ -316,7 +316,7 @@ define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
   ret <4 x i32> %r
 }
 
-define void @test_ldst_v4i32(<4 x i32>* %a, <4 x i32>* %b) {
+define void @test_ldst_v4i32(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v4i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
@@ -324,8 +324,8 @@ define void @test_ldst_v4i32(<4 x i32>* %a, <4 x i32>* %b) {
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <4 x i32>, <4 x i32>* %a
-  store <4 x i32> %t1, <4 x i32>* %b, align 16
+  %t1 = load <4 x i32>, ptr %a
+  store <4 x i32> %t1, ptr %b, align 16
   ret void
 }
 
@@ -927,4 +927,49 @@ define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
   ret <4 x i32> %r
+}
+
+define void @subvec0(ptr %0) {
+; CHECK-LABEL: subvec0:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:  .LBB53_1: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sq 0[$r0] = $r0r1
+; CHECK-NEXT:    goto .LBB53_1
+; CHECK-NEXT:    ;; # (end cycle 1)
+  br label %2
+
+2:
+  %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %4 = add nsw <2 x i32> zeroinitializer, %3
+  %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
+  %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  store <4 x i32> %6, ptr undef, align 16
+  br label %2
+}
+
+define void @subvec2(ptr %0) {
+; CHECK-LABEL: subvec2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:  .LBB54_1: # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    sq 0[$r0] = $r0r1
+; CHECK-NEXT:    goto .LBB54_1
+; CHECK-NEXT:    ;; # (end cycle 0)
+  br label %2
+
+2:
+  %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+  %4 = add nsw <2 x i32> zeroinitializer, %3
+  %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
+  %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+  store <4 x i32> %6, ptr undef, align 16
+  br label %2
 }
