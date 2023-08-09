@@ -1438,29 +1438,14 @@ entry:
 define <4 x i8> @subx2_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx2_i8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    sllw $r4 = $r4, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_i8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -1476,29 +1461,14 @@ entry:
 define <4 x i8> @subx2_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx2_u8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    sllw $r4 = $r4, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_u8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -1648,29 +1618,14 @@ entry:
 define <4 x i8> @subx4_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx4_i8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 2
-; V1-NEXT:    sllw $r2 = $r2, 2
-; V1-NEXT:    sllw $r3 = $r3, 2
-; V1-NEXT:    sllw $r4 = $r4, 2
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx4hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx4_i8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -1686,29 +1641,14 @@ entry:
 define <4 x i8> @subx4_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx4_u8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 2
-; V1-NEXT:    sllw $r2 = $r2, 2
-; V1-NEXT:    sllw $r3 = $r3, 2
-; V1-NEXT:    sllw $r4 = $r4, 2
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx4hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx4_u8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -1858,29 +1798,14 @@ entry:
 define <4 x i8> @subx8_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx8_i8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    sllw $r4 = $r4, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_i8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -1896,29 +1821,14 @@ entry:
 define <4 x i8> @subx8_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx8_u8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    sllw $r4 = $r4, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_u8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -2068,29 +1978,14 @@ entry:
 define <4 x i8> @subx16_i8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx16_i8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    sllw $r4 = $r4, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_i8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -2106,29 +2001,14 @@ entry:
 define <4 x i8> @subx16_u8x4_rr(<4 x i8> %a, <4 x i8> %b) {
 ; V1-LABEL: subx16_u8x4_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r1 = $r1
-; V1-NEXT:    srlw $r2 = $r1, 24
-; V1-NEXT:    extfz $r3 = $r1, 23, 16
-; V1-NEXT:    extfz $r4 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    sllw $r4 = $r4, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r1 = $r4, 15, 8
-; V1-NEXT:    insf $r3 = $r2, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    insf $r1 = $r3, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r1, $r0
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r1, $r0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_u8x4_rr:
 ; V2:       # %bb.0: # %entry
@@ -2277,28 +2157,13 @@ entry:
 define <4 x i8> @subx2_i8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx2_i8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 1
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_i8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -2314,28 +2179,13 @@ entry:
 define <4 x i8> @subx2_i8x4_ri_2(<4 x i8> %a) {
 ; V1-LABEL: subx2_i8x4_ri_2:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 1
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq.@ $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_i8x4_ri_2:
 ; V2:       # %bb.0: # %entry
@@ -2351,29 +2201,14 @@ entry:
 define <4 x i8> @subx2_i8x4_ri_3(<4 x i8> %a) {
 ; V1-LABEL: subx2_i8x4_ri_3:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 1
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    make $r1 = 0x3000100020001
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    make $r1 = 0x3000100020001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq $r0 = $r0, $r1
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_i8x4_ri_3:
 ; V2:       # %bb.0: # %entry
@@ -2389,28 +2224,13 @@ entry:
 define <4 x i8> @subx2_u8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx2_u8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 1
-; V1-NEXT:    sllw $r1 = $r1, 1
-; V1-NEXT:    sllw $r2 = $r2, 1
-; V1-NEXT:    sllw $r3 = $r3, 1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx2hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx2_u8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -2713,28 +2533,13 @@ entry:
 define <4 x i8> @subx4_i8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx4_i8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 2
-; V1-NEXT:    sllw $r1 = $r1, 2
-; V1-NEXT:    sllw $r2 = $r2, 2
-; V1-NEXT:    sllw $r3 = $r3, 2
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx4hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx4_i8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -2750,28 +2555,13 @@ entry:
 define <4 x i8> @subx4_u8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx4_u8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 2
-; V1-NEXT:    sllw $r1 = $r1, 2
-; V1-NEXT:    sllw $r2 = $r2, 2
-; V1-NEXT:    sllw $r3 = $r3, 2
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx4hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx4_u8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -3075,28 +2865,13 @@ entry:
 define <4 x i8> @subx8_i8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx8_i8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 3
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_i8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -3112,28 +2887,13 @@ entry:
 define <4 x i8> @subx8_i8x4_ri_2(<4 x i8> %a) {
 ; V1-LABEL: subx8_i8x4_ri_2:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 3
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq.@ $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_i8x4_ri_2:
 ; V2:       # %bb.0: # %entry
@@ -3149,29 +2909,14 @@ entry:
 define <4 x i8> @subx8_i8x4_ri_3(<4 x i8> %a) {
 ; V1-LABEL: subx8_i8x4_ri_3:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 3
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    make $r1 = 0x3000100020001
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    make $r1 = 0x3000100020001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r0, $r1
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_i8x4_ri_3:
 ; V2:       # %bb.0: # %entry
@@ -3187,28 +2932,13 @@ entry:
 define <4 x i8> @subx8_u8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx8_u8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 3
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_u8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -3224,29 +2954,14 @@ entry:
 define <4 x i8> @subx8_u8x4_ri_2(<4 x i8> %a) {
 ; V1-LABEL: subx8_u8x4_ri_2:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 3
-; V1-NEXT:    sllw $r1 = $r1, 3
-; V1-NEXT:    sllw $r2 = $r2, 3
-; V1-NEXT:    sllw $r3 = $r3, 3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    make $r1 = 0x3000100020001
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    make $r1 = 0x3000100020001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx8hq $r0 = $r0, $r1
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx8_u8x4_ri_2:
 ; V2:       # %bb.0: # %entry
@@ -3608,28 +3323,13 @@ entry:
 define <4 x i8> @subx16_i8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx16_i8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_i8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -3645,28 +3345,13 @@ entry:
 define <4 x i8> @subx16_i8x4_ri_2(<4 x i8> %a) {
 ; V1-LABEL: subx16_i8x4_ri_2:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq.@ $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_i8x4_ri_2:
 ; V2:       # %bb.0: # %entry
@@ -3682,29 +3367,14 @@ entry:
 define <4 x i8> @subx16_i8x4_ri_3(<4 x i8> %a) {
 ; V1-LABEL: subx16_i8x4_ri_3:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    make $r1 = 0x3000100020001
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    make $r1 = 0x3000100020001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r0, $r1
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_i8x4_ri_3:
 ; V2:       # %bb.0: # %entry
@@ -3720,28 +3390,13 @@ entry:
 define <4 x i8> @subx16_u8x4_ri_(<4 x i8> %a) {
 ; V1-LABEL: subx16_u8x4_ri_:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_u8x4_ri_:
 ; V2:       # %bb.0: # %entry
@@ -3757,28 +3412,13 @@ entry:
 define <4 x i8> @subx16_u8x4_ri_2(<4 x i8> %a) {
 ; V1-LABEL: subx16_u8x4_ri_2:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq.@ $r0 = $r0, 0x20001
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq.@ $r0 = $r0, 0x20001
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_u8x4_ri_2:
 ; V2:       # %bb.0: # %entry
@@ -3794,29 +3434,14 @@ entry:
 define <4 x i8> @subx16_u8x4_ri_3(<4 x i8> %a) {
 ; V1-LABEL: subx16_u8x4_ri_3:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    zxbd $r0 = $r0
-; V1-NEXT:    srlw $r1 = $r0, 24
-; V1-NEXT:    extfz $r2 = $r0, 23, 16
-; V1-NEXT:    extfz $r3 = $r0, 15, 8
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllw $r0 = $r0, 4
-; V1-NEXT:    sllw $r1 = $r1, 4
-; V1-NEXT:    sllw $r2 = $r2, 4
-; V1-NEXT:    sllw $r3 = $r3, 4
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r0 = $r3, 15, 8
-; V1-NEXT:    make $r1 = 0x3000100020001
-; V1-NEXT:    insf $r2 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r0 = $r2, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbfhq $r0 = $r0, $r1
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    make $r1 = 0x3000100020001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbfx16hq $r0 = $r0, $r1
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: subx16_u8x4_ri_3:
 ; V2:       # %bb.0: # %entry

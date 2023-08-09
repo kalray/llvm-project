@@ -1954,3 +1954,57 @@ define <8 x i8> @test_div_32(<8 x i8> %a, <8 x i8> %b) #0 {
   %r = sdiv <8 x i8> %a, <i8 32, i8 32, i8 32, i8 32, i8 32, i8 32, i8 32, i8 32>
   ret <8 x i8> %r
 }
+
+define <8 x i8> @lshr_cst_splat_w_undefs(<8 x i8> %lhs ) {
+; CV1-LABEL: lshr_cst_splat_w_undefs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r0, 0xff00ff
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srld $r0 = $r0, 2
+; CV1-NEXT:    srld $r1 = $r1, 2
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 3)
+;
+; CV2-LABEL: lshr_cst_splat_w_undefs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srlbos $r0 = $r0, 2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %r = lshr <8 x i8> %lhs, <i8 2, i8 undef, i8 undef, i8 undef, i8 2, i8 undef, i8 undef, i8 undef>
+  ret <8 x i8> %r
+}
+
+define <8 x i8> @lshr_val_splat_w_undefs(<8 x i8> %lhs, i32 %s ) {
+; CV1-LABEL: lshr_val_splat_w_undefs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r2 = $r0, 0xff00ff
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srld $r0 = $r0, $r1
+; CV1-NEXT:    srld $r2 = $r2, $r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    andd.@ $r0 = $r0, 0xff00ff00
+; CV1-NEXT:    andd.@ $r1 = $r2, 0xff00ff
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 3)
+;
+; CV2-LABEL: lshr_val_splat_w_undefs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srlbos $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %conv = trunc i32 %s to i8
+  %vecinit = insertelement <8 x i8> undef, i8 %conv, i32 0
+  %rhs = insertelement <8 x i8> %vecinit, i8 %conv, i32 4
+
+  %r = lshr <8 x i8> %lhs, %rhs
+  ret <8 x i8> %r
+}

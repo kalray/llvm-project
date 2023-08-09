@@ -2928,22 +2928,13 @@ define <2 x i8> @shlbps_r(<2 x i8> %0, i32 %1) {
 define <4 x i8> @shlbqs(<4 x i8> %0, i32 %1) {
 ; CV1-LABEL: shlbqs:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    srlw $r2 = $r0, 24
-; CV1-NEXT:    extfz $r3 = $r0, 23, 16
-; CV1-NEXT:    extfz $r4 = $r0, 15, 8
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sllw $r0 = $r0, $r1
-; CV1-NEXT:    sllw $r2 = $r2, $r1
-; CV1-NEXT:    sllw $r3 = $r3, $r1
-; CV1-NEXT:    sllw $r4 = $r4, $r1
+; CV1-NEXT:    sllhqs $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r0 = $r4, 15, 8
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r0 = $r3, 31, 16
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: shlbqs:
 ; CV2:       # %bb.0:

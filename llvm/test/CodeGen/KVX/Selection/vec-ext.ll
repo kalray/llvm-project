@@ -342,23 +342,19 @@ entry:
 define <4 x i8> @sext_4xi1_4xi8(<4 x i1> %a){
 ; CV1-LABEL: sext_4xi1_4xi8:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    srlw $r1 = $r0, 24
-; CV1-NEXT:    extfz $r2 = $r0, 23, 16
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    extfs $r1 = $r1, 0, 0
-; CV1-NEXT:    extfs $r2 = $r2, 0, 0
+; CV1-NEXT:    sllhqs $r0 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    extfs $r0 = $r0, 0, 0
-; CV1-NEXT:    extfs $r3 = $r3, 0, 0
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r0 = $r3, 15, 8
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r0 = $r2, 31, 16
-; CV1-NEXT:    ret
+; CV1-NEXT:    srahqs $r0 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: sext_4xi1_4xi8:
 ; CV2:       # %bb.0: # %entry

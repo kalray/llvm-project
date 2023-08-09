@@ -584,6 +584,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::ROTL, MVT::v8i8, Custom);
   setOperationAction(ISD::ROTR, MVT::v8i8, Custom);
 
+  setOperationPromotedToType(ISD::SHL, MVT::v4i8, MVT::v4i16);
+  setOperationPromotedToType(ISD::SRL, MVT::v4i8, MVT::v4i16);
+  setOperationPromotedToType(ISD::SRA, MVT::v4i8, MVT::v4i16);
+
   for (auto VT : {MVT::v2f64, MVT::v2i64, MVT::v4f64, MVT::v4i64, MVT::v8i8})
     setOperationAction(ISD::SETCC, VT, Expand);
 
@@ -949,10 +953,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::VECREDUCE_ADD, VT, RedAction);
   }
 
-  for (auto I : {ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS, ISD::FADD,
-                 ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG,
-                 ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL, ISD::SRA,
-                 ISD::STORE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
+  for (auto I : {ISD::BUILD_VECTOR, ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS,
+                 ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB,
+                 ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL,
+                 ISD::SRA, ISD::STORE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -2855,6 +2859,30 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
   return Op;
 }
 
+static SDValue combineBUILD_VECTOR(SDNode *N, SelectionDAG &DAG) {
+
+  // Sanity check, we're dealing with a build_vector
+  auto *BV = dyn_cast<BuildVectorSDNode>(N);
+  if (!BV)
+    return SDValue();
+
+  auto VecT = BV->getValueType(0);
+  if (VecT.getVectorMinNumElements() < 3 || VecT.isFloatingPoint() ||
+      VecT.getVectorElementType().getSizeInBits() == 64 ||
+      VecT.getSizeInBits() > 64)
+    return SDValue();
+
+  SDValue SplatV = BV->getSplatValue();
+  if (!SplatV)
+    return SDValue();
+
+  // If we have undefs, normalize it, else do not change.
+  if (!any_of(BV->ops(), [=](const SDUse &Op) { return Op.get()->isUndef(); }))
+    return SDValue();
+
+  return DAG.getSplatBuildVector(BV->getValueType(0), SDLoc(BV), SplatV);
+}
+
 static SDValue combineSRA(SDNode *N, SelectionDAG &DAG) {
   if (!N->getValueType(0).isSimple() ||
       N->getSimpleValueType(0).SimpleTy != MVT::i64)
@@ -3609,6 +3637,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
+  case ISD::BUILD_VECTOR:
+    return combineBUILD_VECTOR(N, DAG);
   case ISD::CTLZ:
   case ISD::CTTZ:
   case ISD::CTPOP:

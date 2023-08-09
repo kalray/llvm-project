@@ -1322,57 +1322,25 @@ attributes #0 = { nounwind }
 define <4 x i8> @test_div_4(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_div_4:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srlw $r1 = $r0, 24
-; CV1-NEXT:    extfz $r2 = $r0, 23, 16
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r4 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    srahqs $r1 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxbd $r3 = $r3
-; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    extfz $r1 = $r1, 14, 13
-; CV1-NEXT:    extfz $r2 = $r2, 14, 13
+; CV1-NEXT:    srlhqs $r1 = $r1, 6
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    extfz $r3 = $r3, 14, 13
-; CV1-NEXT:    extfz $r4 = $r4, 14, 13
+; CV1-NEXT:    addhq $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
-; CV1-NEXT:    insf $r4 = $r3, 15, 8
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sxlbhq $r1 = $r4
+; CV1-NEXT:    srahqs $r0 = $r0, 2
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    addhq $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    srlw $r1 = $r0, 24
-; CV1-NEXT:    extfz $r2 = $r0, 23, 16
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    sxbd $r2 = $r2
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sraw $r1 = $r1, 2
-; CV1-NEXT:    sraw $r2 = $r2, 2
-; CV1-NEXT:    sxbd $r3 = $r3
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    sraw $r0 = $r0, 2
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
-; CV1-NEXT:    sraw $r3 = $r3, 2
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    insf $r0 = $r3, 15, 8
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 15)
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: test_div_4:
 ; CV2:       # %bb.0:
@@ -1386,57 +1354,25 @@ define <4 x i8> @test_div_4(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i8> @test_div_32(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_div_32:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srlw $r1 = $r0, 24
-; CV1-NEXT:    extfz $r2 = $r0, 23, 16
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    zxbd $r4 = $r0
+; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    sxbd $r2 = $r2
+; CV1-NEXT:    srahqs $r1 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxbd $r3 = $r3
-; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    andd.@ $r1 = $r1, 0xff00ff
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    extfz $r1 = $r1, 14, 10
-; CV1-NEXT:    extfz $r2 = $r2, 14, 10
+; CV1-NEXT:    srlhqs $r1 = $r1, 3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    extfz $r3 = $r3, 14, 10
-; CV1-NEXT:    extfz $r4 = $r4, 14, 10
+; CV1-NEXT:    addhq $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
-; CV1-NEXT:    insf $r4 = $r3, 15, 8
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    insf $r4 = $r2, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sxlbhq $r1 = $r4
+; CV1-NEXT:    srahqs $r0 = $r0, 5
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    addhq $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    srlw $r1 = $r0, 24
-; CV1-NEXT:    extfz $r2 = $r0, 23, 16
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    sxbd $r1 = $r1
-; CV1-NEXT:    sxbd $r2 = $r2
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sraw $r1 = $r1, 5
-; CV1-NEXT:    sraw $r2 = $r2, 5
-; CV1-NEXT:    sxbd $r3 = $r3
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    sraw $r0 = $r0, 5
-; CV1-NEXT:    insf $r2 = $r1, 15, 8
-; CV1-NEXT:    sraw $r3 = $r3, 5
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    insf $r0 = $r3, 15, 8
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    insf $r0 = $r2, 31, 16
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 15)
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: test_div_32:
 ; CV2:       # %bb.0:
@@ -1444,5 +1380,49 @@ define <4 x i8> @test_div_32(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %r = sdiv <4 x i8> %a, <i8 32, i8 32, i8 32, i8 32>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @lshr_cst_splat_w_undefs(<4 x i8> %lhs ) {
+; CV1-LABEL: lshr_cst_splat_w_undefs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srlhqs $r0 = $r0, 2
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
+;
+; CV2-LABEL: lshr_cst_splat_w_undefs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srlbos $r0 = $r0, 2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %r = lshr <4 x i8> %lhs, <i8 2, i8 undef, i8 2, i8 undef>
+  ret <4 x i8> %r
+}
+
+define <4 x i8> @lshr_val_splat_w_undefs(<4 x i8> %lhs, i32 %s ) {
+; CV1-LABEL: lshr_val_splat_w_undefs:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srlhqs $r0 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
+;
+; CV2-LABEL: lshr_val_splat_w_undefs:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srlbos $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %conv = trunc i32 %s to i8
+  %vecinit = insertelement <4 x i8> undef, i8 %conv, i32 0
+  %rhs = insertelement <4 x i8> %vecinit, i8 %conv, i32 2
+
+  %r = lshr <4 x i8> %lhs, %rhs
   ret <4 x i8> %r
 }

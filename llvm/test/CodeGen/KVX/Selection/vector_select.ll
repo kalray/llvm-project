@@ -96,7 +96,7 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lwz $r2 = 0[$r0]
 ; CV1-NEXT:    make $r3 = 0
-; CV1-NEXT:    make $r4 = 0xffffffffffff
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lwz $r1 = 0[$r1]
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -128,7 +128,7 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lwz $r2 = 0[$r0]
 ; CV2-NEXT:    make $r3 = 0
-; CV2-NEXT:    make $r4 = 0xffffff
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lwz $r1 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 1)
