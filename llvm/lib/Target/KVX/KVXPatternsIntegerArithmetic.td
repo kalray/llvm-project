@@ -492,7 +492,7 @@ def : Pat<(vt (KVX_vecreduce_add_zext v4i16:$v) ),
 def : Pat<(vt (KVX_vecreduce_add_zext v2i16:$v) ),
           (ADDURHQD (ZXWD SingleReg:$v))>;
 
-// ADDURHWP
+// ADDURWPD
 def : Pat<(vt (KVX_vecreduce_add_zext v2i32:$v) ),
           (ADDURWPD SingleReg:$v)>;
 

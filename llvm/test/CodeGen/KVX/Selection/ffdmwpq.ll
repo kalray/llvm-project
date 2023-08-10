@@ -114,8 +114,8 @@ define <2 x float> @ffdmdswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
   ret <2 x float> %9
 }
 
-define <4 x float> @ffdmaswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 x float> %3, <4 x float> %4) {
-; V1-LABEL: ffdmaswq:
+define <4 x float> @ffdmsawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 x float> %3, <4 x float> %4) {
+; V1-LABEL: ffdmsawq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmswp $r1 = $r3, $r7
 ; V1-NEXT:    ;; # (end cycle 0)
@@ -127,7 +127,7 @@ define <4 x float> @ffdmaswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 5)
 ;
-; V2-LABEL: ffdmaswq:
+; V2-LABEL: ffdmsawq:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r10 = $r2
 ; V2-NEXT:    copyd $r11 = $r3
@@ -165,8 +165,8 @@ define <2 x float> @ffdmaswp(<2 x float> %0, <2 x float> %1, <2 x float> %2, <2 
   ret <2 x float> %9
 }
 
-define <4 x float> @ffdmsawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 x float> %3, <4 x float> %4) {
-; V1-LABEL: ffdmsawq:
+define <4 x float> @ffdmaswq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 x float> %3, <4 x float> %4) {
+; V1-LABEL: ffdmaswq:
 ; V1:       # %bb.0:
 ; V1-NEXT:    ffmawp $r1 = $r7, $r3
 ; V1-NEXT:    ;; # (end cycle 0)
@@ -178,7 +178,7 @@ define <4 x float> @ffdmsawq(<4 x float> %0, <4 x float> %1, <4 x float> %2, <4 
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 5)
 ;
-; V2-LABEL: ffdmsawq:
+; V2-LABEL: ffdmaswq:
 ; V2:       # %bb.0:
 ; V2-NEXT:    copyd $r10 = $r2
 ; V2-NEXT:    copyd $r11 = $r3
