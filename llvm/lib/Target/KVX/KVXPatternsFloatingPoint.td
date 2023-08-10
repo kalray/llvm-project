@@ -461,11 +461,23 @@ def fms: PatFrags<(ops node:$lhs, node:$rhs, node:$acc),
                    (fma (fneg $lhs), $rhs, $acc),
                    (fma $lhs, (fneg $rhs), $acc)]>;
 
+def extcteltMulV4f32 : PatFrag<(ops node:$lhs, node:$rhs, node:$e),
+          (f32 (extractelt (v4f32 (fmulcont node:$lhs, node:$rhs)), node:$e))>;
+
 let Predicates = [IsV2] in  {
 // FFDMAWP
 def : Pat<(v2f32 (faddcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
+         (FFDMAWP PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
+
+def : Pat<(v2f32 (build_vector
+          (f32 (faddcont
+                  (extcteltMulV4f32 v4f32:$lhs, v4f32:$rhs, (i64 0)),
+                  (extcteltMulV4f32 v4f32:$lhs, v4f32:$rhs, (i64 2)))),
+          (f32 (faddcont
+                  (extcteltMulV4f32 v4f32:$lhs, v4f32:$rhs, (i64 1)),
+                  (extcteltMulV4f32 v4f32:$lhs, v4f32:$rhs, (i64 3)))))),
          (FFDMAWP PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 
 // FFDMDAW

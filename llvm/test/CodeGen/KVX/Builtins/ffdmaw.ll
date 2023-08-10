@@ -44,3 +44,66 @@ define <2 x float> @ffdmawp(<4 x float> %0, <4 x float> %1, <2 x float> %2) {
 
 declare <2 x float> @llvm.kvx.ffdma.v2f32(<4 x float>, <4 x float>, i32, i32)
 
+define <2 x float> @ffdmawp2(<4 x float> %0, <4 x float> %1) {
+; V1-LABEL: ffdmawp2:
+; V1:       # %bb.0:
+; V1-NEXT:    fmulwq $r2r3 = $r2r3, $r0r1
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    faddw $r0 = $r2, $r3
+; V1-NEXT:    srld $r1 = $r2, 32
+; V1-NEXT:    srld $r2 = $r3, 32
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    faddw $r1 = $r1, $r2
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    insf $r0 = $r1, 63, 32
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 9)
+;
+; V2-LABEL: ffdmawp2:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmawp $r0 = $r2r3, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 0)
+  %3 = fmul fast <4 x float> %1, %0
+  %4 = extractelement <4 x float> %3, i32 0
+  %5 = extractelement <4 x float> %3, i32 2
+  %6 = fadd fast float %4, %5
+  %7 = insertelement <2 x float> undef, float %6, i32 0
+  %8 = extractelement <4 x float> %3, i32 1
+  %9 = extractelement <4 x float> %3, i32 3
+  %10 = fadd fast float %8, %9
+  %11 = insertelement <2 x float> %7, float %10, i32 1
+  ret <2 x float> %11
+}
+
+define <2 x float> @ffdmawp3(<4 x float> %0, <4 x float> %1) {
+; V1-LABEL: ffdmawp3:
+; V1:       # %bb.0:
+; V1-NEXT:    fmulwq $r2r3 = $r2r3, $r0r1
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    faddw $r0 = $r3, $r2
+; V1-NEXT:    srld $r1 = $r3, 32
+; V1-NEXT:    srld $r2 = $r2, 32
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    faddw $r1 = $r1, $r2
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    insf $r0 = $r1, 63, 32
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 9)
+;
+; V2-LABEL: ffdmawp3:
+; V2:       # %bb.0:
+; V2-NEXT:    ffdmawp $r0 = $r2r3, $r0r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 0)
+  %3 = fmul fast <4 x float> %1, %0
+  %4 = extractelement <4 x float> %3, i32 2
+  %5 = extractelement <4 x float> %3, i32 0
+  %6 = fadd fast float %4, %5
+  %7 = insertelement <2 x float> undef, float %6, i32 0
+  %8 = extractelement <4 x float> %3, i32 3
+  %9 = extractelement <4 x float> %3, i32 1
+  %10 = fadd fast float %8, %9
+  %11 = insertelement <2 x float> %7, float %10, i32 1
+  ret <2 x float> %11
+}
