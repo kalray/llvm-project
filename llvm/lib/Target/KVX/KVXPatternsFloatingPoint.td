@@ -465,6 +465,14 @@ def extcteltMulV4f32 : PatFrag<(ops node:$lhs, node:$rhs, node:$e),
           (f32 (extractelt (v4f32 (fmulcont node:$lhs, node:$rhs)), node:$e))>;
 
 let Predicates = [IsV2] in  {
+// FFDMAWQ
+def : Pat<(v4f32 (fma v4f32:$v1_lo, v4f32:$v0_lo, (v4f32(fmulcont v4f32:$v1_hi, v4f32:$v0_hi)))),
+          (v4f32
+            (FFDMAWQ
+              (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$v0_lo, sub_q0, PairedReg:$v0_hi, sub_q1)),
+              (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$v1_lo, sub_q0, PairedReg:$v1_hi, sub_q1)),
+              rounding_, silent_))>;
+
 // FFDMAWP
 def : Pat<(v2f32 (faddcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),
