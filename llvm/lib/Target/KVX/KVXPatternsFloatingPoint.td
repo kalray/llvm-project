@@ -719,6 +719,13 @@ def : Pat<(f32 (fsubcont
           (extractelt (fmulcont v2f32:$lhs, v2f32:$rhs), (i64 1)))),
          (FFDMSW SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_)>;
 
+// FFDMSWQ
+def : Pat<(v4f32 (fma v4f32:$v1_lo, v4f32:$v0_lo, (fneg (fmulcont v4f32:$v1_hi, v4f32:$v0_hi)))),
+          (v4f32 (FFDMSWQ
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$v0_lo, sub_q0, PairedReg:$v0_hi, sub_q1)),
+            (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$v1_lo, sub_q0, PairedReg:$v1_hi, sub_q1)),
+            rounding_, silent_))>;
+
 // FFDMSWP
 def : Pat<(v2f32 (fsubcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)),

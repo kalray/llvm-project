@@ -677,3 +677,33 @@ define <4 x float> @ffdmawq(<8 x float> %0, <8 x float> %1) {
   %6 = fadd fast <4 x float> %4, %5
   ret <4 x float> %6
 }
+
+define <4 x float> @ffdmswq(<8 x float> %a, <8 x float> %b) {
+; KV1-LABEL: ffdmswq:
+; KV1:       # %bb.0: # %entry
+; KV1-NEXT:    fmulwq $r2r3 = $r6r7, $r2r3
+; KV1-NEXT:    ;; # (end cycle 0)
+; KV1-NEXT:    fnegwp $r2 = $r2
+; KV1-NEXT:    fnegwp $r3 = $r3
+; KV1-NEXT:    ;; # (end cycle 4)
+; KV1-NEXT:    ffmawp $r3 = $r5, $r1
+; KV1-NEXT:    ;; # (end cycle 5)
+; KV1-NEXT:    ffmawp $r2 = $r4, $r0
+; KV1-NEXT:    ;; # (end cycle 6)
+; KV1-NEXT:    copyd $r0 = $r2
+; KV1-NEXT:    copyd $r1 = $r3
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;; # (end cycle 10)
+;
+; KV2-LABEL: ffdmswq:
+; KV2:       # %bb.0: # %entry
+; KV2-NEXT:    ffdmswq $r0r1 = $r0r1r2r3, $r4r5r6r7
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;; # (end cycle 0)
+entry:
+  %mul = fmul fast <8 x float> %b, %a
+  %kvx_low = shufflevector <8 x float> %mul, <8 x float> poison, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  %kvx_high = shufflevector <8 x float> %mul, <8 x float> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
+  %sub = fsub fast <4 x float> %kvx_low, %kvx_high
+  ret <4 x float> %sub
+}
