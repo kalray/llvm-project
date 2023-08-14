@@ -707,3 +707,33 @@ entry:
   %sub = fsub fast <4 x float> %kvx_low, %kvx_high
   ret <4 x float> %sub
 }
+
+define <2 x float> @ffdmdawp_2(<4 x float> noundef %a, <4 x float> noundef %b, <2 x float> noundef %c) {
+; KV1-LABEL: ffdmdawp_2:
+; KV1:       # %bb.0: # %entry
+; KV1-NEXT:    fmulwq $r0r1 = $r2r3, $r0r1
+; KV1-NEXT:    ;; # (end cycle 0)
+; KV1-NEXT:    faddwp $r0 = $r0, $r4
+; KV1-NEXT:    ;; # (end cycle 4)
+; KV1-NEXT:    faddwp $r0 = $r0, $r1
+; KV1-NEXT:    ret
+; KV1-NEXT:    ;; # (end cycle 8)
+;
+; KV2-LABEL: ffdmdawp_2:
+; KV2:       # %bb.0: # %entry
+; KV2-NEXT:    ffdmdawp $r4 = $r2r3, $r0r1
+; KV2-NEXT:    ;; # (end cycle 0)
+; KV2-NEXT:    copyd $r0 = $r4
+; KV2-NEXT:    ret
+; KV2-NEXT:    ;; # (end cycle 4)
+entry:
+  %mul = fmul fast <4 x float> %b, %a
+  %0 = bitcast <4 x float> %mul to <4 x i32>
+  %kvx_low = shufflevector <4 x i32> %0, <4 x i32> poison, <2 x i32> <i32 0, i32 1>
+  %1 = bitcast <2 x i32> %kvx_low to <2 x float>
+  %kvx_high = shufflevector <4 x i32> %0, <4 x i32> poison, <2 x i32> <i32 2, i32 3>
+  %2 = bitcast <2 x i32> %kvx_high to <2 x float>
+  %add = fadd fast <2 x float> %1, %c
+  %add1 = fadd fast <2 x float> %add, %2
+  ret <2 x float> %add1
+}
