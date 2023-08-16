@@ -321,8 +321,6 @@ bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
   switch (II->getIntrinsicID()) {
   default:
   case Intrinsic::vector_reduce_add:
-    return false;
-  // These reductions haven't been implemented:
   case Intrinsic::vector_reduce_and:
   case Intrinsic::vector_reduce_or:
   case Intrinsic::vector_reduce_smax:
@@ -330,6 +328,7 @@ bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
   case Intrinsic::vector_reduce_umax:
   case Intrinsic::vector_reduce_umin:
   case Intrinsic::vector_reduce_xor:
+    return false;
   // These reductions are not present in KVX
   case Intrinsic::vector_reduce_fadd:
   case Intrinsic::vector_reduce_fmax:
@@ -452,9 +451,19 @@ KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
                                        TTI::TargetCostKind CostKind) {
 
   auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
-  if (Ty->isFloatingPointTy() || Sz > 512 || Opcode != Instruction::Add)
+  // Fixme: FP and V1 costs are really wrong
+  if (Ty->isFPOrFPVectorTy() || Sz > 512)
     return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
 
+  switch (Opcode) {
+  case Instruction::Add:
+  case Instruction::And:
+  case Instruction::Or:
+  case Instruction::Xor:
+    break;
+  default:
+    return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
+  }
   if (Sz < 64)
     return 2 + ST->isV1();
 
@@ -464,6 +473,19 @@ KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
     Ret += Ty->getElementCount().getFixedValue();
 
   return Ret;
+}
+
+InstructionCost
+KVXTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
+                                   bool IsUnsigned,
+                                   TTI::TargetCostKind CostKind) {
+  // Fixme: FP and V1 costs are really wrong
+  if (Ty->isFPOrFPVectorTy() || ST->isV1())
+    return BaseT::getMinMaxReductionCost(Ty, CondTy, IsUnsigned, CostKind);
+
+  // V2 Hack: we can simply use the cost of an And reduction for the type.
+  return getArithmeticReductionCost(Instruction::And, Ty, FastMathFlags(),
+                                    CostKind);
 }
 
 InstructionCost KVXTTIImpl::getArithmeticInstrCost(
@@ -523,9 +545,16 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     return getArithmeticReductionCost(                                         \
         Instruction::Type, static_cast<VectorType *>(ICA.getArgTypes()[0]),    \
         FastMathFlags::getFast(), CostKind);
+
+#define MINMAXRED(type, Type)                                                  \
+  case Intrinsic::vector_reduce_##type:                                        \
+    return getMinMaxReductionCost
   auto Opcode = ICA.getID();
   switch (Opcode) {
     REDUCTION(add, Add)
+    REDUCTION(and, And)
+    REDUCTION(or, Or)
+    REDUCTION(xor, Xor)
   default:
     break;
   }

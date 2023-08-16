@@ -794,6 +794,32 @@ foreach vtype = [ v2i8, v2i16, v4i8 ] in {
     def : Pat<(and (vnot vtype:$rs1), vtype:$rs2), (ANDNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
+// ANDRBOD
+def ANDRBOD_Patv2 : Pat<(and (anyext (i32 (vecreduce_and v2i8:$v))), 0xFF),
+                       (ANDRBOD (SBMM8ri64 SingleReg:$v, 0x0101010101010201))>;
+
+def ANDRBOD_Patv4 : Pat<(and (anyext (i32 (vecreduce_and v4i8:$v))), 0xFF),
+                       (ANDRBOD (INSF $v, $v, 63, 32))>;
+
+def ANDRBOD_Patv8 : Pat<(and (anyext (i32 (vecreduce_and v8i8:$v))), 0xFF),
+                       (ANDRBOD SingleReg:$v)>;
+
+// ANDRHQD
+def ANDRHQD_Patv2 : Pat<(and (anyext (i32 (vecreduce_and v2i16:$v))), 0xFFFF),
+                       (ANDRHQD (INSF $v, $v, 63, 32))>;
+
+def ANDRHQD_Patv4 : Pat<(and (anyext (i32 (vecreduce_and v4i16:$v))), 0xFFFF),
+                       (ANDRHQD SingleReg:$v)>;
+
+// ANDRWPD
+def ANDRWPD_Pat1 : Pat<(zext (i32 (vecreduce_and v2i32:$v))),
+                       (ANDRWPD SingleReg:$v)>;
+
+def ANDRWPD_Pat2 : Pat<(zext (i32 (and
+                              (extractelt v2i32:$v, (i64 0)),
+                              (extractelt v2i32:$v, (i64 1))))),
+                       (ANDRWPD SingleReg:$v)>;
+
 // ANDW
 defm : ZEFPat<(and i32:$rs1, i32:$rs2), (ANDWrr SingleReg:$rs1, SingleReg:$rs2)>;
 defm : ZEFPat<(and i32:$rs1, Signed10W:$rs2), (ANDWri10 SingleReg:$rs1, Signed10W:$rs2)>;
@@ -1516,6 +1542,27 @@ multiclass Word_RR_RIsplat_select_H <SDNode irnode, Instruction rinode, Instruct
 // MAXHQ
 defm MAXHQ : Word_RR_RIsplat_select_H<smax, MAXHQri, MAXHQrr>;
 
+// MAXRBOD
+def MAXRBOD_Patv2 : Pat<(sext_inreg (anyext (i32 (vecreduce_smax v2i8:$v))), i8),
+                       (MAXRBOD (SBMM8ri64 SingleReg:$v, 0x0101010101010201))>;
+
+def MAXRBOD_Patv4 : Pat<(sext_inreg (anyext (i32 (vecreduce_smax v4i8:$v))), i8),
+                       (MAXRBOD (INSF $v, $v, 63, 32))>;
+
+def MAXRBOD_Patv8 : Pat<(sext_inreg (anyext (i32 (vecreduce_smax v8i8:$v))), i8),
+                       (MAXRBOD SingleReg:$v)>;
+
+// MAXRHQD
+def MAXRHQD_Patv2 : Pat<(sext_inreg (anyext (i32 (vecreduce_smax v2i16:$v))), i16),
+                       (MAXRHQD (INSF $v, $v, 63, 32))>;
+
+def MAXRHQD_Patv4 : Pat<(sext_inreg (anyext (i32 (vecreduce_smax v4i16:$v))), i16),
+                       (MAXRHQD SingleReg:$v)>;
+
+// MAXRWPD
+def MAXRWPD_Pat : Pat<(sext (i32 (vecreduce_smax v2i32:$v))),
+                       (MAXRWPD SingleReg:$v)>;
+
 // MAXUD
 def : Pat<(umax i64:$v1, i64:$v2), (MAXUDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(umax i64:$v1, Signed10:$v2), (MAXUDri10 SingleReg:$v1, Signed10:$v2)>;
@@ -1528,6 +1575,32 @@ defm MAXUBO : Emulate_v8i8_with_v4i16<umax, MAXUHQrr>, Requires<[IsV1]>;
 
 // MAXUHQ
 defm MAXUHQ : Word_RR_RIsplat_select_H<umax, MAXUHQri, MAXUHQrr>;
+
+// MAXURBOD
+def MAXURBOD_Patv2 : Pat<(and (anyext (i32 (vecreduce_umax v2i8:$v))), 0xFF),
+                       (MAXURBOD (ZXHD SingleReg:$v))>;
+
+def MAXURBOD_Patv4 : Pat<(and (anyext (i32 (vecreduce_umax v4i8:$v))), 0xFF),
+                       (MAXURBOD (ZXWD $v))>;
+
+def MAXURBOD_Patv8 : Pat<(and (anyext (i32 (vecreduce_umax v8i8:$v))), 0xFF),
+                       (MAXURBOD SingleReg:$v)>;
+
+// MAXURHQD
+def MAXURHQD_Patv2 : Pat<(and (anyext (i32 (vecreduce_umax v2i16:$v))), 0xFFFF),
+                       (MAXURHQD (ZXWD $v))>;
+
+def MAXURHQD_Patv4 : Pat<(and (anyext (i32 (vecreduce_umax v4i16:$v))), 0xFFFF),
+                       (MAXURHQD SingleReg:$v)>;
+
+// MAXURWPD
+def MAXURWPD_Pat1 : Pat<(zext (i32 (vecreduce_umax v2i32:$v))),
+                       (MAXURWPD SingleReg:$v)>;
+
+def MAXURWPD_Pat2 : Pat<(zext (i32 (umax
+                              (extractelt v2i32:$v, (i64 0)),
+                              (extractelt v2i32:$v, (i64 1))))),
+                       (MAXURWPD SingleReg:$v)>;
 
 // MAXUW
 defm : ZEFPat<(umax i32:$v1, i32:$v2), (MAXUWrr SingleReg:$v1, SingleReg:$v2)>;
@@ -1565,6 +1638,27 @@ defm MINBO : Emulate_v8i8_with_v4i16<smin, MINHQrr>, Requires<[IsV1]>;
 // MINHQ
 defm MINHQ : Word_RR_RIsplat_select_H<smin, MINHQri, MINHQrr>;
 
+// MINRBOD
+def MINRBOD_Patv2 : Pat<(sext_inreg (anyext (i32 (vecreduce_smin v2i8:$v))), i8),
+                       (MINRBOD (SBMM8ri64 SingleReg:$v, 0x0101010101010201))>;
+
+def MINRBOD_Patv4 : Pat<(sext_inreg (anyext (i32 (vecreduce_smin v4i8:$v))), i8),
+                       (MINRBOD (INSF $v, $v, 63, 32))>;
+
+def MINRBOD_Patv8 : Pat<(sext_inreg (anyext (i32 (vecreduce_smin v8i8:$v))), i8),
+                       (MINRBOD SingleReg:$v)>;
+
+// MINRHQD
+def MINRHQD_Patv2 : Pat<(sext_inreg (anyext (i32 (vecreduce_smin v2i16:$v))), i16),
+                       (MINRHQD (INSF $v, $v, 63, 32))>;
+
+def MINRHQD_Patv4 : Pat<(sext_inreg (anyext (i32 (vecreduce_smin v4i16:$v))), i16),
+                       (MINRHQD SingleReg:$v)>;
+
+// MINRWPD
+def MINRWPD_Pat : Pat<(sext (i32 (vecreduce_smin v2i32:$v))),
+                       (MINRWPD SingleReg:$v)>;
+
 // MINUD
 def : Pat<(umin i64:$v1, i64:$v2), (MINUDrr SingleReg:$v1, SingleReg:$v2)>;
 def : Pat<(umin i64:$v1, Signed10:$v2), (MINUDri10 SingleReg:$v1, Signed10:$v2)>;
@@ -1577,6 +1671,32 @@ defm MINUBO : Emulate_v8i8_with_v4i16<umin, MINUHQrr>, Requires<[IsV1]>;
 
 // MINUHQ
 defm MINUHQ : Word_RR_RIsplat_select_H<umin, MINUHQri, MINUHQrr>;
+
+// MINURBOD
+def MINURBOD_Patv2 : Pat<(and (anyext (i32 (vecreduce_umin v2i8:$v))), 0xFF),
+                       (MINURBOD (SBMM8ri64 SingleReg:$v, 0x0101010101010201))>;
+
+def MINURBOD_Patv4 : Pat<(and (anyext (i32 (vecreduce_umin v4i8:$v))), 0xFF),
+                       (MINURBOD (INSF $v, $v, 63, 32))>;
+
+def MINURBOD_Patv8 : Pat<(and (anyext (i32 (vecreduce_umin v8i8:$v))), 0xFF),
+                       (MINURBOD SingleReg:$v)>;
+
+// MINURHQD
+def MINURHQD_Patv2 : Pat<(and (anyext (i32 (vecreduce_umin v2i16:$v))), 0xFFFF),
+                       (MINURHQD (INSF $v, $v, 63, 32))>;
+
+def MINURHQD_Patv4 : Pat<(and (anyext (i32 (vecreduce_umin v4i16:$v))), 0xFFFF),
+                       (MINURHQD SingleReg:$v)>;
+
+// MINURWPD
+def MINURWPD_Pat1 : Pat<(zext (i32 (vecreduce_umin v2i32:$v))),
+                       (MINURWPD SingleReg:$v)>;
+
+def MINURWPD_Pat2 : Pat<(zext (i32 (umin
+                              (extractelt v2i32:$v, (i64 0)),
+                              (extractelt v2i32:$v, (i64 1))))),
+                       (MINURWPD SingleReg:$v)>;
 
 // MINUW
 defm : ZEFPat<(umin i32:$v1, i32:$v2), (MINUWrr SingleReg:$v1, SingleReg:$v2)>;
@@ -1862,6 +1982,32 @@ foreach vtype = [ v2i8, v4i8, v2i16 ] in {
     def : Pat<(or (vnot vtype:$rs1), (vtype (is_imm_vec:$IMM))), (ORNWri37 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(or (vnot vtype:$rs1), vtype:$rs2), (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
+
+// ORRBOD
+def ORRBOD_Patv2 : Pat<(and (anyext (i32 (vecreduce_or v2i8:$v))), 0xFF),
+                       (ORRBOD (SBMM8ri64 SingleReg:$v, 0x0101010101010201))>;
+
+def ORRBOD_Patv4 : Pat<(and (anyext (i32 (vecreduce_or v4i8:$v))), 0xFF),
+                       (ORRBOD (INSF $v, $v, 63, 32))>;
+
+def ORRBOD_Patv8 : Pat<(and (anyext (i32 (vecreduce_or v8i8:$v))), 0xFF),
+                       (ORRBOD SingleReg:$v)>;
+
+// ORRHQD
+def ORRHQD_Patv2 : Pat<(and (anyext (i32 (vecreduce_or v2i16:$v))), 0xFFFF),
+                       (ORRHQD (INSF $v, $v, 63, 32))>;
+
+def ORRHQD_Patv4 : Pat<(and (anyext (i32 (vecreduce_or v4i16:$v))), 0xFFFF),
+                       (ORRHQD SingleReg:$v)>;
+
+// ORRWPD
+def ORRWPD_Pat1 : Pat<(zext (i32 (vecreduce_or v2i32:$v))),
+                       (ORRWPD SingleReg:$v)>;
+
+def ORRWPD_Pat2 : Pat<(zext (i32 (or
+                              (extractelt v2i32:$v, (i64 0)),
+                              (extractelt v2i32:$v, (i64 1))))),
+                       (ORRWPD SingleReg:$v)>;
 
 // ORW
 defm : ZEFPat<(or i32:$rs1, i32:$rs2), (ORWrr SingleReg:$rs1, SingleReg:$rs2)>;
@@ -2636,6 +2782,32 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
     def : Pat<(xor vtype:$rs1, (vtype (is_imm_vec:$IMM))), (XORDri64 SingleReg:$rs1, (build_imm_vec $IMM))>;
     def : Pat<(xor vtype:$rs1, vtype:$rs2), (XORDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
+
+// XORRBOD
+def XORRBOD_Patv2 : Pat<(and (anyext (i32 (vecreduce_xor v2i8:$v))), 0xFF),
+                       (XORRBOD (ZXHD SingleReg:$v))>;
+
+def XORRBOD_Patv4 : Pat<(and (anyext (i32 (vecreduce_xor v4i8:$v))), 0xFF),
+                       (XORRBOD (ZXWD SingleReg:$v))>;
+
+def XORRBOD_Patv8 : Pat<(and (anyext (i32 (vecreduce_xor v8i8:$v))), 0xFF),
+                       (XORRBOD SingleReg:$v)>;
+
+// XORRHQD
+def XORRHQD_Patv2 : Pat<(and (anyext (i32 (vecreduce_xor v2i16:$v))), 0xFFFF),
+                       (XORRHQD (ZXWD SingleReg:$v))>;
+
+def XORRHQD_Patv4 : Pat<(and (anyext (i32 (vecreduce_xor v4i16:$v))), 0xFFFF),
+                       (XORRHQD SingleReg:$v)>;
+
+// XORRWPD
+def XORRWPD_Pat1 : Pat<(zext (i32 (vecreduce_xor v2i32:$v))),
+                       (XORRWPD SingleReg:$v)>;
+
+def XORRWPD_Pat2 : Pat<(zext (i32 (xor
+                              (extractelt v2i32:$v, (i64 0)),
+                              (extractelt v2i32:$v, (i64 1))))),
+                       (XORRWPD SingleReg:$v)>;
 
 // XORW
 defm : ZEFPat<(xor i32:$rs1, i32:$rs2), (XORWrr SingleReg:$rs1, SingleReg:$rs2)>;

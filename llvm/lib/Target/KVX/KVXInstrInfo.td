@@ -2692,6 +2692,32 @@ defm ADDURBOD : I<"addurbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ADDURHQD : I<"addurhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ADDURWPD : I<"addurwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 
+defm MAXRBOD : I<"maxrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MAXRHQD : I<"maxrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MAXRWPD : I<"maxrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MAXURBOD : I<"maxurbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MAXURHQD : I<"maxurhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MAXURWPD : I<"maxurwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
+defm MINRBOD : I<"minrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MINRHQD : I<"minrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MINRWPD : I<"minrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MINURBOD : I<"minurbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MINURHQD : I<"minurhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm MINURWPD : I<"minurwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
+defm ANDRBOD : I<"andrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ANDRHQD : I<"andrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ANDRWPD : I<"andrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
+defm ORRBOD : I<"orrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ORRHQD : I<"orrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ORRWPD : I<"orrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
+defm XORRBOD : I<"xorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm XORRHQD : I<"xorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm XORRWPD : I<"xorrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
 defm FFDMAWQ : I<"ffdmawq", MAU_FP, [QuadReg, QuadReg], [RoundingMod, SilentMod], [], [], [PairedReg], 0>;

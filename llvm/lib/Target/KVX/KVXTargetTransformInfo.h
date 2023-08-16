@@ -134,6 +134,10 @@ public:
                                      TTI::TargetCostKind CostKind,
                                      const Instruction *I = nullptr);
 
+  InstructionCost getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
+                                         bool IsUnsigned,
+                                         TTI::TargetCostKind CostKind);
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };

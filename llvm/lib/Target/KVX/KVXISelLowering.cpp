@@ -949,9 +949,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   auto RedAction = Subtarget.isV1() ? Expand : Legal;
   for (MVT VT :
-       {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16, MVT::v2i32}) {
-    setOperationAction(ISD::VECREDUCE_ADD, VT, RedAction);
-  }
+       {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16, MVT::v2i32})
+    for (auto I : {ISD::VECREDUCE_ADD, ISD::VECREDUCE_OR, ISD::VECREDUCE_SMAX,
+                   ISD::VECREDUCE_SMIN, ISD::VECREDUCE_UMAX,
+                   ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
+      setOperationAction(I, VT, RedAction);
 
   for (auto I : {ISD::BUILD_VECTOR, ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS,
                  ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB,

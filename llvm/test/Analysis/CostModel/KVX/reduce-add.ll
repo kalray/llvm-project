@@ -4,8 +4,8 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @reduce_add_i8() {
-; V1-LABEL: 'reduce_add_i8'
+define void @reduce_add() {
+; V1-LABEL: 'reduce_add'
 ; V1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V2i8 = call i8 @llvm.vector.reduce.add.v2i8(<2 x i8> undef)
 ; V1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V3i8 = call i8 @llvm.vector.reduce.add.v3i8(<3 x i8> undef)
 ; V1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V4i8 = call i8 @llvm.vector.reduce.add.v4i8(<4 x i8> undef)
@@ -24,7 +24,7 @@ define void @reduce_add_i8() {
 ; V1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V4i64 = call i64 @llvm.vector.reduce.add.v4i64(<4 x i64> undef)
 ; V1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
-; V2-LABEL: 'reduce_add_i8'
+; V2-LABEL: 'reduce_add'
 ; V2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V2i8 = call i8 @llvm.vector.reduce.add.v2i8(<2 x i8> undef)
 ; V2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V3i8 = call i8 @llvm.vector.reduce.add.v3i8(<3 x i8> undef)
 ; V2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V4i8 = call i8 @llvm.vector.reduce.add.v4i8(<4 x i8> undef)

@@ -463,6 +463,10 @@ def vecreduce_smin  : SDNode<"ISD::VECREDUCE_SMIN", SDTVecReduce>;
 def vecreduce_umin  : SDNode<"ISD::VECREDUCE_UMIN", SDTVecReduce>;
 def vecreduce_fadd  : SDNode<"ISD::VECREDUCE_FADD", SDTFPVecReduce>;
 
+def vecreduce_and  : SDNode<"ISD::VECREDUCE_AND", SDTVecReduce>;
+def vecreduce_or  : SDNode<"ISD::VECREDUCE_OR", SDTVecReduce>;
+def vecreduce_xor  : SDNode<"ISD::VECREDUCE_XOR", SDTVecReduce>;
+
 def fadd       : SDNode<"ISD::FADD"       , SDTFPBinOp, [SDNPCommutative]>;
 def fsub       : SDNode<"ISD::FSUB"       , SDTFPBinOp>;
 def fmul       : SDNode<"ISD::FMUL"       , SDTFPBinOp, [SDNPCommutative]>;
