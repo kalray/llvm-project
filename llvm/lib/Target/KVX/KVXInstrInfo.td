@@ -3988,6 +3988,13 @@ defm XACCESSO : I</*asm=*/"xaccesso", /*itin=*/BCU_TINY_AUXW_CRRP_RR, /*Ops=*/[B
 foreach vt = [v512i1, v1024i1, v2048i1, v4096i1] in
 def : Pat <(v4i64(int_kvx_xaccesso vt:$op0, i64:$op1)),
            (XACCESSO BufferReg:$op0, SingleReg:$op1)>;
+
+defm XSBMM8DQ : I</*asm=*/"xsbmm8dq", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xsbmm8dq v256i1:$op0, v256i1:$op1))]>;
+
+defm XSBMMT8DQ : I</*asm=*/"xsbmmt8dq", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[], /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*InPlace=*/0,
+  /*pattern=*/ [(set v256i1:$r, (int_kvx_xsbmmt8dq v256i1:$op0, v256i1:$op1))]>;
+
 } // let Predicates = [IsV2]
 
 defvar FxList = [PS, PCR, CS, CSIT, IPE, MEN, PMC, TCR, ILE, ILL, ILR, MMC, TEL, TEH, IXC, DC, MES, WS,

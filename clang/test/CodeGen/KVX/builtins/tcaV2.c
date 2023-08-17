@@ -737,7 +737,7 @@ __kvx_v4di xaccesso4096(long long s) {
 
 // CHECK-LABEL: @binOps(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplatdo(i64 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 734)
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xandno(<256 x i1> [[TMP0]], <256 x i1> [[TMP0]])
 // CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xando(<256 x i1> [[TMP1]], <256 x i1> [[TMP1]])
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xnando(<256 x i1> [[TMP2]], <256 x i1> [[TMP2]])
@@ -750,7 +750,7 @@ __kvx_v4di xaccesso4096(long long s) {
 // CHECK-NEXT:    ret void
 //
 void binOps(__kvx_x256 *p) {
-  __kvx_x256 v = __builtin_kvx_xsplatdo(0);
+  __kvx_x256 v = __builtin_kvx_xsplatd256(734);
   v = __builtin_kvx_xandno(v, v);
   v = __builtin_kvx_xando(v, v);
   v = __builtin_kvx_xnando(v, v);
@@ -759,6 +759,23 @@ void binOps(__kvx_x256 *p) {
   v = __builtin_kvx_xiorno(v, v);
   v = __builtin_kvx_xioro(v, v);
   v = __builtin_kvx_xxoro(v, v);
+  *p = v;
+}
+
+// CHECK-LABEL: @xsbmm8(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 734)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 15)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <256 x i1> @llvm.kvx.xsbmm8dq(<256 x i1> [[TMP0]], <256 x i1> [[TMP1]])
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <256 x i1> @llvm.kvx.xsbmmt8dq(<256 x i1> [[TMP1]], <256 x i1> [[TMP2]])
+// CHECK-NEXT:    store <256 x i1> [[TMP3]], ptr [[P:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+void xsbmm8(__kvx_x256 *p) {
+  __kvx_x256 v = __builtin_kvx_xsplatd256(734);
+  __kvx_x256 v1 = __builtin_kvx_xsplatd256(15);
+  v = __builtin_kvx_xsbmm8dq(v, v1);
+  v = __builtin_kvx_xsbmmt8dq(v1, v);
   *p = v;
 }
 
