@@ -2,7 +2,6 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -emit-llvm %s -O3 -o - | FileCheck %s
 
 #include <kvx_builtins.h>
-#include "../vector-types.h"
 
 // CHECK-LABEL: @fmulho(
 // CHECK-NEXT:  entry:
@@ -20,7 +19,7 @@
 // CHECK-NEXT:    [[TMP6:%.*]] = bitcast <8 x half> [[SHUFFLE4]] to <8 x i16>
 // CHECK-NEXT:    ret <8 x i16> [[TMP6]]
 //
-v8i16 fmulho(v8i16 a, v8i16 b){
+__kvx_v8hi fmulho(__kvx_v8hi a, __kvx_v8hi b){
   return __builtin_kvx_fmulho(a, b, ".ru");
 }
 
@@ -54,6 +53,6 @@ v8i16 fmulho(v8i16 a, v8i16 b){
 // CHECK-NEXT:    [[SHUFFLE26:%.*]] = bitcast <16 x half> [[SHUFFLE26_UNCASTED]] to <16 x i16>
 // CHECK-NEXT:    ret <16 x i16> [[SHUFFLE26]]
 //
-v16i16 fmulhx(v16i16 a, v16i16 b){
+__kvx_v16hi fmulhx(__kvx_v16hi a, __kvx_v16hi b){
   return __builtin_kvx_fmulhx(a, b, ".ru");
 }

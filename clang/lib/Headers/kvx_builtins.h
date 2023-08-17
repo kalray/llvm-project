@@ -1,30 +1,46 @@
 #ifndef __H__KVX_BUILTINS__
 #define __H__KVX_BUILTINS__
 
-#if defined(__llvm__) && defined(__kv3_1__)
+#ifdef __llvm__
 /** LLVM KV3-1 emulation of KV3-2 builtins */
 
-#define __get_v4i16_low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3)
-#define __get_v4i16_high(a) __builtin_shufflevector((a), (a), 4, 5, 6, 7)
+#define __get_4low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3)
+#define __get4hi(a) __builtin_shufflevector((a), (a), 4, 5, 6, 7)
 
-#define __builtin_kvx_fmulho(a, b, mod)                                        \
-  (__kvx_v8hi) __builtin_shufflevector(                                        \
-      __builtin_kvx_fmulhq(__get_v4i16_low(a), __get_v4i16_low(b), mod),       \
-      __builtin_kvx_fmulhq(__get_v4i16_high(a), __get_v4i16_high(b), mod), 0,  \
-      1, 2, 3, 4, 5, 6, 7)
+#define __get_8low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3, 4, 5, 6, 7)
 
-#define __get_v8i16_low(a)                                                     \
-  __builtin_shufflevector((a), (a), 0, 1, 2, 3, 4, 5, 6, 7)
-#define __get_v8i16_high(a)                                                    \
+#define __get_8hi(a)                                                           \
   __builtin_shufflevector((a), (a), 8, 9, 10, 11, 12, 13, 14, 15)
 
-#define __builtin_kvx_fmulhx(a, b, mod)                                        \
-  (__kvx_v16hi) __builtin_shufflevector(                                       \
-      __builtin_kvx_fmulho(__get_v8i16_low(a), __get_v8i16_low(b), mod),       \
-      __builtin_kvx_fmulho(__get_v8i16_high(a), __get_v8i16_high(b), mod), 0,  \
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+#define __join8(a, b) __builtin_shufflevector(a, b, 0, 1, 2, 3, 4, 5, 6, 7)
 
-#endif // defined(__llvm__) && defined(__kv3_1__)
+#define __join16(a, b)                                                         \
+  __builtin_shufflevector(a, b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,  \
+                          14, 15)
+
+#define __split_op8(a, name, type)                                             \
+  (type) __join8(__builtin_kvx_##name(__get_4low(a)),                          \
+                 __builtin_kvx_##name(__get4hi(a)))
+
+#define __split_binmod_op8(a, b, mod, name, type)                              \
+  (type) __join8(__builtin_kvx_##name(__get_4low(a), __get_4low(b), mod),      \
+                 __builtin_kvx_##name(__get4hi(a), __get4hi(b), mod))
+
+#define __split_termod_op8(a, b, c, mod, name, type)                           \
+  (type) __join8(                                                              \
+      __builtin_kvx_##name(__get_4low(a), __get_4low(b), __get_4low(c), mod),  \
+      __builtin_kvx_##name(__get4hi(a), __get4hi(b), __get4hi(c), mod))
+
+#ifdef __kv3_1__
+#define __builtin_kvx_fmulho(a, b, mod)                                        \
+  __split_binmod_op8(a, b, mod, fmulhq, __kvx_v8hi)
+
+#define __builtin_kvx_fmulhx(a, b, mod)                                        \
+  (__kvx_v16hi)                                                                \
+      __join16(__builtin_kvx_fmulho(__get_8low(a), __get_8low(b), mod),        \
+               __builtin_kvx_fmulho(__get_8hi(a), __get_8hi(b), mod))
+
+#endif // ifdef __kv3_1__
 
 #define __KVX_EXT_OP_RED(op, name, inType, midType, outType)                   \
   inline outType __builtin_kvx_##name(inType V) {                              \
@@ -201,4 +217,24 @@ __KVX_OP_EXT_RED(xor, xorrwxd, __kvx_v16su, unsigned long)
 
 #undef __KVX_EXT_OP_RED
 #undef __KVX_OP_EXT_RED
+
+#define __builtin_kvx_fadddcq(a, b, mod)                                       \
+  __split_binmod_op8(a, b, mod, fadddcp, __kvx_v8df)
+
+#define __builtin_kvx_fconjdcq(a)                                              \
+  __builtin_shufflevector(a, -a, 0, 9, 2, 11, 4, 13, 6, 15)
+
+#define __builtin_kvx_ffmadcq(a, b, c, mod)                                    \
+  __split_termod_op8(a, b, c, mod, ffmadcp, __kvx_v8df)
+
+#define __builtin_kvx_ffmsdcq(a, b, c, mod)                                    \
+  __split_termod_op8(a, b, c, mod, ffmsdcp, __kvx_v8df)
+
+#define __builtin_kvx_fmuldcq(a, b, mod)                                       \
+  __split_binmod_op8(a, b, mod, fmuldcp, __kvx_v8df)
+
+#define __builtin_kvx_fsbfdcq(a, b, mod)                                       \
+  __split_binmod_op8(a, b, mod, fsbfdcp, __kvx_v8df)
+
+#endif /* defined(__llvm__) */
 #endif /* __H__KVX_BUILTINS__ */
