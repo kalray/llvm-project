@@ -1550,10 +1550,10 @@ define void @binOps(<256 x i1>* nocapture %0) {
   %3 = tail call <256 x i1> @llvm.kvx.xandno(<256 x i1> %2, <256 x i1> %2)
   %4 = tail call <256 x i1> @llvm.kvx.xando(<256 x i1> %3, <256 x i1> %3)
   %5 = tail call <256 x i1> @llvm.kvx.xnando(<256 x i1> %4, <256 x i1> %4)
-  %6 = tail call <256 x i1> @llvm.kvx.xnoro(<256 x i1> %5, <256 x i1> %5)
+  %6 = tail call <256 x i1> @llvm.kvx.xnioro(<256 x i1> %5, <256 x i1> %5)
   %7 = tail call <256 x i1> @llvm.kvx.xnxoro(<256 x i1> %6, <256 x i1> %6)
-  %8 = tail call <256 x i1> @llvm.kvx.xorno(<256 x i1> %7, <256 x i1> %7)
-  %9 = tail call <256 x i1> @llvm.kvx.xoro(<256 x i1> %8, <256 x i1> %8)
+  %8 = tail call <256 x i1> @llvm.kvx.xiorno(<256 x i1> %7, <256 x i1> %7)
+  %9 = tail call <256 x i1> @llvm.kvx.xioro(<256 x i1> %8, <256 x i1> %8)
   %10 = tail call <256 x i1> @llvm.kvx.xxoro(<256 x i1> %9, <256 x i1> %9)
   store <256 x i1> %10, <256 x i1>* %0
   ret void
@@ -1565,13 +1565,13 @@ declare <256 x i1> @llvm.kvx.xando(<256 x i1>, <256 x i1>)
 
 declare <256 x i1> @llvm.kvx.xnando(<256 x i1>, <256 x i1>)
 
-declare <256 x i1> @llvm.kvx.xnoro(<256 x i1>, <256 x i1>)
+declare <256 x i1> @llvm.kvx.xnioro(<256 x i1>, <256 x i1>)
 
 declare <256 x i1> @llvm.kvx.xnxoro(<256 x i1>, <256 x i1>)
 
-declare <256 x i1> @llvm.kvx.xorno(<256 x i1>, <256 x i1>)
+declare <256 x i1> @llvm.kvx.xiorno(<256 x i1>, <256 x i1>)
 
-declare <256 x i1> @llvm.kvx.xoro(<256 x i1>, <256 x i1>)
+declare <256 x i1> @llvm.kvx.xioro(<256 x i1>, <256 x i1>)
 
 declare <256 x i1> @llvm.kvx.xxoro(<256 x i1>, <256 x i1>)
 
