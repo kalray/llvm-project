@@ -854,6 +854,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                    ISD::USUBSAT, ISD::VSELECT})
       setOperationAction(I, MVT::v8i8, Legal);
 
+    setOperationAction(ISD::MULHU, MVT::v4i32, Legal);
+    setOperationAction(ISD::MULHS, MVT::v4i32, Legal);
+
   } else {
     // Fall-back to hq in cv1 using dag-combine
     for (auto I : {ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::FADD})

@@ -236,5 +236,67 @@ __KVX_OP_EXT_RED(xor, xorrwxd, __kvx_v16su, unsigned long)
 #define __builtin_kvx_fsbfdcq(a, b, mod)                                       \
   __split_binmod_op8(a, b, mod, fsbfdcp, __kvx_v8df)
 
+inline __kvx_v4si __builtin_kvx_maddwq(__kvx_v4si acc, __kvx_v4si a,
+                                       __kvx_v4si b) {
+  return acc + a * b;
+}
+
+inline __kvx_v4si __builtin_kvx_maddmwq(__kvx_v4si acc, __kvx_v4si a,
+                                        __kvx_v4si b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4di eb = __builtin_convertvector(b, __kvx_v4di);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
+  return acc + trunc;
+}
+
+inline __kvx_v4su __builtin_kvx_maddumwq(__kvx_v4su acc, __kvx_v4su a,
+                                         __kvx_v4su b) {
+  __kvx_v4du ea = __builtin_convertvector(a, __kvx_v4du);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4du mul = (ea * eb) >> 32;
+  __kvx_v4su trunc = __builtin_convertvector(mul, __kvx_v4su);
+  return acc + trunc;
+}
+
+inline __kvx_v4si __builtin_kvx_mulmwq(__kvx_v4si a, __kvx_v4si b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4di eb = __builtin_convertvector(b, __kvx_v4di);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
+  return trunc;
+}
+
+inline __kvx_v4su __builtin_kvx_mulumwq(__kvx_v4su a, __kvx_v4su b) {
+  __kvx_v4du ea = __builtin_convertvector(a, __kvx_v4du);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4du mul = (ea * eb) >> 32;
+  __kvx_v4su trunc = __builtin_convertvector(mul, __kvx_v4su);
+  return trunc;
+}
+
+inline __kvx_v4si __builtin_kvx_msbfmwq(__kvx_v4si acc, __kvx_v4si a,
+                                        __kvx_v4si b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4di eb = __builtin_convertvector(b, __kvx_v4di);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
+  return acc - trunc;
+}
+
+inline __kvx_v4su __builtin_kvx_msbfumwq(__kvx_v4su acc, __kvx_v4su a,
+                                         __kvx_v4su b) {
+  __kvx_v4du ea = __builtin_convertvector(a, __kvx_v4du);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4du mul = (ea * eb) >> 32;
+  __kvx_v4su trunc = __builtin_convertvector(mul, __kvx_v4su);
+  return acc - trunc;
+}
+
+inline __kvx_v4si __builtin_kvx_msbfwq(__kvx_v4si acc, __kvx_v4si a,
+                                       __kvx_v4si b) {
+  return acc - a * b;
+}
+
 #endif /* defined(__llvm__) */
 #endif /* __H__KVX_BUILTINS__ */

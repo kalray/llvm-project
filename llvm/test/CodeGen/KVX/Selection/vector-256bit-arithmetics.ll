@@ -1419,22 +1419,35 @@ define <8 x i32> @sub_v8i32_i32(<8 x i32> %0, i32 %1) {
 }
 
 define <8 x i32> @mul_add_v8i32_v8i32(<8 x i32> %0, <8 x i32> %1, <8 x i32> %2) {
-; CHECK-LABEL: mul_add_v8i32_v8i32:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    maddwp $r11 = $r7, $r3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maddwp $r10 = $r6, $r2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    maddwp $r9 = $r5, $r1
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    maddwp $r8 = $r4, $r0
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    copyd $r0 = $r8
-; CHECK-NEXT:    copyd $r1 = $r9
-; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    copyd $r3 = $r11
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 5)
+; V1-LABEL: mul_add_v8i32_v8i32:
+; V1:       # %bb.0:
+; V1-NEXT:    maddwp $r11 = $r7, $r3
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    maddwp $r10 = $r6, $r2
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    maddwp $r9 = $r5, $r1
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    maddwp $r8 = $r4, $r0
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    copyd $r0 = $r8
+; V1-NEXT:    copyd $r1 = $r9
+; V1-NEXT:    copyd $r2 = $r10
+; V1-NEXT:    copyd $r3 = $r11
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 5)
+;
+; V2-LABEL: mul_add_v8i32_v8i32:
+; V2:       # %bb.0:
+; V2-NEXT:    maddwq $r10r11 = $r6r7, $r2r3
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    maddwq $r8r9 = $r4r5, $r0r1
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    copyd $r0 = $r8
+; V2-NEXT:    copyd $r1 = $r9
+; V2-NEXT:    copyd $r2 = $r10
+; V2-NEXT:    copyd $r3 = $r11
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 3)
   %4 = mul <8 x i32> %1, %0
   %5 = add <8 x i32> %4, %2
   ret <8 x i32> %5
@@ -6089,26 +6102,47 @@ define <8 x i32> @p_add_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 }
 
 define <8 x i32> @p_mul_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>* nocapture readonly %1, <8 x i32>* nocapture %2) {
-; CHECK-LABEL: p_mul_add_v8i32_v8i32:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r1]
-; CHECK-NEXT:    copyd $r4 = $r2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    maddwp $r3 = $r35, $r11
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    maddwp $r2 = $r34, $r10
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    maddwp $r1 = $r33, $r9
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    maddwp $r0 = $r32, $r8
-; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 8)
+; V1-LABEL: p_mul_add_v8i32_v8i32:
+; V1:       # %bb.0:
+; V1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    lo $r32r33r34r35 = 0[$r1]
+; V1-NEXT:    copyd $r4 = $r2
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    lo $r0r1r2r3 = 0[$r4]
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    maddwp $r3 = $r35, $r11
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    maddwp $r2 = $r34, $r10
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    maddwp $r1 = $r33, $r9
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    maddwp $r0 = $r32, $r8
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    so 0[$r4] = $r0r1r2r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 8)
+;
+; V2-LABEL: p_mul_add_v8i32_v8i32:
+; V2:       # %bb.0:
+; V2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    lo $r4r5r6r7 = 0[$r2]
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    lo $r32r33r34r35 = 0[$r1]
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    maddwq $r6r7 = $r34r35, $r10r11
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    maddwq $r4r5 = $r32r33, $r8r9
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    so 0[$r2] = $r4r5r6r7
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    copyd $r0 = $r4
+; V2-NEXT:    copyd $r1 = $r5
+; V2-NEXT:    copyd $r2 = $r6
+; V2-NEXT:    copyd $r3 = $r7
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 7)
   %4 = load <8 x i32>, <8 x i32>* %0, align 32
   %5 = load <8 x i32>, <8 x i32>* %1, align 32
   %6 = mul <8 x i32> %5, %4

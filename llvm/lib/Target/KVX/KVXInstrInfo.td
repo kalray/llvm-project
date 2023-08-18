@@ -2909,6 +2909,30 @@ defm XSENDRECVO : I <"xsendrecvo", ALU_TINY_CRRP_CRWL_CRWH, [VectorReg], [Channe
 
 let isMoveReg = 1 in
 defm XCOPYO : I<"xcopyo", BCU_CRRP_CRWL_CRWH_RR, [VectorReg], [], [], [], [VectorReg]>;
+
+defm MADDWQ : I <"maddwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (add v4i32:$z, (mul v4i32:$op0, v4i32:$op1)))]>;
+
+defm MADDMWQ : I <"maddmwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (add v4i32:$z, (mulhs v4i32:$op0, v4i32:$op1)))]>;
+
+defm MADDUMWQ : I <"maddumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (add v4i32:$z, (mulhu v4i32:$op0, v4i32:$op1)))]>;
+
+defm MSBFWQ : I <"msbfwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (sub v4i32:$z, (mul v4i32:$op0, v4i32:$op1)))]>;
+
+defm MSBFMWQ : I <"msbfmwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (sub v4i32:$z, (mulhs v4i32:$op0, v4i32:$op1)))]>;
+
+defm MSBFUMWQ : I <"msbfumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (sub v4i32:$z, (mulhu v4i32:$op0, v4i32:$op1)))]>;
+
+defm MULMWQ : I <"mulmwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 0,
+  [(set v4i32:$r, (mulhs v4i32:$op0, v4i32:$op1))]>;
+
+defm MULUMWQ : I <"mulumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 0,
+  [(set v4i32:$r, (mulhu v4i32:$op0, v4i32:$op1))]>;
 } // isV2
 
 def FMIND : KVX_INSTRUCTION

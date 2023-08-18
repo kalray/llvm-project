@@ -36,29 +36,46 @@ define i32 @test_extract_1(<4 x i32> %a) #0 {
 }
 
 define <4 x i32> @test_fma(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
-; CHECK-LABEL: test_fma:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    maddwp $r1 = $r3, $r5
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maddwp $r0 = $r2, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: test_fma:
+; CV1:       # %bb.0:
+; CV1-NEXT:    maddwp $r1 = $r3, $r5
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    maddwp $r0 = $r2, $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: test_fma:
+; CV2:       # %bb.0:
+; CV2-NEXT:    maddwq $r0r1 = $r2r3, $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
   %m = mul <4 x i32> %b, %c
   %ad = add <4 x i32> %a, %m
   ret <4 x i32> %ad
 }
 
+; FIXME: CV2 could have 2 make in same bundle
 define <4 x i32> @test_fma_imm(<4 x i32> %a, <4 x i32> %b) #0 {
-; CHECK-LABEL: test_fma_imm:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r5 = 0x200000001
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maddwp $r1 = $r3, $r5
-; CHECK-NEXT:    copyd $r4 = $r5
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    maddwp $r0 = $r2, $r4
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CV1-LABEL: test_fma_imm:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r5 = 0x200000001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    maddwp $r1 = $r3, $r5
+; CV1-NEXT:    copyd $r4 = $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    maddwp $r0 = $r2, $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
+;
+; CV2-LABEL: test_fma_imm:
+; CV2:       # %bb.0:
+; CV2-NEXT:    make $r5 = 0x200000001
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    copyd $r4 = $r5
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    maddwq $r0r1 = $r2r3, $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 2)
   %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
   %ad = add <4 x i32> %a, %m
   ret <4 x i32> %ad
