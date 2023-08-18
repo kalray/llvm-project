@@ -18,6 +18,8 @@
 include "KVXOperandInfo.td"
 include "KVXInstrFormats.td"
 
+def KVX_sz_mul   : SDNode<"KVXISD::SZ_MUL", SDTIntBinOp>;
+
 
 // multiclass MC_00 is used by:
 //   defm SCALL
@@ -2933,6 +2935,15 @@ defm MULMWQ : I <"mulmwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [],
 
 defm MULUMWQ : I <"mulumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 0,
   [(set v4i32:$r, (mulhu v4i32:$op0, v4i32:$op1))]>;
+
+defm MADDSUMWQ : I <"maddsumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (add v4i32:$z, (KVX_sz_mul v4i32:$op0, v4i32:$op1)))]>;
+
+defm MSBFSUMWQ : I <"msbfsumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 1,
+  [(set v4i32:$r, (sub v4i32:$z, (KVX_sz_mul v4i32:$op0, v4i32:$op1)))]>;
+
+defm MULSUMWQ : I <"mulsumwq", MAU_AUXR_INT_AV1, [PairedReg, PairedReg], [], [], [], [PairedReg], 0,
+  [(set v4i32:$r, (KVX_sz_mul v4i32:$op0, v4i32:$op1))]>;
 } // isV2
 
 def FMIND : KVX_INSTRUCTION

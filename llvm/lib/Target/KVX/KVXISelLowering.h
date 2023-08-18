@@ -53,6 +53,7 @@ enum NodeType : unsigned {
   SRSNEG,
   VECREDUCE_ADD_SEXT,
   VECREDUCE_ADD_ZEXT,
+  SZ_MUL,
 };
 } // namespace KVXISD
 

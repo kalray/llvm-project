@@ -958,10 +958,11 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                    ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
       setOperationAction(I, VT, RedAction);
 
-  for (auto I : {ISD::BUILD_VECTOR, ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS,
-                 ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB,
-                 ISD::FNEG, ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL,
-                 ISD::SRA, ISD::STORE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
+  for (auto I :
+       {ISD::BUILD_VECTOR, ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS,
+        ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG,
+        ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL, ISD::SRA, ISD::STORE,
+        ISD::TRUNCATE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -998,12 +999,13 @@ const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {
     TARGET_NODE_CASE(EH_SJLJ_SETUP_DISPATCH)
     TARGET_NODE_CASE(FENCE)
     TARGET_NODE_CASE(SEXT_MUL)
-    TARGET_NODE_CASE(SZEXT_MUL)
-    TARGET_NODE_CASE(ZEXT_MUL)
     TARGET_NODE_CASE(SRS)
     TARGET_NODE_CASE(SRSNEG)
+    TARGET_NODE_CASE(SZ_MUL)
+    TARGET_NODE_CASE(SZEXT_MUL)
     TARGET_NODE_CASE(VECREDUCE_ADD_SEXT)
     TARGET_NODE_CASE(VECREDUCE_ADD_ZEXT)
+    TARGET_NODE_CASE(ZEXT_MUL)
   default:
     return NULL;
   }
@@ -3383,8 +3385,7 @@ static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   }
 }
 
-static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
-                          SelectionDAG &Dag) {
+static SDValue combineMUL(SDNode *N, SelectionDAG &Dag) {
   auto VT = N->getValueType(0);
   unsigned HalfSize;
   MVT HalfSizeVT;
@@ -3480,6 +3481,46 @@ static SDValue combineMUL(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   // The legalizer will just split the bitcast operation.
   SDValue Vec = SDValue(Dag.getNode(Opcode, SDLoc(N), MVT::v2i64, {T0, T1}));
   return Dag.getNode(ISD::BITCAST, SDLoc(N), MVT::i128, Vec);
+}
+
+static SDValue combineTrunc(SDNode *N, SelectionDAG &DAG) {
+  auto Ty = N->getValueType(0);
+  if (!Ty.isSimple() && Ty.getSimpleVT() != MVT::v4i32)
+    return SDValue();
+
+  auto Srl = N->getOperand(0);
+  if (Srl.getOpcode() != ISD::SRL)
+    return SDValue();
+
+  auto SZextMul = Srl.getOperand(0);
+  unsigned OutOpcode = KVXISD::SZ_MUL;
+
+  if (SZextMul->getOpcode() != KVXISD::SZEXT_MUL) {
+    if (SZextMul->getOpcode() != ISD::MUL)
+      return SDValue();
+
+    SZextMul = combineMUL(SZextMul.getNode(), DAG);
+    if (!SZextMul)
+      return SDValue();
+
+    if (SZextMul.getOpcode() != KVXISD::SZEXT_MUL)
+      return SDValue();
+  }
+
+  auto *ShiftAmount = dyn_cast<BuildVectorSDNode>(Srl->getOperand(1));
+  if (!ShiftAmount)
+    return SDValue();
+
+  auto *ShiftCst = dyn_cast<ConstantSDNode>(ShiftAmount->getSplatValue());
+  if (!ShiftCst)
+    return SDValue();
+
+  unsigned Shift = ShiftCst->getZExtValue();
+  if (Shift != Ty.getScalarSizeInBits() ||
+      Shift != SZextMul.getOperand(0)->getValueType(0).getScalarSizeInBits())
+    return SDValue();
+
+  return DAG.getNode(OutOpcode, SDLoc(SZextMul), Ty, SZextMul->ops());
 }
 
 static SDValue splitLoad(LoadSDNode *LD, SelectionDAG &Dag, SDLoc DL) {
@@ -3660,11 +3701,13 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::LOAD:
     return combineLoad(N, DCI, DAG);
   case ISD::MUL:
-    return combineMUL(N, DCI, DAG);
+    return combineMUL(N, DAG);
   case ISD::SRA:
     return combineSRA(N, DAG);
   case ISD::STORE:
     return combineStore(N, DCI, DAG);
+  case ISD::TRUNCATE:
+    return (Subtarget.isV1()) ? SDValue() : combineTrunc(N, DAG);
   case ISD::ZERO_EXTEND:
     return combineZext(N, DAG);
   case ISD::VECREDUCE_ADD:

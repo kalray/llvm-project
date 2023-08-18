@@ -252,3 +252,108 @@ define <4 x i32> @mulumwq(<4 x i32> %0, <4 x i32> %1) {
   %7 = trunc <4 x i64> %6 to <4 x i32>
   ret <4 x i32> %7
 }
+
+define <4 x i32> @maddsumwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
+; CV1-LABEL: maddsumwq:
+; CV1:       # %bb.0:
+; CV1-NEXT:    mulsuwdp $r6r7 = $r3, $r5
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    mulsuwdp $r4r5 = $r2, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srld $r2 = $r6, 32
+; CV1-NEXT:    srld $r3 = $r7, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    insf $r2 = $r3, 63, 32
+; CV1-NEXT:    srld $r4 = $r4, 32
+; CV1-NEXT:    srld $r5 = $r5, 32
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    insf $r4 = $r5, 63, 32
+; CV1-NEXT:    copyd $r5 = $r2
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    addwp $r0 = $r4, $r0
+; CV1-NEXT:    addwp $r1 = $r5, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
+;
+; CV2-LABEL: maddsumwq:
+; CV2:       # %bb.0:
+; CV2-NEXT:    maddsumwq $r0r1 = $r2r3, $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %4 = sext <4 x i32> %1 to <4 x i64>
+  %5 = zext <4 x i32> %2 to <4 x i64>
+  %6 = mul nsw <4 x i64> %5, %4
+  %7 = lshr <4 x i64> %6, <i64 32, i64 32, i64 32, i64 32>
+  %8 = trunc <4 x i64> %7 to <4 x i32>
+  %9 = add <4 x i32> %8, %0
+  ret <4 x i32> %9
+}
+
+define <4 x i32> @msbfsumwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
+; CV1-LABEL: msbfsumwq:
+; CV1:       # %bb.0:
+; CV1-NEXT:    mulsuwdp $r6r7 = $r3, $r5
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    mulsuwdp $r4r5 = $r2, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srld $r2 = $r6, 32
+; CV1-NEXT:    srld $r3 = $r7, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    insf $r2 = $r3, 63, 32
+; CV1-NEXT:    srld $r4 = $r4, 32
+; CV1-NEXT:    srld $r5 = $r5, 32
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    insf $r4 = $r5, 63, 32
+; CV1-NEXT:    copyd $r5 = $r2
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    sbfwp $r0 = $r4, $r0
+; CV1-NEXT:    sbfwp $r1 = $r5, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
+;
+; CV2-LABEL: msbfsumwq:
+; CV2:       # %bb.0:
+; CV2-NEXT:    msbfsumwq $r0r1 = $r2r3, $r4r5
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %4 = sext <4 x i32> %1 to <4 x i64>
+  %5 = zext <4 x i32> %2 to <4 x i64>
+  %6 = mul nsw <4 x i64> %5, %4
+  %7 = lshr <4 x i64> %6, <i64 32, i64 32, i64 32, i64 32>
+  %8 = trunc <4 x i64> %7 to <4 x i32>
+  %9 = sub <4 x i32> %0, %8
+  ret <4 x i32> %9
+}
+
+define <4 x i32> @mulsumwq(<4 x i32> %0, <4 x i32> %1) {
+; CV1-LABEL: mulsumwq:
+; CV1:       # %bb.0:
+; CV1-NEXT:    mulsuwdp $r6r7 = $r1, $r3
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    mulsuwdp $r0r1 = $r0, $r2
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srld $r2 = $r6, 32
+; CV1-NEXT:    srld $r3 = $r7, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    srld $r0 = $r0, 32
+; CV1-NEXT:    srld $r1 = $r1, 32
+; CV1-NEXT:    insf $r2 = $r3, 63, 32
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    insf $r0 = $r1, 63, 32
+; CV1-NEXT:    copyd $r1 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 4)
+;
+; CV2-LABEL: mulsumwq:
+; CV2:       # %bb.0:
+; CV2-NEXT:    mulsumwq $r0r1 = $r0r1, $r2r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %3 = sext <4 x i32> %0 to <4 x i64>
+  %4 = zext <4 x i32> %1 to <4 x i64>
+  %5 = mul nsw <4 x i64> %4, %3
+  %6 = lshr <4 x i64> %5, <i64 32, i64 32, i64 32, i64 32>
+  %7 = trunc <4 x i64> %6 to <4 x i32>
+  ret <4 x i32> %7
+}
+

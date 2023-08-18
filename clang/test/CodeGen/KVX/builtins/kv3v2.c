@@ -540,3 +540,45 @@ __kvx_v4su msbfumwq(__kvx_v4su acc, __kvx_v4su a, __kvx_v4su b) {
 __kvx_v4si msbfwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4si b) {
     return __builtin_kvx_msbfwq(acc, a, b);
 }
+
+// CHECK-LABEL: @maddsumwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[CONV_I:%.*]] = sext <4 x i32> [[A:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[CONV1_I:%.*]] = zext <4 x i32> [[B:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[MUL2_I:%.*]] = mul nsw <4 x i64> [[CONV1_I]], [[CONV_I]]
+// CHECK-NEXT:    [[TMP0:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
+// CHECK-NEXT:    [[CONV3_I:%.*]] = trunc <4 x i64> [[TMP0]] to <4 x i32>
+// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[CONV3_I]], [[ACC:%.*]]
+// CHECK-NEXT:    ret <4 x i32> [[ADD_I]]
+//
+__kvx_v4si maddsumwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4su b) {
+    return __builtin_kvx_maddsumwq(acc, a, b);
+}
+
+// CHECK-LABEL: @msbfsumwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[CONV_I:%.*]] = sext <4 x i32> [[A:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[CONV1_I:%.*]] = zext <4 x i32> [[B:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[MUL2_I:%.*]] = mul nsw <4 x i64> [[CONV1_I]], [[CONV_I]]
+// CHECK-NEXT:    [[TMP0:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
+// CHECK-NEXT:    [[CONV3_I:%.*]] = trunc <4 x i64> [[TMP0]] to <4 x i32>
+// CHECK-NEXT:    [[SUB_I:%.*]] = sub <4 x i32> [[ACC:%.*]], [[CONV3_I]]
+// CHECK-NEXT:    ret <4 x i32> [[SUB_I]]
+//
+__kvx_v4si msbfsumwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4su b) {
+    return __builtin_kvx_msbfsumwq(acc, a, b);
+}
+
+// CHECK-LABEL: @mulsumwq(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[CONV_I:%.*]] = sext <4 x i32> [[A:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[CONV1_I:%.*]] = zext <4 x i32> [[B:%.*]] to <4 x i64>
+// CHECK-NEXT:    [[MUL2_I:%.*]] = mul nsw <4 x i64> [[CONV1_I]], [[CONV_I]]
+// CHECK-NEXT:    [[TMP0:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
+// CHECK-NEXT:    [[CONV3_I:%.*]] = trunc <4 x i64> [[TMP0]] to <4 x i32>
+// CHECK-NEXT:    ret <4 x i32> [[CONV3_I]]
+//
+__kvx_v4si mulsumwq(__kvx_v4si a, __kvx_v4su b) {
+    return __builtin_kvx_mulsumwq(a, b);
+}
+

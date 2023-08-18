@@ -263,16 +263,14 @@ inline __kvx_v4si __builtin_kvx_mulmwq(__kvx_v4si a, __kvx_v4si b) {
   __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
   __kvx_v4di eb = __builtin_convertvector(b, __kvx_v4di);
   __kvx_v4di mul = (ea * eb) >> 32;
-  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
-  return trunc;
+  return __builtin_convertvector(mul, __kvx_v4si);
 }
 
 inline __kvx_v4su __builtin_kvx_mulumwq(__kvx_v4su a, __kvx_v4su b) {
   __kvx_v4du ea = __builtin_convertvector(a, __kvx_v4du);
   __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
   __kvx_v4du mul = (ea * eb) >> 32;
-  __kvx_v4su trunc = __builtin_convertvector(mul, __kvx_v4su);
-  return trunc;
+  return __builtin_convertvector(mul, __kvx_v4su);
 }
 
 inline __kvx_v4si __builtin_kvx_msbfmwq(__kvx_v4si acc, __kvx_v4si a,
@@ -296,6 +294,31 @@ inline __kvx_v4su __builtin_kvx_msbfumwq(__kvx_v4su acc, __kvx_v4su a,
 inline __kvx_v4si __builtin_kvx_msbfwq(__kvx_v4si acc, __kvx_v4si a,
                                        __kvx_v4si b) {
   return acc - a * b;
+}
+
+inline __kvx_v4si __builtin_kvx_maddsumwq(__kvx_v4si acc, __kvx_v4si a,
+                                          __kvx_v4su b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
+  return acc + trunc;
+}
+
+inline __kvx_v4si __builtin_kvx_msbfsumwq(__kvx_v4si acc, __kvx_v4si a,
+                                          __kvx_v4su b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  __kvx_v4si trunc = __builtin_convertvector(mul, __kvx_v4si);
+  return acc - trunc;
+}
+
+inline __kvx_v4si __builtin_kvx_mulsumwq(__kvx_v4si a, __kvx_v4su b) {
+  __kvx_v4di ea = __builtin_convertvector(a, __kvx_v4di);
+  __kvx_v4du eb = __builtin_convertvector(b, __kvx_v4du);
+  __kvx_v4di mul = (ea * eb) >> 32;
+  return __builtin_convertvector(mul, __kvx_v4si);
 }
 
 #endif /* defined(__llvm__) */
