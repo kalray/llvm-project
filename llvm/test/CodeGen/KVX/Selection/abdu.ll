@@ -528,64 +528,33 @@ declare <4 x i16> @llvm.umax.v4i16(<4 x i16>, <4 x i16>)
 
 declare <4 x i16> @llvm.umin.v4i16(<4 x i16>, <4 x i16>)
 
-; FIXME: v4i32 abs is extended.
 define <4 x i16> @abduhq2(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: abduhq2:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
-; V1-NEXT:    sbmm8 $r4 = $r1, 0x80400000201
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sbfwp $r0 = $r4, $r2
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x804000002010
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; V1-NEXT:    sbmm8 $r3 = $r0, 0x804000002010
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbmm8 $r2 = $r1, 0x80400000201
+; V1-NEXT:    sbmm8 $r5 = $r1, 0x804000002010
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    absw $r0 = $r0
-; V1-NEXT:    sbfwp $r1 = $r1, $r3
-; V1-NEXT:    srld $r2 = $r0, 32
+; V1-NEXT:    sbfwp $r0 = $r2, $r0
+; V1-NEXT:    sbfwp $r1 = $r5, $r3
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    absw $r1 = $r1
-; V1-NEXT:    absw $r2 = $r2
-; V1-NEXT:    srld $r3 = $r1, 32
+; V1-NEXT:    abswp $r0 = $r0
+; V1-NEXT:    abswp $r1 = $r1
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    insf $r0 = $r2, 63, 32
-; V1-NEXT:    absw $r3 = $r3
-; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; V1-NEXT:    insf $r1 = $r3, 63, 32
-; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    ;; # (end cycle 5)
 ;
 ; V2-LABEL: abduhq2:
 ; V2:       # %bb.0:
-; V2-NEXT:    zxlhwp $r0 = $r0
-; V2-NEXT:    zxlhwp $r2 = $r1
-; V2-NEXT:    zxmhwp $r3 = $r0
-; V2-NEXT:    zxmhwp $r5 = $r1
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sbfwp $r0 = $r2, $r0
-; V2-NEXT:    sbfwp $r1 = $r5, $r3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    absw $r0 = $r0
-; V2-NEXT:    absw $r1 = $r1
-; V2-NEXT:    srld $r2 = $r0, 32
-; V2-NEXT:    srld $r3 = $r1, 32
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    absw $r2 = $r2
-; V2-NEXT:    absw $r3 = $r3
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    insf $r0 = $r2, 63, 32
-; V2-NEXT:    insf $r1 = $r3, 63, 32
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    insf $r0 = $r1, 63, 32
+; V2-NEXT:    abduhq $r0 = $r0, $r1
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = zext <4 x i16> %0 to <4 x i32>
   %4 = zext <4 x i16> %1 to <4 x i32>
   %5 = sub nsw <4 x i32> %3, %4

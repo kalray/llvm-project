@@ -81,6 +81,9 @@ def get_fpimm_16 : SDNodeXForm<fpimm, [{
   return CurDAG->getTargetConstantFP(N->getValueAPF(), SDLoc(N), MVT::f16);
 }]>;
 
+def PairedRegLo: OutPatFrag<(ops node:$R), (EXTRACT_SUBREG $R, sub_d0)>;
+def PairedRegHi: OutPatFrag<(ops node:$R), (EXTRACT_SUBREG $R, sub_d1)>;
+def BuildPairedReg: OutPatFrag<(ops node:$hi, node:$lo), (REG_SEQUENCE PairedReg, node:$hi, sub_d1, node:$lo, sub_d0)>;
 
 def KVXInstrInfo : InstrInfo;
 include "KVXConstants.td"

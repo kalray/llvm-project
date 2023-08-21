@@ -3708,39 +3708,29 @@ define i64 @maxrhxd(<16 x i16> %0) {
 define i64 @maxrwod(<8 x i32> %0) {
 ; CV1-LABEL: maxrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    compnwp.gt $r4 = $r0, $r2
-; CV1-NEXT:    compnwp.gt $r5 = $r1, $r3
+; CV1-NEXT:    maxwp $r0 = $r0, $r2
+; CV1-NEXT:    maxwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    cmovewp.even $r4 ? $r0 = $r2
-; CV1-NEXT:    cmovewp.even $r5 ? $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    maxw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: maxrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    compnwp.gt $r4 = $r0, $r2
-; CV2-NEXT:    compnwp.gt $r5 = $r1, $r3
+; CV2-NEXT:    maxwp $r0 = $r0, $r2
+; CV2-NEXT:    maxwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    cmovewp.even $r4 ? $r0 = $r2
-; CV2-NEXT:    cmovewp.even $r5 ? $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    maxw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    maxrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.smax.v8i32(<8 x i32> %0)
   %3 = sext i32 %2 to i64
   ret i64 %3
@@ -3784,13 +3774,9 @@ define i64 @maxrwqd(<4 x i32> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    maxwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    maxw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    maxrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i32 @llvm.vector.reduce.smax.v4i32(<4 x i32> %0)
   %3 = sext i32 %2 to i64
   ret i64 %3
@@ -3801,121 +3787,73 @@ define i64 @maxrwvd(ptr %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
+; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    compnwp.gt $r36 = $r6, $r34
-; CV1-NEXT:    compnwp.gt $r37 = $r7, $r35
+; CV1-NEXT:    maxwp $r4 = $r4, $r8
+; CV1-NEXT:    maxwp $r5 = $r5, $r9
+; CV1-NEXT:    maxwp $r6 = $r6, $r10
+; CV1-NEXT:    maxwp $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmovewp.even $r36 ? $r6 = $r34
-; CV1-NEXT:    cmovewp.even $r37 ? $r7 = $r35
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    compnwp.gt $r16 = $r10, $r2
-; CV1-NEXT:    compnwp.gt $r17 = $r11, $r3
+; CV1-NEXT:    maxwp $r0 = $r32, $r0
+; CV1-NEXT:    maxwp $r1 = $r33, $r1
+; CV1-NEXT:    maxwp $r2 = $r34, $r2
+; CV1-NEXT:    maxwp $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmovewp.even $r16 ? $r10 = $r2
-; CV1-NEXT:    cmovewp.even $r17 ? $r11 = $r3
+; CV1-NEXT:    maxwp $r0 = $r4, $r0
+; CV1-NEXT:    maxwp $r1 = $r5, $r1
+; CV1-NEXT:    maxwp $r2 = $r6, $r2
+; CV1-NEXT:    maxwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    compnwp.gt $r2 = $r6, $r10
-; CV1-NEXT:    compnwp.gt $r3 = $r7, $r11
+; CV1-NEXT:    maxwp $r0 = $r0, $r2
+; CV1-NEXT:    maxwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    compnwp.gt $r3 = $r9, $r1
-; CV1-NEXT:    cmovewp.even $r2 ? $r6 = $r10
-; CV1-NEXT:    cmovewp.even $r3 ? $r7 = $r11
-; CV1-NEXT:    compnwp.gt $r11 = $r5, $r33
+; CV1-NEXT:    maxwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    compnwp.gt $r2 = $r8, $r0
-; CV1-NEXT:    cmovewp.even $r11 ? $r5 = $r33
-; CV1-NEXT:    cmovewp.even $r3 ? $r9 = $r1
-; CV1-NEXT:    compnwp.gt $r10 = $r4, $r32
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    compnwp.gt $r1 = $r5, $r9
-; CV1-NEXT:    cmovewp.even $r10 ? $r4 = $r32
-; CV1-NEXT:    cmovewp.even $r2 ? $r8 = $r0
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    compnwp.gt $r0 = $r4, $r8
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r9
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    compnwp.gt $r1 = $r5, $r7
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r8
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    compnwp.gt $r0 = $r4, $r6
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    maxwp $r0 = $r4, $r5
-; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 17)
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    maxw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 18)
+; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 19)
+; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: maxrwvd:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
+; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compnwp.gt $r36 = $r6, $r34
-; CV2-NEXT:    compnwp.gt $r37 = $r7, $r35
+; CV2-NEXT:    maxwp $r4 = $r4, $r8
+; CV2-NEXT:    maxwp $r5 = $r5, $r9
+; CV2-NEXT:    maxwp $r6 = $r6, $r10
+; CV2-NEXT:    maxwp $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmovewp.even $r36 ? $r6 = $r34
-; CV2-NEXT:    cmovewp.even $r37 ? $r7 = $r35
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    compnwp.gt $r16 = $r10, $r2
-; CV2-NEXT:    compnwp.gt $r17 = $r11, $r3
+; CV2-NEXT:    maxwp $r0 = $r32, $r0
+; CV2-NEXT:    maxwp $r1 = $r33, $r1
+; CV2-NEXT:    maxwp $r2 = $r34, $r2
+; CV2-NEXT:    maxwp $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cmovewp.even $r16 ? $r10 = $r2
-; CV2-NEXT:    cmovewp.even $r17 ? $r11 = $r3
+; CV2-NEXT:    maxwp $r0 = $r4, $r0
+; CV2-NEXT:    maxwp $r1 = $r5, $r1
+; CV2-NEXT:    maxwp $r2 = $r6, $r2
+; CV2-NEXT:    maxwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    compnwp.gt $r2 = $r6, $r10
-; CV2-NEXT:    compnwp.gt $r3 = $r7, $r11
+; CV2-NEXT:    maxwp $r0 = $r0, $r2
+; CV2-NEXT:    maxwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    compnwp.gt $r3 = $r9, $r1
-; CV2-NEXT:    cmovewp.even $r2 ? $r6 = $r10
-; CV2-NEXT:    cmovewp.even $r3 ? $r7 = $r11
-; CV2-NEXT:    compnwp.gt $r11 = $r5, $r33
+; CV2-NEXT:    maxwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    compnwp.gt $r2 = $r8, $r0
-; CV2-NEXT:    cmovewp.even $r11 ? $r5 = $r33
-; CV2-NEXT:    cmovewp.even $r3 ? $r9 = $r1
-; CV2-NEXT:    compnwp.gt $r10 = $r4, $r32
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    compnwp.gt $r1 = $r5, $r9
-; CV2-NEXT:    cmovewp.even $r10 ? $r4 = $r32
-; CV2-NEXT:    cmovewp.even $r2 ? $r8 = $r0
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    compnwp.gt $r0 = $r4, $r8
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r9
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    compnwp.gt $r1 = $r5, $r7
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r8
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    compnwp.gt $r0 = $r4, $r6
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV2-NEXT:    ;; # (end cycle 15)
-; CV2-NEXT:    maxwp $r0 = $r4, $r5
-; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    maxw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 18)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    maxrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 10)
   %2 = load <32 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.smax.v32i32(<32 x i32> %2)
   %4 = sext i32 %3 to i64
@@ -3929,32 +3867,23 @@ define i64 @maxrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    compnwp.gt $r8 = $r6, $r2
-; CV1-NEXT:    compnwp.gt $r9 = $r7, $r3
+; CV1-NEXT:    maxwp $r0 = $r4, $r0
+; CV1-NEXT:    maxwp $r1 = $r5, $r1
+; CV1-NEXT:    maxwp $r2 = $r6, $r2
+; CV1-NEXT:    maxwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    compnwp.gt $r2 = $r4, $r0
-; CV1-NEXT:    compnwp.gt $r3 = $r5, $r1
-; CV1-NEXT:    cmovewp.even $r8 ? $r6 = $r2
-; CV1-NEXT:    cmovewp.even $r9 ? $r7 = $r3
+; CV1-NEXT:    maxwp $r0 = $r0, $r2
+; CV1-NEXT:    maxwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    cmovewp.even $r2 ? $r4 = $r0
-; CV1-NEXT:    cmovewp.even $r3 ? $r5 = $r1
+; CV1-NEXT:    maxwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    compnwp.gt $r0 = $r4, $r6
-; CV1-NEXT:    compnwp.gt $r1 = $r5, $r7
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    maxwp $r0 = $r4, $r5
-; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    maxw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 12)
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: maxrwxd:
 ; CV2:       # %bb.0:
@@ -3962,32 +3891,19 @@ define i64 @maxrwxd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    compnwp.gt $r8 = $r6, $r2
-; CV2-NEXT:    compnwp.gt $r9 = $r7, $r3
+; CV2-NEXT:    maxwp $r0 = $r4, $r0
+; CV2-NEXT:    maxwp $r1 = $r5, $r1
+; CV2-NEXT:    maxwp $r2 = $r6, $r2
+; CV2-NEXT:    maxwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    compnwp.gt $r2 = $r4, $r0
-; CV2-NEXT:    compnwp.gt $r3 = $r5, $r1
-; CV2-NEXT:    cmovewp.even $r8 ? $r6 = $r2
-; CV2-NEXT:    cmovewp.even $r9 ? $r7 = $r3
+; CV2-NEXT:    maxwp $r0 = $r0, $r2
+; CV2-NEXT:    maxwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    cmovewp.even $r2 ? $r4 = $r0
-; CV2-NEXT:    cmovewp.even $r3 ? $r5 = $r1
+; CV2-NEXT:    maxwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    compnwp.gt $r0 = $r4, $r6
-; CV2-NEXT:    compnwp.gt $r1 = $r5, $r7
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    maxwp $r0 = $r4, $r5
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    maxw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    maxrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 12)
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <16 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.smax.v16i32(<16 x i32> %2)
   %4 = sext i32 %3 to i64
@@ -4430,37 +4346,27 @@ define i64 @maxurhxd(<16 x i16> %0) {
 define i64 @maxurwod(<8 x i32> %0) {
 ; CV1-LABEL: maxurwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    maxuwp $r2 = $r2, $r0
-; CV1-NEXT:    maxuwp $r3 = $r3, $r1
+; CV1-NEXT:    maxuwp $r0 = $r0, $r2
+; CV1-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfwp $r2 = $r0, $r2
-; CV1-NEXT:    sbfwp $r3 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    addwp $r0 = $r0, $r2
-; CV1-NEXT:    addwp $r1 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    maxuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    maxuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: maxurwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    maxuwp $r2 = $r2, $r0
-; CV2-NEXT:    maxuwp $r3 = $r3, $r1
+; CV2-NEXT:    maxuwp $r0 = $r0, $r2
+; CV2-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sbfwp $r2 = $r0, $r2
-; CV2-NEXT:    sbfwp $r3 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    addwp $r0 = $r0, $r2
-; CV2-NEXT:    addwp $r1 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    maxuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.umax.v8i32(<8 x i32> %0)
   %3 = zext i32 %2 to i64
   ret i64 %3
@@ -4469,9 +4375,11 @@ define i64 @maxurwod(<8 x i32> %0) {
 define i64 @maxurwpd(<2 x i32> %0) {
 ; CV1-LABEL: maxurwpd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    maxurwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    maxuw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: maxurwpd:
 ; CV2:       # %bb.0:
@@ -4488,9 +4396,11 @@ define i64 @maxurwqd(<4 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    maxuwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    maxurwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    maxuw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: maxurwqd:
 ; CV2:       # %bb.0:
@@ -4507,145 +4417,73 @@ define i64 @maxurwqd(<4 x i32> %0) {
 define i64 @maxurwvd(ptr %0) {
 ; CV1-LABEL: maxurwvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r8r9r10r11 = 96[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxuwp $r8 = $r8, $r4
-; CV1-NEXT:    maxuwp $r9 = $r9, $r5
-; CV1-NEXT:    maxuwp $r10 = $r10, $r6
-; CV1-NEXT:    maxuwp $r11 = $r11, $r7
+; CV1-NEXT:    maxuwp $r4 = $r4, $r8
+; CV1-NEXT:    maxuwp $r5 = $r5, $r9
+; CV1-NEXT:    maxuwp $r6 = $r6, $r10
+; CV1-NEXT:    maxuwp $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbfwp $r8 = $r4, $r8
-; CV1-NEXT:    sbfwp $r9 = $r5, $r9
-; CV1-NEXT:    sbfwp $r11 = $r7, $r11
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    maxuwp $r15 = $r33, $r1
-; CV1-NEXT:    maxuwp $r16 = $r32, $r0
-; CV1-NEXT:    maxuwp $r17 = $r35, $r3
-; CV1-NEXT:    maxuwp $r32 = $r34, $r2
+; CV1-NEXT:    maxuwp $r0 = $r32, $r0
+; CV1-NEXT:    maxuwp $r1 = $r33, $r1
+; CV1-NEXT:    maxuwp $r2 = $r34, $r2
+; CV1-NEXT:    maxuwp $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbfwp $r16 = $r0, $r16
-; CV1-NEXT:    sbfwp $r17 = $r3, $r17
-; CV1-NEXT:    sbfwp $r32 = $r2, $r32
-; CV1-NEXT:    sbfwp $r33 = $r1, $r15
+; CV1-NEXT:    maxuwp $r0 = $r4, $r0
+; CV1-NEXT:    maxuwp $r1 = $r5, $r1
+; CV1-NEXT:    maxuwp $r2 = $r6, $r2
+; CV1-NEXT:    maxuwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    addwp $r0 = $r0, $r16
-; CV1-NEXT:    addwp $r1 = $r1, $r33
-; CV1-NEXT:    addwp $r4 = $r4, $r8
-; CV1-NEXT:    sbfwp $r8 = $r6, $r10
+; CV1-NEXT:    maxuwp $r0 = $r0, $r2
+; CV1-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    addwp $r2 = $r2, $r32
-; CV1-NEXT:    addwp $r3 = $r3, $r17
-; CV1-NEXT:    addwp $r5 = $r5, $r9
-; CV1-NEXT:    addwp $r7 = $r7, $r11
-; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    maxuwp $r4 = $r4, $r0
-; CV1-NEXT:    maxuwp $r5 = $r5, $r1
-; CV1-NEXT:    addwp $r6 = $r6, $r8
-; CV1-NEXT:    maxuwp $r7 = $r7, $r3
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    sbfwp $r4 = $r0, $r4
-; CV1-NEXT:    sbfwp $r5 = $r1, $r5
-; CV1-NEXT:    maxuwp $r6 = $r6, $r2
-; CV1-NEXT:    sbfwp $r7 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    addwp $r0 = $r0, $r4
-; CV1-NEXT:    addwp $r1 = $r1, $r5
-; CV1-NEXT:    addwp $r3 = $r3, $r7
-; CV1-NEXT:    sbfwp $r6 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    addwp $r2 = $r2, $r6
-; CV1-NEXT:    maxuwp $r3 = $r3, $r1
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    maxuwp $r2 = $r2, $r0
-; CV1-NEXT:    sbfwp $r3 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    addwp $r1 = $r1, $r3
-; CV1-NEXT:    sbfwp $r2 = $r0, $r2
-; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    addwp $r0 = $r0, $r2
-; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    maxuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    maxurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    maxuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 18)
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: maxurwvd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r8r9r10r11 = 96[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    maxuwp $r8 = $r8, $r4
-; CV2-NEXT:    maxuwp $r9 = $r9, $r5
-; CV2-NEXT:    maxuwp $r10 = $r10, $r6
-; CV2-NEXT:    maxuwp $r11 = $r11, $r7
+; CV2-NEXT:    maxuwp $r4 = $r4, $r8
+; CV2-NEXT:    maxuwp $r5 = $r5, $r9
+; CV2-NEXT:    maxuwp $r6 = $r6, $r10
+; CV2-NEXT:    maxuwp $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbfwp $r8 = $r4, $r8
-; CV2-NEXT:    sbfwp $r9 = $r5, $r9
-; CV2-NEXT:    sbfwp $r11 = $r7, $r11
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    maxuwp $r15 = $r33, $r1
-; CV2-NEXT:    maxuwp $r16 = $r32, $r0
-; CV2-NEXT:    maxuwp $r17 = $r35, $r3
-; CV2-NEXT:    maxuwp $r32 = $r34, $r2
+; CV2-NEXT:    maxuwp $r0 = $r32, $r0
+; CV2-NEXT:    maxuwp $r1 = $r33, $r1
+; CV2-NEXT:    maxuwp $r2 = $r34, $r2
+; CV2-NEXT:    maxuwp $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    sbfwp $r16 = $r0, $r16
-; CV2-NEXT:    sbfwp $r17 = $r3, $r17
-; CV2-NEXT:    sbfwp $r32 = $r2, $r32
-; CV2-NEXT:    sbfwp $r33 = $r1, $r15
+; CV2-NEXT:    maxuwp $r0 = $r4, $r0
+; CV2-NEXT:    maxuwp $r1 = $r5, $r1
+; CV2-NEXT:    maxuwp $r2 = $r6, $r2
+; CV2-NEXT:    maxuwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    addwp $r0 = $r0, $r16
-; CV2-NEXT:    addwp $r1 = $r1, $r33
-; CV2-NEXT:    addwp $r4 = $r4, $r8
-; CV2-NEXT:    sbfwp $r8 = $r6, $r10
+; CV2-NEXT:    maxuwp $r0 = $r0, $r2
+; CV2-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    addwp $r2 = $r2, $r32
-; CV2-NEXT:    addwp $r3 = $r3, $r17
-; CV2-NEXT:    addwp $r5 = $r5, $r9
-; CV2-NEXT:    addwp $r7 = $r7, $r11
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    maxuwp $r4 = $r4, $r0
-; CV2-NEXT:    maxuwp $r5 = $r5, $r1
-; CV2-NEXT:    addwp $r6 = $r6, $r8
-; CV2-NEXT:    maxuwp $r7 = $r7, $r3
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    sbfwp $r4 = $r0, $r4
-; CV2-NEXT:    sbfwp $r5 = $r1, $r5
-; CV2-NEXT:    maxuwp $r6 = $r6, $r2
-; CV2-NEXT:    sbfwp $r7 = $r3, $r7
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    addwp $r0 = $r0, $r4
-; CV2-NEXT:    addwp $r1 = $r1, $r5
-; CV2-NEXT:    addwp $r3 = $r3, $r7
-; CV2-NEXT:    sbfwp $r6 = $r2, $r6
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    addwp $r2 = $r2, $r6
-; CV2-NEXT:    maxuwp $r3 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    maxuwp $r2 = $r2, $r0
-; CV2-NEXT:    sbfwp $r3 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    addwp $r1 = $r1, $r3
-; CV2-NEXT:    sbfwp $r2 = $r0, $r2
-; CV2-NEXT:    ;; # (end cycle 15)
-; CV2-NEXT:    addwp $r0 = $r0, $r2
-; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    maxuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    maxurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 10)
   %2 = load <32 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.umax.v32i32(<32 x i32> %2)
   %4 = zext i32 %3 to i64
@@ -4655,75 +4493,45 @@ define i64 @maxurwvd(ptr %0) {
 define i64 @maxurwxd(ptr %0) {
 ; CV1-LABEL: maxurwxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    maxuwp $r4 = $r4, $r0
-; CV1-NEXT:    maxuwp $r5 = $r5, $r1
-; CV1-NEXT:    maxuwp $r6 = $r6, $r2
-; CV1-NEXT:    maxuwp $r7 = $r7, $r3
+; CV1-NEXT:    maxuwp $r0 = $r4, $r0
+; CV1-NEXT:    maxuwp $r1 = $r5, $r1
+; CV1-NEXT:    maxuwp $r2 = $r6, $r2
+; CV1-NEXT:    maxuwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbfwp $r4 = $r0, $r4
-; CV1-NEXT:    sbfwp $r5 = $r1, $r5
-; CV1-NEXT:    sbfwp $r6 = $r2, $r6
-; CV1-NEXT:    sbfwp $r7 = $r3, $r7
+; CV1-NEXT:    maxuwp $r0 = $r0, $r2
+; CV1-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    addwp $r0 = $r0, $r4
-; CV1-NEXT:    addwp $r1 = $r1, $r5
-; CV1-NEXT:    addwp $r2 = $r2, $r6
-; CV1-NEXT:    addwp $r3 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    maxuwp $r2 = $r2, $r0
-; CV1-NEXT:    maxuwp $r3 = $r3, $r1
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    sbfwp $r2 = $r0, $r2
-; CV1-NEXT:    sbfwp $r3 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    addwp $r0 = $r0, $r2
-; CV1-NEXT:    addwp $r1 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    maxuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    maxurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    maxuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: maxurwxd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    maxuwp $r4 = $r4, $r0
-; CV2-NEXT:    maxuwp $r5 = $r5, $r1
-; CV2-NEXT:    maxuwp $r6 = $r6, $r2
-; CV2-NEXT:    maxuwp $r7 = $r7, $r3
+; CV2-NEXT:    maxuwp $r0 = $r4, $r0
+; CV2-NEXT:    maxuwp $r1 = $r5, $r1
+; CV2-NEXT:    maxuwp $r2 = $r6, $r2
+; CV2-NEXT:    maxuwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbfwp $r4 = $r0, $r4
-; CV2-NEXT:    sbfwp $r5 = $r1, $r5
-; CV2-NEXT:    sbfwp $r6 = $r2, $r6
-; CV2-NEXT:    sbfwp $r7 = $r3, $r7
+; CV2-NEXT:    maxuwp $r0 = $r0, $r2
+; CV2-NEXT:    maxuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    addwp $r0 = $r0, $r4
-; CV2-NEXT:    addwp $r1 = $r1, $r5
-; CV2-NEXT:    addwp $r2 = $r2, $r6
-; CV2-NEXT:    addwp $r3 = $r3, $r7
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    maxuwp $r2 = $r2, $r0
-; CV2-NEXT:    maxuwp $r3 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    sbfwp $r2 = $r0, $r2
-; CV2-NEXT:    sbfwp $r3 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    addwp $r0 = $r0, $r2
-; CV2-NEXT:    addwp $r1 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    maxuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 10)
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    maxurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 11)
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <16 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.umax.v16i32(<16 x i32> %2)
   %4 = zext i32 %3 to i64
@@ -4798,7 +4606,7 @@ define i64 @minrbpd(<2 x i8> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x101010101010201
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    minrbod $r0 = $r0
+; CV2-NEXT:    maxrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.smin.v2i8(<2 x i8> %0)
@@ -5165,39 +4973,29 @@ define i64 @minrhxd(<16 x i16> %0) {
 define i64 @minrwod(<8 x i32> %0) {
 ; CV1-LABEL: minrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    compnwp.lt $r4 = $r0, $r2
-; CV1-NEXT:    compnwp.lt $r5 = $r1, $r3
+; CV1-NEXT:    minwp $r0 = $r0, $r2
+; CV1-NEXT:    minwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    cmovewp.even $r4 ? $r0 = $r2
-; CV1-NEXT:    cmovewp.even $r5 ? $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    minwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    minw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: minrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    compnwp.lt $r4 = $r0, $r2
-; CV2-NEXT:    compnwp.lt $r5 = $r1, $r3
+; CV2-NEXT:    minwp $r0 = $r0, $r2
+; CV2-NEXT:    minwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    cmovewp.even $r4 ? $r0 = $r2
-; CV2-NEXT:    cmovewp.even $r5 ? $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    minwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    minw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    minrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.smin.v8i32(<8 x i32> %0)
   %3 = sext i32 %2 to i64
   ret i64 %3
@@ -5241,13 +5039,9 @@ define i64 @minrwqd(<4 x i32> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    minwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    minw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    minrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i32 @llvm.vector.reduce.smin.v4i32(<4 x i32> %0)
   %3 = sext i32 %2 to i64
   ret i64 %3
@@ -5258,121 +5052,73 @@ define i64 @minrwvd(ptr %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
+; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    compnwp.lt $r36 = $r6, $r34
-; CV1-NEXT:    compnwp.lt $r37 = $r7, $r35
+; CV1-NEXT:    minwp $r4 = $r4, $r8
+; CV1-NEXT:    minwp $r5 = $r5, $r9
+; CV1-NEXT:    minwp $r6 = $r6, $r10
+; CV1-NEXT:    minwp $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmovewp.even $r36 ? $r6 = $r34
-; CV1-NEXT:    cmovewp.even $r37 ? $r7 = $r35
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    compnwp.lt $r16 = $r10, $r2
-; CV1-NEXT:    compnwp.lt $r17 = $r11, $r3
+; CV1-NEXT:    minwp $r0 = $r32, $r0
+; CV1-NEXT:    minwp $r1 = $r33, $r1
+; CV1-NEXT:    minwp $r2 = $r34, $r2
+; CV1-NEXT:    minwp $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmovewp.even $r16 ? $r10 = $r2
-; CV1-NEXT:    cmovewp.even $r17 ? $r11 = $r3
+; CV1-NEXT:    minwp $r0 = $r4, $r0
+; CV1-NEXT:    minwp $r1 = $r5, $r1
+; CV1-NEXT:    minwp $r2 = $r6, $r2
+; CV1-NEXT:    minwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    compnwp.lt $r2 = $r6, $r10
-; CV1-NEXT:    compnwp.lt $r3 = $r7, $r11
+; CV1-NEXT:    minwp $r0 = $r0, $r2
+; CV1-NEXT:    minwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    compnwp.lt $r3 = $r9, $r1
-; CV1-NEXT:    cmovewp.even $r2 ? $r6 = $r10
-; CV1-NEXT:    cmovewp.even $r3 ? $r7 = $r11
-; CV1-NEXT:    compnwp.lt $r11 = $r5, $r33
+; CV1-NEXT:    minwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    compnwp.lt $r2 = $r8, $r0
-; CV1-NEXT:    cmovewp.even $r11 ? $r5 = $r33
-; CV1-NEXT:    cmovewp.even $r3 ? $r9 = $r1
-; CV1-NEXT:    compnwp.lt $r10 = $r4, $r32
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    compnwp.lt $r1 = $r5, $r9
-; CV1-NEXT:    cmovewp.even $r10 ? $r4 = $r32
-; CV1-NEXT:    cmovewp.even $r2 ? $r8 = $r0
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    compnwp.lt $r0 = $r4, $r8
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r9
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    compnwp.lt $r1 = $r5, $r7
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r8
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    compnwp.lt $r0 = $r4, $r6
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    minwp $r0 = $r4, $r5
-; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 17)
+; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    minw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 18)
+; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 19)
+; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: minrwvd:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r32r33r34r35 = 64[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
+; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compnwp.lt $r36 = $r6, $r34
-; CV2-NEXT:    compnwp.lt $r37 = $r7, $r35
+; CV2-NEXT:    minwp $r4 = $r4, $r8
+; CV2-NEXT:    minwp $r5 = $r5, $r9
+; CV2-NEXT:    minwp $r6 = $r6, $r10
+; CV2-NEXT:    minwp $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmovewp.even $r36 ? $r6 = $r34
-; CV2-NEXT:    cmovewp.even $r37 ? $r7 = $r35
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    compnwp.lt $r16 = $r10, $r2
-; CV2-NEXT:    compnwp.lt $r17 = $r11, $r3
+; CV2-NEXT:    minwp $r0 = $r32, $r0
+; CV2-NEXT:    minwp $r1 = $r33, $r1
+; CV2-NEXT:    minwp $r2 = $r34, $r2
+; CV2-NEXT:    minwp $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cmovewp.even $r16 ? $r10 = $r2
-; CV2-NEXT:    cmovewp.even $r17 ? $r11 = $r3
+; CV2-NEXT:    minwp $r0 = $r4, $r0
+; CV2-NEXT:    minwp $r1 = $r5, $r1
+; CV2-NEXT:    minwp $r2 = $r6, $r2
+; CV2-NEXT:    minwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    compnwp.lt $r2 = $r6, $r10
-; CV2-NEXT:    compnwp.lt $r3 = $r7, $r11
+; CV2-NEXT:    minwp $r0 = $r0, $r2
+; CV2-NEXT:    minwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    compnwp.lt $r3 = $r9, $r1
-; CV2-NEXT:    cmovewp.even $r2 ? $r6 = $r10
-; CV2-NEXT:    cmovewp.even $r3 ? $r7 = $r11
-; CV2-NEXT:    compnwp.lt $r11 = $r5, $r33
+; CV2-NEXT:    minwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    compnwp.lt $r2 = $r8, $r0
-; CV2-NEXT:    cmovewp.even $r11 ? $r5 = $r33
-; CV2-NEXT:    cmovewp.even $r3 ? $r9 = $r1
-; CV2-NEXT:    compnwp.lt $r10 = $r4, $r32
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    compnwp.lt $r1 = $r5, $r9
-; CV2-NEXT:    cmovewp.even $r10 ? $r4 = $r32
-; CV2-NEXT:    cmovewp.even $r2 ? $r8 = $r0
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    compnwp.lt $r0 = $r4, $r8
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r9
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    compnwp.lt $r1 = $r5, $r7
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r8
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    compnwp.lt $r0 = $r4, $r6
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV2-NEXT:    ;; # (end cycle 15)
-; CV2-NEXT:    minwp $r0 = $r4, $r5
-; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    minw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 18)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    minrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 10)
   %2 = load <32 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.smin.v32i32(<32 x i32> %2)
   %4 = sext i32 %3 to i64
@@ -5386,32 +5132,23 @@ define i64 @minrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    compnwp.lt $r8 = $r6, $r2
-; CV1-NEXT:    compnwp.lt $r9 = $r7, $r3
+; CV1-NEXT:    minwp $r0 = $r4, $r0
+; CV1-NEXT:    minwp $r1 = $r5, $r1
+; CV1-NEXT:    minwp $r2 = $r6, $r2
+; CV1-NEXT:    minwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    compnwp.lt $r2 = $r4, $r0
-; CV1-NEXT:    compnwp.lt $r3 = $r5, $r1
-; CV1-NEXT:    cmovewp.even $r8 ? $r6 = $r2
-; CV1-NEXT:    cmovewp.even $r9 ? $r7 = $r3
+; CV1-NEXT:    minwp $r0 = $r0, $r2
+; CV1-NEXT:    minwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    cmovewp.even $r2 ? $r4 = $r0
-; CV1-NEXT:    cmovewp.even $r3 ? $r5 = $r1
+; CV1-NEXT:    minwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    compnwp.lt $r0 = $r4, $r6
-; CV1-NEXT:    compnwp.lt $r1 = $r5, $r7
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV1-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    minwp $r0 = $r4, $r5
-; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    minw $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    sxwd $r0 = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 12)
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: minrwxd:
 ; CV2:       # %bb.0:
@@ -5419,32 +5156,19 @@ define i64 @minrwxd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    compnwp.lt $r8 = $r6, $r2
-; CV2-NEXT:    compnwp.lt $r9 = $r7, $r3
+; CV2-NEXT:    minwp $r0 = $r4, $r0
+; CV2-NEXT:    minwp $r1 = $r5, $r1
+; CV2-NEXT:    minwp $r2 = $r6, $r2
+; CV2-NEXT:    minwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    compnwp.lt $r2 = $r4, $r0
-; CV2-NEXT:    compnwp.lt $r3 = $r5, $r1
-; CV2-NEXT:    cmovewp.even $r8 ? $r6 = $r2
-; CV2-NEXT:    cmovewp.even $r9 ? $r7 = $r3
+; CV2-NEXT:    minwp $r0 = $r0, $r2
+; CV2-NEXT:    minwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    cmovewp.even $r2 ? $r4 = $r0
-; CV2-NEXT:    cmovewp.even $r3 ? $r5 = $r1
+; CV2-NEXT:    minwp $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    compnwp.lt $r0 = $r4, $r6
-; CV2-NEXT:    compnwp.lt $r1 = $r5, $r7
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    cmovewp.even $r0 ? $r4 = $r6
-; CV2-NEXT:    cmovewp.even $r1 ? $r5 = $r7
-; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    minwp $r0 = $r4, $r5
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    srad $r1 = $r0, 32
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    minw $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    sxwd $r0 = $r0
+; CV2-NEXT:    minrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 12)
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <16 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.smin.v16i32(<16 x i32> %2)
   %4 = sext i32 %3 to i64
@@ -5881,37 +5605,27 @@ define i64 @minurhxd(<16 x i16> %0) {
 define i64 @minurwod(<8 x i32> %0) {
 ; CV1-LABEL: minurwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    maxuwp $r4 = $r1, $r3
-; CV1-NEXT:    maxuwp $r5 = $r0, $r2
+; CV1-NEXT:    minuwp $r0 = $r0, $r2
+; CV1-NEXT:    minuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfwp $r2 = $r2, $r5
-; CV1-NEXT:    sbfwp $r3 = $r3, $r4
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbfwp $r0 = $r2, $r0
-; CV1-NEXT:    sbfwp $r1 = $r3, $r1
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    minuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    minurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    minuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: minurwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    maxuwp $r4 = $r1, $r3
-; CV2-NEXT:    maxuwp $r5 = $r0, $r2
+; CV2-NEXT:    minuwp $r0 = $r0, $r2
+; CV2-NEXT:    minuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sbfwp $r2 = $r2, $r5
-; CV2-NEXT:    sbfwp $r3 = $r3, $r4
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sbfwp $r0 = $r2, $r0
-; CV2-NEXT:    sbfwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    minuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    minurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.umin.v8i32(<8 x i32> %0)
   %3 = zext i32 %2 to i64
   ret i64 %3
@@ -5920,9 +5634,11 @@ define i64 @minurwod(<8 x i32> %0) {
 define i64 @minurwpd(<2 x i32> %0) {
 ; CV1-LABEL: minurwpd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    minurwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    minuw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: minurwpd:
 ; CV2:       # %bb.0:
@@ -5939,9 +5655,11 @@ define i64 @minurwqd(<4 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    minuwp $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    minurwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    minuw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: minurwqd:
 ; CV2:       # %bb.0:
@@ -5966,65 +5684,31 @@ define i64 @minurwvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxuwp $r17 = $r7, $r11
-; CV1-NEXT:    maxuwp $r36 = $r6, $r10
-; CV1-NEXT:    maxuwp $r39 = $r5, $r9
-; CV1-NEXT:    maxuwp $r40 = $r4, $r8
+; CV1-NEXT:    minuwp $r4 = $r4, $r8
+; CV1-NEXT:    minuwp $r5 = $r5, $r9
+; CV1-NEXT:    minuwp $r6 = $r6, $r10
+; CV1-NEXT:    minuwp $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbfwp $r8 = $r8, $r40
-; CV1-NEXT:    sbfwp $r9 = $r9, $r39
-; CV1-NEXT:    sbfwp $r10 = $r10, $r36
-; CV1-NEXT:    sbfwp $r11 = $r11, $r17
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    maxuwp $r15 = $r35, $r3
-; CV1-NEXT:    maxuwp $r16 = $r34, $r2
-; CV1-NEXT:    maxuwp $r37 = $r33, $r1
-; CV1-NEXT:    maxuwp $r38 = $r32, $r0
+; CV1-NEXT:    minuwp $r0 = $r32, $r0
+; CV1-NEXT:    minuwp $r1 = $r33, $r1
+; CV1-NEXT:    minuwp $r2 = $r34, $r2
+; CV1-NEXT:    minuwp $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r38
-; CV1-NEXT:    sbfwp $r1 = $r1, $r37
-; CV1-NEXT:    sbfwp $r2 = $r2, $r16
-; CV1-NEXT:    sbfwp $r3 = $r3, $r15
+; CV1-NEXT:    minuwp $r0 = $r4, $r0
+; CV1-NEXT:    minuwp $r1 = $r5, $r1
+; CV1-NEXT:    minuwp $r2 = $r6, $r2
+; CV1-NEXT:    minuwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    sbfwp $r2 = $r2, $r34
-; CV1-NEXT:    sbfwp $r3 = $r3, $r35
-; CV1-NEXT:    sbfwp $r6 = $r10, $r6
-; CV1-NEXT:    sbfwp $r7 = $r11, $r7
+; CV1-NEXT:    minuwp $r0 = $r0, $r2
+; CV1-NEXT:    minuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r32
-; CV1-NEXT:    sbfwp $r1 = $r1, $r33
-; CV1-NEXT:    sbfwp $r4 = $r8, $r4
-; CV1-NEXT:    sbfwp $r5 = $r9, $r5
-; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    maxuwp $r8 = $r7, $r3
-; CV1-NEXT:    maxuwp $r9 = $r6, $r2
-; CV1-NEXT:    maxuwp $r10 = $r5, $r1
-; CV1-NEXT:    maxuwp $r11 = $r4, $r0
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r11
-; CV1-NEXT:    sbfwp $r1 = $r1, $r10
-; CV1-NEXT:    sbfwp $r2 = $r2, $r9
-; CV1-NEXT:    sbfwp $r3 = $r3, $r8
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r4
-; CV1-NEXT:    sbfwp $r1 = $r1, $r5
-; CV1-NEXT:    sbfwp $r2 = $r2, $r6
-; CV1-NEXT:    sbfwp $r3 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    maxuwp $r4 = $r1, $r3
-; CV1-NEXT:    maxuwp $r5 = $r0, $r2
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    sbfwp $r2 = $r2, $r5
-; CV1-NEXT:    sbfwp $r3 = $r3, $r4
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    sbfwp $r0 = $r2, $r0
-; CV1-NEXT:    sbfwp $r1 = $r3, $r1
-; CV1-NEXT:    ;; # (end cycle 15)
 ; CV1-NEXT:    minuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 16)
-; CV1-NEXT:    minurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    minuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 17)
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: minurwvd:
 ; CV2:       # %bb.0:
@@ -6036,65 +5720,29 @@ define i64 @minurwvd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    maxuwp $r17 = $r7, $r11
-; CV2-NEXT:    maxuwp $r36 = $r6, $r10
-; CV2-NEXT:    maxuwp $r39 = $r5, $r9
-; CV2-NEXT:    maxuwp $r40 = $r4, $r8
+; CV2-NEXT:    minuwp $r4 = $r4, $r8
+; CV2-NEXT:    minuwp $r5 = $r5, $r9
+; CV2-NEXT:    minuwp $r6 = $r6, $r10
+; CV2-NEXT:    minuwp $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbfwp $r8 = $r8, $r40
-; CV2-NEXT:    sbfwp $r9 = $r9, $r39
-; CV2-NEXT:    sbfwp $r10 = $r10, $r36
-; CV2-NEXT:    sbfwp $r11 = $r11, $r17
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    maxuwp $r15 = $r35, $r3
-; CV2-NEXT:    maxuwp $r16 = $r34, $r2
-; CV2-NEXT:    maxuwp $r37 = $r33, $r1
-; CV2-NEXT:    maxuwp $r38 = $r32, $r0
+; CV2-NEXT:    minuwp $r0 = $r32, $r0
+; CV2-NEXT:    minuwp $r1 = $r33, $r1
+; CV2-NEXT:    minuwp $r2 = $r34, $r2
+; CV2-NEXT:    minuwp $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r38
-; CV2-NEXT:    sbfwp $r1 = $r1, $r37
-; CV2-NEXT:    sbfwp $r2 = $r2, $r16
-; CV2-NEXT:    sbfwp $r3 = $r3, $r15
+; CV2-NEXT:    minuwp $r0 = $r4, $r0
+; CV2-NEXT:    minuwp $r1 = $r5, $r1
+; CV2-NEXT:    minuwp $r2 = $r6, $r2
+; CV2-NEXT:    minuwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    sbfwp $r2 = $r2, $r34
-; CV2-NEXT:    sbfwp $r3 = $r3, $r35
-; CV2-NEXT:    sbfwp $r6 = $r10, $r6
-; CV2-NEXT:    sbfwp $r7 = $r11, $r7
+; CV2-NEXT:    minuwp $r0 = $r0, $r2
+; CV2-NEXT:    minuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r32
-; CV2-NEXT:    sbfwp $r1 = $r1, $r33
-; CV2-NEXT:    sbfwp $r4 = $r8, $r4
-; CV2-NEXT:    sbfwp $r5 = $r9, $r5
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    maxuwp $r8 = $r7, $r3
-; CV2-NEXT:    maxuwp $r9 = $r6, $r2
-; CV2-NEXT:    maxuwp $r10 = $r5, $r1
-; CV2-NEXT:    maxuwp $r11 = $r4, $r0
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r11
-; CV2-NEXT:    sbfwp $r1 = $r1, $r10
-; CV2-NEXT:    sbfwp $r2 = $r2, $r9
-; CV2-NEXT:    sbfwp $r3 = $r3, $r8
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r4
-; CV2-NEXT:    sbfwp $r1 = $r1, $r5
-; CV2-NEXT:    sbfwp $r2 = $r2, $r6
-; CV2-NEXT:    sbfwp $r3 = $r3, $r7
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    maxuwp $r4 = $r1, $r3
-; CV2-NEXT:    maxuwp $r5 = $r0, $r2
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    sbfwp $r2 = $r2, $r5
-; CV2-NEXT:    sbfwp $r3 = $r3, $r4
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    sbfwp $r0 = $r2, $r0
-; CV2-NEXT:    sbfwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    minuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 16)
+; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    minurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 10)
   %2 = load <32 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.umin.v32i32(<32 x i32> %2)
   %4 = zext i32 %3 to i64
@@ -6108,35 +5756,21 @@ define i64 @minurwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    maxuwp $r8 = $r7, $r3
-; CV1-NEXT:    maxuwp $r9 = $r6, $r2
-; CV1-NEXT:    maxuwp $r10 = $r5, $r1
-; CV1-NEXT:    maxuwp $r11 = $r4, $r0
+; CV1-NEXT:    minuwp $r0 = $r4, $r0
+; CV1-NEXT:    minuwp $r1 = $r5, $r1
+; CV1-NEXT:    minuwp $r2 = $r6, $r2
+; CV1-NEXT:    minuwp $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r11
-; CV1-NEXT:    sbfwp $r1 = $r1, $r10
-; CV1-NEXT:    sbfwp $r2 = $r2, $r9
-; CV1-NEXT:    sbfwp $r3 = $r3, $r8
+; CV1-NEXT:    minuwp $r0 = $r0, $r2
+; CV1-NEXT:    minuwp $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sbfwp $r0 = $r0, $r4
-; CV1-NEXT:    sbfwp $r1 = $r1, $r5
-; CV1-NEXT:    sbfwp $r2 = $r2, $r6
-; CV1-NEXT:    sbfwp $r3 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    maxuwp $r4 = $r1, $r3
-; CV1-NEXT:    maxuwp $r5 = $r0, $r2
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    sbfwp $r2 = $r2, $r5
-; CV1-NEXT:    sbfwp $r3 = $r3, $r4
-; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    sbfwp $r0 = $r2, $r0
-; CV1-NEXT:    sbfwp $r1 = $r3, $r1
-; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    minuwp $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    minurwpd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    minuw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: minurwxd:
 ; CV2:       # %bb.0:
@@ -6144,35 +5778,19 @@ define i64 @minurwxd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    maxuwp $r8 = $r7, $r3
-; CV2-NEXT:    maxuwp $r9 = $r6, $r2
-; CV2-NEXT:    maxuwp $r10 = $r5, $r1
-; CV2-NEXT:    maxuwp $r11 = $r4, $r0
+; CV2-NEXT:    minuwp $r0 = $r4, $r0
+; CV2-NEXT:    minuwp $r1 = $r5, $r1
+; CV2-NEXT:    minuwp $r2 = $r6, $r2
+; CV2-NEXT:    minuwp $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r11
-; CV2-NEXT:    sbfwp $r1 = $r1, $r10
-; CV2-NEXT:    sbfwp $r2 = $r2, $r9
-; CV2-NEXT:    sbfwp $r3 = $r3, $r8
+; CV2-NEXT:    minuwp $r0 = $r0, $r2
+; CV2-NEXT:    minuwp $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sbfwp $r0 = $r0, $r4
-; CV2-NEXT:    sbfwp $r1 = $r1, $r5
-; CV2-NEXT:    sbfwp $r2 = $r2, $r6
-; CV2-NEXT:    sbfwp $r3 = $r3, $r7
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    maxuwp $r4 = $r1, $r3
-; CV2-NEXT:    maxuwp $r5 = $r0, $r2
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    sbfwp $r2 = $r2, $r5
-; CV2-NEXT:    sbfwp $r3 = $r3, $r4
-; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    sbfwp $r0 = $r2, $r0
-; CV2-NEXT:    sbfwp $r1 = $r3, $r1
-; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    minuwp $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 10)
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    minurwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 11)
+; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <16 x i32>, ptr %0
   %3 = tail call i32 @llvm.vector.reduce.umin.v16i32(<16 x i32> %2)
   %4 = zext i32 %3 to i64
@@ -6620,9 +6238,11 @@ define i64 @andrwod(<8 x i32> %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    andrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    andw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: andrwod:
 ; CV2:       # %bb.0:
@@ -6652,9 +6272,11 @@ define i64 @andrwod(<8 x i32> %0) {
 define i64 @andrwpd(<2 x i32> %0) {
 ; CV1-LABEL: andrwpd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    andrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: andrwpd:
 ; CV2:       # %bb.0:
@@ -6671,9 +6293,11 @@ define i64 @andrwqd(<4 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    andd $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    andw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: andrwqd:
 ; CV2:       # %bb.0:
@@ -6718,9 +6342,11 @@ define i64 @andrwvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    andrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    andw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: andrwvd:
 ; CV2:       # %bb.0:
@@ -6778,9 +6404,11 @@ define i64 @andrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    andrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    andw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: andrwxd:
 ; CV2:       # %bb.0:
@@ -6852,7 +6480,7 @@ define i64 @orrbpd(<2 x i8> %0) {
 ;
 ; CV2-LABEL: orrbpd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    sbmm8 $r0 = $r0, 0x101010101010201
+; CV2-NEXT:    zxhd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    orrbod $r0 = $r0
 ; CV2-NEXT:    ret
@@ -6881,7 +6509,7 @@ define i64 @orrbqd(<4 x i8> %0) {
 ;
 ; CV2-LABEL: orrbqd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    insf $r0 = $r0, 63, 32
+; CV2-NEXT:    zxwd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    orrbod $r0 = $r0
 ; CV2-NEXT:    ret
@@ -7011,7 +6639,7 @@ define i64 @orrhpd(<2 x i16> %0) {
 ;
 ; CV2-LABEL: orrhpd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    insf $r0 = $r0, 63, 32
+; CV2-NEXT:    zxwd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    orrhqd $r0 = $r0
 ; CV2-NEXT:    ret
@@ -7156,24 +6784,26 @@ define i64 @orrwod(<8 x i32> %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    orrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    orw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: orrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r4 = $r3, 32
-; CV2-NEXT:    srad $r5 = $r1, 32
-; CV2-NEXT:    srad $r6 = $r2, 32
-; CV2-NEXT:    srad $r7 = $r0, 32
+; CV2-NEXT:    srad $r4 = $r2, 32
+; CV2-NEXT:    srad $r5 = $r0, 32
+; CV2-NEXT:    srad $r6 = $r3, 32
+; CV2-NEXT:    srad $r7 = $r1, 32
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    orw $r0 = $r0, $r2
 ; CV2-NEXT:    orw $r1 = $r1, $r3
-; CV2-NEXT:    orw $r3 = $r7, $r6
 ; CV2-NEXT:    orw $r4 = $r5, $r4
+; CV2-NEXT:    orw $r5 = $r7, $r6
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r3, 63, 32
-; CV2-NEXT:    insf $r1 = $r4, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
@@ -7188,9 +6818,11 @@ define i64 @orrwod(<8 x i32> %0) {
 define i64 @orrwpd(<2 x i32> %0) {
 ; CV1-LABEL: orrwpd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    orrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    orw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: orrwpd:
 ; CV2:       # %bb.0:
@@ -7207,9 +6839,11 @@ define i64 @orrwqd(<4 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    orrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    orw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: orrwqd:
 ; CV2:       # %bb.0:
@@ -7254,34 +6888,36 @@ define i64 @orrwvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    orrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    orw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: orrwvd:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 96[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
+; CV2-NEXT:    lo $r32r33r34r35 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    ord $r8 = $r32, $r8
-; CV2-NEXT:    ord $r9 = $r33, $r9
-; CV2-NEXT:    ord $r10 = $r34, $r10
-; CV2-NEXT:    ord $r11 = $r35, $r11
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    ord $r0 = $r0, $r4
-; CV2-NEXT:    ord $r1 = $r1, $r5
-; CV2-NEXT:    ord $r2 = $r2, $r6
-; CV2-NEXT:    ord $r3 = $r3, $r7
+; CV2-NEXT:    ord $r4 = $r8, $r4
+; CV2-NEXT:    ord $r5 = $r9, $r5
+; CV2-NEXT:    ord $r6 = $r10, $r6
+; CV2-NEXT:    ord $r7 = $r11, $r7
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ord $r0 = $r0, $r32
+; CV2-NEXT:    ord $r1 = $r1, $r33
+; CV2-NEXT:    ord $r2 = $r2, $r34
+; CV2-NEXT:    ord $r3 = $r3, $r35
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    ord $r0 = $r0, $r8
-; CV2-NEXT:    ord $r1 = $r1, $r9
-; CV2-NEXT:    ord $r2 = $r2, $r10
-; CV2-NEXT:    ord $r3 = $r3, $r11
+; CV2-NEXT:    ord $r0 = $r4, $r0
+; CV2-NEXT:    ord $r1 = $r5, $r1
+; CV2-NEXT:    ord $r2 = $r6, $r2
+; CV2-NEXT:    ord $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    ord $r0 = $r0, $r2
 ; CV2-NEXT:    ord $r1 = $r1, $r3
@@ -7314,9 +6950,11 @@ define i64 @orrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    ord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    orrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    orw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: orrwxd:
 ; CV2:       # %bb.0:
@@ -7692,24 +7330,26 @@ define i64 @xorrwod(<8 x i32> %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    xord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xorrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: xorrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r4 = $r3, 32
-; CV2-NEXT:    srad $r5 = $r1, 32
-; CV2-NEXT:    srad $r6 = $r2, 32
-; CV2-NEXT:    srad $r7 = $r0, 32
+; CV2-NEXT:    srad $r4 = $r2, 32
+; CV2-NEXT:    srad $r5 = $r0, 32
+; CV2-NEXT:    srad $r6 = $r3, 32
+; CV2-NEXT:    srad $r7 = $r1, 32
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    xorw $r0 = $r0, $r2
 ; CV2-NEXT:    xorw $r1 = $r1, $r3
-; CV2-NEXT:    xorw $r3 = $r7, $r6
 ; CV2-NEXT:    xorw $r4 = $r5, $r4
+; CV2-NEXT:    xorw $r5 = $r7, $r6
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r3, 63, 32
-; CV2-NEXT:    insf $r1 = $r4, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    xord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
@@ -7724,9 +7364,11 @@ define i64 @xorrwod(<8 x i32> %0) {
 define i64 @xorrwpd(<2 x i32> %0) {
 ; CV1-LABEL: xorrwpd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xorrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: xorrwpd:
 ; CV2:       # %bb.0:
@@ -7743,9 +7385,11 @@ define i64 @xorrwqd(<4 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: xorrwqd:
 ; CV2:       # %bb.0:
@@ -7790,34 +7434,36 @@ define i64 @xorrwvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    xord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    xorrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: xorrwvd:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    lo $r4r5r6r7 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 96[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
+; CV2-NEXT:    lo $r32r33r34r35 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    xord $r8 = $r32, $r8
-; CV2-NEXT:    xord $r9 = $r33, $r9
-; CV2-NEXT:    xord $r10 = $r34, $r10
-; CV2-NEXT:    xord $r11 = $r35, $r11
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xord $r0 = $r0, $r4
-; CV2-NEXT:    xord $r1 = $r1, $r5
-; CV2-NEXT:    xord $r2 = $r2, $r6
-; CV2-NEXT:    xord $r3 = $r3, $r7
+; CV2-NEXT:    xord $r4 = $r8, $r4
+; CV2-NEXT:    xord $r5 = $r9, $r5
+; CV2-NEXT:    xord $r6 = $r10, $r6
+; CV2-NEXT:    xord $r7 = $r11, $r7
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    xord $r0 = $r0, $r32
+; CV2-NEXT:    xord $r1 = $r1, $r33
+; CV2-NEXT:    xord $r2 = $r2, $r34
+; CV2-NEXT:    xord $r3 = $r3, $r35
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xord $r0 = $r0, $r8
-; CV2-NEXT:    xord $r1 = $r1, $r9
-; CV2-NEXT:    xord $r2 = $r2, $r10
-; CV2-NEXT:    xord $r3 = $r3, $r11
+; CV2-NEXT:    xord $r0 = $r4, $r0
+; CV2-NEXT:    xord $r1 = $r5, $r1
+; CV2-NEXT:    xord $r2 = $r6, $r2
+; CV2-NEXT:    xord $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    xord $r0 = $r0, $r2
 ; CV2-NEXT:    xord $r1 = $r1, $r3
@@ -7850,9 +7496,11 @@ define i64 @xorrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    xord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    xorrwpd $r0 = $r0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: xorrwxd:
 ; CV2:       # %bb.0:

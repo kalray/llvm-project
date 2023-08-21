@@ -589,18 +589,10 @@ declare <4 x i32> @llvm.abs.v4i32(<4 x i32>, i1) #0
 define <4 x i32> @test_abs(<4 x i32> %a) #0 {
 ; CHECK-LABEL: test_abs:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    absw $r0 = $r0
-; CHECK-NEXT:    absw $r1 = $r1
-; CHECK-NEXT:    srad $r2 = $r1, 32
-; CHECK-NEXT:    srad $r3 = $r0, 32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    absw $r2 = $r2
-; CHECK-NEXT:    absw $r3 = $r3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    abswp $r0 = $r0
+; CHECK-NEXT:    abswp $r1 = $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a, i1 false)
   ret <4 x i32> %r
 }
