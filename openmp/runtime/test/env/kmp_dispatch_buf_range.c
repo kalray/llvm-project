@@ -1,6 +1,6 @@
 // RUN: %libomp-compile
-// RUN: env KMP_DISP_NUM_BUFFERS=0 %libomp-run 2>&1 | FileCheck --check-prefix=SMALL %s
-// RUN: env KMP_DISP_NUM_BUFFERS=4097 %libomp-run 2>&1 | FileCheck --check-prefix=LARGE %s
+// RUN: env KMP_DISP_NUM_BUFFERS=0 %libomp-run 2>&1 | FileCheck %s --check-prefix=SMALL
+// RUN: env KMP_DISP_NUM_BUFFERS=4097 %libomp-run 2>&1 | FileCheck %s --check-prefix=LARGE
 // SMALL: OMP: Warning
 // SMALL-SAME: KMP_DISP_NUM_BUFFERS
 // SMALL-SAME: too small
