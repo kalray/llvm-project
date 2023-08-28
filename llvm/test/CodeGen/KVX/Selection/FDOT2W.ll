@@ -213,3 +213,28 @@ define float @DOT2W_ri_10_5(<2 x float> %0) {
   %5 = fadd fast float %3, %4
   ret float %5
 }
+
+define float @ffdmaw(float %a0, float %a1, float %b0, float %b1) {
+; V1-LABEL: ffdmaw:
+; V1:       # %bb.0: # %entry
+; V1-NEXT:    insf $r1 = $r0, 63, 32
+; V1-NEXT:    insf $r3 = $r2, 63, 32
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    fdot2w $r0 = $r3, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 1)
+;
+; V2-LABEL: ffdmaw:
+; V2:       # %bb.0: # %entry
+; V2-NEXT:    insf $r1 = $r0, 63, 32
+; V2-NEXT:    insf $r3 = $r2, 63, 32
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    ffdmaw $r0 = $r3, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
+entry:
+  %mul = fmul fast float %b0, %a0
+  %mul1 = fmul fast float %b1, %a1
+  %add = fadd fast float %mul1, %mul
+  ret float %add
+}

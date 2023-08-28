@@ -134,25 +134,47 @@ define { i64, i64 } @FADDCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 }
 
 define i64 @FMULCWC(i64 %0, i64 %1) {
-; CHECK-LABEL: FMULCWC:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fmulw $r4 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    fmulw $r3 = $r1, $r2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ffmaw $r4 = $r1, $r2
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ffmsw $r3 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    slld $r0 = $r3, 32
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CV1-LABEL: FMULCWC:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srld $r2 = $r0, 32
+; CV1-NEXT:    srld $r4 = $r1, 32
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    insf $r2 = $r0, 63, 32
+; CV1-NEXT:    fmulw $r3 = $r1, $r2
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ffmsw $r3 = $r4, $r0
+; CV1-NEXT:    insf $r4 = $r1, 63, 32
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    fdot2w $r0 = $r4, $r2
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    slld $r1 = $r3, 32
+; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    zxwd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    ord $r0 = $r1, $r0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 11)
+;
+; CV2-LABEL: FMULCWC:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srld $r2 = $r0, 32
+; CV2-NEXT:    srld $r4 = $r1, 32
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    insf $r2 = $r0, 63, 32
+; CV2-NEXT:    fmulw $r3 = $r1, $r2
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ffmsw $r3 = $r4, $r0
+; CV2-NEXT:    insf $r4 = $r1, 63, 32
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ffdmaw $r0 = $r4, $r2
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    slld $r1 = $r3, 32
+; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    zxwd $r0 = $r0
+; CV2-NEXT:    ;; # (end cycle 10)
+; CV2-NEXT:    ord $r0 = $r1, $r0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 11)
   %3 = trunc i64 %0 to i32
   %4 = bitcast i32 %3 to float
   %5 = lshr i64 %0, 32
@@ -229,25 +251,51 @@ define { i64, i64 } @FMULCWDC(i64 %0, i64 %1) {
 }
 
 define i64 @FMULWC(i64 %0, i64 %1) {
-; CHECK-LABEL: FMULWC:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fmulw $r4 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    fmulw $r3 = $r1, $r2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ffmsw $r4 = $r1, $r2
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ffmaw $r3 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    slld $r0 = $r3, 32
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CV1-LABEL: FMULWC:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fmulw $r2 = $r1, $r0
+; CV1-NEXT:    srld $r3 = $r1, 32
+; CV1-NEXT:    srld $r4 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    insf $r0 = $r4, 63, 32
+; CV1-NEXT:    copyd $r5 = $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    insf $r5 = $r1, 63, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    fdot2w $r0 = $r5, $r0
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ffmsw $r2 = $r3, $r4
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    slld $r0 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    zxwd $r1 = $r2
+; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
+;
+; CV2-LABEL: FMULWC:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmulw $r2 = $r1, $r0
+; CV2-NEXT:    srld $r3 = $r1, 32
+; CV2-NEXT:    srld $r4 = $r0, 32
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    copyd $r5 = $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    insf $r5 = $r1, 63, 32
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ffdmaw $r0 = $r5, $r0
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ffmsw $r2 = $r3, $r4
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    slld $r0 = $r0, 32
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    zxwd $r1 = $r2
+; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 9)
   %3 = trunc i64 %0 to i32
   %4 = bitcast i32 %3 to float
   %5 = lshr i64 %0, 32
@@ -697,25 +745,51 @@ define { i64, i64 } @FMULCWDC_2(i64 %0, i64 %1) {
 }
 
 define i64 @FMULWC_2(i64 %0, i64 %1) {
-; CHECK-LABEL: FMULWC_2:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    fmulw $r4 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    fmulw $r3 = $r2, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ffmsw $r4 = $r1, $r2
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ffmaw $r3 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    slld $r0 = $r3, 32
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CV1-LABEL: FMULWC_2:
+; CV1:       # %bb.0:
+; CV1-NEXT:    insf $r0 = $r1, 63, 32
+; CV1-NEXT:    fmulw $r2 = $r1, $r0
+; CV1-NEXT:    srld $r3 = $r1, 32
+; CV1-NEXT:    srld $r4 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyd $r5 = $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    insf $r5 = $r4, 63, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    fdot2w $r0 = $r5, $r0
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ffmsw $r2 = $r3, $r4
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    slld $r0 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    zxwd $r1 = $r2
+; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
+;
+; CV2-LABEL: FMULWC_2:
+; CV2:       # %bb.0:
+; CV2-NEXT:    insf $r0 = $r1, 63, 32
+; CV2-NEXT:    fmulw $r2 = $r1, $r0
+; CV2-NEXT:    srld $r3 = $r1, 32
+; CV2-NEXT:    srld $r4 = $r0, 32
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    copyd $r5 = $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    insf $r5 = $r4, 63, 32
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ffdmaw $r0 = $r5, $r0
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ffmsw $r2 = $r3, $r4
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    slld $r0 = $r0, 32
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    zxwd $r1 = $r2
+; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 9)
   %3 = trunc i64 %0 to i32
   %4 = bitcast i32 %3 to float
   %5 = lshr i64 %0, 32

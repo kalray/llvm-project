@@ -450,6 +450,12 @@ def : Pat<(f32 (faddcont (f32 (fmulcont
                               (f32 (vector_extract v2f32:$lhs, (i64 0))),
                               (f32 ( bitconvert (i32 (trunc i64:$rhs)))))))),
           (f32 (I SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
+
+def : Pat<(f32(fma f32:$lo_a, f32:$lo_b, (fmulcont f32:$hi_a, f32:$hi_b))),
+          (f32 (I
+            (INSF SingleReg:$lo_a, SingleReg:$hi_a, 63, 32),
+            (INSF SingleReg:$lo_b, SingleReg:$hi_b, 63, 32),
+            rounding_, silent_))>;
 }
 
 defm : FDOT2WRR_FFDMAW<FDOT2Wrr>, Requires<[IsV1]>;
