@@ -982,3 +982,83 @@ define void @subvec2(ptr %0) {
   store <4 x i32> %6, ptr undef, align 16
   br label %2
 }
+
+define <4 x i32> @test_select_cmp(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
+; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r4 = $r4, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    compd.eq $r4 = $r4, -1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <4 x i32> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @test_select_cmp_2(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) {
+; CHECK-LABEL: test_select_cmp_2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
+; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lnord $r4 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <4 x i32> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, 0
+  %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @test_select_cmp_3(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) {
+; CHECK-LABEL: test_select_cmp_3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
+; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lord $r4 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <4 x i32> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp ne i4 %bc, 0
+  %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @test_select_cmp_4(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) {
+; CHECK-LABEL: test_select_cmp_4:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
+; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r4 = $r4, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    compd.ne $r4 = $r4, -1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <4 x i32> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp ne i4 %bc, -1
+  %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+  ret <4 x i32> %r
+}

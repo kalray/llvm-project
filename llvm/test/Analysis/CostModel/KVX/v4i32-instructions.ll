@@ -883,3 +883,25 @@ define void @subvec2(ptr %0) {
   store <4 x i32> %6, ptr undef, align 16
   br label %2
 }
+
+define <4 x i32> @test_select_cmp(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4 x i32> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <4 x i32> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <4 x i32> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+;
+  %cc = icmp ne <4 x i32> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
+  ret <4 x i32> %r
+}

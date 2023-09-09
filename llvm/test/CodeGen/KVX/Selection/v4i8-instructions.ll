@@ -1426,3 +1426,35 @@ define <4 x i8> @lshr_val_splat_w_undefs(<4 x i8> %lhs, i32 %s ) {
   %r = lshr <4 x i8> %lhs, %rhs
   ret <4 x i8> %r
 }
+
+define <4 x i8> @test_select_cmp(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> %d) #0 {
+; CV1-LABEL: test_select_cmp:
+; CV1:       # %bb.0:
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r3 = $r3, 0x8000400020001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    compnhq.ne $r2 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    compw.eq $r2 = $r2, -1
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 4)
+;
+; CV2-LABEL: test_select_cmp:
+; CV2:       # %bb.0:
+; CV2-NEXT:    compnbo.ne $r2 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    compw.eq $r2 = $r2, -1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <4 x i8> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x i8> %a, <4 x i8> %b
+  ret <4 x i8> %r
+}

@@ -2979,3 +2979,25 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
   %9 = phi <16 x half> [ %7, %5 ], [ %0, %3 ]
   ret <16 x half> %9
 }
+
+define <8 x half> @test_select_cmp(<8 x half> %a, <8 x half> %b, <8 x half> %c, <8 x half> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <8 x half> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <8 x i1> %cc to i8
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i8 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <8 x half> %a, <8 x half> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <8 x half> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <8 x i1> %cc to i8
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i8 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <8 x half> %a, <8 x half> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
+;
+  %cc = fcmp une <8 x half> %c, %d
+  %bc = bitcast <8 x i1> %cc to i8
+  %cmp = icmp eq i8 %bc, -1
+  %r = select i1 %cmp, <8 x half> %a, <8 x half> %b
+  ret <8 x half> %r
+}

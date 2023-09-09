@@ -1139,3 +1139,25 @@ define <8 x i8> @lshr_val_splat_w_undefs(<8 x i8> %lhs, i32 %s ) {
   %r = lshr <8 x i8> %lhs, %rhs
   ret <8 x i8> %r
 }
+
+define <8 x i8> @test_select_cmp(<8 x i8> %a, <8 x i8> %b, <8 x i8> %c, <8 x i8> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <8 x i8> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <8 x i1> %cc to i8
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i8 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <8 x i8> %a, <8 x i8> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <8 x i8> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <8 x i1> %cc to i8
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i8 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <8 x i8> %a, <8 x i8> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %r
+;
+  %cc = icmp ne <8 x i8> %c, %d
+  %bc = bitcast <8 x i1> %cc to i8
+  %cmp = icmp eq i8 %bc, -1
+  %r = select i1 %cmp, <8 x i8> %a, <8 x i8> %b
+  ret <8 x i8> %r
+}

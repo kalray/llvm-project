@@ -2798,4 +2798,22 @@ define <2 x half> @subvect_0(<4 x half> %0) {
   ret <2 x half> %2
 }
 
+; TODO: compw.eq is not required, should invert the fcomp CC and use cmovew.weqz
+define <2 x half> @test_select_cmp(<2 x half> %a, <2 x half> %b, <2 x half> %c, <2 x half> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    compw.eq $r2 = $r2, -1
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %cc = fcmp une <2 x half> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x half> %a, <2 x half> %b
+  ret <2 x half> %r
+}
+
 attributes #0 = { nounwind }

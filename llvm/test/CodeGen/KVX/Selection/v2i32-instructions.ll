@@ -1153,3 +1153,20 @@ define <2 x i32> @sxmhwp(<4 x i16> %0) {
 }
 
 declare <2 x i32> @llvm.kvx.sxmhwp(<4 x i16>)
+
+define <2 x i32> @test_select_cmp(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x i32> %d) #0 {
+; ALL-LABEL: test_select_cmp:
+; ALL:       # %bb.0:
+; ALL-NEXT:    compnwp.ne $r2 = $r2, $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    compd.eq $r2 = $r2, -1
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <2 x i32> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x i32> %a, <2 x i32> %b
+  ret <2 x i32> %r
+}

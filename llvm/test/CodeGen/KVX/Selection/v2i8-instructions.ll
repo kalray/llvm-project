@@ -1176,3 +1176,144 @@ define <2 x i8> @test_div_notsrs(<2 x i8> %a, <2 x i8> %b) {
   %r = sdiv <2 x i8> %a, <i8 32, i8 16>
   ret <2 x i8> %r
 }
+
+; TODO: cv1 sxlbhq(sbmm8) is not required. cv[12]: compw not required, can use cmove.w***
+define <2 x i8> @test_select_cmp(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) {
+; V1-LABEL: test_select_cmp:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x20001
+; V1-NEXT:    sbmm8 $r3 = $r3, 0x20001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x401
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    compw.eq $r2 = $r2, -1
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 5)
+;
+; V2-LABEL: test_select_cmp:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.ne $r2 = $r2, $r3
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    sxlbhq $r2 = $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    compw.eq $r2 = $r2, -1
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <2 x i8> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x i8> %a, <2 x i8> %b
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_select_cmp_2(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) {
+; V1-LABEL: test_select_cmp_2:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x20001
+; V1-NEXT:    sbmm8 $r3 = $r3, 0x20001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    zxwd $r2 = $r2
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    compw.eq $r2 = $r2, 0
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 4)
+;
+; V2-LABEL: test_select_cmp_2:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.ne $r2 = $r2, $r3
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    zxhd $r2 = $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    compw.eq $r2 = $r2, 0
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <2 x i8> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, 0
+  %r = select i1 %cmp, <2 x i8> %a, <2 x i8> %b
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_select_cmp_3(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) {
+; V1-LABEL: test_select_cmp_3:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x20001
+; V1-NEXT:    sbmm8 $r3 = $r3, 0x20001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    zxwd $r2 = $r2
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    compw.ne $r2 = $r2, 0
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 4)
+;
+; V2-LABEL: test_select_cmp_3:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.ne $r2 = $r2, $r3
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    zxhd $r2 = $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    compw.ne $r2 = $r2, 0
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <2 x i8> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp ne i2 %bc, 0
+  %r = select i1 %cmp, <2 x i8> %a, <2 x i8> %b
+  ret <2 x i8> %r
+}
+
+define <2 x i8> @test_select_cmp_4(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) {
+; V1-LABEL: test_select_cmp_4:
+; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x20001
+; V1-NEXT:    sbmm8 $r3 = $r3, 0x20001
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x401
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    sxlbhq $r2 = $r2
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    compw.ne $r2 = $r2, -1
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 5)
+;
+; V2-LABEL: test_select_cmp_4:
+; V2:       # %bb.0:
+; V2-NEXT:    compnbo.ne $r2 = $r2, $r3
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    sxlbhq $r2 = $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    compw.ne $r2 = $r2, -1
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <2 x i8> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp ne i2 %bc, -1
+  %r = select i1 %cmp, <2 x i8> %a, <2 x i8> %b
+  ret <2 x i8> %r
+}

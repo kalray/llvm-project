@@ -1202,3 +1202,25 @@ define <4 x i16> @test_div_32(<4 x i16> %a, <4 x i16> %b) #0 {
   %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
   ret <4 x i16> %r
 }
+
+define <4 x i16> @test_select_cmp(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <4 x i16> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <4 x i16> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
+;
+  %cc = icmp ne <4 x i16> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b
+  ret <4 x i16> %r
+}

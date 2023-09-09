@@ -3779,3 +3779,25 @@ define void @subvec2fp(ptr %0) {
   store <4 x float> %6, ptr undef, align 16
   br label %2
 }
+
+; TODO: compd.eq is not required, should invert the fcomp CC and use cmoved.deqz
+define <4 x float> @test_select_cmp(<4 x float> %a, <4 x float> %b, <4 x float> %c, <4 x float> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fcompnwp.une $r4 = $r4, $r6
+; CHECK-NEXT:    fcompnwp.une $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r4 = $r4, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    compd.eq $r4 = $r4, -1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 3)
+  %cc = fcmp une <4 x float> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x float> %a, <4 x float> %b
+  ret <4 x float> %r
+}

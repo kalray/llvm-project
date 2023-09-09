@@ -3267,4 +3267,43 @@ define <2 x double> @add_splat_const_op1(<2 x double> %vx) #0 {
   ret <2 x double> %r
 }
 
+; TODO: Can be (<cmoved,cmoved>(and(<fcompd,fcompd))), taking only 3 cycles.
+define <2 x double> @test_select_cmp(<2 x double> %a, <2 x double> %b, <2 x double> %c, <2 x double> %d) #0 {
+; CV1-LABEL: test_select_cmp:
+; CV1:       # %bb.0:
+; CV1-NEXT:    fcompd.une $r4 = $r4, $r6
+; CV1-NEXT:    fcompd.une $r5 = $r5, $r7
+; CV1-NEXT:    make $r7 = -1
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    cmoved.even $r5 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    cmoved.even $r4 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    compd.eq $r4 = $r7, -1
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CV1-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 4)
+;
+; CV2-LABEL: test_select_cmp:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fcompd.une $r4 = $r4, $r6
+; CV2-NEXT:    fcompnd.une $r5 = $r5, $r7
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compd.eq $r4 = $r5, -1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CV2-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 3)
+  %cc = fcmp une <2 x double> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x double> %a, <2 x double> %b
+  ret <2 x double> %r
+}
+
 attributes #0 = { nounwind }

@@ -1300,3 +1300,20 @@ define <4 x i16> @test_div_32(<4 x i16> %a, <4 x i16> %b) #0 {
   %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
   ret <4 x i16> %r
 }
+
+define <4 x i16> @test_select_cmp(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) #0 {
+; ALL-LABEL: test_select_cmp:
+; ALL:       # %bb.0:
+; ALL-NEXT:    compnhq.ne $r2 = $r2, $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    compd.eq $r2 = $r2, -1
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <4 x i16> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b
+  ret <4 x i16> %r
+}

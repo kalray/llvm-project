@@ -2403,4 +2403,26 @@ define <2 x half> @subvect_0(<4 x half> %0) {
   ret <2 x half> %2
 }
 
+define <2 x half> @test_select_cmp(<2 x half> %a, <2 x half> %b, <2 x half> %c, <2 x half> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x half> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x half> %a, <2 x half> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x half> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x half> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x half> %a, <2 x half> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x half> %r
+;
+  %cc = fcmp une <2 x half> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x half> %a, <2 x half> %b
+  ret <2 x half> %r
+}
+
 attributes #0 = { nounwind }

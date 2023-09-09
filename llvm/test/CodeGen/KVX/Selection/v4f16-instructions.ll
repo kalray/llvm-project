@@ -3323,4 +3323,21 @@ define <4 x half> @concat (<2 x half> %a, <2 x half> %b) #0 {
   ret <4 x half> %v
 }
 
+define <4 x half> @test_select_cmp(<4 x half> %a, <4 x half> %b, <4 x half> %c, <4 x half> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fcompnhq.une $r2 = $r2, $r3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    compd.eq $r2 = $r2, -1
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %cc = fcmp une <4 x half> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x half> %a, <4 x half> %b
+  ret <4 x half> %r
+}
+
 attributes #0 = { nounwind }

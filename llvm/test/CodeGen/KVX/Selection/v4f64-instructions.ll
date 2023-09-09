@@ -5327,3 +5327,73 @@ define void @subvec2fp(ptr %0) {
   store <4 x double> %6, ptr undef, align 16
   br label %2
 }
+
+define <4 x double> @test_select_cmp(<4 x double> %a, <4 x double> %b, <4 x double> %c, <4 x double> %d) #0 {
+; CV1-LABEL: test_select_cmp:
+; CV1:       # %bb.0:
+; CV1-NEXT:    ld $r15 = 8[$r12]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r16 = 0[$r12]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ld $r17 = 16[$r12]
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    fcompd.une $r9 = $r9, $r15
+; CV1-NEXT:    make $r15 = -1
+; CV1-NEXT:    ld $r32 = 24[$r12]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.une $r8 = $r8, $r16
+; CV1-NEXT:    cmoved.even $r9 ? $r15 = 0
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    fcompd.une $r9 = $r10, $r17
+; CV1-NEXT:    cmoved.even $r8 ? $r15 = 0
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    fcompd.une $r8 = $r11, $r32
+; CV1-NEXT:    cmoved.even $r9 ? $r15 = 0
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    cmoved.even $r8 ? $r15 = 0
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    compd.eq $r8 = $r15, -1
+; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    cmoved.even $r8 ? $r2 = $r6
+; CV1-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    cmoved.even $r8 ? $r0 = $r4
+; CV1-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 10)
+;
+; CV2-LABEL: test_select_cmp:
+; CV2:       # %bb.0:
+; CV2-NEXT:    ld $r15 = 0[$r12]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r16 = 8[$r12]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ld $r17 = 16[$r12]
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    fcompd.une $r8 = $r8, $r15
+; CV2-NEXT:    ld $r32 = 24[$r12]
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    fcompnd.une $r9 = $r9, $r16
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    fcompd.une $r8 = $r10, $r17
+; CV2-NEXT:    cmoved.even $r8 ? $r9 = 0
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    fcompd.une $r8 = $r11, $r32
+; CV2-NEXT:    cmoved.even $r8 ? $r9 = 0
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    cmoved.even $r8 ? $r9 = 0
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    compd.eq $r8 = $r9, -1
+; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    cmoved.even $r8 ? $r0 = $r4
+; CV2-NEXT:    cmoved.even $r8 ? $r1 = $r5
+; CV2-NEXT:    cmoved.even $r8 ? $r2 = $r6
+; CV2-NEXT:    cmoved.even $r8 ? $r3 = $r7
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 9)
+  %cc = fcmp une <4 x double> %c, %d
+  %bc = bitcast <4 x i1> %cc to i4
+  %cmp = icmp eq i4 %bc, -1
+  %r = select i1 %cmp, <4 x double> %a, <4 x double> %b
+  ret <4 x double> %r
+}

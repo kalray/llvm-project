@@ -1136,3 +1136,20 @@ define <2 x i16> @subvect_0(<4 x i16> %0) {
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
   ret <2 x i16> %2
 }
+
+define <2 x i16> @test_select_cmp(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c, <2 x i16> %d) #0 {
+; ALL-LABEL: test_select_cmp:
+; ALL:       # %bb.0:
+; ALL-NEXT:    compnhq.ne $r2 = $r2, $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    compw.eq $r2 = $r2, -1
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %cc = icmp ne <2 x i16> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x i16> %a, <2 x i16> %b
+  ret <2 x i16> %r
+}

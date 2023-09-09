@@ -1190,3 +1190,25 @@ define <2 x i16> @subvect_0(<4 x i16> %0) {
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <2 x i32> <i32 0, i32 1>
   ret <2 x i16> %2
 }
+
+define <2 x i16> @test_select_cmp(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c, <2 x i16> %d) #0 {
+; CV1-LABEL: 'test_select_cmp'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <2 x i16> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x i16> %a, <2 x i16> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %r
+;
+; CV2-LABEL: 'test_select_cmp'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <2 x i16> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x i16> %a, <2 x i16> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %r
+;
+  %cc = icmp ne <2 x i16> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x i16> %a, <2 x i16> %b
+  ret <2 x i16> %r
+}

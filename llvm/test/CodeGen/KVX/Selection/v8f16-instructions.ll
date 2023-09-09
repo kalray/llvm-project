@@ -6333,3 +6333,24 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
   %9 = phi <16 x half> [ %7, %5 ], [ %0, %3 ]
   ret <16 x half> %9
 }
+
+define <8 x half> @test_select_cmp(<8 x half> %a, <8 x half> %b, <8 x half> %c, <8 x half> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fcompnhq.une $r4 = $r4, $r6
+; CHECK-NEXT:    fcompnhq.une $r5 = $r5, $r7
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r4 = $r4, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    compd.eq $r4 = $r4, -1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 3)
+  %cc = fcmp une <8 x half> %c, %d
+  %bc = bitcast <8 x i1> %cc to i8
+  %cmp = icmp eq i8 %bc, -1
+  %r = select i1 %cmp, <8 x half> %a, <8 x half> %b
+  ret <8 x half> %r
+}

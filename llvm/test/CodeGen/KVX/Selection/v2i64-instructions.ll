@@ -730,4 +730,41 @@ define <2 x i64> @MSBFWDP(<2 x i64> %0, <2 x i32> %1, <2 x i32> %2) {
   ret <2 x i64> %6
 }
 
+define <2 x i64> @test_select_cmp(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x i64> %d) #0 {
+; CV1-LABEL: test_select_cmp:
+; CV1:       # %bb.0:
+; CV1-NEXT:    compd.ne $r4 = $r4, $r6
+; CV1-NEXT:    compd.ne $r5 = $r5, $r7
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    negd $r5 = $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    compd.eq $r4 = $r5, -1
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CV1-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 4)
+;
+; CV2-LABEL: test_select_cmp:
+; CV2:       # %bb.0:
+; CV2-NEXT:    compd.ne $r4 = $r4, $r6
+; CV2-NEXT:    compnd.ne $r5 = $r5, $r7
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compd.eq $r4 = $r5, -1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    cmoved.even $r4 ? $r0 = $r2
+; CV2-NEXT:    cmoved.even $r4 ? $r1 = $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 3)
+  %cc = icmp ne <2 x i64> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x i64> %a, <2 x i64> %b
+  ret <2 x i64> %r
+}
+
 attributes #0 = { nounwind }

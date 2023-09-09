@@ -712,9 +712,10 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::FDIV, MVT::f32, Custom);
   setOperationAction(ISD::FSQRT, MVT::f32, Custom);
 
-  for (auto VT : {MVT::v2f16, MVT::v2f32, MVT::v2f64, MVT::v2i8, MVT::v2i16,
-                  MVT::v2i32, MVT::v2i64, MVT::v4f16, MVT::v4f32, MVT::v4f64,
-                  MVT::v4i8, MVT::v4i16, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
+  for (auto VT :
+       {MVT::v2f16, MVT::v2f32, MVT::v2f64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
+        MVT::v2i64, MVT::v4f16, MVT::v4f32, MVT::v4f64, MVT::v4i8, MVT::v4i16,
+        MVT::v4i32, MVT::v4i64, MVT::v8i8, MVT::v8f16}) {
     setOperationAction(ISD::SELECT_CC, VT, Expand);
     setOperationAction(ISD::SELECT, VT, Legal);
   }
@@ -962,11 +963,13 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
           ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
       setOperationAction(I, VT, RedAction);
 
-  for (auto I :
-       {ISD::BUILD_VECTOR, ISD::CTLZ, ISD::CTTZ, ISD::CTPOP, ISD::FABS,
-        ISD::FADD, ISD::FCOPYSIGN, ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG,
-        ISD::INTRINSIC_WO_CHAIN, ISD::LOAD, ISD::MUL, ISD::SRA, ISD::STORE,
-        ISD::TRUNCATE, ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
+  for (auto I : {ISD::BUILD_VECTOR,  ISD::CTLZ,       ISD::CTPOP,
+                 ISD::CTTZ,          ISD::FABS,       ISD::FADD,
+                 ISD::FCOPYSIGN,     ISD::FMA,        ISD::FMUL,
+                 ISD::FSUB,          ISD::FNEG,       ISD::INTRINSIC_WO_CHAIN,
+                 ISD::LOAD,          ISD::MUL,        ISD::SETCC,
+                 ISD::SRA,           ISD::STORE,      ISD::TRUNCATE,
+                 ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -2870,6 +2873,72 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
   return Op;
 }
 
+static SDValue combineSETCC(SDNode *N, SelectionDAG &DAG) {
+
+  if (N->getSimpleValueType(0).isVector())
+    return SDValue();
+
+  auto Cast = N->getOperand(0);
+  if (Cast->getOpcode() != ISD::BITCAST)
+    return SDValue();
+
+  auto Setcc = Cast.getOperand(0);
+  if (!((Setcc.getOpcode() == ISD::SETCC) &&
+        (Setcc->getValueType(0).isVector())))
+    return SDValue();
+
+  auto Vec0 = Setcc->getOperand(0);
+  auto Vec1 = Setcc.getOperand(1);
+
+  auto Cond = N->getOperand(1);
+  if (auto *Cst = dyn_cast<ConstantSDNode>(Cond)) {
+    ISD::CondCode CC = cast<CondCodeSDNode>(N->getOperand(2))->get();
+    if ((CC != ISD::SETEQ) && (CC != ISD::SETNE))
+      report_fatal_error("Untreated vector set CC");
+
+    auto API = Cst->getAPIntValue();
+    if (!(API.isAllOnes() || API.isNullValue()))
+      report_fatal_error("Untreated vector set CC constant condition value");
+
+    //  EQ x  0 -> x = or_reduce
+    //  EQ x -1 -> x = and_reduce
+    // NEQ x  0 -> x = or_reduce
+    // NEQ x -1 -> x = and_reduce
+    auto VecTy = Vec0->getSimpleValueType(0);
+    auto EltSz = VecTy.getScalarSizeInBits();
+    if (EltSz > 64 || EltSz < 8)
+      return SDValue();
+
+    auto CCTy = VecTy.changeVectorElementTypeToInteger();
+    auto CCI = cast<CondCodeSDNode>(Setcc->getOperand(2))->get();
+    auto Result = DAG.getSetCC(SDLoc(Setcc), CCTy, Vec0, Vec1, CCI);
+    unsigned VecSz = CCTy.getFixedSizeInBits();
+    MVT CmpTy = MVT::getIntegerVT(std::min(VecSz, 64u));
+
+    if (VecSz > 64) {
+      if (CCTy.getScalarType() != MVT::i64)
+        Result = DAG.getBitcast(MVT::getVectorVT(MVT::i64, VecSz / 64), Result);
+
+      auto VecReduction =
+          API.isAllOnes() ? ISD::VECREDUCE_AND : ISD::VECREDUCE_OR;
+      Result = DAG.getNode(VecReduction, SDLoc(Cast), MVT::i64, Result);
+    } else if (VecSz == 16) {
+      assert(CCTy == MVT::v2i8 && "Untreated 16 bits wide vector!");
+      CCTy = CCTy.changeVectorElementType(MVT::getIntegerVT(
+          std::min(16u, 32 / CCTy.getVectorMinNumElements())));
+      Result = DAG.getNode(ISD::SIGN_EXTEND, SDLoc(Result), CCTy, Result);
+      CmpTy = MVT::getIntegerVT(CCTy.getFixedSizeInBits());
+      Result = DAG.getBitcast(CmpTy, Result);
+    } else
+      Result = DAG.getBitcast(CmpTy, Result);
+
+    auto NewCst = DAG.getConstant(Cst->getSExtValue(), SDLoc(Cond), CmpTy);
+    Result = DAG.getSetCC(SDLoc(N), N->getValueType(0), Result, NewCst, CC);
+    return Result;
+  }
+  report_fatal_error("Todo: Not a constant CC");
+}
+
 static SDValue combineBUILD_VECTOR(SDNode *N, SelectionDAG &DAG) {
 
   // Sanity check, we're dealing with a build_vector
@@ -3687,6 +3756,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   switch (N->getOpcode()) {
   default:
     break;
+  case ISD::SETCC:
+    return combineSETCC(N, DAG);
   case ISD::BUILD_VECTOR:
     return combineBUILD_VECTOR(N, DAG);
   case ISD::CTLZ:

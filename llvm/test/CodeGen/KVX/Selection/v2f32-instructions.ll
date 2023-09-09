@@ -2595,4 +2595,22 @@ entry:
   ret <2 x i32> %1
 }
 
+; TODO: compd.eq is not required, should invert the fcomp CC and use cmoved.deqz
+define <2 x float> @test_select_cmp(<2 x float> %a, <2 x float> %b, <2 x float> %c, <2 x float> %d) #0 {
+; CHECK-LABEL: test_select_cmp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fcompnwp.une $r2 = $r2, $r3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    compd.eq $r2 = $r2, -1
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cmoved.even $r2 ? $r0 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %cc = fcmp une <2 x float> %c, %d
+  %bc = bitcast <2 x i1> %cc to i2
+  %cmp = icmp eq i2 %bc, -1
+  %r = select i1 %cmp, <2 x float> %a, <2 x float> %b
+  ret <2 x float> %r
+}
+
 attributes #0 = { nounwind }
