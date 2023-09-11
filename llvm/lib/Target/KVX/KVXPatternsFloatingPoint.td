@@ -394,6 +394,9 @@ def : Pat<(f32 (fma:$dot2fma
                       (fpimm))))),
           (f32 (FDOT2Wri SingleReg:$t2, (build_fdot_imm_swp $dot2fma)))>, Requires<[IsV1]>;
 
+def FdotWPat: PatFrag <(ops node:$lo_a, node:$lo_b, node:$hi_a, node:$hi_b),
+                       (f32(fma node:$lo_a, node:$lo_b, (fmulcont node:$hi_a, node:$hi_b)))>;
+
 multiclass FDOT2WRR_FFDMAW<Instruction I> {
 def : Pat<(f32 (faddcont (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, (is_imm_vec:$rhs))), (i64 0))),
                     (f32 (vector_extract (v2f32 (fmulcont v2f32:$lhs, (is_imm_vec:$rhs))), (i64 1))))),
@@ -451,11 +454,18 @@ def : Pat<(f32 (faddcont (f32 (fmulcont
                               (f32 ( bitconvert (i32 (trunc i64:$rhs)))))))),
           (f32 (I SingleReg:$lhs, SingleReg:$rhs, rounding_, silent_))>;
 
-def : Pat<(f32(fma f32:$lo_a, f32:$lo_b, (fmulcont f32:$hi_a, f32:$hi_b))),
+def : Pat<(f32(FdotWPat f32:$lo_a, f32:$lo_b, f32:$hi_a, f32:$hi_b)),
           (f32 (I
-            (INSF SingleReg:$lo_a, SingleReg:$hi_a, 63, 32),
-            (INSF SingleReg:$lo_b, SingleReg:$hi_b, 63, 32),
+            (v2f32(INSF SingleReg:$lo_a, SingleReg:$hi_a, 63, 32)),
+            (v2f32(INSF SingleReg:$lo_b, SingleReg:$hi_b, 63, 32)),
             rounding_, silent_))>;
+
+def : Pat<(f32(FdotWPat
+              (f32(extract_subvector v2f32:$a, (i64 0))),
+              (f32(extract_subvector v2f32:$b, (i64 0))),
+              (f32(extract_subvector v2f32:$a, (i64 1))),
+              (f32(extract_subvector v2f32:$b, (i64 1))))),
+          (f32 (I SingleReg:$a, SingleReg:$b, rounding_, silent_))>;
 }
 
 defm : FDOT2WRR_FFDMAW<FDOT2Wrr>, Requires<[IsV1]>;
@@ -1074,6 +1084,25 @@ def : Pat<(v4f64 (int_to_fp v4i32:$val)), (REG_SEQUENCE QuadReg,
 
 defm : INT_TO_FP<sint_to_fp, FLOATW, FLOATD, FLOATWP, SXWD, SRADri>;
 defm : INT_TO_FP<uint_to_fp, FLOATUW, FLOATUD, FLOATUWP, ZXWD, SRLDri>;
+
+// FMM222W
+class FdotWExtractpat<int a0, int b0, int a1, int b1> : PatFrag<(ops node:$va, node:$vb),
+            (f32 (FdotWPat
+              (f32(extractelt node:$va, (i64 a0))),
+              (f32(extractelt node:$vb, (i64 b0))),
+              (f32(extractelt node:$va, (i64 a1))),
+              (f32(extractelt node:$vb, (i64 b1)))))>;
+
+class SubFMM222W<int pos_a> : PatFrag<(ops node:$vec_a, node:$vec_b),
+                         (v2f32 (build_vector
+                            (FdotWExtractpat<pos_a, 0, !add(pos_a, 1), 2> node:$vec_a, node:$vec_b),
+                            (FdotWExtractpat<pos_a, 1, !add(pos_a, 1), 3> node:$vec_a, node:$vec_b)))>;
+
+def FMM222W_LO : Pat<(SubFMM222W<0> v4f32:$a, v4f32:$b),
+                            (EXTRACT_SUBREG (FMM222W PairedReg:$a, PairedReg:$b, transpose_nn, rounding_, silent_), sub_d0)>, Requires<[IsV2]>;
+
+def FMM222W_HI : Pat<(SubFMM222W<2> v4f32:$a, v4f32:$b),
+                            (EXTRACT_SUBREG (FMM222W PairedReg:$a, PairedReg:$b, transpose_nn, rounding_, silent_), sub_d1)>, Requires<[IsV2]>;
 
 // FMUL
 def : Pat<(f16(fmul f16:$r, Binary16:$IMM)), (f16 (FMULHQri (f16(ZXHD SingleReg:$r)), (get_fpimm_16 fpimm:$IMM)))>, Requires<[IsV1]>;
