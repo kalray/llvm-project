@@ -254,9 +254,9 @@ define void @vi8() {
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %c2 = add <2 x i8> undef, undef
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %d2 = sub <2 x i8> undef, undef
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e2 = mul <2 x i8> undef, undef
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %f2 = ashr <2 x i8> undef, undef
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %g2 = lshr <2 x i8> undef, undef
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %h2 = shl <2 x i8> undef, undef
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %f2 = ashr <2 x i8> undef, undef
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %g2 = lshr <2 x i8> undef, undef
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %h2 = shl <2 x i8> undef, undef
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i2 = and <2 x i8> undef, undef
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %j2 = or <2 x i8> undef, undef
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %k2 = xor <2 x i8> undef, undef

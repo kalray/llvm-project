@@ -16,11 +16,11 @@ define <2 x i64> @test_ret_const() {
 
 define i64 @test_extract_0(<2 x i64> %a) {
 ; CV1-LABEL: 'test_extract_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
 ; CV2-LABEL: 'test_extract_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
   %e = extractelement <2 x i64> %a, i64 0
@@ -29,11 +29,11 @@ define i64 @test_extract_0(<2 x i64> %a) {
 
 define i64 @test_extract_1(<2 x i64> %a) {
 ; CV1-LABEL: 'test_extract_1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
 ; CV2-LABEL: 'test_extract_1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
   %e = extractelement <2 x i64> %a, i64 1
@@ -42,11 +42,11 @@ define i64 @test_extract_1(<2 x i64> %a) {
 
 define i64 @test_extract_i(<2 x i64> %a, i64 %idx) {
 ; CV1-LABEL: 'test_extract_i'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 %idx
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 %idx
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
 ; CV2-LABEL: 'test_extract_i'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x i64> %a, i64 %idx
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x i64> %a, i64 %idx
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %e
 ;
   %e = extractelement <2 x i64> %a, i64 %idx
@@ -432,11 +432,11 @@ define <2 x i64> @test_abs(<2 x i64> %a) {
 
 define <2 x i64> @test_insertelement0(<2 x i64> %a, i64 %x) {
 ; CV1-LABEL: 'test_insertelement0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
 ; CV2-LABEL: 'test_insertelement0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
   %i = insertelement <2 x i64> %a, i64 %x, i64 0
@@ -445,11 +445,11 @@ define <2 x i64> @test_insertelement0(<2 x i64> %a, i64 %x) {
 
 define <2 x i64> @test_insertelement1(<2 x i64> %a, i64 %x) {
 ; CV1-LABEL: 'test_insertelement1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
 ; CV2-LABEL: 'test_insertelement1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
   %i = insertelement <2 x i64> %a, i64 %x, i64 1
@@ -458,11 +458,11 @@ define <2 x i64> @test_insertelement1(<2 x i64> %a, i64 %x) {
 
 define <2 x i64> @test_insertelement(<2 x i64> %a, i64 %x, i64 %p) {
 ; CV1-LABEL: 'test_insertelement'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 %p
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 %p
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
 ; CV2-LABEL: 'test_insertelement'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 %p
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i64> %a, i64 %x, i64 %p
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %i
 ;
   %i = insertelement <2 x i64> %a, i64 %x, i64 %p
@@ -484,14 +484,14 @@ define <2 x i8> @trunc_to_v2i8(<2 x i64> %a){
 
 define <2 x i8> @trunc_to_v2i64_buildvector(i64 %arg1, i64 %arg2) {
 ; CV1-LABEL: 'trunc_to_v2i64_buildvector'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %conv = trunc <2 x i64> %v1 to <2 x i8>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %conv
 ;
 ; CV2-LABEL: 'trunc_to_v2i64_buildvector'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v0 = insertelement <2 x i64> undef, i64 %arg1, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v1 = insertelement <2 x i64> %v0, i64 %arg2, i32 1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %conv = trunc <2 x i64> %v1 to <2 x i8>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %conv
 ;

@@ -74,9 +74,10 @@ public:
     return true;
   };
   bool enableAggressiveInterleaving(bool LoopHasReductions) const {
-    return true;
+    return !ST->isV1();
   }
-  bool enableInterleavedAccessVectorization() const { return true; }
+
+  bool enableInterleavedAccessVectorization() const { return !ST->isV1(); }
 
   unsigned getNumberOfRegisters(unsigned ClassID) const;
   TypeSize getRegisterBitWidth(bool Vector) const {
@@ -90,16 +91,14 @@ public:
   unsigned getMaxInterleaveFactor(unsigned VF) const { return 3; }
 
   unsigned getRegUsageForType(Type *Ty) const {
-    return Ty->getPrimitiveSizeInBits() / 64;
+    if (!Ty->isSized())
+      return 0;
+
+    return std::max(1ul, Ty->getPrimitiveSizeInBits() / 64);
   }
 
   InstructionCost getVectorInstrCost(unsigned Opcode, Type *Ty,
-                                     unsigned Index) const {
-    if (Opcode == Instruction::ShuffleVector)
-      return TargetTransformInfoImplBase::getVectorInstrCost(Opcode, Ty, Index);
-
-    return 1;
-  }
+                                     unsigned Index) const;
 
   InstructionCost getScalarizationOverhead(VectorType *Ty,
                                            const APInt &DemandedElts,

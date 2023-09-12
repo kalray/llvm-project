@@ -16,11 +16,11 @@ define <4 x half> @test_ret_const() #0 {
 
 define half @test_extract_0(<4 x half> %a) #0 {
 ; CV1-LABEL: 'test_extract_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <4 x half> %a, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <4 x half> %a, i32 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %e
 ;
 ; CV2-LABEL: 'test_extract_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <4 x half> %a, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <4 x half> %a, i32 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %e
 ;
   %e = extractelement <4 x half> %a, i32 0
@@ -1238,11 +1238,11 @@ define <4 x half> @test_fmuladd(<4 x half> %a, <4 x half> %b, <4 x half> %c) #0 
 
 define <4 x half> @test_shufflevector(<4 x half> %a) #0 {
 ; CV1-LABEL: 'test_shufflevector'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %s
 ;
 ; CV2-LABEL: 'test_shufflevector'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %s
 ;
   %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
@@ -1251,11 +1251,11 @@ define <4 x half> @test_shufflevector(<4 x half> %a) #0 {
 
 define <4 x half> @test_shufflevector2(<4 x half> %a) #0 {
 ; CV1-LABEL: 'test_shufflevector2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 0, i32 1, i32 3, i32 2>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 0, i32 1, i32 3, i32 2>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %s
 ;
 ; CV2-LABEL: 'test_shufflevector2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 0, i32 1, i32 3, i32 2>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 0, i32 1, i32 3, i32 2>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %s
 ;
   %s = shufflevector <4 x half> %a, <4 x half> undef, <4 x i32> <i32 0, i32 1, i32 3, i32 2>
@@ -1264,11 +1264,11 @@ define <4 x half> @test_shufflevector2(<4 x half> %a) #0 {
 
 define <4 x half> @test_insertelement0(<4 x half> %a, half %x) #0 {
 ; CV1-LABEL: 'test_insertelement0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x half> %a, half %x, i64 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x half> %a, half %x, i64 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %i
 ;
 ; CV2-LABEL: 'test_insertelement0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x half> %a, half %x, i64 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x half> %a, half %x, i64 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %i
 ;
   %i = insertelement <4 x half> %a, half %x, i64 0
@@ -2298,11 +2298,11 @@ entry:
 
 define <4 x half> @concat (<2 x half> %a, <2 x half> %b) #0 {
 ; CV1-LABEL: 'concat'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %v
 ;
 ; CV2-LABEL: 'concat'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %v
 ;
   %v = shufflevector <2 x half> %a, <2 x half> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>

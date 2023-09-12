@@ -500,6 +500,22 @@ KVXTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
   return IC;
 }
 
+InstructionCost KVXTTIImpl::getVectorInstrCost(unsigned Opcode, Type *Ty,
+                                               unsigned Index) const {
+  unsigned TypeSize = Ty->getScalarSizeInBits();
+  if (TypeSize == 1)
+    return InstructionCost::getInvalid();
+
+  if (Opcode == Instruction::ShuffleVector)
+    return Ty->getPrimitiveSizeInBits() / TypeSize;
+
+  auto SingleRegWidth = getRegisterBitWidth(false);
+  if (((Index * TypeSize) % SingleRegWidth) == 0)
+    return 0;
+
+  return 1;
+}
+
 InstructionCost KVXTTIImpl::getArithmeticInstrCost(
     unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
     TTI::OperandValueKind Opd1Info, TTI::OperandValueKind Opd2Info,
@@ -541,9 +557,8 @@ InstructionCost KVXTTIImpl::getScalarizationOverhead(VectorType *Ty,
   // non-complex insert/extract cases
   auto *FVTy = dyn_cast<FixedVectorType>(Ty);
   Size = ScalarSize * (FVTy ? FVTy->getNumElements() : 1);
-  if (Size == RegWidth || Size == RegWidth * 2 || Size == RegWidth * 4) {
+  if (Size == RegWidth || Size == RegWidth * 2 || Size == RegWidth * 4)
     return 1;
-  }
 
   return BaseT::getScalarizationOverhead(Ty, DemandedElts, Insert, Extract);
 }

@@ -16,11 +16,11 @@ define <2 x double> @test_ret_const() #0 {
 
 define double @test_extract_0(<2 x double> %a) #0 {
 ; CV1-LABEL: 'test_extract_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i32 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
 ; CV2-LABEL: 'test_extract_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i32 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
   %e = extractelement <2 x double> %a, i32 0
@@ -29,11 +29,11 @@ define double @test_extract_0(<2 x double> %a) #0 {
 
 define double @test_extract_1(<2 x double> %a) #0 {
 ; CV1-LABEL: 'test_extract_1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i32 1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i32 1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
 ; CV2-LABEL: 'test_extract_1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i32 1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i32 1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
   %e = extractelement <2 x double> %a, i32 1
@@ -42,11 +42,11 @@ define double @test_extract_1(<2 x double> %a) #0 {
 
 define double @test_extract_i(<2 x double> %a, i64 %idx) #0 {
 ; CV1-LABEL: 'test_extract_i'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i64 %idx
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i64 %idx
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
 ; CV2-LABEL: 'test_extract_i'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <2 x double> %a, i64 %idx
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <2 x double> %a, i64 %idx
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
   %e = extractelement <2 x double> %a, i64 %idx
@@ -1049,11 +1049,11 @@ define <2 x double> @test_fmuladd(<2 x double> %a, <2 x double> %b, <2 x double>
 
 define <2 x double> @test_shufflevector(<2 x double> %a) #0 {
 ; CV1-LABEL: 'test_shufflevector'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %s
 ;
 ; CV2-LABEL: 'test_shufflevector'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %s
 ;
   %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
@@ -1062,11 +1062,11 @@ define <2 x double> @test_shufflevector(<2 x double> %a) #0 {
 
 define <2 x double> @test_insertelement0(<2 x double> %a, double %x) #0 {
 ; CV1-LABEL: 'test_insertelement0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
 ; CV2-LABEL: 'test_insertelement0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 0
@@ -1075,11 +1075,11 @@ define <2 x double> @test_insertelement0(<2 x double> %a, double %x) #0 {
 
 define <2 x double> @test_insertelement1(<2 x double> %a, double %x) #0 {
 ; CV1-LABEL: 'test_insertelement1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
 ; CV2-LABEL: 'test_insertelement1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 1
@@ -1088,11 +1088,11 @@ define <2 x double> @test_insertelement1(<2 x double> %a, double %x) #0 {
 
 define <2 x double> @test_insertelement(<2 x double> %a, double %x, i64 %p) #0 {
 ; CV1-LABEL: 'test_insertelement'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
 ; CV2-LABEL: 'test_insertelement'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 %p
@@ -1885,12 +1885,12 @@ entry:
 
 define <2 x double> @add_splat_const_op1(<2 x double> %vx) #0 {
 ; CV1-LABEL: 'add_splat_const_op1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'add_splat_const_op1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;

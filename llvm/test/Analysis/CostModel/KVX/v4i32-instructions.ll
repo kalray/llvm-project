@@ -16,11 +16,11 @@ define <4 x i32> @test_ret_const() #0 {
 
 define i32 @test_extract_0(<4 x i32> %a) #0 {
 ; CV1-LABEL: 'test_extract_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <4 x i32> %a, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <4 x i32> %a, i32 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %e
 ;
 ; CV2-LABEL: 'test_extract_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = extractelement <4 x i32> %a, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %e = extractelement <4 x i32> %a, i32 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %e
 ;
   %e = extractelement <4 x i32> %a, i32 0
@@ -429,11 +429,11 @@ define <4 x i32> @test_abs(<4 x i32> %a) #0 {
 
 define <4 x i32> @test_insertelement0(<4 x i32> %a, i32 %x) #0 {
 ; CV1-LABEL: 'test_insertelement0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %i
 ;
 ; CV2-LABEL: 'test_insertelement0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %i
 ;
   %i = insertelement <4 x i32> %a, i32 %x, i64 0
@@ -455,11 +455,11 @@ define <4 x i32> @test_insertelement1(<4 x i32> %a, i32 %x) #0 {
 
 define <4 x i32> @test_insertelement2(<4 x i32> %a, i32 %x) #0 {
 ; CV1-LABEL: 'test_insertelement2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 2
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %i
 ;
 ; CV2-LABEL: 'test_insertelement2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i32> %a, i32 %x, i64 2
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %i
 ;
   %i = insertelement <4 x i32> %a, i32 %x, i64 2
@@ -507,17 +507,17 @@ define <4 x i8> @trunc_to_v4i8(<4 x i32> %a) {
 
 define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 %arg4) {
 ; CV1-LABEL: 'trunc_to_v4i8_buildvector'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v0 = insertelement <4 x i32> undef, i32 %arg1, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v0 = insertelement <4 x i32> undef, i32 %arg1, i32 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v1 = insertelement <4 x i32> %v0, i32 %arg2, i32 1
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2 = insertelement <4 x i32> %v1, i32 %arg3, i32 2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v2 = insertelement <4 x i32> %v1, i32 %arg3, i32 2
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v3 = insertelement <4 x i32> %v2, i32 %arg4, i32 3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %conv = trunc <4 x i32> %v3 to <4 x i8>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %conv
 ;
 ; CV2-LABEL: 'trunc_to_v4i8_buildvector'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v0 = insertelement <4 x i32> undef, i32 %arg1, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v0 = insertelement <4 x i32> undef, i32 %arg1, i32 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v1 = insertelement <4 x i32> %v0, i32 %arg2, i32 1
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2 = insertelement <4 x i32> %v1, i32 %arg3, i32 2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v2 = insertelement <4 x i32> %v1, i32 %arg3, i32 2
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v3 = insertelement <4 x i32> %v2, i32 %arg4, i32 3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %conv = trunc <4 x i32> %v3 to <4 x i8>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %conv
@@ -532,11 +532,11 @@ define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 
 
 define <4 x i32> @concat(<2 x i32> %a, <2 x i32> %b){
 ; CV1-LABEL: 'concat'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %v
 ;
 ; CV2-LABEL: 'concat'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %v
 ;
   %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -545,11 +545,11 @@ define <4 x i32> @concat(<2 x i32> %a, <2 x i32> %b){
 
 define <4 x i32> @revconcat(<2 x i32> %b, <2 x i32> %a){
 ; CV1-LABEL: 'revconcat'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %v
 ;
 ; CV2-LABEL: 'revconcat'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %v
 ;
   %v = shufflevector <2 x i32> %a, <2 x i32> %b, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -560,14 +560,14 @@ define void @bug() {
 ; CV1-LABEL: 'bug'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %loop
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = phi <4 x i32> [ %1, %loop ], [ undef, %entry ]
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = insertelement <4 x i32> %0, i32 0, i64 2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %1 = insertelement <4 x i32> %0, i32 0, i64 2
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = extractelement <4 x i32> %0, i32 3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %loop
 ;
 ; CV2-LABEL: 'bug'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %loop
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = phi <4 x i32> [ %1, %loop ], [ undef, %entry ]
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = insertelement <4 x i32> %0, i32 0, i64 2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %1 = insertelement <4 x i32> %0, i32 0, i64 2
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = extractelement <4 x i32> %0, i32 3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %loop
 ;
@@ -827,19 +827,19 @@ define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 define void @subvec0(ptr %0) {
 ; CV1-LABEL: 'subvec0'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = add nsw <2 x i32> zeroinitializer, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x i32> %6, ptr undef, align 16
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
 ; CV2-LABEL: 'subvec0'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = add nsw <2 x i32> zeroinitializer, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x i32> %6, ptr undef, align 16
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
@@ -857,19 +857,19 @@ define void @subvec0(ptr %0) {
 define void @subvec2(ptr %0) {
 ; CV1-LABEL: 'subvec2'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = add nsw <2 x i32> zeroinitializer, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x i32> %6, ptr undef, align 16
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
 ; CV2-LABEL: 'subvec2'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x i32> zeroinitializer, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = add nsw <2 x i32> zeroinitializer, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x i32> %4, <2 x i32> poison, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x i32> %5, <4 x i32> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x i32> %6, ptr undef, align 16
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
