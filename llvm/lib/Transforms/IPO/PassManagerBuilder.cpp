@@ -79,7 +79,7 @@ cl::opt<bool> EnableLoopInterchange(
     "enable-loopinterchange", cl::init(false), cl::Hidden,
     cl::desc("Enable the experimental LoopInterchange Pass"));
 
-cl::opt<bool> EnableUnrollAndJam("enable-unroll-and-jam", cl::init(false),
+cl::opt<bool> EnableUnrollAndJam("enable-unroll-and-jam", cl::init(true),
                                  cl::Hidden,
                                  cl::desc("Enable Unroll And Jam Pass"));
 
@@ -89,7 +89,7 @@ cl::opt<bool> EnableLoopFlatten("enable-loop-flatten", cl::init(false),
 
 cl::opt<bool> EnableDFAJumpThreading("enable-dfa-jump-thread",
                                      cl::desc("Enable DFA jump threading."),
-                                     cl::init(false), cl::Hidden);
+                                     cl::init(true), cl::Hidden);
 
 cl::opt<bool> EnableHotColdSplit("hot-cold-split",
                                  cl::desc("Enable hot-cold splitting pass"));
@@ -111,8 +111,8 @@ cl::opt<int> PreInlineThreshold(
              "(default = 75)"));
 
 cl::opt<bool>
-    EnableGVNHoist("enable-gvn-hoist",
-                   cl::desc("Enable the GVN hoisting pass (default = off)"));
+    EnableGVNHoist("enable-gvn-hoist", cl::init(true),
+                   cl::desc("Enable the GVN hoisting pass (default = on)"));
 
 static cl::opt<bool>
     DisableLibCallsShrinkWrap("disable-libcalls-shrinkwrap", cl::init(false),
@@ -120,8 +120,8 @@ static cl::opt<bool>
                               cl::desc("Disable shrink-wrap library calls"));
 
 cl::opt<bool>
-    EnableGVNSink("enable-gvn-sink",
-                  cl::desc("Enable the GVN sinking pass (default = off)"));
+    EnableGVNSink("enable-gvn-sink", cl::init(true),
+                  cl::desc("Enable the GVN sinking pass (default = on)"));
 
 // This option is used in simplifying testing SampleFDO optimizations for
 // profile loading.

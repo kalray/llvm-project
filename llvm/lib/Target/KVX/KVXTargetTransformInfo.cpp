@@ -247,14 +247,21 @@ void KVXTTIImpl::getUnrollingPreferences(Loop *L, ScalarEvolution &SE,
   if (OptLvl < CodeGenOpt::Default)
     return;
 
-  UP.Partial = true;
+  UP.UnrollRemainder = true;
   UP.Runtime = true;
-  if (TM->getOptLevel() < CodeGenOpt::Aggressive)
+  UP.Force = true;
+
+  UP.DefaultUnrollRuntimeCount = 8;
+  UP.MaxCount = 8;
+  UP.FullUnrollMaxCount = 4;
+  if (OptLvl < CodeGenOpt::Aggressive)
     return;
 
-  UP.UnrollRemainder = true;
-  UP.Force = true;
+  UP.Partial = true;
+  UP.UnrollAndJam = true;
+  UP.UnrollAndJamInnerLoopThreshold = 60;
 }
+
 bool KVXTTIImpl::shouldAddRemainderMetaData() { return true; }
 bool KVXTTIImpl::isHardwareLoopProfitable(Loop *L, ScalarEvolution &SE,
                                           AssumptionCache &AC,
