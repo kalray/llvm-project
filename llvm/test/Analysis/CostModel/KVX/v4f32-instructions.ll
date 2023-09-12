@@ -2190,14 +2190,14 @@ define void @subvec2fp(ptr %0) {
 define <4 x float> @test_select_cmp(<4 x float> %a, <4 x float> %b, <4 x float> %c, <4 x float> %d) #0 {
 ; CV1-LABEL: 'test_select_cmp'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <4 x float> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <4 x i1> %cc to i4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x float> %a, <4 x float> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x float> %r
 ;
 ; CV2-LABEL: 'test_select_cmp'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <4 x float> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <4 x i1> %cc to i4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <4 x i1> %cc to i4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <4 x float> %a, <4 x float> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x float> %r

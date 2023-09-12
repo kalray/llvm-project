@@ -386,7 +386,7 @@ unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const {
     REG(Quad);
     REG(System);
     default:
-      return 64;
+    REG(Single);
   }
 }
 
@@ -407,16 +407,13 @@ const char *KVXTTIImpl::getRegisterClassName(unsigned ClassID) const {
     REGNAME(Quad);
     REGNAME(System);
     default:
-      return "KVX::SingleRegRegClass";
+    REGNAME(Single);
   }
 }
 
 unsigned KVXTTIImpl::getRegisterClassForType(bool Vector, Type *Ty) const {
-  if (!Ty) {
-    if (!Vector)
-      return KVX::SingleRegRegClassID;
-    return KVX::QuadRegRegClassID;
-  }
+  if (!Ty)
+    return Vector ? KVX::QuadRegRegClassID : KVX::SingleRegRegClassID;
 
   if (Ty->isVectorTy() && Ty->getScalarSizeInBits() == 1) {
     switch (Ty->getPrimitiveSizeInBits()) {
@@ -449,7 +446,7 @@ unsigned KVXTTIImpl::getRegisterClassForType(bool Vector, Type *Ty) const {
   if (Size <= 256)
     return KVX::QuadRegRegClassID;
 
-  return KVX::SingleRegRegClassID;
+  return TargetTransformInfoImplBase::getRegisterClassForType(Vector, Ty);
 }
 
 InstructionCost
@@ -457,8 +454,14 @@ KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
                                        Optional<FastMathFlags> FMF,
                                        TTI::TargetCostKind CostKind) {
 
+  if (CostKind != TTI::TCK_RecipThroughput)
+    return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
+
+  if (Ty->getScalarSizeInBits() < 8)
+    return InstructionCost::getInvalid();
+
   auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
-  // Fixme: FP and V1 costs are really wrong
+  // Fixme: FP costs are really wrong
   if (Ty->isFPOrFPVectorTy() || Sz > 512)
     return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
 
@@ -486,13 +489,15 @@ InstructionCost
 KVXTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
                                    bool IsUnsigned,
                                    TTI::TargetCostKind CostKind) {
-  // Fixme: FP and V1 costs are really wrong
-  if (Ty->isFPOrFPVectorTy() || ST->isV1())
+  if (CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getMinMaxReductionCost(Ty, CondTy, IsUnsigned, CostKind);
+  // Hack: we can simply use the cost of an And reduction for the type.
+  InstructionCost IC = getArithmeticReductionCost(Instruction::And, Ty,
+                                                  FastMathFlags(), CostKind);
+  if (Ty->isFPOrFPVectorTy() || ST->isV1())
+    IC += Log2_32(Ty->getPrimitiveSizeInBits() / Ty->getScalarSizeInBits()) - 1;
 
-  // V2 Hack: we can simply use the cost of an And reduction for the type.
-  return getArithmeticReductionCost(Instruction::And, Ty, FastMathFlags(),
-                                    CostKind);
+  return IC;
 }
 
 InstructionCost KVXTTIImpl::getArithmeticInstrCost(
@@ -578,6 +583,16 @@ InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
   return IC;
 }
 
+bool KVXTTIImpl::isTypeLegal(Type *Ty) const {
+  if (!Ty->isSized())
+    return true;
+
+  const unsigned EltSize = Ty->getScalarSizeInBits();
+  const unsigned Size = Ty->getPrimitiveSizeInBits();
+
+  return (EltSize <= 64 && (EltSize >= 8 || EltSize == 1) && (Size <= 256));
+}
+
 InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
                                                Type *CondTy,
                                                CmpInst::Predicate VecPred,
@@ -635,11 +650,23 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
     return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);
   // FIXME: Forbid bitvector casts until properly handled in backend during
   // lowering.
-  case Instruction::BitCast:
-    if (Src->isVectorTy() && !Dst->isVectorTy() &&
-        Src->getScalarSizeInBits() == 1)
-      return 70000;
-    return 0;
+  case Instruction::BitCast: {
+    if (Dst->getScalarSizeInBits() >= 8)
+      return 0; // bitcasts are free
+
+    // Cast to scalar, or vector with elements, of size smaller than 8 bits are
+    // illegal, with the exception of a bitcast of result of a vector
+    // comparison.
+    if (!I)
+      return InstructionCost::getInvalid();
+
+    if (auto *Cmp = dyn_cast<Instruction>(I->getOperand(0))) {
+      auto Op = Cmp->getOpcode();
+      bool Ok = (Op == Instruction::FCmp || Op == Instruction::ICmp);
+      return Ok ? 0 : InstructionCost::getInvalid();
+    }
+    return InstructionCost::getInvalid();
+  }
 
   case Instruction::FPExt:
     IsFP = true;

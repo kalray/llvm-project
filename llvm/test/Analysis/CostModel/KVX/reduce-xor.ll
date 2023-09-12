@@ -6,12 +6,12 @@ target triple = "kvx-kalray-cos"
 
 define void @reduce_xor() {
 ; CV1-LABEL: 'reduce_xor'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V2i1 = call i1 @llvm.vector.reduce.xor.v2i1(<2 x i1> undef)
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V3i1 = call i1 @llvm.vector.reduce.xor.v3i1(<3 x i1> undef)
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V4i1 = call i1 @llvm.vector.reduce.xor.v4i1(<4 x i1> undef)
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V8i1 = call i1 @llvm.vector.reduce.xor.v8i1(<8 x i1> undef)
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V16i1 = call i1 @llvm.vector.reduce.xor.v16i1(<16 x i1> undef)
-; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V32i1 = call i1 @llvm.vector.reduce.xor.v32i1(<32 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V2i1 = call i1 @llvm.vector.reduce.xor.v2i1(<2 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V3i1 = call i1 @llvm.vector.reduce.xor.v3i1(<3 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V4i1 = call i1 @llvm.vector.reduce.xor.v4i1(<4 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V8i1 = call i1 @llvm.vector.reduce.xor.v8i1(<8 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V16i1 = call i1 @llvm.vector.reduce.xor.v16i1(<16 x i1> undef)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %V32i1 = call i1 @llvm.vector.reduce.xor.v32i1(<32 x i1> undef)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V2i8 = call i8 @llvm.vector.reduce.xor.v2i8(<2 x i8> undef)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V3i8 = call i8 @llvm.vector.reduce.xor.v3i8(<3 x i8> undef)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %V4i8 = call i8 @llvm.vector.reduce.xor.v4i8(<4 x i8> undef)
@@ -31,12 +31,12 @@ define void @reduce_xor() {
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
 ; CV2-LABEL: 'reduce_xor'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V2i1 = call i1 @llvm.vector.reduce.xor.v2i1(<2 x i1> undef)
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V3i1 = call i1 @llvm.vector.reduce.xor.v3i1(<3 x i1> undef)
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V4i1 = call i1 @llvm.vector.reduce.xor.v4i1(<4 x i1> undef)
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V8i1 = call i1 @llvm.vector.reduce.xor.v8i1(<8 x i1> undef)
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V16i1 = call i1 @llvm.vector.reduce.xor.v16i1(<16 x i1> undef)
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V32i1 = call i1 @llvm.vector.reduce.xor.v32i1(<32 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V2i1 = call i1 @llvm.vector.reduce.xor.v2i1(<2 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V3i1 = call i1 @llvm.vector.reduce.xor.v3i1(<3 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V4i1 = call i1 @llvm.vector.reduce.xor.v4i1(<4 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V8i1 = call i1 @llvm.vector.reduce.xor.v8i1(<8 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V16i1 = call i1 @llvm.vector.reduce.xor.v16i1(<16 x i1> undef)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %V32i1 = call i1 @llvm.vector.reduce.xor.v32i1(<32 x i1> undef)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V2i8 = call i8 @llvm.vector.reduce.xor.v2i8(<2 x i8> undef)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V3i8 = call i8 @llvm.vector.reduce.xor.v3i8(<3 x i8> undef)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %V4i8 = call i8 @llvm.vector.reduce.xor.v4i8(<4 x i8> undef)

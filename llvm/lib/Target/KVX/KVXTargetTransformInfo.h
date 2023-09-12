@@ -105,7 +105,7 @@ public:
                                            const APInt &DemandedElts,
                                            bool Insert, bool Extract);
 
-  bool isTypeLegal(Type *Ty) const { return true; }
+  bool isTypeLegal(Type *Ty) const;
 
   InstructionCost getArithmeticInstrCost(
       unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,

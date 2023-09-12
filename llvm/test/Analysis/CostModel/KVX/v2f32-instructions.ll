@@ -2320,14 +2320,14 @@ entry:
 define <2 x float> @test_select_cmp(<2 x float> %a, <2 x float> %b, <2 x float> %c, <2 x float> %d) #0 {
 ; CV1-LABEL: 'test_select_cmp'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x float> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <2 x i1> %cc to i2
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x float> %a, <2 x float> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_select_cmp'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x float> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %bc = bitcast <2 x i1> %cc to i2
+; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <2 x i1> %cc to i2
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <2 x float> %a, <2 x float> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
