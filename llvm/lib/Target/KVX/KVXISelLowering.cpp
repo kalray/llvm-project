@@ -914,11 +914,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::DYNAMIC_STACKALLOC, MVT::i64,
                      hasStackLimitRegister() ? Custom : Expand);
 
-  for (auto I :
+  for (auto VT :
        {MVT::v2i16, MVT::v4i16, MVT::i32, MVT::v2i32, MVT::i64, MVT::v8i8})
-    setOperationAction(ISD::SADDSAT, I, Legal);
-  setOperationAction(ISD::UADDSAT, MVT::v8i8, Legal);
-  setOperationAction(ISD::UADDSAT, MVT::v2i32, Legal);
+    setOperationAction(ISD::SADDSAT, VT, Legal);
+
+  for (auto VT : {MVT::v2i32, MVT::v2i8, MVT::v4i8, MVT::v8i8})
+    setOperationAction(ISD::UADDSAT, VT, Legal);
 
   for (auto I : {MVT::v8i8, MVT::v4i16, MVT::v2i16, MVT::v2i32, MVT::i32,
                  MVT::i64, MVT::v4i32})

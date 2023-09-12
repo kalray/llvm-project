@@ -576,12 +576,15 @@ def isSignExtended : PatLeaf<(i64 SingleReg:$src), [{
 // ADDUSBO
 def : Pat<(v2i8(uaddsat v2i8:$v0, (is_imm_vec:$IMM))),
           (ADDUSBOri SingleReg:$v0, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
-def : Pat<(v2i8(uaddsat v2i8:$v0, v2i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
 
+def : Pat<(v2i8(uaddsat v2i8:$v0, v2i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+def : Pat<(v2i8(uaddsat v2i8:$v0, v2i8:$v1)),
+            (SBMM8ri37 (MINHQri(ADDHQrr(SBMM8ri37 SingleReg:$v0, 0x20001), (SBMM8ri37 SingleReg:$v1, 0x20001)), 0xFF00FF, splat32_), 0x401)>, Requires<[IsV1]>;
 def : Pat<(v4i8(uaddsat v4i8:$v0, (v4i8(is_imm_vec:$IMM)) ) ),
            (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
 def : Pat<(v4i8(uaddsat v4i8:$v0, v4i8:$v1)), (ADDUSBOrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
-
+def : Pat<(v4i8(uaddsat v4i8:$v0, v4i8:$v1)),
+            (SBMM8ri64 (MINHQri(ADDHQrr(SBMM8ri64 SingleReg:$v0, 0x8000400020001), (SBMM8ri64 SingleReg:$v1, 0x8000400020001)), 0xFF00FF, splat32_at), 0x40100401)>, Requires<[IsV1]>;
 def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_:$IMM)) ) ),
            (ADDUSBOri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
 def : Pat<(v8i8(uaddsat v8i8:$v0, (v8i8(is_imm_vec_kvx_splat32_at:$IMM)) ) ),
@@ -603,6 +606,8 @@ def : Pat<(i64(uaddsat i64:$v0, i64:$v1)),
 def : Pat<(v2i16(uaddsat v2i16:$v0, (v2i16(is_imm_vec:$IMM)) ) ),
            (ADDUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
 def : Pat<(v2i16(uaddsat v2i16:$v0, v2i16:$v1)), (ADDUSHQrr SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV2]>;
+def : Pat<(v2i16(uaddsat v2i16:$v0, v2i16:$v1)),
+            (SBMM8ri64 (MINWPri(ADDWPrr(SBMM8ri64 SingleReg:$v0, 0x80400000201), (SBMM8ri37 SingleReg:$v1, 0x80400000201)), 0x0000FFFF, splat32_at), 0x20100201)>, Requires<[IsV1]>;
 
 def : Pat<(v4i16(uaddsat v4i16:$v0, (v4i16(is_imm_vec_kvx_splat32_:$IMM)) ) ),
            (ADDUSHQri SingleReg:$v0, (i32(trunc_imm_32 (i32(build_imm_vec $IMM)))), splat32_)>, Requires<[IsV2]>;
