@@ -4,7 +4,7 @@
 
 define i8* @f(i8* %buffer, i32 %n) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  coro.return:
+; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[N_VAL_SPILL_ADDR:%.*]] = bitcast i8* [[BUFFER:%.*]] to i32*
 ; CHECK-NEXT:    store i32 [[N:%.*]], i32* [[N_VAL_SPILL_ADDR]], align 4
 ; CHECK-NEXT:    tail call void @print(i32 [[N]])
@@ -35,9 +35,9 @@ cleanup:
 define i32 @main() {
 ; CHECK-LABEL: @main(
 ; CHECK-NEXT:  entry:
-; CHECK-NEXT:    call void @print(i32 4)
-; CHECK-NEXT:    call void @print(i32 5), !noalias !0
-; CHECK-NEXT:    call void @print(i32 6), !noalias !3
+; CHECK-NEXT:    tail call void @print(i32 4)
+; CHECK-NEXT:    tail call void @print(i32 5), !noalias !0
+; CHECK-NEXT:    tail call void @print(i32 6), !noalias !3
 ; CHECK-NEXT:    ret i32 0
 ;
 entry:
@@ -60,7 +60,7 @@ entry:
 
 define hidden { i8*, i8* } @g(i8* %buffer, i16* %ptr) {
 ; CHECK-LABEL: @g(
-; CHECK-NEXT:  coro.return:
+; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[TMP0:%.*]] = tail call i8* @allocate(i32 8)
 ; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i8* [[BUFFER:%.*]] to i8**
 ; CHECK-NEXT:    store i8* [[TMP0]], i8** [[TMP1]], align 8

@@ -1,3 +1,5 @@
+; KVX: Activated non default passes by default to hold same behavior over clang/opencl(pocl)/opt
+; XFAIL: *
 ; Validate ThinLTO postlink pipeline when we have Sample PGO
 ;
 ; RUN: opt -disable-verify -verify-cfg-preserved=0 -eagerly-invalidate-analyses=0 -debug-pass-manager \

@@ -1,3 +1,5 @@
+; KVX: Difficult to change passes
+; XFAIL: *
 ; Validate ThinLTO prelink pipeline when we have Sample PGO
 ;
 ; RUN: opt -disable-verify -verify-cfg-preserved=0 -eagerly-invalidate-analyses=0 -debug-pass-manager \

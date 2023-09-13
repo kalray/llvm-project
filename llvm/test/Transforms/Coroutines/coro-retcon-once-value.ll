@@ -6,7 +6,7 @@ target triple = "x86_64-apple-macosx10.12.0"
 
 define {i8*, i32} @f(i8* %buffer, i32* %array) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  PostSpill:
+; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[ARRAY_SPILL_ADDR:%.*]] = bitcast i8* [[BUFFER:%.*]] to i32**
 ; CHECK-NEXT:    store i32* [[ARRAY:%.*]], i32** [[ARRAY_SPILL_ADDR]], align 8
 ; CHECK-NEXT:    [[LOAD:%.*]] = load i32, i32* [[ARRAY]], align 4

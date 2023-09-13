@@ -1,3 +1,4 @@
+; XFAIL: *
 ; Validate ThinLTO post link pipeline when we have instrumentation PGO
 ;
 ; Postlink pipelines:

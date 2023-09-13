@@ -5,7 +5,7 @@
 
 define ptr @f(ptr %buffer, i32 %n) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  coro.return:
+; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    store i32 [[N:%.*]], ptr [[BUFFER:%.*]], align 4
 ; CHECK-NEXT:    tail call void @print(i32 [[N]])
 ; CHECK-NEXT:    ret ptr @f.resume.0
@@ -33,9 +33,9 @@ cleanup:                                          ; preds = %loop
 define i32 @main() {
 ; CHECK-LABEL: @main(
 ; CHECK-NEXT:  entry:
-; CHECK-NEXT:    call void @print(i32 4)
-; CHECK-NEXT:    call void @print(i32 5), !noalias !0
-; CHECK-NEXT:    call void @print(i32 6), !noalias !3
+; CHECK-NEXT:    tail call void @print(i32 4)
+; CHECK-NEXT:    tail call void @print(i32 5), !noalias !0
+; CHECK-NEXT:    tail call void @print(i32 6), !noalias !3
 ; CHECK-NEXT:    ret i32 0
 ;
 entry:
@@ -50,7 +50,7 @@ entry:
 
 define hidden { ptr, ptr } @g(ptr %buffer, ptr %ptr) {
 ; CHECK-LABEL: @g(
-; CHECK-NEXT:  coro.return:
+; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[TMP0:%.*]] = tail call ptr @allocate(i32 8)
 ; CHECK-NEXT:    store ptr [[TMP0]], ptr [[BUFFER:%.*]], align 8
 ; CHECK-NEXT:    store ptr [[PTR:%.*]], ptr [[TMP0]], align 8
