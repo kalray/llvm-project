@@ -846,7 +846,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   if (!Subtarget.isV1()) {
     for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
-                    MVT::v4i8, MVT::v4i16})
+                    MVT::v4i8, MVT::v4i16, MVT::v8i8})
       for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
                      ISD::SMIN, ISD::SHL, ISD::SRA, ISD::SRL, ISD::SSHLSAT,
                      ISD::SSUBSAT, ISD::SUB, ISD::UADDSAT, ISD::UMAX, ISD::UMIN,
@@ -3800,6 +3800,9 @@ KVXTargetLowering::getPreferredVectorAction(MVT VT) const {
 
   switch (VT.SimpleTy) {
   case MVT::v8i1:
+    if (!Subtarget.isV1())
+      return TargetLowering::getPreferredVectorAction(VT);
+    LLVM_FALLTHROUGH;
   case MVT::v8i16:
   case MVT::v8f32:
   case MVT::v8i32:
