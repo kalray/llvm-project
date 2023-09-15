@@ -22,6 +22,15 @@ defm : StorePatNode<truncstoref32, f64, 2, SWp, SWri10,  SWri37,  SWri64, SWrr,
                     (FNARROWDW SingleReg:$val, rounding_, silent_)>;
 defm : StorePat<store, v2f16, SingleReg, 2, SWp, SWri10,  SWri37,  SWri64, SWrr>;
 
+def fmaxnum_ok : PatFrag<(ops node:$op0, node:$op1), (fmaxnum node:$op0, node:$op1), [{
+    return N->getFlags().hasNoNaNs() || !Subtarget->isV1();
+  }]>;
+
+def fminnum_ok : PatFrag<(ops node:$op0, node:$op1), (fminnum node:$op0, node:$op1), [{
+    return N->getFlags().hasNoNaNs() || !Subtarget->isV1();
+  }]>;
+
+
 def fmulcont : PatFrag<(ops node:$op0, node:$op1), (fmul node:$op0, node:$op1), [{
     return N->getFlags().hasAllowContract();
   }]>;
@@ -1371,7 +1380,8 @@ def : Pat<(v4f16 (fpround v4f64:$val)), (FNARROWWHQ (REG_SEQUENCE PairedReg,
                                           rounding_, silent_)>;
 
 // FMAX
-foreach I = [int_kvx_max, fmaxnum] in {
+let AddedComplexity = 1 in {
+foreach I = [int_kvx_max, fmaxnum_ok] in {
   foreach vt = [f16, v2f16, v4f16] in
     def: Pat<(vt (I vt:$v1, vt:$v2)),
              (FMAXHQ SingleReg:$v1, SingleReg:$v2)>;
@@ -1387,7 +1397,7 @@ foreach I = [int_kvx_max, fmaxnum] in {
 }
 
 // FMIN
-foreach I = [int_kvx_min, fminnum] in {
+foreach I = [int_kvx_min, fminnum_ok] in {
   foreach vt = [f16, v2f16, v4f16] in
     def: Pat<(vt (I vt:$v1, vt:$v2)),
              (FMINHQ SingleReg:$v1, SingleReg:$v2)>;
@@ -1401,6 +1411,54 @@ foreach I = [int_kvx_min, fminnum] in {
     def: Pat<(v2f32 (I v2f32:$v1, v2f32:$v2)),
              (FMINWP SingleReg:$v1, SingleReg:$v2)>;
 }
+}
+
+multiclass FMAX_FMIN_Pat<ValueType vt, Instruction SHL, Instruction FCMP, OutPatFrag IsNan, Instruction OR, Instruction CMOVE, dag CMOVE_cond> {
+  def _fminnum : Pat
+  <(vt (fminnum vt:$lhs, vt:$rhs)),
+      (vt (CMOVE
+              (OR
+              (FCMP SingleReg:$rhs, SingleReg:$lhs, floatcomp_olt),
+              (IsNan (SHL SingleReg:$lhs, 1))),
+              SingleReg:$lhs,
+              SingleReg:$rhs,
+              CMOVE_cond))>;
+
+  def _fmaxnum : Pat
+  <(vt (fmaxnum vt:$lhs, vt:$rhs)),
+      (vt (CMOVE
+              (OR
+              (FCMP SingleReg:$lhs, SingleReg:$rhs, floatcomp_olt),
+              (IsNan (SHL SingleReg:$lhs, 1))),
+              SingleReg:$lhs,
+              SingleReg:$rhs,
+              CMOVE_cond))>;
+}
+
+def IsNanD : OutPatFrag <(ops node:$v),
+                (COMPDri64 node:$v, (i64 0xFFE0000000000000), comparison_gtu)>;
+
+def IsNanW : OutPatFrag <(ops node:$v),
+                (COMPWri node:$v, (i32 0xFF000000), comparison_gtu)>;
+
+def IsNanWP: OutPatFrag <(ops node:$v),
+                (COMPNWPris node:$v, (i32 0xFF000000), comparison_gtu)>;
+
+def IsNanH: OutPatFrag <(ops node:$v),
+                (COMPNHQri node:$v, (i32 0xF800), comparison_gtu)>;
+
+def IsNanHP: OutPatFrag <(ops node:$v),
+                (COMPNHQri node:$v, (i32 0xF800F800), comparison_gtu)>;
+
+def IsNanHQ: OutPatFrag <(ops node:$v),
+                (COMPNHQris node:$v, (i32 0xF800F800), comparison_gtu)>;
+
+defm cv1_h : FMAX_FMIN_Pat<f16, SLLHQSri, FCOMPNHQ, IsNanH, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_hp : FMAX_FMIN_Pat<v2f16, SLLHQSri, FCOMPNHQ, IsNanHP, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_hq : FMAX_FMIN_Pat<v4f16, SLLHQSri, FCOMPNHQ, IsNanHQ, ORDrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_w : FMAX_FMIN_Pat<f32, SLLWri, FCOMPWrr, IsNanW, ORWrr, CMOVEDrr, (i32 scalarcond_odd)>;
+defm cv1_wp : FMAX_FMIN_Pat<v2f32, SLLWPSri, FCOMPNWP, IsNanWP, ORDrr, CMOVEWP, (i32 simplecond_odd)>;
+defm cv1_d : FMAX_FMIN_Pat<f64, SLLDri, FCOMPD, IsNanD, ORDrr, CMOVEDrr, (i32 scalarcond_odd)>;
 
 // FNEG
 def : Pat<(vfneg f16:$rs), (FNEGHQ SingleReg:$rs)>;

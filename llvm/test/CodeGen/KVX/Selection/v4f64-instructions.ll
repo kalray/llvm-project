@@ -2214,65 +2214,33 @@ define <4 x double> @test_fabs(<4 x double> %a) #0 {
 define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_minnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    addd $r12 = $r12, -96
-; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    slld $r8 = $r1, 1
+; CV1-NEXT:    slld $r9 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r10 = $r5, $r1
+; CV1-NEXT:    fcompd.olt $r11 = $r4, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 88[$r12] = $r16
+; CV1-NEXT:    compd.gtu $r8 = $r8, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r9 = $r9, 0xffe0000000000000
+; CV1-NEXT:    fcompd.olt $r15 = $r6, $r2
+; CV1-NEXT:    fcompd.olt $r16 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sd 80[$r12] = $r26
+; CV1-NEXT:    ord $r8 = $r10, $r8
+; CV1-NEXT:    ord $r9 = $r11, $r9
+; CV1-NEXT:    slld $r10 = $r2, 1
+; CV1-NEXT:    slld $r11 = $r3, 1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sd 72[$r12] = $r24
+; CV1-NEXT:    cmoved.odd $r9 ? $r0 = $r4
+; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
+; CV1-NEXT:    compd.gtu $r10 = $r10, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    so 40[$r12] = $r20r21r22r23
+; CV1-NEXT:    ord $r4 = $r15, $r10
+; CV1-NEXT:    ord $r5 = $r16, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sq 24[$r12] = $r18r19
-; CV1-NEXT:    copyd $r18 = $r7
-; CV1-NEXT:    copyd $r19 = $r6
-; CV1-NEXT:    copyd $r20 = $r4
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r1
-; CV1-NEXT:    copyd $r22 = $r3
-; CV1-NEXT:    copyd $r23 = $r2
-; CV1-NEXT:    copyd $r24 = $r0
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    call fmin
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r24
-; CV1-NEXT:    copyd $r1 = $r20
-; CV1-NEXT:    copyd $r21 = $r0
-; CV1-NEXT:    call fmin
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r23
-; CV1-NEXT:    copyd $r1 = $r19
-; CV1-NEXT:    copyd $r20 = $r0
-; CV1-NEXT:    call fmin
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r22
-; CV1-NEXT:    copyd $r1 = $r18
-; CV1-NEXT:    copyd $r26 = $r0
-; CV1-NEXT:    call fmin
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r20
-; CV1-NEXT:    copyd $r1 = $r21
-; CV1-NEXT:    copyd $r2 = $r26
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lq $r18r19 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    lo $r20r21r22r23 = 40[$r12]
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ld $r24 = 72[$r12]
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ld $r26 = 80[$r12]
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    ld $r16 = 88[$r12]
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 96
-; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    cmoved.odd $r4 ? $r2 = $r6
+; CV1-NEXT:    cmoved.odd $r5 ? $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: test_minnum:
 ; CV2:       # %bb.0:
@@ -2333,65 +2301,33 @@ define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_maxnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    addd $r12 = $r12, -96
-; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    slld $r8 = $r1, 1
+; CV1-NEXT:    slld $r9 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r10 = $r1, $r5
+; CV1-NEXT:    fcompd.olt $r11 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 88[$r12] = $r16
+; CV1-NEXT:    compd.gtu $r8 = $r8, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r9 = $r9, 0xffe0000000000000
+; CV1-NEXT:    fcompd.olt $r15 = $r2, $r6
+; CV1-NEXT:    fcompd.olt $r16 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sd 80[$r12] = $r26
+; CV1-NEXT:    ord $r8 = $r10, $r8
+; CV1-NEXT:    ord $r9 = $r11, $r9
+; CV1-NEXT:    slld $r10 = $r2, 1
+; CV1-NEXT:    slld $r11 = $r3, 1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sd 72[$r12] = $r24
+; CV1-NEXT:    cmoved.odd $r9 ? $r0 = $r4
+; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
+; CV1-NEXT:    compd.gtu $r10 = $r10, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    so 40[$r12] = $r20r21r22r23
+; CV1-NEXT:    ord $r4 = $r15, $r10
+; CV1-NEXT:    ord $r5 = $r16, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sq 24[$r12] = $r18r19
-; CV1-NEXT:    copyd $r18 = $r7
-; CV1-NEXT:    copyd $r19 = $r6
-; CV1-NEXT:    copyd $r20 = $r4
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r1
-; CV1-NEXT:    copyd $r22 = $r3
-; CV1-NEXT:    copyd $r23 = $r2
-; CV1-NEXT:    copyd $r24 = $r0
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    call fmax
-; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r24
-; CV1-NEXT:    copyd $r1 = $r20
-; CV1-NEXT:    copyd $r21 = $r0
-; CV1-NEXT:    call fmax
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r23
-; CV1-NEXT:    copyd $r1 = $r19
-; CV1-NEXT:    copyd $r20 = $r0
-; CV1-NEXT:    call fmax
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r22
-; CV1-NEXT:    copyd $r1 = $r18
-; CV1-NEXT:    copyd $r26 = $r0
-; CV1-NEXT:    call fmax
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r0 = $r20
-; CV1-NEXT:    copyd $r1 = $r21
-; CV1-NEXT:    copyd $r2 = $r26
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lq $r18r19 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    lo $r20r21r22r23 = 40[$r12]
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ld $r24 = 72[$r12]
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ld $r26 = 80[$r12]
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    ld $r16 = 88[$r12]
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 96
-; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    cmoved.odd $r4 ? $r2 = $r6
+; CV1-NEXT:    cmoved.odd $r5 ? $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: test_maxnum:
 ; CV2:       # %bb.0:

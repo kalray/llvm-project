@@ -1099,23 +1099,16 @@ define half @test_fabs(half %a) #0 {
 define half @test_minnum(half %a, half %b) #0 {
 ; KV3_1-LABEL: test_minnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    fwidenlhw $r0 = $r0
-; KV3_1-NEXT:    fwidenlhw $r1 = $r1
-; KV3_1-NEXT:    addd $r12 = $r12, -32
+; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
+; KV3_1-NEXT:    fcompnhq.olt $r3 = $r1, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sd 24[$r12] = $r16
-; KV3_1-NEXT:    call fminf
+; KV3_1-NEXT:    orw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    fnarrowwh $r0 = $r0
-; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    set $ra = $r16
-; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;; # (end cycle 5)
+; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: test_minnum:
 ; KV3_2:       # %bb.0:
@@ -1139,23 +1132,16 @@ define half @test_minnum_fast(half %a, half %b) #0 {
 define half @test_maxnum(half %a, half %b) #0 {
 ; KV3_1-LABEL: test_maxnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    fwidenlhw $r0 = $r0
-; KV3_1-NEXT:    fwidenlhw $r1 = $r1
-; KV3_1-NEXT:    addd $r12 = $r12, -32
+; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
+; KV3_1-NEXT:    fcompnhq.olt $r3 = $r0, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sd 24[$r12] = $r16
-; KV3_1-NEXT:    call fmaxf
+; KV3_1-NEXT:    orw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    fnarrowwh $r0 = $r0
-; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    set $ra = $r16
-; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;; # (end cycle 5)
+; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: test_maxnum:
 ; KV3_2:       # %bb.0:

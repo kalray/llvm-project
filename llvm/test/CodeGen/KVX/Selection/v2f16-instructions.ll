@@ -1281,40 +1281,16 @@ define <2 x half> @test_fabs(<2 x half> %a) #0 {
 define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: test_minnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    addd $r12 = $r12, -32
-; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
+; KV3_1-NEXT:    fcompnhq.olt $r3 = $r1, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 24[$r12] = $r16
+; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sd 16[$r12] = $r20
+; KV3_1-NEXT:    orw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    sq 0[$r12] = $r18r19
-; KV3_1-NEXT:    fwidenlhwp $r18 = $r1
-; KV3_1-NEXT:    fwidenlhwp $r19 = $r0
-; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srad $r0 = $r19, 32
-; KV3_1-NEXT:    srad $r1 = $r18, 32
-; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;; # (end cycle 4)
-; KV3_1-NEXT:    copyd $r0 = $r19
-; KV3_1-NEXT:    copyd $r1 = $r18
-; KV3_1-NEXT:    copyd $r20 = $r0
-; KV3_1-NEXT:    call fminf
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    lq $r18r19 = 0[$r12]
-; KV3_1-NEXT:    insf $r0 = $r20, 63, 32
-; KV3_1-NEXT:    make $r1 = 0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fnarrowwhq $r0 = $r0r1
-; KV3_1-NEXT:    ld $r20 = 16[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    set $ra = $r16
-; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;; # (end cycle 7)
+; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: test_minnum:
 ; KV3_2:       # %bb.0:
@@ -1338,40 +1314,16 @@ define <2 x half> @test_minnum_fast(<2 x half> %a, <2 x half> %b) #0 {
 define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-LABEL: test_maxnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    addd $r12 = $r12, -32
-; KV3_1-NEXT:    get $r16 = $ra
+; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
+; KV3_1-NEXT:    fcompnhq.olt $r3 = $r0, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 24[$r12] = $r16
+; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sd 16[$r12] = $r20
+; KV3_1-NEXT:    orw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    sq 0[$r12] = $r18r19
-; KV3_1-NEXT:    fwidenlhwp $r18 = $r1
-; KV3_1-NEXT:    fwidenlhwp $r19 = $r0
-; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srad $r0 = $r19, 32
-; KV3_1-NEXT:    srad $r1 = $r18, 32
-; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;; # (end cycle 4)
-; KV3_1-NEXT:    copyd $r0 = $r19
-; KV3_1-NEXT:    copyd $r1 = $r18
-; KV3_1-NEXT:    copyd $r20 = $r0
-; KV3_1-NEXT:    call fmaxf
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    lq $r18r19 = 0[$r12]
-; KV3_1-NEXT:    insf $r0 = $r20, 63, 32
-; KV3_1-NEXT:    make $r1 = 0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fnarrowwhq $r0 = $r0r1
-; KV3_1-NEXT:    ld $r20 = 16[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ld $r16 = 24[$r12]
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    set $ra = $r16
-; KV3_1-NEXT:    addd $r12 = $r12, 32
-; KV3_1-NEXT:    ;; # (end cycle 7)
+; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ;
 ; KV3_2-LABEL: test_maxnum:
 ; KV3_2:       # %bb.0:

@@ -9,23 +9,16 @@ target triple = "kvx-kalray-cos"
 define half @fminh(half %a, half %b) {
 ; CV1-LABEL: fminh:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fwidenlhw $r0 = $r0
-; CV1-NEXT:    fwidenlhw $r1 = $r1
-; CV1-NEXT:    addd $r12 = $r12, -32
+; CV1-NEXT:    sllhqs $r2 = $r0, 1
+; CV1-NEXT:    fcompnhq.olt $r3 = $r1, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sd 24[$r12] = $r16
-; CV1-NEXT:    call fminf
+; CV1-NEXT:    orw $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: fminh:
 ; CV2:       # %bb.0:
@@ -53,19 +46,16 @@ declare half @llvm.minnum.f16(half, half)
 define float @fminw(float %a, float %b) {
 ; CV1-LABEL: fminw:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    sllw $r2 = $r0, 1
+; CV1-NEXT:    fcompw.olt $r3 = $r1, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 24[$r12] = $r16
-; CV1-NEXT:    call fminf
+; CV1-NEXT:    compw.gtu $r2 = $r2, 0xff000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    orw $r2 = $r3, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: fminw:
 ; CV2:       # %bb.0:
@@ -92,19 +82,16 @@ declare float @llvm.minnum.f32(float, float)
 define double @fmind(double %a, double %b) {
 ; CV1-LABEL: fmind:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    get $r16 = $ra
+; CV1-NEXT:    slld $r2 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r3 = $r1, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 24[$r12] = $r16
-; CV1-NEXT:    call fmin
+; CV1-NEXT:    compd.gtu $r2 = $r2, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ld $r16 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ord $r2 = $r3, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;;
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: fmind:
 ; CV2:       # %bb.0:

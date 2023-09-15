@@ -666,10 +666,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   for (auto VT :
        {MVT::f16, MVT::f32, MVT::f64, MVT::v2f16, MVT::v2f32, MVT::v4f16}) {
-    // Use hardware instructions f[min|max] for f[min|max]num iff -ffast-math
     // See: T14224.
-    setOperationAction(ISD::FMINNUM, VT, Custom);
-    setOperationAction(ISD::FMAXNUM, VT, Custom);
+    setOperationAction(ISD::FMAXNUM, VT, Legal);
+    setOperationAction(ISD::FMINNUM, VT, Legal);
   }
 
   for (unsigned im = (unsigned)ISD::PRE_INC;
@@ -1500,30 +1499,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   return Chain;
 }
 
-// This expands the data type to the twice the size
-static SDValue manualPromoteTruncOp(SDValue &Op, SelectionDAG &DAG,
-                                    bool Uns = false) {
-  EVT VT =
-      Op->getValueType(0).widenVectorOrScalarElementType(*DAG.getContext());
-
-  SmallVector<SDValue, 2> Ops;
-  if (VT.isFloatingPoint())
-    for (auto &Operand : Op->ops())
-      Ops.push_back(DAG.getFPExtendOrRound(Operand, SDLoc(Operand), VT));
-  else if (Uns)
-    for (auto &Operand : Op->ops())
-      Ops.push_back(DAG.getZExtOrTrunc(Operand, SDLoc(Operand), VT));
-  else
-    for (auto &Operand : Op->ops())
-      Ops.push_back(DAG.getSExtOrTrunc(Operand, SDLoc(Operand), VT));
-  SDValue Ext = DAG.getNode(Op->getOpcode(), SDLoc(Op), VT, Ops);
-  if (VT.isFloatingPoint())
-    return DAG.getFPExtendOrRound(Ext, SDLoc(Op), Op->getValueType(0));
-  if (Uns)
-    return DAG.getZExtOrTrunc(Ext, SDLoc(Op), Op->getValueType(0));
-  return DAG.getSExtOrTrunc(Ext, SDLoc(Op), Op->getValueType(0));
-}
-
 SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   const unsigned Opcode = Op.getOpcode();
   switch (Opcode) {
@@ -1653,20 +1628,6 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     if (Op.getNode()->getFlags().hasAllowReciprocal())
       return Op;
     return SDValue();
-  case ISD::FMINNUM:
-  case ISD::FMAXNUM: {
-    if (Op.getNode()->getFlags().hasNoNaNs() || !Subtarget.isV1())
-      return Op;
-
-    switch (Op.getValueType().getSimpleVT().SimpleTy) {
-    case MVT::f16:
-    case MVT::v2f16:
-    case MVT::v4f16:
-      return manualPromoteTruncOp(Op, DAG);
-    default:
-      return SDValue();
-    }
-  }
   case ISD::DYNAMIC_STACKALLOC:
     return lowerStackCheckAlloca(Op, DAG);
   case ISD::SMUL_LOHI:
