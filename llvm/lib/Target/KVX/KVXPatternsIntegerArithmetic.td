@@ -1144,37 +1144,82 @@ multiclass COMP_Pat<PatFrag Node, Comparison Mod, Comparison RevMod> {
         (COMPDri64 SingleReg:$lhs, Wrapped64:$rhs, Mod)>;
 
   //COMPNBO
+  def : Pat<(v2i8 (Node v2i8:$lhs, is_imm_vec:$rhs)),
+        (COMPNBOri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>, Requires<[IsV2]>;
   def : Pat<(v2i8 (Node v2i8:$lhs, v2i8:$rhs)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
   def : Pat<(sra (shl (v2i8 (Node v2i8:$lhs, v2i8:$rhs)), (v2i8 v2_splat_7)), (v2i8 v2_splat_7)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
 
+  def : Pat<(v4i8 (Node v4i8:$lhs, is_imm_vec:$rhs)),
+        (COMPNBOri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>, Requires<[IsV2]>;
   def : Pat<(v4i8 (Node v4i8:$lhs, v4i8:$rhs)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
   def : Pat<(sra (shl (v4i8 (Node v4i8:$lhs, v4i8:$rhs)), (v4i8 v4_splat_7)), (v4i8 v4_splat_7)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
 
+  def : Pat<(v8i8 (Node v8i8:$lhs, is_imm_vec_kvx_splat32_:$rhs)),
+        (COMPNBOri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>, Requires<[IsV2]>;
+  def : Pat<(v8i8 (Node v8i8:$lhs, is_imm_vec_kvx_splat32_:$rhs)),
+        (COMPNBOris SingleReg:$lhs, (build_imm_vec $rhs), Mod)>, Requires<[IsV2]>;
   def : Pat<(v8i8 (Node v8i8:$lhs, v8i8:$rhs)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
   def : Pat<(sra (shl (v8i8 (Node v8i8:$lhs, v8i8:$rhs)), (v8i8 v8_splat_7)), (v8i8 v8_splat_7)),
         (COMPNBO SingleReg:$lhs, SingleReg:$rhs, Mod)>, Requires<[IsV2]>;
 
 //COMPNHQ
+  def : Pat<(v4i16 (Node v4i16:$lhs, is_imm_vec_kvx_splat32_:$rhs)),
+        (COMPNHQri SingleReg:$lhs,  (build_imm_vec $rhs), Mod)>;
+
+  def : Pat<(v4i16 (Node v4i16:$lhs, is_imm_vec_kvx_splat32_at:$rhs)),
+        (COMPNHQris SingleReg:$lhs,  (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(v4i16 (Node v4i16:$lhs, v4i16:$rhs)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(sra (shl (v4i16 (Node v4i16:$lhs, (v4i16(is_imm_vec_kvx_splat32_:$rhs)))), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
+        (COMPNHQri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
+  def : Pat<(sra (shl (v4i16 (Node v4i16:$lhs, (v4i16(is_imm_vec_kvx_splat32_at:$rhs)))), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
+        (COMPNHQris SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(sra (shl (v4i16 (Node v4i16:$lhs, v4i16:$rhs)), (v4i16 v4_splat_15)), (v4i16 v4_splat_15)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 
+  def : Pat<(v2i16 (Node v2i16:$lhs, is_imm_vec:$rhs)),
+        (COMPNHQri SingleReg:$lhs,  (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(v2i16 (Node v2i16:$lhs, v2i16:$rhs)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(sra (shl (v2i16 (Node v2i16:$lhs, (v2i16(is_imm_vec:$rhs)))), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
+        (COMPNHQri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(sra (shl (v2i16 (Node v2i16:$lhs, v2i16:$rhs)), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 
   //COMPNWP
+  def : Pat<(v2i32 (Node v2i32:$lhs, (v2i32(is_imm_vec_kvx_splat32_:$rhs)))),
+        (COMPNWPri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
+  def : Pat<(v2i32 (Node v2i32:$lhs, (v2i32(is_imm_vec_kvx_splat32_at:$rhs)))),
+        (COMPNWPris SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(v2i32 (Node v2i32:$lhs, v2i32:$rhs)),
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(v2i32 (Node v2i32:$lhs, v2i32:$rhs)),
+        (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
+  def : Pat<(sra (shl (v2i32 (Node v2i32:$lhs, (v2i32(is_imm_vec_kvx_splat32_:$rhs)))), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
+        (COMPNWPri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
+  def : Pat<(sra (shl (v2i32 (Node v2i32:$lhs, (v2i32(is_imm_vec_kvx_splat32_at:$rhs)))), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
+        (COMPNWPris SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
+
   def : Pat<(sra (shl (v2i32 (Node v2i32:$lhs, v2i32:$rhs)), (v2i32 v2_splat_31)), (v2i32 v2_splat_31)),
         (COMPNWP SingleReg:$lhs, SingleReg:$rhs, Mod)>;
+
   def : Pat<(v4i32 (Node v4i32:$lhs, v4i32:$rhs)),
         (v4i32 (REG_SEQUENCE PairedReg,
             (v2i32 ( COMPNWP (v2i32 (EXTRACT_SUBREG PairedReg:$lhs, sub_d0)),

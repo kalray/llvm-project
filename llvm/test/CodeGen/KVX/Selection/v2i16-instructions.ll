@@ -740,16 +740,14 @@ define <2 x i16> @lnand(<2 x i16> %0, <2 x i16> %1) {
 ;
 ; V2-LABEL: lnand:
 ; V2:       # %bb.0:
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.eq $r0 = $r0, 0
+; V2-NEXT:    compnhq.eq $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.eq $r0 = $r0, $r2
-; V2-NEXT:    compnhq.eq $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    orw $r0 = $r1, $r0
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andw $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    ;; # (end cycle 2)
   %3 = icmp eq <2 x i16> %0, zeroinitializer
   %4 = icmp eq <2 x i16> %1, zeroinitializer
   %5 = or <2 x i1> %4, %3
@@ -768,14 +766,12 @@ define <2 x i16> @lnandn(<2 x i16> %0, <2 x i16> %1) {
 ;
 ; V2-LABEL: lnandn:
 ; V2:       # %bb.0:
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.eq $r0 = $r0, 0
+; V2-NEXT:    compnhq.eq $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.eq $r0 = $r0, $r2
-; V2-NEXT:    compnhq.eq $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    orw $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
   %3 = icmp eq <2 x i16> %0, zeroinitializer
   %4 = icmp eq <2 x i16> %1, zeroinitializer
   %5 = or <2 x i1> %4, %3
@@ -793,9 +789,8 @@ define <2 x i16> @lor(<2 x i16> %0, <2 x i16> %1) {
 ; V2-LABEL: lor:
 ; V2:       # %bb.0:
 ; V2-NEXT:    orw $r0 = $r1, $r0
-; V2-NEXT:    make $r1 = 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andw $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
@@ -819,9 +814,8 @@ define <2 x i16> @lorneg(<2 x i16> %0, <2 x i16> %1) {
 ; V2-LABEL: lorneg:
 ; V2:       # %bb.0:
 ; V2-NEXT:    orw $r0 = $r1, $r0
-; V2-NEXT:    make $r1 = 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r1
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 1)
   %3 = or <2 x i16> %1, %0
@@ -840,9 +834,8 @@ define <2 x i16> @lnor(<2 x i16> %0, <2 x i16> %1) {
 ; V2-LABEL: lnor:
 ; V2:       # %bb.0:
 ; V2-NEXT:    orw $r0 = $r1, $r0
-; V2-NEXT:    make $r1 = 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
+; V2-NEXT:    compnhq.eq $r0 = $r0, 0
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andw $r0 = $r0, 0x10001
 ; V2-NEXT:    ret
@@ -866,9 +859,8 @@ define <2 x i16> @lnorneg(<2 x i16> %0, <2 x i16> %1) {
 ; V2-LABEL: lnorneg:
 ; V2:       # %bb.0:
 ; V2-NEXT:    orw $r0 = $r1, $r0
-; V2-NEXT:    make $r1 = 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.eq $r0 = $r0, $r1
+; V2-NEXT:    compnhq.eq $r0 = $r0, 0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 1)
   %3 = or <2 x i16> %1, %0

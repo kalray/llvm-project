@@ -21,14 +21,12 @@ define <2 x i16> @land2h(<2 x i16> %a, <2 x i16> %b) {
 ;
 ; V2-LABEL: land2h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andw $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i16> %a, zeroinitializer
   %cmp1 = icmp ne <2 x i16> %b, zeroinitializer
@@ -48,14 +46,12 @@ define <2 x i16> @uland2h(<2 x i16> %a, <2 x i16> %b) {
 ;
 ; V2-LABEL: uland2h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andw $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i16> %a, zeroinitializer
   %cmp1 = icmp ne <2 x i16> %b, zeroinitializer
@@ -75,14 +71,12 @@ define <3 x i16> @land3h(<3 x i16> %a, <3 x i16> %b) {
 ;
 ; V2-LABEL: land3h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <3 x i16> %a, zeroinitializer
   %cmp7 = icmp ne <3 x i16> %b, zeroinitializer
@@ -102,14 +96,12 @@ define <3 x i16> @uland3h(<3 x i16> %a, <3 x i16> %b) {
 ;
 ; V2-LABEL: uland3h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <3 x i16> %a, zeroinitializer
   %cmp7 = icmp ne <3 x i16> %b, zeroinitializer
@@ -129,14 +121,12 @@ define <4 x i16> @land4h(<4 x i16> %a, <4 x i16> %b) {
 ;
 ; V2-LABEL: land4h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <4 x i16> %a, zeroinitializer
   %cmp1 = icmp ne <4 x i16> %b, zeroinitializer
@@ -156,14 +146,12 @@ define <4 x i16> @uland4h(<4 x i16> %a, <4 x i16> %b) {
 ;
 ; V2-LABEL: uland4h:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnhq.ne $r0 = $r0, 0
+; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnhq.ne $r0 = $r0, $r2
-; V2-NEXT:    compnhq.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <4 x i16> %a, zeroinitializer
   %cmp1 = icmp ne <4 x i16> %b, zeroinitializer
@@ -183,14 +171,12 @@ define <2 x i32> @landw2w(<2 x i32> %a, <2 x i32> %b) {
 ;
 ; V2-LABEL: landw2w:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnwp.ne $r0 = $r0, 0
+; V2-NEXT:    compnwp.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnwp.ne $r0 = $r0, $r2
-; V2-NEXT:    compnwp.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i32> %a, zeroinitializer
   %cmp1 = icmp ne <2 x i32> %b, zeroinitializer
@@ -210,14 +196,12 @@ define <2 x i32> @ulandw2w(<2 x i32> %a, <2 x i32> %b) {
 ;
 ; V2-LABEL: ulandw2w:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    make $r2 = 0
+; V2-NEXT:    compnwp.ne $r0 = $r0, 0
+; V2-NEXT:    compnwp.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnwp.ne $r0 = $r0, $r2
-; V2-NEXT:    compnwp.ne $r1 = $r1, $r2
-; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i32> %a, zeroinitializer
   %cmp1 = icmp ne <2 x i32> %b, zeroinitializer

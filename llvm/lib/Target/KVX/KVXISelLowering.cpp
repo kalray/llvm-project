@@ -4975,6 +4975,8 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
       (VT.getSizeInBits() <= 32 && SplatAt))
     return false;
 
+  // FIXME!!! No splat modifier does SIGN-EXTEND the lower 32 bits!!!
+  // Must check that upper 32 bits == bit 31!!!
   if (VT.getSizeInBits() <= 32 && !SplatAt)
     return true;
 

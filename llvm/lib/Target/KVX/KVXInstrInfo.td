@@ -2461,23 +2461,29 @@ def COMPUWD : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
-def COMPNWP : KVX_INSTRUCTION
-  <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
-   "compnwp$a1 $a2 = $a3, $a4",
-   [/* no straightforward pattern */],
-   ALU_TINY>;
+multiclass VecCOMP<string OpcStr> {
+  def "" : KVX_INSTRUCTION
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY>;
 
-def COMPNBO : KVX_INSTRUCTION
-  <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
-   "compnbo$a1 $a2 = $a3, $a4",
-   [/* no straightforward pattern */],
-   ALU_TINY>, Requires<[IsV2]>;
+  def ri : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32:$a4, ComparisonMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY_X_>;
 
-def COMPNHQ : KVX_INSTRUCTION
-  <(outs SingleReg:$a2), (ins SingleReg:$a3, SingleReg:$a4, ComparisonMod:$a1),
-   "compnhq$a1 $a2 = $a3, $a4",
-   [/* no straightforward pattern */],
-   ALU_TINY>;
+  def ris : KVX_INSTRUCTION_X
+    <(outs SingleReg:$a2), (ins SingleReg:$a3, Wrapped32Splat:$a4, ComparisonMod:$a1),
+     !strconcat (OpcStr, "$a1 $a2 = $a3, $a4"),
+     [/* no straightforward pattern */],
+     ALU_TINY_X_>;
+}
+
+defm COMPNWP : VecCOMP<"compnwp">;
+defm COMPNHQ : VecCOMP<"compnhq">;
+defm COMPNBO : VecCOMP<"compnbo">, Requires<[IsV2]>;
 
 defm CMOVED : MC_1C<"cmoved">;
 

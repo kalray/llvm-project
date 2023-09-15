@@ -463,13 +463,11 @@ entry:
 define <2 x i16> @set_eq_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_eq_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.eq $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -493,13 +491,11 @@ entry:
 define <2 x i16> @set_ne_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_ne_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.ne $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -523,13 +519,11 @@ entry:
 define <2 x i16> @set_ugt_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_ugt_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.gtu $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ugt <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -553,13 +547,11 @@ entry:
 define <2 x i16> @set_uge_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_uge_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.geu $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp uge <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -583,13 +575,11 @@ entry:
 define <2 x i16> @set_ult_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_ult_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.ltu $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ult <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -613,13 +603,11 @@ entry:
 define <2 x i16> @set_ule_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_ule_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.leu $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ule <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -643,13 +631,11 @@ entry:
 define <2 x i16> @set_sgt_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_sgt_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.gt $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sgt <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -673,13 +659,11 @@ entry:
 define <2 x i16> @set_sge_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_sge_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.ge $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sge <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -703,13 +687,11 @@ entry:
 define <2 x i16> @set_slt_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_slt_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.lt $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp slt <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -733,13 +715,11 @@ entry:
 define <2 x i16> @set_sle_v2i16_ri(<2 x i16> %a){
 ; CHECK-LABEL: set_sle_v2i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x70007
+; CHECK-NEXT:    compnhq.le $r0 = $r0, 0x70007
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x10001
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sle <2 x i16> %a, <i16 7, i16 7>
   %r = zext <2 x i1> %cmp to <2 x i16>
@@ -763,13 +743,11 @@ entry:
 define <2 x i32> @set_eq_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_eq_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.eq $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.eq $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -793,13 +771,11 @@ entry:
 define <2 x i32> @set_ne_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_ne_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.ne $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.ne $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -823,13 +799,11 @@ entry:
 define <2 x i32> @set_ugt_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_ugt_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.gtu $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.gtu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ugt <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -853,13 +827,11 @@ entry:
 define <2 x i32> @set_uge_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_uge_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.geu $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.geu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp uge <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -883,13 +855,11 @@ entry:
 define <2 x i32> @set_ult_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_ult_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.ltu $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.ltu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ult <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -913,13 +883,11 @@ entry:
 define <2 x i32> @set_ule_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_ule_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.leu $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.leu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ule <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -943,13 +911,11 @@ entry:
 define <2 x i32> @set_sgt_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_sgt_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.gt $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sgt <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -973,13 +939,11 @@ entry:
 define <2 x i32> @set_sge_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_sge_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.ge $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.ge $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sge <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -1003,13 +967,11 @@ entry:
 define <2 x i32> @set_slt_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_slt_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.lt $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.lt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp slt <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -1033,13 +995,11 @@ entry:
 define <2 x i32> @set_sle_v2i32_ri(<2 x i32> %a){
 ; CHECK-LABEL: set_sle_v2i32_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x700000007
+; CHECK-NEXT:    compnwp.le $r0 = $r0, 0x7.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnwp.le $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x1.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sle <2 x i32> %a, <i32 7, i32 7>
   %r = zext <2 x i1> %cmp to <2 x i32>
@@ -1063,13 +1023,11 @@ entry:
 define <4 x i16> @set_eq_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_eq_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.eq $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.eq $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp eq <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1093,13 +1051,11 @@ entry:
 define <4 x i16> @set_ne_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_ne_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.ne $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ne $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ne <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1123,13 +1079,11 @@ entry:
 define <4 x i16> @set_ugt_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_ugt_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.gtu $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.gtu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ugt <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1153,13 +1107,11 @@ entry:
 define <4 x i16> @set_uge_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_uge_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.geu $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.geu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp uge <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1183,13 +1135,11 @@ entry:
 define <4 x i16> @set_ult_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_ult_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.ltu $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ltu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ult <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1213,13 +1163,11 @@ entry:
 define <4 x i16> @set_ule_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_ule_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.leu $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.leu $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp ule <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1243,13 +1191,11 @@ entry:
 define <4 x i16> @set_sgt_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_sgt_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.gt $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.gt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sgt <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1273,13 +1219,11 @@ entry:
 define <4 x i16> @set_sge_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_sge_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.ge $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.ge $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sge <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1303,13 +1247,11 @@ entry:
 define <4 x i16> @set_slt_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_slt_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.lt $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.lt $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp slt <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
@@ -1333,13 +1275,11 @@ entry:
 define <4 x i16> @set_sle_v4i16_ri(<4 x i16> %a){
 ; CHECK-LABEL: set_sle_v4i16_ri:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r1 = 0x7000700070007
+; CHECK-NEXT:    compnhq.le $r0 = $r0, 0x70007.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compnhq.le $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r0 = $r0, 0x10001.@
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %cmp = icmp sle <4 x i16> %a, <i16 7, i16 7, i16 7, i16 7>
   %r = zext <4 x i1> %cmp to <4 x i16>
