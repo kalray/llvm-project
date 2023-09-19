@@ -494,19 +494,25 @@ KVXTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
   if (CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getMinMaxReductionCost(Ty, CondTy, IsUnsigned, CostKind);
   // Hack: we can simply use the cost of an And reduction for the type.
-  InstructionCost IC = getArithmeticReductionCost(Instruction::And, Ty,
-                                                  FastMathFlags(), CostKind);
+  InstructionCost IC = getArithmeticReductionCost(
+      Instruction::And, VectorType::getInteger(Ty), FastMathFlags(), CostKind);
   if (Ty->isFPOrFPVectorTy() || ST->isV1())
     IC += Log2_32(Ty->getPrimitiveSizeInBits() / Ty->getScalarSizeInBits()) - 1;
 
+  // CV1 has a fmin/fmax bug.
+  if (Ty->isFPOrFPVectorTy() && ST->isV1()) {
+    IC *= 2;
+  }
   return IC;
 }
 
 InstructionCost KVXTTIImpl::getVectorInstrCost(unsigned Opcode, Type *Ty,
                                                unsigned Index) const {
   unsigned TypeSize = Ty->getScalarSizeInBits();
-  if (TypeSize == 1)
+  if (TypeSize == 1) {
+    LLVM_DEBUG(dbgs() << "Invalid, bit-vector operation\n");
     return InstructionCost::getInvalid();
+  }
 
   if (Opcode == Instruction::ShuffleVector)
     return Ty->getPrimitiveSizeInBits() / TypeSize;
@@ -676,26 +682,74 @@ InstructionCost
 KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
                                   TTI::TargetCostKind CostKind) {
 
-#define REDUCTION(type, Type)                                                  \
-  case Intrinsic::vector_reduce_##type:                                        \
+#define REDUCTION(op, Type)                                                    \
+  case Intrinsic::vector_reduce_##op:                                          \
     return getArithmeticReductionCost(                                         \
         Instruction::Type, static_cast<VectorType *>(ICA.getArgTypes()[0]),    \
-        FastMathFlags::getFast(), CostKind);
+        FastMathFlags::getFast(), CostKind)
 
-#define MINMAXRED(type, Type)                                                  \
-  case Intrinsic::vector_reduce_##type:                                        \
-    return getMinMaxReductionCost
+#define MINMAXRED(op, U)                                                       \
+  case Intrinsic::vector_reduce_##op:                                          \
+    return getMinMaxReductionCost(                                             \
+        static_cast<VectorType *>(ICA.getArgTypes()[0]), nullptr, U, CostKind)
+
+#define CV1_CV2_BITWIDTH(op, CV1, OTHER)                                       \
+  case Intrinsic::op:                                                          \
+    BitWidth = ST->isV1() ? CV1 : OTHER
+
+#define LITE_TINY(op)                                                          \
+  CV1_CV2_BITWIDTH(op, 128, 256);                                              \
+  break
+
+#define CV1_EXTENDED(op, CF)                                                   \
+  case Intrinsic::op:                                                          \
+    if (ST->isV1())                                                            \
+      CostFactor *= CF;                                                        \
+    break
+
+  unsigned BitWidth = 256;
+  unsigned CostFactor = 1;
+  unsigned LegalizeCost = 0;
   auto Opcode = ICA.getID();
+
   switch (Opcode) {
-    REDUCTION(add, Add)
-    REDUCTION(and, And)
-    REDUCTION(or, Or)
-    REDUCTION(xor, Xor)
+    REDUCTION(add, Add);
+    REDUCTION(and, And);
+    REDUCTION(or, Or);
+    REDUCTION(xor, Xor);
+
+    LITE_TINY(sadd_sat);
+    LITE_TINY(ssub_sat);
+
+    CV1_EXTENDED(uadd_sat, 3);
+    CV1_EXTENDED(usub_sat, 3);
+
   default:
+    return BaseT::getIntrinsicInstrCost(ICA, CostKind);
     break;
   }
-  auto Cost = BaseT::getIntrinsicInstrCost(ICA, CostKind);
-  return Cost;
+
+  Type *Ty = ICA.getReturnType();
+  const unsigned VecSize = Ty->getPrimitiveSizeInBits();
+
+  if (ST->isV1() && Ty->getScalarSizeInBits() == 8) {
+    BitWidth /= 2;
+    // It is possible to extend 64 to 128 bits from vNi8 to vNi16 per cycle,
+    // it is also possible to reduce 128 to 64 bits per cycle, so just in type
+    // conversion cost the penalty is:
+    LegalizeCost = (ICA.getArgs().size() + 1) * std::max(1u, VecSize / 64) +
+                   // we also need to count the number of sub-vector insertions
+                   // to be done, we can generate 64 bits per cycle, if it is
+                   // required. However this can be pipelined with other
+                   // operations, so it will not penalize more than 3 cycles.
+                   std::min(3u, VecSize / 64);
+    // usually there aren't i8 to i16 patterns implementing immediates, if the
+    // last operand is immediate, we need to materialize it.
+    if (isa<Constant>(ICA.getArgs().back()))
+      LegalizeCost += std::max(1u, VecSize / 128);
+  }
+
+  return LegalizeCost + CostFactor * std::max(1u, VecSize / BitWidth);
 }
 
 InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
@@ -723,12 +777,39 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
                                                TTI::TargetCostKind CostKind,
                                                const Instruction *I) {
   if (!ValTy->isVectorTy())
+    return 1;
+
+  if (!ValTy->isVectorTy() || CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
                                      I);
 
-  // FIXME: Make vector select / compare costs absurd blocking until properly
-  // handled during lowering.
-  return InstructionCost(70000);
+  // It is possible to compare up to 256 bits per cycle. It takes log2
+  // (vector_size_bits / 64) to lower it to 64 bits.
+  // If a condition vector type holds less thant 32 bits, it will be
+  // required to clear the upper bits of the comparison.
+  unsigned BaseCost = 1;
+  unsigned PrimSz = ValTy->getPrimitiveSizeInBits();
+  if (ST->isV1() && (!ValTy || ValTy->getScalarSizeInBits() == 8)) {
+    PrimSz *= 2;
+    BaseCost += (Instruction::Select != Opcode);
+  }
+  switch (Opcode) {
+  case Instruction::FCmp:
+    break;
+  case Instruction::ICmp:
+  case Instruction::Select: {
+    if (!ValTy || ValTy->getScalarSizeInBits() == 1) {
+      LLVM_DEBUG(dbgs() << "Invalid, ICmp/select: "; if (I) I->print(dbgs());
+                 dbgs() << "\n");
+      return InstructionCost::getInvalid();
+    }
+  } break;
+  default:
+    return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
+                                     I);
+  }
+
+  return BaseCost * std::max(1u, PrimSz / 256);
 }
 
 InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,

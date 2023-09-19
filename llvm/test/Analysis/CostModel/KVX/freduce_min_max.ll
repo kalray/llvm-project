@@ -6,11 +6,11 @@ target triple = "kvx-kalray-cos"
 
 define float @red_max_float2(<2 x float> %0) {
 ; CV1-LABEL: 'red_max_float2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v2f32(<2 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v2f32(<2 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_max_float2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v2f32(<2 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v2f32(<2 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmax.v2f32(<2 x float> %0)
@@ -21,11 +21,11 @@ declare float @llvm.vector.reduce.fmax.v2f32(<2 x float>)
 
 define float @red_max_float4(<4 x float> %0) {
 ; CV1-LABEL: 'red_max_float4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v4f32(<4 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 14 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v4f32(<4 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_max_float4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v4f32(<4 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v4f32(<4 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmax.v4f32(<4 x float> %0)
@@ -36,11 +36,11 @@ declare float @llvm.vector.reduce.fmax.v4f32(<4 x float>)
 
 define float @red_max_float8(<8 x float> %0) {
 ; CV1-LABEL: 'red_max_float8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v8f32(<8 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 26 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v8f32(<8 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_max_float8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v8f32(<8 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmax.v8f32(<8 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmax.v8f32(<8 x float> %0)
@@ -52,12 +52,12 @@ declare float @llvm.vector.reduce.fmax.v8f32(<8 x float>)
 define float @red_max_float16(ptr %0) {
 ; CV1-LABEL: 'red_max_float16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x float>, ptr %0, align 64
-; CV1-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call float @llvm.vector.reduce.fmax.v16f32(<16 x float> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 46 for instruction: %3 = tail call float @llvm.vector.reduce.fmax.v16f32(<16 x float> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %3
 ;
 ; CV2-LABEL: 'red_max_float16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x float>, ptr %0, align 64
-; CV2-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call float @llvm.vector.reduce.fmax.v16f32(<16 x float> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %3 = tail call float @llvm.vector.reduce.fmax.v16f32(<16 x float> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %3
 ;
   %2 = load <16 x float>, ptr %0
@@ -69,11 +69,11 @@ declare float @llvm.vector.reduce.fmax.v16f32(<16 x float>)
 
 define double @red_max_double2(<2 x double> %0) {
 ; CV1-LABEL: 'red_max_double2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
 ; CV2-LABEL: 'red_max_double2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
   %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
@@ -84,11 +84,11 @@ declare double @llvm.vector.reduce.fmax.v2f64(<2 x double>)
 
 define double @red_max_double4(<4 x double> %0) {
 ; CV1-LABEL: 'red_max_double4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
 ; CV2-LABEL: 'red_max_double4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
   %2 = tail call double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
@@ -100,12 +100,12 @@ declare double @llvm.vector.reduce.fmax.v4f64(<4 x double>)
 define double @red_max_double8(ptr %0) {
 ; CV1-LABEL: 'red_max_double8'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = load <8 x double>, ptr %0, align 64
-; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v8f64(<8 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 12 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v8f64(<8 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_max_double8'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = load <8 x double>, ptr %0, align 64
-; CV2-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v8f64(<8 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v8f64(<8 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <8 x double>, ptr %0
@@ -118,12 +118,12 @@ declare double @llvm.vector.reduce.fmax.v8f64(<8 x double>)
 define double @red_max_double16(ptr %0) {
 ; CV1-LABEL: 'red_max_double16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 128
-; CV1-NEXT:  Cost Model: Found an estimated cost of 35 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 38 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_max_double16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 128
-; CV2-NEXT:  Cost Model: Found an estimated cost of 35 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %3 = tail call double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <16 x double>, ptr %0
@@ -135,11 +135,11 @@ declare double @llvm.vector.reduce.fmax.v16f64(<16 x double>)
 
 define half @red_max_half2(<2 x half> %0) {
 ; CV1-LABEL: 'red_max_half2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v2f16(<2 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v2f16(<2 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_max_half2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v2f16(<2 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v2f16(<2 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmax.v2f16(<2 x half> %0)
@@ -150,11 +150,11 @@ declare half @llvm.vector.reduce.fmax.v2f16(<2 x half>)
 
 define half @red_max_half4(<4 x half> %0) {
 ; CV1-LABEL: 'red_max_half4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v4f16(<4 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 12 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v4f16(<4 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_max_half4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v4f16(<4 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v4f16(<4 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmax.v4f16(<4 x half> %0)
@@ -165,11 +165,11 @@ declare half @llvm.vector.reduce.fmax.v4f16(<4 x half>)
 
 define half @red_max_half8(<8 x half> %0) {
 ; CV1-LABEL: 'red_max_half8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v8f16(<8 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 24 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v8f16(<8 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_max_half8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v8f16(<8 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v8f16(<8 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmax.v8f16(<8 x half> %0)
@@ -180,11 +180,11 @@ declare half @llvm.vector.reduce.fmax.v8f16(<8 x half>)
 
 define half @red_max_half16(<16 x half> %0) {
 ; CV1-LABEL: 'red_max_half16'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v16f16(<16 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 44 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v16f16(<16 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_max_half16'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v16f16(<16 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call half @llvm.vector.reduce.fmax.v16f16(<16 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmax.v16f16(<16 x half> %0)
@@ -195,11 +195,11 @@ declare half @llvm.vector.reduce.fmax.v16f16(<16 x half>)
 
 define float @red_min_float2(<2 x float> %0) {
 ; CV1-LABEL: 'red_min_float2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v2f32(<2 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v2f32(<2 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_min_float2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v2f32(<2 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v2f32(<2 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmin.v2f32(<2 x float> %0)
@@ -210,11 +210,11 @@ declare float @llvm.vector.reduce.fmin.v2f32(<2 x float>)
 
 define float @red_min_float4(<4 x float> %0) {
 ; CV1-LABEL: 'red_min_float4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v4f32(<4 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 14 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v4f32(<4 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_min_float4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v4f32(<4 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v4f32(<4 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmin.v4f32(<4 x float> %0)
@@ -225,11 +225,11 @@ declare float @llvm.vector.reduce.fmin.v4f32(<4 x float>)
 
 define float @red_min_float8(<8 x float> %0) {
 ; CV1-LABEL: 'red_min_float8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v8f32(<8 x float> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 26 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v8f32(<8 x float> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
 ; CV2-LABEL: 'red_min_float8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v8f32(<8 x float> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call float @llvm.vector.reduce.fmin.v8f32(<8 x float> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %2
 ;
   %2 = tail call float @llvm.vector.reduce.fmin.v8f32(<8 x float> %0)
@@ -241,12 +241,12 @@ declare float @llvm.vector.reduce.fmin.v8f32(<8 x float>)
 define float @red_min_float16(ptr %0) {
 ; CV1-LABEL: 'red_min_float16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x float>, ptr %0, align 64
-; CV1-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call float @llvm.vector.reduce.fmin.v16f32(<16 x float> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 46 for instruction: %3 = tail call float @llvm.vector.reduce.fmin.v16f32(<16 x float> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %3
 ;
 ; CV2-LABEL: 'red_min_float16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x float>, ptr %0, align 64
-; CV2-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call float @llvm.vector.reduce.fmin.v16f32(<16 x float> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %3 = tail call float @llvm.vector.reduce.fmin.v16f32(<16 x float> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret float %3
 ;
   %2 = load <16 x float>, ptr %0
@@ -258,11 +258,11 @@ declare float @llvm.vector.reduce.fmin.v16f32(<16 x float>)
 
 define double @red_min_double2(<2 x double> %0) {
 ; CV1-LABEL: 'red_min_double2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
 ; CV2-LABEL: 'red_min_double2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
   %2 = tail call double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
@@ -273,11 +273,11 @@ declare double @llvm.vector.reduce.fmin.v2f64(<2 x double>)
 
 define double @red_min_double4(<4 x double> %0) {
 ; CV1-LABEL: 'red_min_double4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
 ; CV2-LABEL: 'red_min_double4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %2
 ;
   %2 = tail call double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
@@ -289,12 +289,12 @@ declare double @llvm.vector.reduce.fmin.v4f64(<4 x double>)
 define double @red_min_double8(ptr %0) {
 ; CV1-LABEL: 'red_min_double8'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = load <8 x double>, ptr %0, align 64
-; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v8f64(<8 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 12 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v8f64(<8 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_min_double8'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = load <8 x double>, ptr %0, align 64
-; CV2-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v8f64(<8 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v8f64(<8 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <8 x double>, ptr %0
@@ -307,12 +307,12 @@ declare double @llvm.vector.reduce.fmin.v8f64(<8 x double>)
 define double @red_min_double16(ptr %0) {
 ; CV1-LABEL: 'red_min_double16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 128
-; CV1-NEXT:  Cost Model: Found an estimated cost of 35 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 38 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_min_double16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 128
-; CV2-NEXT:  Cost Model: Found an estimated cost of 35 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %3 = tail call double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <16 x double>, ptr %0
@@ -324,11 +324,11 @@ declare double @llvm.vector.reduce.fmin.v16f64(<16 x double>)
 
 define half @red_min_half2(<2 x half> %0) {
 ; CV1-LABEL: 'red_min_half2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v2f16(<2 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v2f16(<2 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_min_half2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v2f16(<2 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v2f16(<2 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmin.v2f16(<2 x half> %0)
@@ -339,11 +339,11 @@ declare half @llvm.vector.reduce.fmin.v2f16(<2 x half>)
 
 define half @red_min_half4(<4 x half> %0) {
 ; CV1-LABEL: 'red_min_half4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v4f16(<4 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 12 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v4f16(<4 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_min_half4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v4f16(<4 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v4f16(<4 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmin.v4f16(<4 x half> %0)
@@ -354,11 +354,11 @@ declare half @llvm.vector.reduce.fmin.v4f16(<4 x half>)
 
 define half @red_min_half8(<8 x half> %0) {
 ; CV1-LABEL: 'red_min_half8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v8f16(<8 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 24 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v8f16(<8 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_min_half8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v8f16(<8 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v8f16(<8 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmin.v8f16(<8 x half> %0)
@@ -369,11 +369,11 @@ declare half @llvm.vector.reduce.fmin.v8f16(<8 x half>)
 
 define half @red_min_half16(<16 x half> %0) {
 ; CV1-LABEL: 'red_min_half16'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v16f16(<16 x half> %0)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 44 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v16f16(<16 x half> %0)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
 ; CV2-LABEL: 'red_min_half16'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v16f16(<16 x half> %0)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = tail call half @llvm.vector.reduce.fmin.v16f16(<16 x half> %0)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret half %2
 ;
   %2 = tail call half @llvm.vector.reduce.fmin.v16f16(<16 x half> %0)

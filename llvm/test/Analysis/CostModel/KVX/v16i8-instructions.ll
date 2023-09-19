@@ -329,11 +329,11 @@ define <16 x i8> @test_tailcall_flipped(<16 x i8> %a, <16 x i8> %b) #0 {
 
 define <16 x i8> @test_select(<16 x i8> %a, <16 x i8> %b, i1 zeroext %c) #0 {
 ; CV1-LABEL: 'test_select'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %c, <16 x i8> %a, <16 x i8> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %c, <16 x i8> %a, <16 x i8> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
 ; CV2-LABEL: 'test_select'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %c, <16 x i8> %a, <16 x i8> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %c, <16 x i8> %a, <16 x i8> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %r = select i1 %c, <16 x i8> %a, <16 x i8> %b
@@ -342,13 +342,13 @@ define <16 x i8> @test_select(<16 x i8> %a, <16 x i8> %b, i1 zeroext %c) #0 {
 
 define <16 x i8> @test_select_cc(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
 ; CV1-LABEL: 'test_select_cc'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp slt <16 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp slt <16 x i8> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
 ; CV2-LABEL: 'test_select_cc'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp slt <16 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <16 x i8> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp slt <16 x i8> %c, %d
@@ -360,11 +360,11 @@ declare <16 x i8> @llvm.abs.v8i8(<16 x i8>, i1) #0
 
 define <16 x i8> @test_abs(<16 x i8> %a) #0 {
 ; CV1-LABEL: 'test_abs'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140002 for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
 ; CV2-LABEL: 'test_abs'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140002 for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %r = call <16 x i8> @llvm.abs.v8i8(<16 x i8> %a, i1 false)
@@ -664,12 +664,12 @@ entry:
 define <16 x i8> @abdbo_rr(<16 x i8> %a, <16 x i8> %b) {
 ; CV1-LABEL: 'abdbo_rr'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %sub = sub nsw <16 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140002 for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 ; CV2-LABEL: 'abdbo_rr'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %sub = sub nsw <16 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140002 for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:
@@ -680,11 +680,11 @@ entry:
 
 define  <16 x i8> @v4_maxbo_rr_i8(<16 x i8> %a, <16 x i8> %b) {
 ; CV1-LABEL: 'v4_maxbo_rr_i8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.smax.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %0 = call <16 x i8> @llvm.smax.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 ; CV2-LABEL: 'v4_maxbo_rr_i8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.smax.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <16 x i8> @llvm.smax.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:
@@ -694,11 +694,11 @@ entry:
 
 define  <16 x i8> @v4_minbo_rr_i8(<16 x i8> %a, <16 x i8> %b) {
 ; CV1-LABEL: 'v4_minbo_rr_i8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.smin.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %0 = call <16 x i8> @llvm.smin.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 ; CV2-LABEL: 'v4_minbo_rr_i8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.smin.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <16 x i8> @llvm.smin.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:
@@ -708,11 +708,11 @@ entry:
 
 define  <16 x i8> @v4_umaxbo_rr_i8(<16 x i8> %a, <16 x i8> %b) {
 ; CV1-LABEL: 'v4_umaxbo_rr_i8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.umax.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %0 = call <16 x i8> @llvm.umax.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 ; CV2-LABEL: 'v4_umaxbo_rr_i8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.umax.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <16 x i8> @llvm.umax.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:
@@ -722,11 +722,11 @@ entry:
 
 define  <16 x i8> @v4_uminbo_rr_i8(<16 x i8> %a, <16 x i8> %b) {
 ; CV1-LABEL: 'v4_uminbo_rr_i8'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.umin.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %0 = call <16 x i8> @llvm.umin.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 ; CV2-LABEL: 'v4_uminbo_rr_i8'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 140000 for instruction: %0 = call <16 x i8> @llvm.umin.v16i8(<16 x i8> %a, <16 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <16 x i8> @llvm.umin.v16i8(<16 x i8> %a, <16 x i8> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:
@@ -805,17 +805,17 @@ define <16 x i8> @lshr_val_splat_w_undefs(<16 x i8> %lhs, i32 %s ) {
 
 define <16 x i8> @test_select_cmp(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
 ; CV1-LABEL: 'test_select_cmp'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <16 x i8> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp ne <16 x i8> %c, %d
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <16 x i1> %cc to i16
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i16 %bc, -1
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
 ; CV2-LABEL: 'test_select_cmp'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <16 x i8> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ne <16 x i8> %c, %d
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <16 x i1> %cc to i16
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i16 %bc, -1
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp ne <16 x i8> %c, %d
@@ -827,13 +827,13 @@ define <16 x i8> @test_select_cmp(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 
 
 define <16 x i8> @test_select_cmp_vec(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
 ; CV1-LABEL: 'test_select_cmp_vec'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp ne <16 x i8> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
 ; CV2-LABEL: 'test_select_cmp_vec'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ne <16 x i8> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp ne <16 x i8> %c, %d

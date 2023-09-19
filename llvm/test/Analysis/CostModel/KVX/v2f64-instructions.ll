@@ -242,11 +242,11 @@ define <2 x double> @test_tailcall_flipped(<2 x double> %a, <2 x double> %b) #0 
 
 define <2 x double> @test_select(<2 x double> %a, <2 x double> %b, i1 zeroext %c) #0 {
 ; CV1-LABEL: 'test_select'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %c, <2 x double> %a, <2 x double> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %c, <2 x double> %a, <2 x double> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_select'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select i1 %c, <2 x double> %a, <2 x double> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %c, <2 x double> %a, <2 x double> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = select i1 %c, <2 x double> %a, <2 x double> %b
@@ -255,13 +255,13 @@ define <2 x double> @test_select(<2 x double> %a, <2 x double> %b, i1 zeroext %c
 
 define <2 x double> @test_select_cc(<2 x double> %a, <2 x double> %b, <2 x double> %c, <2 x double> %d) #0 {
 ; CV1-LABEL: 'test_select_cc'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x double> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x double> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_select_cc'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x double> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x double> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %cc = fcmp une <2 x double> %c, %d
@@ -271,13 +271,13 @@ define <2 x double> @test_select_cc(<2 x double> %a, <2 x double> %b, <2 x doubl
 
 define <2 x float> @test_select_cc_f32_f32(<2 x float> %a, <2 x float> %b, <2 x double> %c, <2 x double> %d) #0 {
 ; CV1-LABEL: 'test_select_cc_f32_f32'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x double> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x double> %c, %d
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_select_cc_f32_f32'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %cc = fcmp une <2 x double> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x double> %c, %d
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %cc = fcmp une <2 x double> %c, %d
@@ -287,11 +287,11 @@ define <2 x float> @test_select_cc_f32_f32(<2 x float> %a, <2 x float> %b, <2 x 
 
 define <2 x i1> @test_fcmp_une(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_une'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp une <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp une <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_une'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp une <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp une <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp une <2 x double> %a, %b
@@ -300,11 +300,11 @@ define <2 x i1> @test_fcmp_une(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ueq(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ueq'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ueq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ueq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ueq'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ueq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ueq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ueq <2 x double> %a, %b
@@ -313,11 +313,11 @@ define <2 x i1> @test_fcmp_ueq(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ugt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ugt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ugt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ugt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ugt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ugt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ugt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ugt <2 x double> %a, %b
@@ -326,11 +326,11 @@ define <2 x i1> @test_fcmp_ugt(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_uge(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_uge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp uge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_uge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp uge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp uge <2 x double> %a, %b
@@ -339,11 +339,11 @@ define <2 x i1> @test_fcmp_uge(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ult(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ult'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ult <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ult <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ult'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ult <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ult <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ult <2 x double> %a, %b
@@ -352,11 +352,11 @@ define <2 x i1> @test_fcmp_ult(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ule(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ule'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ule <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ule <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ule'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ule <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ule <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ule <2 x double> %a, %b
@@ -365,11 +365,11 @@ define <2 x i1> @test_fcmp_ule(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_uno(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_uno'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp uno <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uno <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_uno'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp uno <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uno <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp uno <2 x double> %a, %b
@@ -378,11 +378,11 @@ define <2 x i1> @test_fcmp_uno(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_one(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_one'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp one <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp one <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_one'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp one <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp one <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp one <2 x double> %a, %b
@@ -391,11 +391,11 @@ define <2 x i1> @test_fcmp_one(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_oeq(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_oeq'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp oeq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oeq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_oeq'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp oeq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oeq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp oeq <2 x double> %a, %b
@@ -404,11 +404,11 @@ define <2 x i1> @test_fcmp_oeq(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ogt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ogt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ogt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ogt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ogt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ogt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ogt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ogt <2 x double> %a, %b
@@ -417,11 +417,11 @@ define <2 x i1> @test_fcmp_ogt(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_oge(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_oge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp oge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_oge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp oge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp oge <2 x double> %a, %b
@@ -430,11 +430,11 @@ define <2 x i1> @test_fcmp_oge(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_olt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_olt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp olt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp olt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_olt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp olt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp olt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp olt <2 x double> %a, %b
@@ -443,11 +443,11 @@ define <2 x i1> @test_fcmp_olt(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ole(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ole'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ole <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ole <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ole'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ole <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ole <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ole <2 x double> %a, %b
@@ -456,11 +456,11 @@ define <2 x i1> @test_fcmp_ole(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x i1> @test_fcmp_ord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fcmp_ord'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ord <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ord <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
 ; CV2-LABEL: 'test_fcmp_ord'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %r = fcmp ord <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ord <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ord <2 x double> %a, %b
@@ -1101,11 +1101,11 @@ define <2 x double> @test_insertelement(<2 x double> %a, double %x, i64 %p) #0 {
 
 define <2 x i1> @fcmp_setoeq(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setoeq'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oeq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoeq'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oeq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1115,11 +1115,11 @@ entry:
 
 define <2 x i1> @fcmp_setoeq_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setoeq_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oeq <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoeq_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oeq <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1129,11 +1129,11 @@ entry:
 
 define <2 x i1> @fcmp_setogt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setogt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ogt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setogt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ogt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1143,11 +1143,11 @@ entry:
 
 define <2 x i1> @fcmp_setogt_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setogt_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ogt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setogt_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ogt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1157,11 +1157,11 @@ entry:
 
 define <2 x i1> @fcmp_setoge(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setoge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1171,11 +1171,11 @@ entry:
 
 define <2 x i1> @fcmp_setoge_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setoge_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oge <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoge_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp oge <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1185,11 +1185,11 @@ entry:
 
 define <2 x i1> @fcmp_setolt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setolt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp olt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setolt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp olt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1199,11 +1199,11 @@ entry:
 
 define <2 x i1> @fcmp_setolt_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setolt_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp olt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setolt_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp olt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1213,11 +1213,11 @@ entry:
 
 define <2 x i1> @fcmp_setole(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setole'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ole <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setole'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ole <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1227,11 +1227,11 @@ entry:
 
 define <2 x i1> @fcmp_setole_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setole_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ole <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setole_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ole <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1241,11 +1241,11 @@ entry:
 
 define <2 x i1> @fcmp_setone(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setone'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp one <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setone'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp one <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1255,11 +1255,11 @@ entry:
 
 define <2 x i1> @fcmp_setone_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setone_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp one <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setone_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp one <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1269,11 +1269,11 @@ entry:
 
 define <2 x i1> @fcmp_setord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setord'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ord <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setord'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ord <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1283,11 +1283,11 @@ entry:
 
 define <2 x i1> @fcmp_setord_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setord_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ord <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setord_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ord <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1297,11 +1297,11 @@ entry:
 
 define <2 x i1> @fcmp_setuno(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setuno'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uno <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuno'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uno <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1311,11 +1311,11 @@ entry:
 
 define <2 x i1> @fcmp_setuno_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setuno_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uno <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuno_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uno <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1325,11 +1325,11 @@ entry:
 
 define <2 x i1> @fcmp_setueq(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setueq'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ueq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setueq'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ueq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1339,11 +1339,11 @@ entry:
 
 define <2 x i1> @fcmp_setueq_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setueq_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ueq <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setueq_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ueq <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1353,11 +1353,11 @@ entry:
 
 define <2 x i1> @fcmp_setugt(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setugt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ugt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setugt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ugt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1367,11 +1367,11 @@ entry:
 
 define <2 x i1> @fcmp_setugt_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setugt_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ugt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setugt_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ugt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1381,11 +1381,11 @@ entry:
 
 define <2 x i1> @fcmp_setuge(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setuge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1395,11 +1395,11 @@ entry:
 
 define <2 x i1> @fcmp_setuge_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setuge_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uge <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuge_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp uge <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1409,11 +1409,11 @@ entry:
 
 define <2 x i1> @fcmp_setult(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setult'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ult <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setult'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ult <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1423,11 +1423,11 @@ entry:
 
 define <2 x i1> @fcmp_setult_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setult_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ult <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setult_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ult <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1437,11 +1437,11 @@ entry:
 
 define <2 x i1> @fcmp_setule(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setule'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ule <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setule'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ule <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1451,11 +1451,11 @@ entry:
 
 define <2 x i1> @fcmp_setule_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setule_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ule <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setule_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp ule <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1465,11 +1465,11 @@ entry:
 
 define <2 x i1> @fcmp_setune(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setune'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp une <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setune'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp une <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1479,11 +1479,11 @@ entry:
 
 define <2 x i1> @fcmp_setune_single(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setune_single'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp une <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setune_single'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp une <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1493,11 +1493,11 @@ entry:
 
 define <2 x i1> @fcmp_setoeq_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setoeq_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oeq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoeq_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oeq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1507,11 +1507,11 @@ entry:
 
 define <2 x i1> @fcmp_setoeq_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setoeq_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oeq <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoeq_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oeq <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1521,11 +1521,11 @@ entry:
 
 define <2 x i1> @fcmp_setogt_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setogt_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ogt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setogt_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ogt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1535,11 +1535,11 @@ entry:
 
 define <2 x i1> @fcmp_setogt_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setogt_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ogt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setogt_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ogt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1549,11 +1549,11 @@ entry:
 
 define <2 x i1> @fcmp_setoge_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setoge_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoge_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1563,11 +1563,11 @@ entry:
 
 define <2 x i1> @fcmp_setoge_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setoge_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oge <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setoge_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast oge <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1577,11 +1577,11 @@ entry:
 
 define <2 x i1> @fcmp_setolt_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setolt_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast olt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setolt_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast olt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1591,11 +1591,11 @@ entry:
 
 define <2 x i1> @fcmp_setolt_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setolt_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast olt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setolt_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast olt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1605,11 +1605,11 @@ entry:
 
 define <2 x i1> @fcmp_setole_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setole_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ole <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setole_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ole <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1619,11 +1619,11 @@ entry:
 
 define <2 x i1> @fcmp_setole_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setole_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ole <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setole_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ole <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1633,11 +1633,11 @@ entry:
 
 define <2 x i1> @fcmp_setone_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setone_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast one <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setone_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast one <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1647,11 +1647,11 @@ entry:
 
 define <2 x i1> @fcmp_setone_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setone_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast one <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setone_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast one <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1661,11 +1661,11 @@ entry:
 
 define <2 x i1> @fcmp_setord_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setord_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ord <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setord_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ord <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1675,11 +1675,11 @@ entry:
 
 define <2 x i1> @fcmp_setord_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setord_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ord <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setord_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ord <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1689,11 +1689,11 @@ entry:
 
 define <2 x i1> @fcmp_setuno_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setuno_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uno <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuno_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uno <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1703,11 +1703,11 @@ entry:
 
 define <2 x i1> @fcmp_setuno_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setuno_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uno <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuno_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uno <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1717,11 +1717,11 @@ entry:
 
 define <2 x i1> @fcmp_setueq_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setueq_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ueq <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setueq_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ueq <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1731,11 +1731,11 @@ entry:
 
 define <2 x i1> @fcmp_setueq_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setueq_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ueq <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setueq_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ueq <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1745,11 +1745,11 @@ entry:
 
 define <2 x i1> @fcmp_setugt_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setugt_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ugt <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setugt_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ugt <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1759,11 +1759,11 @@ entry:
 
 define <2 x i1> @fcmp_setugt_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setugt_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ugt <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setugt_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ugt <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1773,11 +1773,11 @@ entry:
 
 define <2 x i1> @fcmp_setuge_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setuge_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uge <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuge_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uge <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1787,11 +1787,11 @@ entry:
 
 define <2 x i1> @fcmp_setuge_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setuge_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uge <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setuge_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast uge <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1801,11 +1801,11 @@ entry:
 
 define <2 x i1> @fcmp_setult_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setult_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ult <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setult_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ult <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1815,11 +1815,11 @@ entry:
 
 define <2 x i1> @fcmp_setult_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setult_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ult <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setult_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ult <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1829,11 +1829,11 @@ entry:
 
 define <2 x i1> @fcmp_setule_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setule_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ule <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setule_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ule <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1843,11 +1843,11 @@ entry:
 
 define <2 x i1> @fcmp_setule_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setule_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ule <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setule_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast ule <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1857,11 +1857,11 @@ entry:
 
 define <2 x i1> @fcmp_setune_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'fcmp_setune_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast une <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setune_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast une <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
@@ -1871,11 +1871,11 @@ entry:
 
 define <2 x i1> @fcmp_setune_single_fast(<2 x double> %a) #0 {
 ; CV1-LABEL: 'fcmp_setune_single_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast une <2 x double> %a, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x double> %a, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 ; CV2-LABEL: 'fcmp_setune_single_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %0 = fcmp fast une <2 x double> %a, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x double> %a, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %0
 ;
 entry:
