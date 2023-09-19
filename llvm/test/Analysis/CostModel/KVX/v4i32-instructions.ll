@@ -42,12 +42,12 @@ define i32 @test_extract_1(<4 x i32> %a) #0 {
 
 define <4 x i32> @test_fma(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 ; CV1-LABEL: 'test_fma'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %m = mul <4 x i32> %b, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %m = mul <4 x i32> %b, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %ad = add <4 x i32> %a, %m
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %ad
 ;
 ; CV2-LABEL: 'test_fma'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %m = mul <4 x i32> %b, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %m = mul <4 x i32> %b, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %ad = add <4 x i32> %a, %m
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %ad
 ;
@@ -58,12 +58,12 @@ define <4 x i32> @test_fma(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 
 define <4 x i32> @test_fma_imm(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_fma_imm'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %ad = add <4 x i32> %a, %m
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %ad
 ;
 ; CV2-LABEL: 'test_fma_imm'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %m = mul <4 x i32> <i32 1, i32 2, i32 1, i32 2>, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %ad = add <4 x i32> %a, %m
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %ad
 ;
@@ -179,11 +179,11 @@ define <4 x i32> @test_neg(<4 x i32> %a) #0 {
 
 define <4 x i32> @test_mul(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_mul'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = mul <4 x i32> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = mul <4 x i32> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
 ; CV2-LABEL: 'test_mul'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = mul <4 x i32> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = mul <4 x i32> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = mul <4 x i32> %a, %b
@@ -192,13 +192,13 @@ define <4 x i32> @test_mul(<4 x i32> %a, <4 x i32> %b) #0 {
 
 define <4 x i32> @test_mul_2(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 ; CV1-LABEL: 'test_mul_2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = mul <4 x i32> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r1 = mul <4 x i32> %r, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = mul <4 x i32> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r1 = mul <4 x i32> %r, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r1
 ;
 ; CV2-LABEL: 'test_mul_2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = mul <4 x i32> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r1 = mul <4 x i32> %r, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = mul <4 x i32> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r1 = mul <4 x i32> %r, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r1
 ;
   %r = mul <4 x i32> %a, %b
@@ -208,11 +208,11 @@ define <4 x i32> @test_mul_2(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 
 define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_div'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = sdiv <4 x i32> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = sdiv <4 x i32> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
 ; CV2-LABEL: 'test_div'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = sdiv <4 x i32> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = sdiv <4 x i32> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, %b
@@ -221,11 +221,11 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 
 define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_rem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = srem <4 x i32> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = srem <4 x i32> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
 ; CV2-LABEL: 'test_rem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = srem <4 x i32> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = srem <4 x i32> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = srem <4 x i32> %a, %b
@@ -585,13 +585,13 @@ define <4 x i32> @MULHWQ(<4 x i16> %a, <4 x i16> %b) {
 ; CV1-LABEL: 'MULHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = sext <4 x i16> %a to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <4 x i16> %b to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nsw <4 x i32> %1, %0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nsw <4 x i32> %1, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 ; CV2-LABEL: 'MULHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = sext <4 x i16> %a to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <4 x i16> %b to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nsw <4 x i32> %1, %0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nsw <4 x i32> %1, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 entry:
@@ -605,13 +605,13 @@ define <4 x i32> @MULSUHWQ(<4 x i16> %a, <4 x i16> %b) {
 ; CV1-LABEL: 'MULSUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = sext <4 x i16> %a to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = zext <4 x i16> %b to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nsw <4 x i32> %1, %0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nsw <4 x i32> %1, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 ; CV2-LABEL: 'MULSUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = sext <4 x i16> %a to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = zext <4 x i16> %b to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nsw <4 x i32> %1, %0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nsw <4 x i32> %1, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 entry:
@@ -625,13 +625,13 @@ define <4 x i32> @MULUHWQ(<4 x i16> %a, <4 x i16> %b) {
 ; CV1-LABEL: 'MULUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = zext <4 x i16> %a to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = zext <4 x i16> %b to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nuw <4 x i32> %1, %0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nuw <4 x i32> %1, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 ; CV2-LABEL: 'MULUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = zext <4 x i16> %a to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = zext <4 x i16> %b to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %mul = mul nuw <4 x i32> %1, %0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %mul = mul nuw <4 x i32> %1, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %mul
 ;
 entry:
@@ -645,14 +645,14 @@ define <4 x i32> @MADDHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MADDHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MADDHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -667,14 +667,14 @@ define <4 x i32> @MADDSUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MADDSUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MADDSUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -689,14 +689,14 @@ define <4 x i32> @MADDUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MADDUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = zext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nuw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nuw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MADDUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = zext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nuw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nuw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <4 x i32> %6, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -711,14 +711,14 @@ define <3 x i32> @MADDSUHWQ_v3(<3 x i32> %0, <3 x i16> %1, <3 x i16> %2) {
 ; CV1-LABEL: 'MADDSUHWQ_v3'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <3 x i16> %1 to <3 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <3 x i16> %2 to <3 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <3 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <3 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <3 x i32> %6, %0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <3 x i32> %7
 ;
 ; CV2-LABEL: 'MADDSUHWQ_v3'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <3 x i16> %1 to <3 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <3 x i16> %2 to <3 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <3 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <3 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = add <3 x i32> %6, %0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <3 x i32> %7
 ;
@@ -734,14 +734,14 @@ define <4 x i32> @MSBFHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MSBFHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MSBFHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -756,14 +756,14 @@ define <4 x i32> @MSBFSUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MSBFSUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MSBFSUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = sext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nsw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nsw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -778,14 +778,14 @@ define <4 x i32> @MSBFUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 ; CV1-LABEL: 'MSBFUHWQ'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = zext <4 x i16> %1 to <4 x i32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nuw <4 x i32> %5, %4
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nuw <4 x i32> %5, %4
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
 ; CV2-LABEL: 'MSBFUHWQ'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = zext <4 x i16> %1 to <4 x i32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i16> %2 to <4 x i32>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %6 = mul nuw <4 x i32> %5, %4
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %6 = mul nuw <4 x i32> %5, %4
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %7 = sub <4 x i32> %0, %6
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %7
 ;
@@ -800,11 +800,11 @@ attributes #0 = { nounwind }
 
 define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_div_4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
 ; CV2-LABEL: 'test_div_4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
@@ -813,11 +813,11 @@ define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 
 define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CV1-LABEL: 'test_div_32'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
 ; CV2-LABEL: 'test_div_32'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>

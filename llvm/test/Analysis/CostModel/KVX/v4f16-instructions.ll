@@ -276,11 +276,11 @@ define <4 x half> @test_fmul_imm(<4 x half> %a) {
 
 define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_fdiv'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <4 x half> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %r = fdiv <4 x half> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_fdiv'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <4 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %r = fdiv <4 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = fdiv <4 x half> %a, %b
@@ -289,11 +289,11 @@ define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 
 define <4 x half> @test_frem(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_frem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <4 x half> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %r = frem <4 x half> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_frem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <4 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %r = frem <4 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = frem <4 x half> %a, %b
@@ -1034,11 +1034,11 @@ define <4 x half> @test_fabs(<4 x half> %a) #0 {
 
 define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_minnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_minnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = call <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
@@ -1047,11 +1047,11 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 
 define <4 x half> @test_minnum_fast(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_minnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_minnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = call fast <4 x half> @llvm.minnum.v4f16(<4 x half> %a, <4 x half> %b)
@@ -1060,11 +1060,11 @@ define <4 x half> @test_minnum_fast(<4 x half> %a, <4 x half> %b) #0 {
 
 define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_maxnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_maxnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = call <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
@@ -1073,11 +1073,11 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 
 define <4 x half> @test_maxnum_fast(<4 x half> %a, <4 x half> %b) #0 {
 ; CV1-LABEL: 'test_maxnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
 ; CV2-LABEL: 'test_maxnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = call fast <4 x half> @llvm.maxnum.v4f16(<4 x half> %a, <4 x half> %b)

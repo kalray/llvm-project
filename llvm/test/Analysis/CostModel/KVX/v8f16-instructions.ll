@@ -159,11 +159,11 @@ define <8 x half> @test_fadd(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fadd'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fadd <8 x half> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fadd'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fadd <8 x half> %a, %b
@@ -176,11 +176,11 @@ define <8 x half> @test_fadd_imm_0(<8 x half> %a) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fadd_imm_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %r = fadd <8 x half> <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fadd <8 x half> <half 1.0, half 2.0, half 3.0, half 4.0, half 1.0, half 2.0, half 3.0, half 4.0>, %a
@@ -193,11 +193,11 @@ define <8 x half> @test_fadd_imm_1(<8 x half> %a) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fadd_imm_1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400, half 0xH3C00, half 0xH4000, half 0xH4200, half 0xH4400>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fadd <8 x half> %a, <half 1.0, half 2.0, half 3.0, half 4.0, half 1.0, half 2.0, half 3.0, half 4.0>
@@ -210,11 +210,11 @@ define <8 x half> @test_fadd_imm_2(<8 x half> %a) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fadd_imm_2'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_2'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fadd <8 x half> %a, <half 1.0, half 2.0, half 1.0, half 2.0, half 1.0, half 2.0, half 1.0, half 2.0>
@@ -227,11 +227,11 @@ define <8 x half> @test_fadd_imm_3(<8 x half> %a) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fadd_imm_3'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000, half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 18 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000, half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_3'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000, half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000, half 0xH3C00, half 0xH4000, half 0xH0000, half 0xH0000>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fadd <8 x half> %a, <half 1.0, half 2.0, half 0.0, half 0.0, half 1.0, half 2.0, half 0.0, half 0.0>
@@ -352,7 +352,7 @@ define <8 x half> @test_fmul(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fmul'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fmul <8 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <8 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fmul <8 x half> %a, %b
@@ -369,7 +369,7 @@ define <8 x half> @test_fmul_imm(<8 x half> %a) {
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fmul_imm'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fmul <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <8 x half> %a, <half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000, half 0xH3C00, half 0xH4000>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fmul <8 x half> %a, <half 1.0, half 2.0, half 1.0, half 2.0, half 1.0, half 2.0, half 1.0, half 2.0>
@@ -382,11 +382,11 @@ define <8 x half> @test_fdiv(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_fdiv'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fdiv <8 x half> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = fdiv <8 x half> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fdiv'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fdiv <8 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = fdiv <8 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fdiv <8 x half> %a, %b
@@ -399,11 +399,11 @@ define <8 x half> @test_frem(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_frem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = frem <8 x half> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = frem <8 x half> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_frem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = frem <8 x half> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = frem <8 x half> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = frem <8 x half> %a, %b
@@ -912,12 +912,12 @@ define <8 x half> @test_uitofp_8xi32_fadd(<8 x i32> %a, <8 x half> %b) #0 {
 ;
 ; CV1-LABEL: 'test_uitofp_8xi32_fadd'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %c = uitofp <8 x i32> %a to <8 x half>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %b, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fadd <8 x half> %b, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_uitofp_8xi32_fadd'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %c = uitofp <8 x i32> %a to <8 x half>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %b, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %b, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %c = uitofp <8 x i32> %a to <8 x half>
@@ -933,12 +933,12 @@ define <8 x half> @test_sitofp_8xi32_fadd(<8 x i32> %a, <8 x half> %b) #0 {
 ;
 ; CV1-LABEL: 'test_sitofp_8xi32_fadd'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %c = sitofp <8 x i32> %a to <8 x half>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %b, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fadd <8 x half> %b, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_sitofp_8xi32_fadd'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %c = sitofp <8 x i32> %a to <8 x half>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <8 x half> %b, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <8 x half> %b, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %c = sitofp <8 x i32> %a to <8 x half>
@@ -1243,11 +1243,11 @@ define <8 x half> @test_minnum(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_minnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_minnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = call <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
@@ -1260,11 +1260,11 @@ define <8 x half> @test_minnum_fast(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_minnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call fast <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call fast <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_minnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call fast <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call fast <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = call fast <8 x half> @llvm.minnum.v8f16(<8 x half> %a, <8 x half> %b)
@@ -1277,11 +1277,11 @@ define <8 x half> @test_maxnum(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_maxnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_maxnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = call <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
@@ -1294,11 +1294,11 @@ define <8 x half> @test_maxnum_fast(<8 x half> %a, <8 x half> %b) #0 {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV1-LABEL: 'test_maxnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call fast <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call fast <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_maxnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = call fast <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call fast <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = call fast <8 x half> @llvm.maxnum.v8f16(<8 x half> %a, <8 x half> %b)
@@ -1468,7 +1468,7 @@ define <8 x half> @test_round(<8 x half> %a) #0 {
 
 define <8 x half> @test_fmuladd(<8 x half> %a, <8 x half> %b, <8 x half> %c) #0 {
 ; CV1-LABEL: 'test_fmuladd'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <8 x half> @llvm.fmuladd.v8f16(<8 x half> %a, <8 x half> %b, <8 x half> %c)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 22 for instruction: %r = call <8 x half> @llvm.fmuladd.v8f16(<8 x half> %a, <8 x half> %b, <8 x half> %c)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
 ; CV2-LABEL: 'test_fmuladd'

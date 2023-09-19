@@ -146,11 +146,11 @@ define <2 x float> @test_fneg(<2 x float> %a) #0 {
 
 define <2 x float> @test_fmul(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_fmul'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <2 x float> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fmul <2 x float> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_fmul'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <2 x float> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fmul <2 x float> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = fmul <2 x float> %a, %b
@@ -159,11 +159,11 @@ define <2 x float> @test_fmul(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_fdiv'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <2 x float> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = fdiv <2 x float> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_fdiv'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <2 x float> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = fdiv <2 x float> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = fdiv <2 x float> %a, %b
@@ -172,11 +172,11 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_frem(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_frem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <2 x float> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = frem <2 x float> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_frem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <2 x float> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = frem <2 x float> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = frem <2 x float> %a, %b
@@ -887,11 +887,11 @@ define <2 x float> @test_fabs(<2 x float> %a) #0 {
 
 define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_minnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_minnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
@@ -900,11 +900,11 @@ define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_minnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_minnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call fast <2 x float> @llvm.minnum.v2f32(<2 x float> %a, <2 x float> %b)
@@ -913,11 +913,11 @@ define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_maxnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_maxnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
@@ -926,11 +926,11 @@ define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_maxnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; CV1-LABEL: 'test_maxnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
 ; CV2-LABEL: 'test_maxnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call fast <2 x float> @llvm.maxnum.v2f32(<2 x float> %a, <2 x float> %b)

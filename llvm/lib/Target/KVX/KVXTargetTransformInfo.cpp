@@ -457,9 +457,11 @@ KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
   if (CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
 
-  if (Ty->getScalarSizeInBits() < 8)
+  if (Ty->getScalarSizeInBits() < 8) {
+    LLVM_DEBUG(dbgs() << "Invalid, reduction: " << Opcode << ", ";
+               Ty->print(dbgs()); dbgs() << '\n');
     return InstructionCost::getInvalid();
-
+  }
   auto Sz = Ty->getPrimitiveSizeInBits().getFixedSize();
   // Fixme: FP costs are really wrong
   if (Ty->isFPOrFPVectorTy() || Sz > 512)
@@ -529,22 +531,129 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
   // Legalize the type.
   std::pair<InstructionCost, MVT> LT = TLI->getTypeLegalizationCost(DL, Ty);
 
-  auto *FVTy = dyn_cast<FixedVectorType>(Ty);
-  unsigned Cost, TypeSize = Ty->getScalarSizeInBits(),
-                 NumElems = FVTy ? FVTy->getNumElements() : 1;
-
-  int ISD = TLI->InstructionOpcodeToISD(Opcode);
-  assert(ISD && "Invalid opcode");
-
-  switch (ISD) {
-  case ISD::FMUL:
-  case ISD::FADD:
-    Cost = (TypeSize * NumElems) / getRegisterBitWidth(false); // bitwidth/64
-    Cost = Cost ? Cost : 1;
-    return LT.first * 2 * Cost;
+  if (Ty->isVectorTy() && (Ty->getScalarSizeInBits() < 8) &&
+      !Ty->isPtrOrPtrVectorTy()) {
+    LLVM_DEBUG(dbgs() << "Invalid arithmetic instruction: " << Opcode << ", "
+                      << *Ty << '\n');
+    return InstructionCost::getInvalid();
   }
-  return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info, Opd2Info,
-                                       Opd1PropInfo, Opd2PropInfo, Args, CxtI);
+  if (LT.first == 0)
+    LT.first = 1;
+
+  int ISDi = TLI->InstructionOpcodeToISD(Opcode);
+  if (!ISDi)
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
+                                         Opd2Info, Opd1PropInfo, Opd2PropInfo,
+                                         Args, CxtI);
+
+  unsigned BitWidth = 256;
+  unsigned ElementSize = LT.second.getScalarSizeInBits();
+  bool IsVector = LT.second.isVector();
+  if (LT.second.isFloatingPoint()) {
+    BitWidth = ST->isV1() ? 64 : 128;
+
+    if (ElementSize == 16 && LT.second.getScalarSizeInBits() < 64 &&
+        ISD::FNEG != ISDi)
+      LT.first++;
+
+    switch (ISDi) {
+    default:
+      return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
+                                           Opd2Info, Opd1PropInfo, Opd2PropInfo,
+                                           Args, CxtI);
+    case ISD::FNEG:
+      BitWidth = 256;
+      break;
+    case ISD::FREM:
+    case ISD::FDIV: {
+      auto BaseCst = 50;
+      // Can this division be lowered to frecw ?
+      if (CxtI && CxtI->getFastMathFlags().allowReciprocal() &&
+          (ElementSize <= 32))
+        BaseCst = 15 + (2 * (ElementSize != 32));
+      if (IsVector)
+        return BaseCst * LT.second.getVectorMinNumElements();
+      return BaseCst;
+    }
+    case ISD::FMA:
+    case ISD::FMUL:
+      if (ElementSize == 64)
+        BitWidth = 64;
+      break;
+    }
+    return LT.first * std::max(1ul, LT.second.getFixedSizeInBits() / BitWidth);
+  }
+  if (!IsVector)
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
+                                         Opd2Info, Opd1PropInfo, Opd2PropInfo,
+                                         Args, CxtI);
+  switch (ISDi) {
+  default:
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Opd1Info,
+                                         Opd2Info, Opd1PropInfo, Opd2PropInfo,
+                                         Args, CxtI);
+  case ISD::ROTL:
+  case ISD::ROTR:
+    if (ElementSize != 32)
+      LT.first *= 3;
+    LLVM_FALLTHROUGH;
+  case ISD::SHL:
+  case ISD::SRA:
+  case ISD::SRL: {
+    const Value *Shift = nullptr;
+    if (Args.size() > 1)
+      Shift = Args[1];
+    else if (CxtI)
+      Shift = CxtI->getOperand(1);
+    if (Shift) {
+      if (!Shift->getType()->isVectorTy())
+        break;
+      if (ElementSize < 16 && ST->isV1())
+        LT.first += 2; // vNi8 -> vNi16 -> vNi8 conversions
+      auto *V = dyn_cast<ShuffleVectorInst>(Shift);
+      if (V && V->isZeroEltSplat())
+        break;
+      auto *C = dyn_cast<Constant>(Shift);
+      if (C && C->getSplatValue(true)) {
+        if (TLI->isOperationLegal(ISDi, LT.second))
+          LT.first = 1;
+        break;
+      }
+    }
+    LT.first *= (LT.second.getVectorMinNumElements() - 1);
+    break;
+  }
+  case ISD::SDIV:
+  case ISD::SDIVREM:
+  case ISD::SREM:
+  case ISD::UDIV:
+  case ISD::UDIVREM:
+  case ISD::UREM: {
+    auto *C = dyn_cast<Constant>(Args[1]);
+
+    if (C && IsVector)
+      C = C->getSplatValue(true);
+
+    if (C) {
+      auto I = C->getUniqueInteger();
+      if (I.isPowerOf2())
+        break;
+
+      if (I.isNegatedPowerOf2()) {
+        LT.first++;
+        break;
+      }
+    }
+    if (IsVector)
+      return 25 * LT.second.getVectorMinNumElements();
+    return 25;
+  }
+  case ISD::MUL: {
+    BitWidth = 64;
+    break;
+  }
+  }
+  return LT.first * std::max(1ul, LT.second.getFixedSizeInBits() / BitWidth);
 }
 
 InstructionCost KVXTTIImpl::getScalarizationOverhead(VectorType *Ty,
@@ -672,14 +781,17 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
     // Cast to scalar, or vector with elements, of size smaller than 8 bits are
     // illegal, with the exception of a bitcast of result of a vector
     // comparison.
-    if (!I)
+    if (!I) {
+      LLVM_DEBUG(dbgs() << "Invalid, Bitcast, no instruction\n");
       return InstructionCost::getInvalid();
-
+    }
     if (auto *Cmp = dyn_cast<Instruction>(I->getOperand(0))) {
       auto Op = Cmp->getOpcode();
       bool Ok = (Op == Instruction::FCmp || Op == Instruction::ICmp);
-      return Ok ? 0 : InstructionCost::getInvalid();
+      if (Ok)
+        return 0;
     }
+    LLVM_DEBUG(dbgs() << "Invalid, Bitcast invalid, does not come from Cmp\n");
     return InstructionCost::getInvalid();
   }
 

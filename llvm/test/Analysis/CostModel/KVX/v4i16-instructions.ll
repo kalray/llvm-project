@@ -250,11 +250,11 @@ define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 
 define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CV1-LABEL: 'test_div'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = sdiv <4 x i16> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = sdiv <4 x i16> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
 ; CV2-LABEL: 'test_div'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = sdiv <4 x i16> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = sdiv <4 x i16> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %r = sdiv <4 x i16> %a, %b
@@ -263,11 +263,11 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 
 define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CV1-LABEL: 'test_rem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = srem <4 x i16> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = srem <4 x i16> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
 ; CV2-LABEL: 'test_rem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = srem <4 x i16> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = srem <4 x i16> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %r = srem <4 x i16> %a, %b
@@ -630,14 +630,14 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; CV1-LABEL: 'lnand'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = or <4 x i1> %4, %3
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = zext <4 x i1> %5 to <4 x i16>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
 ; CV2-LABEL: 'lnand'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = or <4 x i1> %4, %3
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = zext <4 x i1> %5 to <4 x i16>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
@@ -652,14 +652,14 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; CV1-LABEL: 'lnandn'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = or <4 x i1> %4, %3
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = sext <4 x i1> %5 to <4 x i16>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
 ; CV2-LABEL: 'lnandn'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 70000 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = or <4 x i1> %4, %3
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = sext <4 x i1> %5 to <4 x i16>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
@@ -1179,11 +1179,11 @@ attributes #0 = { nounwind }
 
 define <4 x i16> @test_div_4(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CV1-LABEL: 'test_div_4'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
 ; CV2-LABEL: 'test_div_4'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %r = sdiv <4 x i16> %a, <i16 4, i16 4, i16 4, i16 4>
@@ -1192,11 +1192,11 @@ define <4 x i16> @test_div_4(<4 x i16> %a, <4 x i16> %b) #0 {
 
 define <4 x i16> @test_div_32(<4 x i16> %a, <4 x i16> %b) #0 {
 ; CV1-LABEL: 'test_div_32'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
 ; CV2-LABEL: 'test_div_32'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %r = sdiv <4 x i16> %a, <i16 32, i16 32, i16 32, i16 32>

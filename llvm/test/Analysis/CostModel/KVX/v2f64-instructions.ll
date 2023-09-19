@@ -55,11 +55,11 @@ define double @test_extract_i(<2 x double> %a, i64 %idx) #0 {
 
 define <2 x double> @test_fadd(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fadd'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_fadd'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = fadd <2 x double> %a, %b
@@ -68,11 +68,11 @@ define <2 x double> @test_fadd(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_fadd_imm_0(<2 x double> %a) #0 {
 ; CV1-LABEL: 'test_fadd_imm_0'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> <double 1.000000e+00, double 2.000000e+00>, %a
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> <double 1.000000e+00, double 2.000000e+00>, %a
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_0'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> <double 1.000000e+00, double 2.000000e+00>, %a
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> <double 1.000000e+00, double 2.000000e+00>, %a
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = fadd <2 x double> <double 1.0, double 2.0>, %a
@@ -81,11 +81,11 @@ define <2 x double> @test_fadd_imm_0(<2 x double> %a) #0 {
 
 define <2 x double> @test_fadd_imm_1(<2 x double> %a) #0 {
 ; CV1-LABEL: 'test_fadd_imm_1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %a, <double 1.000000e+00, double 2.000000e+00>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %a, <double 1.000000e+00, double 2.000000e+00>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_fadd_imm_1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %a, <double 1.000000e+00, double 2.000000e+00>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %a, <double 1.000000e+00, double 2.000000e+00>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = fadd <2 x double> %a, <double 1.0, double 2.0>
@@ -146,11 +146,11 @@ define <2 x double> @test_fneg(<2 x double> %a) #0 {
 
 define <2 x double> @test_fmul(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fmul'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fmul <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_fmul'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fmul <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fmul <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = fmul <2 x double> %a, %b
@@ -159,11 +159,11 @@ define <2 x double> @test_fmul(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_fdiv(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_fdiv'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = fdiv <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_fdiv'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = fdiv <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = fdiv <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = fdiv <2 x double> %a, %b
@@ -172,11 +172,11 @@ define <2 x double> @test_fdiv(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_frem(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_frem'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <2 x double> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = frem <2 x double> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_frem'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = frem <2 x double> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = frem <2 x double> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = frem <2 x double> %a, %b
@@ -625,12 +625,12 @@ define <2 x double> @test_sitofp_2xi64(<2 x i64> %a) #0 {
 define <2 x double> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_uitofp_2xi32_fadd'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %c = uitofp <2 x i32> %a to <2 x double>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %b, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %b, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_uitofp_2xi32_fadd'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %c = uitofp <2 x i32> %a to <2 x double>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %b, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %b, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %c = uitofp <2 x i32> %a to <2 x double>
@@ -641,12 +641,12 @@ define <2 x double> @test_uitofp_2xi32_fadd(<2 x i32> %a, <2 x double> %b) #0 {
 define <2 x double> @test_sitofp_2xi32_fadd(<2 x i32> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_sitofp_2xi32_fadd'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %c = sitofp <2 x i32> %a to <2 x double>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %b, %c
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %b, %c
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_sitofp_2xi32_fadd'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %c = sitofp <2 x i32> %a to <2 x double>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %b, %c
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %b, %c
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %c = sitofp <2 x i32> %a to <2 x double>
@@ -861,11 +861,11 @@ define <2 x double> @test_fabs(<2 x double> %a) #0 {
 
 define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_minnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_minnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -874,11 +874,11 @@ define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_minnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_minnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -887,11 +887,11 @@ define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_maxnum'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_maxnum'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -900,11 +900,11 @@ define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_maxnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: 'test_maxnum_fast'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'test_maxnum_fast'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -1886,12 +1886,12 @@ entry:
 define <2 x double> @add_splat_const_op1(<2 x double> %vx) #0 {
 ; CV1-LABEL: 'add_splat_const_op1'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
-; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'add_splat_const_op1'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
-; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
