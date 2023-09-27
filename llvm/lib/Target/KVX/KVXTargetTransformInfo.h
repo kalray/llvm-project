@@ -137,6 +137,9 @@ public:
                                          bool IsUnsigned,
                                          TTI::TargetCostKind CostKind);
 
+  InstructionCost getCFInstrCost(unsigned Opcode, TTI::TargetCostKind CostKind,
+                                 const Instruction *I = nullptr);
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };

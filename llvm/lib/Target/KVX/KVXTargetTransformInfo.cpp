@@ -508,20 +508,40 @@ KVXTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
 
 InstructionCost KVXTTIImpl::getVectorInstrCost(unsigned Opcode, Type *Ty,
                                                unsigned Index) const {
-  unsigned TypeSize = Ty->getScalarSizeInBits();
-  if (TypeSize == 1) {
+  auto EltSz = Ty->getScalarSizeInBits();
+  if (EltSz == 1) {
     LLVM_DEBUG(dbgs() << "Invalid, bit-vector operation\n");
     return InstructionCost::getInvalid();
   }
+  const static unsigned M = std::numeric_limits<unsigned>::max();
+  unsigned TypeSize;
+  switch (Opcode) {
+  // TODO: This only treats unhandled cases of ShuffleVector
+  // that are not treated by ShuffleKind that uses the
+  // getShuffleCost hook. It will return a negative value which
+  // should mean don't know, but I'm not sure the vectorizer is
+  // considering like that.
+  case ISD::VECTOR_SHUFFLE:
+    return Ty->getPrimitiveSizeInBits() / Ty->getScalarSizeInBits();
 
-  if (Opcode == Instruction::ShuffleVector)
-    return Ty->getPrimitiveSizeInBits() / TypeSize;
+  case ISD::INSERT_VECTOR_ELT:
+  case ISD::INSERT_SUBVECTOR:
+    return (Index == M) ? 3 : 1;
+
+  case ISD::EXTRACT_SUBVECTOR:
+    TypeSize = Ty->getPrimitiveSizeInBits();
+    break;
+  default:
+    TypeSize = Ty->getScalarSizeInBits();
+    break;
+  }
 
   auto SingleRegWidth = getRegisterBitWidth(false);
-  if (((Index * TypeSize) % SingleRegWidth) == 0)
-    return 0;
+  // Probably an variable index
+  if (Index == M)
+    return 3;
 
-  return 1;
+  return ((Index * TypeSize) % SingleRegWidth) ? 1 : 0;
 }
 
 InstructionCost KVXTTIImpl::getArithmeticInstrCost(
@@ -558,7 +578,7 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
   if (LT.second.isFloatingPoint()) {
     BitWidth = ST->isV1() ? 64 : 128;
 
-    if (ElementSize == 16 && LT.second.getScalarSizeInBits() < 64 &&
+    if (ElementSize == 16 && LT.second.getSizeInBits() < 64 &&
         ISD::FNEG != ISDi)
       LT.first++;
 
@@ -568,7 +588,12 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
                                            Opd2Info, Opd1PropInfo, Opd2PropInfo,
                                            Args, CxtI);
     case ISD::FNEG:
+    case ISD::FABS:
+    case ISD::FGETSIGN:
       BitWidth = 256;
+      break;
+    case ISD::FADD:
+    case ISD::FSUB:
       break;
     case ISD::FREM:
     case ISD::FDIV: {
@@ -707,6 +732,10 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
       CostFactor *= CF;                                                        \
     break
 
+#define FP_64_128(op)                                                          \
+  CV1_CV2_BITWIDTH(op, 64, 128);                                               \
+  break
+
   unsigned BitWidth = 256;
   unsigned CostFactor = 1;
   unsigned LegalizeCost = 0;
@@ -724,6 +753,11 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     CV1_EXTENDED(uadd_sat, 3);
     CV1_EXTENDED(usub_sat, 3);
 
+    FP_64_128(fmuladd);
+    FP_64_128(fma);
+  case Intrinsic::fabs:
+    BitWidth = 256;
+    break;
   default:
     return BaseT::getIntrinsicInstrCost(ICA, CostKind);
     break;
@@ -755,10 +789,14 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
 InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
                                                      VectorType *VecTy,
                                                      unsigned Index) {
-  auto IC = BaseT::getExtractWithExtendCost(Opcode, Dst, VecTy, Index);
-  LLVM_DEBUG(dbgs() << "getExtractWithExtendCost: " << IC << Opcode << ' '
-                    << *Dst << ' ' << Index << '\n');
-  return IC;
+  const static unsigned M = std::numeric_limits<unsigned>::max();
+  if (Index == M)
+    return 3;
+
+  if (Dst->isVectorTy())
+    BaseT::getExtractWithExtendCost(Opcode, Dst, VecTy, Index);
+
+  return 1;
 }
 
 bool KVXTTIImpl::isTypeLegal(Type *Ty) const {
@@ -776,9 +814,6 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
                                                CmpInst::Predicate VecPred,
                                                TTI::TargetCostKind CostKind,
                                                const Instruction *I) {
-  if (!ValTy->isVectorTy())
-    return 1;
-
   if (!ValTy->isVectorTy() || CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
                                      I);
@@ -790,15 +825,20 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
   unsigned BaseCost = 1;
   unsigned PrimSz = ValTy->getPrimitiveSizeInBits();
   if (ST->isV1() && (!ValTy || ValTy->getScalarSizeInBits() == 8)) {
-    PrimSz *= 2;
-    BaseCost += (Instruction::Select != Opcode);
+    if (!(CondTy && !CondTy->isVectorTy())) {
+      PrimSz *= 2;
+      BaseCost += (Instruction::Select != Opcode);
+    }
   }
   switch (Opcode) {
   case Instruction::FCmp:
     break;
-  case Instruction::ICmp:
-  case Instruction::Select: {
-    if (!ValTy || ValTy->getScalarSizeInBits() == 1) {
+  case Instruction::Select:
+    if (CondTy && !CondTy->isVectorTy())
+      break;
+    LLVM_FALLTHROUGH;
+  case Instruction::ICmp: {
+    if (!ValTy || ValTy->getScalarSizeInBits() < 8) {
       LLVM_DEBUG(dbgs() << "Invalid, ICmp/select: "; if (I) I->print(dbgs());
                  dbgs() << "\n");
       return InstructionCost::getInvalid();
@@ -916,4 +956,18 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
   return std::min(
       static_cast<VectorType *>(Dst)->getElementCount().getKnownMinValue(),
       Cost);
+}
+
+InstructionCost KVXTTIImpl::getCFInstrCost(unsigned Opcode,
+                                           TTI::TargetCostKind CostKind,
+                                           const Instruction *I) {
+  // TODO: Bit-vectors phis can be promoted to i8-vector
+  if (Opcode != Instruction::PHI || !I)
+    return BaseT::getCFInstrCost(Opcode, CostKind, I);
+
+  auto *VT = I->getType();
+  if (VT->isVectorTy() && VT->getScalarSizeInBits() == 1)
+    return InstructionCost::getInvalid(404);
+
+  return 0;
 }
