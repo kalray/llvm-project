@@ -1728,21 +1728,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setoeq_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setoeq_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setoeq_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoeq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1786,21 +1776,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setoge_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setoge_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setoge_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1844,21 +1824,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setole_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setole_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setole_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setole_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1890,27 +1860,14 @@ entry:
 }
 
 define <2 x i32> @fcmp_setord(<2 x float> %a, <2 x float> %b) #0 {
-; KV3_1-LABEL: fcmp_setord:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setord:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setord:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.olt $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ord <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1918,21 +1875,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setord_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setord_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setord_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setord_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ord <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1940,27 +1887,14 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuno(<2 x float> %a, <2 x float> %b) #0 {
-; KV3_1-LABEL: fcmp_setuno:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.ult $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -1968,21 +1902,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuno_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setuno_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setuno_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setuno_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uno <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2001,12 +1925,19 @@ entry:
   ret <2 x i32> %1
 }
 
+; Fixme: Should be just -1 for both
 define <2 x i32> @fcmp_setueq_single(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setueq_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setueq_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setueq_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2026,21 +1957,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setugt_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setugt_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setugt_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setugt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ugt <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2060,11 +1981,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuge_single(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setuge_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setuge_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setuge_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2084,21 +2011,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setult_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setult_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setult_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setult_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ult <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2118,11 +2035,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setule_single(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setule_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setule_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setule_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2142,21 +2065,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setune_single(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setune_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setune_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setune_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp une <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2176,11 +2089,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setoeq_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setoeq_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setoeq_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setoeq_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2224,11 +2143,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setoge_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setoge_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setoge_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setoge_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2272,11 +2197,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setole_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setole_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setole_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setole_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2308,27 +2239,14 @@ entry:
 }
 
 define <2 x i32> @fcmp_setord_fast(<2 x float> %a, <2 x float> %b) #0 {
-; KV3_1-LABEL: fcmp_setord_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setord_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnwp.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setord_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.olt $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ord <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2336,21 +2254,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setord_single_fast(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setord_single_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setord_single_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setord_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ord <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2358,27 +2266,14 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuno_fast(<2 x float> %a, <2 x float> %b) #0 {
-; KV3_1-LABEL: fcmp_setuno_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.uge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.uge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnwp.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnwp.ult $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno <2 x float> %a, %b
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2386,21 +2281,11 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuno_single_fast(<2 x float> %a) #0 {
-; KV3_1-LABEL: fcmp_setuno_single_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllwps $r0 = $r0, 31
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srawps $r0 = $r0, 31
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setuno_single_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnwp.une $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setuno_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnwp.une $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uno <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2420,11 +2305,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setueq_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setueq_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setueq_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setueq_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2468,11 +2359,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setuge_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setuge_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setuge_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setuge_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>
@@ -2516,11 +2413,17 @@ entry:
 }
 
 define <2 x i32> @fcmp_setule_single_fast(<2 x float> %a) #0 {
-; CHECK-LABEL: fcmp_setule_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setule_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x100000001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setule_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <2 x float> %a, %a
   %1 = sext <2 x i1> %0 to <2 x i32>

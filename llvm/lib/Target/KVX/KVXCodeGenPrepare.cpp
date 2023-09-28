@@ -19,7 +19,9 @@
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IntrinsicsKVX.h"
+#include "llvm/IR/MDBuilder.h"
 #include "llvm/IR/PatternMatch.h"
+#include "llvm/Transforms/Utils/Local.h"
 
 using namespace llvm;
 using namespace PatternMatch;
@@ -43,8 +45,9 @@ KVXCodeGenPrepare::KVXCodeGenPrepare(bool V1) : FunctionPass(ID), IsV1((V1)) {
   initializeKVXCodeGenPreparePass(*PR);
 }
 
+static SmallSet<BasicBlock *, 8> ToDCE;
 // Reverse the instruction-combine that converts icmp(vector_reduce_(and/or))
-// into
+// into (icmp(bitcast to iN ()))
 static bool visitICmp(Instruction &I, const bool IsV1) {
   ICmpInst::Predicate PredCast, PredVec;
   Value *LHS, *RHS;
@@ -95,6 +98,7 @@ static bool visitICmp(Instruction &I, const bool IsV1) {
       Value *R = Builder.CreateICmp(PredCast, Values.pop_back_val(),
                                     ConstantInt::getNullValue(EltTy));
       I.replaceAllUsesWith(R);
+      ToDCE.insert(I.getParent());
       return true;
     }
 
@@ -157,6 +161,7 @@ static bool visitICmp(Instruction &I, const bool IsV1) {
       Value *R =
           Builder.CreateCmp(PredCast, CI, ConstantInt::getNullValue(CmpType));
       I.replaceAllUsesWith(R);
+      ToDCE.insert(I.getParent());
       return true;
     }
     const int IdxStep = 64 / VecTy->getScalarSizeInBits();
@@ -191,9 +196,67 @@ static bool visitICmp(Instruction &I, const bool IsV1) {
     Value *R = Builder.CreateCmp(PredCast, Values.pop_back_val(),
                                  ConstantInt::getNullValue(CmpType));
     I.replaceAllUsesWith(R);
+    ToDCE.insert(I.getParent());
     return true;
   }
   return false;
+}
+
+/*Transform:
+  @llvm.ctpop(iN (bitcast <N x i1> ([fi]cmp <N x X> v0, v1) to iN) )
+
+  Into:
+  @(zext/trunc(abs(vector_reduce_add (sext <N x i1> ([fi]cmp <N x X> v0, v1) to
+  <N x size(X)>) ) ) to iN)
+  */
+bool visitIntrinsic_ctpop(CallInst &CI, const bool IsV1) {
+  Instruction *CMP;
+  if (!match(&CI, m_Intrinsic<Intrinsic::ctpop>(
+                      m_BitCast(m_CombineAnd(m_Cmp(), m_Instruction(CMP))))))
+    return false;
+
+  VectorType *VT = dyn_cast<VectorType>(CMP->getOperand(0)->getType());
+  if (!VT)
+    return false;
+
+  VectorType *CmpRealTy = VectorType::getInteger(VT);
+  LLVMContext &Ctx = CI.getParent()->getContext();
+  IRBuilder<> Builder(Ctx);
+  Builder.SetInsertPoint(CMP->getNextNode());
+  auto *Sext = Builder.CreateSExt(CMP, CmpRealTy, "cmp.real.type");
+  Instruction *Reduce = Builder.CreateAddReduce(Sext);
+  MDBuilder MDB(Ctx);
+  MDNode *Range = MDB.createRange(
+      APInt(32, 0),
+      APInt(32, -CmpRealTy->getElementCount().getKnownMinValue()));
+  Reduce->setMetadata(LLVMContext::MD_range, Range);
+
+  Value *R = Builder.CreateBinOp(Instruction::Sub,
+                                 ConstantInt::getNullValue(Reduce->getType()),
+                                 Reduce, "to.positive");
+  if (CI.hasOneUse()) {
+    auto *User = CI.user_back();
+    if (User->isCast()) {
+      auto *UTy = User->getType();
+      if (UTy == R->getType()) {
+        User->replaceAllUsesWith(R);
+        ToDCE.insert(User->getParent());
+        return true;
+      }
+      if (UTy->isIntegerTy()) {
+        R = Builder.CreateZExtOrTrunc(R, UTy, "ext.user");
+        User->replaceAllUsesWith(R);
+        ToDCE.insert(User->getParent());
+        return true;
+      }
+    }
+  }
+  if (CI.getType() != R->getType())
+    R = Builder.CreateZExtOrTrunc(R, CI.getType(), "ext");
+
+  CI.replaceAllUsesWith(R);
+  ToDCE.insert(CI.getParent());
+  return true;
 }
 
 bool KVXCodeGenPrepare::runOnFunction(Function &F) {
@@ -206,9 +269,16 @@ bool KVXCodeGenPrepare::runOnFunction(Function &F) {
 
   bool Changed = false;
 
+  ToDCE.clear();
+
 #define VISIT(X)                                                               \
   case Instruction::X:                                                         \
     Changed |= visit##X(*I, IsV1);                                             \
+    break
+
+#define VISIT_INTRINSIC(X)                                                     \
+  case Intrinsic::X:                                                           \
+    Changed |= visitIntrinsic_##X(CI, IsV1);                                   \
     break
 
   for (BasicBlock &BB : F.getBasicBlockList()) {
@@ -220,8 +290,24 @@ bool KVXCodeGenPrepare::runOnFunction(Function &F) {
       default:
         break;
         VISIT(ICmp);
+
+      case Instruction::Call:
+        CallInst &CI = cast<CallInst>(*I);
+        if (auto IntrID = CI.getIntrinsicID()) {
+          switch (IntrID) {
+          default:
+            break;
+            VISIT_INTRINSIC(ctpop);
+          }
+        }
       }
     }
   }
+  if (Changed)
+    for (auto *BB : ToDCE)
+      SimplifyInstructionsInBlock(BB);
+
+  ToDCE.clear();
+
   return Changed;
 }

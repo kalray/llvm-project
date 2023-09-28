@@ -8430,25 +8430,13 @@ entry:
 define <16 x i16> @fcmp_setoeq_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setoeq_single:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
 ; CV1-NEXT:    fcompnhq.oeq $r1 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
+; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fcmp_setoeq_single:
 ; CV2:       # %bb.0: # %entry
@@ -8533,25 +8521,13 @@ entry:
 define <16 x i16> @fcmp_setoge_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setoge_single:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
 ; CV1-NEXT:    fcompnhq.oeq $r1 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
+; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fcmp_setoge_single:
 ; CV2:       # %bb.0: # %entry
@@ -8636,25 +8612,13 @@ entry:
 define <16 x i16> @fcmp_setole_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setole_single:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
 ; CV1-NEXT:    fcompnhq.oeq $r1 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
+; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fcmp_setole_single:
 ; CV2:       # %bb.0: # %entry
@@ -8714,35 +8678,24 @@ entry:
 define <16 x i16> @fcmp_setord(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-LABEL: fcmp_setord:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oge $r3 = $r3, $r7
-; CV1-NEXT:    fcompnhq.olt $r8 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r5
-; CV1-NEXT:    ord $r3 = $r3, $r8
-; CV1-NEXT:    fcompnhq.olt $r7 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompnhq.oge $r0 = $r0, $r4
-; CV1-NEXT:    ord $r1 = $r1, $r7
-; CV1-NEXT:    fcompnhq.olt $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r5
+; CV1-NEXT:    fcompnhq.olt $r8 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ord $r0 = $r0, $r8
+; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r5
+; CV1-NEXT:    fcompnhq.olt $r4 = $r1, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ord $r1 = $r1, $r4
 ; CV1-NEXT:    fcompnhq.oge $r2 = $r2, $r6
-; CV1-NEXT:    fcompnhq.olt $r4 = $r2, $r6
+; CV1-NEXT:    fcompnhq.olt $r5 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ord $r2 = $r2, $r5
+; CV1-NEXT:    fcompnhq.oge $r3 = $r3, $r7
+; CV1-NEXT:    fcompnhq.olt $r6 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ord $r2 = $r2, $r4
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ord $r3 = $r3, $r6
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setord:
 ; CV2:       # %bb.0: # %entry
@@ -8771,25 +8724,13 @@ entry:
 define <16 x i16> @fcmp_setord_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setord_single:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
 ; CV1-NEXT:    fcompnhq.oeq $r1 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
+; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fcmp_setord_single:
 ; CV2:       # %bb.0: # %entry
@@ -8808,35 +8749,24 @@ entry:
 define <16 x i16> @fcmp_setuno(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-LABEL: fcmp_setuno:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r7
-; CV1-NEXT:    fcompnhq.ult $r8 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r5
-; CV1-NEXT:    andd $r3 = $r3, $r8
-; CV1-NEXT:    fcompnhq.ult $r7 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r4
-; CV1-NEXT:    andd $r1 = $r1, $r7
-; CV1-NEXT:    fcompnhq.ult $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r5
+; CV1-NEXT:    fcompnhq.ult $r8 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r8
+; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r5
+; CV1-NEXT:    fcompnhq.ult $r4 = $r1, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    andd $r1 = $r1, $r4
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r6
-; CV1-NEXT:    fcompnhq.ult $r4 = $r2, $r6
+; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r5
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r7
+; CV1-NEXT:    fcompnhq.ult $r6 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r4
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r6
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setuno:
 ; CV2:       # %bb.0: # %entry
@@ -8865,35 +8795,24 @@ entry:
 define <16 x i16> @fcmp_setuno_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setuno_single:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CV1-NEXT:    fcompnhq.ult $r4 = $r0, $r0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r1
 ; CV1-NEXT:    fcompnhq.ult $r5 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd $r1 = $r1, $r5
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
-; CV1-NEXT:    fcompnhq.ult $r4 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    fcompnhq.ult $r6 = $r0, $r0
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r6
+; CV1-NEXT:    andd $r1 = $r1, $r5
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r2
+; CV1-NEXT:    fcompnhq.ult $r6 = $r2, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r6
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
+; CV1-NEXT:    fcompnhq.ult $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r5
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setuno_single:
 ; CV2:       # %bb.0: # %entry
@@ -8945,15 +8864,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setueq_single(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setueq_single:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setueq_single:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setueq_single:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8988,35 +8917,24 @@ entry:
 define <16 x i16> @fcmp_setugt_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setugt_single:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CV1-NEXT:    fcompnhq.ult $r4 = $r0, $r0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r1
 ; CV1-NEXT:    fcompnhq.ult $r5 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd $r1 = $r1, $r5
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
-; CV1-NEXT:    fcompnhq.ult $r4 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    fcompnhq.ult $r6 = $r0, $r0
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r6
+; CV1-NEXT:    andd $r1 = $r1, $r5
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r2
+; CV1-NEXT:    fcompnhq.ult $r6 = $r2, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r6
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
+; CV1-NEXT:    fcompnhq.ult $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r5
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setugt_single:
 ; CV2:       # %bb.0: # %entry
@@ -9068,15 +8986,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setuge_single(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setuge_single:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setuge_single:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setuge_single:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9111,35 +9039,24 @@ entry:
 define <16 x i16> @fcmp_setult_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setult_single:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CV1-NEXT:    fcompnhq.ult $r4 = $r0, $r0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r1
 ; CV1-NEXT:    fcompnhq.ult $r5 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd $r1 = $r1, $r5
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
-; CV1-NEXT:    fcompnhq.ult $r4 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    fcompnhq.ult $r6 = $r0, $r0
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r6
+; CV1-NEXT:    andd $r1 = $r1, $r5
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r2
+; CV1-NEXT:    fcompnhq.ult $r6 = $r2, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r6
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
+; CV1-NEXT:    fcompnhq.ult $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r5
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setult_single:
 ; CV2:       # %bb.0: # %entry
@@ -9191,15 +9108,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setule_single(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setule_single:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setule_single:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setule_single:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9234,35 +9161,24 @@ entry:
 define <16 x i16> @fcmp_setune_single(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setune_single:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CV1-NEXT:    fcompnhq.ult $r4 = $r0, $r0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r1
 ; CV1-NEXT:    fcompnhq.ult $r5 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd $r1 = $r1, $r5
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
-; CV1-NEXT:    fcompnhq.ult $r4 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    fcompnhq.ult $r6 = $r0, $r0
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r6
+; CV1-NEXT:    andd $r1 = $r1, $r5
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r2
+; CV1-NEXT:    fcompnhq.ult $r6 = $r2, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r6
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
+; CV1-NEXT:    fcompnhq.ult $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r5
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setune_single:
 ; CV2:       # %bb.0: # %entry
@@ -9314,15 +9230,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setoeq_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setoeq_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setoeq_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setoeq_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oeq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9396,15 +9322,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setoge_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setoge_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setoge_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setoge_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9478,15 +9414,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setole_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setole_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setole_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setole_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ole <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9537,35 +9483,24 @@ entry:
 define <16 x i16> @fcmp_setord_fast(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-LABEL: fcmp_setord_fast:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oge $r3 = $r3, $r7
-; CV1-NEXT:    fcompnhq.olt $r8 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r5
-; CV1-NEXT:    ord $r3 = $r3, $r8
-; CV1-NEXT:    fcompnhq.olt $r7 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompnhq.oge $r0 = $r0, $r4
-; CV1-NEXT:    ord $r1 = $r1, $r7
-; CV1-NEXT:    fcompnhq.olt $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r5
+; CV1-NEXT:    fcompnhq.olt $r8 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ord $r0 = $r0, $r8
+; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r5
+; CV1-NEXT:    fcompnhq.olt $r4 = $r1, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ord $r1 = $r1, $r4
 ; CV1-NEXT:    fcompnhq.oge $r2 = $r2, $r6
-; CV1-NEXT:    fcompnhq.olt $r4 = $r2, $r6
+; CV1-NEXT:    fcompnhq.olt $r5 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ord $r2 = $r2, $r5
+; CV1-NEXT:    fcompnhq.oge $r3 = $r3, $r7
+; CV1-NEXT:    fcompnhq.olt $r6 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ord $r2 = $r2, $r4
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ord $r3 = $r3, $r6
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setord_fast:
 ; CV2:       # %bb.0: # %entry
@@ -9594,25 +9529,13 @@ entry:
 define <16 x i16> @fcmp_setord_single_fast(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setord_single_fast:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
 ; CV1-NEXT:    fcompnhq.oeq $r1 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fcompnhq.oeq $r2 = $r2, $r2
+; CV1-NEXT:    fcompnhq.oeq $r3 = $r3, $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: fcmp_setord_single_fast:
 ; CV2:       # %bb.0: # %entry
@@ -9631,35 +9554,24 @@ entry:
 define <16 x i16> @fcmp_setuno_fast(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-LABEL: fcmp_setuno_fast:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r7
-; CV1-NEXT:    fcompnhq.ult $r8 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r5
-; CV1-NEXT:    andd $r3 = $r3, $r8
-; CV1-NEXT:    fcompnhq.ult $r7 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r4
-; CV1-NEXT:    andd $r1 = $r1, $r7
-; CV1-NEXT:    fcompnhq.ult $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r5
+; CV1-NEXT:    fcompnhq.ult $r8 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r8
+; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r5
+; CV1-NEXT:    fcompnhq.ult $r4 = $r1, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    andd $r1 = $r1, $r4
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r6
-; CV1-NEXT:    fcompnhq.ult $r4 = $r2, $r6
+; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r5
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r7
+; CV1-NEXT:    fcompnhq.ult $r6 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r4
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r6
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setuno_fast:
 ; CV2:       # %bb.0: # %entry
@@ -9688,35 +9600,24 @@ entry:
 define <16 x i16> @fcmp_setuno_single_fast(<16 x half> %a) #0 {
 ; CV1-LABEL: fcmp_setuno_single_fast:
 ; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CV1-NEXT:    fcompnhq.ult $r4 = $r0, $r0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    andd $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.uge $r1 = $r1, $r1
 ; CV1-NEXT:    fcompnhq.ult $r5 = $r1, $r1
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andd $r1 = $r1, $r5
-; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
-; CV1-NEXT:    fcompnhq.ult $r4 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; CV1-NEXT:    andd $r3 = $r3, $r4
-; CV1-NEXT:    fcompnhq.ult $r6 = $r0, $r0
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    andd $r0 = $r0, $r6
+; CV1-NEXT:    andd $r1 = $r1, $r5
 ; CV1-NEXT:    fcompnhq.uge $r2 = $r2, $r2
-; CV1-NEXT:    fcompnhq.ult $r5 = $r2, $r2
+; CV1-NEXT:    fcompnhq.ult $r6 = $r2, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    andd $r2 = $r2, $r6
+; CV1-NEXT:    fcompnhq.uge $r3 = $r3, $r3
+; CV1-NEXT:    fcompnhq.ult $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sllhqs $r0 = $r0, 15
-; CV1-NEXT:    sllhqs $r1 = $r1, 15
-; CV1-NEXT:    andd $r2 = $r2, $r5
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sllhqs $r2 = $r2, 15
-; CV1-NEXT:    sllhqs $r3 = $r3, 15
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    srahqs $r0 = $r0, 15
-; CV1-NEXT:    srahqs $r1 = $r1, 15
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r2 = $r2, 15
-; CV1-NEXT:    srahqs $r3 = $r3, 15
+; CV1-NEXT:    andd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 4)
 ;
 ; CV2-LABEL: fcmp_setuno_single_fast:
 ; CV2:       # %bb.0: # %entry
@@ -9768,15 +9669,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setueq_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setueq_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setueq_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setueq_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9850,15 +9761,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setuge_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setuge_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setuge_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setuge_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9932,15 +9853,25 @@ entry:
 }
 
 define <16 x i16> @fcmp_setule_single_fast(<16 x half> %a) #0 {
-; ALL-LABEL: fcmp_setule_single_fast:
-; ALL:       # %bb.0: # %entry
-; ALL-NEXT:    make $r0 = -1
-; ALL-NEXT:    make $r1 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    make $r2 = -1
-; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; CV1-LABEL: fcmp_setule_single_fast:
+; CV1:       # %bb.0: # %entry
+; CV1-NEXT:    make $r0 = 0x1000100010001
+; CV1-NEXT:    make $r1 = 0x1000100010001
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    make $r2 = 0x1000100010001
+; CV1-NEXT:    make $r3 = 0x1000100010001
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 1)
+;
+; CV2-LABEL: fcmp_setule_single_fast:
+; CV2:       # %bb.0: # %entry
+; CV2-NEXT:    make $r0 = -1
+; CV2-NEXT:    make $r1 = -1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    make $r2 = -1
+; CV2-NEXT:    make $r3 = -1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>

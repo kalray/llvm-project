@@ -963,13 +963,13 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
           ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
       setOperationAction(I, VT, RedAction);
 
-  for (auto I : {ISD::BUILD_VECTOR,  ISD::CTLZ,       ISD::CTPOP,
-                 ISD::CTTZ,          ISD::FABS,       ISD::FADD,
-                 ISD::FCOPYSIGN,     ISD::FMA,        ISD::FMUL,
-                 ISD::FSUB,          ISD::FNEG,       ISD::INTRINSIC_WO_CHAIN,
-                 ISD::LOAD,          ISD::MUL,        ISD::SETCC,
-                 ISD::SRA,           ISD::STORE,      ISD::TRUNCATE,
-                 ISD::VECREDUCE_ADD, ISD::ZERO_EXTEND})
+  for (auto I :
+       {ISD::BUILD_VECTOR, ISD::CTLZ,  ISD::CTPOP,     ISD::CTTZ,
+        ISD::FABS,         ISD::FADD,  ISD::FCOPYSIGN, ISD::FMA,
+        ISD::FMUL,         ISD::FSUB,  ISD::FNEG,      ISD::INTRINSIC_WO_CHAIN,
+        ISD::LOAD,         ISD::MUL,   ISD::SETCC,     ISD::SIGN_EXTEND,
+        ISD::SRA,          ISD::STORE, ISD::TRUNCATE,  ISD::VECREDUCE_ADD,
+        ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -2974,6 +2974,17 @@ static SDValue combineSRA(SDNode *N, SelectionDAG &DAG) {
                      DAG.getConstant(-SRAsz, SDLoc(SRAszSD), MVT::i64));
 }
 
+static SDValue combineSIGN_EXTEND(SDNode *N, SelectionDAG &DAG) {
+  auto Op = N->getOperand(0);
+  auto VT = N->getValueType(0);
+  if (N->getValueType(0).isVector() && Op.getOpcode() == ISD::SETCC &&
+      Op->hasOneUse() &&
+      VT == Op.getOperand(0)->getValueType(0).changeTypeToInteger())
+    return DAG.getNode(ISD::SETCC, SDLoc(Op), VT, Op->ops());
+
+  return SDValue();
+}
+
 static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
   SDValue N0 = N->getOperand(0);
   if (N0->isUndef())
@@ -2997,6 +3008,15 @@ static SDValue combineZext(SDNode *N, SelectionDAG &DAG) {
 
 static SDValue combineVecRedAdd(SDNode *N, SelectionDAG &DAG) {
   auto Op = N->getOperand(0);
+
+  // Prevent to generate VECREDUCE_ADD_[SZ]EXT from bit-vectors
+  if (!Op->ops().empty()) {
+    auto Ty = Op->getOperand(0).getValueType();
+    if (!Ty.isSimple() || Ty.getSimpleVT() == MVT::Other ||
+        Ty.getScalarSizeInBits() == 1)
+      return SDValue();
+  }
+
   unsigned Opcode;
   switch (Op->getOpcode()) {
   case ISD::ANY_EXTEND:
@@ -3739,6 +3759,8 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineLoad(N, DCI, DAG);
   case ISD::MUL:
     return combineMUL(N, DAG);
+  case ISD::SIGN_EXTEND:
+    return combineSIGN_EXTEND(N, DAG);
   case ISD::SRA:
     return combineSRA(N, DAG);
   case ISD::STORE:

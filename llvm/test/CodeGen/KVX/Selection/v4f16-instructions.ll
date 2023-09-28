@@ -2359,21 +2359,11 @@ entry:
 }
 
 define <4 x i16> @fcmp_setoeq_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setoeq_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setoeq_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoeq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oeq <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2417,21 +2407,11 @@ entry:
 }
 
 define <4 x i16> @fcmp_setoge_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setoge_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setoge_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp oge <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2475,21 +2455,11 @@ entry:
 }
 
 define <4 x i16> @fcmp_setole_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setole_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setole_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setole_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ole <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2521,27 +2491,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setord(<4 x half> %a, <4 x half> %b) #0 {
-; KV3_1-LABEL: fcmp_setord:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setord:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setord:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ord <4 x half> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2549,21 +2506,11 @@ entry:
 }
 
 define <4 x i16> @fcmp_setord_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setord_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setord_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setord_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ord <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2571,27 +2518,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setuno(<4 x half> %a, <4 x half> %b) #0 {
-; KV3_1-LABEL: fcmp_setuno:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno <4 x half> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2599,27 +2533,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setuno_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setuno_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_1-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_2-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r1
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CHECK-NEXT:    fcompnhq.ult $r1 = $r0, $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uno <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2639,11 +2560,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setueq_single(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setueq_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setueq_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setueq_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2663,27 +2590,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setugt_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setugt_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_1-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setugt_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_2-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r1
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setugt_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CHECK-NEXT:    fcompnhq.ult $r1 = $r0, $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ugt <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2703,11 +2617,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setuge_single(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setuge_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setuge_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setuge_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2727,27 +2647,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setult_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setult_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_1-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setult_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_2-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r1
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setult_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CHECK-NEXT:    fcompnhq.ult $r1 = $r0, $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ult <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2767,11 +2674,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setule_single(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setule_single:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setule_single:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setule_single:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2791,27 +2704,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setune_single(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setune_single:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_1-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setune_single:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_2-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r1
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setune_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CHECK-NEXT:    fcompnhq.ult $r1 = $r0, $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp une <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2831,11 +2731,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setoeq_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setoeq_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setoeq_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setoeq_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2879,11 +2785,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setoge_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setoge_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setoge_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setoge_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2927,11 +2839,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setole_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setole_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setole_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setole_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2963,27 +2881,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setord_fast(<4 x half> %a, <4 x half> %b) #0 {
-; KV3_1-LABEL: fcmp_setord_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    ord $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setord_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnhq.olt $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setord_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ord <4 x half> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -2991,21 +2896,11 @@ entry:
 }
 
 define <4 x i16> @fcmp_setord_single_fast(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setord_single_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 2)
-;
-; KV3_2-LABEL: fcmp_setord_single_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setord_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.oeq $r0 = $r0, $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ord <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -3014,27 +2909,14 @@ entry:
 
 ; Shouldn't this be just a true? Isn't fast unordered free?
 define <4 x i16> @fcmp_setuno_fast(<4 x half> %a, <4 x half> %b) #0 {
-; KV3_1-LABEL: fcmp_setuno_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; KV3_1-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r2
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r1
-; KV3_2-NEXT:    fcompnhq.ult $r2 = $r0, $r1
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r2
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
+; CHECK-NEXT:    fcompnhq.ult $r2 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno <4 x half> %a, %b
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -3042,27 +2924,14 @@ entry:
 }
 
 define <4 x i16> @fcmp_setuno_single_fast(<4 x half> %a) #0 {
-; KV3_1-LABEL: fcmp_setuno_single_fast:
-; KV3_1:       # %bb.0: # %entry
-; KV3_1-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_1-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    andd $r0 = $r0, $r1
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sllhqs $r0 = $r0, 15
-; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 15
-; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
-;
-; KV3_2-LABEL: fcmp_setuno_single_fast:
-; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    fcompnhq.uge $r0 = $r0, $r0
-; KV3_2-NEXT:    fcompnhq.ult $r1 = $r0, $r0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    andd $r0 = $r0, $r1
-; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 1)
+; CHECK-LABEL: fcmp_setuno_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r0
+; CHECK-NEXT:    fcompnhq.ult $r1 = $r0, $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andd $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uno <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -3082,11 +2951,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setueq_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setueq_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setueq_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setueq_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -3130,11 +3005,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setuge_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setuge_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setuge_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setuge_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>
@@ -3178,11 +3059,17 @@ entry:
 }
 
 define <4 x i16> @fcmp_setule_single_fast(<4 x half> %a) #0 {
-; CHECK-LABEL: fcmp_setule_single_fast:
-; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    make $r0 = -1
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 0)
+; KV3_1-LABEL: fcmp_setule_single_fast:
+; KV3_1:       # %bb.0: # %entry
+; KV3_1-NEXT:    make $r0 = 0x1000100010001
+; KV3_1-NEXT:    ret
+; KV3_1-NEXT:    ;; # (end cycle 0)
+;
+; KV3_2-LABEL: fcmp_setule_single_fast:
+; KV3_2:       # %bb.0: # %entry
+; KV3_2-NEXT:    make $r0 = -1
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <4 x half> %a, %a
   %1 = sext <4 x i1> %0 to <4 x i16>

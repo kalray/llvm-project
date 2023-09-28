@@ -894,3 +894,57 @@ define i1 @v4_vecreduce_and_cmp_sle_i64(ptr %p0, ptr %p1) {
   ret i1 %2
 }
 
+define i32 @ctpop_to_add_reduce(<8 x i32> %v0, i32 %c) {
+; CV1-LABEL: ctpop_to_add_reduce:
+; CV1:       # %bb.0:
+; CV1-NEXT:    make $r5 = 0
+; CV1-NEXT:    make $r6 = 0
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    compnwp.ne $r0 = $r0, $r6
+; CV1-NEXT:    compnwp.ne $r1 = $r1, $r5
+; CV1-NEXT:    compnwp.ne $r2 = $r2, $r6
+; CV1-NEXT:    compnwp.ne $r3 = $r3, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    addwp $r0 = $r0, $r2
+; CV1-NEXT:    addwp $r1 = $r1, $r3
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    addwp $r0 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    srad $r1 = $r0, 32
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    addw $r0 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    sbfw $r0 = $r0, $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 6)
+;
+; CV2-LABEL: ctpop_to_add_reduce:
+; CV2:       # %bb.0:
+; CV2-NEXT:    make $r5 = 0
+; CV2-NEXT:    make $r6 = 0
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    compnwp.ne $r0 = $r0, $r6
+; CV2-NEXT:    compnwp.ne $r1 = $r1, $r5
+; CV2-NEXT:    compnwp.ne $r2 = $r2, $r6
+; CV2-NEXT:    compnwp.ne $r3 = $r3, $r5
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    addwp $r0 = $r0, $r2
+; CV2-NEXT:    addwp $r1 = $r1, $r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    addrwpd $r0 = $r0
+; CV2-NEXT:    addrwpd $r1 = $r1
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    addw $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    sbfw $r0 = $r0, $r4
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 5)
+  %cmp = icmp ne <8 x i32> %v0, zeroinitializer
+  %b = bitcast <8 x i1> %cmp to i8
+  %pop = tail call i8 @llvm.ctpop.i8(i8 %b)
+  %z = zext i8 %pop to i32
+  %r = add i32 %c, %z
+  ret i32 %r
+}
+
+declare i8 @llvm.ctpop.i8(i8) nounwind readnone
