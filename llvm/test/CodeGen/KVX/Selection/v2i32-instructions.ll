@@ -791,13 +791,14 @@ define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 }
 
 ; Not sure this is better than a (compnwq.ne (ord), (make 0))
-; Fixme: missing neg for sext
 define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lorwp $r0 = $r0, $r1
-; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    negwp $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lorneg:
 ; V2:       # %bb.0:
@@ -835,13 +836,14 @@ define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 }
 
 ; Not sure this is better than a (compnwq.eq (ord), (make 0))
-; Fixme: missing neg for sext
 define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lnorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnorwp $r0 = $r0, $r1
-; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    negwp $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lnorneg:
 ; V2:       # %bb.0:

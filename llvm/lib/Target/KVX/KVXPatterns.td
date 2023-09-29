@@ -908,10 +908,10 @@ def v8_splat_1 : PatFrags<(ops), [(v8_splat (i32 1)), (v8_splat (i64 1))]>;
 def v8_splat_7 : PatFrags<(ops), [(v8_splat (i32 7)), (v8_splat (i64 7))]>;
 
 def ZEXT_VEC2_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
-        [(or node:$lhs, node:$rhs), (and (or node:$lhs, node:$rhs), v2_splat_1)]>;
+        [(and (or node:$lhs, node:$rhs), v2_splat_1)]>;
 
 def ZEXT_VEC4_SETCC_Pat : PatFrags<(ops node:$lhs, node:$rhs),
-        [(or node:$lhs, node:$rhs), (and (or node:$lhs, node:$rhs), v4_splat_1)]>;
+        [(and (or node:$lhs, node:$rhs), v4_splat_1)]>;
 
 def get_not_imm : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(~N->getSExtValue(), SDLoc(N), N->getValueType(0));

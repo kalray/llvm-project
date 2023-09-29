@@ -139,10 +139,8 @@ define <4 x i16> @uland4h(<4 x i16> %a, <4 x i16> %b) {
 ; CHECK-LABEL: uland4h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    landhq $r0 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    neghq $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: uland4h:
 ; V2:       # %bb.0: # %entry
@@ -150,13 +148,15 @@ define <4 x i16> @uland4h(<4 x i16> %a, <4 x i16> %b) {
 ; V2-NEXT:    compnhq.ne $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    andd $r0 = $r1, $r0
-; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    andd $r0 = $r0, 0x10001.@
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 2)
 entry:
   %cmp = icmp ne <4 x i16> %a, zeroinitializer
   %cmp1 = icmp ne <4 x i16> %b, zeroinitializer
   %and3 = and <4 x i1> %cmp1, %cmp
-  %and = sext <4 x i1> %and3 to <4 x i16>
+  %and = zext <4 x i1> %and3 to <4 x i16>
   ret <4 x i16> %and
 }
 

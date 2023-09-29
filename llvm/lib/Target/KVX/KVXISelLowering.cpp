@@ -417,8 +417,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     : TargetLowering(TM), Subtarget(STI) {
   setBooleanContents(ZeroOrOneBooleanContent);
 
-  if (!Subtarget.isV1())
-    setBooleanVectorContents(ZeroOrNegativeOneBooleanContent);
+  setBooleanVectorContents(ZeroOrNegativeOneBooleanContent);
 
   // set up the register classes
   addRegisterClass(MVT::i32, &KVX::SingleRegRegClass);

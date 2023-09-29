@@ -8864,25 +8864,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setueq_single(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setueq_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setueq_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setueq_single:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8986,25 +8976,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setuge_single(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setuge_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setuge_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setuge_single:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9108,25 +9088,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setule_single(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setule_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setule_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setule_single:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9230,25 +9200,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setoeq_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setoeq_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setoeq_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setoeq_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oeq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9322,25 +9282,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setoge_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setoge_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setoge_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setoge_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast oge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9414,25 +9364,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setole_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setole_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setole_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setole_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ole <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9669,25 +9609,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setueq_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setueq_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setueq_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setueq_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9761,25 +9691,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setuge_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setuge_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setuge_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setuge_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9853,25 +9773,15 @@ entry:
 }
 
 define <16 x i16> @fcmp_setule_single_fast(<16 x half> %a) #0 {
-; CV1-LABEL: fcmp_setule_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    make $r2 = 0x1000100010001
-; CV1-NEXT:    make $r3 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
-;
-; CV2-LABEL: fcmp_setule_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    make $r2 = -1
-; CV2-NEXT:    make $r3 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; ALL-LABEL: fcmp_setule_single_fast:
+; ALL:       # %bb.0: # %entry
+; ALL-NEXT:    make $r0 = -1
+; ALL-NEXT:    make $r1 = -1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    make $r2 = -1
+; ALL-NEXT:    make $r3 = -1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = fcmp fast ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>

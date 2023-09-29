@@ -536,18 +536,16 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbmm8 $r4 = $r4, 0x401
+; V1-NEXT:    sxhd $r4 = $r4
+; V1-NEXT:    extfs $r5 = $r4, 31, 16
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxbd $r4 = $r4
-; V1-NEXT:    extfs $r5 = $r4, 15, 8
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    cmoved.dnez $r4 ? $r2 = $r0
 ; V1-NEXT:    cmoved.dnez $r5 ? $r3 = $r1
-; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    copyd $r0 = $r2
 ; V1-NEXT:    copyd $r1 = $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 4)
 ;
 ; V2-LABEL: test_select_cc_f32_f32:
 ; V2:       # %bb.0:
@@ -1084,7 +1082,6 @@ define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    insf $r2 = $r1, 15, 8
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    sxlbhq $r1 = $r2
-; V1-NEXT:    make $r2 = 0x10001
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    addhq $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 5)
@@ -1101,15 +1098,13 @@ define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
 ; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    neghq $r1 = $r0
+; V1-NEXT:    neghq $r0 = $r0
 ; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    cmovehq.even $r2 ? $r1 = $r0
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    sbmm8 $r0 = $r1, 0x401
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 14)
+; V1-NEXT:    ;; # (end cycle 13)
 ;
 ; V2-LABEL: test_div_neg64:
 ; V2:       # %bb.0:
@@ -1177,7 +1172,7 @@ define <2 x i8> @test_div_notsrs(<2 x i8> %a, <2 x i8> %b) {
   ret <2 x i8> %r
 }
 
-; TODO: cv1 sxlbhq(sbmm8) is not required. cv[12]: compw not required, can use cmove.w***
+; TODO: compw not required, can use cmove.w***
 define <2 x i8> @test_select_cmp(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) {
 ; V1-LABEL: test_select_cmp:
 ; V1:       # %bb.0:
@@ -1186,15 +1181,11 @@ define <2 x i8> @test_select_cmp(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8>
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x401
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    compw.eq $r2 = $r2, -1
-; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: test_select_cmp:
 ; V2:       # %bb.0:
@@ -1290,15 +1281,11 @@ define <2 x i8> @test_select_cmp_4(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.ne $r2 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbmm8 $r2 = $r2, 0x401
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxlbhq $r2 = $r2
-; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    compw.ne $r2 = $r2, -1
-; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    ;; # (end cycle 3)
 ;
 ; V2-LABEL: test_select_cmp_4:
 ; V2:       # %bb.0:

@@ -1408,27 +1408,27 @@ def : Pat<(and (srl i64:$v, Wrapped32:$shiftc), isMask:$andm), (EXTFZDp SingleRe
 defm : ZEFPat<(and (i32 (setne i64:$v1, (i64 0))), (i32 (setne i64:$v2, (i64 0)))),
       (LANDDrr SingleReg:$v1, SingleReg:$v2)>;
 
-multiclass PAT_LNAND_VEC<ValueType vt, PatFrags zext, PatFrags splat, Instruction LNAND, Instruction NEG> {
+multiclass PAT_LNAND_VEC<ValueType vt, PatFrags zext, Instruction LNAND, Instruction NEG> {
 def : Pat<(vt (zext (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV))),
           (vt (LNAND SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
 
-def : Pat<(vt (sra (shl ( or (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV)), (vt splat)), (vt splat))),
+def : Pat<(vt (or (seteq vt:$rhs, immAllZerosV), (seteq vt:$lhs, immAllZerosV))),
           (vt (NEG (LNAND SingleReg:$rhs, SingleReg:$lhs)))>, Requires<[IsV1]>;
 }
 
 // RI variants don't seem usuable, as they turn into vselects.
-multiclass VECLANDPAT<ValueType ty, Instruction RR, Instruction NEG, dag SplatVal> {
-def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
+multiclass VECLANDPAT<ValueType ty, Instruction RR, Instruction NEG, dag OnesVec> {
+def : Pat<(ty(and (and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV)), OnesVec)),
             (RR SingleReg:$v0, SingleReg:$v1)>, Requires<[IsV1]>;
 
-def : Pat<(ty(sra( shl
-                  ( and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV)),
-            SplatVal),SplatVal)), (NEG(RR SingleReg:$v0, SingleReg:$v1))>, Requires<[IsV1]>;
+def : Pat<(ty(and (setne ty:$v0, immAllZerosV), (setne ty:$v1, immAllZerosV))),
+            (NEG (RR SingleReg:$v0, SingleReg:$v1))>, Requires<[IsV1]>;
 }
 
 // LANDHQ
-defm : VECLANDPAT<v2i16, LANDHQrr, NEGHQ, (v2i16 v2_splat_15)>;
-defm : VECLANDPAT<v4i16, LANDHQrr, NEGHQ, (v4i16 v4_splat_15)>;
+defm : VECLANDPAT<v2i16, LANDHQrr, NEGHQ, (v2i16 v2_splat_1)>;
+defm : VECLANDPAT<v4i16, LANDHQrr, NEGHQ, (v4i16 v4_splat_1)>;
+
 
 // LANDW
 defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0)))),
@@ -1436,8 +1436,7 @@ defm : ZEFPat<(and (i32 (setne i32:$v1, (i32 0))), (i32 (setne i32:$v2, (i32 0))
 
 
 // LANDWP
-defm : VECLANDPAT<v2i32, LANDWPrr, NEGWP, (v2i32 v2_splat_31)>;
-
+defm : VECLANDPAT<v2i32, LANDWPrr, NEGWP, (v2i32 v2_splat_1)>;
 // LNANDD
 defm : ZEFPat<(or (i32 (seteq i64:$v1, (i64 0))), (i32 (seteq i64:$v2, (i64 0)))),
       (LNANDDrr SingleReg:$v1, SingleReg:$v2)>;
@@ -1447,22 +1446,22 @@ def : Pat<(vt (and (cmp (or vt:$lhs, vt:$rhs), immAllZerosV), and_splat)),
           (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
 
 def : Pat<(vt (cmp (or vt:$lhs, vt:$rhs), immAllZerosV)),
-          (vt (LOR SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV1]>;
+          (vt (NEG (LOR SingleReg:$rhs, SingleReg:$lhs)))>, Requires<[IsV1]>;
 
 def : Pat<(vt (sra (shl ( cmp (or vt:$lhs, vt:$rhs), immAllZerosV), (vt splat)), (vt splat))),
           (vt (NEG (LOR SingleReg:$rhs, SingleReg:$lhs)))>, Requires<[IsV1]>;
 }
 
 // LNANDHQ
-defm : PAT_LNAND_VEC<v2i16, ZEXT_VEC2_SETCC_Pat, v2_splat_15, LNANDHQrr, NEGHQ>;
-defm : PAT_LNAND_VEC<v4i16, ZEXT_VEC4_SETCC_Pat, v4_splat_15, LNANDHQrr, NEGHQ>;
+defm : PAT_LNAND_VEC<v2i16, ZEXT_VEC2_SETCC_Pat, LNANDHQrr, NEGHQ>;
+defm : PAT_LNAND_VEC<v4i16, ZEXT_VEC4_SETCC_Pat, LNANDHQrr, NEGHQ>;
 
 // LNANDW
 defm : ZEFPat<(or (i32 (seteq i32:$v1, (i32 0))), (i32 (seteq i32:$v2, (i32 0)))),
       (LNANDWrr SingleReg:$v1, SingleReg:$v2)>;
 
 // LNANDWP
-defm : PAT_LNAND_VEC<v2i32, ZEXT_VEC2_SETCC_Pat, v2_splat_31, LNANDWPrr, NEGWP>;
+defm : PAT_LNAND_VEC<v2i32, ZEXT_VEC2_SETCC_Pat, LNANDWPrr, NEGWP>;
 
 // LNORD
 def : Pat<(i32 (seteq (or i64:$v1, i64:$v2), (i64 0))), (LNORDrr SingleReg:$v1, SingleReg:$v2)>;

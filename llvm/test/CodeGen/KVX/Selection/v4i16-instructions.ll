@@ -903,13 +903,14 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 }
 
 ; Not sure this is better than a (compnhq.ne (ord), (make 0))
-; Fixme: missing neg for sext
 define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: lorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lorhq $r0 = $r0, $r1
-; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    neghq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lorneg:
 ; V2:       # %bb.0:
@@ -951,8 +952,10 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 ; V1-LABEL: lnorneg:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lnorhq $r0 = $r0, $r1
-; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    neghq $r0 = $r0
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: lnorneg:
 ; V2:       # %bb.0:

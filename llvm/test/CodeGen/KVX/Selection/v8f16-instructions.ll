@@ -5326,19 +5326,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setueq_single(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setueq_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setueq_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setueq_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5403,19 +5396,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setuge_single(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setuge_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setuge_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setuge_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5480,19 +5466,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setule_single(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setule_single:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setule_single:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setule_single:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5557,19 +5536,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setoeq_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setoeq_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setoeq_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoeq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5616,19 +5588,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setoge_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setoge_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setoge_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setoge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5675,19 +5640,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setole_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setole_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setole_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setole_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5841,19 +5799,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setueq_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setueq_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setueq_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setueq_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5900,19 +5851,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setuge_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setuge_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setuge_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setuge_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
@@ -5959,19 +5903,12 @@ entry:
 }
 
 define <8 x i16> @fcmp_setule_single_fast(<8 x half> %a) #0 {
-; CV1-LABEL: fcmp_setule_single_fast:
-; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r0 = 0x1000100010001
-; CV1-NEXT:    make $r1 = 0x1000100010001
-; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
-;
-; CV2-LABEL: fcmp_setule_single_fast:
-; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    make $r1 = -1
-; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CHECK-LABEL: fcmp_setule_single_fast:
+; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    make $r0 = -1
+; CHECK-NEXT:    make $r1 = -1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <8 x half> %a, %a
   %1 = sext <8 x i1> %0 to <8 x i16>
