@@ -2656,13 +2656,13 @@ defm : HQShiftScalarOps<ushlsat, SLUSHQSri, SLUSHQSrr>, Requires<[IsV2]>;
 
 // SLUSW
 defm : ZEFPat<(i32 (ushlsat i32:$r, Unsigned6W:$im)),
-              (SLUSWri SingleReg:$r, (imm32_to_imm64 imm:$im))>, Requires<[IsV2]>;
+              (SLUSWri SingleReg:$r, (immu32_to_imm64 imm:$im))>, Requires<[IsV2]>;
 
 defm : ZEFPat<(i32 (ushlsat i32:$rs1, i32:$rs2)),
               (SLUSWrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
 defm : ZEFPat<(i32 (ushlsat i32:$r, Unsigned6W:$im)),
-              (MINUDri37 (SLLDri (ZXWD SingleReg:$r), (imm32_to_imm64 imm:$im)), i64_ui32_max)>;
+              (MINUDri37 (SLLDri (ZXWD SingleReg:$r), (immu32_to_imm64 imm:$im)), i64_ui32_max)>;
 
 defm : ZEFPat<(i32 (ushlsat i32:$rs1, i32:$rs2)),
               (MINUDri37 (SLLDrr (ZXWD SingleReg:$rs1), SingleReg:$rs2), i64_ui32_max)>;

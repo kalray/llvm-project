@@ -70,11 +70,15 @@ def trunc_imm_32 : SDNodeXForm<imm, [{
 }]>;
 
 def imm32_to_imm64 : SDNodeXForm<imm, [{
+  return CurDAG->getTargetConstant(N->getSExtValue(), SDLoc(N), MVT::i64);
+}]>;
+
+def immu32_to_imm64 : SDNodeXForm<imm, [{
   return CurDAG->getTargetConstant(N->getZExtValue(), SDLoc(N), MVT::i64);
 }]>;
 
 def fpimm_to_i64 : SDNodeXForm<fpimm, [{
-  return CurDAG->getTargetConstant(N->getValueAPF().bitcastToAPInt().getZExtValue(), SDLoc(N), MVT::i64);
+  return CurDAG->getTargetConstant(N->getValueAPF().bitcastToAPInt().getSExtValue(), SDLoc(N), MVT::i64);
 }]>;
 
 def get_fpimm_16 : SDNodeXForm<fpimm, [{

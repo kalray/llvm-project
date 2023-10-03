@@ -699,16 +699,16 @@ def : Pat<(brind (i32 SingleReg:$r)), (IGOTO SingleReg:$r)>;
 // TODO: i32 (select (i32 setcc:$v), -1, 0) should be a simple NEGW $v
 
 def : Pat<(i64 (select i32:$cc, i64:$t, Signed10:$f)),
-            (CMOVEDri10 SingleReg:$cc, SingleReg:$t, (trunc_imm_32 imm:$f), scalarcond_even)>;
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$t, imm:$f, scalarcond_even)>;
 
 def : Pat<(i64 (select i32:$cc, Signed10:$t, i64:$f)),
-            (CMOVEDri10 SingleReg:$cc, SingleReg:$f, (trunc_imm_32 imm:$t), scalarcond_odd)>;
+            (CMOVEDri10 SingleReg:$cc, SingleReg:$f, imm:$t, scalarcond_odd)>;
 
 def : Pat<(i64 (select i32:$cc, i64:$t, Signed37:$f)),
-            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, (trunc_imm_32 imm:$f), scalarcond_even)>;
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$t, imm:$f, scalarcond_even)>;
 
 def : Pat<(i64 (select i32:$cc, Signed37:$t, i64:$f)),
-            (CMOVEDri37 SingleReg:$cc, SingleReg:$f, (trunc_imm_32 imm:$t), scalarcond_odd)>;
+            (CMOVEDri37 SingleReg:$cc, SingleReg:$f, imm:$t, scalarcond_odd)>;
 
 def : Pat<(i64 (select i32:$cc, i64:$t, Wrapped64:$f)),
             (CMOVEDri64 SingleReg:$cc, SingleReg:$t, imm:$f, scalarcond_even)>;
