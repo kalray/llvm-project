@@ -60,6 +60,7 @@ static cl::opt<std::string>
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());
   auto *PR = PassRegistry::getPassRegistry();
+  initializeKVXCodeGenPreparePass(*PR);
   initializeKVXExpandPseudoPass(*PR);
   initializeKVXLoadStorePackingPassPass(*PR);
   initializeKVXPacketizerPass(*PR);

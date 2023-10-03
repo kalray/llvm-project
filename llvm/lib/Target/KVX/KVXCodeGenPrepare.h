@@ -28,6 +28,7 @@ struct KVXCodeGenPrepare : public FunctionPass {
 
   void getAnalysisUsage(AnalysisUsage &AU) const override {
     AU.setPreservesCFG();
+    AU.addRequired<TargetPassConfig>();
   }
   static char ID;
   const bool IsV1;
