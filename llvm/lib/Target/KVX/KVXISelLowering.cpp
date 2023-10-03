@@ -822,12 +822,12 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {ISD::ABS, ISD::ADD, ISD::SUB})
     setOperationAction(I, MVT::v8i8, Legal);
 
-  for (auto VT : {MVT::v2i64, MVT::v4i32, MVT::v4i64})
+  for (auto VT : {MVT::v2i64, MVT::v4i64})
     for (auto I : {ISD::AND, ISD::OR, ISD::XOR, ISD::ADD, ISD::SUB, ISD::MUL})
       setOperationAction(I, VT, Expand);
 
   for (auto VT : {MVT::v2i32, MVT::v4i32})
-    for (auto I : {ISD::ADD, ISD::MUL, ISD::SUB})
+    for (auto I : {ISD::ADD, ISD::MUL, ISD::SUB, ISD::AND, ISD::OR, ISD::XOR})
       setOperationAction(I, VT, Legal);
 
   setOperationAction(ISD::ADD, MVT::v2i64, Custom);

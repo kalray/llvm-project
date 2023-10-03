@@ -18,9 +18,13 @@
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/InstrTypes.h"
+#include "llvm/IR/Intrinsics.h"
 #include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/IR/MDBuilder.h"
 #include "llvm/IR/PatternMatch.h"
+#include "llvm/Support/MathExtras.h"
+#include "llvm/Support/TypeSize.h"
 #include "llvm/Transforms/Utils/Local.h"
 
 using namespace llvm;
@@ -259,6 +263,76 @@ bool visitIntrinsic_ctpop(CallInst &CI, const bool IsV1) {
   return true;
 }
 
+bool visitIntrinsic_vector_reduce_add(CallInst &CI, const bool IsV1) {
+  Instruction *I = dyn_cast<Instruction>(CI.getOperand(0));
+  if (!(I &&
+        ((I->getOpcode() == Instruction::SExt) ||
+         (I->getOpcode() == Instruction::ZExt)) &&
+        I->getOperand(0)->getType()->getScalarSizeInBits() == 1 &&
+        I->getType()->isVectorTy()))
+    return false;
+
+  // if (CI.getType()->getScalarSizeInBits() == 1) {
+  //   CI.getParent()->print(errs());
+  //   report_fatal_error("vector_reduce_add");
+  // }
+  return false;
+}
+
+bool visitIntrinsic_vector_reduce_and(CallInst &CI, const bool IsV1) {
+  // if (CI.getType()->getScalarSizeInBits() == 1) {
+  //   CI.getParent()->print(errs());
+  //   report_fatal_error("vector_reduce_and");
+  // }
+  return false;
+}
+
+bool visitIntrinsic_vector_reduce_or(CallInst &CI, const bool IsV1) {
+  CmpInst::Predicate NE0, NE1, NE2;
+  Value *V0, *V1, *V2;
+  if (match(&CI, m_Intrinsic<Intrinsic::vector_reduce_or>(m_Select(
+                     m_Select(m_Cmp(NE0, m_Value(V0), m_Zero()), m_One(),
+                              m_Cmp(NE1, m_Value(V1), m_Zero())),
+                     m_One(), m_Cmp(NE2, m_Value(V2), m_Zero()))))) {
+    if (NE0 == NE1 && NE0 == NE2 && NE0 == CmpInst::ICMP_NE &&
+        V0->getType() == V1->getType() && V0->getType() == V2->getType() &&
+        isPowerOf2_32(V0->getType()->getPrimitiveSizeInBits())) {
+      auto &Ctx = CI.getContext();
+      IRBuilder<> Builder(Ctx);
+      Builder.SetInsertPoint(&CI);
+      unsigned Regs = V0->getType()->getPrimitiveSizeInBits() / 64;
+      if (Regs > 1) {
+        auto *Vec64Ty = VectorType::get(Type::getInt64Ty(Ctx),
+                                        ElementCount::getFixed(Regs));
+        V0 = Builder.CreateBitCast(V0, Vec64Ty);
+        V1 = Builder.CreateBitCast(V1, Vec64Ty);
+        V2 = Builder.CreateBitCast(V2, Vec64Ty);
+      }
+
+      auto *Or0 = Builder.CreateBinOp(Instruction::BinaryOps::Or, V0, V1);
+      auto *Or1 = Builder.CreateBinOp(Instruction::BinaryOps::Or, V2, Or0);
+      while (Regs > 1) {
+        auto HiLo = Builder.SplitVector(Or1);
+        Or1 = Builder.CreateBinOp(Instruction::BinaryOps::Or, HiLo.first,
+                                  HiLo.second);
+        Regs /= 2;
+      }
+      auto *Cmp =
+          Builder.CreateICmp(CmpInst::Predicate::ICMP_NE,
+                             ConstantInt::getNullValue(Or1->getType()), Or1);
+      CI.replaceAllUsesWith(Cmp);
+      ToDCE.insert(CI.getParent());
+      return true;
+    }
+  }
+
+  // if (CI.getType()->getScalarSizeInBits() == 1) {
+  //   CI.getParent()->print(errs());
+  //   report_fatal_error("vector_reduce_or");
+  // }
+  return false;
+}
+
 bool KVXCodeGenPrepare::runOnFunction(Function &F) {
   if (skipFunction(F))
     return false;
@@ -298,6 +372,9 @@ bool KVXCodeGenPrepare::runOnFunction(Function &F) {
           default:
             break;
             VISIT_INTRINSIC(ctpop);
+            VISIT_INTRINSIC(vector_reduce_add);
+            VISIT_INTRINSIC(vector_reduce_and);
+            VISIT_INTRINSIC(vector_reduce_or);
           }
         }
       }

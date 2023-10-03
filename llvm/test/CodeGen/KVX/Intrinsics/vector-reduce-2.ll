@@ -1954,47 +1954,27 @@ define i16 @andrhxd(<16 x i16> %0) {
 define i32 @andrwod(<8 x i32> %0) {
 ; CV1-LABEL: andrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srad $r4 = $r3, 32
-; CV1-NEXT:    srad $r5 = $r1, 32
-; CV1-NEXT:    srad $r6 = $r2, 32
-; CV1-NEXT:    srad $r7 = $r0, 32
+; CV1-NEXT:    andd $r0 = $r0, $r2
+; CV1-NEXT:    andd $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    andw $r0 = $r0, $r2
-; CV1-NEXT:    andw $r1 = $r1, $r3
-; CV1-NEXT:    andw $r3 = $r7, $r6
-; CV1-NEXT:    andw $r4 = $r5, $r4
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r0 = $r3, 63, 32
-; CV1-NEXT:    insf $r1 = $r4, 63, 32
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    andd $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    andw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: andrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r4 = $r2, 32
-; CV2-NEXT:    srad $r5 = $r0, 32
-; CV2-NEXT:    srad $r6 = $r3, 32
-; CV2-NEXT:    srad $r7 = $r1, 32
+; CV2-NEXT:    andd $r0 = $r0, $r2
+; CV2-NEXT:    andd $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    andw $r0 = $r0, $r2
-; CV2-NEXT:    andw $r1 = $r1, $r3
-; CV2-NEXT:    andw $r4 = $r5, $r4
-; CV2-NEXT:    andw $r5 = $r7, $r6
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r4, 63, 32
-; CV2-NEXT:    insf $r1 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    andd $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    andrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.and.v8i32(<8 x i32> %0)
   ret i32 %2
 }
@@ -2291,47 +2271,27 @@ define i16 @orrhxd(<16 x i16> %0) {
 define i32 @orrwod(<8 x i32> %0) {
 ; CV1-LABEL: orrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srad $r4 = $r3, 32
-; CV1-NEXT:    srad $r5 = $r1, 32
-; CV1-NEXT:    srad $r6 = $r2, 32
-; CV1-NEXT:    srad $r7 = $r0, 32
+; CV1-NEXT:    ord $r0 = $r0, $r2
+; CV1-NEXT:    ord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    orw $r0 = $r0, $r2
-; CV1-NEXT:    orw $r1 = $r1, $r3
-; CV1-NEXT:    orw $r3 = $r7, $r6
-; CV1-NEXT:    orw $r4 = $r5, $r4
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r0 = $r3, 63, 32
-; CV1-NEXT:    insf $r1 = $r4, 63, 32
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    ord $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    orw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: orrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r4 = $r2, 32
-; CV2-NEXT:    srad $r5 = $r0, 32
-; CV2-NEXT:    srad $r6 = $r3, 32
-; CV2-NEXT:    srad $r7 = $r1, 32
+; CV2-NEXT:    ord $r0 = $r0, $r2
+; CV2-NEXT:    ord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    orw $r0 = $r0, $r2
-; CV2-NEXT:    orw $r1 = $r1, $r3
-; CV2-NEXT:    orw $r4 = $r5, $r4
-; CV2-NEXT:    orw $r5 = $r7, $r6
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r4, 63, 32
-; CV2-NEXT:    insf $r1 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ord $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    orrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.or.v8i32(<8 x i32> %0)
   ret i32 %2
 }
@@ -2628,47 +2588,27 @@ define i16 @xorrhxd(<16 x i16> %0) {
 define i32 @xorrwod(<8 x i32> %0) {
 ; CV1-LABEL: xorrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    srad $r4 = $r3, 32
-; CV1-NEXT:    srad $r5 = $r1, 32
-; CV1-NEXT:    srad $r6 = $r2, 32
-; CV1-NEXT:    srad $r7 = $r0, 32
+; CV1-NEXT:    xord $r0 = $r0, $r2
+; CV1-NEXT:    xord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r2
-; CV1-NEXT:    xorw $r1 = $r1, $r3
-; CV1-NEXT:    xorw $r3 = $r7, $r6
-; CV1-NEXT:    xorw $r4 = $r5, $r4
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r0 = $r3, 63, 32
-; CV1-NEXT:    insf $r1 = $r4, 63, 32
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    xord $r0 = $r0, $r1
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    xorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: xorrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    srad $r4 = $r2, 32
-; CV2-NEXT:    srad $r5 = $r0, 32
-; CV2-NEXT:    srad $r6 = $r3, 32
-; CV2-NEXT:    srad $r7 = $r1, 32
+; CV2-NEXT:    xord $r0 = $r0, $r2
+; CV2-NEXT:    xord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorw $r0 = $r0, $r2
-; CV2-NEXT:    xorw $r1 = $r1, $r3
-; CV2-NEXT:    xorw $r4 = $r5, $r4
-; CV2-NEXT:    xorw $r5 = $r7, $r6
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r4, 63, 32
-; CV2-NEXT:    insf $r1 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    xord $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    xorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.xor.v8i32(<8 x i32> %0)
   ret i32 %2
 }

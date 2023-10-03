@@ -2038,6 +2038,16 @@ foreach vtype = [ v8i8, v4i16, v2i32 ] in {
               (ORNDrr SingleReg:$rs1, SingleReg:$rs2)>;
 }
 
+def : Pat<(and v4i32:$lhs, v4i32:$rhs),
+            (v4i32 (PairedRegRepl<ANDDrr> $lhs, $rhs))>;
+def : Pat<(or v4i32:$lhs, v4i32:$rhs),
+            (v4i32 (PairedRegRepl<ORDrr> $lhs, $rhs))>;
+def : Pat<(xor v4i32:$lhs, v4i32:$rhs),
+            (v4i32 (PairedRegRepl<XORDrr> $lhs, $rhs))>;
+def : Pat<(or (vnot v4i32:$lhs), v4i32:$rhs),
+            (v4i32 (PairedRegRepl<ORNDrr> $lhs, $rhs))>;
+def : Pat<(vnot (xor v4i32:$lhs, v4i32:$rhs)),
+            (v4i32 (PairedRegRepl<NXORDrr> $lhs, $rhs))>;
 // ORNW
 def : Pat<(or (not i32:$rs1), i32:$rs2), (ORNWrr SingleReg:$rs1, SingleReg:$rs2)>;
 def : Pat<(ORNDriPat (or i32:$rs1, Signed10W:$c1), Signed10W), (ORNWri10 SingleReg:$rs1, Signed10W:$c1)>;

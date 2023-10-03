@@ -89,6 +89,13 @@ def PairedRegLo: OutPatFrag<(ops node:$R), (EXTRACT_SUBREG $R, sub_d0)>;
 def PairedRegHi: OutPatFrag<(ops node:$R), (EXTRACT_SUBREG $R, sub_d1)>;
 def BuildPairedReg: OutPatFrag<(ops node:$hi, node:$lo), (REG_SEQUENCE PairedReg, node:$hi, sub_d1, node:$lo, sub_d0)>;
 
+class PairedRegRepl<Instruction I>: OutPatFrag<(ops node:$lhs, node:$rhs),
+            (REG_SEQUENCE PairedReg,
+              (I (i64 (EXTRACT_SUBREG node:$lhs, sub_d1)),
+                 (i64 (EXTRACT_SUBREG node:$rhs, sub_d1))), sub_d1,
+              (I (i64 (EXTRACT_SUBREG node:$lhs, sub_d0)),
+                 (i64 (EXTRACT_SUBREG node:$rhs, sub_d0))), sub_d0)>;
+
 def KVXInstrInfo : InstrInfo;
 include "KVXConstants.td"
 include "KVXInstrInfo.td"
