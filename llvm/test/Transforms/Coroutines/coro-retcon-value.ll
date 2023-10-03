@@ -4,7 +4,7 @@
 
 define {i8*, i32} @f(i8* %buffer, i32 %n) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  entry:
+; CHECK-NEXT:  coro.return:
 ; CHECK-NEXT:    [[N_VAL_SPILL_ADDR:%.*]] = bitcast i8* [[BUFFER:%.*]] to i32*
 ; CHECK-NEXT:    store i32 [[N:%.*]], i32* [[N_VAL_SPILL_ADDR]], align 4
 ; CHECK-NEXT:    [[TMP0:%.*]] = insertvalue { i8*, i32 } { i8* bitcast ({ i8*, i32 } (i8*, i8)* @f.resume.0 to i8*), i32 undef }, i32 [[N]], 1

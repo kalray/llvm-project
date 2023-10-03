@@ -120,8 +120,8 @@ static cl::opt<bool>
                               cl::desc("Disable shrink-wrap library calls"));
 
 cl::opt<bool>
-    EnableGVNSink("enable-gvn-sink", cl::init(true),
-                  cl::desc("Enable the GVN sinking pass (default = on)"));
+    EnableGVNSink("enable-gvn-sink",
+                  cl::desc("Enable the GVN sinking pass (default = off)"));
 
 // This option is used in simplifying testing SampleFDO optimizations for
 // profile loading.

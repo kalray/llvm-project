@@ -3,7 +3,7 @@
 
 define i8* @f(i8* %buffer, i32 %n) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  entry:
+; CHECK-NEXT:  coro.return:
 ; CHECK-NEXT:    [[TMP0:%.*]] = tail call i8* @allocate(i32 12)
 ; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i8* [[BUFFER:%.*]] to i8**
 ; CHECK-NEXT:    store i8* [[TMP0]], i8** [[TMP1]], align 8

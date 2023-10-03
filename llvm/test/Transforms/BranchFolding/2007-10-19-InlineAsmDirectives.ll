@@ -1,5 +1,3 @@
-; KVX activated gvn sink which will move identical asm instructions
-; XFAIL: *
 ; RUN: opt < %s -O3 | llc -no-integrated-as | FileCheck %s
 ; REQUIRES: default_triple
 

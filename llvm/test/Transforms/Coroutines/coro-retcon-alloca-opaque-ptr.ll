@@ -7,7 +7,7 @@ target datalayout = "p:64:64:64"
 declare {i8*, i8*, i32} @prototype_f(i8*, i1)
 define {i8*, i8*, i32} @f(i8* %buffer, i32 %n, { i32 } %dummy) {
 ; CHECK-LABEL: @f(
-; CHECK-NEXT:  entry:
+; CHECK-NEXT:  coro.return:
 ; CHECK-NEXT:    [[N_VAL_SPILL_ADDR:%.*]] = getelementptr inbounds [[F_FRAME:%.*]], ptr [[BUFFER:%.*]], i64 0, i32 1
 ; CHECK-NEXT:    store i32 [[N:%.*]], ptr [[N_VAL_SPILL_ADDR]], align 4
 ; CHECK-NEXT:    [[TMP0:%.*]] = tail call ptr @allocate(i32 [[N]])
@@ -42,7 +42,7 @@ cleanup:
 declare {i8*, i32} @prototype_g(i8*, i1)
 define {i8*, i32} @g(i8* %buffer, i32 %n) {
 ; CHECK-LABEL: @g(
-; CHECK-NEXT:  entry:
+; CHECK-NEXT:  coro.return:
 ; CHECK-NEXT:    store i32 [[N:%.*]], ptr [[BUFFER:%.*]], align 4
 ; CHECK-NEXT:    [[TMP0:%.*]] = zext i32 [[N]] to i64
 ; CHECK-NEXT:    [[TMP1:%.*]] = alloca i8, i64 [[TMP0]], align 8
