@@ -1180,15 +1180,15 @@ define <2 x i16> @fshl_rr(<2 x i16> %a, <2 x i16> %b, i16 %c) {
 ; V2-NEXT:    andnw $r3 = $r2, 0xf000f
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sllhqs $r2 = $r0, $r2
-; V2-NEXT:    srlhqs $r3 = $r1, $r3
-; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r3 = $r3, 19, 16
+; V2-NEXT:    srlhqs $r4 = $r1, $r3
 ; V2-NEXT:    extfz $r5 = $r2, 19, 16
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sllhqs $r0 = $r0, $r5
-; V2-NEXT:    srlhqs $r1 = $r1, $r4
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 15, 0
-; V2-NEXT:    insf $r1 = $r3, 15, 0
+; V2-NEXT:    insf $r1 = $r4, 15, 0
 ; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    orw $r0 = $r0, $r1
 ; V2-NEXT:    ret
@@ -1221,17 +1221,17 @@ define <2 x i16> @fshl_vec(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c) {
 ; V1-NEXT:    andw $r2 = $r2, 0xf000f
 ; V1-NEXT:    andnw $r3 = $r2, 0xf000f
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    extfz $r3 = $r3, 19, 16
-; V1-NEXT:    srlhqs $r4 = $r1, $r3
+; V1-NEXT:    srlhqs $r3 = $r1, $r3
+; V1-NEXT:    extfz $r4 = $r3, 19, 16
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlhqs $r1 = $r1, $r3
-; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    srlhqs $r1 = $r1, $r4
+; V1-NEXT:    extfz $r4 = $r2, 19, 16
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sllhqs $r0 = $r0, $r3
+; V1-NEXT:    sllhqs $r0 = $r0, $r4
 ; V1-NEXT:    sllhqs $r2 = $r0, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    insf $r0 = $r2, 15, 0
-; V1-NEXT:    insf $r1 = $r4, 15, 0
+; V1-NEXT:    insf $r1 = $r3, 15, 0
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    orw $r0 = $r0, $r1
 ; V1-NEXT:    ret
@@ -1294,15 +1294,15 @@ define <2 x i16> @fshr_rr(<2 x i16> %a, <2 x i16> %b, i16 %c) {
 ; V2-NEXT:    andw $r3 = $r2, 0xf000f
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sllhqs $r2 = $r0, $r2
-; V2-NEXT:    srlhqs $r3 = $r1, $r3
-; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r3 = $r3, 19, 16
+; V2-NEXT:    srlhqs $r4 = $r1, $r3
 ; V2-NEXT:    extfz $r5 = $r2, 19, 16
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sllhqs $r0 = $r0, $r5
-; V2-NEXT:    srlhqs $r1 = $r1, $r4
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 15, 0
-; V2-NEXT:    insf $r1 = $r3, 15, 0
+; V2-NEXT:    insf $r1 = $r4, 15, 0
 ; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    orw $r0 = $r0, $r1
 ; V2-NEXT:    ret
@@ -1335,17 +1335,17 @@ define <2 x i16> @fshr_vec(<2 x i16> %a, <2 x i16> %b, <2 x i16> %c) {
 ; V1-NEXT:    andnw $r2 = $r2, 0xf000f
 ; V1-NEXT:    andw $r3 = $r2, 0xf000f
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    extfz $r3 = $r3, 19, 16
-; V1-NEXT:    srlhqs $r4 = $r1, $r3
+; V1-NEXT:    srlhqs $r3 = $r1, $r3
+; V1-NEXT:    extfz $r4 = $r3, 19, 16
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlhqs $r1 = $r1, $r3
-; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    srlhqs $r1 = $r1, $r4
+; V1-NEXT:    extfz $r4 = $r2, 19, 16
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sllhqs $r0 = $r0, $r3
+; V1-NEXT:    sllhqs $r0 = $r0, $r4
 ; V1-NEXT:    sllhqs $r2 = $r0, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    insf $r0 = $r2, 15, 0
-; V1-NEXT:    insf $r1 = $r4, 15, 0
+; V1-NEXT:    insf $r1 = $r3, 15, 0
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    orw $r0 = $r0, $r1
 ; V1-NEXT:    ret

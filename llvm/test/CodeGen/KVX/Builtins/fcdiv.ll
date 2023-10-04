@@ -21,15 +21,14 @@ declare double @llvm.kvx.fcdiv.f64(double, double, i32)
 define <2 x double> @fcdivdp(<2 x double> %0, <2 x double> %1) {
 ; ALL-LABEL: fcdivdp:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    copyd $r2 = $r1
 ; ALL-NEXT:    copyd $r4 = $r0
 ; ALL-NEXT:    copyd $r5 = $r2
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fcdivd $r0 = $r4r5
-; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fcdivd $r1 = $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
   %3 = extractelement <2 x double> %0, i64 0
   %4 = extractelement <2 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fcdiv.f64(double %3, double %4, i32 0)
@@ -44,22 +43,21 @@ define <2 x double> @fcdivdp(<2 x double> %0, <2 x double> %1) {
 define <4 x double> @fcdivdq(<4 x double> %0, <4 x double> %1) {
 ; ALL-LABEL: fcdivdq:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    copyd $r6 = $r3
 ; ALL-NEXT:    copyd $r9 = $r6
-; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    copyd $r11 = $r4
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    fcdivd $r0 = $r10r11
-; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    fcdivd $r0 = $r10r11
 ; ALL-NEXT:    fcdivd $r1 = $r4r5
 ; ALL-NEXT:    copyd $r8 = $r2
 ; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fcdivd $r2 = $r8r9
-; ALL-NEXT:    copyd $r6 = $r3
-; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    fcdivd $r3 = $r6r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <4 x double> %0, i64 0
   %4 = extractelement <4 x double> %1, i64 0
   %5 = tail call double @llvm.kvx.fcdiv.f64(double %3, double %4, i32 0)
@@ -94,22 +92,21 @@ declare float @llvm.kvx.fcdiv.f32(float, float, i32)
 define <8 x float> @fcdivwo(<8 x float> %0, <8 x float> %1) {
 ; ALL-LABEL: fcdivwo:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    copyd $r6 = $r3
 ; ALL-NEXT:    copyd $r9 = $r6
-; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    copyd $r11 = $r4
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    fcdivwp $r0 = $r10r11
-; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    copyd $r10 = $r0
 ; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    fcdivwp $r0 = $r10r11
 ; ALL-NEXT:    fcdivwp $r1 = $r4r5
 ; ALL-NEXT:    copyd $r8 = $r2
 ; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    fcdivwp $r2 = $r8r9
-; ALL-NEXT:    copyd $r6 = $r3
-; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    fcdivwp $r3 = $r6r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    ;; # (end cycle 3)
   %3 = shufflevector <8 x float> %0, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <8 x float> %1, <8 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.fcdiv.v2f32(<2 x float> %3, <2 x float> %4, i32 0)
@@ -143,15 +140,14 @@ define <2 x float> @fcdivwp(<2 x float> %0, <2 x float> %1) {
 define <4 x float> @fcdivwq(<4 x float> %0, <4 x float> %1) {
 ; ALL-LABEL: fcdivwq:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    copyd $r2 = $r1
 ; ALL-NEXT:    copyd $r4 = $r0
 ; ALL-NEXT:    copyd $r5 = $r2
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fcdivwp $r0 = $r4r5
-; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fcdivwp $r1 = $r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
   %3 = shufflevector <4 x float> %0, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %4 = shufflevector <4 x float> %1, <4 x float> undef, <2 x i32> <i32 0, i32 1>
   %5 = tail call <2 x float> @llvm.kvx.fcdiv.v2f32(<2 x float> %3, <2 x float> %4, i32 0)

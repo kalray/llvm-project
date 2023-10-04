@@ -476,19 +476,19 @@ entry:
 define <4 x i32> @sext_4xi1_4xi32(<4 x i1> %a){
 ; CHECK-LABEL: sext_4xi1_4xi32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x200000001
-; CHECK-NEXT:    sbmm8 $r1 = $r0, 0x800000004
+; CHECK-NEXT:    sbmm8 $r2 = $r0, 0x200000001
+; CHECK-NEXT:    sbmm8 $r3 = $r0, 0x800000004
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r0, 0, 0
-; CHECK-NEXT:    extfs $r1 = $r1, 0, 0
-; CHECK-NEXT:    srld $r2 = $r1, 32
-; CHECK-NEXT:    srld $r3 = $r0, 32
+; CHECK-NEXT:    extfs $r0 = $r2, 0, 0
+; CHECK-NEXT:    extfs $r1 = $r3, 0, 0
+; CHECK-NEXT:    srld $r2 = $r2, 32
+; CHECK-NEXT:    srld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    extfs $r2 = $r2, 0, 0
 ; CHECK-NEXT:    extfs $r3 = $r3, 0, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    insf $r0 = $r2, 63, 32
+; CHECK-NEXT:    insf $r1 = $r3, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:

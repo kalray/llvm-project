@@ -1341,15 +1341,15 @@ define <2 x i8> @fshl_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V2-NEXT:    andnw $r3 = $r2, 0x707
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sllbos $r2 = $r0, $r2
-; V2-NEXT:    srlbos $r3 = $r1, $r3
-; V2-NEXT:    extfz $r4 = $r3, 10, 8
+; V2-NEXT:    extfz $r3 = $r3, 10, 8
+; V2-NEXT:    srlbos $r4 = $r1, $r3
 ; V2-NEXT:    extfz $r5 = $r2, 10, 8
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sllbos $r0 = $r0, $r5
-; V2-NEXT:    srlbos $r1 = $r1, $r4
+; V2-NEXT:    srlbos $r1 = $r1, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
-; V2-NEXT:    insf $r1 = $r3, 7, 0
+; V2-NEXT:    insf $r1 = $r4, 7, 0
 ; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    orw $r0 = $r0, $r1
 ; V2-NEXT:    ret
@@ -1481,15 +1481,15 @@ define <2 x i8> @fshr_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V2-NEXT:    andw $r3 = $r2, 0x707
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    sllbos $r2 = $r0, $r2
-; V2-NEXT:    srlbos $r3 = $r1, $r3
-; V2-NEXT:    extfz $r4 = $r3, 10, 8
+; V2-NEXT:    extfz $r3 = $r3, 10, 8
+; V2-NEXT:    srlbos $r4 = $r1, $r3
 ; V2-NEXT:    extfz $r5 = $r2, 10, 8
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    sllbos $r0 = $r0, $r5
-; V2-NEXT:    srlbos $r1 = $r1, $r4
+; V2-NEXT:    srlbos $r1 = $r1, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
-; V2-NEXT:    insf $r1 = $r3, 7, 0
+; V2-NEXT:    insf $r1 = $r4, 7, 0
 ; V2-NEXT:    ;; # (end cycle 4)
 ; V2-NEXT:    orw $r0 = $r0, $r1
 ; V2-NEXT:    ret

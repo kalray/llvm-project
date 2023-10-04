@@ -17,27 +17,27 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sxhd $r3 = $r3
 ; CHECK-NEXT:    zxwd $r4 = $r0
-; CHECK-NEXT:    make $r6 = 0
-; CHECK-NEXT:    compw.ltu $r7 = $r0, 2
+; CHECK-NEXT:    make $r5 = 0
+; CHECK-NEXT:    compw.ltu $r6 = $r0, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    clrf $r5 = $r4, 0, 31
+; CHECK-NEXT:    addd $r7 = $r4, -1
+; CHECK-NEXT:    clrf $r8 = $r4, 0, 31
 ; CHECK-NEXT:    copyd $r9 = $r3
 ; CHECK-NEXT:    make $r17 = 0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    addd $r8 = $r5, -2
 ; CHECK-NEXT:    insf $r9 = $r9, 63, 32
-; CHECK-NEXT:    compd.eq $r16 = $r5, $r4
+; CHECK-NEXT:    addd $r10 = $r8, -2
+; CHECK-NEXT:    compd.gtu $r15 = $r7, 0xffffffff
+; CHECK-NEXT:    compd.eq $r16 = $r8, $r4
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    addd $r8 = $r4, -1
-; CHECK-NEXT:    srld $r11 = $r8, 1
+; CHECK-NEXT:    srld $r11 = $r10, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    addd $r10 = $r11, -2
 ; CHECK-NEXT:    addd $r11 = $r11, 1
-; CHECK-NEXT:    compd.gtu $r15 = $r8, 0xffffffff
 ; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    addw $r6 = $r6, $r0
+; CHECK-NEXT:    addw $r5 = $r5, $r0
 ; CHECK-NEXT:    addw $r17 = $r17, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compw.ne $r32 = $r17, $r0
@@ -47,7 +47,7 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CHECK-NEXT:    # Child Loop BB0_10 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_16 Depth 2
-; CHECK-NEXT:    cb.odd $r7 ? .LBB0_15
+; CHECK-NEXT:    cb.odd $r6 ? .LBB0_15
 ; CHECK-NEXT:    make $r33 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.4: # in Loop: Header=BB0_3 Depth=1
@@ -56,7 +56,7 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    notw $r32 = $r32
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    compw.ltu $r32 = $r32, $r8
+; CHECK-NEXT:    compw.ltu $r32 = $r32, $r7
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    cb.odd $r32 ? .LBB0_15
 ; CHECK-NEXT:    ;;
@@ -65,9 +65,9 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    make $r33 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.6: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r33 = $r6
+; CHECK-NEXT:    zxwd $r33 = $r5
 ; CHECK-NEXT:    compd.gt $r34 = $r11, 1
-; CHECK-NEXT:    addw $r36 = $r6, 2
+; CHECK-NEXT:    addw $r35 = $r5, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slld $r32 = $r33, 1
 ; CHECK-NEXT:    slld $r33 = $r33, 2
@@ -75,10 +75,10 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    cb.even $r34 ? .LBB0_14
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r34 = $r36
-; CHECK-NEXT:    lwz $r35 = $r32[$r2]
+; CHECK-NEXT:    zxwd $r34 = $r35
+; CHECK-NEXT:    lwz $r36 = $r32[$r2]
 ; CHECK-NEXT:    compd.gt $r37 = $r11, 2
-; CHECK-NEXT:    addw $r38 = $r36, 2
+; CHECK-NEXT:    addw $r39 = $r35, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    slld $r32 = $r34, 1
 ; CHECK-NEXT:    slld $r34 = $r34, 2
@@ -86,54 +86,54 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    cb.even $r37 ? .LBB0_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r35 = $r38
-; CHECK-NEXT:    sxlhwp $r37 = $r35
-; CHECK-NEXT:    lwz $r39 = $r32[$r2]
-; CHECK-NEXT:    compd.gt $r40 = $r11, 3
+; CHECK-NEXT:    sxlhwp $r35 = $r36
+; CHECK-NEXT:    compd.gt $r36 = $r11, 3
+; CHECK-NEXT:    zxwd $r37 = $r39
+; CHECK-NEXT:    lwz $r38 = $r32[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r32 = $r35, 1
-; CHECK-NEXT:    slld $r36 = $r35, 2
-; CHECK-NEXT:    addw $r38 = $r38, 2
+; CHECK-NEXT:    slld $r32 = $r37, 1
+; CHECK-NEXT:    slld $r37 = $r37, 2
+; CHECK-NEXT:    addw $r39 = $r39, 2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r40 ? .LBB0_11
+; CHECK-NEXT:    cb.even $r36 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    loopdo $r10, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_10: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    mulwp $r32 = $r9, $r37
-; CHECK-NEXT:    lwz $r35 = $r32[$r2]
+; CHECK-NEXT:    copyd $r34 = $r37
+; CHECK-NEXT:    lwz $r36 = $r32[$r2]
+; CHECK-NEXT:    zxwd $r37 = $r39
 ; CHECK-NEXT:    copyd $r40 = $r34
-; CHECK-NEXT:    zxwd $r41 = $r38
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd $r33[$r1] = $r32
-; CHECK-NEXT:    copyd $r34 = $r36
-; CHECK-NEXT:    sxlhwp $r37 = $r39
-; CHECK-NEXT:    addw $r38 = $r38, 2
+; CHECK-NEXT:    slld $r32 = $r37, 1
+; CHECK-NEXT:    mulwp $r35 = $r9, $r35
+; CHECK-NEXT:    slld $r37 = $r37, 2
+; CHECK-NEXT:    addw $r39 = $r39, 2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    slld $r32 = $r41, 1
-; CHECK-NEXT:    slld $r36 = $r41, 2
+; CHECK-NEXT:    sd $r33[$r1] = $r35
+; CHECK-NEXT:    sxlhwp $r35 = $r38
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r33 = $r40
-; CHECK-NEXT:    copyd $r39 = $r35
+; CHECK-NEXT:    copyd $r38 = $r36
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:    goto .LBB0_12
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_11: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    copyd $r35 = $r39
+; CHECK-NEXT:    copyd $r36 = $r38
 ; CHECK-NEXT:    copyd $r40 = $r33
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_12: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    copyd $r33 = $r34
-; CHECK-NEXT:    mulwp $r37 = $r9, $r37
+; CHECK-NEXT:    mulwp $r34 = $r9, $r35
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r34 = $r36
-; CHECK-NEXT:    sd $r40[$r1] = $r37
+; CHECK-NEXT:    copyd $r34 = $r37
+; CHECK-NEXT:    sd $r40[$r1] = $r34
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_13: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    sxlhwp $r35 = $r35
+; CHECK-NEXT:    sxlhwp $r35 = $r36
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    mulwp $r35 = $r9, $r35
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -149,11 +149,11 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    cb.odd $r16 ? .LBB0_2
 ; CHECK-NEXT:    sd $r33[$r1] = $r32
-; CHECK-NEXT:    copyd $r33 = $r5
+; CHECK-NEXT:    copyd $r33 = $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB0_15: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    sbfd $r32 = $r33, $r4
-; CHECK-NEXT:    addw $r33 = $r6, $r33
+; CHECK-NEXT:    addw $r33 = $r5, $r33
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_16: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2

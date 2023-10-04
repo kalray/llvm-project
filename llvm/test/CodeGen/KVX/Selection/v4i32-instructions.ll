@@ -866,22 +866,22 @@ define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_div_4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sraw $r4 = $r0, 31
+; CHECK-NEXT:    sraw $r3 = $r0, 31
+; CHECK-NEXT:    srad $r4 = $r1, 32
 ; CHECK-NEXT:    sraw $r5 = $r1, 31
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    srlw $r4 = $r4, 30
+; CHECK-NEXT:    sraw $r3 = $r4, 31
 ; CHECK-NEXT:    srlw $r5 = $r5, 30
+; CHECK-NEXT:    srlw $r6 = $r3, 30
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r2 = $r2, 30
 ; CHECK-NEXT:    srlw $r3 = $r3, 30
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
+; CHECK-NEXT:    insf $r6 = $r2, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addwp $r0 = $r0, $r4
+; CHECK-NEXT:    addwp $r0 = $r0, $r6
 ; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sraw $r0 = $r0, 2
@@ -904,22 +904,22 @@ define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_div_32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sraw $r4 = $r0, 31
+; CHECK-NEXT:    sraw $r3 = $r0, 31
+; CHECK-NEXT:    srad $r4 = $r1, 32
 ; CHECK-NEXT:    sraw $r5 = $r1, 31
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    srlw $r4 = $r4, 27
+; CHECK-NEXT:    sraw $r3 = $r4, 31
 ; CHECK-NEXT:    srlw $r5 = $r5, 27
+; CHECK-NEXT:    srlw $r6 = $r3, 27
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r2 = $r2, 27
 ; CHECK-NEXT:    srlw $r3 = $r3, 27
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
 ; CHECK-NEXT:    insf $r5 = $r3, 63, 32
+; CHECK-NEXT:    insf $r6 = $r2, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addwp $r0 = $r0, $r4
+; CHECK-NEXT:    addwp $r0 = $r0, $r6
 ; CHECK-NEXT:    addwp $r1 = $r1, $r5
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sraw $r0 = $r0, 5
@@ -1069,31 +1069,31 @@ define <4 x i32> @fshl_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
 ; CHECK-NEXT:    andw $r5 = $r4, 31
 ; CHECK-NEXT:    srad $r6 = $r1, 32
 ; CHECK-NEXT:    srad $r7 = $r3, 32
-; CHECK-NEXT:    srad $r8 = $r0, 32
+; CHECK-NEXT:    srad $r8 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sllw $r0 = $r0, $r5
-; CHECK-NEXT:    sllw $r1 = $r1, $r5
-; CHECK-NEXT:    sllw $r6 = $r6, $r5
-; CHECK-NEXT:    sllw $r8 = $r8, $r5
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srlw $r3 = $r3, 1
 ; CHECK-NEXT:    andnw $r4 = $r4, 31
-; CHECK-NEXT:    srad $r5 = $r2, 32
 ; CHECK-NEXT:    srlw $r7 = $r7, 1
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srad $r9 = $r0, 32
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sllw $r1 = $r1, $r5
 ; CHECK-NEXT:    srlw $r2 = $r2, 1
+; CHECK-NEXT:    sllw $r6 = $r6, $r5
+; CHECK-NEXT:    srlw $r8 = $r8, 1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sllw $r0 = $r0, $r5
 ; CHECK-NEXT:    srlw $r3 = $r3, $r4
-; CHECK-NEXT:    srlw $r5 = $r5, 1
+; CHECK-NEXT:    sllw $r5 = $r9, $r5
 ; CHECK-NEXT:    srlw $r7 = $r7, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    orw $r1 = $r1, $r3
 ; CHECK-NEXT:    srlw $r2 = $r2, $r4
 ; CHECK-NEXT:    orw $r4 = $r6, $r7
-; CHECK-NEXT:    srlw $r5 = $r5, $r4
+; CHECK-NEXT:    srlw $r8 = $r8, $r4
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r8, $r5
+; CHECK-NEXT:    orw $r3 = $r5, $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
@@ -1141,26 +1141,26 @@ define <4 x i32> @fshl_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
 ; CHECK-NEXT:    srlw $r3 = $r3, 1
 ; CHECK-NEXT:    srad $r6 = $r5, 32
 ; CHECK-NEXT:    srad $r7 = $r3, 32
-; CHECK-NEXT:    srad $r9 = $r1, 32
+; CHECK-NEXT:    andnw $r9 = $r5, 31
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andw $r5 = $r5, 31
 ; CHECK-NEXT:    andw $r6 = $r6, 31
 ; CHECK-NEXT:    srlw $r7 = $r7, 1
 ; CHECK-NEXT:    andnw $r8 = $r6, 31
-; CHECK-NEXT:    srad $r10 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    andw $r5 = $r5, 31
-; CHECK-NEXT:    sllw $r6 = $r9, $r6
+; CHECK-NEXT:    srlw $r3 = $r3, $r9
 ; CHECK-NEXT:    srlw $r7 = $r7, $r8
-; CHECK-NEXT:    andnw $r8 = $r5, 31
+; CHECK-NEXT:    srad $r8 = $r1, 32
+; CHECK-NEXT:    srad $r9 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sllw $r1 = $r1, $r5
-; CHECK-NEXT:    srlw $r3 = $r3, $r8
+; CHECK-NEXT:    sllw $r6 = $r8, $r6
 ; CHECK-NEXT:    srad $r8 = $r4, 32
-; CHECK-NEXT:    srad $r9 = $r2, 32
+; CHECK-NEXT:    srlw $r9 = $r9, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    andnw $r5 = $r8, 31
 ; CHECK-NEXT:    andw $r8 = $r8, 31
-; CHECK-NEXT:    srlw $r9 = $r9, 1
+; CHECK-NEXT:    srad $r10 = $r0, 32
 ; CHECK-NEXT:    andnw $r11 = $r4, 31
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    srlw $r2 = $r2, 1
@@ -1189,31 +1189,31 @@ define <4 x i32> @fshr_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
 ; CHECK-NEXT:    andw $r5 = $r4, 31
 ; CHECK-NEXT:    srad $r6 = $r3, 32
 ; CHECK-NEXT:    srad $r7 = $r1, 32
-; CHECK-NEXT:    srad $r8 = $r2, 32
+; CHECK-NEXT:    srad $r8 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srlw $r2 = $r2, $r5
-; CHECK-NEXT:    srlw $r3 = $r3, $r5
-; CHECK-NEXT:    srlw $r6 = $r6, $r5
-; CHECK-NEXT:    srlw $r8 = $r8, $r5
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sllw $r1 = $r1, 1
 ; CHECK-NEXT:    andnw $r4 = $r4, 31
-; CHECK-NEXT:    srad $r5 = $r0, 32
 ; CHECK-NEXT:    sllw $r7 = $r7, 1
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srad $r9 = $r2, 32
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sllw $r0 = $r0, 1
+; CHECK-NEXT:    srlw $r3 = $r3, $r5
+; CHECK-NEXT:    srlw $r6 = $r6, $r5
+; CHECK-NEXT:    sllw $r8 = $r8, 1
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sllw $r1 = $r1, $r4
-; CHECK-NEXT:    sllw $r5 = $r5, 1
+; CHECK-NEXT:    srlw $r2 = $r2, $r5
+; CHECK-NEXT:    srlw $r5 = $r9, $r5
 ; CHECK-NEXT:    sllw $r7 = $r7, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r4
 ; CHECK-NEXT:    orw $r1 = $r1, $r3
 ; CHECK-NEXT:    orw $r4 = $r7, $r6
-; CHECK-NEXT:    sllw $r5 = $r5, $r4
+; CHECK-NEXT:    sllw $r8 = $r8, $r4
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    orw $r3 = $r8, $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
@@ -1259,43 +1259,43 @@ define <4 x i32> @fshr_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
 ; CHECK-LABEL: fshr_vec:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sllw $r1 = $r1, 1
-; CHECK-NEXT:    srad $r6 = $r5, 32
-; CHECK-NEXT:    srad $r7 = $r3, 32
+; CHECK-NEXT:    srad $r6 = $r3, 32
+; CHECK-NEXT:    srad $r7 = $r5, 32
 ; CHECK-NEXT:    srad $r9 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    andnw $r6 = $r6, 31
-; CHECK-NEXT:    andw $r8 = $r6, 31
+; CHECK-NEXT:    andnw $r7 = $r7, 31
+; CHECK-NEXT:    andw $r8 = $r7, 31
 ; CHECK-NEXT:    srad $r10 = $r0, 32
 ; CHECK-NEXT:    andw $r11 = $r4, 31
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andnw $r5 = $r5, 31
-; CHECK-NEXT:    srlw $r7 = $r7, $r8
+; CHECK-NEXT:    srlw $r6 = $r6, $r8
 ; CHECK-NEXT:    sllw $r8 = $r9, 1
 ; CHECK-NEXT:    andw $r9 = $r5, 31
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sllw $r1 = $r1, $r5
 ; CHECK-NEXT:    srlw $r3 = $r3, $r9
-; CHECK-NEXT:    srad $r5 = $r4, 32
-; CHECK-NEXT:    sllw $r6 = $r8, $r6
+; CHECK-NEXT:    sllw $r7 = $r8, $r7
+; CHECK-NEXT:    srad $r8 = $r4, 32
+; CHECK-NEXT:    srad $r9 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    andnw $r5 = $r5, 31
-; CHECK-NEXT:    srad $r8 = $r2, 32
-; CHECK-NEXT:    andw $r9 = $r5, 31
+; CHECK-NEXT:    sllw $r1 = $r1, $r5
+; CHECK-NEXT:    andw $r5 = $r8, 31
+; CHECK-NEXT:    andnw $r8 = $r8, 31
 ; CHECK-NEXT:    sllw $r10 = $r10, 1
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sllw $r0 = $r0, 1
 ; CHECK-NEXT:    andnw $r4 = $r4, 31
-; CHECK-NEXT:    sllw $r5 = $r10, $r5
-; CHECK-NEXT:    srlw $r8 = $r8, $r9
+; CHECK-NEXT:    srlw $r5 = $r9, $r5
+; CHECK-NEXT:    sllw $r8 = $r10, $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r4
 ; CHECK-NEXT:    orw $r1 = $r1, $r3
 ; CHECK-NEXT:    srlw $r2 = $r2, $r11
-; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    orw $r4 = $r7, $r6
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    orw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    orw $r3 = $r8, $r5
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret

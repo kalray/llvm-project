@@ -76,6 +76,7 @@ public:
   bool enablePostRAScheduler() const override;
   bool enablePostRAMachineScheduler() const override;
   bool enableMachineScheduler() const override;
+  bool alternateTopBottomBidirectional() const override { return true; }
   bool isV1() const;
   bool isV2() const;
   bool useAA() const override;

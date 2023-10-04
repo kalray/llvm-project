@@ -92,23 +92,23 @@ define <2 x i8> @shrbps_r(<2 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    insf $r1 = $r1, 15, 8
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    andw $r1 = $r1, 0x707
-; CHECK-NEXT:    negbo $r2 = $r1
+; CHECK-NEXT:    negbo $r1 = $r1
+; CHECK-NEXT:    andw $r2 = $r1, 0x707
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srlbos $r1 = $r0, $r1
-; CHECK-NEXT:    andw $r2 = $r2, 0x707
-; CHECK-NEXT:    extfz $r3 = $r1, 10, 8
+; CHECK-NEXT:    andw $r1 = $r1, 0x707
+; CHECK-NEXT:    extfz $r2 = $r2, 10, 8
+; CHECK-NEXT:    srlbos $r3 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sllbos $r2 = $r0, $r2
-; CHECK-NEXT:    srlbos $r3 = $r0, $r3
-; CHECK-NEXT:    extfz $r4 = $r2, 10, 8
+; CHECK-NEXT:    sllbos $r1 = $r0, $r1
+; CHECK-NEXT:    srlbos $r2 = $r0, $r2
+; CHECK-NEXT:    extfz $r4 = $r1, 10, 8
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sllbos $r0 = $r0, $r4
-; CHECK-NEXT:    insf $r3 = $r1, 7, 0
+; CHECK-NEXT:    insf $r2 = $r3, 7, 0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    insf $r0 = $r2, 7, 0
+; CHECK-NEXT:    insf $r0 = $r1, 7, 0
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    orw $r0 = $r3, $r0
+; CHECK-NEXT:    orw $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 3)
@@ -152,40 +152,39 @@ define <4 x i8> @shrbqs_r(<4 x i8> %0, i32 %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x1010101
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    andw $r1 = $r1, 0x7070707
-; CHECK-NEXT:    negbo $r2 = $r1
+; CHECK-NEXT:    negbo $r1 = $r1
+; CHECK-NEXT:    andw $r2 = $r1, 0x7070707
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    andw $r2 = $r2, 0x7070707
-; CHECK-NEXT:    extfz $r3 = $r1, 10, 8
-; CHECK-NEXT:    srlbos $r5 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    srlbos $r3 = $r0, $r3
+; CHECK-NEXT:    andw $r1 = $r1, 0x7070707
+; CHECK-NEXT:    srlbos $r3 = $r0, $r2
 ; CHECK-NEXT:    extfz $r4 = $r2, 10, 8
-; CHECK-NEXT:    sllbos $r6 = $r0, $r2
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    extfz $r1 = $r1, 26, 24
-; CHECK-NEXT:    insf $r3 = $r5, 7, 0
-; CHECK-NEXT:    sllbos $r4 = $r0, $r4
-; CHECK-NEXT:    extfz $r5 = $r1, 18, 16
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    extfz $r2 = $r2, 26, 24
-; CHECK-NEXT:    insf $r4 = $r6, 7, 0
+; CHECK-NEXT:    extfz $r5 = $r2, 18, 16
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srlbos $r4 = $r0, $r4
 ; CHECK-NEXT:    srlbos $r5 = $r0, $r5
-; CHECK-NEXT:    extfz $r6 = $r2, 18, 16
+; CHECK-NEXT:    sllbos $r6 = $r0, $r1
+; CHECK-NEXT:    extfz $r7 = $r1, 10, 8
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    extfz $r2 = $r2, 26, 24
+; CHECK-NEXT:    sllbos $r3 = $r0, $r7
+; CHECK-NEXT:    insf $r4 = $r3, 7, 0
+; CHECK-NEXT:    extfz $r7 = $r1, 18, 16
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    extfz $r1 = $r1, 26, 24
+; CHECK-NEXT:    insf $r3 = $r6, 7, 0
+; CHECK-NEXT:    insf $r5 = $r4, 15, 0
+; CHECK-NEXT:    sllbos $r6 = $r0, $r7
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sllbos $r0 = $r0, $r2
-; CHECK-NEXT:    srlbos $r1 = $r0, $r1
-; CHECK-NEXT:    insf $r5 = $r3, 15, 0
-; CHECK-NEXT:    sllbos $r6 = $r0, $r6
+; CHECK-NEXT:    sllbos $r0 = $r0, $r1
+; CHECK-NEXT:    srlbos $r2 = $r0, $r2
+; CHECK-NEXT:    insf $r6 = $r3, 15, 0
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    insf $r1 = $r5, 23, 0
-; CHECK-NEXT:    insf $r6 = $r4, 15, 0
-; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r6, 23, 0
-; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    insf $r2 = $r5, 23, 0
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    orw $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 8)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 3)
   ret <4 x i8> %3
 }
@@ -283,16 +282,16 @@ define <32 x i8> @shrbvs_r(<32 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff.@
 ; CHECK-NEXT:    srlhqs $r3 = $r3, $r4
-; CHECK-NEXT:    sllhqs $r4 = $r5, 8
+; CHECK-NEXT:    sllhqs $r5 = $r5, 8
 ; CHECK-NEXT:    srlhqs $r8 = $r8, $r4
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CHECK-NEXT:    andd $r2 = $r2, 0xff00ff.@
-; CHECK-NEXT:    sllhqs $r5 = $r6, 8
+; CHECK-NEXT:    sllhqs $r4 = $r6, 8
 ; CHECK-NEXT:    sllhqs $r6 = $r7, 8
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    ord $r0 = $r0, $r5
+; CHECK-NEXT:    ord $r1 = $r1, $r4
 ; CHECK-NEXT:    andd $r3 = $r3, 0xff00ff.@
 ; CHECK-NEXT:    sllhqs $r7 = $r8, 8
 ; CHECK-NEXT:    ;; # (end cycle 6)

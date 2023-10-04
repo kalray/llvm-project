@@ -1014,6 +1014,8 @@ protected:
   SchedCandidate TopCand;
   /// Candidate last picked from Bot boundary.
   SchedCandidate BotCand;
+  /// Was the last picked candidate from Top boundary?
+  bool BidirectionalPickedFromTop;
 
   void checkAcyclicLatency();
 

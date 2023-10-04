@@ -237,10 +237,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:  .LBB0_20: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    sw 40[$r21] = $r28
 ; KV3_1-NEXT:    make $r0 = 2
-; KV3_1-NEXT:    copyd $r29 = $r28
-; KV3_1-NEXT:    copyd $r30 = $r28
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    sh 0[$r21] = $r0
+; KV3_1-NEXT:    copyd $r29 = $r28
+; KV3_1-NEXT:    copyd $r30 = $r28
 ; KV3_1-NEXT:    copyd $r31 = $r28
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    so 48[$r21] = $r28r29r30r31
@@ -588,10 +588,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:  .LBB0_20: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    sw 40[$r21] = $r28
 ; KV3_2-NEXT:    make $r0 = 2
-; KV3_2-NEXT:    copyd $r29 = $r28
-; KV3_2-NEXT:    copyd $r30 = $r28
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    sh 0[$r21] = $r0
+; KV3_2-NEXT:    copyd $r29 = $r28
+; KV3_2-NEXT:    copyd $r30 = $r28
 ; KV3_2-NEXT:    copyd $r31 = $r28
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    so 48[$r21] = $r28r29r30r31

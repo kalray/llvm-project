@@ -40,9 +40,9 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_5: # %for.body4.preheader
-; CHECK-NEXT:    zxwd $r6 = $r0
+; CHECK-NEXT:    zxwd $r7 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maxud $r4 = $r6, 255
+; CHECK-NEXT:    maxud $r4 = $r7, 255
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbfuwd $r0 = $r0, $r4
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -53,19 +53,19 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    cb.odd $r0 ? .LBB0_7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.6:
-; CHECK-NEXT:    copyd $r0 = $r6
+; CHECK-NEXT:    copyd $r0 = $r7
 ; CHECK-NEXT:    goto .LBB0_10
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_7: # %vector.ph
 ; CHECK-NEXT:    andd $r5 = $r4, -2
-; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
+; CHECK-NEXT:    addx2d $r6 = $r7, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r0 = $r5, -2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    adduwd $r0 = $r6, $r5
-; CHECK-NEXT:    addx2d $r6 = $r6, $r1
+; CHECK-NEXT:    adduwd $r0 = $r7, $r5
+; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    addd $r8 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
@@ -119,54 +119,50 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    cb.even $r0 ? .LBB0_17
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    goto .LBB0_24
+; CHECK-NEXT:    goto .LBB0_23
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_16:
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_17: # %for.body23.preheader
-; CHECK-NEXT:    zxwd $r4 = $r2
+; CHECK-NEXT:    zxwd $r0 = $r2
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maxud $r0 = $r4, 15
+; CHECK-NEXT:    maxud $r1 = $r0, 15
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sbfuwd $r0 = $r2, $r0
+; CHECK-NEXT:    sbfuwd $r1 = $r2, $r1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    addd $r1 = $r0, 1
+; CHECK-NEXT:    addd $r1 = $r1, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    compd.gtu $r0 = $r1, 1
+; CHECK-NEXT:    compd.gtu $r2 = $r1, 1
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_19
+; CHECK-NEXT:    cb.even $r2 ? .LBB0_21
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.18:
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    goto .LBB0_22
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_19: # %vector.ph74
+; CHECK-NEXT:  # %bb.18: # %vector.ph74
 ; CHECK-NEXT:    andd $r2 = $r1, -2
-; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
+; CHECK-NEXT:    addx2d $r4 = $r0, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r0 = $r2, -2
+; CHECK-NEXT:    adduwd $r0 = $r0, $r2
+; CHECK-NEXT:    addd $r5 = $r2, -2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srld $r0 = $r0, 1
+; CHECK-NEXT:    srld $r5 = $r5, 1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    adduwd $r0 = $r4, $r2
-; CHECK-NEXT:    addx2d $r4 = $r4, $r3
-; CHECK-NEXT:    addd $r6 = $r0, 1
+; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
+; CHECK-NEXT:    addd $r6 = $r5, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_20: # %vector.body71
+; CHECK-NEXT:  .LBB0_19: # %vector.body71
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 0[$r4] = $r5
 ; CHECK-NEXT:    addd $r4 = $r4, 4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.21: # %middle.block69
+; CHECK-NEXT:  # %bb.20: # %middle.block69
 ; CHECK-NEXT:    compd.eq $r1 = $r1, $r2
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_24
+; CHECK-NEXT:    cb.odd $r1 ? .LBB0_23
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_22: # %for.body23.preheader86
+; CHECK-NEXT:  .LBB0_21: # %for.body23.preheader86
 ; CHECK-NEXT:    maxud $r1 = $r0, 15
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfd $r1 = $r0, $r1
@@ -176,13 +172,13 @@ define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_23: # %for.body23
+; CHECK-NEXT:  .LBB0_22: # %for.body23
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sh.xs $r0[$r3] = $r1
 ; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  .LBB0_24: # %for.end28
+; CHECK-NEXT:  .LBB0_23: # %for.end28
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:

@@ -873,15 +873,15 @@ define <2 x i64> @fshr_ri(<2 x i64> %a, <2 x i64> %b) {
 define <2 x i64> @fshr_vec(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c) {
 ; CHECK-LABEL: fshr_vec:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 1
 ; CHECK-NEXT:    slld $r1 = $r1, 1
 ; CHECK-NEXT:    andnw $r5 = $r5, 63
 ; CHECK-NEXT:    andw $r6 = $r5, 63
-; CHECK-NEXT:    andw $r7 = $r4, 63
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r0 = $r0, 1
 ; CHECK-NEXT:    slld $r1 = $r1, $r5
 ; CHECK-NEXT:    srld $r3 = $r3, $r6
 ; CHECK-NEXT:    andnw $r4 = $r4, 63
+; CHECK-NEXT:    andw $r7 = $r4, 63
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    slld $r0 = $r0, $r4
 ; CHECK-NEXT:    ord $r1 = $r1, $r3

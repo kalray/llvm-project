@@ -2984,6 +2984,8 @@ void GenericScheduler::initPolicy(MachineBasicBlock::iterator Begin,
     if (RegionPolicy.OnlyTopDown)
       RegionPolicy.OnlyBottomUp = false;
   }
+
+  BidirectionalPickedFromTop = false; // pick Top first
 }
 
 void GenericScheduler::dumpPolicy() const {
@@ -3348,7 +3350,6 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   setPolicy(TopPolicy, /*IsPostRA=*/false, Top, &Bot);
 
   // See if BotCand is still valid (because we previously scheduled from Top).
-  LLVM_DEBUG(dbgs() << "Picking from Bot:\n");
   if (!BotCand.isValid() || BotCand.SU->isScheduled ||
       BotCand.Policy != BotPolicy) {
     BotCand.reset(CandPolicy());
@@ -3368,7 +3369,6 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   }
 
   // Check if the top Q has a better candidate.
-  LLVM_DEBUG(dbgs() << "Picking from Top:\n");
   if (!TopCand.isValid() || TopCand.SU->isScheduled ||
       TopCand.Policy != TopPolicy) {
     TopCand.reset(CandPolicy());
@@ -3390,14 +3390,30 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   // Pick best from BotCand and TopCand.
   assert(BotCand.isValid());
   assert(TopCand.isValid());
-  SchedCandidate Cand = BotCand;
-  TopCand.Reason = NoCand;
+
+  // Possibly alternate top/bottom
+  bool TopIsDefaultCand =
+      Context->MF->getSubtarget().alternateTopBottomBidirectional() &&
+      !BidirectionalPickedFromTop;
+  SchedCandidate &TryCand = TopIsDefaultCand ? BotCand : TopCand;
+  SchedCandidate &Cand = TopIsDefaultCand ? TopCand : BotCand;
+  CandReason TryCandReason = TryCand.Reason;
+  TryCand.Reason = NoCand;
+  LLVM_DEBUG(dbgs() << (TopIsDefaultCand ? "Cand=BotCand, TryCand=TopCand\n"
+                                         : "Cand=TopCand, TryCand=BotCand\n"));
   if (tryCandidate(Cand, TopCand, nullptr)) {
-    Cand.setBest(TopCand);
+    Cand.setBest(TryCand);
+    BidirectionalPickedFromTop = !TopIsDefaultCand;
+    LLVM_DEBUG(dbgs() << "TryCand won: ");
     LLVM_DEBUG(traceCandidate(Cand));
+  } else {
+    // Undo the NoCand assignment to preserve BotCand state
+    TryCand.Reason = TryCandReason;
+    BidirectionalPickedFromTop = !BidirectionalPickedFromTop;
   }
 
   IsTopNode = Cand.AtTop;
+  LLVM_DEBUG(dbgs() << "Final pick: ");
   tracePick(Cand);
   return Cand.SU;
 }

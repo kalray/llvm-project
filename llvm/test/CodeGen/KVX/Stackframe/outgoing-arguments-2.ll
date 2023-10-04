@@ -50,14 +50,14 @@ define i32 @fn(i32* nocapture readonly %p) {
 ; FP-NONE-NEXT:    ;; # (end cycle 15)
 ; FP-NONE-NEXT:    lwz $r0 = 96[$r0]
 ; FP-NONE-NEXT:    ;; # (end cycle 16)
-; FP-NONE-NEXT:    sw 8[$r12] = $r17
-; FP-NONE-NEXT:    ;; # (end cycle 17)
 ; FP-NONE-NEXT:    sw 16[$r12] = $r0
-; FP-NONE-NEXT:    ;; # (end cycle 18)
-; FP-NONE-NEXT:    sw 0[$r12] = $r16
 ; FP-NONE-NEXT:    copyd $r0 = $r15
-; FP-NONE-NEXT:    call g
+; FP-NONE-NEXT:    ;; # (end cycle 18)
+; FP-NONE-NEXT:    sw 8[$r12] = $r17
 ; FP-NONE-NEXT:    ;; # (end cycle 19)
+; FP-NONE-NEXT:    sw 0[$r12] = $r16
+; FP-NONE-NEXT:    call g
+; FP-NONE-NEXT:    ;; # (end cycle 20)
 ; FP-NONE-NEXT:    ld $r16 = 24[$r12]
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    set $ra = $r16
@@ -108,11 +108,11 @@ define i32 @fn(i32* nocapture readonly %p) {
 ; FP-ALL-NEXT:    addd $r12 = $r12, -32
 ; FP-ALL-NEXT:    ;; # (end cycle 17)
 ; FP-ALL-NEXT:    sw 16[$r12] = $r0
+; FP-ALL-NEXT:    copyd $r0 = $r15
 ; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    sw 8[$r12] = $r17
 ; FP-ALL-NEXT:    ;; # (end cycle 1)
 ; FP-ALL-NEXT:    sw 0[$r12] = $r16
-; FP-ALL-NEXT:    copyd $r0 = $r15
 ; FP-ALL-NEXT:    call g
 ; FP-ALL-NEXT:    ;; # (end cycle 2)
 ; FP-ALL-NEXT:    addd $r12 = $r12, 32

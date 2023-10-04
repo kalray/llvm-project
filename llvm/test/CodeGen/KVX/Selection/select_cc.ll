@@ -65,30 +65,31 @@ define <4 x half> @f_Select32PAT(<4 x half> %x, <4 x half> %y){
 ; CV1-NEXT:    srlw $r4 = $r1, 16
 ; CV1-NEXT:    srld $r5 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    srld $r6 = $r0, 48
-; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r4
-; CV1-NEXT:    srld $r8 = $r1, 32
+; CV1-NEXT:    andw $r2 = $r2, 1
+; CV1-NEXT:    srld $r6 = $r1, 32
+; CV1-NEXT:    srld $r7 = $r0, 48
 ; CV1-NEXT:    srld $r9 = $r1, 48
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    andw $r2 = $r2, 1
-; CV1-NEXT:    andw $r7 = $r7, 1
-; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r8
-; CV1-NEXT:    fcompnhq.olt $r11 = $r6, $r9
+; CV1-NEXT:    fcompnhq.olt $r8 = $r3, $r4
+; CV1-NEXT:    fcompnhq.olt $r10 = $r5, $r6
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.wnez $r2 ? $r0 = $r1
 ; CV1-NEXT:    andw $r1 = $r10, 1
-; CV1-NEXT:    andw $r2 = $r11, 1
-; CV1-NEXT:    cmoved.wnez $r7 ? $r3 = $r4
+; CV1-NEXT:    andw $r8 = $r8, 1
+; CV1-NEXT:    fcompnhq.olt $r11 = $r7, $r9
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cmoved.wnez $r1 ? $r5 = $r8
-; CV1-NEXT:    cmoved.wnez $r2 ? $r6 = $r9
+; CV1-NEXT:    andw $r2 = $r11, 1
+; CV1-NEXT:    cmoved.wnez $r8 ? $r3 = $r4
+; CV1-NEXT:    cmoved.wnez $r1 ? $r5 = $r6
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r0 = $r3, 31, 16
-; CV1-NEXT:    insf $r5 = $r6, 31, 16
+; CV1-NEXT:    cmoved.wnez $r2 ? $r7 = $r9
 ; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    insf $r5 = $r7, 31, 16
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r5, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: f_Select32PAT:
 ; CV2:       # %bb.0: # %entry
