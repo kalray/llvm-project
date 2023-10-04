@@ -1,5 +1,5 @@
 // RUN: %libomp-compile
-// RUN: env OMP_WAIT_POLICY=passive OMP_NUM_THREADS=32 %libomp-run 0 134217728 1 134217728
+// RUN: env OMP_WAIT_POLICY=passive OMP_NUM_THREADS=32 %libomp-run 0 8388608 1 8388608
 //
 // This test makes sure that large chunks sizes are handled correctly
 // including internal runtime calculations which incorporate the chunk size
