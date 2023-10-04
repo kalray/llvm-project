@@ -1165,3 +1165,193 @@ define <4 x i64> @test_select_cmp(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x
   %r = select i1 %cmp, <4 x i64> %a, <4 x i64> %b
   ret <4 x i64> %r
 }
+
+define <4 x i64> @fshl_rr(<4 x i64> %a, <4 x i64> %b, i64 %c) {
+; CHECK-LABEL: fshl_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r4 = $r4, 1
+; CHECK-NEXT:    srld $r5 = $r5, 1
+; CHECK-NEXT:    andw $r8 = $r8, 63
+; CHECK-NEXT:    andnw $r9 = $r8, 63
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r1 = $r1, $r8
+; CHECK-NEXT:    srld $r5 = $r5, $r9
+; CHECK-NEXT:    srld $r6 = $r6, 1
+; CHECK-NEXT:    srld $r7 = $r7, 1
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    slld $r0 = $r0, $r8
+; CHECK-NEXT:    slld $r2 = $r2, $r8
+; CHECK-NEXT:    srld $r4 = $r4, $r9
+; CHECK-NEXT:    srld $r6 = $r6, $r9
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    slld $r3 = $r3, $r8
+; CHECK-NEXT:    srld $r7 = $r7, $r9
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
+  %i = insertelement <4 x i64> undef, i64 %c, i64 0
+  %s = shufflevector <4 x i64> %i, <4 x i64> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %s)
+  ret <4 x i64> %r
+}
+
+define <4 x i64> @fshl_ri(<4 x i64> %a, <4 x i64> %b) {
+; CHECK-LABEL: fshl_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 3
+; CHECK-NEXT:    slld $r1 = $r1, 3
+; CHECK-NEXT:    srld $r4 = $r4, 61
+; CHECK-NEXT:    srld $r5 = $r5, 61
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r2 = $r2, 3
+; CHECK-NEXT:    slld $r3 = $r3, 3
+; CHECK-NEXT:    srld $r6 = $r6, 61
+; CHECK-NEXT:    srld $r7 = $r7, 61
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+  ret <4 x i64> %r
+}
+
+define <4 x i64> @fshl_vec(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) {
+; CHECK-LABEL: fshl_vec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srld $r4 = $r4, 1
+; CHECK-NEXT:    srld $r5 = $r5, 1
+; CHECK-NEXT:    andw $r9 = $r9, 63
+; CHECK-NEXT:    andnw $r15 = $r9, 63
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r1 = $r1, $r9
+; CHECK-NEXT:    srld $r6 = $r6, 1
+; CHECK-NEXT:    andw $r8 = $r8, 63
+; CHECK-NEXT:    andnw $r9 = $r8, 63
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    slld $r0 = $r0, $r8
+; CHECK-NEXT:    srld $r4 = $r4, $r9
+; CHECK-NEXT:    andnw $r8 = $r10, 63
+; CHECK-NEXT:    andw $r9 = $r10, 63
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srld $r5 = $r5, $r15
+; CHECK-NEXT:    srld $r7 = $r7, 1
+; CHECK-NEXT:    andnw $r10 = $r11, 63
+; CHECK-NEXT:    andw $r11 = $r11, 63
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    slld $r2 = $r2, $r9
+; CHECK-NEXT:    slld $r3 = $r3, $r11
+; CHECK-NEXT:    srld $r6 = $r6, $r8
+; CHECK-NEXT:    srld $r7 = $r7, $r10
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 5)
+  %r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c)
+  ret <4 x i64> %r
+}
+define <4 x i64> @fshr_rr(<4 x i64> %a, <4 x i64> %b, i64 %c) {
+; CHECK-LABEL: fshr_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 1
+; CHECK-NEXT:    slld $r1 = $r1, 1
+; CHECK-NEXT:    andnw $r8 = $r8, 63
+; CHECK-NEXT:    andw $r9 = $r8, 63
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r1 = $r1, $r8
+; CHECK-NEXT:    slld $r2 = $r2, 1
+; CHECK-NEXT:    slld $r3 = $r3, 1
+; CHECK-NEXT:    srld $r5 = $r5, $r9
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    slld $r0 = $r0, $r8
+; CHECK-NEXT:    slld $r2 = $r2, $r8
+; CHECK-NEXT:    srld $r4 = $r4, $r9
+; CHECK-NEXT:    srld $r6 = $r6, $r9
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    slld $r3 = $r3, $r8
+; CHECK-NEXT:    srld $r7 = $r7, $r9
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
+  %i = insertelement <4 x i64> undef, i64 %c, i64 0
+  %s = shufflevector <4 x i64> %i, <4 x i64> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %s)
+  ret <4 x i64> %r
+}
+
+define <4 x i64> @fshr_ri(<4 x i64> %a, <4 x i64> %b, i64 %c) {
+; CHECK-LABEL: fshr_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 61
+; CHECK-NEXT:    slld $r1 = $r1, 61
+; CHECK-NEXT:    srld $r4 = $r4, 3
+; CHECK-NEXT:    srld $r5 = $r5, 3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r2 = $r2, 61
+; CHECK-NEXT:    slld $r3 = $r3, 61
+; CHECK-NEXT:    srld $r6 = $r6, 3
+; CHECK-NEXT:    srld $r7 = $r7, 3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+  ret <4 x i64> %r
+}
+
+define <4 x i64> @fshr_vec(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) {
+; CHECK-LABEL: fshr_vec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 1
+; CHECK-NEXT:    slld $r1 = $r1, 1
+; CHECK-NEXT:    andnw $r9 = $r9, 63
+; CHECK-NEXT:    andw $r15 = $r9, 63
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    slld $r1 = $r1, $r9
+; CHECK-NEXT:    slld $r2 = $r2, 1
+; CHECK-NEXT:    andnw $r8 = $r8, 63
+; CHECK-NEXT:    andw $r9 = $r8, 63
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    slld $r0 = $r0, $r8
+; CHECK-NEXT:    srld $r4 = $r4, $r9
+; CHECK-NEXT:    andw $r8 = $r10, 63
+; CHECK-NEXT:    andnw $r9 = $r10, 63
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    slld $r3 = $r3, 1
+; CHECK-NEXT:    srld $r5 = $r5, $r15
+; CHECK-NEXT:    andw $r10 = $r11, 63
+; CHECK-NEXT:    andnw $r11 = $r11, 63
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    slld $r2 = $r2, $r9
+; CHECK-NEXT:    slld $r3 = $r3, $r11
+; CHECK-NEXT:    srld $r6 = $r6, $r8
+; CHECK-NEXT:    srld $r7 = $r7, $r10
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ord $r0 = $r0, $r4
+; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    ord $r2 = $r2, $r6
+; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 5)
+  %r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c)
+  ret <4 x i64> %r
+}
+
+declare <4 x i64> @llvm.fshr.v4i64(<4 x i64>, <4 x i64>, <4 x i64>)
+declare <4 x i64> @llvm.fshl.v4i64(<4 x i64>, <4 x i64>, <4 x i64>)

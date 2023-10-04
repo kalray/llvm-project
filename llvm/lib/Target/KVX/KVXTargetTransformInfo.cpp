@@ -660,9 +660,12 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
   case ISD::UDIV:
   case ISD::UDIVREM:
   case ISD::UREM: {
+    if (Args.size() < 2)
+      return 25;
+
     auto *C = dyn_cast<Constant>(Args[1]);
 
-    if (C && IsVector)
+    if (C && C->getType()->isVectorTy())
       C = C->getSplatValue(true);
 
     if (C) {
@@ -758,7 +761,35 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
   case Intrinsic::fabs:
     BitWidth = 256;
     break;
+  case Intrinsic::fshl:
+  case Intrinsic::fshr: {
+    // Requires 2 shift + or. The shifts take 2 TINY, so bitwidth / 2.
+    // It requires an extra bundle for the or.
+    CostFactor = 2;
+    BitWidth = 128;
+    // If the shift amount is not a splat value it must split the vectors.
+    if (ICA.getReturnType()->isVectorTy()) {
+      VectorType *VT = cast<VectorType>(ICA.getReturnType());
+      const IntrinsicInst *I = ICA.getInst();
+      if (I)
+        if (auto *Shift = dyn_cast<ShuffleVectorInst>(I->getOperand(2))) {
+          auto *V = dyn_cast<ShuffleVectorInst>(Shift);
+          if (V && V->isZeroEltSplat()) {
+            // From a register value, must compute left/right shift amount
+            if (!isa<Constant>(V))
+              CostFactor += 1;
+            break;
+          }
+          auto *C = dyn_cast<Constant>(Shift);
+          if (C && C->getSplatValue(true))
+            break;
+        }
+      CostFactor *= VT->getElementCount().getKnownMinValue();
+    }
+    break;
+  }
   default:
+    LLVM_DEBUG(errs() << "KVX untreated intrinsic: " << *ICA.getInst() << '\n');
     return BaseT::getIntrinsicInstrCost(ICA, CostKind);
     break;
   }
@@ -771,8 +802,8 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     // It is possible to extend 64 to 128 bits from vNi8 to vNi16 per cycle,
     // it is also possible to reduce 128 to 64 bits per cycle, so just in type
     // conversion cost the penalty is:
-    LegalizeCost = (ICA.getArgs().size() + 1) * std::max(1u, VecSize / 64) +
-                   // we also need to count the number of sub-vector insertions
+    LegalizeCost += (ICA.getArgs().size() + 1) * std::max(1u, VecSize / 64) +
+                    // we also need to count the number of sub-vector insertions
                    // to be done, we can generate 64 bits per cycle, if it is
                    // required. However this can be pipelined with other
                    // operations, so it will not penalize more than 3 cycles.
@@ -861,7 +892,7 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
   if (!(COND)) {                                                               \
     errs() << TXT << ":" << *Src << " == (" << Opcode << ") ==> " << *Dst      \
            << '\n';                                                            \
-    abort();                                                                   \
+    return InstructionCost::getInvalid();                                      \
   }
   // Sanity check
   assertM(Dst->isSized() && Src->isSized(), "Cast with non-sized types");
@@ -933,9 +964,32 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
     break;
 
   case Instruction::SExt:
-  case Instruction::ZExt:
+  case Instruction::ZExt: {
     // 4 x TINY -> 256
+    if (Src->isVectorTy() && Src->getScalarSizeInBits() == 1) {
+      if (!I)
+        return InstructionCost::getInvalid();
+
+      auto *Cmp = dyn_cast<Instruction>(I->getOperand(0));
+      if (!Cmp)
+        return InstructionCost::getInvalid();
+
+      auto Op = Cmp->getOpcode();
+      bool Ok = (Op == Instruction::FCmp || Op == Instruction::ICmp);
+      if (!Ok)
+        return InstructionCost::getInvalid();
+
+      if (Cmp->getOperand(0)->getType()->getScalarSizeInBits() !=
+          Dst->getScalarSizeInBits())
+        return InstructionCost::getInvalid();
+
+      if (Opcode == ISD::SIGN_EXTEND)
+        return 0;
+
+      return std::max(1ul, Dst->getPrimitiveSizeInBits() / 256);
+    }
     break;
+  }
   }
 
   if (!IsFP && !Dst->isVectorTy())

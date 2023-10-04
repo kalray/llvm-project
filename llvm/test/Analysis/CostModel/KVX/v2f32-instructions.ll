@@ -961,7 +961,7 @@ entry:
 define <2 x i32> @fcmp_setoeq(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoeq'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -973,7 +973,7 @@ entry:
 define <2 x i32> @fcmp_setoeq_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -985,7 +985,7 @@ entry:
 define <2 x i32> @fcmp_setogt(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setogt'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -997,7 +997,7 @@ entry:
 define <2 x i32> @fcmp_setogt_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setogt_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1009,7 +1009,7 @@ entry:
 define <2 x i32> @fcmp_setoge(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoge'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1021,7 +1021,7 @@ entry:
 define <2 x i32> @fcmp_setoge_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoge_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1033,7 +1033,7 @@ entry:
 define <2 x i32> @fcmp_setolt(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setolt'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1045,7 +1045,7 @@ entry:
 define <2 x i32> @fcmp_setolt_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setolt_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1057,7 +1057,7 @@ entry:
 define <2 x i32> @fcmp_setole(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setole'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1069,7 +1069,7 @@ entry:
 define <2 x i32> @fcmp_setole_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setole_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1081,7 +1081,7 @@ entry:
 define <2 x i32> @fcmp_setone(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setone'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1093,7 +1093,7 @@ entry:
 define <2 x i32> @fcmp_setone_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setone_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1105,7 +1105,7 @@ entry:
 define <2 x i32> @fcmp_setord(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setord'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1117,7 +1117,7 @@ entry:
 define <2 x i32> @fcmp_setord_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setord_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1129,7 +1129,7 @@ entry:
 define <2 x i32> @fcmp_setuno(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuno'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1141,7 +1141,7 @@ entry:
 define <2 x i32> @fcmp_setuno_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuno_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1153,7 +1153,7 @@ entry:
 define <2 x i32> @fcmp_setueq(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setueq'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1165,7 +1165,7 @@ entry:
 define <2 x i32> @fcmp_setueq_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setueq_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1177,7 +1177,7 @@ entry:
 define <2 x i32> @fcmp_setugt(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setugt'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1189,7 +1189,7 @@ entry:
 define <2 x i32> @fcmp_setugt_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setugt_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1201,7 +1201,7 @@ entry:
 define <2 x i32> @fcmp_setuge(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuge'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1213,7 +1213,7 @@ entry:
 define <2 x i32> @fcmp_setuge_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuge_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1225,7 +1225,7 @@ entry:
 define <2 x i32> @fcmp_setult(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setult'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1237,7 +1237,7 @@ entry:
 define <2 x i32> @fcmp_setult_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setult_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1249,7 +1249,7 @@ entry:
 define <2 x i32> @fcmp_setule(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setule'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1261,7 +1261,7 @@ entry:
 define <2 x i32> @fcmp_setule_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setule_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1273,7 +1273,7 @@ entry:
 define <2 x i32> @fcmp_setune(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setune'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1285,7 +1285,7 @@ entry:
 define <2 x i32> @fcmp_setune_single(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setune_single'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1297,7 +1297,7 @@ entry:
 define <2 x i32> @fcmp_setoeq_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1309,7 +1309,7 @@ entry:
 define <2 x i32> @fcmp_setoeq_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1321,7 +1321,7 @@ entry:
 define <2 x i32> @fcmp_setogt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setogt_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1333,7 +1333,7 @@ entry:
 define <2 x i32> @fcmp_setogt_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setogt_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1345,7 +1345,7 @@ entry:
 define <2 x i32> @fcmp_setoge_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoge_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1357,7 +1357,7 @@ entry:
 define <2 x i32> @fcmp_setoge_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoge_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1369,7 +1369,7 @@ entry:
 define <2 x i32> @fcmp_setolt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setolt_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1381,7 +1381,7 @@ entry:
 define <2 x i32> @fcmp_setolt_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setolt_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1393,7 +1393,7 @@ entry:
 define <2 x i32> @fcmp_setole_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setole_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1405,7 +1405,7 @@ entry:
 define <2 x i32> @fcmp_setole_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setole_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1417,7 +1417,7 @@ entry:
 define <2 x i32> @fcmp_setone_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setone_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1429,7 +1429,7 @@ entry:
 define <2 x i32> @fcmp_setone_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setone_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1441,7 +1441,7 @@ entry:
 define <2 x i32> @fcmp_setord_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setord_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1453,7 +1453,7 @@ entry:
 define <2 x i32> @fcmp_setord_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setord_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1465,7 +1465,7 @@ entry:
 define <2 x i32> @fcmp_setuno_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuno_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1477,7 +1477,7 @@ entry:
 define <2 x i32> @fcmp_setuno_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuno_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1489,7 +1489,7 @@ entry:
 define <2 x i32> @fcmp_setueq_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setueq_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1501,7 +1501,7 @@ entry:
 define <2 x i32> @fcmp_setueq_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setueq_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1513,7 +1513,7 @@ entry:
 define <2 x i32> @fcmp_setugt_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setugt_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1525,7 +1525,7 @@ entry:
 define <2 x i32> @fcmp_setugt_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setugt_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1537,7 +1537,7 @@ entry:
 define <2 x i32> @fcmp_setuge_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuge_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1549,7 +1549,7 @@ entry:
 define <2 x i32> @fcmp_setuge_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuge_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1561,7 +1561,7 @@ entry:
 define <2 x i32> @fcmp_setult_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setult_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1573,7 +1573,7 @@ entry:
 define <2 x i32> @fcmp_setult_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setult_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1585,7 +1585,7 @@ entry:
 define <2 x i32> @fcmp_setule_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setule_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1597,7 +1597,7 @@ entry:
 define <2 x i32> @fcmp_setule_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setule_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1609,7 +1609,7 @@ entry:
 define <2 x i32> @fcmp_setune_fast(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'fcmp_setune_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x float> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:
@@ -1621,7 +1621,7 @@ entry:
 define <2 x i32> @fcmp_setune_single_fast(<2 x float> %a) #0 {
 ; ALL-LABEL: 'fcmp_setune_single_fast'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x float> %a, %a
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %1
 ;
 entry:

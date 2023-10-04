@@ -1162,3 +1162,120 @@ define <2 x i32> @test_select_cmp(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c, <2 x
   %r = select i1 %cmp, <2 x i32> %a, <2 x i32> %b
   ret <2 x i32> %r
 }
+
+define <2 x i32> @fshl_rr(<2 x i32> %a, <2 x i32> %b, i32 %c) {
+; ALL-LABEL: fshl_rr:
+; ALL:       # %bb.0:
+; ALL-NEXT:    srlwps $r1 = $r1, 1
+; ALL-NEXT:    andw $r2 = $r2, 31
+; ALL-NEXT:    andnw $r3 = $r2, 31
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sllwps $r0 = $r0, $r2
+; ALL-NEXT:    srlwps $r1 = $r1, $r3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %i = insertelement <2 x i32> undef, i32 %c, i64 0
+  %s = insertelement <2 x i32> %i, i32 %c, i64 1
+  %r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %s)
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @fshl_ri(<2 x i32> %a, <2 x i32> %b, i32 %c) {
+; ALL-LABEL: fshl_ri:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllwps $r0 = $r0, 3
+; ALL-NEXT:    srlwps $r1 = $r1, 29
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
+  %r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> <i32 3, i32 3>)
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @fshl_vec(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
+; ALL-LABEL: fshl_vec:
+; ALL:       # %bb.0:
+; ALL-NEXT:    srlwps $r1 = $r1, 1
+; ALL-NEXT:    andd $r2 = $r2, 0x1f.@
+; ALL-NEXT:    andnd $r3 = $r2, 0x1f.@
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sllw $r2 = $r0, $r2
+; ALL-NEXT:    srlw $r3 = $r1, $r3
+; ALL-NEXT:    extfz $r4 = $r3, 36, 32
+; ALL-NEXT:    extfz $r5 = $r2, 36, 32
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sllwps $r0 = $r0, $r5
+; ALL-NEXT:    srlwps $r1 = $r1, $r4
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    insf $r0 = $r2, 31, 0
+; ALL-NEXT:    insf $r1 = $r3, 31, 0
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 4)
+  %r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c)
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @fshr_rr(<2 x i32> %a, <2 x i32> %b, i32 %c) {
+; ALL-LABEL: fshr_rr:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllwps $r0 = $r0, 1
+; ALL-NEXT:    andnw $r2 = $r2, 31
+; ALL-NEXT:    andw $r3 = $r2, 31
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sllwps $r0 = $r0, $r2
+; ALL-NEXT:    srlwps $r1 = $r1, $r3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %i = insertelement <2 x i32> undef, i32 %c, i64 0
+  %s = insertelement <2 x i32> %i, i32 %c, i64 1
+  %r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %s)
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @fshr_ri(<2 x i32> %a, <2 x i32> %b, i32 %c) {
+; ALL-LABEL: fshr_ri:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllwps $r0 = $r0, 29
+; ALL-NEXT:    srlwps $r1 = $r1, 3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
+  %r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> <i32 3, i32 3>)
+  ret <2 x i32> %r
+}
+
+define <2 x i32> @fshr_vec(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
+; ALL-LABEL: fshr_vec:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllwps $r0 = $r0, 1
+; ALL-NEXT:    andnd $r2 = $r2, 0x1f.@
+; ALL-NEXT:    andd $r3 = $r2, 0x1f.@
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sllw $r2 = $r0, $r2
+; ALL-NEXT:    srlw $r3 = $r1, $r3
+; ALL-NEXT:    extfz $r4 = $r3, 36, 32
+; ALL-NEXT:    extfz $r5 = $r2, 36, 32
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sllwps $r0 = $r0, $r5
+; ALL-NEXT:    srlwps $r1 = $r1, $r4
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    insf $r0 = $r2, 31, 0
+; ALL-NEXT:    insf $r1 = $r3, 31, 0
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 4)
+  %r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c)
+  ret <2 x i32> %r
+}
+
+declare <2 x i32> @llvm.fshr.v2i32(<2 x i32>, <2 x i32>, <2 x i32>)
+declare <2 x i32> @llvm.fshl.v2i32(<2 x i32>, <2 x i32>, <2 x i32>)

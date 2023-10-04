@@ -1309,3 +1309,368 @@ define <4 x i16> @test_select_cmp(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x
   %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b
   ret <4 x i16> %r
 }
+
+define <4 x i16> @fshl_rr(<4 x i16> %a, <4 x i16> %b, i16 %c) {
+; V1-LABEL: fshl_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    srlhqs $r1 = $r1, 1
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x2010201.@
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    andd $r2 = $r2, 0xf000f.@
+; V1-NEXT:    andnd $r3 = $r2, 0xf000f.@
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    srlhqs $r4 = $r1, $r3
+; V1-NEXT:    extfz $r5 = $r3, 19, 16
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    extfz $r3 = $r3, 51, 48
+; V1-NEXT:    extfz $r6 = $r3, 35, 32
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    srlhqs $r5 = $r1, $r5
+; V1-NEXT:    srlhqs $r6 = $r1, $r6
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    srlhqs $r1 = $r1, $r3
+; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    sllhqs $r4 = $r0, $r2
+; V1-NEXT:    insf $r5 = $r4, 15, 0
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    sllhqs $r3 = $r0, $r3
+; V1-NEXT:    insf $r6 = $r5, 31, 0
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    insf $r3 = $r4, 15, 0
+; V1-NEXT:    extfz $r4 = $r2, 35, 32
+; V1-NEXT:    ;; # (end cycle 8)
+; V1-NEXT:    extfz $r2 = $r2, 51, 48
+; V1-NEXT:    sllhqs $r4 = $r0, $r4
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    sllhqs $r0 = $r0, $r2
+; V1-NEXT:    insf $r4 = $r3, 31, 0
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    insf $r0 = $r4, 47, 0
+; V1-NEXT:    insf $r1 = $r6, 47, 0
+; V1-NEXT:    ;; # (end cycle 11)
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 12)
+;
+; V2-LABEL: fshl_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    srlhqs $r1 = $r1, 1
+; V2-NEXT:    sbmm8 $r2 = $r2, 0x2010201.@
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    andd $r2 = $r2, 0xf000f.@
+; V2-NEXT:    andnd $r3 = $r2, 0xf000f.@
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r5 = $r2, 19, 16
+; V2-NEXT:    srlhqs $r6 = $r1, $r3
+; V2-NEXT:    sllhqs $r7 = $r0, $r2
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    srlhqs $r4 = $r1, $r4
+; V2-NEXT:    sllhqs $r5 = $r0, $r5
+; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    insf $r4 = $r6, 15, 0
+; V2-NEXT:    insf $r5 = $r7, 15, 0
+; V2-NEXT:    extfz $r6 = $r3, 35, 32
+; V2-NEXT:    extfz $r7 = $r2, 35, 32
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    extfz $r2 = $r2, 51, 48
+; V2-NEXT:    extfz $r3 = $r3, 51, 48
+; V2-NEXT:    srlhqs $r6 = $r1, $r6
+; V2-NEXT:    sllhqs $r7 = $r0, $r7
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    sllhqs $r0 = $r0, $r2
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
+; V2-NEXT:    insf $r6 = $r4, 31, 0
+; V2-NEXT:    insf $r7 = $r5, 31, 0
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    insf $r0 = $r7, 47, 0
+; V2-NEXT:    insf $r1 = $r6, 47, 0
+; V2-NEXT:    ;; # (end cycle 7)
+; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 8)
+  %i = insertelement <4 x i16> undef, i16 %c, i16 0
+  %s = shufflevector <4 x i16> %i, <4 x i16> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> %s)
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @fshl_ri(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: fshl_ri:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllhqs $r0 = $r0, 3
+; ALL-NEXT:    srlhqs $r1 = $r1, 1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    srlhqs $r1 = $r1, 12
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %r = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @fshl_vec(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
+; V1-LABEL: fshl_vec:
+; V1:       # %bb.0:
+; V1-NEXT:    srlhqs $r1 = $r1, 1
+; V1-NEXT:    andd $r2 = $r2, 0xf000f.@
+; V1-NEXT:    andnd $r3 = $r2, 0xf000f.@
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    extfz $r4 = $r3, 19, 16
+; V1-NEXT:    srlhqs $r5 = $r1, $r3
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    srlhqs $r4 = $r1, $r4
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    insf $r4 = $r5, 15, 0
+; V1-NEXT:    extfz $r5 = $r3, 35, 32
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    extfz $r3 = $r3, 51, 48
+; V1-NEXT:    srlhqs $r5 = $r1, $r5
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    srlhqs $r1 = $r1, $r3
+; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    sllhqs $r4 = $r0, $r2
+; V1-NEXT:    insf $r5 = $r4, 31, 0
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    insf $r1 = $r5, 47, 0
+; V1-NEXT:    sllhqs $r3 = $r0, $r3
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    insf $r3 = $r4, 15, 0
+; V1-NEXT:    extfz $r4 = $r2, 35, 32
+; V1-NEXT:    ;; # (end cycle 8)
+; V1-NEXT:    extfz $r2 = $r2, 51, 48
+; V1-NEXT:    sllhqs $r4 = $r0, $r4
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    sllhqs $r0 = $r0, $r2
+; V1-NEXT:    insf $r4 = $r3, 31, 0
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    insf $r0 = $r4, 47, 0
+; V1-NEXT:    ;; # (end cycle 11)
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 12)
+;
+; V2-LABEL: fshl_vec:
+; V2:       # %bb.0:
+; V2-NEXT:    srlhqs $r1 = $r1, 1
+; V2-NEXT:    andd $r2 = $r2, 0xf000f.@
+; V2-NEXT:    andnd $r3 = $r2, 0xf000f.@
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r5 = $r2, 19, 16
+; V2-NEXT:    srlhqs $r6 = $r1, $r3
+; V2-NEXT:    sllhqs $r7 = $r0, $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    srlhqs $r4 = $r1, $r4
+; V2-NEXT:    sllhqs $r5 = $r0, $r5
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    insf $r4 = $r6, 15, 0
+; V2-NEXT:    insf $r5 = $r7, 15, 0
+; V2-NEXT:    extfz $r6 = $r3, 35, 32
+; V2-NEXT:    extfz $r7 = $r2, 35, 32
+; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    extfz $r2 = $r2, 51, 48
+; V2-NEXT:    extfz $r3 = $r3, 51, 48
+; V2-NEXT:    srlhqs $r6 = $r1, $r6
+; V2-NEXT:    sllhqs $r7 = $r0, $r7
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    sllhqs $r0 = $r0, $r2
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
+; V2-NEXT:    insf $r6 = $r4, 31, 0
+; V2-NEXT:    insf $r7 = $r5, 31, 0
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    insf $r0 = $r7, 47, 0
+; V2-NEXT:    insf $r1 = $r6, 47, 0
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 7)
+  %r = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c)
+  ret <4 x i16> %r
+}
+define <4 x i16> @fshr_rr(<4 x i16> %a, <4 x i16> %b, i16 %c) {
+; V1-LABEL: fshr_rr:
+; V1:       # %bb.0:
+; V1-NEXT:    sllhqs $r0 = $r0, 1
+; V1-NEXT:    sbmm8 $r2 = $r2, 0x2010201.@
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    andnd $r2 = $r2, 0xf000f.@
+; V1-NEXT:    andd $r3 = $r2, 0xf000f.@
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    srlhqs $r4 = $r1, $r3
+; V1-NEXT:    extfz $r5 = $r3, 19, 16
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    extfz $r3 = $r3, 51, 48
+; V1-NEXT:    extfz $r6 = $r3, 35, 32
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    srlhqs $r5 = $r1, $r5
+; V1-NEXT:    srlhqs $r6 = $r1, $r6
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    srlhqs $r1 = $r1, $r3
+; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    sllhqs $r4 = $r0, $r2
+; V1-NEXT:    insf $r5 = $r4, 15, 0
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    sllhqs $r3 = $r0, $r3
+; V1-NEXT:    insf $r6 = $r5, 31, 0
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    insf $r3 = $r4, 15, 0
+; V1-NEXT:    extfz $r4 = $r2, 35, 32
+; V1-NEXT:    ;; # (end cycle 8)
+; V1-NEXT:    extfz $r2 = $r2, 51, 48
+; V1-NEXT:    sllhqs $r4 = $r0, $r4
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    sllhqs $r0 = $r0, $r2
+; V1-NEXT:    insf $r4 = $r3, 31, 0
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    insf $r0 = $r4, 47, 0
+; V1-NEXT:    insf $r1 = $r6, 47, 0
+; V1-NEXT:    ;; # (end cycle 11)
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 12)
+;
+; V2-LABEL: fshr_rr:
+; V2:       # %bb.0:
+; V2-NEXT:    sllhqs $r0 = $r0, 1
+; V2-NEXT:    sbmm8 $r2 = $r2, 0x2010201.@
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    andnd $r2 = $r2, 0xf000f.@
+; V2-NEXT:    andd $r3 = $r2, 0xf000f.@
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r5 = $r2, 19, 16
+; V2-NEXT:    srlhqs $r6 = $r1, $r3
+; V2-NEXT:    sllhqs $r7 = $r0, $r2
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    srlhqs $r4 = $r1, $r4
+; V2-NEXT:    sllhqs $r5 = $r0, $r5
+; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    insf $r4 = $r6, 15, 0
+; V2-NEXT:    insf $r5 = $r7, 15, 0
+; V2-NEXT:    extfz $r6 = $r3, 35, 32
+; V2-NEXT:    extfz $r7 = $r2, 35, 32
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    extfz $r2 = $r2, 51, 48
+; V2-NEXT:    extfz $r3 = $r3, 51, 48
+; V2-NEXT:    srlhqs $r6 = $r1, $r6
+; V2-NEXT:    sllhqs $r7 = $r0, $r7
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    sllhqs $r0 = $r0, $r2
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
+; V2-NEXT:    insf $r6 = $r4, 31, 0
+; V2-NEXT:    insf $r7 = $r5, 31, 0
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    insf $r0 = $r7, 47, 0
+; V2-NEXT:    insf $r1 = $r6, 47, 0
+; V2-NEXT:    ;; # (end cycle 7)
+; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 8)
+  %i = insertelement <4 x i16> undef, i16 %c, i16 0
+  %s = shufflevector <4 x i16> %i, <4 x i16> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> %s)
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @fshr_ri(<4 x i16> %a, <4 x i16> %b, i16 %c) {
+; ALL-LABEL: fshr_ri:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sllhqs $r0 = $r0, 1
+; ALL-NEXT:    srlhqs $r1 = $r1, 3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sllhqs $r0 = $r0, 12
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 2)
+  %r = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @fshr_vec(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
+; V1-LABEL: fshr_vec:
+; V1:       # %bb.0:
+; V1-NEXT:    sllhqs $r0 = $r0, 1
+; V1-NEXT:    andnd $r2 = $r2, 0xf000f.@
+; V1-NEXT:    andd $r3 = $r2, 0xf000f.@
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    srlhqs $r4 = $r1, $r3
+; V1-NEXT:    extfz $r5 = $r3, 19, 16
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    extfz $r3 = $r3, 51, 48
+; V1-NEXT:    extfz $r6 = $r3, 35, 32
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    srlhqs $r5 = $r1, $r5
+; V1-NEXT:    srlhqs $r6 = $r1, $r6
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    srlhqs $r1 = $r1, $r3
+; V1-NEXT:    extfz $r3 = $r2, 19, 16
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    sllhqs $r4 = $r0, $r2
+; V1-NEXT:    insf $r5 = $r4, 15, 0
+; V1-NEXT:    ;; # (end cycle 5)
+; V1-NEXT:    sllhqs $r3 = $r0, $r3
+; V1-NEXT:    insf $r6 = $r5, 31, 0
+; V1-NEXT:    ;; # (end cycle 6)
+; V1-NEXT:    insf $r3 = $r4, 15, 0
+; V1-NEXT:    extfz $r4 = $r2, 35, 32
+; V1-NEXT:    ;; # (end cycle 7)
+; V1-NEXT:    extfz $r2 = $r2, 51, 48
+; V1-NEXT:    sllhqs $r4 = $r0, $r4
+; V1-NEXT:    ;; # (end cycle 8)
+; V1-NEXT:    sllhqs $r0 = $r0, $r2
+; V1-NEXT:    insf $r4 = $r3, 31, 0
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    insf $r0 = $r4, 47, 0
+; V1-NEXT:    insf $r1 = $r6, 47, 0
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 11)
+;
+; V2-LABEL: fshr_vec:
+; V2:       # %bb.0:
+; V2-NEXT:    sllhqs $r0 = $r0, 1
+; V2-NEXT:    andnd $r2 = $r2, 0xf000f.@
+; V2-NEXT:    andd $r3 = $r2, 0xf000f.@
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    extfz $r4 = $r3, 19, 16
+; V2-NEXT:    extfz $r5 = $r2, 19, 16
+; V2-NEXT:    srlhqs $r6 = $r1, $r3
+; V2-NEXT:    sllhqs $r7 = $r0, $r2
+; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    srlhqs $r4 = $r1, $r4
+; V2-NEXT:    sllhqs $r5 = $r0, $r5
+; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    insf $r4 = $r6, 15, 0
+; V2-NEXT:    insf $r5 = $r7, 15, 0
+; V2-NEXT:    extfz $r6 = $r3, 35, 32
+; V2-NEXT:    extfz $r7 = $r2, 35, 32
+; V2-NEXT:    ;; # (end cycle 3)
+; V2-NEXT:    extfz $r2 = $r2, 51, 48
+; V2-NEXT:    extfz $r3 = $r3, 51, 48
+; V2-NEXT:    srlhqs $r6 = $r1, $r6
+; V2-NEXT:    sllhqs $r7 = $r0, $r7
+; V2-NEXT:    ;; # (end cycle 4)
+; V2-NEXT:    sllhqs $r0 = $r0, $r2
+; V2-NEXT:    srlhqs $r1 = $r1, $r3
+; V2-NEXT:    insf $r6 = $r4, 31, 0
+; V2-NEXT:    insf $r7 = $r5, 31, 0
+; V2-NEXT:    ;; # (end cycle 5)
+; V2-NEXT:    insf $r0 = $r7, 47, 0
+; V2-NEXT:    insf $r1 = $r6, 47, 0
+; V2-NEXT:    ;; # (end cycle 6)
+; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 7)
+  %r = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c)
+  ret <4 x i16> %r
+}
+
+declare <4 x i16> @llvm.fshr.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)
+declare <4 x i16> @llvm.fshl.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)

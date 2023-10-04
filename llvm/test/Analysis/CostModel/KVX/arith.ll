@@ -467,18 +467,18 @@ define void @vi32() {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %f4 = ashr <4 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %g4 = lshr <4 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %h4 = shl <4 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %i4 = and <4 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %j4 = or <4 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %k4 = xor <4 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i4 = and <4 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %j4 = or <4 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %k4 = xor <4 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %c8 = add <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %d8 = sub <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e8 = mul <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %f8 = ashr <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %g8 = lshr <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %h8 = shl <8 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %i8 = and <8 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %j8 = or <8 x i32> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %k8 = xor <8 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %i8 = and <8 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %j8 = or <8 x i32> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %k8 = xor <8 x i32> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
   %c2 = add <2 x i32> undef, undef
@@ -553,3 +553,135 @@ define void @vi64() {
   %k4 = xor <4 x i64> undef, undef
   ret void
 }
+
+define void @fsh_i8() {
+; CV1-LABEL: 'fsh_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %r_fshl_v2i8i = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %r_fshl_v2i8r = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %r_fshr_v2i8i = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %r_fshr_v2i8r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 13 for instruction: %r_fshl_v4i8r = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 13 for instruction: %r_fshl_v4i8i = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 13 for instruction: %r_fshr_v4i8r = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 13 for instruction: %r_fshr_v4i8i = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 22 for instruction: %r_fshl_v8i8r = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 22 for instruction: %r_fshl_v8i8i = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 22 for instruction: %r_fshr_v8i8r = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 22 for instruction: %r_fshr_v8i8i = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
+;
+; CV2-LABEL: 'fsh_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i8i = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i8r = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i8i = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i8r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i8r = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i8i = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i8r = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i8i = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshl_v8i8r = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshl_v8i8i = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshr_v8i8r = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshr_v8i8i = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
+;
+  %r_fshl_v2i8i = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+  %r_fshl_v2i8r = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+  %r_fshr_v2i8i = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> <i8 3, i8 3>)
+  %r_fshr_v2i8r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> undef, <2 x i8> undef, <2 x i8> undef)
+
+  %r_fshl_v4i8r = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+  %r_fshl_v4i8i = call <4 x i8> @llvm.fshl.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+  %r_fshr_v4i8r = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> <i8 3, i8 3, i8 3, i8 3>)
+  %r_fshr_v4i8i = call <4 x i8> @llvm.fshr.v4i8(<4 x i8> undef, <4 x i8> undef, <4 x i8> undef)
+
+  %r_fshl_v8i8r = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+  %r_fshl_v8i8i = call <8 x i8> @llvm.fshl.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+  %r_fshr_v8i8r = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> <i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3, i8 3>)
+  %r_fshr_v8i8i = call <8 x i8> @llvm.fshr.v8i8(<8 x i8> undef, <8 x i8> undef, <8 x i8> undef)
+  ret void
+}
+
+define void @fsh() {
+; ALL-LABEL: 'fsh'
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i16i = call <2 x i16> @llvm.fshl.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> <i16 3, i16 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i16r = call <2 x i16> @llvm.fshl.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i16i = call <2 x i16> @llvm.fshr.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> <i16 3, i16 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i16r = call <2 x i16> @llvm.fshr.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i32i = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> <i32 3, i32 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i32r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i32i = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> <i32 3, i32 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i32r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i64i = call <2 x i64> @llvm.fshl.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> <i64 3, i64 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshl_v2i64r = call <2 x i64> @llvm.fshl.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i64i = call <2 x i64> @llvm.fshr.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> <i64 3, i64 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r_fshr_v2i64r = call <2 x i64> @llvm.fshr.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r_fshl_v3i16i = call <3 x i16> @llvm.fshl.v3i16(<3 x i16> undef, <3 x i16> undef, <3 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i16r = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i16i = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i16r = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i16i = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i32r = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshl_v4i32i = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i32r = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r_fshr_v4i32i = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshl_v4i64r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshl_v4i64i = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshr_v4i64r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshr_v4i64i = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 16 for instruction: %r_fshl_v8i16r = call <8 x i16> @llvm.fshl.v8i16(<8 x i16> undef, <8 x i16> undef, <8 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 64 for instruction: %r_fshl_v16i16 = call <16 x i16> @llvm.fshl.v16i16(<16 x i16> undef, <16 x i16> undef, <16 x i16> undef)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
+;
+  %r_fshl_v2i16i = call <2 x i16> @llvm.fshl.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> <i16 3, i16 3>)
+  %r_fshl_v2i16r = call <2 x i16> @llvm.fshl.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> undef)
+  %r_fshr_v2i16i = call <2 x i16> @llvm.fshr.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> <i16 3, i16 3>)
+  %r_fshr_v2i16r = call <2 x i16> @llvm.fshr.v2i16(<2 x i16> undef, <2 x i16> undef, <2 x i16> undef)
+  %r_fshl_v2i32i = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> <i32 3, i32 3>)
+  %r_fshl_v2i32r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> undef)
+  %r_fshr_v2i32i = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> <i32 3, i32 3>)
+  %r_fshr_v2i32r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> undef, <2 x i32> undef, <2 x i32> undef)
+  %r_fshl_v2i64i = call <2 x i64> @llvm.fshl.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> <i64 3, i64 3>)
+  %r_fshl_v2i64r = call <2 x i64> @llvm.fshl.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> undef)
+  %r_fshr_v2i64i = call <2 x i64> @llvm.fshr.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> <i64 3, i64 3>)
+  %r_fshr_v2i64r = call <2 x i64> @llvm.fshr.v2i64(<2 x i64> undef, <2 x i64> undef, <2 x i64> undef)
+  %r_fshl_v3i16i = call <3 x i16> @llvm.fshl.v3i16(<3 x i16> undef, <3 x i16> undef, <3 x i16> undef)
+  %r_fshl_v4i16r = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+  %r_fshl_v4i16i = call <4 x i16> @llvm.fshl.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> undef)
+  %r_fshr_v4i16r = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> <i16 3, i16 3, i16 3, i16 3>)
+  %r_fshr_v4i16i = call <4 x i16> @llvm.fshr.v4i16(<4 x i16> undef, <4 x i16> undef, <4 x i16> undef)
+  %r_fshl_v4i32r = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+  %r_fshl_v4i32i = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> undef)
+  %r_fshr_v4i32r = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+  %r_fshr_v4i32i = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> undef, <4 x i32> undef, <4 x i32> undef)
+  %r_fshl_v4i64r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+  %r_fshl_v4i64i = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> undef)
+  %r_fshr_v4i64r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
+  %r_fshr_v4i64i = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> undef, <4 x i64> undef, <4 x i64> undef)
+  %r_fshl_v8i16r = call <8 x i16> @llvm.fshl.v8i16(<8 x i16> undef, <8 x i16> undef, <8 x i16> undef)
+  %r_fshl_v16i16 = call <16 x i16> @llvm.fshl.v16i16(<16 x i16> undef, <16 x i16> undef, <16 x i16> undef)
+
+  ret void
+}
+declare <2 x i8> @llvm.fshl.v2i8(<2 x i8>, <2 x i8>, <2 x i8>)
+declare <2 x i8> @llvm.fshr.v2i8(<2 x i8>, <2 x i8>, <2 x i8>)
+declare <4 x i8> @llvm.fshl.v4i8(<4 x i8>, <4 x i8>, <4 x i8>)
+declare <4 x i8> @llvm.fshr.v4i8(<4 x i8>, <4 x i8>, <4 x i8>)
+declare <8 x i8> @llvm.fshl.v8i8(<8 x i8>, <8 x i8>, <8 x i8>)
+declare <8 x i8> @llvm.fshr.v8i8(<8 x i8>, <8 x i8>, <8 x i8>)
+
+declare <2 x i16> @llvm.fshl.v2i16(<2 x i16>, <2 x i16>, <2 x i16>)
+declare <2 x i16> @llvm.fshr.v2i16(<2 x i16>, <2 x i16>, <2 x i16>)
+declare <2 x i32> @llvm.fshl.v2i32(<2 x i32>, <2 x i32>, <2 x i32>)
+declare <2 x i32> @llvm.fshr.v2i32(<2 x i32>, <2 x i32>, <2 x i32>)
+declare <2 x i64> @llvm.fshl.v2i64(<2 x i64>, <2 x i64>, <2 x i64>)
+declare <2 x i64> @llvm.fshr.v2i64(<2 x i64>, <2 x i64>, <2 x i64>)
+declare <3 x i16> @llvm.fshl.v3i16(<3 x i16>, <3 x i16>, <3 x i16>)
+declare <4 x i16> @llvm.fshl.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)
+declare <4 x i16> @llvm.fshr.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)
+declare <4 x i32> @llvm.fshl.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
+declare <4 x i32> @llvm.fshr.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
+declare <4 x i64> @llvm.fshl.v4i64(<4 x i64>, <4 x i64>, <4 x i64>)
+declare <4 x i64> @llvm.fshr.v4i64(<4 x i64>, <4 x i64>, <4 x i64>)
+declare <8 x i16> @llvm.fshl.v8i16(<8 x i16>, <8 x i16>, <8 x i16>)
+declare <16 x i16> @llvm.fshl.v16i16(<16 x i16>, <16 x i16>, <16 x i16>)

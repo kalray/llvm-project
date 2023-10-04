@@ -440,7 +440,7 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = zext <4 x i1> %5 to <4 x i16>
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = zext <4 x i1> %5 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
   %3 = icmp eq <4 x i16> %0, zeroinitializer
@@ -455,7 +455,7 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = sext <4 x i1> %5 to <4 x i16>
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = sext <4 x i1> %5 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
 ;
   %3 = icmp eq <4 x i16> %0, zeroinitializer
@@ -469,7 +469,7 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %3 = or <4 x i16> %1, %0
@@ -482,7 +482,7 @@ define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %3 = or <4 x i16> %1, %0
@@ -495,7 +495,7 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %3 = or <4 x i16> %1, %0
@@ -508,7 +508,7 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %3 = or <4 x i16> %1, %0

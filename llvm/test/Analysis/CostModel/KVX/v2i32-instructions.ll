@@ -521,7 +521,7 @@ define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <2 x i32> %0, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <2 x i32> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <2 x i1> %4, %3
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %6 = zext <2 x i1> %5 to <2 x i32>
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = zext <2 x i1> %5 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %6
 ;
   %3 = icmp eq <2 x i32> %0, zeroinitializer
@@ -536,7 +536,7 @@ define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <2 x i32> %0, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <2 x i32> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <2 x i1> %4, %3
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %6 = sext <2 x i1> %5 to <2 x i32>
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = sext <2 x i1> %5 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %6
 ;
   %3 = icmp eq <2 x i32> %0, zeroinitializer
@@ -550,7 +550,7 @@ define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: 'lor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <2 x i32> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <2 x i32> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %5 = zext <2 x i1> %4 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <2 x i1> %4 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %5
 ;
   %3 = or <2 x i32> %1, %0
@@ -563,7 +563,7 @@ define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: 'lorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <2 x i32> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <2 x i32> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %5 = sext <2 x i1> %4 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <2 x i1> %4 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %5
 ;
   %3 = or <2 x i32> %1, %0
@@ -576,7 +576,7 @@ define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: 'lnor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <2 x i32> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <2 x i32> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %5 = zext <2 x i1> %4 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <2 x i1> %4 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %5
 ;
   %3 = or <2 x i32> %1, %0
@@ -589,7 +589,7 @@ define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 ; ALL-LABEL: 'lnorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <2 x i32> %1, %0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <2 x i32> %3, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %5 = sext <2 x i1> %4 to <2 x i32>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <2 x i1> %4 to <2 x i32>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %5
 ;
   %3 = or <2 x i32> %1, %0

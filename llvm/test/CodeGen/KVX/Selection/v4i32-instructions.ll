@@ -1062,3 +1062,247 @@ define <4 x i32> @test_select_cmp_4(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4
   %r = select i1 %cmp, <4 x i32> %a, <4 x i32> %b
   ret <4 x i32> %r
 }
+
+define <4 x i32> @fshl_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
+; CHECK-LABEL: fshl_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    andw $r5 = $r4, 31
+; CHECK-NEXT:    srad $r6 = $r1, 32
+; CHECK-NEXT:    srad $r7 = $r3, 32
+; CHECK-NEXT:    srad $r8 = $r0, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sllw $r0 = $r0, $r5
+; CHECK-NEXT:    sllw $r1 = $r1, $r5
+; CHECK-NEXT:    sllw $r6 = $r6, $r5
+; CHECK-NEXT:    sllw $r8 = $r8, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    srlw $r3 = $r3, 1
+; CHECK-NEXT:    andnw $r4 = $r4, 31
+; CHECK-NEXT:    srad $r5 = $r2, 32
+; CHECK-NEXT:    srlw $r7 = $r7, 1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srlw $r2 = $r2, 1
+; CHECK-NEXT:    srlw $r3 = $r3, $r4
+; CHECK-NEXT:    srlw $r5 = $r5, 1
+; CHECK-NEXT:    srlw $r7 = $r7, $r4
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    srlw $r2 = $r2, $r4
+; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    srlw $r5 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    orw $r3 = $r8, $r5
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 6)
+  %i = insertelement <4 x i32> undef, i32 %c, i32 0
+  %s = shufflevector <4 x i32> %i, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> %s)
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @fshl_ri(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: fshl_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r4 = $r3, 32
+; CHECK-NEXT:    srad $r5 = $r1, 32
+; CHECK-NEXT:    srad $r6 = $r2, 32
+; CHECK-NEXT:    srad $r7 = $r0, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sllw $r1 = $r1, 3
+; CHECK-NEXT:    srlw $r3 = $r3, 29
+; CHECK-NEXT:    srlw $r4 = $r4, 29
+; CHECK-NEXT:    sllw $r5 = $r5, 3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sllw $r0 = $r0, 3
+; CHECK-NEXT:    srlw $r2 = $r2, 29
+; CHECK-NEXT:    srlw $r6 = $r6, 29
+; CHECK-NEXT:    sllw $r7 = $r7, 3
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    orw $r3 = $r7, $r6
+; CHECK-NEXT:    orw $r4 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
+  %r = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @fshl_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
+; CHECK-LABEL: fshl_vec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlw $r3 = $r3, 1
+; CHECK-NEXT:    srad $r6 = $r5, 32
+; CHECK-NEXT:    srad $r7 = $r3, 32
+; CHECK-NEXT:    srad $r9 = $r1, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andw $r6 = $r6, 31
+; CHECK-NEXT:    srlw $r7 = $r7, 1
+; CHECK-NEXT:    andnw $r8 = $r6, 31
+; CHECK-NEXT:    srad $r10 = $r0, 32
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    andw $r5 = $r5, 31
+; CHECK-NEXT:    sllw $r6 = $r9, $r6
+; CHECK-NEXT:    srlw $r7 = $r7, $r8
+; CHECK-NEXT:    andnw $r8 = $r5, 31
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sllw $r1 = $r1, $r5
+; CHECK-NEXT:    srlw $r3 = $r3, $r8
+; CHECK-NEXT:    srad $r8 = $r4, 32
+; CHECK-NEXT:    srad $r9 = $r2, 32
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    andnw $r5 = $r8, 31
+; CHECK-NEXT:    andw $r8 = $r8, 31
+; CHECK-NEXT:    srlw $r9 = $r9, 1
+; CHECK-NEXT:    andnw $r11 = $r4, 31
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srlw $r2 = $r2, 1
+; CHECK-NEXT:    andw $r4 = $r4, 31
+; CHECK-NEXT:    srlw $r5 = $r9, $r5
+; CHECK-NEXT:    sllw $r8 = $r10, $r8
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    sllw $r0 = $r0, $r4
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    srlw $r2 = $r2, $r11
+; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    orw $r3 = $r8, $r5
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 8)
+  %r = call <4 x i32> @llvm.fshl.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c)
+  ret <4 x i32> %r
+}
+define <4 x i32> @fshr_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
+; CHECK-LABEL: fshr_rr:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    andw $r5 = $r4, 31
+; CHECK-NEXT:    srad $r6 = $r3, 32
+; CHECK-NEXT:    srad $r7 = $r1, 32
+; CHECK-NEXT:    srad $r8 = $r2, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srlw $r2 = $r2, $r5
+; CHECK-NEXT:    srlw $r3 = $r3, $r5
+; CHECK-NEXT:    srlw $r6 = $r6, $r5
+; CHECK-NEXT:    srlw $r8 = $r8, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sllw $r1 = $r1, 1
+; CHECK-NEXT:    andnw $r4 = $r4, 31
+; CHECK-NEXT:    srad $r5 = $r0, 32
+; CHECK-NEXT:    sllw $r7 = $r7, 1
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sllw $r0 = $r0, 1
+; CHECK-NEXT:    sllw $r1 = $r1, $r4
+; CHECK-NEXT:    sllw $r5 = $r5, 1
+; CHECK-NEXT:    sllw $r7 = $r7, $r4
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sllw $r0 = $r0, $r4
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    orw $r4 = $r7, $r6
+; CHECK-NEXT:    sllw $r5 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 6)
+  %i = insertelement <4 x i32> undef, i32 %c, i32 0
+  %s = shufflevector <4 x i32> %i, <4 x i32> undef, <4 x i32> <i32 0, i32 0, i32 0, i32 0>
+  %r = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> %s)
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @fshr_ri(<4 x i32> %a, <4 x i32> %b, i32 %c) {
+; CHECK-LABEL: fshr_ri:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srad $r4 = $r3, 32
+; CHECK-NEXT:    srad $r5 = $r1, 32
+; CHECK-NEXT:    srad $r6 = $r2, 32
+; CHECK-NEXT:    srad $r7 = $r0, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sllw $r1 = $r1, 29
+; CHECK-NEXT:    srlw $r3 = $r3, 3
+; CHECK-NEXT:    srlw $r4 = $r4, 3
+; CHECK-NEXT:    sllw $r5 = $r5, 29
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sllw $r0 = $r0, 29
+; CHECK-NEXT:    srlw $r2 = $r2, 3
+; CHECK-NEXT:    srlw $r6 = $r6, 3
+; CHECK-NEXT:    sllw $r7 = $r7, 29
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    orw $r3 = $r7, $r6
+; CHECK-NEXT:    orw $r4 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
+  %r = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> <i32 3, i32 3, i32 3, i32 3>)
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @fshr_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
+; CHECK-LABEL: fshr_vec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllw $r1 = $r1, 1
+; CHECK-NEXT:    srad $r6 = $r5, 32
+; CHECK-NEXT:    srad $r7 = $r3, 32
+; CHECK-NEXT:    srad $r9 = $r1, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    andnw $r6 = $r6, 31
+; CHECK-NEXT:    andw $r8 = $r6, 31
+; CHECK-NEXT:    srad $r10 = $r0, 32
+; CHECK-NEXT:    andw $r11 = $r4, 31
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    andnw $r5 = $r5, 31
+; CHECK-NEXT:    srlw $r7 = $r7, $r8
+; CHECK-NEXT:    sllw $r8 = $r9, 1
+; CHECK-NEXT:    andw $r9 = $r5, 31
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sllw $r1 = $r1, $r5
+; CHECK-NEXT:    srlw $r3 = $r3, $r9
+; CHECK-NEXT:    srad $r5 = $r4, 32
+; CHECK-NEXT:    sllw $r6 = $r8, $r6
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    andnw $r5 = $r5, 31
+; CHECK-NEXT:    srad $r8 = $r2, 32
+; CHECK-NEXT:    andw $r9 = $r5, 31
+; CHECK-NEXT:    sllw $r10 = $r10, 1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    sllw $r0 = $r0, 1
+; CHECK-NEXT:    andnw $r4 = $r4, 31
+; CHECK-NEXT:    sllw $r5 = $r10, $r5
+; CHECK-NEXT:    srlw $r8 = $r8, $r9
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    sllw $r0 = $r0, $r4
+; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    srlw $r2 = $r2, $r11
+; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
+; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 8)
+  %r = call <4 x i32> @llvm.fshr.v4i32(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c)
+  ret <4 x i32> %r
+}
+
+declare <4 x i32> @llvm.fshr.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
+declare <4 x i32> @llvm.fshl.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
