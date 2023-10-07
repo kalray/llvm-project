@@ -168,22 +168,62 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call __divsf3
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 16)
+  %r = fdiv half %a, %b
+  ret half %r
+}
+
+define half @test_frec(half %a) {
+; CHECK-LABEL: test_frec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    frecw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 12)
+  %r = fdiv half 1.0, %a
+  ret half %r
+}
+
+define half @test_neg_frec(half %a) {
+; CHECK-LABEL: test_neg_frec:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    fnegw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    frecw $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-  %r = fdiv half %a, %b
+; CHECK-NEXT:    ;; # (end cycle 13)
+  %r = fdiv half -1.0, %a
+  ret half %r
+}
+
+define half @test_fdiv_cst(half %a) {
+; CHECK-LABEL: test_fdiv_cst:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    make $r1 = 0x40b00000
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    frecw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    fmulw $r0 = $r1, $r0
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 16)
+  %r = fdiv half 5.5, %a
   ret half %r
 }
 
@@ -544,7 +584,7 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB35_2
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB38_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %then
 ; CHECK-NEXT:    make $r0 = 0
@@ -552,7 +592,7 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-NEXT:    sw 0[$r2] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:  .LBB35_2: # %else
+; CHECK-NEXT:  .LBB38_2: # %else
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 0[$r3] = $r0
@@ -583,7 +623,7 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    lhz $r20 = 0[$r18]
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:  .LBB36_1: # %loop
+; CHECK-NEXT:  .LBB39_1: # %loop
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r20
@@ -592,7 +632,7 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB36_1
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB39_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %return
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]

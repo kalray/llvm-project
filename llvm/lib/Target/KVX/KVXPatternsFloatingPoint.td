@@ -43,8 +43,12 @@ def fsubcont : PatFrag<(ops node:$op0, node:$op1), (fsub node:$op0, node:$op1), 
     return N->getFlags().hasAllowContract();
   }]>;
 
-def immFloat1 : FPImmLeaf<f32, [{
-    return Imm.convertToFloat() == 1.0f;
+def fpimm1 : FPImmLeaf<fAny, [{
+  return Imm.isExactlyValue(+1.0);
+}]>;
+
+def fpimm_m1 : FPImmLeaf<fAny, [{
+  return Imm.isExactlyValue(-1.0);
 }]>;
 
 defm : LoadPat<load, f16, 1, LHZp, LHZri10, LHZri37, LHZri64, LHZrr>;
@@ -1882,8 +1886,11 @@ def : Pat<(v4f64 (insertelt v4f64:$to, f64:$e, i64:$idx)),
             (CMOVEDrr (COMPDri10 SingleReg:$idx, 3, comparison_eq), (f64 (EXTRACT_SUBREG QuadReg:$to, sub_d3)), SingleReg:$e, scalarcond_odd),
             sub_d3)>;
 
-def : Pat<(f32 (fdiv immFloat1, f32:$a)),
+def : Pat<(f32 (fdiv fpimm1, f32:$a)),
           (FRECW SingleReg:$a, rounding_, silent_)>;
+
+def : Pat<(f32 (fdiv fpimm_m1, f32:$a)),
+          (FRECW (FNEGW SingleReg:$a), rounding_, silent_)>;
 
 // Patterns used only for -freciprocal-math
 def : Pat<(fdiv f32:$a, f32:$b), (FMULWrr SingleReg:$a, (FRECW SingleReg:$b, rounding_, silent_), rounding_, silent_)>;

@@ -962,13 +962,28 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
           ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
       setOperationAction(I, VT, RedAction);
 
-  for (auto I :
-       {ISD::BUILD_VECTOR, ISD::CTLZ,  ISD::CTPOP,     ISD::CTTZ,
-        ISD::FABS,         ISD::FADD,  ISD::FCOPYSIGN, ISD::FMA,
-        ISD::FMUL,         ISD::FSUB,  ISD::FNEG,      ISD::INTRINSIC_WO_CHAIN,
-        ISD::LOAD,         ISD::MUL,   ISD::SETCC,     ISD::SIGN_EXTEND,
-        ISD::SRA,          ISD::STORE, ISD::TRUNCATE,  ISD::VECREDUCE_ADD,
-        ISD::ZERO_EXTEND})
+  for (auto I : {ISD::BUILD_VECTOR,
+                 ISD::CTLZ,
+                 ISD::CTPOP,
+                 ISD::CTTZ,
+                 ISD::FABS,
+                 ISD::FADD,
+                 ISD::FCOPYSIGN,
+                 ISD::FDIV,
+                 ISD::FMA,
+                 ISD::FMUL,
+                 ISD::FSUB,
+                 ISD::FNEG,
+                 ISD::INTRINSIC_WO_CHAIN,
+                 ISD::LOAD,
+                 ISD::MUL,
+                 ISD::SETCC,
+                 ISD::SIGN_EXTEND,
+                 ISD::SRA,
+                 ISD::STORE,
+                 ISD::TRUNCATE,
+                 ISD::VECREDUCE_ADD,
+                 ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
@@ -1614,15 +1629,18 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerATOMIC_LOAD_OP(Op, DAG);
   case ISD::ADDRSPACECAST:
     return lowerADDRSPACECAST(Op, DAG);
-  case ISD::FDIV:
-    if (Op.getNode()->getFlags().hasAllowReciprocal() ||
-        (isa<ConstantFPSDNode>(Op.getOperand(0)) &&
-         cast<ConstantFPSDNode>(Op.getOperand(0))
-                 ->getConstantFPValue()
-                 ->getValue()
-                 .convertToFloat() == 1.0f))
+  case ISD::FDIV: {
+    if (Op.getNode()->getFlags().hasAllowReciprocal())
       return Op;
+
+    if (auto *FPN = dyn_cast<ConstantFPSDNode>(Op.getOperand(0))) {
+      auto &APF = FPN->getValueAPF();
+      if (APF.isExactlyValue(1.0) || APF.isExactlyValue(-1.0))
+        return Op;
+    }
+
     return SDValue();
+  }
   case ISD::FSQRT:
     if (Op.getNode()->getFlags().hasAllowReciprocal())
       return Op;
@@ -3730,6 +3748,26 @@ static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getStore(Chain, SDLoc(N), Cast, Ptr, ST->getMemOperand());
 }
 
+static SDValue combineFDIV(SDNode *N, SelectionDAG &Dag) {
+  auto Ty = N->getValueType(N->getNumValues() - 1);
+  if (Ty.getScalarType() != EVT(MVT::f16))
+    return SDValue();
+
+  auto DL = SDLoc(N);
+  auto ToTy = EVT(MVT::f32);
+  if (Ty.isVector())
+    ToTy = Ty.changeVectorElementType(ToTy);
+
+  auto Op0 = Dag.getFPExtendOrRound(N->getOperand(0), DL, ToTy);
+  auto Op1 = Dag.getFPExtendOrRound(N->getOperand(1), DL, ToTy);
+
+  auto Div = Dag.getNode(ISD::FDIV, DL, ToTy, Op0, Op1);
+  SDNodeFlags WithRec = N->getFlags();
+  WithRec.setAllowReciprocal(true);
+  Div->setFlags(WithRec);
+  return Dag.getFPExtendOrRound(Div, DL, Ty);
+}
+
 SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
                                              DAGCombinerInfo &DCI) const {
   SelectionDAG &DAG = DCI.DAG;
@@ -3770,6 +3808,9 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineZext(N, DAG);
   case ISD::VECREDUCE_ADD:
     return (Subtarget.isV1()) ? SDValue() : combineVecRedAdd(N, DAG);
+  case ISD::FDIV: {
+    return combineFDIV(N, DAG);
+  }
   }
 
   return SDValue();

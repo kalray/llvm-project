@@ -62,3 +62,15 @@ define float @fdiv(float %0) {
   %2 = fdiv float 1.000000e+00, %0
   ret float %2
 }
+
+define float @fdiv_neg(float %0) {
+; CHECK-LABEL: fdiv_neg:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fnegw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    frecw $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
+  %2 = fdiv float -1.000000e+00, %0
+  ret float %2
+}

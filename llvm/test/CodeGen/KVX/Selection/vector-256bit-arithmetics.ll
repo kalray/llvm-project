@@ -1504,368 +1504,235 @@ define <16 x half> @mul_v16f16_f16(<16 x half> %0, half %1) {
 define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; V1-LABEL: div_v16f16_v16f16:
 ; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -160
-; V1-NEXT:    get $r16 = $ra
+; V1-NEXT:    fwidenlhwp $r8 = $r0
+; V1-NEXT:    fwidenlhwp $r10 = $r4
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 152[$r12] = $r16
+; V1-NEXT:    frecw $r0 = $r10
+; V1-NEXT:    fwidenmhwp $r9 = $r0
+; V1-NEXT:    srld $r10 = $r10, 32
+; V1-NEXT:    srld $r36 = $r8, 32
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    so 120[$r12] = $r28r29r30r31
+; V1-NEXT:    frecw $r10 = $r10
+; V1-NEXT:    fwidenlhwp $r16 = $r5
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    so 88[$r12] = $r24r25r26r27
+; V1-NEXT:    frecw $r11 = $r16
+; V1-NEXT:    fwidenlhwp $r32 = $r6
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    so 56[$r12] = $r20r21r22r23
+; V1-NEXT:    srld $r4 = $r16, 32
+; V1-NEXT:    frecw $r15 = $r32
+; V1-NEXT:    fwidenmhwp $r17 = $r4
+; V1-NEXT:    srld $r32 = $r32, 32
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sq 40[$r12] = $r18r19
-; V1-NEXT:    copyd $r21 = $r7
-; V1-NEXT:    copyd $r22 = $r6
-; V1-NEXT:    copyd $r23 = $r5
+; V1-NEXT:    fwidenlhwp $r16 = $r1
+; V1-NEXT:    frecw $r32 = $r32
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    copyd $r19 = $r4
-; V1-NEXT:    copyd $r24 = $r3
-; V1-NEXT:    copyd $r25 = $r2
-; V1-NEXT:    copyd $r26 = $r1
+; V1-NEXT:    fwidenmhwp $r1 = $r1
+; V1-NEXT:    fwidenlhwp $r34 = $r7
 ; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    fwidenmhw $r0 = $r24
-; V1-NEXT:    fwidenmhw $r1 = $r21
-; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    call __divsf3
+; V1-NEXT:    fwidenmhwp $r5 = $r5
+; V1-NEXT:    fwidenmhwp $r37 = $r2
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r21
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 32[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r24
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r24, 48
-; V1-NEXT:    srld $r1 = $r21, 48
-; V1-NEXT:    fnarrowwh $r18 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    srld $r1 = $r21, 32
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 24[$r12] = $r0
-; V1-NEXT:    srld $r0 = $r24, 32
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fwidenmhw $r0 = $r25
-; V1-NEXT:    fnarrowwh $r24 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenmhw $r1 = $r22
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r22
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 16[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r25
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r25, 48
-; V1-NEXT:    srld $r1 = $r22, 48
-; V1-NEXT:    fnarrowwh $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r25, 32
-; V1-NEXT:    srld $r1 = $r22, 32
-; V1-NEXT:    fnarrowwh $r30 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenmhw $r0 = $r26
-; V1-NEXT:    fnarrowwh $r25 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenmhw $r1 = $r23
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r26
-; V1-NEXT:    fnarrowwh $r31 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r1 = $r23
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r26, 48
-; V1-NEXT:    srld $r1 = $r23, 48
-; V1-NEXT:    fnarrowwh $r22 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r26, 32
-; V1-NEXT:    srld $r1 = $r23, 32
-; V1-NEXT:    fnarrowwh $r27 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenmhw $r0 = $r20
-; V1-NEXT:    fnarrowwh $r26 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenmhw $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r20
-; V1-NEXT:    fnarrowwh $r28 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r20, 48
-; V1-NEXT:    srld $r1 = $r19, 48
-; V1-NEXT:    fnarrowwh $r23 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r20, 32
-; V1-NEXT:    srld $r1 = $r19, 32
-; V1-NEXT:    fnarrowwh $r29 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    insf $r23 = $r28, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    insf $r0 = $r29, 31, 16
-; V1-NEXT:    insf $r26 = $r27, 31, 16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r0 = 16[$r12]
-; V1-NEXT:    insf $r22 = $r31, 31, 16
-; V1-NEXT:    insf $r23 = $r0, 63, 32
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r22 = $r26, 63, 32
-; V1-NEXT:    insf $r25 = $r30, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ld $r0 = 24[$r12]
-; V1-NEXT:    insf $r21 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    insf $r21 = $r25, 63, 32
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    ld $r0 = 32[$r12]
-; V1-NEXT:    insf $r24 = $r0, 31, 16
+; V1-NEXT:    srld $r34 = $r34, 32
+; V1-NEXT:    frecw $r35 = $r34
+; V1-NEXT:    fwidenmhwp $r39 = $r6
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    copyd $r0 = $r23
-; V1-NEXT:    copyd $r1 = $r22
-; V1-NEXT:    copyd $r2 = $r21
-; V1-NEXT:    insf $r18 = $r0, 31, 16
+; V1-NEXT:    fwidenmhwp $r7 = $r7
+; V1-NEXT:    fwidenmhwp $r41 = $r3
+; V1-NEXT:    ;; # (end cycle 9)
+; V1-NEXT:    fwidenlhwp $r2 = $r2
+; V1-NEXT:    srld $r17 = $r17, 32
+; V1-NEXT:    frecw $r33 = $r17
+; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    frecw $r6 = $r34
 ; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    insf $r18 = $r24, 63, 32
+; V1-NEXT:    srld $r0 = $r39, 32
+; V1-NEXT:    srld $r5 = $r5, 32
+; V1-NEXT:    frecw $r34 = $r5
+; V1-NEXT:    fmulw $r42 = $r8, $r0
 ; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    lq $r18r19 = 40[$r12]
-; V1-NEXT:    copyd $r3 = $r18
+; V1-NEXT:    frecw $r0 = $r0
+; V1-NEXT:    fmulw $r8 = $r36, $r10
+; V1-NEXT:    srld $r10 = $r7, 32
 ; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; V1-NEXT:    frecw $r4 = $r4
+; V1-NEXT:    srld $r11 = $r16, 32
+; V1-NEXT:    fmulw $r44 = $r16, $r11
 ; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; V1-NEXT:    srld $r2 = $r2, 32
+; V1-NEXT:    fmulw $r16 = $r2, $r15
+; V1-NEXT:    frecw $r17 = $r17
 ; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; V1-NEXT:    fmulw $r2 = $r2, $r32
+; V1-NEXT:    frecw $r38 = $r39
 ; V1-NEXT:    ;; # (end cycle 16)
-; V1-NEXT:    ld $r16 = 152[$r12]
+; V1-NEXT:    frecw $r5 = $r5
+; V1-NEXT:    insf $r42 = $r8, 63, 32
 ; V1-NEXT:    ;; # (end cycle 17)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 160
+; V1-NEXT:    srld $r3 = $r9, 32
+; V1-NEXT:    fwidenlhwp $r8 = $r3
+; V1-NEXT:    frecw $r10 = $r10
+; V1-NEXT:    ;; # (end cycle 18)
+; V1-NEXT:    frecw $r7 = $r7
+; V1-NEXT:    srld $r8 = $r8, 32
+; V1-NEXT:    fmulw $r32 = $r8, $r35
+; V1-NEXT:    ;; # (end cycle 19)
+; V1-NEXT:    srld $r2 = $r37, 32
+; V1-NEXT:    insf $r16 = $r2, 63, 32
+; V1-NEXT:    ;; # (end cycle 20)
+; V1-NEXT:    fmulw $r43 = $r9, $r33
+; V1-NEXT:    ;; # (end cycle 21)
+; V1-NEXT:    fmulw $r6 = $r8, $r6
 ; V1-NEXT:    ;; # (end cycle 22)
+; V1-NEXT:    srld $r1 = $r1, 32
+; V1-NEXT:    fmulw $r45 = $r1, $r34
+; V1-NEXT:    ;; # (end cycle 23)
+; V1-NEXT:    fmulw $r0 = $r2, $r0
+; V1-NEXT:    srld $r2 = $r41, 32
+; V1-NEXT:    ;; # (end cycle 24)
+; V1-NEXT:    fmulw $r4 = $r11, $r4
+; V1-NEXT:    ;; # (end cycle 25)
+; V1-NEXT:    fmulw $r3 = $r3, $r17
+; V1-NEXT:    insf $r32 = $r6, 63, 32
+; V1-NEXT:    ;; # (end cycle 26)
+; V1-NEXT:    fmulw $r17 = $r37, $r38
+; V1-NEXT:    ;; # (end cycle 27)
+; V1-NEXT:    fmulw $r1 = $r1, $r5
+; V1-NEXT:    ;; # (end cycle 28)
+; V1-NEXT:    fmulw $r2 = $r2, $r10
+; V1-NEXT:    insf $r44 = $r4, 63, 32
+; V1-NEXT:    ;; # (end cycle 29)
+; V1-NEXT:    fmulw $r33 = $r41, $r7
+; V1-NEXT:    insf $r43 = $r3, 63, 32
+; V1-NEXT:    ;; # (end cycle 30)
+; V1-NEXT:    fnarrowwhq $r0 = $r42r43
+; V1-NEXT:    insf $r17 = $r0, 63, 32
+; V1-NEXT:    ;; # (end cycle 31)
+; V1-NEXT:    insf $r45 = $r1, 63, 32
+; V1-NEXT:    ;; # (end cycle 32)
+; V1-NEXT:    fnarrowwhq $r1 = $r44r45
+; V1-NEXT:    ;; # (end cycle 33)
+; V1-NEXT:    fnarrowwhq $r2 = $r16r17
+; V1-NEXT:    insf $r33 = $r2, 63, 32
+; V1-NEXT:    ;; # (end cycle 34)
+; V1-NEXT:    fnarrowwhq $r3 = $r32r33
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 35)
 ;
 ; V2-LABEL: div_v16f16_v16f16:
 ; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -160
-; V2-NEXT:    get $r16 = $ra
+; V2-NEXT:    fwidenlhwp $r8 = $r0
+; V2-NEXT:    fwidenlhwp $r10 = $r4
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 152[$r12] = $r16
+; V2-NEXT:    frecw $r0 = $r10
+; V2-NEXT:    fwidenmhwp $r9 = $r0
+; V2-NEXT:    srld $r10 = $r10, 32
+; V2-NEXT:    srld $r36 = $r8, 32
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    so 120[$r12] = $r28r29r30r31
+; V2-NEXT:    frecw $r10 = $r10
+; V2-NEXT:    fwidenlhwp $r16 = $r5
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    so 88[$r12] = $r24r25r26r27
+; V2-NEXT:    frecw $r11 = $r16
+; V2-NEXT:    fwidenlhwp $r32 = $r6
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    so 56[$r12] = $r20r21r22r23
+; V2-NEXT:    srld $r4 = $r16, 32
+; V2-NEXT:    frecw $r15 = $r32
+; V2-NEXT:    fwidenmhwp $r17 = $r4
+; V2-NEXT:    srld $r32 = $r32, 32
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sq 40[$r12] = $r18r19
-; V2-NEXT:    copyd $r21 = $r7
-; V2-NEXT:    copyd $r22 = $r6
-; V2-NEXT:    copyd $r23 = $r5
+; V2-NEXT:    fwidenlhwp $r16 = $r1
+; V2-NEXT:    frecw $r32 = $r32
 ; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    copyd $r19 = $r4
-; V2-NEXT:    copyd $r24 = $r3
-; V2-NEXT:    copyd $r25 = $r2
-; V2-NEXT:    copyd $r26 = $r1
+; V2-NEXT:    fwidenmhwp $r1 = $r1
+; V2-NEXT:    fwidenlhwp $r34 = $r7
 ; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    fwidenmhw $r0 = $r24
-; V2-NEXT:    fwidenmhw $r1 = $r21
-; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    call __divsf3
+; V2-NEXT:    fwidenmhwp $r5 = $r5
+; V2-NEXT:    fwidenmhwp $r37 = $r2
 ; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r21
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 32[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r24
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r24, 48
-; V2-NEXT:    srld $r1 = $r21, 48
-; V2-NEXT:    fnarrowwh $r18 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    srld $r1 = $r21, 32
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 24[$r12] = $r0
-; V2-NEXT:    srld $r0 = $r24, 32
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    fwidenmhw $r0 = $r25
-; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenmhw $r1 = $r22
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r22
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 16[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r25
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r25, 48
-; V2-NEXT:    srld $r1 = $r22, 48
-; V2-NEXT:    fnarrowwh $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r25, 32
-; V2-NEXT:    srld $r1 = $r22, 32
-; V2-NEXT:    fnarrowwh $r30 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenmhw $r0 = $r26
-; V2-NEXT:    fnarrowwh $r25 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenmhw $r1 = $r23
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r26
-; V2-NEXT:    fnarrowwh $r31 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r1 = $r23
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r26, 48
-; V2-NEXT:    srld $r1 = $r23, 48
-; V2-NEXT:    fnarrowwh $r22 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r26, 32
-; V2-NEXT:    srld $r1 = $r23, 32
-; V2-NEXT:    fnarrowwh $r27 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenmhw $r0 = $r20
-; V2-NEXT:    fnarrowwh $r26 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenmhw $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r20
-; V2-NEXT:    fnarrowwh $r28 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r20, 48
-; V2-NEXT:    srld $r1 = $r19, 48
-; V2-NEXT:    fnarrowwh $r23 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r20, 32
-; V2-NEXT:    srld $r1 = $r19, 32
-; V2-NEXT:    fnarrowwh $r29 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ld $r1 = 16[$r12]
-; V2-NEXT:    insf $r23 = $r28, 31, 16
-; V2-NEXT:    insf $r26 = $r27, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    insf $r0 = $r29, 31, 16
-; V2-NEXT:    insf $r22 = $r31, 31, 16
-; V2-NEXT:    insf $r25 = $r30, 31, 16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    insf $r22 = $r26, 63, 32
-; V2-NEXT:    insf $r23 = $r0, 63, 32
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ld $r1 = 24[$r12]
-; V2-NEXT:    insf $r21 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    insf $r21 = $r25, 63, 32
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    copyd $r0 = $r23
-; V2-NEXT:    ld $r1 = 32[$r12]
-; V2-NEXT:    insf $r24 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    copyd $r1 = $r22
-; V2-NEXT:    copyd $r2 = $r21
-; V2-NEXT:    insf $r18 = $r1, 31, 16
+; V2-NEXT:    srld $r34 = $r34, 32
+; V2-NEXT:    frecw $r35 = $r34
+; V2-NEXT:    fwidenmhwp $r39 = $r6
+; V2-NEXT:    ;; # (end cycle 8)
+; V2-NEXT:    fwidenmhwp $r7 = $r7
+; V2-NEXT:    fwidenmhwp $r41 = $r3
 ; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    insf $r18 = $r24, 63, 32
+; V2-NEXT:    fwidenlhwp $r2 = $r2
+; V2-NEXT:    srld $r17 = $r17, 32
+; V2-NEXT:    frecw $r33 = $r17
 ; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    lq $r18r19 = 40[$r12]
-; V2-NEXT:    copyd $r3 = $r18
+; V2-NEXT:    frecw $r6 = $r34
 ; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; V2-NEXT:    srld $r0 = $r39, 32
+; V2-NEXT:    srld $r5 = $r5, 32
+; V2-NEXT:    frecw $r34 = $r5
+; V2-NEXT:    fmulw $r42 = $r8, $r0
 ; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; V2-NEXT:    frecw $r0 = $r0
+; V2-NEXT:    fmulw $r8 = $r36, $r10
+; V2-NEXT:    srld $r10 = $r7, 32
 ; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; V2-NEXT:    frecw $r4 = $r4
+; V2-NEXT:    srld $r11 = $r16, 32
+; V2-NEXT:    fmulw $r44 = $r16, $r11
 ; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    ld $r16 = 152[$r12]
+; V2-NEXT:    srld $r2 = $r2, 32
+; V2-NEXT:    fmulw $r16 = $r2, $r15
+; V2-NEXT:    frecw $r17 = $r17
 ; V2-NEXT:    ;; # (end cycle 15)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 160
+; V2-NEXT:    fmulw $r2 = $r2, $r32
+; V2-NEXT:    frecw $r38 = $r39
+; V2-NEXT:    ;; # (end cycle 16)
+; V2-NEXT:    srld $r3 = $r9, 32
+; V2-NEXT:    frecw $r5 = $r5
+; V2-NEXT:    fwidenlhwp $r8 = $r3
+; V2-NEXT:    insf $r42 = $r8, 63, 32
+; V2-NEXT:    ;; # (end cycle 17)
+; V2-NEXT:    frecw $r10 = $r10
+; V2-NEXT:    ;; # (end cycle 18)
+; V2-NEXT:    frecw $r7 = $r7
+; V2-NEXT:    srld $r8 = $r8, 32
+; V2-NEXT:    fmulw $r32 = $r8, $r35
+; V2-NEXT:    ;; # (end cycle 19)
+; V2-NEXT:    srld $r2 = $r37, 32
+; V2-NEXT:    insf $r16 = $r2, 63, 32
 ; V2-NEXT:    ;; # (end cycle 20)
+; V2-NEXT:    fmulw $r43 = $r9, $r33
+; V2-NEXT:    ;; # (end cycle 21)
+; V2-NEXT:    fmulw $r6 = $r8, $r6
+; V2-NEXT:    ;; # (end cycle 22)
+; V2-NEXT:    srld $r1 = $r1, 32
+; V2-NEXT:    fmulw $r45 = $r1, $r34
+; V2-NEXT:    ;; # (end cycle 23)
+; V2-NEXT:    fmulw $r0 = $r2, $r0
+; V2-NEXT:    srld $r2 = $r41, 32
+; V2-NEXT:    ;; # (end cycle 24)
+; V2-NEXT:    fmulw $r4 = $r11, $r4
+; V2-NEXT:    ;; # (end cycle 25)
+; V2-NEXT:    fmulw $r3 = $r3, $r17
+; V2-NEXT:    insf $r32 = $r6, 63, 32
+; V2-NEXT:    ;; # (end cycle 26)
+; V2-NEXT:    fmulw $r17 = $r37, $r38
+; V2-NEXT:    ;; # (end cycle 27)
+; V2-NEXT:    fmulw $r1 = $r1, $r5
+; V2-NEXT:    ;; # (end cycle 28)
+; V2-NEXT:    fmulw $r2 = $r2, $r10
+; V2-NEXT:    insf $r44 = $r4, 63, 32
+; V2-NEXT:    ;; # (end cycle 29)
+; V2-NEXT:    fmulw $r33 = $r41, $r7
+; V2-NEXT:    insf $r43 = $r3, 63, 32
+; V2-NEXT:    ;; # (end cycle 30)
+; V2-NEXT:    fnarrowwhq $r0 = $r42r43
+; V2-NEXT:    insf $r17 = $r0, 63, 32
+; V2-NEXT:    ;; # (end cycle 31)
+; V2-NEXT:    insf $r45 = $r1, 63, 32
+; V2-NEXT:    ;; # (end cycle 32)
+; V2-NEXT:    fnarrowwhq $r1 = $r44r45
+; V2-NEXT:    ;; # (end cycle 33)
+; V2-NEXT:    fnarrowwhq $r2 = $r16r17
+; V2-NEXT:    insf $r33 = $r2, 63, 32
+; V2-NEXT:    ;; # (end cycle 34)
+; V2-NEXT:    fnarrowwhq $r3 = $r32r33
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 35)
   %3 = fdiv <16 x half> %0, %1
   ret <16 x half> %3
 }
@@ -1873,334 +1740,173 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V1-LABEL: div_v16f16_f16:
 ; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -160
-; V1-NEXT:    get $r16 = $ra
+; V1-NEXT:    sbmm8 $r4 = $r4, 0x2010201.@
+; V1-NEXT:    fwidenlhwp $r8 = $r0
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 152[$r12] = $r16
+; V1-NEXT:    fwidenlhwp $r6 = $r4
+; V1-NEXT:    fwidenlhwp $r10 = $r1
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    so 120[$r12] = $r28r29r30r31
+; V1-NEXT:    srld $r5 = $r6, 32
+; V1-NEXT:    frecw $r7 = $r6
+; V1-NEXT:    fwidenlhwp $r16 = $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    so 88[$r12] = $r24r25r26r27
+; V1-NEXT:    fwidenmhwp $r5 = $r0
+; V1-NEXT:    frecw $r6 = $r5
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    so 56[$r12] = $r20r21r22r23
-; V1-NEXT:    fwidenlhw $r20 = $r4
+; V1-NEXT:    fwidenmhwp $r9 = $r4
+; V1-NEXT:    fwidenlhwp $r34 = $r3
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sq 40[$r12] = $r18r19
-; V1-NEXT:    copyd $r21 = $r3
-; V1-NEXT:    copyd $r22 = $r2
-; V1-NEXT:    copyd $r23 = $r1
+; V1-NEXT:    frecw $r4 = $r9
+; V1-NEXT:    srld $r9 = $r9, 32
+; V1-NEXT:    srld $r11 = $r34, 32
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    fwidenmhw $r0 = $r21
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    call __divsf3
+; V1-NEXT:    frecw $r9 = $r9
 ; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 32[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r21
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r21, 48
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r18 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 24[$r12] = $r0
-; V1-NEXT:    srld $r0 = $r21, 32
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fwidenmhw $r0 = $r22
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r26 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 16[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r22
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r22, 48
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r22, 32
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r28 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenmhw $r0 = $r23
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r29 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r23
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r30 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    srld $r0 = $r23, 48
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r22 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r23, 32
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r31 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenmhw $r0 = $r19
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r24 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r19
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r25 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    srld $r0 = $r19, 48
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r23 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r19, 32
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    fnarrowwh $r27 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    insf $r23 = $r25, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    insf $r0 = $r27, 31, 16
-; V1-NEXT:    insf $r24 = $r31, 31, 16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r0 = 16[$r12]
-; V1-NEXT:    insf $r22 = $r30, 31, 16
-; V1-NEXT:    insf $r23 = $r0, 63, 32
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r22 = $r24, 63, 32
-; V1-NEXT:    insf $r29 = $r28, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ld $r0 = 24[$r12]
-; V1-NEXT:    insf $r21 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    insf $r21 = $r29, 63, 32
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    ld $r0 = 32[$r12]
-; V1-NEXT:    insf $r26 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    copyd $r0 = $r23
-; V1-NEXT:    copyd $r1 = $r22
-; V1-NEXT:    copyd $r2 = $r21
-; V1-NEXT:    insf $r18 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    insf $r18 = $r26, 63, 32
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    lq $r18r19 = 40[$r12]
-; V1-NEXT:    copyd $r3 = $r18
+; V1-NEXT:    fmulw $r0 = $r8, $r7
+; V1-NEXT:    srld $r8 = $r8, 32
 ; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; V1-NEXT:    fmulw $r32 = $r10, $r7
 ; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; V1-NEXT:    fmulw $r36 = $r16, $r7
 ; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; V1-NEXT:    srld $r7 = $r10, 32
+; V1-NEXT:    srld $r10 = $r16, 32
+; V1-NEXT:    fmulw $r38 = $r34, $r7
 ; V1-NEXT:    ;; # (end cycle 16)
-; V1-NEXT:    ld $r16 = 152[$r12]
+; V1-NEXT:    fmulw $r7 = $r7, $r6
 ; V1-NEXT:    ;; # (end cycle 17)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 160
+; V1-NEXT:    fmulw $r8 = $r8, $r6
+; V1-NEXT:    ;; # (end cycle 18)
+; V1-NEXT:    fmulw $r10 = $r10, $r6
+; V1-NEXT:    ;; # (end cycle 19)
+; V1-NEXT:    fmulw $r6 = $r11, $r6
+; V1-NEXT:    ;; # (end cycle 20)
+; V1-NEXT:    fmulw $r1 = $r5, $r4
+; V1-NEXT:    fwidenmhwp $r7 = $r1
+; V1-NEXT:    insf $r32 = $r7, 63, 32
+; V1-NEXT:    ;; # (end cycle 21)
+; V1-NEXT:    srld $r2 = $r5, 32
+; V1-NEXT:    fwidenmhwp $r3 = $r3
+; V1-NEXT:    fwidenmhwp $r11 = $r2
+; V1-NEXT:    fmulw $r33 = $r7, $r4
 ; V1-NEXT:    ;; # (end cycle 22)
+; V1-NEXT:    insf $r0 = $r8, 63, 32
+; V1-NEXT:    srld $r5 = $r11, 32
+; V1-NEXT:    insf $r36 = $r10, 63, 32
+; V1-NEXT:    fmulw $r37 = $r11, $r4
+; V1-NEXT:    ;; # (end cycle 23)
+; V1-NEXT:    srld $r3 = $r3, 32
+; V1-NEXT:    srld $r4 = $r7, 32
+; V1-NEXT:    insf $r38 = $r6, 63, 32
+; V1-NEXT:    fmulw $r39 = $r3, $r4
+; V1-NEXT:    ;; # (end cycle 24)
+; V1-NEXT:    fmulw $r2 = $r2, $r9
+; V1-NEXT:    ;; # (end cycle 25)
+; V1-NEXT:    fmulw $r4 = $r4, $r9
+; V1-NEXT:    ;; # (end cycle 26)
+; V1-NEXT:    fmulw $r5 = $r5, $r9
+; V1-NEXT:    ;; # (end cycle 27)
+; V1-NEXT:    fmulw $r3 = $r3, $r9
+; V1-NEXT:    ;; # (end cycle 28)
+; V1-NEXT:    insf $r1 = $r2, 63, 32
+; V1-NEXT:    ;; # (end cycle 29)
+; V1-NEXT:    fnarrowwhq $r0 = $r0r1
+; V1-NEXT:    insf $r33 = $r4, 63, 32
+; V1-NEXT:    ;; # (end cycle 30)
+; V1-NEXT:    fnarrowwhq $r1 = $r32r33
+; V1-NEXT:    insf $r37 = $r5, 63, 32
+; V1-NEXT:    ;; # (end cycle 31)
+; V1-NEXT:    fnarrowwhq $r2 = $r36r37
+; V1-NEXT:    insf $r39 = $r3, 63, 32
+; V1-NEXT:    ;; # (end cycle 32)
+; V1-NEXT:    fnarrowwhq $r3 = $r38r39
 ; V1-NEXT:    ret
-; V1-NEXT:    ;;
+; V1-NEXT:    ;; # (end cycle 33)
 ;
 ; V2-LABEL: div_v16f16_f16:
 ; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -160
-; V2-NEXT:    get $r16 = $ra
+; V2-NEXT:    sbmm8 $r4 = $r4, 0x2010201.@
+; V2-NEXT:    fwidenlhwp $r8 = $r0
+; V2-NEXT:    fwidenlhwp $r10 = $r1
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 152[$r12] = $r16
+; V2-NEXT:    fwidenlhwp $r6 = $r4
+; V2-NEXT:    fwidenlhwp $r16 = $r2
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    so 120[$r12] = $r28r29r30r31
+; V2-NEXT:    srld $r5 = $r6, 32
+; V2-NEXT:    frecw $r7 = $r6
+; V2-NEXT:    fwidenlhwp $r34 = $r3
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    so 88[$r12] = $r24r25r26r27
+; V2-NEXT:    fwidenmhwp $r5 = $r0
+; V2-NEXT:    frecw $r6 = $r5
+; V2-NEXT:    srld $r11 = $r34, 32
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    so 56[$r12] = $r20r21r22r23
-; V2-NEXT:    fwidenlhw $r20 = $r4
+; V2-NEXT:    fwidenmhwp $r9 = $r4
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sq 40[$r12] = $r18r19
-; V2-NEXT:    copyd $r21 = $r3
-; V2-NEXT:    copyd $r22 = $r2
-; V2-NEXT:    copyd $r23 = $r1
+; V2-NEXT:    frecw $r4 = $r9
+; V2-NEXT:    srld $r9 = $r9, 32
 ; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    fwidenmhw $r0 = $r21
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    call __divsf3
+; V2-NEXT:    frecw $r9 = $r9
 ; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 32[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r21
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r21, 48
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r18 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 24[$r12] = $r0
-; V2-NEXT:    srld $r0 = $r21, 32
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    fwidenmhw $r0 = $r22
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r26 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 16[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r22
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r22, 48
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r22, 32
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r28 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenmhw $r0 = $r23
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r29 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r23
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r30 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    srld $r0 = $r23, 48
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r22 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r23, 32
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r31 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenmhw $r0 = $r19
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r19
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r25 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    srld $r0 = $r19, 48
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r23 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r19, 32
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    fnarrowwh $r27 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ld $r1 = 16[$r12]
-; V2-NEXT:    insf $r23 = $r25, 31, 16
-; V2-NEXT:    insf $r24 = $r31, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    insf $r0 = $r27, 31, 16
-; V2-NEXT:    insf $r22 = $r30, 31, 16
-; V2-NEXT:    insf $r29 = $r28, 31, 16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    insf $r22 = $r24, 63, 32
-; V2-NEXT:    insf $r23 = $r0, 63, 32
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ld $r1 = 24[$r12]
-; V2-NEXT:    insf $r21 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    insf $r21 = $r29, 63, 32
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    copyd $r0 = $r23
-; V2-NEXT:    ld $r1 = 32[$r12]
-; V2-NEXT:    insf $r26 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    copyd $r1 = $r22
-; V2-NEXT:    copyd $r2 = $r21
-; V2-NEXT:    insf $r18 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    insf $r18 = $r26, 63, 32
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    lq $r18r19 = 40[$r12]
-; V2-NEXT:    copyd $r3 = $r18
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    lo $r20r21r22r23 = 56[$r12]
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; V2-NEXT:    fmulw $r0 = $r8, $r7
+; V2-NEXT:    srld $r8 = $r8, 32
 ; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; V2-NEXT:    fmulw $r32 = $r10, $r7
 ; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    ld $r16 = 152[$r12]
+; V2-NEXT:    fmulw $r36 = $r16, $r7
 ; V2-NEXT:    ;; # (end cycle 15)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 160
+; V2-NEXT:    srld $r7 = $r10, 32
+; V2-NEXT:    srld $r10 = $r16, 32
+; V2-NEXT:    fmulw $r38 = $r34, $r7
+; V2-NEXT:    ;; # (end cycle 16)
+; V2-NEXT:    fmulw $r7 = $r7, $r6
+; V2-NEXT:    ;; # (end cycle 17)
+; V2-NEXT:    fmulw $r8 = $r8, $r6
+; V2-NEXT:    ;; # (end cycle 18)
+; V2-NEXT:    fmulw $r10 = $r10, $r6
+; V2-NEXT:    ;; # (end cycle 19)
+; V2-NEXT:    fmulw $r6 = $r11, $r6
 ; V2-NEXT:    ;; # (end cycle 20)
+; V2-NEXT:    fmulw $r1 = $r5, $r4
+; V2-NEXT:    fwidenmhwp $r7 = $r1
+; V2-NEXT:    fwidenmhwp $r11 = $r2
+; V2-NEXT:    insf $r32 = $r7, 63, 32
+; V2-NEXT:    ;; # (end cycle 21)
+; V2-NEXT:    srld $r2 = $r5, 32
+; V2-NEXT:    fwidenmhwp $r3 = $r3
+; V2-NEXT:    srld $r5 = $r11, 32
+; V2-NEXT:    fmulw $r33 = $r7, $r4
+; V2-NEXT:    ;; # (end cycle 22)
+; V2-NEXT:    insf $r0 = $r8, 63, 32
+; V2-NEXT:    insf $r36 = $r10, 63, 32
+; V2-NEXT:    fmulw $r37 = $r11, $r4
+; V2-NEXT:    ;; # (end cycle 23)
+; V2-NEXT:    srld $r3 = $r3, 32
+; V2-NEXT:    srld $r4 = $r7, 32
+; V2-NEXT:    insf $r38 = $r6, 63, 32
+; V2-NEXT:    fmulw $r39 = $r3, $r4
+; V2-NEXT:    ;; # (end cycle 24)
+; V2-NEXT:    fmulw $r2 = $r2, $r9
+; V2-NEXT:    ;; # (end cycle 25)
+; V2-NEXT:    fmulw $r4 = $r4, $r9
+; V2-NEXT:    ;; # (end cycle 26)
+; V2-NEXT:    fmulw $r5 = $r5, $r9
+; V2-NEXT:    ;; # (end cycle 27)
+; V2-NEXT:    fmulw $r3 = $r3, $r9
+; V2-NEXT:    ;; # (end cycle 28)
+; V2-NEXT:    insf $r1 = $r2, 63, 32
+; V2-NEXT:    ;; # (end cycle 29)
+; V2-NEXT:    fnarrowwhq $r0 = $r0r1
+; V2-NEXT:    insf $r33 = $r4, 63, 32
+; V2-NEXT:    ;; # (end cycle 30)
+; V2-NEXT:    fnarrowwhq $r1 = $r32r33
+; V2-NEXT:    insf $r37 = $r5, 63, 32
+; V2-NEXT:    ;; # (end cycle 31)
+; V2-NEXT:    fnarrowwhq $r2 = $r36r37
+; V2-NEXT:    insf $r39 = $r3, 63, 32
+; V2-NEXT:    ;; # (end cycle 32)
+; V2-NEXT:    fnarrowwhq $r3 = $r38r39
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 33)
   %3 = insertelement <16 x half> undef, half %1, i32 0
   %4 = shufflevector <16 x half> %3, <16 x half> undef, <16 x i32> zeroinitializer
   %5 = fdiv <16 x half> %0, %4
@@ -6229,385 +5935,107 @@ define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 }
 
 define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
-; V1-LABEL: p_div_v16f16_v16f16:
-; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -160
-; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 152[$r12] = $r16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    so 120[$r12] = $r28r29r30r31
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    so 88[$r12] = $r24r25r26r27
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    so 56[$r12] = $r20r21r22r23
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sq 40[$r12] = $r18r19
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    lo $r24r25r26r27 = 0[$r0]
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    lo $r28r29r30r31 = 0[$r1]
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    fwidenlhw $r0 = $r27
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    fwidenlhw $r1 = $r31
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    srlw $r0 = $r27, 16
-; V1-NEXT:    srlw $r1 = $r31, 16
-; V1-NEXT:    fnarrowwh $r18 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    srld $r1 = $r31, 48
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 32[$r12] = $r0
-; V1-NEXT:    srld $r0 = $r27, 48
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    extfz $r1 = $r31, 47, 32
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 24[$r12] = $r0
-; V1-NEXT:    extfz $r0 = $r27, 47, 32
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fwidenlhw $r0 = $r26
-; V1-NEXT:    fnarrowwh $r27 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r1 = $r30
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlw $r0 = $r26, 16
-; V1-NEXT:    srlw $r1 = $r30, 16
-; V1-NEXT:    fnarrowwh $r19 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    srld $r1 = $r30, 48
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 16[$r12] = $r0
-; V1-NEXT:    srld $r0 = $r26, 48
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    extfz $r0 = $r26, 47, 32
-; V1-NEXT:    fnarrowwh $r22 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    extfz $r1 = $r30, 47, 32
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fwidenlhw $r0 = $r25
-; V1-NEXT:    fnarrowwh $r26 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r1 = $r29
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlw $r0 = $r25, 16
-; V1-NEXT:    srlw $r1 = $r29, 16
-; V1-NEXT:    fnarrowwh $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r25, 48
-; V1-NEXT:    srld $r1 = $r29, 48
-; V1-NEXT:    fnarrowwh $r30 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfz $r0 = $r25, 47, 32
-; V1-NEXT:    fnarrowwh $r23 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    extfz $r1 = $r29, 47, 32
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fwidenlhw $r0 = $r24
-; V1-NEXT:    fnarrowwh $r25 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r1 = $r28
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlw $r0 = $r24, 16
-; V1-NEXT:    srlw $r1 = $r28, 16
-; V1-NEXT:    fnarrowwh $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r0 = $r24, 48
-; V1-NEXT:    srld $r1 = $r28, 48
-; V1-NEXT:    fnarrowwh $r29 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfz $r0 = $r24, 47, 32
-; V1-NEXT:    fnarrowwh $r31 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r0
-; V1-NEXT:    extfz $r1 = $r28, 47, 32
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r1 = $r1
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    insf $r21 = $r29, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    insf $r0 = $r31, 31, 16
-; V1-NEXT:    insf $r25 = $r23, 31, 16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r0 = 16[$r12]
-; V1-NEXT:    insf $r20 = $r30, 31, 16
-; V1-NEXT:    insf $r21 = $r0, 63, 32
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r20 = $r25, 63, 32
-; V1-NEXT:    insf $r26 = $r22, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ld $r0 = 24[$r12]
-; V1-NEXT:    insf $r19 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    insf $r19 = $r26, 63, 32
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    ld $r0 = 32[$r12]
-; V1-NEXT:    insf $r27 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    copyd $r0 = $r21
-; V1-NEXT:    copyd $r1 = $r20
-; V1-NEXT:    copyd $r2 = $r19
-; V1-NEXT:    insf $r18 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    insf $r18 = $r27, 63, 32
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    lq $r18r19 = 40[$r12]
-; V1-NEXT:    copyd $r3 = $r18
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    lo $r20r21r22r23 = 56[$r12]
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    lo $r24r25r26r27 = 88[$r12]
-; V1-NEXT:    ;; # (end cycle 15)
-; V1-NEXT:    lo $r28r29r30r31 = 120[$r12]
-; V1-NEXT:    ;; # (end cycle 16)
-; V1-NEXT:    ld $r16 = 152[$r12]
-; V1-NEXT:    ;; # (end cycle 17)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 160
-; V1-NEXT:    ;; # (end cycle 22)
-; V1-NEXT:    ret
-; V1-NEXT:    ;;
-;
-; V2-LABEL: p_div_v16f16_v16f16:
-; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -160
-; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 152[$r12] = $r16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    so 120[$r12] = $r28r29r30r31
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    so 88[$r12] = $r24r25r26r27
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    so 56[$r12] = $r20r21r22r23
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sq 40[$r12] = $r18r19
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    lo $r24r25r26r27 = 0[$r0]
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    lo $r28r29r30r31 = 0[$r1]
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    fwidenlhw $r0 = $r27
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    fwidenlhw $r1 = $r31
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    srlw $r0 = $r27, 16
-; V2-NEXT:    srlw $r1 = $r31, 16
-; V2-NEXT:    fnarrowwh $r18 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    srld $r1 = $r31, 48
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 32[$r12] = $r0
-; V2-NEXT:    srld $r0 = $r27, 48
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    extfz $r1 = $r31, 47, 32
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 24[$r12] = $r0
-; V2-NEXT:    extfz $r0 = $r27, 47, 32
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    fwidenlhw $r0 = $r26
-; V2-NEXT:    fnarrowwh $r27 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r1 = $r30
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srlw $r0 = $r26, 16
-; V2-NEXT:    srlw $r1 = $r30, 16
-; V2-NEXT:    fnarrowwh $r19 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    srld $r1 = $r30, 48
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 16[$r12] = $r0
-; V2-NEXT:    srld $r0 = $r26, 48
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    extfz $r0 = $r26, 47, 32
-; V2-NEXT:    extfz $r1 = $r30, 47, 32
-; V2-NEXT:    fnarrowwh $r22 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r25
-; V2-NEXT:    fnarrowwh $r26 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r1 = $r29
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srlw $r0 = $r25, 16
-; V2-NEXT:    srlw $r1 = $r29, 16
-; V2-NEXT:    fnarrowwh $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r25, 48
-; V2-NEXT:    srld $r1 = $r29, 48
-; V2-NEXT:    fnarrowwh $r30 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfz $r0 = $r25, 47, 32
-; V2-NEXT:    extfz $r1 = $r29, 47, 32
-; V2-NEXT:    fnarrowwh $r23 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r24
-; V2-NEXT:    fnarrowwh $r25 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r1 = $r28
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srlw $r0 = $r24, 16
-; V2-NEXT:    srlw $r1 = $r28, 16
-; V2-NEXT:    fnarrowwh $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r0 = $r24, 48
-; V2-NEXT:    srld $r1 = $r28, 48
-; V2-NEXT:    fnarrowwh $r29 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfz $r0 = $r24, 47, 32
-; V2-NEXT:    extfz $r1 = $r28, 47, 32
-; V2-NEXT:    fnarrowwh $r31 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r0
-; V2-NEXT:    fwidenlhw $r1 = $r1
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ld $r1 = 16[$r12]
-; V2-NEXT:    insf $r21 = $r29, 31, 16
-; V2-NEXT:    insf $r25 = $r23, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    insf $r0 = $r31, 31, 16
-; V2-NEXT:    insf $r20 = $r30, 31, 16
-; V2-NEXT:    insf $r26 = $r22, 31, 16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    insf $r20 = $r25, 63, 32
-; V2-NEXT:    insf $r21 = $r0, 63, 32
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ld $r1 = 24[$r12]
-; V2-NEXT:    insf $r19 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    insf $r19 = $r26, 63, 32
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    copyd $r0 = $r21
-; V2-NEXT:    ld $r1 = 32[$r12]
-; V2-NEXT:    insf $r27 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    copyd $r1 = $r20
-; V2-NEXT:    copyd $r2 = $r19
-; V2-NEXT:    insf $r18 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    insf $r18 = $r27, 63, 32
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    lq $r18r19 = 40[$r12]
-; V2-NEXT:    copyd $r3 = $r18
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    lo $r20r21r22r23 = 56[$r12]
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    lo $r24r25r26r27 = 88[$r12]
-; V2-NEXT:    ;; # (end cycle 13)
-; V2-NEXT:    lo $r28r29r30r31 = 120[$r12]
-; V2-NEXT:    ;; # (end cycle 14)
-; V2-NEXT:    ld $r16 = 152[$r12]
-; V2-NEXT:    ;; # (end cycle 15)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 160
-; V2-NEXT:    ;; # (end cycle 20)
-; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; CHECK-LABEL: p_div_v16f16_v16f16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r1]
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lo $r8r9r10r11 = 16[$r1]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lo $r32r33r34r35 = 0[$r0]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    lo $r36r37r38r39 = 16[$r0]
+; CHECK-NEXT:    frecw $r1 = $r4
+; CHECK-NEXT:    srld $r2 = $r4, 32
+; CHECK-NEXT:    srld $r3 = $r6, 32
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    srld $r0 = $r7, 32
+; CHECK-NEXT:    frecw $r3 = $r3
+; CHECK-NEXT:    srld $r4 = $r8, 32
+; CHECK-NEXT:    srld $r15 = $r10, 32
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    frecw $r2 = $r2
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    frecw $r6 = $r6
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    frecw $r4 = $r4
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    frecw $r15 = $r15
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    srld $r5 = $r5, 32
+; CHECK-NEXT:    frecw $r16 = $r5
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    srld $r7 = $r32, 32
+; CHECK-NEXT:    frecw $r17 = $r7
+; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    frecw $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    frecw $r8 = $r8
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    frecw $r10 = $r10
+; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    srld $r1 = $r34, 32
+; CHECK-NEXT:    srld $r9 = $r9, 32
+; CHECK-NEXT:    frecw $r32 = $r9
+; CHECK-NEXT:    fmulw $r40 = $r32, $r1
+; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    fmulw $r1 = $r1, $r3
+; CHECK-NEXT:    frecw $r3 = $r11
+; CHECK-NEXT:    srld $r11 = $r11, 32
+; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    fmulw $r2 = $r7, $r2
+; CHECK-NEXT:    frecw $r5 = $r5
+; CHECK-NEXT:    srld $r7 = $r36, 32
+; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    fmulw $r6 = $r34, $r6
+; CHECK-NEXT:    frecw $r9 = $r9
+; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    fmulw $r4 = $r7, $r4
+; CHECK-NEXT:    srld $r7 = $r38, 32
+; CHECK-NEXT:    frecw $r11 = $r11
+; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    fmulw $r15 = $r7, $r15
+; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    srld $r2 = $r35, 32
+; CHECK-NEXT:    insf $r40 = $r2, 63, 32
+; CHECK-NEXT:    fmulw $r41 = $r33, $r16
+; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    srld $r1 = $r33, 32
+; CHECK-NEXT:    insf $r6 = $r1, 63, 32
+; CHECK-NEXT:    fmulw $r7 = $r35, $r17
+; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    fmulw $r0 = $r2, $r0
+; CHECK-NEXT:    srld $r2 = $r37, 32
+; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    fmulw $r16 = $r36, $r8
+; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    fmulw $r34 = $r38, $r10
+; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    fmulw $r17 = $r37, $r32
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    srld $r3 = $r39, 32
+; CHECK-NEXT:    insf $r7 = $r0, 63, 32
+; CHECK-NEXT:    fmulw $r35 = $r39, $r3
+; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    fmulw $r1 = $r1, $r5
+; CHECK-NEXT:    insf $r16 = $r4, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    fmulw $r2 = $r2, $r9
+; CHECK-NEXT:    insf $r34 = $r15, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    fmulw $r3 = $r3, $r11
+; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    fnarrowwhq $r1 = $r6r7
+; CHECK-NEXT:    insf $r41 = $r1, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 31)
+; CHECK-NEXT:    fnarrowwhq $r0 = $r40r41
+; CHECK-NEXT:    insf $r17 = $r2, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 32)
+; CHECK-NEXT:    fnarrowwhq $r2 = $r16r17
+; CHECK-NEXT:    insf $r35 = $r3, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 33)
+; CHECK-NEXT:    fnarrowwhq $r3 = $r34r35
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 34)
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load <16 x half>, <16 x half>* %1, align 32
   %5 = fdiv <16 x half> %3, %4
@@ -6615,341 +6043,86 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 }
 
 define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
-; V1-LABEL: p_div_v16f16_f16:
-; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -160
-; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 152[$r12] = $r16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    so 120[$r12] = $r28r29r30r31
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    so 88[$r12] = $r24r25r26r27
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    so 56[$r12] = $r20r21r22r23
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sq 40[$r12] = $r18r19
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    lhz $r1 = 0[$r1]
-; V1-NEXT:    ;; # (end cycle 6)
-; V1-NEXT:    lo $r24r25r26r27 = 0[$r0]
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    fwidenlhw $r19 = $r1
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    fwidenlhw $r0 = $r27
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    srlw $r1 = $r27, 16
-; V1-NEXT:    fnarrowwh $r18 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    srld $r1 = $r27, 48
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 32[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    extfz $r1 = $r27, 47, 32
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 24[$r12] = $r0
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r26
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    fnarrowwh $r28 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    srlw $r1 = $r26, 16
-; V1-NEXT:    fnarrowwh $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r1 = $r26, 48
-; V1-NEXT:    fnarrowwh $r29 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfz $r1 = $r26, 47, 32
-; V1-NEXT:    fnarrowwh $r26 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r25
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    fnarrowwh $r30 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    srlw $r1 = $r25, 16
-; V1-NEXT:    fnarrowwh $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r1 = $r25, 48
-; V1-NEXT:    fnarrowwh $r31 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfz $r1 = $r25, 47, 32
-; V1-NEXT:    fnarrowwh $r25 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fwidenlhw $r0 = $r24
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    fnarrowwh $r23 = $r0
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    srlw $r1 = $r24, 16
-; V1-NEXT:    fnarrowwh $r22 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srld $r1 = $r24, 48
-; V1-NEXT:    fnarrowwh $r27 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfz $r1 = $r24, 47, 32
-; V1-NEXT:    fnarrowwh $r24 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    fwidenlhw $r0 = $r1
-; V1-NEXT:    copyd $r1 = $r19
-; V1-NEXT:    call __divsf3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    fnarrowwh $r0 = $r0
-; V1-NEXT:    insf $r22 = $r27, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    insf $r0 = $r24, 31, 16
-; V1-NEXT:    insf $r23 = $r25, 31, 16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r0 = 24[$r12]
-; V1-NEXT:    insf $r21 = $r31, 31, 16
-; V1-NEXT:    insf $r22 = $r0, 63, 32
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    insf $r20 = $r29, 31, 16
-; V1-NEXT:    insf $r30 = $r26, 31, 16
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    insf $r20 = $r30, 63, 32
-; V1-NEXT:    insf $r21 = $r23, 63, 32
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    ld $r0 = 32[$r12]
-; V1-NEXT:    insf $r28 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    copyd $r0 = $r22
-; V1-NEXT:    copyd $r1 = $r21
-; V1-NEXT:    copyd $r2 = $r20
-; V1-NEXT:    insf $r18 = $r0, 31, 16
-; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    insf $r18 = $r28, 63, 32
-; V1-NEXT:    ;; # (end cycle 9)
-; V1-NEXT:    lq $r18r19 = 40[$r12]
-; V1-NEXT:    copyd $r3 = $r18
-; V1-NEXT:    ;; # (end cycle 10)
-; V1-NEXT:    lo $r20r21r22r23 = 56[$r12]
-; V1-NEXT:    ;; # (end cycle 11)
-; V1-NEXT:    lo $r24r25r26r27 = 88[$r12]
-; V1-NEXT:    ;; # (end cycle 12)
-; V1-NEXT:    lo $r28r29r30r31 = 120[$r12]
-; V1-NEXT:    ;; # (end cycle 13)
-; V1-NEXT:    ld $r16 = 152[$r12]
-; V1-NEXT:    ;; # (end cycle 14)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 160
-; V1-NEXT:    ;; # (end cycle 19)
-; V1-NEXT:    ret
-; V1-NEXT:    ;;
-;
-; V2-LABEL: p_div_v16f16_f16:
-; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -160
-; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 152[$r12] = $r16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    so 120[$r12] = $r28r29r30r31
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    so 88[$r12] = $r24r25r26r27
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    so 56[$r12] = $r20r21r22r23
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sq 40[$r12] = $r18r19
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    lhz $r1 = 0[$r1]
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    lo $r24r25r26r27 = 0[$r0]
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    fwidenlhw $r19 = $r1
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    fwidenlhw $r0 = $r27
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    srlw $r1 = $r27, 16
-; V2-NEXT:    fnarrowwh $r18 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    srld $r1 = $r27, 48
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 32[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    extfz $r1 = $r27, 47, 32
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 24[$r12] = $r0
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r26
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    fnarrowwh $r28 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    srlw $r1 = $r26, 16
-; V2-NEXT:    fnarrowwh $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r1 = $r26, 48
-; V2-NEXT:    fnarrowwh $r29 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfz $r1 = $r26, 47, 32
-; V2-NEXT:    fnarrowwh $r26 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r25
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    fnarrowwh $r30 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    srlw $r1 = $r25, 16
-; V2-NEXT:    fnarrowwh $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r1 = $r25, 48
-; V2-NEXT:    fnarrowwh $r31 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfz $r1 = $r25, 47, 32
-; V2-NEXT:    fnarrowwh $r25 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fwidenlhw $r0 = $r24
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    fnarrowwh $r23 = $r0
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    srlw $r1 = $r24, 16
-; V2-NEXT:    fnarrowwh $r22 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    srld $r1 = $r24, 48
-; V2-NEXT:    fnarrowwh $r27 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfz $r1 = $r24, 47, 32
-; V2-NEXT:    fnarrowwh $r24 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    fwidenlhw $r0 = $r1
-; V2-NEXT:    copyd $r1 = $r19
-; V2-NEXT:    call __divsf3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    fnarrowwh $r0 = $r0
-; V2-NEXT:    ld $r1 = 24[$r12]
-; V2-NEXT:    insf $r22 = $r27, 31, 16
-; V2-NEXT:    insf $r23 = $r25, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    insf $r0 = $r24, 31, 16
-; V2-NEXT:    insf $r20 = $r29, 31, 16
-; V2-NEXT:    insf $r21 = $r31, 31, 16
-; V2-NEXT:    insf $r30 = $r26, 31, 16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    insf $r20 = $r30, 63, 32
-; V2-NEXT:    insf $r21 = $r23, 63, 32
-; V2-NEXT:    insf $r22 = $r0, 63, 32
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    copyd $r0 = $r22
-; V2-NEXT:    ld $r1 = 32[$r12]
-; V2-NEXT:    insf $r28 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    copyd $r1 = $r21
-; V2-NEXT:    copyd $r2 = $r20
-; V2-NEXT:    insf $r18 = $r1, 31, 16
-; V2-NEXT:    ;; # (end cycle 6)
-; V2-NEXT:    insf $r18 = $r28, 63, 32
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    lq $r18r19 = 40[$r12]
-; V2-NEXT:    copyd $r3 = $r18
-; V2-NEXT:    ;; # (end cycle 8)
-; V2-NEXT:    lo $r20r21r22r23 = 56[$r12]
-; V2-NEXT:    ;; # (end cycle 9)
-; V2-NEXT:    lo $r24r25r26r27 = 88[$r12]
-; V2-NEXT:    ;; # (end cycle 10)
-; V2-NEXT:    lo $r28r29r30r31 = 120[$r12]
-; V2-NEXT:    ;; # (end cycle 11)
-; V2-NEXT:    ld $r16 = 152[$r12]
-; V2-NEXT:    ;; # (end cycle 12)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 160
-; V2-NEXT:    ;; # (end cycle 17)
-; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; CHECK-LABEL: p_div_v16f16_f16:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    fwidenmhwp $r1 = $r1
+; CHECK-NEXT:    fwidenlhwp $r2 = $r1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srld $r2 = $r2, 32
+; CHECK-NEXT:    frecw $r8 = $r2
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    srld $r2 = $r1, 32
+; CHECK-NEXT:    frecw $r9 = $r2
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    frecw $r11 = $r1
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    lo $r0r1r2r3 = 16[$r0]
+; CHECK-NEXT:    frecw $r10 = $r2
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    srld $r15 = $r2, 32
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    srld $r4 = $r4, 32
+; CHECK-NEXT:    fmulw $r16 = $r4, $r8
+; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    srld $r6 = $r6, 32
+; CHECK-NEXT:    fmulw $r32 = $r6, $r8
+; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    srld $r0 = $r0, 32
+; CHECK-NEXT:    fmulw $r34 = $r0, $r8
+; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    fmulw $r4 = $r4, $r9
+; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    fmulw $r6 = $r6, $r9
+; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    fmulw $r0 = $r0, $r9
+; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    fmulw $r9 = $r15, $r9
+; CHECK-NEXT:    srld $r15 = $r5, 32
+; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    fmulw $r8 = $r2, $r8
+; CHECK-NEXT:    insf $r16 = $r4, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    insf $r32 = $r6, 63, 32
+; CHECK-NEXT:    fmulw $r35 = $r1, $r11
+; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    srld $r0 = $r7, 32
+; CHECK-NEXT:    fmulw $r2 = $r15, $r10
+; CHECK-NEXT:    insf $r34 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    fmulw $r17 = $r5, $r11
+; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    srld $r3 = $r3, 32
+; CHECK-NEXT:    insf $r8 = $r9, 63, 32
+; CHECK-NEXT:    fmulw $r9 = $r3, $r11
+; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    fmulw $r33 = $r7, $r11
+; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    fmulw $r0 = $r0, $r10
+; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    fmulw $r1 = $r1, $r10
+; CHECK-NEXT:    insf $r17 = $r2, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 30)
+; CHECK-NEXT:    fmulw $r3 = $r3, $r10
+; CHECK-NEXT:    ;; # (end cycle 31)
+; CHECK-NEXT:    fnarrowwhq $r0 = $r16r17
+; CHECK-NEXT:    insf $r33 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 33)
+; CHECK-NEXT:    fnarrowwhq $r1 = $r32r33
+; CHECK-NEXT:    insf $r35 = $r1, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 34)
+; CHECK-NEXT:    fnarrowwhq $r2 = $r34r35
+; CHECK-NEXT:    insf $r9 = $r3, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 35)
+; CHECK-NEXT:    fnarrowwhq $r3 = $r8r9
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 36)
   %3 = load <16 x half>, <16 x half>* %0, align 32
   %4 = load half, half* %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0

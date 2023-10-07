@@ -307,60 +307,38 @@ define <4 x half> @test_fmul_imm(<4 x half> %a) {
 define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-LABEL: test_fdiv:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    fwidenlhwp $r2 = $r1
+; CHECK-NEXT:    fwidenmhwp $r5 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    fwidenmhwp $r1 = $r1
+; CHECK-NEXT:    srld $r2 = $r2, 32
+; CHECK-NEXT:    frecw $r3 = $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 40[$r12] = $r20r21
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
+; CHECK-NEXT:    frecw $r2 = $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sq 24[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    frecw $r4 = $r1
+; CHECK-NEXT:    srld $r6 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    srld $r0 = $r19, 48
-; CHECK-NEXT:    srld $r1 = $r18, 48
+; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    srld $r0 = $r19, 32
-; CHECK-NEXT:    srld $r1 = $r18, 32
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fwidenlhw $r0 = $r0
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fwidenmhw $r0 = $r19
-; CHECK-NEXT:    fnarrowwh $r21 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fwidenmhw $r1 = $r18
-; CHECK-NEXT:    insf $r21 = $r20, 31, 16
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fwidenlhw $r0 = $r19
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fwidenlhw $r1 = $r18
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lq $r18r19 = 24[$r12]
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r0 = $r20, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lq $r20r21 = 40[$r12]
-; CHECK-NEXT:    insf $r0 = $r21, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    fmulw $r8 = $r0, $r3
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    fmulw $r0 = $r6, $r2
+; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    fmulw $r9 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    srld $r0 = $r5, 32
+; CHECK-NEXT:    insf $r8 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    insf $r9 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    fnarrowwhq $r0 = $r8r9
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 23)
   %r = fdiv <4 x half> %a, %b
   ret <4 x half> %r
 }
