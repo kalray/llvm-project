@@ -312,7 +312,7 @@ bool isSplatBuildVec(const llvm::SDNode *N, const llvm::SelectionDAG *CurDag,
                      unsigned ImmSizeCheck = 0);
 
 bool isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
-                        bool SplatAT);
+                        bool SplatAT, bool Negate = false);
 
 bool isExtended(llvm::SDNode *N, llvm::SelectionDAG *CurDag, bool SignExt);
 } // namespace KVX_LOW

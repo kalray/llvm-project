@@ -351,13 +351,11 @@ entry:
 define <4 x i16> @uadd_satv4i16_ri_(<4 x i16> %a) {
 ; KVXV1-LABEL: uadd_satv4i16_ri_:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    make $r1 = 0xfffffffff61709e7
+; KVXV1-NEXT:    minuhq $r0 = $r0, 0xf61709e7
 ; KVXV1-NEXT:    ;; # (end cycle 0)
-; KVXV1-NEXT:    minuhq $r0 = $r0, $r1
-; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r0 = $r0, 0x9e8f618
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;; # (end cycle 2)
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
 ; KVXV2-LABEL: uadd_satv4i16_ri_:
 ; KVXV2:       # %bb.0: # %entry

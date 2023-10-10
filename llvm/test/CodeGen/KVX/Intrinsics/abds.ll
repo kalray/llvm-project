@@ -569,7 +569,7 @@ define <2 x i32> @v2i32abds_ri_at(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_at:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp $r0 = $r0, -1.@
+; V2-NEXT:    abdswp $r0 = $r0, -1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> %0, <2 x i32> <i32 -1, i32 -1>)
@@ -580,7 +580,7 @@ define <2 x i32> @v2i32abds_ri_at(<2 x i32> %0) {
 define <2 x i32> @v2i32abds_ri_at_2(<2 x i32> %0) {
 ; V1-LABEL: v2i32abds_ri_at_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfswp $r0 = $r0, -1.@
+; V1-NEXT:    sbfswp $r0 = $r0, -1
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    abswp $r0 = $r0
 ; V1-NEXT:    ret
@@ -588,7 +588,7 @@ define <2 x i32> @v2i32abds_ri_at_2(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_at_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp $r0 = $r0, -1.@
+; V2-NEXT:    abdswp $r0 = $r0, -1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> <i32 -1, i32 -1>, <2 x i32> %0)
@@ -609,9 +609,11 @@ define <2 x i32> @v2i32abds_ri_(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp $r0 = $r0, 0xffffffff
-; V2-NEXT:    ret
+; V2-NEXT:    make $r1 = 0xffffffff
 ; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    abdswp $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> %0, <2 x i32> <i32 -1, i32 0>)
   %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 false)
   ret <2 x i32> %3
@@ -620,7 +622,7 @@ define <2 x i32> @v2i32abds_ri_(<2 x i32> %0) {
 define <2 x i32> @v2i32abds_ri_2(<2 x i32> %0) {
 ; V1-LABEL: v2i32abds_ri_2:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbfswp $r0 = $r0, -1
+; V1-NEXT:    sbfswp $r0 = $r0, -2
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    abswp $r0 = $r0
 ; V1-NEXT:    ret
@@ -628,10 +630,10 @@ define <2 x i32> @v2i32abds_ri_2(<2 x i32> %0) {
 ;
 ; V2-LABEL: v2i32abds_ri_2:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdswp $r0 = $r0, 0xffffffff
+; V2-NEXT:    abdswp $r0 = $r0, -2
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 0)
-  %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> <i32 -1, i32 0>, <2 x i32> %0)
+  %2 = tail call <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32> <i32 -2, i32 -1>, <2 x i32> %0)
   %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 false)
   ret <2 x i32> %3
 }
@@ -806,9 +808,11 @@ define <4 x i16> @v4i16abds_ri_(<4 x i16> %0) {
 ;
 ; V2-LABEL: v4i16abds_ri_:
 ; V2:       # %bb.0:
-; V2-NEXT:    abdshq $r0 = $r0, 0xffff0001
-; V2-NEXT:    ret
+; V2-NEXT:    make $r1 = 0xffff0001
 ; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    abdshq $r0 = $r1, $r0
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = tail call <4 x i16> @llvm.ssub.sat.v4i16(<4 x i16> %0, <4 x i16> <i16 1, i16 -1, i16 0, i16 0>)
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 false)
   ret <4 x i16> %3

@@ -4981,7 +4981,7 @@ bool KVX_LOW::isSplatBuildVec(const llvm::SDNode *N,
   }
 
 bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
-                                 bool SplatAt) {
+                                 bool SplatAt, bool Negate) {
   const BuildVectorSDNode *BV = dyn_cast<BuildVectorSDNode>(N);
   if (!BV)
     return false;
@@ -4998,33 +4998,48 @@ bool KVX_LOW::isKVXSplat32ImmVec(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
       (VT.getSizeInBits() <= 32 && SplatAt))
     return false;
 
-  // FIXME!!! No splat modifier does SIGN-EXTEND the lower 32 bits!!!
-  // Must check that upper 32 bits == bit 31!!!
   if (VT.getSizeInBits() <= 32 && !SplatAt)
     return true;
 
   if (N->getOpcode() == ISD::SPLAT_VECTOR)
     return SplatAt;
 
+  assert(VT.getSizeInBits() == 64 && "Not 64 bits vector");
+
+  if (!SplatAt) {
+    BitVector Undefs;
+    SmallVector<APInt> Bits;
+
+    auto AllOnes = [](const APInt &V) { return V.isAllOnesValue(); };
+    auto AllZero = [](const APInt &V) { return V.isNullValue(); };
+
+    BV->getConstantRawBits(true, VT.getScalarSizeInBits(), Bits, Undefs);
+    auto Half = VT.getVectorNumElements() / 2 - 1;
+    if (Undefs[Half]) {
+      Negate = false;
+      Bits[Half].clearAllBits();
+    }
+
+    if (Negate)
+      for (auto &I : Bits)
+        I.negate();
+
+    auto F = (Bits[Half].isSignBitSet()) ? AllOnes : AllZero;
+    for (auto End = VT.getVectorNumElements(); ++Half < End;)
+      if (!(Undefs[Half] || F(Bits[Half])))
+        return false;
+
+    return true;
+  }
   // From the start of 32 bits, check if the value is either
   // zero, for non-splat, for equals to the first half.
   // Undef is also accepted as a match in the second half.
   auto ElmCheck = 32 / VT.getVectorElementType().getSizeInBits();
   auto ElmEnd = BV->getNumOperands();
-  bool IsFP = VT.isFloatingPoint();
   for (unsigned FirstHalf = 0; ElmCheck != ElmEnd; ++ElmCheck, ++FirstHalf) {
     auto SecondHalf = BV->getOperand(ElmCheck);
     if (SecondHalf.isUndef())
       continue;
-
-    if (!SplatAt) {
-      if (IsFP) {
-        if ((cast<ConstantFPSDNode>(SecondHalf))->isZero())
-          continue;
-      } else if ((cast<ConstantSDNode>(SecondHalf))->isNullValue())
-        continue;
-      return false;
-    }
 
     if (SecondHalf != BV->getOperand(FirstHalf))
       return false;

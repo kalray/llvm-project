@@ -428,7 +428,7 @@ def : Pat<(add v4i8:$rs1, v4i8:$rs2), (ADDBOrr SingleReg:$rs1, SingleReg:$rs2)>,
 
 def : Pat<(add v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>, Requires<[IsV2]>;
 def : Pat<(add v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_at:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>, Requires<[IsV2]>;
-def : Pat<(sub v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>, Requires<[IsV2]>;
+def : Pat<(sub v8i8:$rs1, (v8i8(is_neg_imm_vec_kvx_splat32_:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>, Requires<[IsV2]>;
 def : Pat<(sub v8i8:$rs1, (v8i8(is_imm_vec_kvx_splat32_at:$IMM))), (ADDBOri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>, Requires<[IsV2]>;
 def : Pat<(add v8i8:$rs1, v8i8:$rs2), (ADDBOrr SingleReg:$rs1, SingleReg:$rs2)>, Requires<[IsV2]>;
 
@@ -440,7 +440,7 @@ def : Pat<(sub v2i16:$rs1, (v2i16(is_imm_vec:$IMM))), (ADDHQri SingleReg:$rs1, (
 def : Pat<(add v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(add v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_at:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(add v4i16:$rs1, v4i16:$rs2), (ADDHQrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(sub v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
+def : Pat<(sub v4i16:$rs1, (v4i16(is_neg_imm_vec_kvx_splat32_:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
 def : Pat<(sub v4i16:$rs1, (v4i16(is_imm_vec_kvx_splat32_at:$IMM))), (ADDHQri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>;
 
 def kvx_vecreduce_add_sext : PatFrags<(ops node:$op),
@@ -650,7 +650,7 @@ def : Pat<(i64(add i64:$v0, isSignExtended:$v1)), (ADDWDrr SingleReg:$v1, Single
 def : Pat<(add v2i32:$r, (v2i32 (build_vector (i32 Wrapped32:$i), (i32 0)))), (ADDWPri SingleReg:$r, Wrapped32:$i, splat32_)>;
 def : Pat<(add v2i32:$r, (v2i32 (v2_splat (i32 Wrapped32:$i)))), (ADDWPri SingleReg:$r, Wrapped32:$i, splat32_at)>;
 def : Pat<(add v2i32:$rs1, v2i32:$rs2), (ADDWPrr SingleReg:$rs1, SingleReg:$rs2)>;
-def : Pat<(sub v2i32:$rs1, (v2i32(is_imm_vec_kvx_splat32_:$IMM))), (ADDWPri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
+def : Pat<(sub v2i32:$rs1, (v2i32(is_neg_imm_vec_kvx_splat32_:$IMM))), (ADDWPri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_)>;
 def : Pat<(sub v2i32:$rs1, (v2i32(is_imm_vec_kvx_splat32_at:$IMM))), (ADDWPri SingleReg:$rs1, (build_imm_vec_neg $IMM), splat32_at)>;
 // TODO: Add immediate sub-vector creation so we can
 // add immediate variants to v4i32, e.g.
@@ -770,11 +770,14 @@ defm : ADDXPAT_HalfSReg<v2i16, (i32 4), ADDX16HQrr, ADDX16HQri, is_imm_vec_leq4b
 multiclass VECADDXPAT<ValueType vt, dag sc, Instruction RR, Instruction RI, PatFrag v_splat, PatLeaf VC_, PatLeaf VC_at, PatLeaf VC_rr> {
 def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_)>;
 def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_)>;
-def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))), (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
+def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_neg_imm_vec_kvx_splat32_:$IMM)))), (RI $v, (build_imm_vec_neg $IMM), splat32_)>;
 
 def : Pat<(vt(add (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(vt(or (shl vt:$v, (vt(v_splat sc))), (vt(VC_at:$IMM)))), (RI $v, (build_imm_vec $IMM), splat32_at)>;
 def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_at:$IMM)))), (RI $v, (build_imm_vec_neg $IMM), splat32_at)>;
+
+def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec_kvx_splat32_:$IMM)))), (RR $v, (MAKEi43 (build_imm_vec_neg $IMM)))>;
+def : Pat<(vt(sub (shl vt:$v, (vt(v_splat sc))), (vt(is_imm_vec:$IMM)))), (RR $v, (MAKEi64 (build_imm_vec_neg $IMM)))>;
 
 def : Pat<(vt(add vt:$v0, (shl vt:$v1, (vt(v_splat sc))))), (RR SingleReg:$v1, SingleReg:$v0)>;
 def : Pat<(vt(or (VC_rr:$IMM), (shl vt:$v, (vt(v_splat sc))))), (RR SingleReg:$v, $IMM)>;

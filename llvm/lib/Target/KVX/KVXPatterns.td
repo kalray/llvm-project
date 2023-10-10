@@ -1013,6 +1013,11 @@ def is_splat_build_vec_signed64 : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG, 64);
 }], build_imm_vec_rpt>;
 
+
+def is_neg_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
+   return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false, true);
+}], build_imm_vec>;
+
 def is_imm_vec_kvx_splat32_ : PatLeaf<(build_vector), [{
    return KVX_LOW::isKVXSplat32ImmVec(N, CurDAG, false);
 }], build_imm_vec>;

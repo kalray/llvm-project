@@ -43,9 +43,11 @@ entry:
 define <4 x i16> @sub_i16x4_ri_(<4 x i16> %a) {
 ; CHECK-LABEL: sub_i16x4_ri_:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfhq $r0 = $r0, 0xffff0005
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    make $r1 = 0xffff0005
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sbfhq $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sub = sub <4 x i16> <i16 5, i16 -1, i16 0, i16 0>, %a
   ret <4 x i16> %sub
@@ -89,9 +91,11 @@ entry:
 define <2 x i32> @sub_i32x2_ri_(<2 x i32> %a) {
 ; CHECK-LABEL: sub_i32x2_ri_:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    sbfwp $r0 = $r0, -1
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    make $r1 = 0xffffffff
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sbfwp $r0 = $r0, $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %sub = sub <2 x i32> <i32 -1, i32 0>, %a
   ret <2 x i32> %sub
@@ -1311,9 +1315,11 @@ define <8 x i8> @sub_i8x8_ri_(<8 x i8> %a) {
 ;
 ; V2-LABEL: sub_i8x8_ri_:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    sbfbo $r0 = $r0, 0xff05ff05
-; V2-NEXT:    ret
+; V2-NEXT:    make $r1 = 0xff05ff05
 ; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    sbfbo $r0 = $r0, $r1
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
 entry:
   %sub = sub <8 x i8> <i8 5, i8 -1, i8 5, i8 -1, i8 0, i8 0, i8 0, i8 0>, %a
   ret <8 x i8> %sub
