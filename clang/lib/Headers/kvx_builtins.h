@@ -4,12 +4,12 @@
 #ifdef __llvm__
 /** LLVM KV3-1 emulation of KV3-2 builtins */
 
-#define __get_4low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3)
+#define __get4low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3)
 #define __get4hi(a) __builtin_shufflevector((a), (a), 4, 5, 6, 7)
 
-#define __get_8low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3, 4, 5, 6, 7)
+#define __get8low(a) __builtin_shufflevector((a), (a), 0, 1, 2, 3, 4, 5, 6, 7)
 
-#define __get_8hi(a)                                                           \
+#define __get8hi(a)                                                            \
   __builtin_shufflevector((a), (a), 8, 9, 10, 11, 12, 13, 14, 15)
 
 #define __join8(a, b) __builtin_shufflevector(a, b, 0, 1, 2, 3, 4, 5, 6, 7)
@@ -19,16 +19,16 @@
                           14, 15)
 
 #define __split_op8(a, name, type)                                             \
-  (type) __join8(__builtin_kvx_##name(__get_4low(a)),                          \
+  (type) __join8(__builtin_kvx_##name(__get4low(a)),                           \
                  __builtin_kvx_##name(__get4hi(a)))
 
 #define __split_binmod_op8(a, b, mod, name, type)                              \
-  (type) __join8(__builtin_kvx_##name(__get_4low(a), __get_4low(b), mod),      \
+  (type) __join8(__builtin_kvx_##name(__get4low(a), __get4low(b), mod),        \
                  __builtin_kvx_##name(__get4hi(a), __get4hi(b), mod))
 
 #define __split_termod_op8(a, b, c, mod, name, type)                           \
   (type) __join8(                                                              \
-      __builtin_kvx_##name(__get_4low(a), __get_4low(b), __get_4low(c), mod),  \
+      __builtin_kvx_##name(__get4low(a), __get4low(b), __get4low(c), mod),     \
       __builtin_kvx_##name(__get4hi(a), __get4hi(b), __get4hi(c), mod))
 
 #ifdef __kv3_1__
@@ -37,8 +37,8 @@
 
 #define __builtin_kvx_fmulhx(a, b, mod)                                        \
   (__kvx_v16hi)                                                                \
-      __join16(__builtin_kvx_fmulho(__get_8low(a), __get_8low(b), mod),        \
-               __builtin_kvx_fmulho(__get_8hi(a), __get_8hi(b), mod))
+      __join16(__builtin_kvx_fmulho(__get8low(a), __get8low(b), mod),          \
+               __builtin_kvx_fmulho(__get8hi(a), __get8hi(b), mod))
 
 #endif // ifdef __kv3_1__
 
