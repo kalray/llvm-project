@@ -711,18 +711,18 @@ define <4 x i16> @abduhq2_(<4 x i16> %0) {
 ; V1:       # %bb.0:
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
-; V1-NEXT:    make $r3 = 0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    addwp $r1 = $r1, $r3
 ; V1-NEXT:    make $r2 = 0xffffffd5fffffff4
-; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    addwp $r0 = $r0, $r2
-; V1-NEXT:    abswp $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    make $r3 = 0
+; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    abswp $r0 = $r0
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
-; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    addwp $r1 = $r1, $r3
+; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
+; V1-NEXT:    abswp $r1 = $r1
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20100201
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
@@ -759,10 +759,10 @@ declare <4 x i32> @llvm.abs.v4i32(<4 x i32>, i1 immarg)
 define <4 x i16> @abduhq2_at(<4 x i16> %0) {
 ; V1-LABEL: abduhq2_at:
 ; V1:       # %bb.0:
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; V1-NEXT:    sbmm8 $r1 = $r0, 0x804000002010
 ; V1-NEXT:    make $r3 = 0xffffffd5fffffff4
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
 ; V1-NEXT:    addwp $r1 = $r1, $r3
 ; V1-NEXT:    copyd $r2 = $r3
 ; V1-NEXT:    ;; # (end cycle 1)

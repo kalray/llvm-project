@@ -1001,6 +1001,24 @@ def is_splat_build_vec : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG);
 }], extract_splat_node>;
 
+def is_buildvec_signed16 : PatLeaf<(build_vector), [{
+  auto BV = cast<BuildVectorSDNode>(N);
+  if (!BV->isConstant())
+    return 0;
+
+  long V = KVX_LOW::getImmVector(BV, CurDAG);
+  return V == ((V << 48) >> 48);
+}], build_imm_vec>;
+
+def is_buildvec_signed43 : PatLeaf<(build_vector), [{
+  auto BV = cast<BuildVectorSDNode>(N);
+  if (!BV->isConstant())
+    return 0;
+
+  long V = KVX_LOW::getImmVector(BV, CurDAG);
+  return V == ((V << 21) >> 21);
+}], build_imm_vec>;
+
 def is_splat_build_vec_signed16 : PatLeaf<(build_vector), [{
   return KVX_LOW::isSplatBuildVec(N, CurDAG, 16);
 }], build_imm_vec_rpt>;
@@ -1156,7 +1174,7 @@ def : Pat<(v2i32 (trunc v2i64:$v)), (INSF (i64 (EXTRACT_SUBREG PairedReg:$v, sub
 def : Pat<(v2i32 (build_vector i32:$v0, (i32(trunc (i64 (srl i64:$v1, (i32 32))))))),
           (INSF SingleReg:$v1, SingleReg:$v0, 31, 0)>;
 
-// v3i16
+// v4i16
 def : Pat<(v4i16 (is_imm_vec_kvx_splat32_:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (build_vector:$IMM (i32 imm), (i32 imm), (i32 imm), (i32 undef))), (MAKEi64 (build_imm_vec $IMM))>;
 def : Pat<(v4i16 (build_vector i32:$v0, i32:$v1, i32:$v2, (i32 undef))),
@@ -2607,3 +2625,10 @@ def : Pat<(v8f16 (insert_subvector v8f16:$v0, v4f16:$v1, (i64 4))),
           (v8f16 (REG_SEQUENCE PairedReg,
                     (v4f16 (EXTRACT_SUBREG PairedReg:$v0, sub_d0)), sub_d0,
                     SingleReg:$v1, sub_d1))>;
+
+foreach vt = [v2f16, v2i16, v4i16, v4f16, v2f32, v2i32, v2i8, v4i8, v8i8] in {
+let AddedComplexity = 2 in
+def : Pat<(vt (is_buildvec_signed16:$IMM)), (MAKEi16 (build_imm_vec $IMM))>;
+let AddedComplexity = 1 in
+def : Pat<(vt (is_buildvec_signed43:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
+}

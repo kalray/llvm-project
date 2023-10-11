@@ -3008,8 +3008,6 @@ define void @subvec0fp(ptr %0) {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB142_1: # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sq 0[$r0] = $r0r1
 ; CHECK-NEXT:    goto .LBB142_1

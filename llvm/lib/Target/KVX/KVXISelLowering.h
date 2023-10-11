@@ -288,6 +288,11 @@ private:
 } // namespace llvm
 
 namespace KVX_LOW {
+uint64_t getImmVector(const llvm::BuildVectorSDNode *BV,
+                      const llvm::SelectionDAG *CurDag,
+                      unsigned long Negative = 0,
+                      bool AllowRepeatExtend = false);
+
 llvm::SDValue buildImmVector(const llvm::SDNode &N, llvm::SelectionDAG &CurDag,
                              unsigned long Negative = 0,
                              bool AllowRepeatExtend = false);

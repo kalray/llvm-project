@@ -4801,10 +4801,9 @@ bool KVXTargetLowering::hasPairedLoad(EVT VT, Align &Alg) const {
 
 // If AllowRepeatExtend, then it is allowed to have immediate vectors that
 // repeat the first 64 bits.
-static uint64_t getImmVector(const llvm::BuildVectorSDNode *BV,
-                             const llvm::SelectionDAG *CurDag,
-                             unsigned long Negative = 0,
-                             bool AllowRepeatExtend = false) {
+uint64_t KVX_LOW::getImmVector(const llvm::BuildVectorSDNode *BV,
+                               const llvm::SelectionDAG *CurDag,
+                               unsigned long Negative, bool AllowRepeatExtend) {
   auto VT = BV->getValueType(0);
   auto NumElts = VT.getVectorNumElements();
   assert(NumElts == BV->getNumOperands() &&

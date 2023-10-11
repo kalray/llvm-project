@@ -945,11 +945,9 @@ define void @subvec0(ptr %0) {
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB53_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq 0[$r0] = $r0r1
 ; CHECK-NEXT:    goto .LBB53_1
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;; # (end cycle 0)
   br label %2
 
 2:

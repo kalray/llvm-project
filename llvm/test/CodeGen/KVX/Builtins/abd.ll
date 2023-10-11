@@ -378,29 +378,28 @@ define <8 x i8> @abdbo_ri_(<8 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000400020001
 ; CV1-NEXT:    make $r2 = 0x4030201
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    make $r3 = 0x80004000200010
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    sbmm8 $r1 = $r0, $r1
 ; CV1-NEXT:    sbmm8 $r4 = $r2, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r1 = $r0, $r1
-; CV1-NEXT:    sbmm8 $r2 = $r2, $r3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, $r3
 ; CV1-NEXT:    minuhq $r1 = $r1, $r4
+; CV1-NEXT:    sbmm8 $r2 = $r2, $r3
 ; CV1-NEXT:    maxuhq $r3 = $r1, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    minuhq $r0 = $r0, $r2
 ; CV1-NEXT:    sbfhq $r1 = $r1, $r3
 ; CV1-NEXT:    maxuhq $r4 = $r0, $r2
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sbfhq $r0 = $r0, $r4
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401.@
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    insf $r0 = $r1, 31, 0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 6)
 ;
 ; CV2-LABEL: abdbo_ri_:
 ; CV2:       # %bb.0:

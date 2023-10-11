@@ -8211,9 +8211,8 @@ define <16 x i16> @fcmp_setogt_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ogt <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8302,9 +8301,8 @@ define <16 x i16> @fcmp_setolt_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp olt <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8393,9 +8391,8 @@ define <16 x i16> @fcmp_setone_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp one <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8597,9 +8594,8 @@ define <16 x i16> @fcmp_setueq_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8709,9 +8705,8 @@ define <16 x i16> @fcmp_setuge_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8821,9 +8816,8 @@ define <16 x i16> @fcmp_setule_single(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8933,9 +8927,8 @@ define <16 x i16> @fcmp_setoeq_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oeq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -8974,9 +8967,8 @@ define <16 x i16> @fcmp_setogt_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ogt <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9015,9 +9007,8 @@ define <16 x i16> @fcmp_setoge_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast oge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9056,9 +9047,8 @@ define <16 x i16> @fcmp_setolt_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast olt <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9097,9 +9087,8 @@ define <16 x i16> @fcmp_setole_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ole <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9138,9 +9127,8 @@ define <16 x i16> @fcmp_setone_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast one <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9342,9 +9330,8 @@ define <16 x i16> @fcmp_setueq_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ueq <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9383,9 +9370,8 @@ define <16 x i16> @fcmp_setugt_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ugt <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9424,9 +9410,8 @@ define <16 x i16> @fcmp_setuge_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast uge <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9465,9 +9450,8 @@ define <16 x i16> @fcmp_setult_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ult <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9506,9 +9490,8 @@ define <16 x i16> @fcmp_setule_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = -1
 ; ALL-NEXT:    make $r2 = -1
 ; ALL-NEXT:    make $r3 = -1
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast ule <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
@@ -9547,9 +9530,8 @@ define <16 x i16> @fcmp_setune_single_fast(<16 x half> %a) #0 {
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r2 = 0
 ; ALL-NEXT:    make $r3 = 0
-; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = fcmp fast une <16 x half> %a, %a
   %1 = sext <16 x i1> %0 to <16 x i16>
