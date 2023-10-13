@@ -7,84 +7,84 @@ target triple = "kvx-kalray-cos"
 define void @f32(float* nocapture %0) {
 ; CHECK-LABEL: f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3f000000
-; CHECK-NEXT:    make $r2 = 20
-; CHECK-NEXT:    make $r4 = 19
+; CHECK-NEXT:    make $r1 = 20
+; CHECK-NEXT:    make $r3 = 0x3f000000
+; CHECK-NEXT:    make $r5 = 19
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    faddw $r3 = $r1, 0x3f800000
+; CHECK-NEXT:    faddw $r4 = $r3, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fixedw.rz $r2 = $r1, 0
+; CHECK-NEXT:    fixedw.rz $r7 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    faddw $r6 = $r3, 0x3f800000
+; CHECK-NEXT:    faddw $r6 = $r4, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    fixedw.rz $r5 = $r3, 0
+; CHECK-NEXT:    sxwd $r7 = $r7
+; CHECK-NEXT:    fixedw.rz $r8 = $r4, 0
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
+; CHECK-NEXT:    sw.xs $r7[$r0] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    faddw $r1 = $r6, 0x3f800000
+; CHECK-NEXT:    faddw $r2 = $r6, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    sxwd $r5 = $r5
-; CHECK-NEXT:    fixedw.rz $r7 = $r6, 0
+; CHECK-NEXT:    sxwd $r3 = $r8
+; CHECK-NEXT:    fixedw.rz $r9 = $r6, 0
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r3
+; CHECK-NEXT:    sw.xs $r3[$r0] = $r4
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    faddw $r2 = $r1, 0x3f800000
+; CHECK-NEXT:    faddw $r1 = $r2, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    sxwd $r3 = $r7
-; CHECK-NEXT:    fixedw.rz $r5 = $r1, 0
+; CHECK-NEXT:    sxwd $r3 = $r9
+; CHECK-NEXT:    fixedw.rz $r4 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    sw.xs $r3[$r0] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    faddw $r3 = $r2, 0x3f800000
+; CHECK-NEXT:    faddw $r3 = $r1, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    loopdo $r4, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r5, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sxwd $r4 = $r5
+; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    faddw $r5 = $r3, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r1
-; CHECK-NEXT:    fixedw.rz $r6 = $r2, 0
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r2
+; CHECK-NEXT:    fixedw.rz $r7 = $r1, 0
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedw.rz $r4 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    faddw $r7 = $r5, 0x3f800000
+; CHECK-NEXT:    faddw $r6 = $r5, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sxwd $r6 = $r6
+; CHECK-NEXT:    sxwd $r7 = $r7
 ; CHECK-NEXT:    fixedw.rz $r8 = $r5, 0
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sxwd $r4 = $r4
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r2
+; CHECK-NEXT:    sw.xs $r7[$r0] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    faddw $r1 = $r7, 0x3f800000
+; CHECK-NEXT:    faddw $r2 = $r6, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    sxwd $r3 = $r8
-; CHECK-NEXT:    fixedw.rz $r9 = $r7, 0
+; CHECK-NEXT:    fixedw.rz $r9 = $r6, 0
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    sw.xs $r3[$r0] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    faddw $r2 = $r1, 0x3f800000
+; CHECK-NEXT:    faddw $r1 = $r2, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sxwd $r3 = $r9
-; CHECK-NEXT:    fixedw.rz $r5 = $r1, 0
+; CHECK-NEXT:    fixedw.rz $r4 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r7
+; CHECK-NEXT:    sw.xs $r3[$r0] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    faddw $r3 = $r2, 0x3f800000
+; CHECK-NEXT:    faddw $r3 = $r1, 0x3f800000
 ; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  # %bb.2:
-; CHECK-NEXT:    sxwd $r3 = $r5
-; CHECK-NEXT:    fixedw.rz $r4 = $r2, 0
+; CHECK-NEXT:    fixedw.rz $r3 = $r1, 0
+; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r1
+; CHECK-NEXT:    sw.xs $r4[$r0] = $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxwd $r1 = $r4
+; CHECK-NEXT:    sxwd $r2 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sw.xs $r1[$r0] = $r2
+; CHECK-NEXT:    sw.xs $r2[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   br label %3
@@ -126,84 +126,84 @@ define void @f32(float* nocapture %0) {
 define void @f64(double* nocapture %0) {
 ; CHECK-LABEL: f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r1 = 0x3fe0000000000000
-; CHECK-NEXT:    make $r2 = 20
-; CHECK-NEXT:    make $r4 = 19
+; CHECK-NEXT:    make $r1 = 20
+; CHECK-NEXT:    make $r3 = 0x3fe0000000000000
+; CHECK-NEXT:    make $r5 = 19
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    faddd $r3 = $r1, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r4 = $r3, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fixedd.rz $r2 = $r1, 0
+; CHECK-NEXT:    fixedd.rz $r7 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    faddd $r6 = $r3, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r6 = $r4, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sxwd $r2 = $r2
-; CHECK-NEXT:    fixedd.rz $r5 = $r3, 0
+; CHECK-NEXT:    sxwd $r7 = $r7
+; CHECK-NEXT:    fixedd.rz $r8 = $r4, 0
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    sd.xs $r2[$r0] = $r1
+; CHECK-NEXT:    sd.xs $r7[$r0] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    faddd $r1 = $r6, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r2 = $r6, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    sxwd $r5 = $r5
-; CHECK-NEXT:    fixedd.rz $r7 = $r6, 0
+; CHECK-NEXT:    sxwd $r3 = $r8
+; CHECK-NEXT:    fixedd.rz $r9 = $r6, 0
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    sd.xs $r5[$r0] = $r3
+; CHECK-NEXT:    sd.xs $r3[$r0] = $r4
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    faddd $r2 = $r1, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r1 = $r2, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    sxwd $r3 = $r7
-; CHECK-NEXT:    fixedd.rz $r5 = $r1, 0
+; CHECK-NEXT:    sxwd $r3 = $r9
+; CHECK-NEXT:    fixedd.rz $r4 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    sd.xs $r3[$r0] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    faddd $r3 = $r2, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r3 = $r1, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    loopdo $r4, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r5, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sxwd $r4 = $r5
+; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    faddd $r5 = $r3, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd.xs $r4[$r0] = $r1
-; CHECK-NEXT:    fixedd.rz $r6 = $r2, 0
+; CHECK-NEXT:    sd.xs $r4[$r0] = $r2
+; CHECK-NEXT:    fixedd.rz $r7 = $r1, 0
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedd.rz $r4 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    faddd $r7 = $r5, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r6 = $r5, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sxwd $r6 = $r6
+; CHECK-NEXT:    sxwd $r7 = $r7
 ; CHECK-NEXT:    fixedd.rz $r8 = $r5, 0
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sxwd $r4 = $r4
-; CHECK-NEXT:    sd.xs $r6[$r0] = $r2
+; CHECK-NEXT:    sd.xs $r7[$r0] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sd.xs $r4[$r0] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    faddd $r1 = $r7, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r2 = $r6, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    sxwd $r3 = $r8
-; CHECK-NEXT:    fixedd.rz $r9 = $r7, 0
+; CHECK-NEXT:    fixedd.rz $r9 = $r6, 0
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    sd.xs $r3[$r0] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    faddd $r2 = $r1, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r1 = $r2, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    sxwd $r3 = $r9
-; CHECK-NEXT:    fixedd.rz $r5 = $r1, 0
+; CHECK-NEXT:    fixedd.rz $r4 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    sd.xs $r3[$r0] = $r7
+; CHECK-NEXT:    sd.xs $r3[$r0] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    faddd $r3 = $r2, 0x3ff0000000000000
+; CHECK-NEXT:    faddd $r3 = $r1, 0x3ff0000000000000
 ; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
 ; CHECK-NEXT:  # %bb.2:
-; CHECK-NEXT:    sxwd $r3 = $r5
-; CHECK-NEXT:    fixedd.rz $r4 = $r2, 0
+; CHECK-NEXT:    fixedd.rz $r3 = $r1, 0
+; CHECK-NEXT:    sxwd $r4 = $r4
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd.xs $r3[$r0] = $r1
+; CHECK-NEXT:    sd.xs $r4[$r0] = $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxwd $r1 = $r4
+; CHECK-NEXT:    sxwd $r2 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sd.xs $r1[$r0] = $r2
+; CHECK-NEXT:    sd.xs $r2[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   br label %3

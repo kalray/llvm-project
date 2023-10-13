@@ -260,14 +260,14 @@ define <2 x i8> @not_urr_v2i8(<2 x i8> %a, <2 x i8> %b){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    zxbd $r1 = $r1
-; CV1-NEXT:    extfz $r2 = $r1, 15, 8
-; CV1-NEXT:    extfz $r3 = $r0, 15, 8
+; CV1-NEXT:    extfz $r2 = $r0, 15, 8
+; CV1-NEXT:    extfz $r3 = $r1, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    zxbd $r0 = $r0
-; CV1-NEXT:    zxbd $r3 = $r3
+; CV1-NEXT:    zxbd $r2 = $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlw $r0 = $r0, $r1
-; CV1-NEXT:    srlw $r2 = $r3, $r2
+; CV1-NEXT:    srlw $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r2, 15, 8
 ; CV1-NEXT:    ret

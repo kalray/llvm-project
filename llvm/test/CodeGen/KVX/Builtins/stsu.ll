@@ -74,22 +74,22 @@ define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    lo $r32r33r34r35 = 32[$r1]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    lo $r36r37r38r39 = 0[$r1]
+; CV1-NEXT:    lo $r0r1r2r3 = 0[$r1]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    stsud $r0 = $r4, $r32
-; CV1-NEXT:    stsud $r1 = $r5, $r33
+; CV1-NEXT:    stsud $r4 = $r4, $r32
+; CV1-NEXT:    stsud $r5 = $r5, $r33
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    stsud $r4 = $r8, $r36
-; CV1-NEXT:    stsud $r5 = $r9, $r37
+; CV1-NEXT:    stsud $r0 = $r8, $r0
+; CV1-NEXT:    stsud $r1 = $r9, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    stsud $r2 = $r6, $r34
-; CV1-NEXT:    stsud $r3 = $r7, $r35
+; CV1-NEXT:    stsud $r6 = $r6, $r34
+; CV1-NEXT:    stsud $r7 = $r7, $r35
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    so 32[$r15] = $r0r1r2r3
-; CV1-NEXT:    stsud $r6 = $r10, $r38
-; CV1-NEXT:    stsud $r7 = $r11, $r39
+; CV1-NEXT:    so 32[$r15] = $r4r5r6r7
+; CV1-NEXT:    stsud $r2 = $r10, $r2
+; CV1-NEXT:    stsud $r3 = $r11, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    so 0[$r15] = $r4r5r6r7
+; CV1-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CV1-NEXT:    copyd $r0 = $r15
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
@@ -102,21 +102,21 @@ define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    lo $r32r33r34r35 = 32[$r1]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    lo $r36r37r38r39 = 0[$r1]
+; CV2-NEXT:    lo $r0r1r2r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    stsud $r0 = $r4, $r32
-; CV2-NEXT:    stsud $r1 = $r5, $r33
-; CV2-NEXT:    stsud $r2 = $r6, $r34
-; CV2-NEXT:    stsud $r3 = $r7, $r35
+; CV2-NEXT:    stsud $r4 = $r4, $r32
+; CV2-NEXT:    stsud $r5 = $r5, $r33
+; CV2-NEXT:    stsud $r6 = $r6, $r34
+; CV2-NEXT:    stsud $r7 = $r7, $r35
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    stsud $r4 = $r8, $r36
-; CV2-NEXT:    stsud $r5 = $r9, $r37
-; CV2-NEXT:    stsud $r6 = $r10, $r38
-; CV2-NEXT:    stsud $r7 = $r11, $r39
+; CV2-NEXT:    stsud $r0 = $r8, $r0
+; CV2-NEXT:    stsud $r1 = $r9, $r1
+; CV2-NEXT:    stsud $r2 = $r10, $r2
+; CV2-NEXT:    stsud $r3 = $r11, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    so 32[$r15] = $r0r1r2r3
+; CV2-NEXT:    so 32[$r15] = $r4r5r6r7
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    so 0[$r15] = $r4r5r6r7
+; CV2-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)

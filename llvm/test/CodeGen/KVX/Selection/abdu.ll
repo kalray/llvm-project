@@ -197,28 +197,28 @@ declare i32 @llvm.umin.i32(i32, i32)
 define <8 x i8> @abdubo(<8 x i8> %0, <8 x i8> %1) {
 ; V1-LABEL: abdubo:
 ; V1:       # %bb.0:
-; V1-NEXT:    sllhqs $r0 = $r0, 8
-; V1-NEXT:    sllhqs $r1 = $r1, 8
-; V1-NEXT:    andd $r2 = $r1, 0xff00ff00.@
-; V1-NEXT:    andd $r3 = $r0, 0xff00ff00.@
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; V1-NEXT:    sllhqs $r2 = $r1, 8
+; V1-NEXT:    sllhqs $r3 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
 ; V1-NEXT:    minuhq $r2 = $r3, $r2
 ; V1-NEXT:    maxuhq $r3 = $r0, $r1
 ; V1-NEXT:    maxuhq $r4 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    srlhqs $r0 = $r0, 8
-; V1-NEXT:    srlhqs $r1 = $r3, 8
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    srlhqs $r4 = $r4, 8
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    ord $r0 = $r2, $r0
-; V1-NEXT:    ord $r1 = $r4, $r1
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
-; V1-NEXT:    ord $r2 = $r1, 0x80808080.@
+; V1-NEXT:    nxord $r0 = $r2, $r0
+; V1-NEXT:    ord $r1 = $r2, 0x80808080.@
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
-; V1-NEXT:    sbfd $r1 = $r3, $r2
+; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    xord $r0 = $r0, $r1
 ; V1-NEXT:    ret

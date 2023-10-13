@@ -191,28 +191,28 @@ define <8 x i8> @ctpopv8i8(<8 x i8> %a) {
 ; CV1-LABEL: ctpopv8i8:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x200000001
-; CV1-NEXT:    sbmm8 $r1 = $r0, 0x800000004
-; CV1-NEXT:    srld $r2 = $r0, 32
+; CV1-NEXT:    srld $r1 = $r0, 32
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x800000004
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x200000001
-; CV1-NEXT:    sbmm8 $r3 = $r2, 0x800000004
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x200000001
+; CV1-NEXT:    sbmm8 $r3 = $r1, 0x800000004
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cbswp $r0 = $r0
 ; CV1-NEXT:    cbswp $r1 = $r1
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cbswp $r2 = $r2
 ; CV1-NEXT:    cbswp $r3 = $r3
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    cbswp $r0 = $r0
+; CV1-NEXT:    cbswp $r2 = $r2
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x1001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x1001
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x1001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x1001
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r0 = $r1, 31, 16
-; CV1-NEXT:    insf $r2 = $r3, 31, 16
+; CV1-NEXT:    insf $r0 = $r2, 31, 16
+; CV1-NEXT:    insf $r1 = $r3, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r0 = $r2, 63, 32
+; CV1-NEXT:    insf $r0 = $r1, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 7)
 ;
@@ -220,23 +220,23 @@ define <8 x i8> @ctpopv8i8(<8 x i8> %a) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x200000001
 ; CV2-NEXT:    srld $r1 = $r0, 32
-; CV2-NEXT:    sbmm8 $r2 = $r0, 0x800000004
+; CV2-NEXT:    sbmm8 $r3 = $r0, 0x800000004
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    cbswp $r0 = $r0
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x200000001
-; CV2-NEXT:    cbswp $r2 = $r2
-; CV2-NEXT:    sbmm8 $r3 = $r1, 0x800000004
+; CV2-NEXT:    sbmm8 $r2 = $r1, 0x800000004
+; CV2-NEXT:    cbswp $r3 = $r3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; CV2-NEXT:    cbswp $r1 = $r1
-; CV2-NEXT:    sbmm8 $r2 = $r2, 0x1001
-; CV2-NEXT:    cbswp $r3 = $r3
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    insf $r0 = $r2, 31, 16
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; CV2-NEXT:    cbswp $r2 = $r2
 ; CV2-NEXT:    sbmm8 $r3 = $r3, 0x1001
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    insf $r0 = $r3, 31, 16
+; CV2-NEXT:    sbmm8 $r1 = $r1, 0x1001
+; CV2-NEXT:    sbmm8 $r2 = $r2, 0x1001
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    insf $r1 = $r3, 31, 16
+; CV2-NEXT:    insf $r1 = $r2, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r1, 63, 32
 ; CV2-NEXT:    ret

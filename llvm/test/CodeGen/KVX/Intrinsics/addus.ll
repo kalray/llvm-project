@@ -657,19 +657,19 @@ define <8 x i8> @uadd_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f
-; KVXV1-NEXT:    andd $r2 = $r0, 0xff00ff00.@
+; KVXV1-NEXT:    andd $r3 = $r0, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
-; KVXV1-NEXT:    andd $r3 = $r1, 0xff00ff00.@
+; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r1 = $r0, $r1
-; KVXV1-NEXT:    addhq $r3 = $r2, $r3
+; KVXV1-NEXT:    addhq $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
-; KVXV1-NEXT:    compnhq.ltu $r2 = $r3, $r2
+; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
-; KVXV1-NEXT:    ord $r2 = $r2, $r3
+; KVXV1-NEXT:    ord $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00.@
@@ -693,19 +693,19 @@ define <8 x i8> @uadd_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    sllhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    make $r1 = 0x81007f0081007f
-; KVXV1-NEXT:    andd $r2 = $r0, 0xff00ff00.@
+; KVXV1-NEXT:    andd $r3 = $r0, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    sllhqs $r1 = $r1, 8
-; KVXV1-NEXT:    andd $r3 = $r1, 0xff00ff00.@
+; KVXV1-NEXT:    andd $r2 = $r1, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    addhq $r1 = $r0, $r1
-; KVXV1-NEXT:    addhq $r3 = $r2, $r3
+; KVXV1-NEXT:    addhq $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
-; KVXV1-NEXT:    compnhq.ltu $r2 = $r3, $r2
+; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    ord $r0 = $r0, $r1
-; KVXV1-NEXT:    ord $r2 = $r2, $r3
+; KVXV1-NEXT:    ord $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00.@

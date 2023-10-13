@@ -173,52 +173,50 @@ declare <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1>, i32, i32)
 define void @xmadd44bw_test(ptr %0, ptr %1) {
 ; CHECK-LABEL: xmadd44bw_test:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo $a8 = 0[$r0]
+; CHECK-NEXT:    xlo $a4 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a1 = 32[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo $a0 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    xmadd44bw0 $a0a1 = $a8, $a8
+; CHECK-NEXT:    xmadd44bw0 $a0a1 = $a4, $a4
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    xcopyx $a4a5 = $a0a1
-; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    xcopyx $a6a7 = $a0a1
-; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a8, $a8
+; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a4, $a4
 ; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
 ; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    xmadd44bw0 $a4a5 = $a8, $a8
-; CHECK-NEXT:    ;; # (end cycle 19)
-; CHECK-NEXT:    xso 32[$r1] = $a5
-; CHECK-NEXT:    ;; # (end cycle 23)
-; CHECK-NEXT:    xso 0[$r1] = $a4
-; CHECK-NEXT:    ;; # (end cycle 24)
-; CHECK-NEXT:    xmaddsu44bw1 $a6a7 = $a8, $a8
-; CHECK-NEXT:    ;; # (end cycle 25)
-; CHECK-NEXT:    xso 32[$r1] = $a7
-; CHECK-NEXT:    ;; # (end cycle 29)
-; CHECK-NEXT:    xso 0[$r1] = $a6
-; CHECK-NEXT:    ;; # (end cycle 30)
-; CHECK-NEXT:    xmaddu44bw0 $a2a3 = $a8, $a8
+; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a4, $a4
+; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
+; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    xmaddsu44bw1 $a2a3 = $a4, $a4
 ; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
 ; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 36)
-; CHECK-NEXT:    xmaddsu44bw1 $a0a1 = $a8, $a8
-; CHECK-NEXT:    ;; # (end cycle 37)
+; CHECK-NEXT:    xmaddu44bw0 $a2a3 = $a4, $a4
+; CHECK-NEXT:    ;; # (end cycle 40)
+; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;; # (end cycle 44)
+; CHECK-NEXT:    xso 0[$r1] = $a2
+; CHECK-NEXT:    ;; # (end cycle 45)
+; CHECK-NEXT:    xmaddsu44bw1 $a0a1 = $a4, $a4
+; CHECK-NEXT:    ;; # (end cycle 46)
 ; CHECK-NEXT:    xso 32[$r1] = $a1
-; CHECK-NEXT:    ;; # (end cycle 41)
+; CHECK-NEXT:    ;; # (end cycle 50)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 42)
+; CHECK-NEXT:    ;; # (end cycle 51)
   %3 = load <256 x i1>, ptr %0
   %4 = load <512 x i1>, ptr %1
   %5 = tail call <512 x i1> @llvm.kvx.xmadd44bw0(<256 x i1> %3, <256 x i1> %3, <512 x i1> %4, i32 0)
@@ -683,24 +681,24 @@ define void @xloadc512(ptr %0, i64 %1) {
 ; CHECK-LABEL: xloadc512:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r2 = $r0, 64
-; CHECK-NEXT:    addd $r3 = $r0, 192
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.dnez $r1 ? $a0 = [$r2]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.dnez $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
-; CHECK-NEXT:    make $r2 = 1
+; CHECK-NEXT:    addd $r2 = $r0, 192
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    xlo.s.weqz $r1 ? $a0 = [$r3]
+; CHECK-NEXT:    xlo.s.weqz $r1 ? $a0 = [$r2]
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xlo.s.weqz $r1 ? $a1 = 32[$r3]
+; CHECK-NEXT:    xlo.s.weqz $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xlo.u.mtc $r1 ? $a0 = [$r3]
+; CHECK-NEXT:    xlo.u.mtc $r1 ? $a0 = [$r2]
 ; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    xlo.u.mtc $r1 ? $a1 = 32[$r3]
+; CHECK-NEXT:    xlo.u.mtc $r1 ? $a1 = 32[$r2]
 ; CHECK-NEXT:    addd $r1 = $r0, 128
+; CHECK-NEXT:    make $r2 = 1
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r1]
 ; CHECK-NEXT:    srld $r2 = $r2, 32
@@ -736,9 +734,7 @@ define void @xloadc1024(ptr %0, <4 x i32> %1) {
 ; CHECK-NEXT:    addd $r4 = $r0, 384
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a0 = [$r1]
-; CHECK-NEXT:    srld $r5 = $r2, 32
-; CHECK-NEXT:    srld $r6 = $r3, 32
-; CHECK-NEXT:    addd $r7 = $r0, 256
+; CHECK-NEXT:    srld $r5 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a1 = 32[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -747,6 +743,7 @@ define void @xloadc1024(ptr %0, <4 x i32> %1) {
 ; CHECK-NEXT:    xcopyo $a3 = $a1
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xlo.dnez $r2 ? $a2 = 96[$r1]
+; CHECK-NEXT:    srld $r1 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xlo.s.weqz $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a2 = $a1
@@ -760,24 +757,25 @@ define void @xloadc1024(ptr %0, <4 x i32> %1) {
 ; CHECK-NEXT:    xlo.u.mtc $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a1 = $a2
 ; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    xlo.u.mtc $r5 ? $a2 = 32[$r4]
+; CHECK-NEXT:    xlo.u.mtc $r1 ? $a2 = 32[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
 ; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xlo.u.mtc $r3 ? $a3 = 64[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 22)
-; CHECK-NEXT:    xlo.u.mtc $r6 ? $a1 = 96[$r4]
+; CHECK-NEXT:    xlo.u.mtc $r5 ? $a1 = 96[$r4]
+; CHECK-NEXT:    addd $r4 = $r0, 256
 ; CHECK-NEXT:    ;; # (end cycle 23)
-; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r7]
+; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r4]
 ; CHECK-NEXT:    xcopyo $a1 = $a2
 ; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xcopyo $a5 = $a1
 ; CHECK-NEXT:    ;; # (end cycle 28)
-; CHECK-NEXT:    xlo.us.mfc $r5 ? $a5 = 32[$r7]
+; CHECK-NEXT:    xlo.us.mfc $r1 ? $a5 = 32[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 32)
-; CHECK-NEXT:    xlo.us.mfc $r3 ? $a2 = 64[$r7]
+; CHECK-NEXT:    xlo.us.mfc $r3 ? $a2 = 64[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 33)
-; CHECK-NEXT:    xlo.us.mfc $r6 ? $a1 = 96[$r7]
+; CHECK-NEXT:    xlo.us.mfc $r5 ? $a1 = 96[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 35)
@@ -1154,11 +1152,10 @@ define void @xsplatox(ptr writeonly %0, ptr %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xsplatox.ud $a4a5 = $a6
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xsplatox.tq $a6a7 = $a6
-; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xsplatox.tq $a0a1 = $a6
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ;; # (end cycle 9)
@@ -1168,9 +1165,9 @@ define void @xsplatox(ptr writeonly %0, ptr %1) {
 ; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    xso 224[$r0] = $a7
+; CHECK-NEXT:    xso 224[$r0] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    xso 192[$r0] = $a6
+; CHECK-NEXT:    xso 192[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 14)
   %3 = load <256 x i1>, ptr %1

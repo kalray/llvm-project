@@ -53,14 +53,14 @@ define <16 x i8> @narrowhbx_s(<16 x i16> %0) {
 ; CV1-NEXT:    slshqs $r0 = $r0, 8
 ; CV1-NEXT:    slshqs $r1 = $r1, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    slshqs $r2 = $r2, 8
-; CV1-NEXT:    slshqs $r3 = $r3, 8
+; CV1-NEXT:    slshqs $r1 = $r2, 8
+; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80200802
-; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80200802
+; CV1-NEXT:    slshqs $r2 = $r3, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80200802
-; CV1-NEXT:    sbmm8 $r2 = $r3, 0x80200802
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x80200802
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32
@@ -199,50 +199,50 @@ define <16 x i8> @narrowhbx(<16 x i16> %0) {
 define <16 x i16> @narrowwhx_q(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_q:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r1 = $r5, 0x80400804
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80400804
+; CV1-NEXT:    sbmm8 $r0 = $r4, 0x80400804
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r0 = $r8, 0x80400804
-; CV1-NEXT:    insf $r2 = $r1, 63, 32
+; CV1-NEXT:    sbmm8 $r1 = $r6, 0x80400804
+; CV1-NEXT:    sbmm8 $r5 = $r7, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r1 = $r10, 0x80400804
-; CV1-NEXT:    sbmm8 $r4 = $r9, 0x80400804
+; CV1-NEXT:    sbmm8 $r2 = $r8, 0x80400804
+; CV1-NEXT:    sbmm8 $r6 = $r9, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sbmm8 $r3 = $r6, 0x80400804
-; CV1-NEXT:    sbmm8 $r5 = $r11, 0x80400804
+; CV1-NEXT:    sbmm8 $r3 = $r10, 0x80400804
+; CV1-NEXT:    sbmm8 $r7 = $r11, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r7, 0x80400804
-; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowwhx_q:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x80400804
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x80400804
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80400804
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80400804
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80400804
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80400804
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sbmm8 $r0 = $r8, 0x80400804
-; CV2-NEXT:    sbmm8 $r1 = $r10, 0x80400804
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80400804
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80400804
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80400804
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80400804
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 63, 32
-; CV2-NEXT:    insf $r1 = $r7, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <16 x i32>, <16 x i32>* %0
@@ -277,73 +277,73 @@ declare <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32>, i32)
 define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_s:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    slswps $r0 = $r4, 16
 ; CV1-NEXT:    slswps $r1 = $r5, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r2 = $r0, 0x80400804
-; CV1-NEXT:    slswps $r3 = $r8, 16
+; CV1-NEXT:    slswps $r2 = $r6, 16
+; CV1-NEXT:    slswps $r3 = $r7, 16
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r0 = $r3, 0x80400804
-; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80400804
+; CV1-NEXT:    slswps $r4 = $r8, 16
+; CV1-NEXT:    slswps $r5 = $r9, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    slswps $r1 = $r9, 16
-; CV1-NEXT:    slswps $r3 = $r10, 16
+; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80400804
+; CV1-NEXT:    sbmm8 $r6 = $r1, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbmm8 $r1 = $r3, 0x80400804
-; CV1-NEXT:    sbmm8 $r5 = $r1, 0x80400804
+; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80400804
+; CV1-NEXT:    sbmm8 $r7 = $r3, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    insf $r0 = $r5, 63, 32
-; CV1-NEXT:    slswps $r3 = $r11, 16
+; CV1-NEXT:    slswps $r3 = $r10, 16
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    slswps $r3 = $r6, 16
-; CV1-NEXT:    sbmm8 $r8 = $r3, 0x80400804
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400804
+; CV1-NEXT:    slswps $r5 = $r11, 16
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x80400804
-; CV1-NEXT:    slswps $r6 = $r7, 16
+; CV1-NEXT:    sbmm8 $r5 = $r5, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    insf $r1 = $r8, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r6, 0x80400804
+; CV1-NEXT:    insf $r0 = $r6, 63, 32
+; CV1-NEXT:    insf $r1 = $r7, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    insf $r2 = $r4, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r5, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: narrowwhx_s:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    slswps $r0 = $r4, 16
-; CV2-NEXT:    slswps $r1 = $r5, 16
+; CV2-NEXT:    slswps $r4 = $r4, 16
+; CV2-NEXT:    slswps $r5 = $r5, 16
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    slswps $r1 = $r9, 16
-; CV2-NEXT:    sbmm8 $r2 = $r0, 0x80400804
-; CV2-NEXT:    slswps $r3 = $r8, 16
-; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80400804
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbmm8 $r0 = $r3, 0x80400804
-; CV2-NEXT:    slswps $r1 = $r10, 16
-; CV2-NEXT:    slswps $r3 = $r11, 16
-; CV2-NEXT:    sbmm8 $r5 = $r1, 0x80400804
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x80400804
 ; CV2-NEXT:    slswps $r6 = $r6, 16
 ; CV2-NEXT:    slswps $r7 = $r7, 16
-; CV2-NEXT:    sbmm8 $r8 = $r3, 0x80400804
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80400804
+; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80400804
+; CV2-NEXT:    slswps $r8 = $r0, 16
+; CV2-NEXT:    slswps $r9 = $r1, 16
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80400804
+; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80400804
+; CV2-NEXT:    slswps $r10 = $r2, 16
+; CV2-NEXT:    slswps $r11 = $r3, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    insf $r0 = $r5, 63, 32
-; CV2-NEXT:    insf $r1 = $r8, 63, 32
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x80400804
-; CV2-NEXT:    sbmm8 $r6 = $r7, 0x80400804
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80400804
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80400804
+; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80400804
+; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80400804
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r6, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
   %2 = load <16 x i32>, <16 x i32>* %0
@@ -376,54 +376,54 @@ define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
 define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_us:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxwp $r4 = $r4, 0
 ; CV1-NEXT:    maxwp $r5 = $r5, 0
 ; CV1-NEXT:    maxwp $r6 = $r6, 0
 ; CV1-NEXT:    maxwp $r7 = $r7, 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxwp $r0 = $r0, 0
 ; CV1-NEXT:    maxwp $r1 = $r1, 0
 ; CV1-NEXT:    maxwp $r2 = $r2, 0
 ; CV1-NEXT:    maxwp $r3 = $r3, 0
+; CV1-NEXT:    maxwp $r8 = $r0, 0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    minwp $r1 = $r1, 0xffff.@
-; CV1-NEXT:    minwp $r2 = $r2, 0xffff.@
-; CV1-NEXT:    minwp $r3 = $r3, 0xffff.@
-; CV1-NEXT:    minwp $r4 = $r4, 0xffff.@
+; CV1-NEXT:    minwp $r0 = $r4, 0xffff.@
+; CV1-NEXT:    minwp $r4 = $r5, 0xffff.@
+; CV1-NEXT:    minwp $r5 = $r6, 0xffff.@
+; CV1-NEXT:    minwp $r6 = $r7, 0xffff.@
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    minwp $r0 = $r0, 0xffff.@
-; CV1-NEXT:    sbmm8 $r1 = $r2, 0x20100201
-; CV1-NEXT:    minwp $r5 = $r5, 0xffff.@
-; CV1-NEXT:    sbmm8 $r8 = $r1, 0x20100201
+; CV1-NEXT:    sbmm8 $r1 = $r5, 0x20100201
+; CV1-NEXT:    sbmm8 $r5 = $r6, 0x20100201
+; CV1-NEXT:    minwp $r7 = $r8, 0xffff.@
+; CV1-NEXT:    minwp $r8 = $r1, 0xffff.@
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x20100201
-; CV1-NEXT:    minwp $r3 = $r6, 0xffff.@
-; CV1-NEXT:    sbmm8 $r9 = $r3, 0x20100201
+; CV1-NEXT:    sbmm8 $r2 = $r7, 0x20100201
+; CV1-NEXT:    minwp $r6 = $r2, 0xffff.@
+; CV1-NEXT:    sbmm8 $r7 = $r8, 0x20100201
+; CV1-NEXT:    minwp $r8 = $r3, 0xffff.@
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; CV1-NEXT:    sbmm8 $r4 = $r5, 0x20100201
-; CV1-NEXT:    minwp $r5 = $r7, 0xffff.@
+; CV1-NEXT:    sbmm8 $r4 = $r4, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    sbmm8 $r3 = $r3, 0x20100201
-; CV1-NEXT:    sbmm8 $r5 = $r5, 0x20100201
+; CV1-NEXT:    sbmm8 $r3 = $r6, 0x20100201
+; CV1-NEXT:    sbmm8 $r6 = $r8, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    insf $r0 = $r8, 63, 32
-; CV1-NEXT:    insf $r1 = $r9, 63, 32
+; CV1-NEXT:    insf $r0 = $r4, 63, 32
+; CV1-NEXT:    insf $r1 = $r5, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    insf $r2 = $r4, 63, 32
-; CV1-NEXT:    insf $r3 = $r5, 63, 32
+; CV1-NEXT:    insf $r2 = $r7, 63, 32
+; CV1-NEXT:    insf $r3 = $r6, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: narrowwhx_us:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxwp $r4 = $r4, 0
 ; CV2-NEXT:    maxwp $r5 = $r5, 0
@@ -435,30 +435,30 @@ define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
 ; CV2-NEXT:    maxwp $r2 = $r2, 0
 ; CV2-NEXT:    maxwp $r3 = $r3, 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    minwp $r0 = $r0, 0xffff.@
-; CV2-NEXT:    minwp $r1 = $r1, 0xffff.@
-; CV2-NEXT:    minwp $r2 = $r2, 0xffff.@
-; CV2-NEXT:    minwp $r3 = $r3, 0xffff.@
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    minwp $r4 = $r4, 0xffff.@
 ; CV2-NEXT:    minwp $r5 = $r5, 0xffff.@
 ; CV2-NEXT:    minwp $r6 = $r6, 0xffff.@
 ; CV2-NEXT:    minwp $r7 = $r7, 0xffff.@
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    minwp $r8 = $r0, 0xffff.@
+; CV2-NEXT:    minwp $r9 = $r1, 0xffff.@
+; CV2-NEXT:    minwp $r10 = $r2, 0xffff.@
+; CV2-NEXT:    minwp $r11 = $r3, 0xffff.@
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    sbmm8 $r0 = $r0, 0x20100201
-; CV2-NEXT:    sbmm8 $r1 = $r2, 0x20100201
-; CV2-NEXT:    sbmm8 $r8 = $r1, 0x20100201
-; CV2-NEXT:    sbmm8 $r9 = $r3, 0x20100201
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x20100201
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x20100201
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x20100201
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x20100201
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x20100201
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x20100201
+; CV2-NEXT:    sbmm8 $r6 = $r9, 0x20100201
+; CV2-NEXT:    sbmm8 $r7 = $r11, 0x20100201
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    insf $r0 = $r8, 63, 32
-; CV2-NEXT:    insf $r1 = $r9, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <16 x i32>, <16 x i32>* %0
@@ -491,50 +491,50 @@ define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
 define <16 x i16> @narrowwhx(<16 x i32>* nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r1 = $r5, 0x20100201
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x20100201
+; CV1-NEXT:    sbmm8 $r0 = $r4, 0x20100201
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r0 = $r8, 0x20100201
-; CV1-NEXT:    insf $r2 = $r1, 63, 32
+; CV1-NEXT:    sbmm8 $r1 = $r6, 0x20100201
+; CV1-NEXT:    sbmm8 $r5 = $r7, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r1 = $r10, 0x20100201
-; CV1-NEXT:    sbmm8 $r4 = $r9, 0x20100201
+; CV1-NEXT:    sbmm8 $r2 = $r8, 0x20100201
+; CV1-NEXT:    sbmm8 $r6 = $r9, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sbmm8 $r3 = $r6, 0x20100201
-; CV1-NEXT:    sbmm8 $r5 = $r11, 0x20100201
+; CV1-NEXT:    sbmm8 $r3 = $r10, 0x20100201
+; CV1-NEXT:    sbmm8 $r7 = $r11, 0x20100201
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r7, 0x20100201
-; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowwhx:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x20100201
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x20100201
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x20100201
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x20100201
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x20100201
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sbmm8 $r0 = $r8, 0x20100201
-; CV2-NEXT:    sbmm8 $r1 = $r10, 0x20100201
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x20100201
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x20100201
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x20100201
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x20100201
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 63, 32
-; CV2-NEXT:    insf $r1 = $r7, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <16 x i32>, <16 x i32>* %0
@@ -738,50 +738,50 @@ define <2 x i16> @narrowwhp(<2 x i32> %0) {
 define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_q:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r1 = $r5, 0x80200802
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80200802
+; CV1-NEXT:    sbmm8 $r0 = $r4, 0x80200802
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r0 = $r8, 0x80200802
-; CV1-NEXT:    insf $r2 = $r1, 63, 32
+; CV1-NEXT:    sbmm8 $r1 = $r6, 0x80200802
+; CV1-NEXT:    sbmm8 $r5 = $r7, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r1 = $r10, 0x80200802
-; CV1-NEXT:    sbmm8 $r4 = $r9, 0x80200802
+; CV1-NEXT:    sbmm8 $r2 = $r8, 0x80200802
+; CV1-NEXT:    sbmm8 $r6 = $r9, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sbmm8 $r3 = $r6, 0x80200802
-; CV1-NEXT:    sbmm8 $r5 = $r11, 0x80200802
+; CV1-NEXT:    sbmm8 $r3 = $r10, 0x80200802
+; CV1-NEXT:    sbmm8 $r7 = $r11, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r7, 0x80200802
-; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowhbv_q:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x80200802
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x80200802
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80200802
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80200802
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80200802
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80200802
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sbmm8 $r0 = $r8, 0x80200802
-; CV2-NEXT:    sbmm8 $r1 = $r10, 0x80200802
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80200802
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80200802
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80200802
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80200802
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 63, 32
-; CV2-NEXT:    insf $r1 = $r7, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <32 x i16>, <32 x i16>* %0
@@ -814,73 +814,73 @@ define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
 define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_s:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    slshqs $r0 = $r4, 8
 ; CV1-NEXT:    slshqs $r1 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r2 = $r0, 0x80200802
-; CV1-NEXT:    slshqs $r3 = $r8, 8
+; CV1-NEXT:    slshqs $r2 = $r6, 8
+; CV1-NEXT:    slshqs $r3 = $r7, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r0 = $r3, 0x80200802
-; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80200802
+; CV1-NEXT:    slshqs $r4 = $r8, 8
+; CV1-NEXT:    slshqs $r5 = $r9, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    slshqs $r1 = $r9, 8
-; CV1-NEXT:    slshqs $r3 = $r10, 8
+; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80200802
+; CV1-NEXT:    sbmm8 $r6 = $r1, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbmm8 $r1 = $r3, 0x80200802
-; CV1-NEXT:    sbmm8 $r5 = $r1, 0x80200802
+; CV1-NEXT:    sbmm8 $r2 = $r4, 0x80200802
+; CV1-NEXT:    sbmm8 $r7 = $r3, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    insf $r0 = $r5, 63, 32
-; CV1-NEXT:    slshqs $r3 = $r11, 8
+; CV1-NEXT:    slshqs $r3 = $r10, 8
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    slshqs $r3 = $r6, 8
-; CV1-NEXT:    sbmm8 $r8 = $r3, 0x80200802
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80200802
+; CV1-NEXT:    slshqs $r5 = $r11, 8
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    sbmm8 $r3 = $r3, 0x80200802
-; CV1-NEXT:    slshqs $r6 = $r7, 8
+; CV1-NEXT:    sbmm8 $r5 = $r5, 0x80200802
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    insf $r1 = $r8, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r6, 0x80200802
+; CV1-NEXT:    insf $r0 = $r6, 63, 32
+; CV1-NEXT:    insf $r1 = $r7, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    insf $r2 = $r4, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r5, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 12)
 ;
 ; CV2-LABEL: narrowhbv_s:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    slshqs $r0 = $r4, 8
-; CV2-NEXT:    slshqs $r1 = $r5, 8
+; CV2-NEXT:    slshqs $r4 = $r4, 8
+; CV2-NEXT:    slshqs $r5 = $r5, 8
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    slshqs $r1 = $r9, 8
-; CV2-NEXT:    sbmm8 $r2 = $r0, 0x80200802
-; CV2-NEXT:    slshqs $r3 = $r8, 8
-; CV2-NEXT:    sbmm8 $r4 = $r1, 0x80200802
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    sbmm8 $r0 = $r3, 0x80200802
-; CV2-NEXT:    slshqs $r1 = $r10, 8
-; CV2-NEXT:    slshqs $r3 = $r11, 8
-; CV2-NEXT:    sbmm8 $r5 = $r1, 0x80200802
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sbmm8 $r1 = $r1, 0x80200802
 ; CV2-NEXT:    slshqs $r6 = $r6, 8
 ; CV2-NEXT:    slshqs $r7 = $r7, 8
-; CV2-NEXT:    sbmm8 $r8 = $r3, 0x80200802
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x80200802
+; CV2-NEXT:    sbmm8 $r4 = $r5, 0x80200802
+; CV2-NEXT:    slshqs $r8 = $r0, 8
+; CV2-NEXT:    slshqs $r9 = $r1, 8
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x80200802
+; CV2-NEXT:    sbmm8 $r5 = $r7, 0x80200802
+; CV2-NEXT:    slshqs $r10 = $r2, 8
+; CV2-NEXT:    slshqs $r11 = $r3, 8
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    insf $r0 = $r5, 63, 32
-; CV2-NEXT:    insf $r1 = $r8, 63, 32
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x80200802
-; CV2-NEXT:    sbmm8 $r6 = $r7, 0x80200802
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x80200802
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x80200802
+; CV2-NEXT:    sbmm8 $r6 = $r9, 0x80200802
+; CV2-NEXT:    sbmm8 $r7 = $r11, 0x80200802
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r6, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
   %2 = load <32 x i16>, <32 x i16>* %0
@@ -913,54 +913,54 @@ define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
 define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_us:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxhq $r4 = $r4, 0
 ; CV1-NEXT:    maxhq $r5 = $r5, 0
 ; CV1-NEXT:    maxhq $r6 = $r6, 0
 ; CV1-NEXT:    maxhq $r7 = $r7, 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxhq $r0 = $r0, 0
 ; CV1-NEXT:    maxhq $r1 = $r1, 0
 ; CV1-NEXT:    maxhq $r2 = $r2, 0
 ; CV1-NEXT:    maxhq $r3 = $r3, 0
+; CV1-NEXT:    maxhq $r8 = $r0, 0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    minhq $r1 = $r1, 0xff00ff.@
-; CV1-NEXT:    minhq $r2 = $r2, 0xff00ff.@
-; CV1-NEXT:    minhq $r3 = $r3, 0xff00ff.@
-; CV1-NEXT:    minhq $r4 = $r4, 0xff00ff.@
+; CV1-NEXT:    minhq $r0 = $r4, 0xff00ff.@
+; CV1-NEXT:    minhq $r4 = $r5, 0xff00ff.@
+; CV1-NEXT:    minhq $r5 = $r6, 0xff00ff.@
+; CV1-NEXT:    minhq $r6 = $r7, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    minhq $r0 = $r0, 0xff00ff.@
-; CV1-NEXT:    sbmm8 $r1 = $r2, 0x40100401
-; CV1-NEXT:    minhq $r5 = $r5, 0xff00ff.@
-; CV1-NEXT:    sbmm8 $r8 = $r1, 0x40100401
+; CV1-NEXT:    sbmm8 $r1 = $r5, 0x40100401
+; CV1-NEXT:    sbmm8 $r5 = $r6, 0x40100401
+; CV1-NEXT:    minhq $r7 = $r8, 0xff00ff.@
+; CV1-NEXT:    minhq $r8 = $r1, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x40100401
-; CV1-NEXT:    minhq $r3 = $r6, 0xff00ff.@
-; CV1-NEXT:    sbmm8 $r9 = $r3, 0x40100401
+; CV1-NEXT:    sbmm8 $r2 = $r7, 0x40100401
+; CV1-NEXT:    minhq $r6 = $r2, 0xff00ff.@
+; CV1-NEXT:    sbmm8 $r7 = $r8, 0x40100401
+; CV1-NEXT:    minhq $r8 = $r3, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; CV1-NEXT:    sbmm8 $r4 = $r5, 0x40100401
-; CV1-NEXT:    minhq $r5 = $r7, 0xff00ff.@
+; CV1-NEXT:    sbmm8 $r4 = $r4, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    sbmm8 $r3 = $r3, 0x40100401
-; CV1-NEXT:    sbmm8 $r5 = $r5, 0x40100401
+; CV1-NEXT:    sbmm8 $r3 = $r6, 0x40100401
+; CV1-NEXT:    sbmm8 $r6 = $r8, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    insf $r0 = $r8, 63, 32
-; CV1-NEXT:    insf $r1 = $r9, 63, 32
+; CV1-NEXT:    insf $r0 = $r4, 63, 32
+; CV1-NEXT:    insf $r1 = $r5, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    insf $r2 = $r4, 63, 32
-; CV1-NEXT:    insf $r3 = $r5, 63, 32
+; CV1-NEXT:    insf $r2 = $r7, 63, 32
+; CV1-NEXT:    insf $r3 = $r6, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: narrowhbv_us:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxhq $r4 = $r4, 0
 ; CV2-NEXT:    maxhq $r5 = $r5, 0
@@ -972,30 +972,30 @@ define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
 ; CV2-NEXT:    maxhq $r2 = $r2, 0
 ; CV2-NEXT:    maxhq $r3 = $r3, 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    minhq $r0 = $r0, 0xff00ff.@
-; CV2-NEXT:    minhq $r1 = $r1, 0xff00ff.@
-; CV2-NEXT:    minhq $r2 = $r2, 0xff00ff.@
-; CV2-NEXT:    minhq $r3 = $r3, 0xff00ff.@
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    minhq $r4 = $r4, 0xff00ff.@
 ; CV2-NEXT:    minhq $r5 = $r5, 0xff00ff.@
 ; CV2-NEXT:    minhq $r6 = $r6, 0xff00ff.@
 ; CV2-NEXT:    minhq $r7 = $r7, 0xff00ff.@
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    minhq $r8 = $r0, 0xff00ff.@
+; CV2-NEXT:    minhq $r9 = $r1, 0xff00ff.@
+; CV2-NEXT:    minhq $r10 = $r2, 0xff00ff.@
+; CV2-NEXT:    minhq $r11 = $r3, 0xff00ff.@
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
-; CV2-NEXT:    sbmm8 $r1 = $r2, 0x40100401
-; CV2-NEXT:    sbmm8 $r8 = $r1, 0x40100401
-; CV2-NEXT:    sbmm8 $r9 = $r3, 0x40100401
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x40100401
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x40100401
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x40100401
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x40100401
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x40100401
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x40100401
+; CV2-NEXT:    sbmm8 $r6 = $r9, 0x40100401
+; CV2-NEXT:    sbmm8 $r7 = $r11, 0x40100401
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    insf $r0 = $r8, 63, 32
-; CV2-NEXT:    insf $r1 = $r9, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <32 x i16>, <32 x i16>* %0
@@ -1028,50 +1028,50 @@ define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
 define <32 x i8> @narrowhbv(<32 x i16>* nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r1 = $r5, 0x40100401
-; CV1-NEXT:    sbmm8 $r2 = $r4, 0x40100401
+; CV1-NEXT:    sbmm8 $r0 = $r4, 0x40100401
+; CV1-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sbmm8 $r0 = $r8, 0x40100401
-; CV1-NEXT:    insf $r2 = $r1, 63, 32
+; CV1-NEXT:    sbmm8 $r1 = $r6, 0x40100401
+; CV1-NEXT:    sbmm8 $r5 = $r7, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sbmm8 $r1 = $r10, 0x40100401
-; CV1-NEXT:    sbmm8 $r4 = $r9, 0x40100401
+; CV1-NEXT:    sbmm8 $r2 = $r8, 0x40100401
+; CV1-NEXT:    sbmm8 $r6 = $r9, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sbmm8 $r3 = $r6, 0x40100401
-; CV1-NEXT:    sbmm8 $r5 = $r11, 0x40100401
+; CV1-NEXT:    sbmm8 $r3 = $r10, 0x40100401
+; CV1-NEXT:    sbmm8 $r7 = $r11, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
-; CV1-NEXT:    sbmm8 $r6 = $r7, 0x40100401
-; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r1 = $r5, 63, 32
-; CV1-NEXT:    insf $r3 = $r6, 63, 32
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowhbv:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sbmm8 $r2 = $r4, 0x40100401
-; CV2-NEXT:    sbmm8 $r3 = $r6, 0x40100401
+; CV2-NEXT:    sbmm8 $r0 = $r4, 0x40100401
+; CV2-NEXT:    sbmm8 $r1 = $r6, 0x40100401
 ; CV2-NEXT:    sbmm8 $r4 = $r5, 0x40100401
 ; CV2-NEXT:    sbmm8 $r5 = $r7, 0x40100401
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    sbmm8 $r0 = $r8, 0x40100401
-; CV2-NEXT:    sbmm8 $r1 = $r10, 0x40100401
+; CV2-NEXT:    sbmm8 $r2 = $r8, 0x40100401
+; CV2-NEXT:    sbmm8 $r3 = $r10, 0x40100401
 ; CV2-NEXT:    sbmm8 $r6 = $r9, 0x40100401
 ; CV2-NEXT:    sbmm8 $r7 = $r11, 0x40100401
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 63, 32
-; CV2-NEXT:    insf $r1 = $r7, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %2 = load <32 x i16>, <32 x i16>* %0
@@ -1470,60 +1470,60 @@ define <8 x i32> @narrowdwo_q(<8 x i64>* nocapture readonly %0) {
 define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_s:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    slsd $r0 = $r4, 32
-; CV1-NEXT:    slsd $r6 = $r6, 32
+; CV1-NEXT:    slsd $r0 = $r5, 32
+; CV1-NEXT:    slsd $r4 = $r4, 32
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    slsd $r1 = $r8, 32
-; CV1-NEXT:    srld $r4 = $r0, 32
-; CV1-NEXT:    srld $r6 = $r6, 32
-; CV1-NEXT:    slsd $r8 = $r10, 32
+; CV1-NEXT:    slsd $r1 = $r7, 32
+; CV1-NEXT:    srld $r4 = $r4, 32
+; CV1-NEXT:    slsd $r5 = $r6, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    slsd $r0 = $r9, 32
-; CV1-NEXT:    slsd $r2 = $r5, 32
-; CV1-NEXT:    srld $r5 = $r1, 32
+; CV1-NEXT:    srld $r5 = $r5, 32
+; CV1-NEXT:    slsd $r6 = $r8, 32
+; CV1-NEXT:    slsd $r7 = $r10, 32
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    slsd $r1 = $r11, 32
-; CV1-NEXT:    slsd $r3 = $r7, 32
-; CV1-NEXT:    srld $r7 = $r8, 32
+; CV1-NEXT:    slsd $r2 = $r9, 32
+; CV1-NEXT:    slsd $r3 = $r11, 32
+; CV1-NEXT:    srld $r6 = $r6, 32
+; CV1-NEXT:    srld $r7 = $r7, 32
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r0 = $r5, 31, 0
-; CV1-NEXT:    insf $r1 = $r7, 31, 0
+; CV1-NEXT:    insf $r0 = $r4, 31, 0
+; CV1-NEXT:    insf $r1 = $r5, 31, 0
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    insf $r2 = $r4, 31, 0
-; CV1-NEXT:    insf $r3 = $r6, 31, 0
+; CV1-NEXT:    insf $r2 = $r6, 31, 0
+; CV1-NEXT:    insf $r3 = $r7, 31, 0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowdwo_s:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    slsd $r4 = $r4, 32
-; CV2-NEXT:    slsd $r6 = $r6, 32
+; CV2-NEXT:    slsd $r0 = $r5, 32
+; CV2-NEXT:    slsd $r2 = $r4, 32
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    slsd $r0 = $r0, 32
-; CV2-NEXT:    slsd $r2 = $r2, 32
-; CV2-NEXT:    srld $r4 = $r4, 32
-; CV2-NEXT:    srld $r6 = $r6, 32
+; CV2-NEXT:    slsd $r3 = $r6, 32
+; CV2-NEXT:    slsd $r4 = $r8, 32
+; CV2-NEXT:    srld $r6 = $r2, 32
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    slsd $r0 = $r1, 32
-; CV2-NEXT:    slsd $r1 = $r3, 32
-; CV2-NEXT:    srld $r8 = $r0, 32
-; CV2-NEXT:    srld $r9 = $r2, 32
+; CV2-NEXT:    slsd $r1 = $r7, 32
+; CV2-NEXT:    srld $r4 = $r4, 32
+; CV2-NEXT:    slsd $r5 = $r10, 32
+; CV2-NEXT:    srld $r7 = $r3, 32
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r8, 31, 0
-; CV2-NEXT:    insf $r1 = $r9, 31, 0
-; CV2-NEXT:    slsd $r2 = $r5, 32
-; CV2-NEXT:    slsd $r3 = $r7, 32
+; CV2-NEXT:    insf $r0 = $r6, 31, 0
+; CV2-NEXT:    slsd $r2 = $r9, 32
+; CV2-NEXT:    slsd $r3 = $r11, 32
+; CV2-NEXT:    srld $r5 = $r5, 32
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    insf $r1 = $r7, 31, 0
 ; CV2-NEXT:    insf $r2 = $r4, 31, 0
-; CV2-NEXT:    insf $r3 = $r6, 31, 0
+; CV2-NEXT:    insf $r3 = $r5, 31, 0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <8 x i64>, <8 x i64>* %0
@@ -1557,68 +1557,68 @@ define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
 define <8 x i32> @narrowdwo_us(<8 x i64>* nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_us:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    maxd $r4 = $r4, 0
 ; CV1-NEXT:    maxd $r5 = $r5, 0
 ; CV1-NEXT:    maxd $r6 = $r6, 0
 ; CV1-NEXT:    maxd $r7 = $r7, 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    maxd $r0 = $r0, 0
-; CV1-NEXT:    maxd $r1 = $r1, 0
-; CV1-NEXT:    maxd $r2 = $r2, 0
-; CV1-NEXT:    maxd $r3 = $r3, 0
+; CV1-NEXT:    maxd $r8 = $r0, 0
+; CV1-NEXT:    maxd $r9 = $r1, 0
+; CV1-NEXT:    maxd $r10 = $r2, 0
+; CV1-NEXT:    maxd $r11 = $r3, 0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    mind $r0 = $r0, 0xffffffff
-; CV1-NEXT:    mind $r1 = $r2, 0xffffffff
-; CV1-NEXT:    mind $r8 = $r1, 0xffffffff
-; CV1-NEXT:    mind $r9 = $r3, 0xffffffff
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    mind $r2 = $r4, 0xffffffff
-; CV1-NEXT:    mind $r3 = $r6, 0xffffffff
+; CV1-NEXT:    mind $r0 = $r4, 0xffffffff
+; CV1-NEXT:    mind $r1 = $r6, 0xffffffff
 ; CV1-NEXT:    mind $r4 = $r5, 0xffffffff
 ; CV1-NEXT:    mind $r5 = $r7, 0xffffffff
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    mind $r2 = $r8, 0xffffffff
+; CV1-NEXT:    mind $r3 = $r10, 0xffffffff
+; CV1-NEXT:    mind $r6 = $r9, 0xffffffff
+; CV1-NEXT:    mind $r7 = $r11, 0xffffffff
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r0 = $r8, 63, 32
-; CV1-NEXT:    insf $r1 = $r9, 63, 32
+; CV1-NEXT:    insf $r0 = $r4, 63, 32
+; CV1-NEXT:    insf $r1 = $r5, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    insf $r2 = $r4, 63, 32
-; CV1-NEXT:    insf $r3 = $r5, 63, 32
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
+; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
 ; CV2-LABEL: narrowdwo_us:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 32[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    maxd $r4 = $r4, 0
 ; CV2-NEXT:    maxd $r5 = $r5, 0
 ; CV2-NEXT:    maxd $r6 = $r6, 0
 ; CV2-NEXT:    maxd $r7 = $r7, 0
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    maxd $r0 = $r0, 0
-; CV2-NEXT:    maxd $r1 = $r1, 0
-; CV2-NEXT:    maxd $r2 = $r2, 0
-; CV2-NEXT:    maxd $r3 = $r3, 0
+; CV2-NEXT:    maxd $r8 = $r0, 0
+; CV2-NEXT:    maxd $r9 = $r1, 0
+; CV2-NEXT:    maxd $r10 = $r2, 0
+; CV2-NEXT:    maxd $r11 = $r3, 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    mind $r0 = $r0, 0xffffffff
-; CV2-NEXT:    mind $r1 = $r2, 0xffffffff
-; CV2-NEXT:    mind $r8 = $r1, 0xffffffff
-; CV2-NEXT:    mind $r9 = $r3, 0xffffffff
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    mind $r2 = $r4, 0xffffffff
-; CV2-NEXT:    mind $r3 = $r6, 0xffffffff
+; CV2-NEXT:    mind $r0 = $r4, 0xffffffff
+; CV2-NEXT:    mind $r1 = $r6, 0xffffffff
 ; CV2-NEXT:    mind $r4 = $r5, 0xffffffff
 ; CV2-NEXT:    mind $r5 = $r7, 0xffffffff
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    mind $r2 = $r8, 0xffffffff
+; CV2-NEXT:    mind $r3 = $r10, 0xffffffff
+; CV2-NEXT:    mind $r6 = $r9, 0xffffffff
+; CV2-NEXT:    mind $r7 = $r11, 0xffffffff
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    insf $r0 = $r8, 63, 32
-; CV2-NEXT:    insf $r1 = $r9, 63, 32
-; CV2-NEXT:    insf $r2 = $r4, 63, 32
-; CV2-NEXT:    insf $r3 = $r5, 63, 32
+; CV2-NEXT:    insf $r0 = $r4, 63, 32
+; CV2-NEXT:    insf $r1 = $r5, 63, 32
+; CV2-NEXT:    insf $r2 = $r6, 63, 32
+; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <8 x i64>, <8 x i64>* %0
@@ -1740,14 +1740,14 @@ define <8 x i16> @narrowwho_s(<8 x i32> %0) {
 ; CV1-NEXT:    slswps $r0 = $r0, 16
 ; CV1-NEXT:    slswps $r1 = $r1, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    slswps $r2 = $r2, 16
-; CV1-NEXT:    slswps $r3 = $r3, 16
+; CV1-NEXT:    slswps $r1 = $r2, 16
+; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400804
-; CV1-NEXT:    sbmm8 $r4 = $r1, 0x80400804
+; CV1-NEXT:    slswps $r2 = $r3, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    sbmm8 $r1 = $r2, 0x80400804
-; CV1-NEXT:    sbmm8 $r2 = $r3, 0x80400804
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x80400804
+; CV1-NEXT:    sbmm8 $r2 = $r2, 0x80400804
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 32
 ; CV1-NEXT:    insf $r1 = $r2, 63, 32

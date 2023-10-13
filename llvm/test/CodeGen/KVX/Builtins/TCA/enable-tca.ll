@@ -7,26 +7,26 @@ target triple = "kvx-kalray-cos"
 define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
-; NORMAL-NEXT:    make $r2 = 0x10000000000000
-; NORMAL-NEXT:    lwz $r3 = 0[$r1]
+; NORMAL-NEXT:    lwz $r2 = 0[$r1]
 ; NORMAL-NEXT:    ;; # (end cycle 0)
 ; NORMAL-NEXT:    xlo.u $a3 = 96[$r0]
 ; NORMAL-NEXT:    ;; # (end cycle 1)
 ; NORMAL-NEXT:    xlo.u $a2 = 64[$r0]
 ; NORMAL-NEXT:    ;; # (end cycle 2)
 ; NORMAL-NEXT:    xlo.u $a1 = 32[$r0]
-; NORMAL-NEXT:    faddw $r3 = $r3, 0x42280000
+; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
 ; NORMAL-NEXT:    ;; # (end cycle 3)
 ; NORMAL-NEXT:    xlo.u $a0 = 0[$r0]
 ; NORMAL-NEXT:    ;; # (end cycle 4)
-; NORMAL-NEXT:    sw 0[$r1] = $r3
-; NORMAL-NEXT:    make $r1 = 0x100000
+; NORMAL-NEXT:    sw 0[$r1] = $r2
+; NORMAL-NEXT:    make $r1 = 0x10000000000000
 ; NORMAL-NEXT:    ;; # (end cycle 6)
 ; NORMAL-NEXT:     # (here cycle 7)
 ; NORMAL-NEXT:    #APP
-; NORMAL-NEXT:    wfxm $pcr, $r2
+; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
+; NORMAL-NEXT:    make $r1 = 0x100000
 ; NORMAL-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
 ; NORMAL-NEXT:    ;; # (end cycle 8)
 ; NORMAL-NEXT:     # (here cycle 9)

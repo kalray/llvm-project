@@ -148,23 +148,23 @@ define <8 x i8> @shuffle_both(<8 x i8> %0, <8 x i8> %1) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srlw $r2 = $r1, 24
 ; CHECK-NEXT:    srld $r3 = $r0, 56
-; CHECK-NEXT:    extfz $r4 = $r1, 15, 8
-; CHECK-NEXT:    srlw $r5 = $r0, 24
+; CHECK-NEXT:    extfz $r4 = $r1, 47, 40
+; CHECK-NEXT:    extfz $r5 = $r1, 15, 8
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    extfz $r0 = $r0, 15, 8
 ; CHECK-NEXT:    zxbd $r1 = $r1
-; CHECK-NEXT:    extfz $r2 = $r1, 47, 40
+; CHECK-NEXT:    srlw $r2 = $r0, 24
 ; CHECK-NEXT:    insf $r3 = $r2, 15, 8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    extfz $r0 = $r0, 15, 8
+; CHECK-NEXT:    insf $r2 = $r5, 15, 8
 ; CHECK-NEXT:    insf $r5 = $r4, 15, 8
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    insf $r0 = $r1, 15, 8
-; CHECK-NEXT:    insf $r4 = $r2, 15, 8
+; CHECK-NEXT:    insf $r5 = $r3, 31, 16
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    insf $r0 = $r5, 31, 16
-; CHECK-NEXT:    insf $r4 = $r3, 31, 16
+; CHECK-NEXT:    insf $r0 = $r2, 31, 16
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    insf $r0 = $r4, 63, 32
+; CHECK-NEXT:    insf $r0 = $r5, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %3 = shufflevector <8 x i8> %0, <8 x i8> %1, <8 x i32> <i32 1, i32 8, i32 3, i32 9, i32 9, i32 13, i32 7, i32 11>

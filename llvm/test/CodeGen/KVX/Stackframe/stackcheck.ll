@@ -119,7 +119,6 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 248[$r12] = $r16
-; CHECK-NEXT:    make $r1 = 0x4d2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 240[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 240
@@ -128,10 +127,11 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 228[$r31] = $r0
-; CHECK-NEXT:    addd $r0 = $r31, 228
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sw 128[$r31] = $r1
+; CHECK-NEXT:    make $r0 = 0x4d2
 ; CHECK-NEXT:    addd $r1 = $r31, 128
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    sw 128[$r31] = $r0
+; CHECK-NEXT:    addd $r0 = $r31, 228
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    addd $r12 = $r14, -240

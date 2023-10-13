@@ -1318,29 +1318,29 @@ define <4 x i64> @fshr_ri(<4 x i64> %a, <4 x i64> %b, i64 %c) {
 define <4 x i64> @fshr_vec(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) {
 ; CHECK-LABEL: fshr_vec:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    slld $r0 = $r0, 1
 ; CHECK-NEXT:    slld $r1 = $r1, 1
 ; CHECK-NEXT:    andnw $r9 = $r9, 63
 ; CHECK-NEXT:    andw $r15 = $r9, 63
-; CHECK-NEXT:    andw $r16 = $r8, 63
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r0 = $r0, 1
 ; CHECK-NEXT:    slld $r1 = $r1, $r9
+; CHECK-NEXT:    slld $r2 = $r2, 1
 ; CHECK-NEXT:    andnw $r8 = $r8, 63
-; CHECK-NEXT:    andw $r9 = $r10, 63
+; CHECK-NEXT:    andw $r9 = $r8, 63
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    slld $r0 = $r0, $r8
-; CHECK-NEXT:    slld $r2 = $r2, 1
-; CHECK-NEXT:    andnw $r8 = $r10, 63
-; CHECK-NEXT:    andw $r10 = $r11, 63
+; CHECK-NEXT:    srld $r4 = $r4, $r9
+; CHECK-NEXT:    andw $r8 = $r10, 63
+; CHECK-NEXT:    andnw $r9 = $r10, 63
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    slld $r3 = $r3, 1
-; CHECK-NEXT:    srld $r4 = $r4, $r16
 ; CHECK-NEXT:    srld $r5 = $r5, $r15
+; CHECK-NEXT:    andw $r10 = $r11, 63
 ; CHECK-NEXT:    andnw $r11 = $r11, 63
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    slld $r2 = $r2, $r8
+; CHECK-NEXT:    slld $r2 = $r2, $r9
 ; CHECK-NEXT:    slld $r3 = $r3, $r11
-; CHECK-NEXT:    srld $r6 = $r6, $r9
+; CHECK-NEXT:    srld $r6 = $r6, $r8
 ; CHECK-NEXT:    srld $r7 = $r7, $r10
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ord $r0 = $r0, $r4

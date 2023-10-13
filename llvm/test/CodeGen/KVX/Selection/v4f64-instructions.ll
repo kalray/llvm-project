@@ -419,38 +419,38 @@ define <4 x double> @test_select(<4 x double> %a, <4 x double> %b, i1 zeroext %c
 define <4 x double> @test_select_cc(<4 x double> %a, <4 x double> %b, <4 x double> %c, <4 x double> %d) #0 {
 ; CV1-LABEL: test_select_cc:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    ld $r15 = 8[$r12]
-; CV1-NEXT:    make $r16 = -1
-; CV1-NEXT:    make $r17 = -1
-; CV1-NEXT:    make $r32 = -1
+; CV1-NEXT:    ld $r15 = 16[$r12]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ld $r33 = 0[$r12]
-; CV1-NEXT:    make $r34 = -1
+; CV1-NEXT:    ld $r16 = 24[$r12]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ld $r35 = 16[$r12]
+; CV1-NEXT:    ld $r17 = 8[$r12]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.une $r9 = $r9, $r15
-; CV1-NEXT:    ld $r36 = 24[$r12]
+; CV1-NEXT:    fcompd.une $r10 = $r10, $r15
+; CV1-NEXT:    make $r15 = -1
+; CV1-NEXT:    ld $r32 = 0[$r12]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.une $r8 = $r8, $r33
-; CV1-NEXT:    cmoved.even $r9 ? $r16 = 0
+; CV1-NEXT:    make $r10 = -1
+; CV1-NEXT:    fcompd.une $r11 = $r11, $r16
+; CV1-NEXT:    cmoved.even $r10 ? $r15 = 0
+; CV1-NEXT:    make $r16 = -1
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    fcompd.une $r10 = $r10, $r35
-; CV1-NEXT:    cmoved.even $r8 ? $r34 = 0
+; CV1-NEXT:    fcompd.une $r9 = $r9, $r17
+; CV1-NEXT:    make $r11 = -1
+; CV1-NEXT:    cmoved.even $r11 ? $r16 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    fcompd.une $r11 = $r11, $r36
-; CV1-NEXT:    cmoved.even $r10 ? $r32 = 0
+; CV1-NEXT:    fcompd.une $r8 = $r8, $r32
+; CV1-NEXT:    cmoved.even $r9 ? $r10 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmoved.dnez $r16 ? $r5 = $r1
-; CV1-NEXT:    cmoved.even $r11 ? $r17 = 0
+; CV1-NEXT:    cmoved.dnez $r10 ? $r5 = $r1
+; CV1-NEXT:    cmoved.even $r8 ? $r11 = 0
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    cmoved.dnez $r34 ? $r4 = $r0
-; CV1-NEXT:    cmoved.dnez $r32 ? $r6 = $r2
+; CV1-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
+; CV1-NEXT:    cmoved.dnez $r15 ? $r6 = $r2
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    copyd $r2 = $r6
-; CV1-NEXT:    cmoved.dnez $r17 ? $r7 = $r3
+; CV1-NEXT:    cmoved.dnez $r16 ? $r7 = $r3
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
@@ -493,26 +493,26 @@ define <4 x float> @test_select_cc_f32_f32(<4 x float> %a, <4 x float> %b, <4 x 
 ; CV1-LABEL: test_select_cc_f32_f32:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.une $r5 = $r5, $r9
-; CV1-NEXT:    fcompd.une $r6 = $r6, $r10
+; CV1-NEXT:    fcompd.une $r7 = $r7, $r11
 ; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    make $r35 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r5 = $r7, $r11
+; CV1-NEXT:    fcompd.une $r5 = $r6, $r10
+; CV1-NEXT:    make $r6 = -1
 ; CV1-NEXT:    cmoved.even $r5 ? $r9 = 0
-; CV1-NEXT:    make $r10 = -1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    make $r4 = -1
+; CV1-NEXT:    cmoved.even $r5 ? $r6 = 0
 ; CV1-NEXT:    fcompd.une $r8 = $r4, $r8
-; CV1-NEXT:    cmoved.even $r6 ? $r10 = 0
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.even $r8 ? $r4 = 0
-; CV1-NEXT:    cmoved.even $r5 ? $r35 = 0
+; CV1-NEXT:    cmoved.even $r7 ? $r35 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r4 = $r9, 63, 32
-; CV1-NEXT:    insf $r10 = $r35, 63, 32
+; CV1-NEXT:    insf $r6 = $r35, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cmovewp.even $r4 ? $r0 = $r2
-; CV1-NEXT:    copyd $r5 = $r10
+; CV1-NEXT:    copyd $r5 = $r6
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; CV1-NEXT:    ret
@@ -543,27 +543,27 @@ define <4 x i1> @test_fcmp_une(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_une:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.une $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -588,27 +588,27 @@ define <4 x i1> @test_fcmp_ueq(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ueq:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.ueq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ueq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ueq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ueq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -633,27 +633,27 @@ define <4 x i1> @test_fcmp_ugt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ugt:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.ult $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ult $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ult $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ult $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -678,27 +678,27 @@ define <4 x i1> @test_fcmp_uge(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_uge:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.uge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -723,27 +723,27 @@ define <4 x i1> @test_fcmp_ult(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ult:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.ult $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ult $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ult $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ult $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -768,27 +768,27 @@ define <4 x i1> @test_fcmp_ule(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ule:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.uge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.uge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -812,74 +812,77 @@ define <4 x i1> @test_fcmp_ule(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x i1> @test_fcmp_uno(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_uno:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    andw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.ult $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV1-NEXT:    andw $r2 = $r2, $r8
+; CV1-NEXT:    andw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    andw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.uge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    andw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.ult $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    andw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: test_fcmp_uno:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.uge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CV2-NEXT:    andw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.ult $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    andw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    andw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    andw $r1 = $r1, $r6
-; CV2-NEXT:    andw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    andw $r0 = $r0, $r5
+; CV2-NEXT:    andw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
   %r = fcmp uno <4 x double> %a, %b
   ret <4 x i1> %r
 }
@@ -888,27 +891,27 @@ define <4 x i1> @test_fcmp_one(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_one:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.one $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.one $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.one $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.one $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -933,27 +936,27 @@ define <4 x i1> @test_fcmp_oeq(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_oeq:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oeq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -978,27 +981,27 @@ define <4 x i1> @test_fcmp_ogt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ogt:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1023,27 +1026,27 @@ define <4 x i1> @test_fcmp_oge(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_oge:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1068,27 +1071,27 @@ define <4 x i1> @test_fcmp_olt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_olt:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1113,27 +1116,27 @@ define <4 x i1> @test_fcmp_ole(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ole:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1157,74 +1160,77 @@ define <4 x i1> @test_fcmp_ole(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x i1> @test_fcmp_ord(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_fcmp_ord:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    orw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.olt $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV1-NEXT:    orw $r2 = $r2, $r8
+; CV1-NEXT:    orw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    orw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    orw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.oge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    orw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.olt $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    orw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: test_fcmp_ord:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.oge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CV2-NEXT:    orw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.olt $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    orw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    orw $r1 = $r1, $r6
-; CV2-NEXT:    orw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    orw $r0 = $r0, $r5
+; CV2-NEXT:    orw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
   %r = fcmp ord <4 x double> %a, %b
   ret <4 x i1> %r
 }
@@ -1490,13 +1496,13 @@ define <4 x double> @test_uitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    zxwd $r2 = $r0
-; CHECK-NEXT:    zxwd $r3 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    zxwd $r2 = $r1
 ; CHECK-NEXT:    floatud.rn $r8 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    floatud.rn $r2 = $r3, 0
+; CHECK-NEXT:    floatud.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    floatud.rn $r3 = $r1, 0
 ; CHECK-NEXT:    ;; # (end cycle 4)
@@ -1521,13 +1527,13 @@ define <4 x double> @test_sitofp_2xi32_fadd(<4 x i32> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    copyd $r7 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r0, 32
-; CHECK-NEXT:    srad $r1 = $r1, 32
 ; CHECK-NEXT:    sxwd $r2 = $r0
-; CHECK-NEXT:    sxwd $r3 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    srad $r1 = $r1, 32
+; CHECK-NEXT:    sxwd $r2 = $r1
 ; CHECK-NEXT:    floatd.rn $r8 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    floatd.rn $r2 = $r3, 0
+; CHECK-NEXT:    floatd.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    floatd.rn $r3 = $r1, 0
 ; CHECK-NEXT:    ;; # (end cycle 4)
@@ -2208,28 +2214,28 @@ define <4 x double> @test_fabs(<4 x double> %a) #0 {
 define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_minnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fcompd.olt $r8 = $r5, $r1
-; CV1-NEXT:    slld $r9 = $r1, 1
-; CV1-NEXT:    fcompd.olt $r10 = $r4, $r0
-; CV1-NEXT:    slld $r11 = $r0, 1
+; CV1-NEXT:    slld $r8 = $r1, 1
+; CV1-NEXT:    slld $r9 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r10 = $r5, $r1
+; CV1-NEXT:    fcompd.olt $r11 = $r4, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    compd.gtu $r8 = $r8, 0xffe0000000000000
 ; CV1-NEXT:    compd.gtu $r9 = $r9, 0xffe0000000000000
-; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
-; CV1-NEXT:    slld $r15 = $r2, 1
-; CV1-NEXT:    slld $r16 = $r3, 1
+; CV1-NEXT:    fcompd.olt $r15 = $r6, $r2
+; CV1-NEXT:    fcompd.olt $r16 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r8 = $r8, $r9
-; CV1-NEXT:    ord $r9 = $r10, $r11
-; CV1-NEXT:    fcompd.olt $r10 = $r6, $r2
-; CV1-NEXT:    compd.gtu $r11 = $r15, 0xffe0000000000000
+; CV1-NEXT:    ord $r8 = $r10, $r8
+; CV1-NEXT:    ord $r9 = $r11, $r9
+; CV1-NEXT:    slld $r10 = $r2, 1
+; CV1-NEXT:    slld $r11 = $r3, 1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
-; CV1-NEXT:    fcompd.olt $r15 = $r7, $r3
-; CV1-NEXT:    compd.gtu $r16 = $r16, 0xffe0000000000000
-; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.odd $r9 ? $r0 = $r4
-; CV1-NEXT:    ord $r4 = $r10, $r11
-; CV1-NEXT:    ord $r5 = $r15, $r16
+; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
+; CV1-NEXT:    compd.gtu $r10 = $r10, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ord $r4 = $r15, $r10
+; CV1-NEXT:    ord $r5 = $r16, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cmoved.odd $r4 ? $r2 = $r6
 ; CV1-NEXT:    cmoved.odd $r5 ? $r3 = $r7
@@ -2295,28 +2301,28 @@ define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_maxnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV1-NEXT:    slld $r9 = $r1, 1
-; CV1-NEXT:    fcompd.olt $r10 = $r0, $r4
-; CV1-NEXT:    slld $r11 = $r0, 1
+; CV1-NEXT:    slld $r8 = $r1, 1
+; CV1-NEXT:    slld $r9 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r10 = $r1, $r5
+; CV1-NEXT:    fcompd.olt $r11 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    compd.gtu $r8 = $r8, 0xffe0000000000000
 ; CV1-NEXT:    compd.gtu $r9 = $r9, 0xffe0000000000000
-; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
-; CV1-NEXT:    slld $r15 = $r2, 1
-; CV1-NEXT:    slld $r16 = $r3, 1
+; CV1-NEXT:    fcompd.olt $r15 = $r2, $r6
+; CV1-NEXT:    fcompd.olt $r16 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r8 = $r8, $r9
-; CV1-NEXT:    ord $r9 = $r10, $r11
-; CV1-NEXT:    fcompd.olt $r10 = $r2, $r6
-; CV1-NEXT:    compd.gtu $r11 = $r15, 0xffe0000000000000
+; CV1-NEXT:    ord $r8 = $r10, $r8
+; CV1-NEXT:    ord $r9 = $r11, $r9
+; CV1-NEXT:    slld $r10 = $r2, 1
+; CV1-NEXT:    slld $r11 = $r3, 1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
-; CV1-NEXT:    fcompd.olt $r15 = $r3, $r7
-; CV1-NEXT:    compd.gtu $r16 = $r16, 0xffe0000000000000
-; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.odd $r9 ? $r0 = $r4
-; CV1-NEXT:    ord $r4 = $r10, $r11
-; CV1-NEXT:    ord $r5 = $r15, $r16
+; CV1-NEXT:    cmoved.odd $r8 ? $r1 = $r5
+; CV1-NEXT:    compd.gtu $r10 = $r10, 0xffe0000000000000
+; CV1-NEXT:    compd.gtu $r11 = $r11, 0xffe0000000000000
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ord $r4 = $r15, $r10
+; CV1-NEXT:    ord $r5 = $r16, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cmoved.odd $r4 ? $r2 = $r6
 ; CV1-NEXT:    cmoved.odd $r5 ? $r3 = $r7
@@ -2384,14 +2390,14 @@ define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srad $r4 = $r4, 63
 ; CV1-NEXT:    srad $r5 = $r5, 63
-; CV1-NEXT:    srad $r6 = $r6, 63
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 63
 ; CV1-NEXT:    insf $r1 = $r5, 63, 63
-; CV1-NEXT:    srad $r4 = $r7, 63
+; CV1-NEXT:    srad $r4 = $r6, 63
+; CV1-NEXT:    srad $r5 = $r7, 63
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r2 = $r6, 63, 63
-; CV1-NEXT:    insf $r3 = $r4, 63, 63
+; CV1-NEXT:    insf $r2 = $r4, 63, 63
+; CV1-NEXT:    insf $r3 = $r5, 63, 63
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -2418,19 +2424,19 @@ define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
 ; CV1-NEXT:    fwidenlhwp $r4 = $r4
 ; CV1-NEXT:    fwidenmhwp $r5 = $r4
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenlwd $r6 = $r5
 ; CV1-NEXT:    fwidenmwd $r7 = $r5
+; CV1-NEXT:    fwidenmwd $r9 = $r4
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fwidenlwd $r4 = $r4
-; CV1-NEXT:    fwidenmwd $r5 = $r4
-; CV1-NEXT:    srad $r6 = $r6, 63
+; CV1-NEXT:    srad $r5 = $r9, 63
+; CV1-NEXT:    fwidenlwd $r6 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r2 = $r6, 63, 63
+; CV1-NEXT:    insf $r1 = $r5, 63, 63
 ; CV1-NEXT:    srad $r4 = $r4, 63
-; CV1-NEXT:    srad $r5 = $r5, 63
+; CV1-NEXT:    srad $r6 = $r6, 63
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 63
-; CV1-NEXT:    insf $r1 = $r5, 63, 63
+; CV1-NEXT:    insf $r2 = $r6, 63, 63
 ; CV1-NEXT:    srad $r4 = $r7, 63
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    insf $r3 = $r4, 63, 63
@@ -2467,22 +2473,22 @@ define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
 define <4 x double> @test_copysign_v4f32(<4 x double> %a, <4 x float> %b) #0 {
 ; CV1-LABEL: test_copysign_v4f32:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fwidenlwd $r6 = $r5
 ; CV1-NEXT:    fwidenmwd $r7 = $r5
+; CV1-NEXT:    fwidenmwd $r9 = $r4
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlwd $r4 = $r4
-; CV1-NEXT:    fwidenmwd $r5 = $r4
+; CV1-NEXT:    srad $r5 = $r9, 63
+; CV1-NEXT:    fwidenlwd $r6 = $r5
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    insf $r1 = $r5, 63, 63
 ; CV1-NEXT:    srad $r4 = $r4, 63
-; CV1-NEXT:    srad $r5 = $r5, 63
+; CV1-NEXT:    srad $r5 = $r7, 63
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 63
-; CV1-NEXT:    insf $r1 = $r5, 63, 63
+; CV1-NEXT:    insf $r3 = $r5, 63, 63
 ; CV1-NEXT:    srad $r4 = $r6, 63
-; CV1-NEXT:    srad $r5 = $r7, 63
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    insf $r2 = $r4, 63, 63
-; CV1-NEXT:    insf $r3 = $r5, 63, 63
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -2958,27 +2964,27 @@ define <4 x i1> @fcmp_setoeq(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setoeq:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oeq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3004,27 +3010,27 @@ define <4 x i1> @fcmp_setoeq_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setoeq_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oeq $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3062,27 +3068,27 @@ define <4 x i1> @fcmp_setogt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setogt:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3119,27 +3125,27 @@ define <4 x i1> @fcmp_setoge(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setoge:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3165,27 +3171,27 @@ define <4 x i1> @fcmp_setoge_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setoge_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oeq $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3223,27 +3229,27 @@ define <4 x i1> @fcmp_setolt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setolt:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3280,27 +3286,27 @@ define <4 x i1> @fcmp_setole(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setole:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3326,27 +3332,27 @@ define <4 x i1> @fcmp_setole_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setole_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oeq $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3384,27 +3390,27 @@ define <4 x i1> @fcmp_setone(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setone:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.one $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.one $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.one $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.one $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3440,74 +3446,77 @@ entry:
 define <4 x i1> @fcmp_setord(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setord:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    orw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.olt $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV1-NEXT:    orw $r2 = $r2, $r8
+; CV1-NEXT:    orw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    orw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    orw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.oge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    orw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.olt $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    orw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: fcmp_setord:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.oge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CV2-NEXT:    orw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.olt $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    orw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    orw $r1 = $r1, $r6
-; CV2-NEXT:    orw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    orw $r0 = $r0, $r5
+; CV2-NEXT:    orw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = fcmp ord <4 x double> %a, %b
   ret <4 x i1> %0
@@ -3517,27 +3526,27 @@ define <4 x i1> @fcmp_setord_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setord_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oeq $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3574,74 +3583,77 @@ entry:
 define <4 x i1> @fcmp_setuno(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setuno:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    andw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.ult $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV1-NEXT:    andw $r2 = $r2, $r8
+; CV1-NEXT:    andw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    andw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.uge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    andw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.ult $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    andw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: fcmp_setuno:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.uge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CV2-NEXT:    andw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.ult $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    andw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    andw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    andw $r1 = $r1, $r6
-; CV2-NEXT:    andw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    andw $r0 = $r0, $r5
+; CV2-NEXT:    andw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = fcmp uno <4 x double> %a, %b
   ret <4 x i1> %0
@@ -3651,27 +3663,27 @@ define <4 x i1> @fcmp_setuno_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setuno_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.une $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3709,27 +3721,27 @@ define <4 x i1> @fcmp_setueq(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setueq:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.ueq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ueq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ueq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ueq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ueq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3766,27 +3778,27 @@ define <4 x i1> @fcmp_setugt(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setugt:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.ult $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ult $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ult $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ult $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ult $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3812,27 +3824,27 @@ define <4 x i1> @fcmp_setugt_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setugt_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.une $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3870,27 +3882,27 @@ define <4 x i1> @fcmp_setuge(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setuge:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.uge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3927,27 +3939,27 @@ define <4 x i1> @fcmp_setult(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setult:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.ult $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.ult $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.ult $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.ult $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.ult $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3973,27 +3985,27 @@ define <4 x i1> @fcmp_setult_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setult_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.une $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4031,27 +4043,27 @@ define <4 x i1> @fcmp_setule(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setule:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.uge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.uge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.uge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4088,27 +4100,27 @@ define <4 x i1> @fcmp_setune(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setune:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.une $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4134,27 +4146,27 @@ define <4 x i1> @fcmp_setune_single(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setune_single:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.une $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4192,27 +4204,27 @@ define <4 x i1> @fcmp_setoeq_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setoeq_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oeq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4249,27 +4261,27 @@ define <4 x i1> @fcmp_setogt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setogt_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4306,27 +4318,27 @@ define <4 x i1> @fcmp_setoge_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setoge_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4363,27 +4375,27 @@ define <4 x i1> @fcmp_setolt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setolt_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4420,27 +4432,27 @@ define <4 x i1> @fcmp_setole_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setole_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4477,27 +4489,27 @@ define <4 x i1> @fcmp_setone_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setone_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.one $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.one $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.one $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.one $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4533,74 +4545,77 @@ entry:
 define <4 x i1> @fcmp_setord_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setord_fast:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    orw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.olt $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV1-NEXT:    orw $r2 = $r2, $r8
+; CV1-NEXT:    orw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    orw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    orw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.olt $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.oge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV1-NEXT:    orw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.olt $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    orw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: fcmp_setord_fast:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    fcompd.oge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.oge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.oge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.olt $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.oge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.oge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.olt $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.olt $r6 = $r1, $r5
+; CV2-NEXT:    orw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.olt $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.oge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    orw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    orw $r1 = $r1, $r6
-; CV2-NEXT:    orw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    orw $r0 = $r0, $r5
+; CV2-NEXT:    orw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = fcmp fast ord <4 x double> %a, %b
   ret <4 x i1> %0
@@ -4610,27 +4625,27 @@ define <4 x i1> @fcmp_setord_single_fast(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setord_single_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.oeq $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4667,74 +4682,77 @@ entry:
 define <4 x i1> @fcmp_setuno_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setuno_fast:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.uge $r7 = $r3, $r7
+; CV1-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r3, $r7
-; CV1-NEXT:    make $r9 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.uge $r2 = $r2, $r6
-; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    andw $r7 = $r7, $r8
-; CV1-NEXT:    fcompd.ult $r8 = $r2, $r6
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV1-NEXT:    andw $r2 = $r2, $r8
+; CV1-NEXT:    andw $r3 = $r3, $r8
+; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    fcompd.ult $r8 = $r1, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andw $r1 = $r1, $r8
-; CV1-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    andw $r0 = $r0, $r5
+; CV1-NEXT:    fcompd.ult $r3 = $r2, $r6
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    cmoved.even $r7 ? $r9 = 0
+; CV1-NEXT:    fcompd.uge $r6 = $r2, $r6
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV1-NEXT:    andw $r3 = $r6, $r3
+; CV1-NEXT:    fcompd.ult $r6 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    andw $r0 = $r0, $r6
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r9, 15, 8
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    copyd $r0 = $r3
-; CV1-NEXT:    ret
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    copyd $r0 = $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
 ;
 ; CV2-LABEL: fcmp_setuno_fast:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    fcompd.uge $r2 = $r2, $r6
 ; CV2-NEXT:    fcompd.uge $r3 = $r3, $r7
+; CV2-NEXT:    fcompd.uge $r6 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r7 = $r2, $r6
 ; CV2-NEXT:    fcompd.ult $r8 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fcompd.uge $r1 = $r1, $r5
-; CV2-NEXT:    fcompd.uge $r4 = $r0, $r4
 ; CV2-NEXT:    fcompd.ult $r5 = $r0, $r4
-; CV2-NEXT:    fcompd.ult $r6 = $r1, $r5
+; CV2-NEXT:    andw $r6 = $r6, $r7
+; CV2-NEXT:    fcompd.ult $r7 = $r1, $r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    andw $r2 = $r2, $r7
+; CV2-NEXT:    fcompd.uge $r0 = $r0, $r4
+; CV2-NEXT:    make $r2 = -1
 ; CV2-NEXT:    andw $r3 = $r3, $r8
 ; CV2-NEXT:    make $r8 = -1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    andw $r1 = $r1, $r6
-; CV2-NEXT:    andw $r4 = $r4, $r5
-; CV2-NEXT:    make $r6 = -1
+; CV2-NEXT:    andw $r0 = $r0, $r5
+; CV2-NEXT:    andw $r1 = $r1, $r7
+; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    make $r7 = -1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cmoved.even $r4 ? $r0 = 0
-; CV2-NEXT:    cmoved.even $r1 ? $r6 = 0
-; CV2-NEXT:    cmoved.even $r2 ? $r7 = 0
+; CV2-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV2-NEXT:    cmoved.even $r6 ? $r4 = 0
+; CV2-NEXT:    cmoved.even $r1 ? $r7 = 0
 ; CV2-NEXT:    cmoved.even $r3 ? $r8 = 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    insf $r0 = $r6, 15, 8
-; CV2-NEXT:    insf $r7 = $r8, 15, 8
+; CV2-NEXT:    insf $r2 = $r7, 15, 8
+; CV2-NEXT:    insf $r4 = $r8, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r0 = $r7, 31, 16
-; CV2-NEXT:    ret
+; CV2-NEXT:    insf $r2 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    copyd $r0 = $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 7)
 entry:
   %0 = fcmp fast uno <4 x double> %a, %b
   ret <4 x i1> %0
@@ -4744,27 +4762,27 @@ define <4 x i1> @fcmp_setuno_single_fast(<4 x double> %a) #0 {
 ; CV1-LABEL: fcmp_setuno_single_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.une $r2 = $r2, $r2
-; CV1-NEXT:    make $r3 = -1
-; CV1-NEXT:    fcompd.une $r4 = $r3, $r3
+; CV1-NEXT:    fcompd.une $r3 = $r3, $r3
+; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    make $r5 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
-; CV1-NEXT:    make $r4 = -1
-; CV1-NEXT:    cmoved.even $r4 ? $r5 = 0
+; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r4 = 0
+; CV1-NEXT:    cmoved.even $r2 ? $r5 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.une $r0 = $r0, $r0
-; CV1-NEXT:    make $r2 = -1
-; CV1-NEXT:    cmoved.even $r2 ? $r4 = 0
+; CV1-NEXT:    fcompd.une $r1 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r4 = $r5, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r4, 31, 16
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4802,27 +4820,27 @@ define <4 x i1> @fcmp_setueq_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setueq_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oeq $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oeq $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oeq $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oeq $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oeq $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4859,27 +4877,27 @@ define <4 x i1> @fcmp_setugt_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setugt_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4916,27 +4934,27 @@ define <4 x i1> @fcmp_setuge_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setuge_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -4973,27 +4991,27 @@ define <4 x i1> @fcmp_setult_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setult_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.olt $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.olt $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.olt $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.olt $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.olt $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -5030,27 +5048,27 @@ define <4 x i1> @fcmp_setule_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setule_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.oge $r2 = $r6, $r2
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.oge $r3 = $r7, $r3
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.oge $r7 = $r7, $r3
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.oge $r0 = $r4, $r0
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.oge $r1 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -5087,27 +5105,27 @@ define <4 x i1> @fcmp_setune_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: fcmp_setune_fast:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    fcompd.one $r2 = $r2, $r6
-; CV1-NEXT:    make $r3 = -1
+; CV1-NEXT:    fcompd.one $r3 = $r3, $r7
 ; CV1-NEXT:    make $r6 = -1
-; CV1-NEXT:    fcompd.one $r7 = $r3, $r7
+; CV1-NEXT:    make $r7 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    make $r2 = -1
+; CV1-NEXT:    make $r3 = -1
 ; CV1-NEXT:    cmoved.even $r2 ? $r6 = 0
-; CV1-NEXT:    make $r8 = -1
+; CV1-NEXT:    cmoved.even $r3 ? $r7 = 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fcompd.one $r0 = $r0, $r4
-; CV1-NEXT:    cmoved.even $r7 ? $r8 = 0
+; CV1-NEXT:    fcompd.one $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmoved.even $r1 ? $r2 = 0
-; CV1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; CV1-NEXT:    cmoved.even $r0 ? $r2 = 0
+; CV1-NEXT:    cmoved.even $r1 ? $r3 = 0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r3 = $r2, 15, 8
-; CV1-NEXT:    insf $r6 = $r8, 15, 8
+; CV1-NEXT:    insf $r2 = $r3, 15, 8
+; CV1-NEXT:    insf $r6 = $r7, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    insf $r3 = $r6, 31, 16
+; CV1-NEXT:    insf $r2 = $r6, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    copyd $r0 = $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -5196,27 +5214,27 @@ define <4 x double> @test_select_cmp(<4 x double> %a, <4 x double> %b, <4 x doub
 ; CV1-LABEL: test_select_cmp:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ld $r15 = 8[$r12]
-; CV1-NEXT:    make $r16 = -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ld $r17 = 0[$r12]
+; CV1-NEXT:    ld $r16 = 0[$r12]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ld $r32 = 16[$r12]
+; CV1-NEXT:    ld $r17 = 16[$r12]
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    fcompd.une $r9 = $r9, $r15
-; CV1-NEXT:    ld $r15 = 24[$r12]
+; CV1-NEXT:    make $r15 = -1
+; CV1-NEXT:    ld $r32 = 24[$r12]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.une $r8 = $r8, $r17
-; CV1-NEXT:    cmoved.even $r9 ? $r16 = 0
+; CV1-NEXT:    fcompd.une $r8 = $r8, $r16
+; CV1-NEXT:    cmoved.even $r9 ? $r15 = 0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    fcompd.une $r9 = $r10, $r32
-; CV1-NEXT:    cmoved.even $r8 ? $r16 = 0
+; CV1-NEXT:    fcompd.une $r9 = $r10, $r17
+; CV1-NEXT:    cmoved.even $r8 ? $r15 = 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    fcompd.une $r8 = $r11, $r15
-; CV1-NEXT:    cmoved.even $r9 ? $r16 = 0
+; CV1-NEXT:    fcompd.une $r8 = $r11, $r32
+; CV1-NEXT:    cmoved.even $r9 ? $r15 = 0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmoved.even $r8 ? $r16 = 0
+; CV1-NEXT:    cmoved.even $r8 ? $r15 = 0
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    compd.eq $r8 = $r16, -1
+; CV1-NEXT:    compd.eq $r8 = $r15, -1
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    cmoved.even $r8 ? $r2 = $r6
 ; CV1-NEXT:    cmoved.even $r8 ? $r3 = $r7

@@ -29,14 +29,14 @@ define void @f(i64* %v) #0 {
 ; CHECK-NEXT:    call g
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    make $r0 = x
-; CHECK-NEXT:    copyd $r2 = $r25
-; CHECK-NEXT:    copyd $r4 = $r21
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
+; CHECK-NEXT:    copyd $r4 = $r21
 ; CHECK-NEXT:    copyd $r5 = $r22
 ; CHECK-NEXT:    copyd $r6 = $r23
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 0[$r0] = $r20
+; CHECK-NEXT:    copyd $r2 = $r25
 ; CHECK-NEXT:    copyd $r7 = $r24
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    so 8[$r0] = $r4r5r6r7

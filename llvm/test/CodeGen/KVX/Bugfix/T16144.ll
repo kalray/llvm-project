@@ -55,15 +55,15 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-LABEL: atomic_flag_test_and_set_explicit:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r2 = 1
-; CV1-NEXT:    compw.gt $r3 = $r1, 3
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 24[$r12] = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sb 19[$r12] = $r2
+; CV1-NEXT:    compw.gt $r2 = $r1, 3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    sd 24[$r12] = $r0
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sw 20[$r12] = $r1
-; CV1-NEXT:    cb.odd $r3 ? .LBB2_5
+; CV1-NEXT:    cb.odd $r2 ? .LBB2_5
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:  # %bb.1:
 ; CV1-NEXT:    addw $r2 = $r1, -1
@@ -183,15 +183,15 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-LABEL: atomic_flag_test_and_set_explicit:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r2 = 1
-; CV2-NEXT:    compw.gt $r3 = $r1, 3
 ; CV2-NEXT:    addd $r12 = $r12, -32
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sd 24[$r12] = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sb 19[$r12] = $r2
+; CV2-NEXT:    compw.gt $r2 = $r1, 3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    sd 24[$r12] = $r0
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    sw 20[$r12] = $r1
-; CV2-NEXT:    cb.odd $r3 ? .LBB2_5
+; CV2-NEXT:    cb.odd $r2 ? .LBB2_5
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  # %bb.1:
 ; CV2-NEXT:    addw $r2 = $r1, -1

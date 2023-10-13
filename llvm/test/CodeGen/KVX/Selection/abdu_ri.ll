@@ -205,30 +205,30 @@ declare i32 @llvm.umin.i32(i32, i32)
 define <8 x i8> @abdubo_(<8 x i8> %0) {
 ; V1-LABEL: abdubo_:
 ; V1:       # %bb.0:
-; V1-NEXT:    sllhqs $r0 = $r0, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    make $r1 = 0x212b0d0c
-; V1-NEXT:    andd $r2 = $r0, 0xff00ff00.@
+; V1-NEXT:    sllhqs $r3 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllhqs $r1 = $r1, 8
-; V1-NEXT:    andd $r3 = $r1, 0xff00ff00.@
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; V1-NEXT:    sllhqs $r2 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
-; V1-NEXT:    minuhq $r2 = $r2, $r3
-; V1-NEXT:    maxuhq $r4 = $r2, $r3
-; V1-NEXT:    maxuhq $r5 = $r0, $r1
+; V1-NEXT:    minuhq $r2 = $r3, $r2
+; V1-NEXT:    maxuhq $r3 = $r0, $r1
+; V1-NEXT:    maxuhq $r4 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    srlhqs $r0 = $r0, 8
-; V1-NEXT:    srlhqs $r1 = $r5, 8
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    srlhqs $r4 = $r4, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r2, $r0
-; V1-NEXT:    ord $r1 = $r4, $r1
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    nxord $r0 = $r1, $r0
-; V1-NEXT:    ord $r2 = $r1, 0x80808080.@
+; V1-NEXT:    nxord $r0 = $r2, $r0
+; V1-NEXT:    ord $r1 = $r2, 0x80808080.@
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
-; V1-NEXT:    sbfd $r1 = $r3, $r2
+; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    xord $r0 = $r0, $r1
 ; V1-NEXT:    ret
@@ -252,30 +252,30 @@ declare <8 x i8> @llvm.umin.v8i8(<8 x i8>, <8 x i8>)
 define <8 x i8> @abdubo_at(<8 x i8> %0) {
 ; V1-LABEL: abdubo_at:
 ; V1:       # %bb.0:
-; V1-NEXT:    sllhqs $r0 = $r0, 8
+; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    make $r1 = 0x212b0d0c212b0d0c
-; V1-NEXT:    andd $r2 = $r0, 0xff00ff00.@
+; V1-NEXT:    sllhqs $r3 = $r0, 8
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sllhqs $r1 = $r1, 8
-; V1-NEXT:    andd $r3 = $r1, 0xff00ff00.@
+; V1-NEXT:    andd $r1 = $r1, 0xff00ff00.@
+; V1-NEXT:    sllhqs $r2 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    minuhq $r0 = $r0, $r1
-; V1-NEXT:    minuhq $r2 = $r2, $r3
-; V1-NEXT:    maxuhq $r4 = $r2, $r3
-; V1-NEXT:    maxuhq $r5 = $r0, $r1
+; V1-NEXT:    minuhq $r2 = $r3, $r2
+; V1-NEXT:    maxuhq $r3 = $r0, $r1
+; V1-NEXT:    maxuhq $r4 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    srlhqs $r0 = $r0, 8
-; V1-NEXT:    srlhqs $r1 = $r5, 8
+; V1-NEXT:    srlhqs $r1 = $r2, 8
+; V1-NEXT:    srlhqs $r4 = $r4, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r2, $r0
-; V1-NEXT:    ord $r1 = $r4, $r1
+; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    ord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    nxord $r0 = $r1, $r0
-; V1-NEXT:    ord $r2 = $r1, 0x80808080.@
+; V1-NEXT:    nxord $r0 = $r2, $r0
+; V1-NEXT:    ord $r1 = $r2, 0x80808080.@
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 5)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
-; V1-NEXT:    sbfd $r1 = $r3, $r2
+; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 6)
 ; V1-NEXT:    xord $r0 = $r0, $r1
 ; V1-NEXT:    ret
@@ -382,20 +382,20 @@ define <8 x i8> @abdubo2_at(<8 x i8> %0) {
 define <8 x i8> @abdubo3_(<8 x i8> %0) {
 ; V1-LABEL: abdubo3_:
 ; V1:       # %bb.0:
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; V1-NEXT:    sbmm8 $r1 = $r0, 0x80004000200010
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    abshq $r1 = $r1
+; V1-NEXT:    sbmm8 $r1 = $r0, 0x8000400020001
 ; V1-NEXT:    make $r2 = 0xffdfffd5fff3fff4
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x80004000200010
+; V1-NEXT:    addhq $r2 = $r1, $r2
 ; V1-NEXT:    make $r3 = 0x21002b000d000c
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbfhq $r0 = $r0, $r3
-; V1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
-; V1-NEXT:    addhq $r2 = $r0, $r2
+; V1-NEXT:    sbfhq $r1 = $r1, $r3
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    maxhq $r0 = $r2, $r0
+; V1-NEXT:    maxhq $r1 = $r2, $r1
+; V1-NEXT:    abshq $r2 = $r0
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V1-NEXT:    sbmm8 $r0 = $r1, 0x40100401
+; V1-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    insf $r0 = $r1, 63, 32
 ; V1-NEXT:    ret
@@ -403,19 +403,19 @@ define <8 x i8> @abdubo3_(<8 x i8> %0) {
 ;
 ; V2-LABEL: abdubo3_:
 ; V2:       # %bb.0:
-; V2-NEXT:    zxlbhq $r0 = $r0
-; V2-NEXT:    zxmbhq $r1 = $r0
+; V2-NEXT:    zxmbhq $r0 = $r0
+; V2-NEXT:    zxlbhq $r1 = $r0
 ; V2-NEXT:    make $r2 = 0xffdfffd5fff3fff4
 ; V2-NEXT:    make $r3 = 0x21002b000d000c
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sbfhq $r0 = $r0, $r3
-; V2-NEXT:    abshq $r1 = $r1
-; V2-NEXT:    addhq $r2 = $r0, $r2
+; V2-NEXT:    sbfhq $r1 = $r1, $r3
+; V2-NEXT:    addhq $r2 = $r1, $r2
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    maxhq $r0 = $r2, $r0
-; V2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
+; V2-NEXT:    maxhq $r1 = $r2, $r1
+; V2-NEXT:    abshq $r2 = $r0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
+; V2-NEXT:    sbmm8 $r0 = $r1, 0x40100401
+; V2-NEXT:    sbmm8 $r1 = $r2, 0x40100401
 ; V2-NEXT:    ;; # (end cycle 3)
 ; V2-NEXT:    insf $r0 = $r1, 63, 32
 ; V2-NEXT:    ret
@@ -893,10 +893,10 @@ declare <2 x i32> @llvm.umin.v2i32(<2 x i32>, <2 x i32>)
 define <2 x i32> @abduwp2(<2 x i32> %0) {
 ; ALL-LABEL: abduwp2:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    zxwd $r0 = $r0
 ; ALL-NEXT:    extfz $r1 = $r0, 63, 32
+; ALL-NEXT:    zxwd $r2 = $r0
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    abdd $r0 = $r0, 12
+; ALL-NEXT:    abdd $r0 = $r2, 12
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r0 = $r1, 63, 32
 ; ALL-NEXT:    ret

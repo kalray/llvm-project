@@ -46,7 +46,6 @@ define i32 @a() {
 ; CV1-NEXT:    alignv $a0 = $a0, $a3, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
-; CV1-NEXT:    copyd $r3 = $r2
 ; CV1-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    xso 96[$r1] = $a7
@@ -57,6 +56,7 @@ define i32 @a() {
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    xso 0[$r1] = $a4
 ; CV1-NEXT:    addd $r1 = $r1, 2
+; CV1-NEXT:    copyd $r3 = $r2
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CV1-NEXT:    # Child Loop BB0_5 Depth 2
@@ -128,7 +128,6 @@ define i32 @a() {
 ; CV2-NEXT:    xaligno $a0 = $a2..a3, $r4
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
-; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    xmt44d $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    xso 96[$r1] = $a7
@@ -139,6 +138,7 @@ define i32 @a() {
 ; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    xso 0[$r1] = $a4
 ; CV2-NEXT:    addd $r1 = $r1, 2
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
 ; CV2-NEXT:    # Child Loop BB0_5 Depth 2

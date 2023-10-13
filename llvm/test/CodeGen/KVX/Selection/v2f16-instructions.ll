@@ -878,20 +878,22 @@ define <2 x half> @test_sqrt(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call sqrtf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call sqrtf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call sqrtf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -951,20 +953,22 @@ define <2 x half> @test_sin(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call sinf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call sinf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call sinf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -985,20 +989,22 @@ define <2 x half> @test_cos(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call cosf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call cosf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call cosf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1060,20 +1066,22 @@ define <2 x half> @test_exp(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call expf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call expf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call expf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1094,20 +1102,22 @@ define <2 x half> @test_exp2(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call exp2f
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call exp2f
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call exp2f
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1128,20 +1138,22 @@ define <2 x half> @test_log(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call logf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call logf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call logf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1162,20 +1174,22 @@ define <2 x half> @test_log10(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call log10f
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call log10f
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call log10f
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1197,20 +1211,22 @@ define <2 x half> @test_log2(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call log2f
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call log2f
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call log2f
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1388,20 +1404,22 @@ define <2 x half> @test_floor(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call floorf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call floorf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call floorf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1422,20 +1440,22 @@ define <2 x half> @test_ceil(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call ceilf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call ceilf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call ceilf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1456,20 +1476,22 @@ define <2 x half> @test_trunc(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call truncf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call truncf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call truncf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1490,20 +1512,22 @@ define <2 x half> @test_rint(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call rintf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call rintf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call rintf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1524,20 +1548,22 @@ define <2 x half> @test_nearbyint(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call nearbyintf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call nearbyintf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call nearbyintf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -1558,20 +1584,22 @@ define <2 x half> @test_round(<2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sd 16[$r12] = $r18
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fwidenmhw $r0 = $r18
 ; CHECK-NEXT:    call roundf
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenlhw $r0 = $r18
-; CHECK-NEXT:    fnarrowwh $r19 = $r0
-; CHECK-NEXT:    call roundf
+; CHECK-NEXT:    fwidenlhw $r1 = $r18
+; CHECK-NEXT:    fnarrowwh $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    call roundf
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r0 = $r19, 31, 16
+; CHECK-NEXT:    insf $r0 = $r18, 31, 16
+; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)

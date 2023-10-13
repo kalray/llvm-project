@@ -27,15 +27,15 @@ define float @red_max_float4(<4 x float> %0) {
 ; ALL-LABEL: red_max_float4:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    fcompnwp.olt $r3 = $r0, $r1
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fcompnwp.olt $r4 = $r2, $r0
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    cmovewp.even $r3 ? $r1 = $r0
 ; ALL-NEXT:    srld $r2 = $r0, 32
+; ALL-NEXT:    fcompnwp.olt $r3 = $r0, $r1
 ; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    cmovewp.even $r3 ? $r1 = $r0
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    copyd $r3 = $r2
@@ -62,14 +62,14 @@ define float @red_max_float8(<8 x float> %0) {
 ; ALL-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; ALL-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srld $r2 = $r1, 32
-; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    srld $r3 = $r1, 32
+; ALL-NEXT:    copyd $r6 = $r1
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    insf $r4 = $r2, 63, 32
+; ALL-NEXT:    insf $r6 = $r3, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    fcompnwp.olt $r2 = $r4, $r0
+; ALL-NEXT:    fcompnwp.olt $r2 = $r6, $r0
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    cmovewp.even $r2 ? $r0 = $r4
+; ALL-NEXT:    cmovewp.even $r2 ? $r0 = $r6
 ; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    srld $r2 = $r0, 32
 ; ALL-NEXT:    fcompnwp.olt $r3 = $r0, $r1
@@ -99,14 +99,14 @@ define float @red_max_float16(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompnwp.olt $r9 = $r7, $r3
-; CV1-NEXT:    fcompnwp.olt $r11 = $r5, $r1
+; CV1-NEXT:    fcompnwp.olt $r9 = $r5, $r1
+; CV1-NEXT:    fcompnwp.olt $r11 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    fcompnwp.olt $r8 = $r4, $r0
 ; CV1-NEXT:    fcompnwp.olt $r10 = $r6, $r2
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    cmovewp.even $r11 ? $r1 = $r5
-; CV1-NEXT:    cmovewp.even $r9 ? $r3 = $r7
+; CV1-NEXT:    cmovewp.even $r9 ? $r1 = $r5
+; CV1-NEXT:    cmovewp.even $r11 ? $r3 = $r7
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    cmovewp.even $r8 ? $r0 = $r4
 ; CV1-NEXT:    cmovewp.even $r10 ? $r2 = $r6
@@ -285,11 +285,9 @@ define double @red_max_double16(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.olt $r15 = $r6, $r34
-; CV1-NEXT:    fcompd.olt $r16 = $r4, $r32
+; CV1-NEXT:    fcompd.olt $r16 = $r6, $r34
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.wnez $r16 ? $r4 = $r32
-; CV1-NEXT:    cmoved.wnez $r15 ? $r6 = $r34
+; CV1-NEXT:    cmoved.wnez $r16 ? $r6 = $r34
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    fcompd.olt $r15 = $r10, $r2
 ; CV1-NEXT:    ;; # (end cycle 6)
@@ -309,8 +307,10 @@ define double @red_max_double16(ptr %0) {
 ; CV1-NEXT:    cmoved.wnez $r0 ? $r9 = $r1
 ; CV1-NEXT:    ;; # (end cycle 11)
 ; CV1-NEXT:    cmoved.wnez $r2 ? $r5 = $r33
+; CV1-NEXT:    fcompd.olt $r15 = $r4, $r32
 ; CV1-NEXT:    ;; # (end cycle 12)
 ; CV1-NEXT:    fcompd.olt $r0 = $r5, $r9
+; CV1-NEXT:    cmoved.wnez $r15 ? $r4 = $r32
 ; CV1-NEXT:    ;; # (end cycle 13)
 ; CV1-NEXT:    fcompd.olt $r0 = $r7, $r11
 ; CV1-NEXT:    cmoved.wnez $r0 ? $r5 = $r9
@@ -348,19 +348,19 @@ define double @red_max_double16(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    fcompd.olt $r15 = $r6, $r34
-; CV2-NEXT:    fcompd.olt $r16 = $r4, $r32
+; CV2-NEXT:    fcompd.olt $r16 = $r6, $r34
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmoved.wnez $r16 ? $r4 = $r32
-; CV2-NEXT:    cmoved.wnez $r15 ? $r6 = $r34
+; CV2-NEXT:    cmoved.wnez $r16 ? $r6 = $r34
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    fcompd.olt $r15 = $r10, $r2
 ; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    fcompd.olt $r2 = $r8, $r0
 ; CV2-NEXT:    cmoved.wnez $r15 ? $r10 = $r2
+; CV2-NEXT:    fcompd.olt $r15 = $r4, $r32
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    fcompd.olt $r0 = $r11, $r3
 ; CV2-NEXT:    fcompd.olt $r2 = $r7, $r35
+; CV2-NEXT:    cmoved.wnez $r15 ? $r4 = $r32
 ; CV2-NEXT:    cmoved.wnez $r2 ? $r8 = $r0
 ; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    fcompd.olt $r0 = $r9, $r1
@@ -535,15 +535,15 @@ define float @red_min_float4(<4 x float> %0) {
 ; ALL-LABEL: red_min_float4:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    copyd $r2 = $r1
-; ALL-NEXT:    fcompnwp.olt $r3 = $r1, $r0
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fcompnwp.olt $r4 = $r0, $r2
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    cmovewp.even $r3 ? $r1 = $r0
 ; ALL-NEXT:    srld $r2 = $r0, 32
+; ALL-NEXT:    fcompnwp.olt $r3 = $r1, $r0
 ; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    cmovewp.even $r3 ? $r1 = $r0
 ; ALL-NEXT:    insf $r2 = $r2, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 4)
 ; ALL-NEXT:    copyd $r3 = $r2
@@ -570,14 +570,14 @@ define float @red_min_float8(<8 x float> %0) {
 ; ALL-NEXT:    cmovewp.even $r4 ? $r0 = $r2
 ; ALL-NEXT:    cmovewp.even $r5 ? $r1 = $r3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srld $r2 = $r1, 32
-; ALL-NEXT:    copyd $r4 = $r1
+; ALL-NEXT:    srld $r3 = $r1, 32
+; ALL-NEXT:    copyd $r6 = $r1
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    insf $r4 = $r2, 63, 32
+; ALL-NEXT:    insf $r6 = $r3, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    fcompnwp.olt $r2 = $r0, $r4
+; ALL-NEXT:    fcompnwp.olt $r2 = $r0, $r6
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    cmovewp.even $r2 ? $r0 = $r4
+; ALL-NEXT:    cmovewp.even $r2 ? $r0 = $r6
 ; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    srld $r2 = $r0, 32
 ; ALL-NEXT:    fcompnwp.olt $r3 = $r1, $r0
@@ -609,14 +609,14 @@ define float @red_min_float16(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    lo $r4r5r6r7 = 32[$r4]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    fcompnwp.olt $r9 = $r1, $r5
-; CV1-NEXT:    fcompnwp.olt $r11 = $r3, $r7
+; CV1-NEXT:    fcompnwp.olt $r9 = $r3, $r7
+; CV1-NEXT:    fcompnwp.olt $r11 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    fcompnwp.olt $r8 = $r2, $r6
 ; CV1-NEXT:    fcompnwp.olt $r10 = $r0, $r4
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmovewp.even $r9 ? $r1 = $r5
-; CV1-NEXT:    cmovewp.even $r11 ? $r3 = $r7
+; CV1-NEXT:    cmovewp.even $r11 ? $r1 = $r5
+; CV1-NEXT:    cmovewp.even $r9 ? $r3 = $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmovewp.even $r10 ? $r0 = $r4
 ; CV1-NEXT:    cmovewp.even $r8 ? $r2 = $r6
@@ -797,29 +797,29 @@ define double @red_min_double16(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.olt $r15 = $r9, $r5
+; CV1-NEXT:    fcompd.olt $r16 = $r9, $r5
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.wnez $r15 ? $r5 = $r9
-; CV1-NEXT:    fcompd.olt $r15 = $r11, $r7
+; CV1-NEXT:    cmoved.wnez $r16 ? $r5 = $r9
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
-; CV1-NEXT:    fcompd.olt $r9 = $r33, $r1
-; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r1 = $r33
 ; CV1-NEXT:    fcompd.olt $r9 = $r35, $r3
+; CV1-NEXT:    fcompd.olt $r15 = $r33, $r1
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    cmoved.wnez $r15 ? $r1 = $r33
+; CV1-NEXT:    fcompd.olt $r15 = $r11, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    cmoved.wnez $r9 ? $r3 = $r35
-; CV1-NEXT:    fcompd.olt $r9 = $r32, $r0
+; CV1-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r0 = $r32
+; CV1-NEXT:    fcompd.olt $r9 = $r32, $r0
 ; CV1-NEXT:    fcompd.olt $r11 = $r8, $r4
 ; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    cmoved.wnez $r9 ? $r0 = $r32
 ; CV1-NEXT:    cmoved.wnez $r11 ? $r4 = $r8
-; CV1-NEXT:    fcompd.olt $r8 = $r34, $r2
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
+; CV1-NEXT:    fcompd.olt $r8 = $r34, $r2
 ; CV1-NEXT:    fcompd.olt $r9 = $r10, $r6
 ; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
 ; CV1-NEXT:    cmoved.wnez $r9 ? $r6 = $r10
 ; CV1-NEXT:    ;; # (end cycle 12)
 ; CV1-NEXT:    fcompd.olt $r8 = $r6, $r2
@@ -860,28 +860,28 @@ define double @red_min_double16(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    fcompd.olt $r15 = $r9, $r5
+; CV2-NEXT:    fcompd.olt $r16 = $r9, $r5
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmoved.wnez $r15 ? $r5 = $r9
-; CV2-NEXT:    fcompd.olt $r15 = $r11, $r7
+; CV2-NEXT:    cmoved.wnez $r16 ? $r5 = $r9
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
-; CV2-NEXT:    fcompd.olt $r9 = $r33, $r1
-; CV2-NEXT:    fcompd.olt $r11 = $r8, $r4
-; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cmoved.wnez $r9 ? $r1 = $r33
-; CV2-NEXT:    cmoved.wnez $r11 ? $r4 = $r8
-; CV2-NEXT:    fcompd.olt $r8 = $r34, $r2
 ; CV2-NEXT:    fcompd.olt $r9 = $r35, $r3
-; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
+; CV2-NEXT:    fcompd.olt $r15 = $r33, $r1
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    cmoved.wnez $r15 ? $r1 = $r33
 ; CV2-NEXT:    cmoved.wnez $r9 ? $r3 = $r35
 ; CV2-NEXT:    fcompd.olt $r9 = $r32, $r0
-; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    fcompd.olt $r15 = $r11, $r7
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    cmoved.wnez $r9 ? $r0 = $r32
+; CV2-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
 ; CV2-NEXT:    fcompd.olt $r9 = $r10, $r6
-; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    fcompd.olt $r11 = $r8, $r4
+; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    cmoved.wnez $r11 ? $r4 = $r8
 ; CV2-NEXT:    cmoved.wnez $r9 ? $r6 = $r10
+; CV2-NEXT:    fcompd.olt $r8 = $r34, $r2
+; CV2-NEXT:    ;; # (end cycle 9)
+; CV2-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
 ; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    fcompd.olt $r8 = $r6, $r2
 ; CV2-NEXT:    ;; # (end cycle 11)

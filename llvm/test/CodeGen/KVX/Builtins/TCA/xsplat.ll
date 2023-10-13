@@ -695,19 +695,19 @@ define void @xsplat4096rr(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 32[$r0] = $a1
-; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    xso 96[$r0] = $a3
-; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 288[$r0] = $a9
-; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 416[$r0] = $a13
+; CV2-NEXT:    ;; # (end cycle 12)
+; CV2-NEXT:    xso 384[$r0] = $a12
 ; CV2-NEXT:    ;; # (end cycle 13)
 ; CV2-NEXT:    xso 160[$r0] = $a5
 ; CV2-NEXT:    ;; # (end cycle 14)
@@ -717,11 +717,11 @@ define void @xsplat4096rr(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    xso 192[$r0] = $a6
 ; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    xso 384[$r0] = $a12
-; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    xso 480[$r0] = $a15
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    xso 448[$r0] = $a14
+; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    xso 288[$r0] = $a9
 ; CV2-NEXT:    ;; # (end cycle 20)
 ; CV2-NEXT:    xso 256[$r0] = $a8
 ; CV2-NEXT:    ;; # (end cycle 21)
@@ -797,33 +797,33 @@ define void @xsplat4096ri16(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 32[$r0] = $a1
-; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    xso 96[$r0] = $a3
-; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 288[$r0] = $a9
-; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 416[$r0] = $a13
-; CV2-NEXT:    ;; # (end cycle 13)
+; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 160[$r0] = $a5
-; CV2-NEXT:    ;; # (end cycle 14)
+; CV2-NEXT:    ;; # (end cycle 13)
 ; CV2-NEXT:    xso 128[$r0] = $a4
-; CV2-NEXT:    ;; # (end cycle 15)
+; CV2-NEXT:    ;; # (end cycle 14)
 ; CV2-NEXT:    xso 224[$r0] = $a7
-; CV2-NEXT:    ;; # (end cycle 16)
+; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    xso 192[$r0] = $a6
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    xso 384[$r0] = $a12
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 17)
 ; CV2-NEXT:    xso 480[$r0] = $a15
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    xso 448[$r0] = $a14
+; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    xso 288[$r0] = $a9
 ; CV2-NEXT:    ;; # (end cycle 20)
 ; CV2-NEXT:    xso 256[$r0] = $a8
 ; CV2-NEXT:    ;; # (end cycle 21)
@@ -897,33 +897,33 @@ define void @xsplat4096ri37(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 32[$r0] = $a1
-; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    xso 96[$r0] = $a3
-; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 288[$r0] = $a9
-; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 416[$r0] = $a13
-; CV2-NEXT:    ;; # (end cycle 13)
+; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 160[$r0] = $a5
-; CV2-NEXT:    ;; # (end cycle 14)
+; CV2-NEXT:    ;; # (end cycle 13)
 ; CV2-NEXT:    xso 128[$r0] = $a4
-; CV2-NEXT:    ;; # (end cycle 15)
+; CV2-NEXT:    ;; # (end cycle 14)
 ; CV2-NEXT:    xso 224[$r0] = $a7
-; CV2-NEXT:    ;; # (end cycle 16)
+; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    xso 192[$r0] = $a6
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    xso 384[$r0] = $a12
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 17)
 ; CV2-NEXT:    xso 480[$r0] = $a15
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    xso 448[$r0] = $a14
+; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    xso 288[$r0] = $a9
 ; CV2-NEXT:    ;; # (end cycle 20)
 ; CV2-NEXT:    xso 256[$r0] = $a8
 ; CV2-NEXT:    ;; # (end cycle 21)
@@ -997,33 +997,33 @@ define void @xsplat4096ri64(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    xsplatov $a0a1a2a3 = $a0
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    xso 32[$r0] = $a1
-; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 8)
 ; CV2-NEXT:    xso 0[$r0] = $a0
-; CV2-NEXT:    xcopyv $a12a13a14a15 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    xso 96[$r0] = $a3
-; CV2-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CV2-NEXT:    xcopyv $a8a9a10a11 = $a0a1a2a3
 ; CV2-NEXT:    ;; # (end cycle 10)
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 288[$r0] = $a9
-; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 416[$r0] = $a13
-; CV2-NEXT:    ;; # (end cycle 13)
+; CV2-NEXT:    ;; # (end cycle 12)
 ; CV2-NEXT:    xso 160[$r0] = $a5
-; CV2-NEXT:    ;; # (end cycle 14)
+; CV2-NEXT:    ;; # (end cycle 13)
 ; CV2-NEXT:    xso 128[$r0] = $a4
-; CV2-NEXT:    ;; # (end cycle 15)
+; CV2-NEXT:    ;; # (end cycle 14)
 ; CV2-NEXT:    xso 224[$r0] = $a7
-; CV2-NEXT:    ;; # (end cycle 16)
+; CV2-NEXT:    ;; # (end cycle 15)
 ; CV2-NEXT:    xso 192[$r0] = $a6
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 16)
 ; CV2-NEXT:    xso 384[$r0] = $a12
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 17)
 ; CV2-NEXT:    xso 480[$r0] = $a15
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    xso 448[$r0] = $a14
+; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    xso 288[$r0] = $a9
 ; CV2-NEXT:    ;; # (end cycle 20)
 ; CV2-NEXT:    xso 256[$r0] = $a8
 ; CV2-NEXT:    ;; # (end cycle 21)

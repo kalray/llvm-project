@@ -114,14 +114,14 @@ define <4 x double> @copysigndq(<4 x double> %0, <4 x double> %1) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srad $r4 = $r4, 63
 ; CV1-NEXT:    srad $r5 = $r5, 63
-; CV1-NEXT:    srad $r6 = $r6, 63
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r4, 63, 63
 ; CV1-NEXT:    insf $r1 = $r5, 63, 63
-; CV1-NEXT:    srad $r4 = $r7, 63
+; CV1-NEXT:    srad $r4 = $r6, 63
+; CV1-NEXT:    srad $r5 = $r7, 63
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r2 = $r6, 63, 63
-; CV1-NEXT:    insf $r3 = $r4, 63, 63
+; CV1-NEXT:    insf $r2 = $r4, 63, 63
+; CV1-NEXT:    insf $r3 = $r5, 63, 63
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;

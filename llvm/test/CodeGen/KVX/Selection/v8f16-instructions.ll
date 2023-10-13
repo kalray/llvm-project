@@ -424,62 +424,62 @@ define <8 x half> @test_fdiv(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK-NEXT:    fwidenlhwp $r4 = $r2
 ; CHECK-NEXT:    fwidenlhwp $r6 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    frecw $r4 = $r4
-; CHECK-NEXT:    fwidenmhwp $r5 = $r0
-; CHECK-NEXT:    srld $r7 = $r4, 32
-; CHECK-NEXT:    srld $r8 = $r6, 32
+; CHECK-NEXT:    srld $r4 = $r4, 32
+; CHECK-NEXT:    frecw $r5 = $r4
+; CHECK-NEXT:    fwidenmhwp $r9 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    frecw $r9 = $r7
+; CHECK-NEXT:    frecw $r4 = $r4
 ; CHECK-NEXT:    fwidenmhwp $r11 = $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    srld $r2 = $r11, 32
 ; CHECK-NEXT:    fwidenmhwp $r3 = $r3
-; CHECK-NEXT:    fwidenmhwp $r7 = $r1
+; CHECK-NEXT:    fwidenmhwp $r17 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
-; CHECK-NEXT:    frecw $r2 = $r6
-; CHECK-NEXT:    srld $r6 = $r11, 32
+; CHECK-NEXT:    srld $r6 = $r6, 32
+; CHECK-NEXT:    frecw $r7 = $r6
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    frecw $r10 = $r11
+; CHECK-NEXT:    srld $r3 = $r3, 32
+; CHECK-NEXT:    frecw $r10 = $r3
 ; CHECK-NEXT:    fwidenlhwp $r16 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    srld $r1 = $r16, 32
-; CHECK-NEXT:    srld $r3 = $r3, 32
-; CHECK-NEXT:    frecw $r11 = $r3
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    frecw $r8 = $r8
-; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    frecw $r6 = $r6
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    frecw $r2 = $r2
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    frecw $r8 = $r11
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    frecw $r3 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    srld $r0 = $r0, 32
-; CHECK-NEXT:    fmulw $r4 = $r0, $r4
+; CHECK-NEXT:    fmulw $r32 = $r0, $r5
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    fmulw $r0 = $r0, $r9
+; CHECK-NEXT:    fmulw $r0 = $r0, $r4
+; CHECK-NEXT:    srld $r4 = $r9, 32
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    srld $r2 = $r5, 32
-; CHECK-NEXT:    fmulw $r32 = $r16, $r2
+; CHECK-NEXT:    fmulw $r34 = $r16, $r7
 ; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    fmulw $r5 = $r5, $r10
+; CHECK-NEXT:    fmulw $r35 = $r17, $r10
 ; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    srld $r0 = $r7, 32
-; CHECK-NEXT:    insf $r4 = $r0, 63, 32
-; CHECK-NEXT:    fmulw $r33 = $r7, $r11
+; CHECK-NEXT:    srld $r0 = $r17, 32
+; CHECK-NEXT:    fmulw $r1 = $r1, $r6
+; CHECK-NEXT:    insf $r32 = $r0, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    fmulw $r1 = $r1, $r8
+; CHECK-NEXT:    fmulw $r2 = $r4, $r2
 ; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    fmulw $r2 = $r2, $r6
+; CHECK-NEXT:    fmulw $r33 = $r9, $r8
 ; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r3
 ; CHECK-NEXT:    ;; # (end cycle 20)
-; CHECK-NEXT:    insf $r32 = $r1, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 22)
-; CHECK-NEXT:    insf $r5 = $r2, 63, 32
+; CHECK-NEXT:    insf $r34 = $r1, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    insf $r33 = $r2, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 23)
-; CHECK-NEXT:    fnarrowwhq $r0 = $r4r5
-; CHECK-NEXT:    insf $r33 = $r0, 63, 32
+; CHECK-NEXT:    fnarrowwhq $r0 = $r32r33
+; CHECK-NEXT:    insf $r35 = $r0, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 24)
-; CHECK-NEXT:    fnarrowwhq $r1 = $r32r33
+; CHECK-NEXT:    fnarrowwhq $r1 = $r34r35
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 25)
   %r = fdiv <8 x half> %a, %b
@@ -796,21 +796,22 @@ define <8 x float> @test_select_cc_f32_f16(<8 x float> %a, <8 x float> %b, <8 x 
 ; CV1-LABEL: test_select_cc_f32_f16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fcompnhq.une $r8 = $r8, $r10
-; CV1-NEXT:    fcompnhq.une $r9 = $r9, $r11
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxlhwp $r10 = $r8
-; CV1-NEXT:    sxmhwp $r11 = $r8
+; CV1-NEXT:    sxmhwp $r17 = $r8
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxlhwp $r8 = $r9
-; CV1-NEXT:    sxmhwp $r9 = $r9
+; CV1-NEXT:    cmovewp.even $r17 ? $r1 = $r5
+; CV1-NEXT:    fcompnhq.une $r8 = $r9, $r11
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cmovewp.even $r8 ? $r2 = $r6
-; CV1-NEXT:    cmovewp.even $r9 ? $r3 = $r7
+; CV1-NEXT:    sxmhwp $r9 = $r8
+; CV1-NEXT:    sxlhwp $r16 = $r8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cmovewp.even $r10 ? $r0 = $r4
-; CV1-NEXT:    cmovewp.even $r11 ? $r1 = $r5
-; CV1-NEXT:    ret
+; CV1-NEXT:    cmovewp.even $r16 ? $r2 = $r6
+; CV1-NEXT:    cmovewp.even $r9 ? $r3 = $r7
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cmovewp.even $r10 ? $r0 = $r4
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
 ;
 ; CV2-LABEL: test_select_cc_f32_f16:
 ; CV2:       # %bb.0:
@@ -1157,25 +1158,25 @@ define <8 x i16> @test_fptosi_i16(<8 x half> %a) #0 {
 ; CHECK-NEXT:    fwidenmhwp $r2 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fwidenlhwp $r1 = $r1
-; CHECK-NEXT:    fwidenmhwp $r3 = $r1
-; CHECK-NEXT:    fixedwp.rz $r5 = $r2, 0
+; CHECK-NEXT:    fwidenmhwp $r2 = $r1
+; CHECK-NEXT:    fixedwp.rz $r3 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fixedwp.rz $r0 = $r0, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    fixedwp.rz $r3 = $r3, 0
+; CHECK-NEXT:    fixedwp.rz $r5 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fixedwp.rz $r2 = $r1, 0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sbmm8 $r4 = $r5, 0x20100201
+; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x20100201
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x20100201
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    insf $r0 = $r4, 63, 32
-; CHECK-NEXT:    sbmm8 $r3 = $r3, 0x20100201
+; CHECK-NEXT:    insf $r0 = $r3, 63, 32
+; CHECK-NEXT:    sbmm8 $r4 = $r5, 0x20100201
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    sbmm8 $r1 = $r2, 0x20100201
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    insf $r1 = $r3, 63, 32
+; CHECK-NEXT:    insf $r1 = $r4, 63, 32
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
   %r = fptosi <8 x half> %a to <8 x i16>
@@ -1227,12 +1228,12 @@ define <8 x i32> @test_fptoui_8xi32(<8 x half> %a) #0 {
 define <8 x half> @test_uitofp_8xi16(<8 x i16> %a) #0 {
 ; CV1-LABEL: test_uitofp_8xi16:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x80400000201
+; CV1-NEXT:    sbmm8 $r2 = $r0, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r3 = $r0, 0x804000002010
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbmm8 $r0 = $r1, 0x80400000201
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x804000002010
-; CV1-NEXT:    floatuwp.rn $r2 = $r0, 0
+; CV1-NEXT:    floatuwp.rn $r2 = $r2, 0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    floatuwp.rn $r3 = $r3, 0
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -1248,12 +1249,12 @@ define <8 x half> @test_uitofp_8xi16(<8 x i16> %a) #0 {
 ;
 ; CV2-LABEL: test_uitofp_8xi16:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    zxlhwp $r0 = $r0
-; CV2-NEXT:    zxmhwp $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    zxlhwp $r0 = $r1
 ; CV2-NEXT:    zxmhwp $r1 = $r1
-; CV2-NEXT:    floatuwp.rn $r2 = $r0, 0
+; CV2-NEXT:    zxlhwp $r2 = $r0
+; CV2-NEXT:    zxmhwp $r3 = $r0
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    floatuwp.rn $r2 = $r2, 0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    floatuwp.rn $r3 = $r3, 0
 ; CV2-NEXT:    ;; # (end cycle 2)
@@ -1275,14 +1276,14 @@ define <8 x half> @test_uitofp_8xi32(<8 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatuwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    floatuwp.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    floatuwp.rn $r1 = $r1, 0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    floatuwp.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    floatuwp.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    fnarrowwhq.rn $r1 = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
@@ -1295,14 +1296,14 @@ define <8 x half> @test_sitofp_8xi32(<8 x i32> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    floatwp.rn $r0 = $r0, 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    floatwp.rn $r2 = $r2, 0
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    floatwp.rn $r1 = $r1, 0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    floatwp.rn $r2 = $r2, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    floatwp.rn $r3 = $r3, 0
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    fnarrowwhq.rn $r0 = $r0r1
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    fnarrowwhq.rn $r1 = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
@@ -4774,38 +4775,37 @@ define <8 x half> @test_shufflevector2(<8 x half> %a) #0 {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srld $r2 = $r0, 32
 ; CV1-NEXT:    srld $r3 = $r0, 48
-; CV1-NEXT:    srld $r4 = $r1, 32
+; CV1-NEXT:    srlw $r4 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    srlw $r2 = $r0, 16
+; CV1-NEXT:    insf $r0 = $r4, 31, 16
+; CV1-NEXT:    srld $r2 = $r1, 32
 ; CV1-NEXT:    insf $r3 = $r2, 31, 16
+; CV1-NEXT:    srld $r4 = $r1, 48
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    insf $r0 = $r2, 31, 16
-; CV1-NEXT:    insf $r1 = $r4, 31, 16
-; CV1-NEXT:    srld $r2 = $r1, 48
+; CV1-NEXT:    insf $r1 = $r2, 31, 16
+; CV1-NEXT:    insf $r4 = $r4, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r3, 63, 32
-; CV1-NEXT:    insf $r2 = $r2, 31, 16
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r1 = $r2, 63, 32
+; CV1-NEXT:    insf $r1 = $r4, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: test_shufflevector2:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    srld $r2 = $r0, 32
 ; CV2-NEXT:    srld $r3 = $r0, 48
-; CV2-NEXT:    srld $r4 = $r1, 32
-; CV2-NEXT:    srld $r5 = $r1, 48
+; CV2-NEXT:    srlw $r4 = $r0, 16
+; CV2-NEXT:    srld $r5 = $r1, 32
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    insf $r1 = $r4, 31, 16
-; CV2-NEXT:    srlw $r2 = $r0, 16
+; CV2-NEXT:    insf $r0 = $r4, 31, 16
+; CV2-NEXT:    insf $r1 = $r5, 31, 16
 ; CV2-NEXT:    insf $r3 = $r2, 31, 16
-; CV2-NEXT:    insf $r5 = $r5, 31, 16
+; CV2-NEXT:    srld $r6 = $r1, 48
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r0 = $r2, 31, 16
-; CV2-NEXT:    insf $r1 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    insf $r0 = $r3, 63, 32
+; CV2-NEXT:    insf $r6 = $r6, 31, 16
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    insf $r1 = $r6, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 3)
   %s = shufflevector <8 x half> %a, <8 x half> undef, <8 x i32> <i32 0, i32 1, i32 3, i32 2, i32 4, i32 6, i32 7, i32 7>
@@ -5837,32 +5837,32 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
 ; CV1-NEXT:    srld $r7 = $r0, 48
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r7, 31, 16
-; CV1-NEXT:    srld $r5 = $r1, 48
+; CV1-NEXT:    srlw $r5 = $r2, 16
 ; CV1-NEXT:    insf $r6 = $r5, 31, 16
-; CV1-NEXT:    srlw $r8 = $r2, 16
+; CV1-NEXT:    copyd $r7 = $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    insf $r0 = $r6, 63, 32
-; CV1-NEXT:    extfz $r1 = $r1, 47, 32
-; CV1-NEXT:    copyd $r7 = $r2
-; CV1-NEXT:    srlw $r9 = $r3, 16
+; CV1-NEXT:    srlw $r5 = $r3, 16
+; CV1-NEXT:    copyd $r6 = $r3
+; CV1-NEXT:    insf $r7 = $r5, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r1 = $r5, 31, 16
-; CV1-NEXT:    copyd $r5 = $r3
-; CV1-NEXT:    srld $r6 = $r2, 48
-; CV1-NEXT:    insf $r7 = $r8, 31, 16
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    insf $r1 = $r7, 63, 32
 ; CV1-NEXT:    extfz $r2 = $r2, 47, 32
-; CV1-NEXT:    srld $r7 = $r3, 48
+; CV1-NEXT:    srld $r5 = $r2, 48
+; CV1-NEXT:    insf $r6 = $r5, 31, 16
+; CV1-NEXT:    srld $r8 = $r1, 48
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    extfz $r1 = $r1, 47, 32
+; CV1-NEXT:    insf $r2 = $r5, 31, 16
+; CV1-NEXT:    srld $r5 = $r3, 48
 ; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    insf $r1 = $r8, 31, 16
 ; CV1-NEXT:    extfz $r3 = $r3, 47, 32
-; CV1-NEXT:    insf $r4 = $r4, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    insf $r2 = $r6, 31, 16
-; CV1-NEXT:    insf $r5 = $r9, 31, 16
+; CV1-NEXT:    insf $r3 = $r5, 31, 16
+; CV1-NEXT:    insf $r4 = $r4, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    insf $r2 = $r5, 63, 32
-; CV1-NEXT:    insf $r3 = $r7, 31, 16
+; CV1-NEXT:    insf $r1 = $r7, 63, 32
+; CV1-NEXT:    insf $r2 = $r6, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r3 = $r4, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 8)
@@ -5882,30 +5882,30 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r7, 31, 16
 ; CV2-NEXT:    extfz $r1 = $r1, 47, 32
-; CV2-NEXT:    srld $r5 = $r1, 48
 ; CV2-NEXT:    insf $r6 = $r5, 31, 16
+; CV2-NEXT:    srld $r8 = $r1, 48
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r1 = $r5, 31, 16
+; CV2-NEXT:    insf $r1 = $r8, 31, 16
 ; CV2-NEXT:    srlw $r5 = $r2, 16
 ; CV2-NEXT:    copyd $r7 = $r2
-; CV2-NEXT:    srlw $r8 = $r3, 16
+; CV2-NEXT:    copyd $r8 = $r3
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    extfz $r2 = $r2, 47, 32
-; CV2-NEXT:    copyd $r9 = $r3
-; CV2-NEXT:    srld $r10 = $r2, 48
-; CV2-NEXT:    srld $r11 = $r3, 48
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    extfz $r3 = $r3, 47, 32
-; CV2-NEXT:    insf $r4 = $r4, 31, 16
+; CV2-NEXT:    srlw $r5 = $r3, 16
 ; CV2-NEXT:    insf $r7 = $r5, 31, 16
-; CV2-NEXT:    insf $r9 = $r8, 31, 16
+; CV2-NEXT:    srld $r9 = $r2, 48
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    insf $r2 = $r9, 31, 16
+; CV2-NEXT:    extfz $r3 = $r3, 47, 32
+; CV2-NEXT:    insf $r8 = $r5, 31, 16
+; CV2-NEXT:    srld $r10 = $r3, 48
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r6, 63, 32
 ; CV2-NEXT:    insf $r1 = $r7, 63, 32
-; CV2-NEXT:    insf $r2 = $r10, 31, 16
-; CV2-NEXT:    insf $r3 = $r11, 31, 16
+; CV2-NEXT:    insf $r3 = $r10, 31, 16
+; CV2-NEXT:    insf $r4 = $r4, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    insf $r2 = $r9, 63, 32
+; CV2-NEXT:    insf $r2 = $r8, 63, 32
 ; CV2-NEXT:    insf $r3 = $r4, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:  .LBB155_2:
