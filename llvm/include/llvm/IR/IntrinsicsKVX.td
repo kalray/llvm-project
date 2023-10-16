@@ -6,6 +6,7 @@ def int_kvx_d1inval : Intrinsic<[], [],[]>;
 def int_kvx_errop : Intrinsic<[], [],[IntrNoReturn, IntrCold]>;
 def int_kvx_fence : Intrinsic<[], [],[]>;
 def int_kvx_i1inval : Intrinsic<[], [],[]>;
+def int_kvx_rfe : Intrinsic<[], [],[IntrNoReturn, IntrCold]>;
 def int_kvx_sleep : Intrinsic<[], [],[]>;
 def int_kvx_stop : Intrinsic<[], [],[]>;
 def int_kvx_tlbdinval : Intrinsic<[], [],[]>;

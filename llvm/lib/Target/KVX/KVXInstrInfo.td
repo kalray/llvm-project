@@ -1568,10 +1568,11 @@ def RET : KVX_INSTRUCTION
    [(KVXRetNode)],
    BCU>;
 
+let Uses = [SPS, SPC], Defs = [PS, SPS, SPC, SRHPC] in
 def RFE : KVX_INSTRUCTION
   <(outs), (ins),
    "rfe",
-   [/* no straightforward pattern */],
+   [(int_kvx_rfe)],
    ALL_ID>;
 
 let isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1 in

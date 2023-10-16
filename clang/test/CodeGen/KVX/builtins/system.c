@@ -18,3 +18,12 @@ void errop(void) {
 void trap(void) {
   __builtin_trap();
 }
+
+// CHECK-LABEL: @rfe(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.kvx.rfe()
+// CHECK-NEXT:    unreachable
+//
+void rfe(void) {
+  __builtin_kvx_rfe();
+}
