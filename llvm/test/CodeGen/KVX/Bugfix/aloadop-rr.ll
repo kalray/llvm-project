@@ -37,8 +37,8 @@ define void @foo32() {
 ; CV1-NEXT:    cb.even $r4 ? .LBB0_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2: # %entry
-; CV1-NEXT:    copyw $r0 = $r5
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -69,8 +69,8 @@ define void @foo32() {
 ; CV2-NEXT:    cb.even $r4 ? .LBB0_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2: # %entry
-; CV2-NEXT:    copyw $r0 = $r5
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
 entry:
@@ -107,8 +107,8 @@ define void @foo64() {
 ; CV1-NEXT:    cb.even $r4 ? .LBB1_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2: # %entry
-; CV1-NEXT:    copyd $r0 = $r5
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -139,8 +139,8 @@ define void @foo64() {
 ; CV2-NEXT:    cb.even $r4 ? .LBB1_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2: # %entry
-; CV2-NEXT:    copyd $r0 = $r5
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r5
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
 entry:

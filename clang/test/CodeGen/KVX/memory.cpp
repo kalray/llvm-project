@@ -39,7 +39,7 @@ void dzerol(char *p) {
 
 // CHECK-LABEL: @_Z5fencev(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    tail call void @llvm.kvx.fence()
+// CHECK-NEXT:    tail call void @llvm.kvx.fence(i32 0)
 // CHECK-NEXT:    ret void
 //
 void fence(void) {

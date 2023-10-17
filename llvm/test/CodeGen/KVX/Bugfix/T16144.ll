@@ -76,9 +76,9 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    lbz $r1 = 19[$r12]
 ; CV1-NEXT:    andd $r3 = $r0, 3
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fence
 ; CV1-NEXT:    slld $r3 = $r3, 3
 ; CV1-NEXT:    sbfd $r7 = $r3, 0
-; CV1-NEXT:    fence
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB2_3: # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    lwz.u $r5 = $r7[$r0]
@@ -111,8 +111,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:  .LBB2_7:
 ; CV1-NEXT:    lbz $r1 = 19[$r12]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    goto .LBB2_10
 ; CV1-NEXT:    fence
+; CV1-NEXT:    goto .LBB2_10
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB2_8:
 ; CV1-NEXT:    compw.eq $r1 = $r1, 3
@@ -204,9 +204,9 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    lbz $r1 = 19[$r12]
 ; CV2-NEXT:    andd $r3 = $r0, 3
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
 ; CV2-NEXT:    slld $r3 = $r3, 3
 ; CV2-NEXT:    sbfd $r7 = $r3, 0
-; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    addd $r0 = $r0, $r7
 ; CV2-NEXT:    ;; # (end cycle 2)
@@ -241,8 +241,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:  .LBB2_7:
 ; CV2-NEXT:    lbz $r1 = 19[$r12]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    goto .LBB2_10
 ; CV2-NEXT:    fence
+; CV2-NEXT:    goto .LBB2_10
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB2_8:
 ; CV2-NEXT:    compw.eq $r1 = $r1, 3

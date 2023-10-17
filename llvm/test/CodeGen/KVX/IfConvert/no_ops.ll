@@ -17,12 +17,12 @@ entry:
   br i1 %v, label %b, label %e
 
 b:
-  tail call void @llvm.kvx.fence()
+  tail call void @llvm.kvx.fence(i32 0)
   br label %e
 
 e:
   ret void
 }
 
-declare void @llvm.kvx.fence()
+declare void @llvm.kvx.fence(i32)
 

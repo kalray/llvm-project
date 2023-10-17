@@ -76,6 +76,7 @@ public:
   void printQindexMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printLsumaskMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printLsupackMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printAccessesMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printFloatcompMod(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printFPImmOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);

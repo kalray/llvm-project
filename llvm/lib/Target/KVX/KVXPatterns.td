@@ -77,7 +77,7 @@ def : Pat<(KVXComp i64:$lhs, i64:$rhs, i32:$mod),
             (COMPDrr SingleReg:$lhs, SingleReg:$rhs, ComparisonMod:$mod)>;
 
 
-def : Pat<(KVXFence), (FENCE)>;
+def : Pat<(KVXFence), (FENCE accesses_all)>;
 
 //===----------------------------------------------------------------------===//
 // ComplexPatterns definitions.

@@ -449,6 +449,20 @@ void KVXInstPrinter::printLsupackMod(const MCInst *MI, unsigned OpNo,
   O << '.' << S[M];
 }
 
+void KVXInstPrinter::printAccessesMod(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  const MCOperand &MO = MI->getOperand(OpNo);
+  unsigned M = MO.getImm();
+  if (!M)
+    return;
+
+  if (M > 3)
+    report_fatal_error("illegal accesses value.");
+
+  const static std::array<const char *const, 4> S = {"", "w", "r", "wa"};
+  O << '.' << S[M];
+}
+
 void KVXInstPrinter::printFloatcompMod(const MCInst *MI, unsigned OpNo,
                                        raw_ostream &O) {
   const MCOperand &MO = MI->getOperand(OpNo);

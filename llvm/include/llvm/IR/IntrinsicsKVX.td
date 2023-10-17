@@ -4,7 +4,7 @@ def int_kvx_await : Intrinsic<[], [],[]>;
 def int_kvx_barrier : Intrinsic<[], [],[]>;
 def int_kvx_d1inval : Intrinsic<[], [],[]>;
 def int_kvx_errop : Intrinsic<[], [],[IntrNoReturn, IntrCold]>;
-def int_kvx_fence : Intrinsic<[], [],[]>;
+def int_kvx_fence : Intrinsic<[], [llvm_i32_ty],[]>;
 def int_kvx_i1inval : Intrinsic<[], [],[]>;
 def int_kvx_rfe : Intrinsic<[], [],[IntrNoReturn, IntrCold]>;
 def int_kvx_sleep : Intrinsic<[], [],[]>;

@@ -1,6 +1,7 @@
 def: Pat<(int_kvx_await), (AWAIT)>;
 def: Pat<(int_kvx_barrier), (BARRIER)>;
-def: Pat<(int_kvx_fence), (FENCE)>;
+def: Pat<(int_kvx_fence AccessesMod), (FENCE accesses_all)>, Requires<[IsV1]>;
+def: Pat<(int_kvx_fence AccessesMod:$m), (FENCE AccessesMod:$m)>, Requires<[IsV2]>;
 def: Pat<(int_kvx_i1inval), (I1INVAL)>;
 def: Pat<(int_kvx_sleep), (SLEEP)>;
 def: Pat<(int_kvx_stop), (STOP)>;

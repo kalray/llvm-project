@@ -19562,6 +19562,8 @@ struct KvxModifier : StringMap<int> {
   }
 };
 
+static const KvxModifier
+    KVX_ACCESSES({{"", 0}, {"all", 0}, {"w", 1}, {"r", 2}, {"wa", 3}});
 static const KvxModifier KVX_BOOLCAS({{"", 1}, {"v", 0}});
 static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
 static const KvxModifier KVX_CARRY({{"", 0}, {"i", 1}});
@@ -20643,6 +20645,19 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     auto *const Zero = ConstantInt::get(IntTy, 0);
     auto *const One = ConstantInt::get(IntTy, 1);
     return Builder.CreateCall(Callee, {Addr, Update, Expect, One, Zero});
+  }
+  case KVX::BI__builtin_kvx_fence: {
+    if (E->getNumArgs() == 1)
+      return KVX_emit(1, *this, E, llvm::Intrinsic::kvx_fence, {KVX_ACCESSES},
+                      "kv3-2");
+
+    if (E->getNumArgs())
+      CGM.Error(E->getArg(0)->getBeginLoc(),
+                "Incorrect number of arguments to builtin.");
+
+    Function *Callee = CGM.getIntrinsic(llvm::Intrinsic::kvx_fence);
+    auto *const Zero = ConstantInt::get(IntTy, 0);
+    return Builder.CreateCall(Callee, {Zero});
   }
 
   case KVX::BI__builtin_kvx_lbz:

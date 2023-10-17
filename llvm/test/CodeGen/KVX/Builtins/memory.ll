@@ -63,11 +63,11 @@ define void @fence(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  tail call void @llvm.kvx.fence()
+  tail call void @llvm.kvx.fence(i32 0)
   ret void
 }
 
-declare void @llvm.kvx.fence() #1
+declare void @llvm.kvx.fence(i32) #1
 
 define void @i1inval(){
 ; CHECK-LABEL: i1inval:

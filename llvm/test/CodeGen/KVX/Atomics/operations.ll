@@ -36,8 +36,8 @@ define i64 @atomicrmw_i64_xchg(i64* %ptr, i64 %c, i64 %s) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cb.even $r2 ? .LBB2_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -50,8 +50,8 @@ define i64 @atomicrmw_i64_xchg(i64* %ptr, i64 %c, i64 %s) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r2 ? .LBB2_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xchg i64* %ptr, i64 %c release
@@ -164,9 +164,9 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 
 define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV1-LABEL: atomic_test_and_set:
-; CV1:         make $r1 = 1
+; CV1:         fence
+; CV1-NEXT:    make $r1 = 1
 ; CV1-NEXT:    andd $r3 = $r0, 3
-; CV1-NEXT:    fence
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    slld $r3 = $r3, 3
 ; CV1-NEXT:    sbfd $r7 = $r3, 0
@@ -187,15 +187,15 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV1-NEXT:    cb.even $r4 ? .LBB5_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB5_3:
-; CV1-NEXT:    compw.ne $r0 = $r2, 0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    compw.ne $r0 = $r2, 0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: atomic_test_and_set:
-; CV2:         make $r1 = 1
+; CV2:         fence
+; CV2-NEXT:    make $r1 = 1
 ; CV2-NEXT:    andd $r3 = $r0, 3
-; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    slld $r3 = $r3, 3
 ; CV2-NEXT:    sbfd $r7 = $r3, 0
@@ -218,8 +218,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV2-NEXT:    cb.even $r4 ? .LBB5_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB5_3:
-; CV2-NEXT:    compw.ne $r0 = $r2, 0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    compw.ne $r0 = $r2, 0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xchg i8* %ptr, i8 1 seq_cst
@@ -232,8 +232,8 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; Tests for atomic_cmp_swap operations
 define i64 @cmpxchg_i64(i64* %ptr, i64 %c, i64 %s) {
 ; CV1-LABEL: cmpxchg_i64:
-; CV1:         copyd $r5 = $r1
-; CV1-NEXT:    fence
+; CV1:         fence
+; CV1-NEXT:    copyd $r5 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB6_1:
 ; CV1-NEXT:    copyd $r4 = $r2
@@ -259,8 +259,8 @@ define i64 @cmpxchg_i64(i64* %ptr, i64 %c, i64 %s) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: cmpxchg_i64:
-; CV2:         copyd $r5 = $r1
-; CV2-NEXT:    fence
+; CV2:         fence
+; CV2-NEXT:    copyd $r5 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB6_1:
 ; CV2-NEXT:    copyd $r4 = $r2
@@ -424,8 +424,8 @@ define i64 @atomicrmw_i64_max(i64 *%src, i64 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB13_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -441,8 +441,8 @@ define i64 @atomicrmw_i64_max(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB13_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw max i64 *%src, i64 %b seq_cst
@@ -460,8 +460,8 @@ define i64 @atomicrmw_i64_add(i64 *%src, i64 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB14_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -475,8 +475,8 @@ define i64 @atomicrmw_i64_add(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB14_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw add i64 *%src, i64 %b release
@@ -494,8 +494,8 @@ define i64 @atomicrmw_i64_sub(i64 *%src, i64 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB15_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -509,8 +509,8 @@ define i64 @atomicrmw_i64_sub(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB15_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw sub i64 *%src, i64 %b release
@@ -528,8 +528,8 @@ define i64 @atomicrmw_i64_nand(i64 *%src, i64 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB16_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -543,8 +543,8 @@ define i64 @atomicrmw_i64_nand(i64 *%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB16_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw nand i64 *%src, i64 %b release
@@ -562,8 +562,8 @@ define i32 @atomicrmw_i32_xor(i32 *%src, i32 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB17_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -577,8 +577,8 @@ define i32 @atomicrmw_i32_xor(i32 *%src, i32 %b) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB17_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xor i32 *%src, i32 %b release
@@ -666,8 +666,8 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; Test for immediates that doesn't hold on 37 bits
 define i64 @bigimm(i64* %0, i64 %1) {
 ; CV1-LABEL: bigimm:
-; CV1:         addd $r0 = $r0, 0x40000000000
-; CV1-NEXT:    fence
+; CV1:         fence
+; CV1-NEXT:    addd $r0 = $r0, 0x40000000000
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB19_1:
 ; CV1-NEXT:    ld.u $r3 = 0[$r0]
@@ -678,8 +678,8 @@ define i64 @bigimm(i64* %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    cb.even $r2 ? .LBB19_1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -695,8 +695,8 @@ define i64 @bigimm(i64* %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r2 ? .LBB19_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i64, i64* %0, i64 549755813888

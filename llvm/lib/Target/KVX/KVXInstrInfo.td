@@ -1751,8 +1751,8 @@ def I1INVAL : KVX_INSTRUCTION
 
 let hasSideEffects = 1 in
 def FENCE : KVX_INSTRUCTION
-  <(outs), (ins),
-   "fence",
+  <(outs), (ins AccessesMod:$m),
+   "fence$m",
    [/* no straightforward pattern */],
    LSU_LOAD>;
 

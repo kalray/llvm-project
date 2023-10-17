@@ -184,10 +184,10 @@ def cachelev_l1 : Cachelev<0>;
 def cachelev_l2 : Cachelev<1>;
 
 class Accesses<int N> : PatLeaf<(i32 N)>;
-def accesses_ : Accesses<0>;
-def accesses_w : Accesses<1>;
-def accesses_r : Accesses<2>;
-def accesses_wa : Accesses<3>;
+def accesses_all : Accesses<0>;
+def accesses_w   : Accesses<1>;
+def accesses_r   : Accesses<2>;
+def accesses_wa  : Accesses<3>;
 
 class Channel<int N> : PatLeaf<(i32 N)>;
 def channel_f : Channel<0>;

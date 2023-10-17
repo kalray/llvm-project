@@ -192,6 +192,10 @@ def LsupackMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 5);}]
   let PrintMethod = "printLsupackMod";
 }
 
+def AccessesMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
+  let PrintMethod = "printAccessesMod";
+}
+
 def chain : Operand<OtherVT>;
 
 def build_imm_vec : SDNodeXForm<build_vector, [{

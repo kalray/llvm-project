@@ -8,7 +8,7 @@ define void @rfe() {
 ; CHECK-LABEL: rfe:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    rfe
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 0)
   tail call void @llvm.kvx.rfe()
   unreachable
 }

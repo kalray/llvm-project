@@ -18,9 +18,9 @@ target triple = "kvx-kalray-cos"
 
 define void @_Z1av() {
 ; CV1-LABEL: _Z1av:
-; CV1:         make $r0 = 0
+; CV1:         fence
+; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    addd $r12 = $r12, -32
-; CV1-NEXT:    fence
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -48,8 +48,8 @@ define void @_Z1av() {
 ; CV1-NEXT:  .LBB0_5:
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_6:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -78,8 +78,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_11:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -104,8 +104,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_16:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -130,8 +130,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_21:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -156,8 +156,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_26:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -182,8 +182,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_31:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -208,8 +208,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_36:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -234,8 +234,8 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    ld $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB0_41:
 ; CV1-NEXT:    copyd $r2 = $r0
@@ -264,9 +264,9 @@ define void @_Z1av() {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: _Z1av:
-; CV2:         make $r0 = 0
+; CV2:         fence
+; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    addd $r12 = $r12, -32
-; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
@@ -294,8 +294,8 @@ define void @_Z1av() {
 ; CV2-NEXT:  .LBB0_5:
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_6:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -324,8 +324,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_11:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -350,8 +350,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_16:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -376,8 +376,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_21:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -402,8 +402,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_26:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -428,8 +428,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_31:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -454,8 +454,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_36:
 ; CV2-NEXT:    copyd $r2 = $r0
@@ -480,8 +480,8 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r1 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r3 = $r0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB0_41:
 ; CV2-NEXT:    copyd $r2 = $r0

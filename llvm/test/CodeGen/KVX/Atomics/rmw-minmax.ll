@@ -21,8 +21,8 @@ define i32 @f32min(i32 *%src, i32 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB0_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -40,8 +40,8 @@ define i32 @f32min(i32 *%src, i32 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB0_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw min i32 *%src, i32 %b seq_cst
@@ -63,8 +63,8 @@ define i32 @f32max(i32 *%src, i32 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB1_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -82,8 +82,8 @@ define i32 @f32max(i32 *%src, i32 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB1_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw max i32 *%src, i32 %b seq_cst
@@ -105,8 +105,8 @@ define i32 @f32umin(i32 *%src, i32 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB2_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -124,8 +124,8 @@ define i32 @f32umin(i32 *%src, i32 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB2_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw umin i32 *%src, i32 %b seq_cst
@@ -147,8 +147,8 @@ define i32 @f32umax(i32 *%src, i32 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB3_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyw $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -166,8 +166,8 @@ define i32 @f32umax(i32 *%src, i32 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB3_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw umax i32 *%src, i32 %b seq_cst
@@ -189,8 +189,8 @@ define i64 @f64min(i64 *%src, i64 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB4_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -208,8 +208,8 @@ define i64 @f64min(i64 *%src, i64 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB4_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw min i64 *%src, i64 %b seq_cst
@@ -231,8 +231,8 @@ define i64 @f64max(i64 *%src, i64 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB5_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -250,8 +250,8 @@ define i64 @f64max(i64 *%src, i64 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB5_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw max i64 *%src, i64 %b seq_cst
@@ -273,8 +273,8 @@ define i64 @f64umin(i64 *%src, i64 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB6_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -292,8 +292,8 @@ define i64 @f64umin(i64 *%src, i64 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB6_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw umin i64 *%src, i64 %b seq_cst
@@ -315,8 +315,8 @@ define i64 @f64umax(i64 *%src, i64 %b) {
 ; CV1-NEXT:    cb.even $r2 ? .LBB7_1
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.2:
-; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    fence
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
@@ -334,8 +334,8 @@ define i64 @f64umax(i64 *%src, i64 %b) {
 ; CV2-NEXT:    cb.even $r2 ? .LBB7_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.2:
-; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw umax i64 *%src, i64 %b seq_cst

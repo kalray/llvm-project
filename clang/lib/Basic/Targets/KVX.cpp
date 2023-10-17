@@ -1861,6 +1861,8 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
   Builder.defineMacro("__kvx_v4df", VECTOR_TYPE(double, 4));
   Builder.defineMacro("__kvx_v8df", VECTOR_TYPE(double, 8));
 
+  Builder.defineMacro("__kvx_v256", VECTOR_TYPE(unsigned long, 4));
+
   Builder.defineMacro("FLT_EVAL_METHOD", "0");
 }
 
