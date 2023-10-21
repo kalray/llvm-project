@@ -865,37 +865,19 @@ attributes #0 = { nounwind }
 define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_div_4:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sraw $r4 = $r0, 31
-; CHECK-NEXT:    sraw $r5 = $r1, 31
+; CHECK-NEXT:    srawps $r2 = $r0, 31
+; CHECK-NEXT:    srawps $r3 = $r1, 31
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    srlw $r4 = $r4, 30
-; CHECK-NEXT:    srlw $r5 = $r5, 30
+; CHECK-NEXT:    srlwps $r2 = $r2, 30
+; CHECK-NEXT:    srlwps $r3 = $r3, 30
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srlw $r2 = $r2, 30
-; CHECK-NEXT:    srlw $r3 = $r3, 30
+; CHECK-NEXT:    addwp $r0 = $r0, $r2
+; CHECK-NEXT:    addwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
-; CHECK-NEXT:    insf $r5 = $r3, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addwp $r0 = $r0, $r4
-; CHECK-NEXT:    addwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sraw $r0 = $r0, 2
-; CHECK-NEXT:    sraw $r1 = $r1, 2
-; CHECK-NEXT:    srld $r2 = $r1, 32
-; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sraw $r2 = $r2, 2
-; CHECK-NEXT:    sraw $r3 = $r3, 2
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    srawps $r0 = $r0, 2
+; CHECK-NEXT:    srawps $r1 = $r1, 2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 3)
   %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
   ret <4 x i32> %r
 }
@@ -903,37 +885,19 @@ define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
 define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-LABEL: test_div_32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srad $r2 = $r0, 32
-; CHECK-NEXT:    srad $r3 = $r1, 32
-; CHECK-NEXT:    sraw $r4 = $r0, 31
-; CHECK-NEXT:    sraw $r5 = $r1, 31
+; CHECK-NEXT:    srawps $r2 = $r0, 31
+; CHECK-NEXT:    srawps $r3 = $r1, 31
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sraw $r2 = $r2, 31
-; CHECK-NEXT:    sraw $r3 = $r3, 31
-; CHECK-NEXT:    srlw $r4 = $r4, 27
-; CHECK-NEXT:    srlw $r5 = $r5, 27
+; CHECK-NEXT:    srlwps $r2 = $r2, 27
+; CHECK-NEXT:    srlwps $r3 = $r3, 27
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srlw $r2 = $r2, 27
-; CHECK-NEXT:    srlw $r3 = $r3, 27
+; CHECK-NEXT:    addwp $r0 = $r0, $r2
+; CHECK-NEXT:    addwp $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    insf $r4 = $r2, 63, 32
-; CHECK-NEXT:    insf $r5 = $r3, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addwp $r0 = $r0, $r4
-; CHECK-NEXT:    addwp $r1 = $r1, $r5
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sraw $r0 = $r0, 5
-; CHECK-NEXT:    sraw $r1 = $r1, 5
-; CHECK-NEXT:    srld $r2 = $r1, 32
-; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sraw $r2 = $r2, 5
-; CHECK-NEXT:    sraw $r3 = $r3, 5
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    insf $r0 = $r3, 63, 32
-; CHECK-NEXT:    insf $r1 = $r2, 63, 32
+; CHECK-NEXT:    srawps $r0 = $r0, 5
+; CHECK-NEXT:    srawps $r1 = $r1, 5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 3)
   %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
   ret <4 x i32> %r
 }
@@ -1304,3 +1268,258 @@ define <4 x i32> @fshr_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
 
 declare <4 x i32> @llvm.fshr.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
 declare <4 x i32> @llvm.fshl.v4i32(<4 x i32>, <4 x i32>, <4 x i32>)
+
+define <4 x i32> @shl_wp(<4 x i32> %0) {
+; CHECK-LABEL: shl_wp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllwps $r0 = $r0, 15
+; CHECK-NEXT:    sllwps $r1 = $r1, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = shl <4 x i32> %0, <i32 15, i32 15, i32 15, i32 15>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @shl_wp_r(<4 x i32> %0, i32 %1) {
+; CHECK-LABEL: shl_wp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllwps $r0 = $r0, $r2
+; CHECK-NEXT:    sllwps $r1 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %3 = insertelement <4 x i32> poison, i32 %1, i64 0
+  %4 = shufflevector <4 x i32> %3, <4 x i32> poison, <4 x i32> zeroinitializer
+  %5 = shl <4 x i32> %0, %4
+  ret <4 x i32> %5
+}
+
+define <4 x i32> @shl_wp2(<4 x i32> %0) {
+; CHECK-LABEL: shl_wp2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllwps $r0 = $r0, 15
+; CHECK-NEXT:    sllwps $r1 = $r1, 17
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = shl <4 x i32> %0, <i32 15, i32 15, i32 17, i32 17>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @shl_wp_r2(<4 x i32> %0, i32 %1, i32 %2) {
+; CHECK-LABEL: shl_wp_r2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllwps $r0 = $r0, $r2
+; CHECK-NEXT:    sllwps $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %4 = insertelement <4 x i32> undef, i32 %1, i64 0
+  %5 = insertelement <4 x i32> %4, i32 %1, i64 1
+  %6 = insertelement <4 x i32> %5, i32 %2, i64 2
+  %7 = insertelement <4 x i32> %6, i32 %2, i64 3
+  %8 = shl <4 x i32> %0, %7
+  ret <4 x i32> %8
+}
+
+define <4 x i32> @shl_notwp(<4 x i32> %0) {
+; CHECK-LABEL: shl_notwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllwps $r0 = $r0, 15
+; CHECK-NEXT:    sllwps $r1 = $r1, 31
+; CHECK-NEXT:    sllw $r2 = $r0, 1
+; CHECK-NEXT:    sllw $r3 = $r1, 15
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
+  %2 = shl <4 x i32> %0, <i32 1, i32 15, i32 15, i32 31>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @shl_notwp_r(<4 x i32> %0, <4 x i32> %1) {
+; CHECK-LABEL: shl_notwp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sllw $r2 = $r0, $r2
+; CHECK-NEXT:    sllw $r3 = $r1, $r3
+; CHECK-NEXT:    extfz $r4 = $r2, 36, 32
+; CHECK-NEXT:    extfz $r5 = $r3, 36, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sllwps $r0 = $r0, $r4
+; CHECK-NEXT:    sllwps $r1 = $r1, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %3 = shl <4 x i32> %0, %1
+  ret <4 x i32> %3
+}
+
+define <4 x i32> @lshr_wp(<4 x i32> %0) {
+; CHECK-LABEL: lshr_wp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlwps $r0 = $r0, 15
+; CHECK-NEXT:    srlwps $r1 = $r1, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = lshr <4 x i32> %0, <i32 15, i32 15, i32 15, i32 15>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @lshr_wp_r(<4 x i32> %0, i32 %1) {
+; CHECK-LABEL: lshr_wp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlwps $r0 = $r0, $r2
+; CHECK-NEXT:    srlwps $r1 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %3 = insertelement <4 x i32> poison, i32 %1, i64 0
+  %4 = shufflevector <4 x i32> %3, <4 x i32> poison, <4 x i32> zeroinitializer
+  %5 = lshr <4 x i32> %0, %4
+  ret <4 x i32> %5
+}
+
+define <4 x i32> @lshr_wp2(<4 x i32> %0) {
+; CHECK-LABEL: lshr_wp2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlwps $r0 = $r0, 15
+; CHECK-NEXT:    srlwps $r1 = $r1, 17
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = lshr <4 x i32> %0, <i32 15, i32 15, i32 17, i32 17>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @lshr_wp_r2(<4 x i32> %0, i32 %1, i32 %2) {
+; CHECK-LABEL: lshr_wp_r2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlwps $r0 = $r0, $r2
+; CHECK-NEXT:    srlwps $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %4 = insertelement <4 x i32> undef, i32 %1, i64 0
+  %5 = insertelement <4 x i32> %4, i32 %1, i64 1
+  %6 = insertelement <4 x i32> %5, i32 %2, i64 2
+  %7 = insertelement <4 x i32> %6, i32 %2, i64 3
+  %8 = lshr <4 x i32> %0, %7
+  ret <4 x i32> %8
+}
+
+define <4 x i32> @lshr_notwp(<4 x i32> %0) {
+; CHECK-LABEL: lshr_notwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlwps $r0 = $r0, 15
+; CHECK-NEXT:    srlwps $r1 = $r1, 31
+; CHECK-NEXT:    srlw $r2 = $r0, 1
+; CHECK-NEXT:    srlw $r3 = $r1, 15
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
+  %2 = lshr <4 x i32> %0, <i32 1, i32 15, i32 15, i32 31>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @lshr_notwp_r(<4 x i32> %0, <4 x i32> %1) {
+; CHECK-LABEL: lshr_notwp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srlw $r2 = $r0, $r2
+; CHECK-NEXT:    srlw $r3 = $r1, $r3
+; CHECK-NEXT:    extfz $r4 = $r2, 36, 32
+; CHECK-NEXT:    extfz $r5 = $r3, 36, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srlwps $r0 = $r0, $r4
+; CHECK-NEXT:    srlwps $r1 = $r1, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %3 = lshr <4 x i32> %0, %1
+  ret <4 x i32> %3
+}
+
+define <4 x i32> @ashr_wp(<4 x i32> %0) {
+; CHECK-LABEL: ashr_wp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srawps $r0 = $r0, 15
+; CHECK-NEXT:    srawps $r1 = $r1, 15
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = ashr <4 x i32> %0, <i32 15, i32 15, i32 15, i32 15>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @ashr_wp_r(<4 x i32> %0, i32 %1) {
+; CHECK-LABEL: ashr_wp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srawps $r0 = $r0, $r2
+; CHECK-NEXT:    srawps $r1 = $r1, $r2
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %3 = insertelement <4 x i32> poison, i32 %1, i64 0
+  %4 = shufflevector <4 x i32> %3, <4 x i32> poison, <4 x i32> zeroinitializer
+  %5 = ashr <4 x i32> %0, %4
+  ret <4 x i32> %5
+}
+
+define <4 x i32> @ashr_wp2(<4 x i32> %0) {
+; CHECK-LABEL: ashr_wp2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srawps $r0 = $r0, 15
+; CHECK-NEXT:    srawps $r1 = $r1, 17
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %2 = ashr <4 x i32> %0, <i32 15, i32 15, i32 17, i32 17>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @ashr_wp_r2(<4 x i32> %0, i32 %1, i32 %2) {
+; CHECK-LABEL: ashr_wp_r2:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srawps $r0 = $r0, $r2
+; CHECK-NEXT:    srawps $r1 = $r1, $r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %4 = insertelement <4 x i32> undef, i32 %1, i64 0
+  %5 = insertelement <4 x i32> %4, i32 %1, i64 1
+  %6 = insertelement <4 x i32> %5, i32 %2, i64 2
+  %7 = insertelement <4 x i32> %6, i32 %2, i64 3
+  %8 = ashr <4 x i32> %0, %7
+  ret <4 x i32> %8
+}
+
+define <4 x i32> @ashr_notwp(<4 x i32> %0) {
+; CHECK-LABEL: ashr_notwp:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    srawps $r0 = $r0, 15
+; CHECK-NEXT:    srawps $r1 = $r1, 31
+; CHECK-NEXT:    sraw $r2 = $r0, 1
+; CHECK-NEXT:    sraw $r3 = $r1, 15
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 1)
+  %2 = ashr <4 x i32> %0, <i32 1, i32 15, i32 15, i32 31>
+  ret <4 x i32> %2
+}
+
+define <4 x i32> @ashr_notwp_r(<4 x i32> %0, <4 x i32> %1) {
+; CHECK-LABEL: ashr_notwp_r:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    sraw $r2 = $r0, $r2
+; CHECK-NEXT:    sraw $r3 = $r1, $r3
+; CHECK-NEXT:    extfz $r4 = $r2, 36, 32
+; CHECK-NEXT:    extfz $r5 = $r3, 36, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srawps $r0 = $r0, $r4
+; CHECK-NEXT:    srawps $r1 = $r1, $r5
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r2, 31, 0
+; CHECK-NEXT:    insf $r1 = $r3, 31, 0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 2)
+  %3 = ashr <4 x i32> %0, %1
+  ret <4 x i32> %3
+}

@@ -979,7 +979,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                  ISD::MUL,
                  ISD::SETCC,
                  ISD::SIGN_EXTEND,
+                 ISD::SHL,
                  ISD::SRA,
+                 ISD::SRL,
                  ISD::STORE,
                  ISD::TRUNCATE,
                  ISD::VECREDUCE_ADD,
@@ -1155,8 +1157,7 @@ unsigned KVXTargetLowering::getVectorTypeBreakdownForCallingConv(
     return NumIntermediates;
   }
 
-  if ((!isPowerOf2_32(VT.getVectorNumElements())) &&
-      (VT.getSizeInBits() % 64)) {
+  if (!VT.isPow2VectorType() && (VT.getSizeInBits() % 64)) {
     VT = VT.getPow2VectorType(Context);
     LLVM_DEBUG(
         dbgs() << "CC vector type has a non-power of 2 number of elements "
@@ -3363,7 +3364,7 @@ static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
   LLVMContext &C = *Dag.getContext();
   const auto Opc = N->getOpcode();
   if (!VT.isVector() || VT.getVectorMinNumElements() == 1 ||
-      !isPowerOf2_32(VT.getVectorMinNumElements()))
+      !VT.isPow2VectorType())
     return SDValue();
 
   auto &TLI = Dag.getTargetLoweringInfo();
@@ -3403,6 +3404,20 @@ static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
     return Dag.getNode(ISD::BUILD_VECTOR, DL, VT, Lo, Hi);
 
   return Dag.getNode(ISD::CONCAT_VECTORS, DL, VT, Lo, Hi);
+}
+
+static inline SDValue splitDownTo64Bits(SDNode *N,
+                                        TargetLowering::DAGCombinerInfo &DCI,
+                                        SelectionDAG &Dag) {
+  auto T = N->getValueType(0);
+  if (!T.isSimple() || !T.isVector())
+    return SDValue();
+
+  MVT VT = N->getSimpleValueType(0);
+  if (VT.getSizeInBits() <= 64 || !VT.isPow2VectorType())
+    return SDValue();
+
+  return combineSplit(N, DCI, Dag);
 }
 
 static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
@@ -3798,8 +3813,6 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineMUL(N, DAG);
   case ISD::SIGN_EXTEND:
     return combineSIGN_EXTEND(N, DAG);
-  case ISD::SRA:
-    return combineSRA(N, DAG);
   case ISD::STORE:
     return combineStore(N, DCI, DAG);
   case ISD::TRUNCATE:
@@ -3811,6 +3824,15 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::FDIV: {
     return combineFDIV(N, DAG);
   }
+  case ISD::SRA: {
+    SDValue R = combineSRA(N, DAG);
+    if (R)
+      return R;
+  }
+    LLVM_FALLTHROUGH;
+  case ISD::SHL:
+  case ISD::SRL:
+    return splitDownTo64Bits(N, DCI, DAG);
   }
 
   return SDValue();
