@@ -1002,6 +1002,10 @@ def is_splat_build_vec : PatLeaf<(build_vector), [{
 }], extract_splat_node>;
 
 def is_buildvec_signed16 : PatLeaf<(build_vector), [{
+  auto Sz = N->getValueSizeInBits(0);
+  if (Sz > 64)
+    return 0;
+
   auto BV = cast<BuildVectorSDNode>(N);
   if (!BV->isConstant())
     return 0;
@@ -1011,6 +1015,10 @@ def is_buildvec_signed16 : PatLeaf<(build_vector), [{
 }], build_imm_vec>;
 
 def is_buildvec_signed43 : PatLeaf<(build_vector), [{
+  auto Sz = N->getValueSizeInBits(0);
+  if (Sz > 64)
+    return 0;
+
   auto BV = cast<BuildVectorSDNode>(N);
   if (!BV->isConstant())
     return 0;

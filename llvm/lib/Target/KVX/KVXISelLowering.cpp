@@ -4843,7 +4843,9 @@ uint64_t KVX_LOW::getImmVector(const llvm::BuildVectorSDNode *BV,
       NumEltsToScan /= TotalSize / 64;
     }
   }
-  assert(NumEltsToScan * EltSize <= 64);
+
+  if (NumEltsToScan * EltSize > 64)
+    report_fatal_error("getImmVector of vector larger than 64 bits!");
 
 /* Extra check that, when AllowRepeatExtend is ON, the first 64 bits are
  * indeed repeated. If we do not check this we risk emitting wrong immediate
