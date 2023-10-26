@@ -2854,8 +2854,8 @@ SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
 }
 
 static SDValue combineSETCC(SDNode *N, SelectionDAG &DAG) {
-
-  if (N->getSimpleValueType(0).isVector())
+  auto VT = N->getValueType(0);
+  if (!VT.isSimple() || VT.isVector())
     return SDValue();
 
   auto Cast = N->getOperand(0);
