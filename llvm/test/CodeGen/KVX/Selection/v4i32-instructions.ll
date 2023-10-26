@@ -237,22 +237,22 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    call __divsi3
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sxwd $r0 = $r20
-; CHECK-NEXT:    sxwd $r1 = $r18
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    call __divsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    call __divsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sxwd $r0 = $r21
-; CHECK-NEXT:    sxwd $r1 = $r19
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call __divdi3
+; CHECK-NEXT:    call __divsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r22, 63, 32
@@ -295,22 +295,22 @@ define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; CHECK-NEXT:    srad $r0 = $r20, 32
 ; CHECK-NEXT:    srad $r1 = $r18, 32
 ; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    call __moddi3
+; CHECK-NEXT:    call __modsi3
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sxwd $r0 = $r20
-; CHECK-NEXT:    sxwd $r1 = $r18
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    call __moddi3
+; CHECK-NEXT:    call __modsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    srad $r0 = $r21, 32
 ; CHECK-NEXT:    srad $r1 = $r19, 32
 ; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __moddi3
+; CHECK-NEXT:    call __modsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sxwd $r0 = $r21
-; CHECK-NEXT:    sxwd $r1 = $r19
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
 ; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call __moddi3
+; CHECK-NEXT:    call __modsi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r0 = $r20, 63, 32
 ; CHECK-NEXT:    insf $r18 = $r22, 63, 32

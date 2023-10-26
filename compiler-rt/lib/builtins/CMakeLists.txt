@@ -690,7 +690,18 @@ set(ve_SOURCES
   ${GENERIC_SOURCES})
 
 set(kvx_SOURCES
+  kvx/divdi3.c
+  kvx/divmoddi4.c
+  kvx/divmodsi4.c
+  kvx/divsi3.c
+  kvx/moddi3.c
+  kvx/modsi3.c
+  kvx/udivdi3.c
   kvx/udivmoddi4.c
+  kvx/udivmodsi4.c
+  kvx/udivsi3.c
+  kvx/umoddi3.c
+  kvx/umodsi3.c
   ${GENERIC_SOURCES}
   ${GENERIC_TF_SOURCES}
 )
@@ -706,7 +717,7 @@ if (APPLE)
   add_subdirectory(macho_embedded)
   darwin_add_builtin_libraries(${BUILTIN_SUPPORTED_OS})
 else ()
-  set(BUILTIN_CFLAGS "")
+  set(BUILTIN_CFLAGS -Wall -Wextra)
 
   if (COMPILER_RT_HAS_FCF_PROTECTION_FLAG)
     append_list_if(COMPILER_RT_ENABLE_CET -fcf-protection=full BUILTIN_CFLAGS)

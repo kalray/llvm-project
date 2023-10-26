@@ -12,35 +12,36 @@
 
 #include "../int_lib.h"
 
-COMPILER_RT_ABI du_int __udivmoddi4(du_int num, du_int den, du_int *modwanted) {
-  du_int r = num, q = 0;
+du_int __udivmoddi4(du_int num, du_int den, du_int *modwanted) {
+  if (den > num) {
+    if (modwanted)
+      *modwanted = num;
 
-  if (den <= r) {
-    unsigned k = __builtin_clzll(den) - __builtin_clzll(r);
-    den = den << k;
+    return 0;
+  }
 
-    if (r >= den) {
-      r = r - den;
-      q = 1LL << k;
-    }
+  du_int q = 0;
+  unsigned k = __builtin_clzll(den) - __builtin_clzll(num);
+  den <<= k;
 
-    if (k != 0) {
-      unsigned i = k;
-      den = den >> 1;
+  if (num >= den) {
+    num -= den;
+    q = 1LL << k;
+  }
 
-      do {
-        r = __builtin_kvx_stsud(den, r);
-        i--;
-      } while (i != 0);
+  if (k != 0) {
+    den >>= 1;
+    du_int mask = (du_int)(-1l) << k;
 
-      q = q + r;
-      r = r >> k;
-      q = q - (r << k);
-    }
+    for (int i = k; i > 0; --i)
+      num = __builtin_kvx_stsud(den, num);
+
+    q += num - (num & mask);
+    num >>= k;
   }
 
   if (modwanted)
-    *modwanted = r;
+    *modwanted = num;
 
   return q;
 }

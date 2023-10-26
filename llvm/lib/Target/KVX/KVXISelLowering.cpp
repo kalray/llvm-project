@@ -468,19 +468,15 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::TRAP, MVT::Other, Legal);
 
-  setOperationAction(ISD::SDIV, MVT::i32, Promote);
-  setOperationAction(ISD::SDIVREM, MVT::i32, Promote);
-  setOperationAction(ISD::SREM, MVT::i32, Promote);
-  setOperationAction(ISD::UDIV, MVT::i32, Promote);
-  setOperationAction(ISD::UDIVREM, MVT::i32, Promote);
-  setOperationAction(ISD::UREM, MVT::i32, Promote);
+  for (MVT VT : {MVT::i32, MVT::i64})
+    for (auto I : {ISD::SDIV, ISD::SDIVREM, ISD::SREM, ISD::UDIV, ISD::UDIVREM,
+                   ISD::UREM})
+      setOperationAction(I, VT, LibCall);
 
-  setOperationAction(ISD::SDIV, MVT::i64, Expand);
-  setOperationAction(ISD::SDIVREM, MVT::i64, Expand);
-  setOperationAction(ISD::SREM, MVT::i64, Expand);
-  setOperationAction(ISD::UDIV, MVT::i64, Expand);
-  setOperationAction(ISD::UDIVREM, MVT::i64, Expand);
-  setOperationAction(ISD::UREM, MVT::i64, Expand);
+  setLibcallName(RTLIB::SDIVREM_I32, "__divmodsi4");
+  setLibcallName(RTLIB::UDIVREM_I32, "__udivmodsi4");
+  setLibcallName(RTLIB::SDIVREM_I64, "__divmoddi4");
+  setLibcallName(RTLIB::SDIVREM_I64, "__udivmoddi4");
 
   setOperationAction(ISD::MULHU, MVT::v4i16, Custom);
   setOperationAction(ISD::MULHS, MVT::v4i16, Custom);

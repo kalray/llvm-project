@@ -213,12 +213,12 @@ define <2 x i32> @test_div(<2 x i32> %a, <2 x i32> %b) #0 {
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    srad $r0 = $r19, 32
 ; ALL-NEXT:    srad $r1 = $r18, 32
-; ALL-NEXT:    call __divdi3
+; ALL-NEXT:    call __divsi3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sxwd $r0 = $r19
-; ALL-NEXT:    sxwd $r1 = $r18
+; ALL-NEXT:    copyd $r0 = $r19
+; ALL-NEXT:    copyd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divdi3
+; ALL-NEXT:    call __divsi3
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
 ; ALL-NEXT:    insf $r0 = $r20, 63, 32
@@ -252,12 +252,12 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    srad $r0 = $r19, 32
 ; ALL-NEXT:    srad $r1 = $r18, 32
-; ALL-NEXT:    call __moddi3
+; ALL-NEXT:    call __modsi3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sxwd $r0 = $r19
-; ALL-NEXT:    sxwd $r1 = $r18
+; ALL-NEXT:    copyd $r0 = $r19
+; ALL-NEXT:    copyd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __moddi3
+; ALL-NEXT:    call __modsi3
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
 ; ALL-NEXT:    insf $r0 = $r20, 63, 32

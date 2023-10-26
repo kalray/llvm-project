@@ -208,19 +208,13 @@ define <2 x i16> @test_div(<2 x i16> %a, <2 x i16> %b) #0 {
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    sraw $r0 = $r19, 16
 ; ALL-NEXT:    sraw $r1 = $r18, 16
+; ALL-NEXT:    call __divsi3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __divsi3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __divdi3
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
 ; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;; # (end cycle 0)
@@ -253,19 +247,13 @@ define <2 x i16> @test_rem(<2 x i16> %a, <2 x i16> %b) #0 {
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    sraw $r0 = $r19, 16
 ; ALL-NEXT:    sraw $r1 = $r18, 16
+; ALL-NEXT:    call __modsi3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    sxhd $r0 = $r19
 ; ALL-NEXT:    sxhd $r1 = $r18
 ; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __modsi3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sxwd $r0 = $r0
-; ALL-NEXT:    sxwd $r1 = $r1
-; ALL-NEXT:    call __moddi3
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    lq $r18r19 = 0[$r12]
 ; ALL-NEXT:    insf $r0 = $r20, 31, 16
 ; ALL-NEXT:    ;; # (end cycle 0)

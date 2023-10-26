@@ -354,22 +354,16 @@ define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __divsi3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __divdi3
-; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    extfz $r0 = $r19, 23, 16
 ; CV1-NEXT:    extfz $r1 = $r18, 23, 16
 ; CV1-NEXT:    copyd $r20 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __divsi3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __divdi3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    extfz $r0 = $r19, 15, 8
 ; CV1-NEXT:    extfz $r1 = $r18, 15, 8
 ; CV1-NEXT:    copyd $r21 = $r0
@@ -377,23 +371,17 @@ define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r21 = $r20, 15, 8
-; CV1-NEXT:    call __divdi3
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    call __divsi3
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    zxbd $r0 = $r19
 ; CV1-NEXT:    zxbd $r1 = $r18
 ; CV1-NEXT:    copyd $r20 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __divsi3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __divdi3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lq $r18r19 = 24[$r12]
 ; CV1-NEXT:    insf $r0 = $r20, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -426,22 +414,16 @@ define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __divsi3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __divdi3
-; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    extfz $r0 = $r19, 23, 16
 ; CV2-NEXT:    extfz $r1 = $r18, 23, 16
 ; CV2-NEXT:    copyd $r20 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __divsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __divdi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    extfz $r0 = $r19, 15, 8
 ; CV2-NEXT:    extfz $r1 = $r18, 15, 8
 ; CV2-NEXT:    copyd $r21 = $r0
@@ -449,22 +431,16 @@ define <4 x i8> @test_div(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
 ; CV2-NEXT:    insf $r21 = $r20, 15, 8
+; CV2-NEXT:    call __divsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __divdi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    zxbd $r0 = $r19
 ; CV2-NEXT:    zxbd $r1 = $r18
 ; CV2-NEXT:    copyd $r20 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __divsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __divdi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lq $r18r19 = 24[$r12]
 ; CV2-NEXT:    insf $r0 = $r20, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -502,22 +478,16 @@ define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __modsi3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __moddi3
-; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    extfz $r0 = $r19, 23, 16
 ; CV1-NEXT:    extfz $r1 = $r18, 23, 16
 ; CV1-NEXT:    copyd $r20 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __modsi3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __moddi3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    extfz $r0 = $r19, 15, 8
 ; CV1-NEXT:    extfz $r1 = $r18, 15, 8
 ; CV1-NEXT:    copyd $r21 = $r0
@@ -525,23 +495,17 @@ define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r21 = $r20, 15, 8
-; CV1-NEXT:    call __moddi3
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    call __modsi3
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    zxbd $r0 = $r19
 ; CV1-NEXT:    zxbd $r1 = $r18
 ; CV1-NEXT:    copyd $r20 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sxbd $r0 = $r0
 ; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    call __modsi3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sxwd $r0 = $r0
-; CV1-NEXT:    sxwd $r1 = $r1
-; CV1-NEXT:    call __moddi3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lq $r18r19 = 24[$r12]
 ; CV1-NEXT:    insf $r0 = $r20, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -574,22 +538,16 @@ define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __modsi3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __moddi3
-; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    extfz $r0 = $r19, 23, 16
 ; CV2-NEXT:    extfz $r1 = $r18, 23, 16
 ; CV2-NEXT:    copyd $r20 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __modsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __moddi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    extfz $r0 = $r19, 15, 8
 ; CV2-NEXT:    extfz $r1 = $r18, 15, 8
 ; CV2-NEXT:    copyd $r21 = $r0
@@ -597,22 +555,16 @@ define <4 x i8> @test_rem(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
 ; CV2-NEXT:    insf $r21 = $r20, 15, 8
+; CV2-NEXT:    call __modsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __moddi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    zxbd $r0 = $r19
 ; CV2-NEXT:    zxbd $r1 = $r18
 ; CV2-NEXT:    copyd $r20 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sxbd $r0 = $r0
 ; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    call __modsi3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sxwd $r0 = $r0
-; CV2-NEXT:    sxwd $r1 = $r1
-; CV2-NEXT:    call __moddi3
-; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lq $r18r19 = 24[$r12]
 ; CV2-NEXT:    insf $r0 = $r20, 15, 8
 ; CV2-NEXT:    ;; # (end cycle 0)

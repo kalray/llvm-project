@@ -213,247 +213,105 @@ define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 }
 
 define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
-; V1-LABEL: test_div:
-; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -64
-; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 56[$r12] = $r16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sq 40[$r12] = $r20r21
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sq 24[$r12] = $r18r19
-; V1-NEXT:    copyd $r18 = $r1
-; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    srad $r0 = $r19, 48
-; V1-NEXT:    srad $r1 = $r18, 48
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    extfs $r0 = $r19, 47, 32
-; V1-NEXT:    extfs $r1 = $r18, 47, 32
-; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfs $r0 = $r19, 31, 16
-; V1-NEXT:    extfs $r1 = $r18, 31, 16
-; V1-NEXT:    copyd $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r21 = $r20, 31, 16
-; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxhd $r0 = $r19
-; V1-NEXT:    sxhd $r1 = $r18
-; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __divdi3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    lq $r18r19 = 24[$r12]
-; V1-NEXT:    insf $r0 = $r20, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    lq $r20r21 = 40[$r12]
-; V1-NEXT:    insf $r0 = $r21, 63, 32
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r16 = 56[$r12]
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 64
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    ret
-; V1-NEXT:    ;;
-;
-; V2-LABEL: test_div:
-; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -64
-; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 56[$r12] = $r16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sq 40[$r12] = $r20r21
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    sq 24[$r12] = $r18r19
-; V2-NEXT:    copyd $r18 = $r1
-; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    srad $r0 = $r19, 48
-; V2-NEXT:    srad $r1 = $r18, 48
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    extfs $r0 = $r19, 47, 32
-; V2-NEXT:    extfs $r1 = $r18, 47, 32
-; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfs $r0 = $r19, 31, 16
-; V2-NEXT:    extfs $r1 = $r18, 31, 16
-; V2-NEXT:    copyd $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    insf $r21 = $r20, 31, 16
-; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sxhd $r0 = $r19
-; V2-NEXT:    sxhd $r1 = $r18
-; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __divdi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    lq $r18r19 = 24[$r12]
-; V2-NEXT:    insf $r0 = $r20, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    lq $r20r21 = 40[$r12]
-; V2-NEXT:    insf $r0 = $r21, 63, 32
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    ld $r16 = 56[$r12]
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 64
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; ALL-LABEL: test_div:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -64
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 56[$r12] = $r16
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sq 40[$r12] = $r20r21
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    sq 24[$r12] = $r18r19
+; ALL-NEXT:    copyd $r18 = $r1
+; ALL-NEXT:    copyd $r19 = $r0
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    srad $r0 = $r19, 48
+; ALL-NEXT:    srad $r1 = $r18, 48
+; ALL-NEXT:    call __divsi3
+; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    extfs $r0 = $r19, 47, 32
+; ALL-NEXT:    extfs $r1 = $r18, 47, 32
+; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __divsi3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    extfs $r0 = $r19, 31, 16
+; ALL-NEXT:    extfs $r1 = $r18, 31, 16
+; ALL-NEXT:    copyd $r21 = $r0
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    insf $r21 = $r20, 31, 16
+; ALL-NEXT:    call __divsi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sxhd $r0 = $r19
+; ALL-NEXT:    sxhd $r1 = $r18
+; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __divsi3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r18r19 = 24[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r20r21 = 40[$r12]
+; ALL-NEXT:    insf $r0 = $r21, 63, 32
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 56[$r12]
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 64
+; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
   %r = sdiv <4 x i16> %a, %b
   ret <4 x i16> %r
 }
 
 define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
-; V1-LABEL: test_rem:
-; V1:       # %bb.0:
-; V1-NEXT:    addd $r12 = $r12, -64
-; V1-NEXT:    get $r16 = $ra
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sd 56[$r12] = $r16
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sq 40[$r12] = $r20r21
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sq 24[$r12] = $r18r19
-; V1-NEXT:    copyd $r18 = $r1
-; V1-NEXT:    copyd $r19 = $r0
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    srad $r0 = $r19, 48
-; V1-NEXT:    srad $r1 = $r18, 48
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    extfs $r0 = $r19, 47, 32
-; V1-NEXT:    extfs $r1 = $r18, 47, 32
-; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    extfs $r0 = $r19, 31, 16
-; V1-NEXT:    extfs $r1 = $r18, 31, 16
-; V1-NEXT:    copyd $r21 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    insf $r21 = $r20, 31, 16
-; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxhd $r0 = $r19
-; V1-NEXT:    sxhd $r1 = $r18
-; V1-NEXT:    copyd $r20 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sxwd $r0 = $r0
-; V1-NEXT:    sxwd $r1 = $r1
-; V1-NEXT:    call __moddi3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    lq $r18r19 = 24[$r12]
-; V1-NEXT:    insf $r0 = $r20, 31, 16
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    lq $r20r21 = 40[$r12]
-; V1-NEXT:    insf $r0 = $r21, 63, 32
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    ld $r16 = 56[$r12]
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    set $ra = $r16
-; V1-NEXT:    addd $r12 = $r12, 64
-; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    ret
-; V1-NEXT:    ;;
-;
-; V2-LABEL: test_rem:
-; V2:       # %bb.0:
-; V2-NEXT:    addd $r12 = $r12, -64
-; V2-NEXT:    get $r16 = $ra
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sd 56[$r12] = $r16
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sq 40[$r12] = $r20r21
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    sq 24[$r12] = $r18r19
-; V2-NEXT:    copyd $r18 = $r1
-; V2-NEXT:    copyd $r19 = $r0
-; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    srad $r0 = $r19, 48
-; V2-NEXT:    srad $r1 = $r18, 48
-; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;; # (end cycle 5)
-; V2-NEXT:    extfs $r0 = $r19, 47, 32
-; V2-NEXT:    extfs $r1 = $r18, 47, 32
-; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    extfs $r0 = $r19, 31, 16
-; V2-NEXT:    extfs $r1 = $r18, 31, 16
-; V2-NEXT:    copyd $r21 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    insf $r21 = $r20, 31, 16
-; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    sxhd $r0 = $r19
-; V2-NEXT:    sxhd $r1 = $r18
-; V2-NEXT:    copyd $r20 = $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sxwd $r0 = $r0
-; V2-NEXT:    sxwd $r1 = $r1
-; V2-NEXT:    call __moddi3
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    lq $r18r19 = 24[$r12]
-; V2-NEXT:    insf $r0 = $r20, 31, 16
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    lq $r20r21 = 40[$r12]
-; V2-NEXT:    insf $r0 = $r21, 63, 32
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    ld $r16 = 56[$r12]
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    set $ra = $r16
-; V2-NEXT:    addd $r12 = $r12, 64
-; V2-NEXT:    ;; # (end cycle 7)
-; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; ALL-LABEL: test_rem:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -64
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 56[$r12] = $r16
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sq 40[$r12] = $r20r21
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    sq 24[$r12] = $r18r19
+; ALL-NEXT:    copyd $r18 = $r1
+; ALL-NEXT:    copyd $r19 = $r0
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    srad $r0 = $r19, 48
+; ALL-NEXT:    srad $r1 = $r18, 48
+; ALL-NEXT:    call __modsi3
+; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    extfs $r0 = $r19, 47, 32
+; ALL-NEXT:    extfs $r1 = $r18, 47, 32
+; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __modsi3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    extfs $r0 = $r19, 31, 16
+; ALL-NEXT:    extfs $r1 = $r18, 31, 16
+; ALL-NEXT:    copyd $r21 = $r0
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    insf $r21 = $r20, 31, 16
+; ALL-NEXT:    call __modsi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sxhd $r0 = $r19
+; ALL-NEXT:    sxhd $r1 = $r18
+; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    call __modsi3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r18r19 = 24[$r12]
+; ALL-NEXT:    insf $r0 = $r20, 31, 16
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r20r21 = 40[$r12]
+; ALL-NEXT:    insf $r0 = $r21, 63, 32
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 56[$r12]
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 64
+; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
   %r = srem <4 x i16> %a, %b
   ret <4 x i16> %r
 }
