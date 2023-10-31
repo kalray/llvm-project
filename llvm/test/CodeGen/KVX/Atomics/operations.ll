@@ -556,7 +556,7 @@ define i32 @atomicrmw_i32_xor(i32 *%src, i32 %b) {
 ; CV1:       .LBB17_1:
 ; CV1-NEXT:    lwz.u $r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r2 = $r1, $r3
+; CV1-NEXT:    eorw $r2 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    acswapw 0[$r0] = $r2r3
 ; CV1-NEXT:    ;; # (end cycle 4)
@@ -571,7 +571,7 @@ define i32 @atomicrmw_i32_xor(i32 *%src, i32 %b) {
 ; CV2:       .LBB17_1:
 ; CV2-NEXT:    lwz.u $r3 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorw $r2 = $r1, $r3
+; CV2-NEXT:    eorw $r2 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
 ; CV2-NEXT:    ;; # (end cycle 4)

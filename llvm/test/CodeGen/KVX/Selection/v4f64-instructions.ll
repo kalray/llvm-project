@@ -153,8 +153,8 @@ define <4 x double> @test_fneg(<4 x double> %a) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fnegd $r0 = $r0
 ; CHECK-NEXT:    fnegd $r1 = $r1
-; CHECK-NEXT:    xord $r2 = $r2, 0x8000000000000000
-; CHECK-NEXT:    xord $r3 = $r3, 0x8000000000000000
+; CHECK-NEXT:    eord $r2 = $r2, 0x8000000000000000
+; CHECK-NEXT:    eord $r3 = $r3, 0x8000000000000000
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;

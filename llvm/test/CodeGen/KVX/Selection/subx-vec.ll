@@ -1276,14 +1276,14 @@ entry:
 define <8 x i8> @sub_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-LABEL: sub_i8x8_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    iord $r2 = $r0, 0x80808080.@
 ; V1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 2)
 ;
@@ -1303,13 +1303,13 @@ define <8 x i8> @sub_i8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    make $r1 = 0xff05ff05
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    iord $r2 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 3)
 ;
@@ -1331,13 +1331,13 @@ define <8 x i8> @sub_i8x4_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    make $r1 = 0xff05ff05ff05ff05
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    iord $r2 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 3)
 ;
@@ -1357,13 +1357,13 @@ define <8 x i8> @sub_i8x8_ri_rr2(<8 x i8> %a) {
 ; V1-NEXT:    make $r1 = 0x5ff050105ff05
 ; V1-NEXT:    iord $r2 = $r0, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 3)
 ;
@@ -1502,13 +1502,13 @@ define <8 x i8> @subx2_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1538,13 +1538,13 @@ define <8 x i8> @subx2_u8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1682,13 +1682,13 @@ define <8 x i8> @subx4_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1718,13 +1718,13 @@ define <8 x i8> @subx4_u8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1862,13 +1862,13 @@ define <8 x i8> @subx8_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1898,13 +1898,13 @@ define <8 x i8> @subx8_u8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2043,13 +2043,13 @@ define <8 x i8> @subx16_i8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2079,13 +2079,13 @@ define <8 x i8> @subx16_u8x8_rr(<8 x i8> %a, <8 x i8> %b) {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    iord $r1 = $r1, $r2
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r0, $r1
+; V1-NEXT:    neord $r0 = $r0, $r1
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2265,14 +2265,14 @@ define <8 x i8> @subx2_i8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2302,14 +2302,14 @@ define <8 x i8> @subx2_i8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x403020104030201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2339,14 +2339,14 @@ define <8 x i8> @subx2_i8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x301030102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2378,14 +2378,14 @@ define <8 x i8> @subx2_u8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2415,14 +2415,14 @@ define <8 x i8> @subx2_u8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2452,14 +2452,14 @@ define <8 x i8> @subx2_u8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x301030102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2596,14 +2596,14 @@ define <8 x i8> @subx4_i8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2633,14 +2633,14 @@ define <8 x i8> @subx4_i8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2670,14 +2670,14 @@ define <8 x i8> @subx4_i8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2710,14 +2710,14 @@ define <8 x i8> @subx4_u8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2747,14 +2747,14 @@ define <8 x i8> @subx4_u8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2784,14 +2784,14 @@ define <8 x i8> @subx4_u8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -2995,14 +2995,14 @@ define <8 x i8> @subx8_i8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3032,14 +3032,14 @@ define <8 x i8> @subx8_i8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3069,14 +3069,14 @@ define <8 x i8> @subx8_i8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3108,14 +3108,14 @@ define <8 x i8> @subx8_u8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3145,14 +3145,14 @@ define <8 x i8> @subx8_u8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3182,14 +3182,14 @@ define <8 x i8> @subx8_u8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3476,14 +3476,14 @@ define <8 x i8> @subx16_i8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3513,14 +3513,14 @@ define <8 x i8> @subx16_i8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3550,14 +3550,14 @@ define <8 x i8> @subx16_i8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3589,14 +3589,14 @@ define <8 x i8> @subx16_u8x8_ri_(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x2010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3626,14 +3626,14 @@ define <8 x i8> @subx16_u8x8_ri_at(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x201020102010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;
@@ -3663,14 +3663,14 @@ define <8 x i8> @subx16_u8x8_rr_2(<8 x i8> %a) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    make $r1 = 0x401020103010201
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r1, $r0
+; V1-NEXT:    neord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    iord $r3 = $r1, 0x80808080.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r2, $r3
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;

@@ -11,7 +11,7 @@ target triple = "kvx-kalray-cos"
 define <8 x i8> @v8i8xor(<8 x i8> %a, <8 x i8> %b){
 ; CHECK-LABEL: v8i8xor:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r1, $r0
+; CHECK-NEXT:    eord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -22,7 +22,7 @@ entry:
 define <8 x i8> @v8i8xor_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x3030303.@
+; CHECK-NEXT:    eord $r0 = $r0, 0x3030303.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -102,7 +102,7 @@ entry:
 define <4 x i16> @v4i16xor(<4 x i16> %a, <4 x i16> %b){
 ; CHECK-LABEL: v4i16xor:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r1, $r0
+; CHECK-NEXT:    eord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -113,7 +113,7 @@ entry:
 define <4 x i16> @v4i16xor_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x30003.@
+; CHECK-NEXT:    eord $r0 = $r0, 0x30003.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -194,7 +194,7 @@ entry:
 define <2 x i32> @v2i32xor(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: v2i32xor:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r1, $r0
+; CHECK-NEXT:    eord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -205,7 +205,7 @@ entry:
 define <2 x i32> @v2i32xor_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xord $r0 = $r0, 0x3.@
+; CHECK-NEXT:    eord $r0 = $r0, 0x3.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -285,7 +285,7 @@ entry:
 define <4 x i8> @v4i8xor(<4 x i8> %a, <4 x i8> %b){
 ; CHECK-LABEL: v4i8xor:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    eorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -296,7 +296,7 @@ entry:
 define <4 x i8> @v4i8xor_imm(<4 x i8> %a){
 ; CHECK-LABEL: v4i8xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 0x10303fd
+; CHECK-NEXT:    eorw $r0 = $r0, 0x10303fd
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -376,7 +376,7 @@ entry:
 define <2 x i8> @v2i8xor(<2 x i8> %a, <2 x i8> %b){
 ; CHECK-LABEL: v2i8xor:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    eorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -387,7 +387,7 @@ entry:
 define <2 x i8> @v2i8xor_imm(<2 x i8> %a){
 ; CHECK-LABEL: v2i8xor_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 1021
+; CHECK-NEXT:    eorw $r0 = $r0, 1021
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

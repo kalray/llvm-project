@@ -12,13 +12,13 @@ define <8 x i8> @negbo(<8 x i8> %0) {
 ; CV1-NEXT:    make $r1 = 0
 ; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    nxord $r0 = $r1, $r0
+; CV1-NEXT:    neord $r0 = $r1, $r0
 ; CV1-NEXT:    iord $r2 = $r1, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; CV1-NEXT:    sbfd $r1 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -68,9 +68,9 @@ define <8 x i16> @negbx(<8 x i16> %0) {
 ; CV1-NEXT:    make $r2 = 0
 ; CV1-NEXT:    andd $r4 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    nxord $r0 = $r2, $r0
+; CV1-NEXT:    neord $r0 = $r2, $r0
 ; CV1-NEXT:    andd $r1 = $r1, 0x7f7f7f7f.@
-; CV1-NEXT:    nxord $r2 = $r2, $r1
+; CV1-NEXT:    neord $r2 = $r2, $r1
 ; CV1-NEXT:    iord $r3 = $r2, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r0 = $r0, 0x80808080.@
@@ -78,8 +78,8 @@ define <8 x i16> @negbx(<8 x i16> %0) {
 ; CV1-NEXT:    andd $r2 = $r2, 0x80808080.@
 ; CV1-NEXT:    sbfd $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xord $r0 = $r0, $r4
-; CV1-NEXT:    xord $r1 = $r2, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r1 = $r2, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -145,13 +145,13 @@ define <8 x i32> @negbv(<8 x i32> %0) {
 ; CV1-NEXT:    andd $r7 = $r1, 0x7f7f7f7f.@
 ; CV1-NEXT:    andd $r8 = $r2, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    nxord $r0 = $r5, $r0
-; CV1-NEXT:    nxord $r1 = $r5, $r1
-; CV1-NEXT:    nxord $r2 = $r5, $r2
+; CV1-NEXT:    neord $r0 = $r5, $r0
+; CV1-NEXT:    neord $r1 = $r5, $r1
+; CV1-NEXT:    neord $r2 = $r5, $r2
 ; CV1-NEXT:    iord $r6 = $r5, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r0 = $r0, 0x80808080.@
-; CV1-NEXT:    nxord $r3 = $r5, $r3
+; CV1-NEXT:    neord $r3 = $r5, $r3
 ; CV1-NEXT:    sbfd $r4 = $r4, $r6
 ; CV1-NEXT:    andd $r9 = $r3, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -160,13 +160,13 @@ define <8 x i32> @negbv(<8 x i32> %0) {
 ; CV1-NEXT:    sbfd $r5 = $r8, $r6
 ; CV1-NEXT:    sbfd $r7 = $r7, $r6
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xord $r0 = $r0, $r4
-; CV1-NEXT:    xord $r1 = $r1, $r7
+; CV1-NEXT:    eord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r1 = $r1, $r7
 ; CV1-NEXT:    andd $r3 = $r3, 0x80808080.@
 ; CV1-NEXT:    sbfd $r6 = $r9, $r6
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xord $r2 = $r2, $r5
-; CV1-NEXT:    xord $r3 = $r3, $r6
+; CV1-NEXT:    eord $r2 = $r2, $r5
+; CV1-NEXT:    eord $r3 = $r3, $r6
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 5)
 ;

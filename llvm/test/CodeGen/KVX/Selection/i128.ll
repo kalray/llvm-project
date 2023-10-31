@@ -55,8 +55,8 @@ define i128 @mul(i128 %0, i128 %1) {
 define i128 @instxor(i128 %0, i128 %1) {
 ; CHECK-LABEL: instxor:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xord $r0 = $r2, $r0
-; CHECK-NEXT:    xord $r1 = $r3, $r1
+; CHECK-NEXT:    eord $r0 = $r2, $r0
+; CHECK-NEXT:    eord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %1, %0
@@ -66,8 +66,8 @@ define i128 @instxor(i128 %0, i128 %1) {
 define i128 @nxor(i128 %0, i128 %1) {
 ; CHECK-LABEL: nxor:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    nxord $r0 = $r0, $r2
-; CHECK-NEXT:    nxord $r1 = $r1, $r3
+; CHECK-NEXT:    neord $r0 = $r0, $r2
+; CHECK-NEXT:    neord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i128 %0, %1
@@ -576,7 +576,7 @@ define i32 @gez(i128 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    srld $r0 = $r1, 63
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xorw $r0 = $r0, 1
+; CHECK-NEXT:    eorw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = lshr i128 %0, 127
@@ -667,8 +667,8 @@ define i32 @u_lez(i128 %0) {
 define i32 @eq(i128 %0, i128 %1) {
 ; CHECK-LABEL: eq:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xord $r0 = $r0, $r2
-; CHECK-NEXT:    xord $r1 = $r1, $r3
+; CHECK-NEXT:    eord $r0 = $r0, $r2
+; CHECK-NEXT:    eord $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lniord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -681,8 +681,8 @@ define i32 @eq(i128 %0, i128 %1) {
 define i32 @ne(i128 %0, i128 %1) {
 ; CHECK-LABEL: ne:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xord $r0 = $r0, $r2
-; CHECK-NEXT:    xord $r1 = $r1, $r3
+; CHECK-NEXT:    eord $r0 = $r0, $r2
+; CHECK-NEXT:    eord $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    liord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret

@@ -213,14 +213,14 @@ define <8 x i8> @abdubo(<8 x i8> %0, <8 x i8> %1) {
 ; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    iord $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    nxord $r0 = $r2, $r0
+; V1-NEXT:    neord $r0 = $r2, $r0
 ; V1-NEXT:    iord $r1 = $r2, 0x80808080.@
 ; V1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    sbfd $r1 = $r3, $r1
 ; V1-NEXT:    ;; # (end cycle 5)
-; V1-NEXT:    xord $r0 = $r0, $r1
+; V1-NEXT:    eord $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 6)
 ;

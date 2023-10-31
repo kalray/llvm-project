@@ -1793,13 +1793,13 @@ def norpfs : PatFrags<(ops node:$l, node:$r),
 
 defm NORD : MC_BINOP_64<"niord", norpfs>;
 
-defm XORD : MC_BINOP_64<"xord", PatFrags<(ops node:$l, node:$r), [(xor node:$l, node:$r)]>>;
+defm XORD : MC_BINOP_64<"eord", PatFrags<(ops node:$l, node:$r), [(xor node:$l, node:$r)]>>;
 
 def nxorpfs : PatFrags<(ops node:$l, node:$r),
                        [(not (xor node:$l, node:$r)),
                         (vnot (xor node:$l, node:$r))]>;
 
-defm NXORD : MC_BINOP_64<"nxord", nxorpfs>;
+defm NXORD : MC_BINOP_64<"neord", nxorpfs>;
 
 def andnpfs : PatFrags<(ops node:$l, node:$r),
                        [(and (not node:$l), node:$r),
@@ -1894,9 +1894,9 @@ defm ORW : MC_14<"iorw">;
 
 defm NORW : MC_14<"niorw">;
 
-defm XORW : MC_14<"xorw">;
+defm XORW : MC_14<"eorw">;
 
-defm NXORW : MC_14<"nxorw">;
+defm NXORW : MC_14<"neorw">;
 
 defm ANDNW : MC_14<"andnw">;
 
@@ -2723,9 +2723,9 @@ defm ORRBOD : I<"iorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ORRHQD : I<"iorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ORRWPD : I<"iorrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 
-defm XORRBOD : I<"xorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
-defm XORRHQD : I<"xorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
-defm XORRWPD : I<"xorrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm XORRBOD : I<"eorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm XORRHQD : I<"eorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm XORRWPD : I<"eorrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 
 def FFDMAW : ROUNDING_SILENT_BINOP_FFDM<"ffdmaw", SingleReg, SingleReg, MAU_FP>;
 def FFDMAWP: ROUNDING_SILENT_BINOP_FFDM<"ffdmawp", SingleReg, PairedReg, MAU_FP>;
@@ -2872,7 +2872,7 @@ defm XNORO : I </*asm=*/"xnioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorRe
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnioro v256i1:$op0, v256i1:$op1))]>;
 
-defm XNXORO : I </*asm=*/"xnxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XNXORO : I </*asm=*/"xneoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnxoro v256i1:$op0, v256i1:$op1))]>;
 
@@ -2884,7 +2884,7 @@ defm XORO : I </*asm=*/"xioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg]
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xioro v256i1:$op0, v256i1:$op1))]>;
 
-defm XXORO : I </*asm=*/"xxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XXORO : I </*asm=*/"xeoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xxoro v256i1:$op0, v256i1:$op1))]>;
 

@@ -99,7 +99,7 @@ define i64 @NOT_ORNDri10(i64 %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    iord $r0 = $r0, -60
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xord $r0 = $r0, 60
+; CHECK-NEXT:    eord $r0 = $r0, 60
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = or i64 %0, -60

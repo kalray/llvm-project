@@ -279,7 +279,7 @@ entry:
 define i64 @orw_reg(i32 %a, i32 %b){
 ; CHECK-LABEL: orw_reg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    eorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -291,7 +291,7 @@ entry:
 define i64 @orw_imm10(i32 %a){
 ; CHECK-LABEL: orw_imm10:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 10
+; CHECK-NEXT:    eorw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -303,7 +303,7 @@ entry:
 define i64 @orw_imm37(i32 %a){
 ; CHECK-LABEL: orw_imm37:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 0x8000
+; CHECK-NEXT:    eorw $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -363,7 +363,7 @@ entry:
 define i64 @xorw_reg(i32 %a, i32 %b){
 ; CHECK-LABEL: xorw_reg:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r1, $r0
+; CHECK-NEXT:    eorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -375,7 +375,7 @@ entry:
 define i64 @xorw_imm10(i32 %a){
 ; CHECK-LABEL: xorw_imm10:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 10
+; CHECK-NEXT:    eorw $r0 = $r0, 10
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -387,7 +387,7 @@ entry:
 define i64 @xorw_imm37(i32 %a){
 ; CHECK-LABEL: xorw_imm37:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    xorw $r0 = $r0, 0x8000
+; CHECK-NEXT:    eorw $r0 = $r0, 0x8000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

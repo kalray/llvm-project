@@ -139,13 +139,13 @@ define <8 x i8> @srs_v8i8(<8 x i8> %0) {
 ; CV1-NEXT:    iord $r1 = $r2, $r1
 ; CV1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 16)
 ; CV1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; CV1-NEXT:    addd $r1 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    xord $r0 = $r1, $r0
+; CV1-NEXT:    eord $r0 = $r1, $r0
 ; CV1-NEXT:    ;; # (end cycle 18)
 ; CV1-NEXT:    extfz $r1 = $r0, 55, 48
 ; CV1-NEXT:    srld $r2 = $r0, 56
@@ -316,7 +316,7 @@ define <16 x i8> @srs_v16i8(<16 x i8> %0) {
 ; CV1-NEXT:    iord $r2 = $r3, $r2
 ; CV1-NEXT:    andd $r3 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    xord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r0 = $r0, $r2
 ; CV1-NEXT:    extfz $r2 = $r1, 55, 48
 ; CV1-NEXT:    andd $r5 = $r2, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 16)
@@ -325,7 +325,7 @@ define <16 x i8> @srs_v16i8(<16 x i8> %0) {
 ; CV1-NEXT:    addd $r3 = $r3, $r5
 ; CV1-NEXT:    extfz $r5 = $r1, 39, 32
 ; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    xord $r0 = $r3, $r0
+; CV1-NEXT:    eord $r0 = $r3, $r0
 ; CV1-NEXT:    sraw $r2 = $r2, 7
 ; CV1-NEXT:    sxbd $r3 = $r6
 ; CV1-NEXT:    sxbd $r5 = $r5
@@ -392,7 +392,7 @@ define <16 x i8> @srs_v16i8(<16 x i8> %0) {
 ; CV1-NEXT:    extfz $r7 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 33)
 ; CV1-NEXT:    andd $r1 = $r1, 0x7f7f7f7f.@
-; CV1-NEXT:    xord $r4 = $r1, $r4
+; CV1-NEXT:    eord $r4 = $r1, $r4
 ; CV1-NEXT:    sxbd $r6 = $r6
 ; CV1-NEXT:    sxbd $r7 = $r7
 ; CV1-NEXT:    ;; # (end cycle 34)
@@ -407,7 +407,7 @@ define <16 x i8> @srs_v16i8(<16 x i8> %0) {
 ; CV1-NEXT:    insf $r6 = $r2, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 36)
 ; CV1-NEXT:    insf $r0 = $r7, 15, 8
-; CV1-NEXT:    xord $r1 = $r1, $r4
+; CV1-NEXT:    eord $r1 = $r1, $r4
 ; CV1-NEXT:    ;; # (end cycle 37)
 ; CV1-NEXT:    insf $r0 = $r6, 31, 16
 ; CV1-NEXT:    srld $r2 = $r1, 56
@@ -540,7 +540,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    iord $r4 = $r5, $r4
 ; CV1-NEXT:    andd $r5 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    xord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r0 = $r0, $r4
 ; CV1-NEXT:    srld $r4 = $r1, 56
 ; CV1-NEXT:    andd $r6 = $r4, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 16)
@@ -549,7 +549,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    addd $r5 = $r5, $r6
 ; CV1-NEXT:    extfz $r6 = $r1, 55, 48
 ; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    xord $r0 = $r5, $r0
+; CV1-NEXT:    eord $r0 = $r5, $r0
 ; CV1-NEXT:    sraw $r4 = $r4, 7
 ; CV1-NEXT:    sxbd $r5 = $r6
 ; CV1-NEXT:    sxbd $r6 = $r7
@@ -619,7 +619,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    sxbd $r9 = $r9
 ; CV1-NEXT:    ;; # (end cycle 33)
 ; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    xord $r1 = $r1, $r6
+; CV1-NEXT:    eord $r1 = $r1, $r6
 ; CV1-NEXT:    sraw $r5 = $r5, 5
 ; CV1-NEXT:    andd $r7 = $r6, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 34)
@@ -629,7 +629,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    sraw $r8 = $r8, 5
 ; CV1-NEXT:    ;; # (end cycle 35)
 ; CV1-NEXT:    sraw $r0 = $r0, 5
-; CV1-NEXT:    xord $r1 = $r7, $r1
+; CV1-NEXT:    eord $r1 = $r7, $r1
 ; CV1-NEXT:    srld $r7 = $r2, 56
 ; CV1-NEXT:    insf $r8 = $r5, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 36)
@@ -730,7 +730,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    srld $r5 = $r3, 56
 ; CV1-NEXT:    extfz $r6 = $r3, 55, 48
 ; CV1-NEXT:    ;; # (end cycle 59)
-; CV1-NEXT:    xord $r2 = $r2, $r4
+; CV1-NEXT:    eord $r2 = $r2, $r4
 ; CV1-NEXT:    sxbd $r5 = $r5
 ; CV1-NEXT:    sxbd $r6 = $r6
 ; CV1-NEXT:    andd $r7 = $r4, 0x7f7f7f7f.@
@@ -750,7 +750,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    insf $r6 = $r5, 15, 8
 ; CV1-NEXT:    extfz $r8 = $r3, 23, 16
 ; CV1-NEXT:    ;; # (end cycle 63)
-; CV1-NEXT:    xord $r2 = $r7, $r2
+; CV1-NEXT:    eord $r2 = $r7, $r2
 ; CV1-NEXT:    srlw $r4 = $r3, 24
 ; CV1-NEXT:    insf $r5 = $r4, 15, 8
 ; CV1-NEXT:    sxbd $r7 = $r8
@@ -816,7 +816,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    sraw $r8 = $r8, 5
 ; CV1-NEXT:    ;; # (end cycle 78)
 ; CV1-NEXT:    andd $r3 = $r3, 0x7f7f7f7f.@
-; CV1-NEXT:    xord $r4 = $r3, $r4
+; CV1-NEXT:    eord $r4 = $r3, $r4
 ; CV1-NEXT:    andd $r7 = $r4, 0x7f7f7f7f.@
 ; CV1-NEXT:    sraw $r9 = $r9, 5
 ; CV1-NEXT:    ;; # (end cycle 79)
@@ -826,7 +826,7 @@ define <32 x i8> @srs_v32i8(<32 x i8> %0) {
 ; CV1-NEXT:    insf $r8 = $r6, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 80)
 ; CV1-NEXT:    insf $r2 = $r9, 15, 8
-; CV1-NEXT:    xord $r3 = $r3, $r4
+; CV1-NEXT:    eord $r3 = $r3, $r4
 ; CV1-NEXT:    ;; # (end cycle 81)
 ; CV1-NEXT:    insf $r2 = $r8, 31, 16
 ; CV1-NEXT:    srld $r4 = $r3, 56

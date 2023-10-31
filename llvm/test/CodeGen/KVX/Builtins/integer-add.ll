@@ -9,14 +9,14 @@ target triple = "kvx-kalray-cos"
 define <8 x i8> @addbo(<8 x i8> %0, <8 x i8> %1) {
 ; V1-LABEL: addbo:
 ; V1:       # %bb.0:
-; V1-NEXT:    xord $r0 = $r1, $r0
+; V1-NEXT:    eord $r0 = $r1, $r0
 ; V1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r3 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    addd $r1 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    xord $r0 = $r1, $r0
+; V1-NEXT:    eord $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 2)
 ;
@@ -97,21 +97,21 @@ declare <8 x i8> @llvm.uadd.sat.v8i8(<8 x i8>, <8 x i8>) #2
 define <16 x i8> @addbx(<16 x i8> %0, <16 x i8> %1) {
 ; V1-LABEL: addbx:
 ; V1:       # %bb.0:
-; V1-NEXT:    xord $r0 = $r2, $r0
+; V1-NEXT:    eord $r0 = $r2, $r0
 ; V1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r4 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r5 = $r2, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
-; V1-NEXT:    xord $r1 = $r3, $r1
+; V1-NEXT:    eord $r1 = $r3, $r1
 ; V1-NEXT:    andd $r3 = $r3, 0x7f7f7f7f.@
 ; V1-NEXT:    addd $r4 = $r5, $r4
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    xord $r0 = $r4, $r0
+; V1-NEXT:    eord $r0 = $r4, $r0
 ; V1-NEXT:    andd $r1 = $r1, 0x80808080.@
 ; V1-NEXT:    addd $r2 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    xord $r1 = $r2, $r1
+; V1-NEXT:    eord $r1 = $r2, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 3)
 ;
@@ -219,24 +219,24 @@ declare <16 x i8> @llvm.uadd.sat.v16i8(<16 x i8>, <16 x i8>) #2
 define <32 x i8> @addbv(<32 x i8> %0, <32 x i8> %1) {
 ; V1-LABEL: addbv:
 ; V1:       # %bb.0:
-; V1-NEXT:    xord $r0 = $r4, $r0
+; V1-NEXT:    eord $r0 = $r4, $r0
 ; V1-NEXT:    andd $r4 = $r1, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r8 = $r0, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r9 = $r4, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    xord $r1 = $r5, $r1
+; V1-NEXT:    eord $r1 = $r5, $r1
 ; V1-NEXT:    andd $r5 = $r2, 0x7f7f7f7f.@
 ; V1-NEXT:    addd $r8 = $r9, $r8
 ; V1-NEXT:    andd $r9 = $r5, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    xord $r2 = $r6, $r2
+; V1-NEXT:    eord $r2 = $r6, $r2
 ; V1-NEXT:    addd $r4 = $r9, $r4
 ; V1-NEXT:    andd $r6 = $r3, 0x7f7f7f7f.@
 ; V1-NEXT:    andd $r9 = $r6, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    andd $r0 = $r0, 0x80808080.@
 ; V1-NEXT:    andd $r1 = $r1, 0x80808080.@
-; V1-NEXT:    xord $r3 = $r7, $r3
+; V1-NEXT:    eord $r3 = $r7, $r3
 ; V1-NEXT:    andd $r7 = $r7, 0x7f7f7f7f.@
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    andd $r2 = $r2, 0x80808080.@
@@ -244,10 +244,10 @@ define <32 x i8> @addbv(<32 x i8> %0, <32 x i8> %1) {
 ; V1-NEXT:    addd $r5 = $r9, $r5
 ; V1-NEXT:    addd $r6 = $r7, $r6
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    xord $r0 = $r8, $r0
-; V1-NEXT:    xord $r1 = $r4, $r1
-; V1-NEXT:    xord $r2 = $r5, $r2
-; V1-NEXT:    xord $r3 = $r6, $r3
+; V1-NEXT:    eord $r0 = $r8, $r0
+; V1-NEXT:    eord $r1 = $r4, $r1
+; V1-NEXT:    eord $r2 = $r5, $r2
+; V1-NEXT:    eord $r3 = $r6, $r3
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 5)
 ;

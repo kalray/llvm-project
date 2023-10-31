@@ -209,7 +209,7 @@ define { i64, i64 } @FMULCWDC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    fwidenlwd $r5 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmuld $r0 = $r3, $r5
-; CHECK-NEXT:    xorw $r1 = $r1, 0x80000000
+; CHECK-NEXT:    eorw $r1 = $r1, 0x80000000
 ; CHECK-NEXT:    fwidenlwd $r4 = $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlwd $r1 = $r1
@@ -382,7 +382,7 @@ define { i64, i64 } @FSBFCDC(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xord $r1 = $r1, 0x8000000000000000
+; CHECK-NEXT:    eord $r1 = $r1, 0x8000000000000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %5 = bitcast i64 %1 to double
@@ -410,7 +410,7 @@ define i64 @FSBFWCC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xorw $r1 = $r2, 0x80000000
+; CHECK-NEXT:    eorw $r1 = $r2, 0x80000000
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
@@ -456,9 +456,9 @@ define { i64, i64 } @FSBFWCCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xorw $r3 = $r4, 0x80000000
+; CHECK-NEXT:    eorw $r3 = $r4, 0x80000000
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
+; CHECK-NEXT:    eorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    iord $r0 = $r3, $r0
@@ -822,7 +822,7 @@ define { i64, i64 } @FSBFCDC_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fsbfd $r0 = $r2, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xord $r1 = $r1, 0x8000000000000000
+; CHECK-NEXT:    eord $r1 = $r1, 0x8000000000000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %5 = bitcast i64 %0 to double
@@ -850,7 +850,7 @@ define i64 @FSBFWCC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xorw $r1 = $r2, 0x80000000
+; CHECK-NEXT:    eorw $r1 = $r2, 0x80000000
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
@@ -896,9 +896,9 @@ define { i64, i64 } @FSBFWCCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xorw $r3 = $r4, 0x80000000
+; CHECK-NEXT:    eorw $r3 = $r4, 0x80000000
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
+; CHECK-NEXT:    eorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    iord $r0 = $r3, $r0

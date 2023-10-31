@@ -6854,17 +6854,17 @@ define i64 @xorrbod(<8 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    andd $r0 = $r0, 255
 ; CV1-NEXT:    ret
@@ -6872,7 +6872,7 @@ define i64 @xorrbod(<8 x i8> %0) {
 ;
 ; CV2-LABEL: xorrbod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xorrbod $r0 = $r0
+; CV2-NEXT:    eorrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i8 @llvm.vector.reduce.xor.v8i8(<8 x i8> %0)
@@ -6886,7 +6886,7 @@ define i64 @xorrbpd(<2 x i8> %0) {
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r0 = $r0, 255
 ; CV1-NEXT:    ret
@@ -6896,7 +6896,7 @@ define i64 @xorrbpd(<2 x i8> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxhd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrbod $r0 = $r0
+; CV2-NEXT:    eorrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.xor.v2i8(<2 x i8> %0)
@@ -6910,12 +6910,12 @@ define i64 @xorrbqd(<4 x i8> %0) {
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    andd $r0 = $r0, 255
 ; CV1-NEXT:    ret
@@ -6925,7 +6925,7 @@ define i64 @xorrbqd(<4 x i8> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxwd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrbod $r0 = $r0
+; CV2-NEXT:    eorrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.xor.v4i8(<4 x i8> %0)
@@ -6936,24 +6936,24 @@ define i64 @xorrbqd(<4 x i8> %0) {
 define i64 @xorrbvd(<32 x i8> %0) {
 ; CV1-LABEL: xorrbvd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    andd $r0 = $r0, 255
 ; CV1-NEXT:    ret
@@ -6961,12 +6961,12 @@ define i64 @xorrbvd(<32 x i8> %0) {
 ;
 ; CV2-LABEL: xorrbvd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xorrbod $r0 = $r0
+; CV2-NEXT:    eorrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i8 @llvm.vector.reduce.xor.v32i8(<32 x i8> %0)
@@ -6977,21 +6977,21 @@ define i64 @xorrbvd(<32 x i8> %0) {
 define i64 @xorrbxd(<16 x i8> %0) {
 ; CV1-LABEL: xorrbxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    andd $r0 = $r0, 255
 ; CV1-NEXT:    ret
@@ -6999,9 +6999,9 @@ define i64 @xorrbxd(<16 x i8> %0) {
 ;
 ; CV2-LABEL: xorrbxd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrbod $r0 = $r0
+; CV2-NEXT:    eorrbod $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i8 @llvm.vector.reduce.xor.v16i8(<16 x i8> %0)
@@ -7012,16 +7012,16 @@ define i64 @xorrbxd(<16 x i8> %0) {
 define i64 @xorrhod(<8 x i16> %0) {
 ; CV1-LABEL: xorrhod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    clrf $r0 = $r0, 63, 16
 ; CV1-NEXT:    ret
@@ -7029,9 +7029,9 @@ define i64 @xorrhod(<8 x i16> %0) {
 ;
 ; CV2-LABEL: xorrhod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrhqd $r0 = $r0
+; CV2-NEXT:    eorrhqd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i16 @llvm.vector.reduce.xor.v8i16(<8 x i16> %0)
@@ -7045,7 +7045,7 @@ define i64 @xorrhpd(<2 x i16> %0) {
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    clrf $r0 = $r0, 63, 16
 ; CV1-NEXT:    ret
@@ -7055,7 +7055,7 @@ define i64 @xorrhpd(<2 x i16> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    zxwd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrhqd $r0 = $r0
+; CV2-NEXT:    eorrhqd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i16 @llvm.vector.reduce.xor.v2i16(<2 x i16> %0)
@@ -7068,12 +7068,12 @@ define i64 @xorrhqd(<4 x i16> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    clrf $r0 = $r0, 63, 16
 ; CV1-NEXT:    ret
@@ -7081,7 +7081,7 @@ define i64 @xorrhqd(<4 x i16> %0) {
 ;
 ; CV2-LABEL: xorrhqd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xorrhqd $r0 = $r0
+; CV2-NEXT:    eorrhqd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i16 @llvm.vector.reduce.xor.v4i16(<4 x i16> %0)
@@ -7096,24 +7096,24 @@ define i64 @xorrhvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xord $r0 = $r0, $r4
-; CV1-NEXT:    xord $r1 = $r1, $r5
-; CV1-NEXT:    xord $r2 = $r2, $r6
-; CV1-NEXT:    xord $r3 = $r3, $r7
+; CV1-NEXT:    eord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r1 = $r1, $r5
+; CV1-NEXT:    eord $r2 = $r2, $r6
+; CV1-NEXT:    eord $r3 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 8)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 10)
 ; CV1-NEXT:    clrf $r0 = $r0, 63, 16
 ; CV1-NEXT:    ret
@@ -7125,17 +7125,17 @@ define i64 @xorrhvd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xord $r0 = $r0, $r4
-; CV2-NEXT:    xord $r1 = $r1, $r5
-; CV2-NEXT:    xord $r2 = $r2, $r6
-; CV2-NEXT:    xord $r3 = $r3, $r7
+; CV2-NEXT:    eord $r0 = $r0, $r4
+; CV2-NEXT:    eord $r1 = $r1, $r5
+; CV2-NEXT:    eord $r2 = $r2, $r6
+; CV2-NEXT:    eord $r3 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xorrhqd $r0 = $r0
+; CV2-NEXT:    eorrhqd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <32 x i16>, ptr %0
@@ -7147,19 +7147,19 @@ define i64 @xorrhvd(ptr %0) {
 define i64 @xorrhxd(<16 x i16> %0) {
 ; CV1-LABEL: xorrhxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    zxhd $r0 = $r0
 ; CV1-NEXT:    srlw $r1 = $r0, 16
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    clrf $r0 = $r0, 63, 16
 ; CV1-NEXT:    ret
@@ -7167,12 +7167,12 @@ define i64 @xorrhxd(<16 x i16> %0) {
 ;
 ; CV2-LABEL: xorrhxd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xorrhqd $r0 = $r0
+; CV2-NEXT:    eorrhqd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i16 @llvm.vector.reduce.xor.v16i16(<16 x i16> %0)
@@ -7183,25 +7183,25 @@ define i64 @xorrhxd(<16 x i16> %0) {
 define i64 @xorrwod(<8 x i32> %0) {
 ; CV1-LABEL: xorrwod:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: xorrwod:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xorrwpd $r0 = $r0
+; CV2-NEXT:    eorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 2)
   %2 = tail call i32 @llvm.vector.reduce.xor.v8i32(<8 x i32> %0)
@@ -7214,13 +7214,13 @@ define i64 @xorrwpd(<2 x i32> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: xorrwpd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xorrwpd $r0 = $r0
+; CV2-NEXT:    eorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.vector.reduce.xor.v2i32(<2 x i32> %0)
@@ -7231,19 +7231,19 @@ define i64 @xorrwpd(<2 x i32> %0) {
 define i64 @xorrwqd(<4 x i32> %0) {
 ; CV1-LABEL: xorrwqd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: xorrwqd:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xorrwpd $r0 = $r0
+; CV2-NEXT:    eorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call i32 @llvm.vector.reduce.xor.v4i32(<4 x i32> %0)
@@ -7262,29 +7262,29 @@ define i64 @xorrwvd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xord $r8 = $r32, $r8
-; CV1-NEXT:    xord $r9 = $r33, $r9
-; CV1-NEXT:    xord $r10 = $r34, $r10
-; CV1-NEXT:    xord $r11 = $r35, $r11
+; CV1-NEXT:    eord $r8 = $r32, $r8
+; CV1-NEXT:    eord $r9 = $r33, $r9
+; CV1-NEXT:    eord $r10 = $r34, $r10
+; CV1-NEXT:    eord $r11 = $r35, $r11
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xord $r0 = $r0, $r4
-; CV1-NEXT:    xord $r1 = $r1, $r5
-; CV1-NEXT:    xord $r2 = $r2, $r6
-; CV1-NEXT:    xord $r3 = $r3, $r7
+; CV1-NEXT:    eord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r1 = $r1, $r5
+; CV1-NEXT:    eord $r2 = $r2, $r6
+; CV1-NEXT:    eord $r3 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    xord $r0 = $r0, $r8
-; CV1-NEXT:    xord $r1 = $r1, $r9
-; CV1-NEXT:    xord $r2 = $r2, $r10
-; CV1-NEXT:    xord $r3 = $r3, $r11
+; CV1-NEXT:    eord $r0 = $r0, $r8
+; CV1-NEXT:    eord $r1 = $r1, $r9
+; CV1-NEXT:    eord $r2 = $r2, $r10
+; CV1-NEXT:    eord $r3 = $r3, $r11
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -7298,27 +7298,27 @@ define i64 @xorrwvd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    xord $r4 = $r8, $r4
-; CV2-NEXT:    xord $r5 = $r9, $r5
-; CV2-NEXT:    xord $r6 = $r10, $r6
-; CV2-NEXT:    xord $r7 = $r11, $r7
+; CV2-NEXT:    eord $r4 = $r8, $r4
+; CV2-NEXT:    eord $r5 = $r9, $r5
+; CV2-NEXT:    eord $r6 = $r10, $r6
+; CV2-NEXT:    eord $r7 = $r11, $r7
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xord $r0 = $r0, $r32
-; CV2-NEXT:    xord $r1 = $r1, $r33
-; CV2-NEXT:    xord $r2 = $r2, $r34
-; CV2-NEXT:    xord $r3 = $r3, $r35
+; CV2-NEXT:    eord $r0 = $r0, $r32
+; CV2-NEXT:    eord $r1 = $r1, $r33
+; CV2-NEXT:    eord $r2 = $r2, $r34
+; CV2-NEXT:    eord $r3 = $r3, $r35
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xord $r0 = $r4, $r0
-; CV2-NEXT:    xord $r1 = $r5, $r1
-; CV2-NEXT:    xord $r2 = $r6, $r2
-; CV2-NEXT:    xord $r3 = $r7, $r3
+; CV2-NEXT:    eord $r0 = $r4, $r0
+; CV2-NEXT:    eord $r1 = $r5, $r1
+; CV2-NEXT:    eord $r2 = $r6, $r2
+; CV2-NEXT:    eord $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    xorrwpd $r0 = $r0
+; CV2-NEXT:    eorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 10)
   %2 = load <32 x i32>, ptr %0
@@ -7334,19 +7334,19 @@ define i64 @xorrwxd(ptr %0) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xord $r0 = $r0, $r4
-; CV1-NEXT:    xord $r1 = $r1, $r5
-; CV1-NEXT:    xord $r2 = $r2, $r6
-; CV1-NEXT:    xord $r3 = $r3, $r7
+; CV1-NEXT:    eord $r0 = $r0, $r4
+; CV1-NEXT:    eord $r1 = $r1, $r5
+; CV1-NEXT:    eord $r2 = $r2, $r6
+; CV1-NEXT:    eord $r3 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xord $r0 = $r0, $r2
-; CV1-NEXT:    xord $r1 = $r1, $r3
+; CV1-NEXT:    eord $r0 = $r0, $r2
+; CV1-NEXT:    eord $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xord $r0 = $r0, $r1
+; CV1-NEXT:    eord $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    srad $r1 = $r0, 32
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    xorw $r0 = $r0, $r1
+; CV1-NEXT:    eorw $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 8)
 ;
@@ -7356,17 +7356,17 @@ define i64 @xorrwxd(ptr %0) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xord $r0 = $r0, $r4
-; CV2-NEXT:    xord $r1 = $r1, $r5
-; CV2-NEXT:    xord $r2 = $r2, $r6
-; CV2-NEXT:    xord $r3 = $r3, $r7
+; CV2-NEXT:    eord $r0 = $r0, $r4
+; CV2-NEXT:    eord $r1 = $r1, $r5
+; CV2-NEXT:    eord $r2 = $r2, $r6
+; CV2-NEXT:    eord $r3 = $r3, $r7
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xord $r0 = $r0, $r2
-; CV2-NEXT:    xord $r1 = $r1, $r3
+; CV2-NEXT:    eord $r0 = $r0, $r2
+; CV2-NEXT:    eord $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xord $r0 = $r0, $r1
+; CV2-NEXT:    eord $r0 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xorrwpd $r0 = $r0
+; CV2-NEXT:    eorrwpd $r0 = $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
   %2 = load <16 x i32>, ptr %0
