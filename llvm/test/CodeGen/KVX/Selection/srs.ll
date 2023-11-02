@@ -221,6 +221,125 @@ define <4 x i16> @srs_v4i16(<4 x i16> %0) {
   ret <4 x i16> %2
 }
 
+; TODO: This should be a simple sequence of 4 srshqs
+; and 3 insf
+define <4 x i16> @diff_srs_v4i16(<4 x i16> %0) {
+; CV1-LABEL: diff_srs_v4i16:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srahqs $r1 = $r0, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srlhqs $r2 = $r1, 12
+; CV1-NEXT:    srlhqs $r3 = $r1, 13
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srlhqs $r2 = $r1, 14
+; CV1-NEXT:    insf $r3 = $r2, 15, 0
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    srlhqs $r1 = $r1, 15
+; CV1-NEXT:    insf $r2 = $r3, 31, 0
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    insf $r1 = $r2, 47, 0
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    addhq $r0 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    srahqs $r1 = $r0, 4
+; CV1-NEXT:    srahqs $r2 = $r0, 3
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    srahqs $r1 = $r0, 2
+; CV1-NEXT:    insf $r2 = $r1, 15, 0
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    srahqs $r0 = $r0, 1
+; CV1-NEXT:    insf $r1 = $r2, 31, 0
+; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    insf $r0 = $r1, 47, 0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 9)
+;
+; CV2-LABEL: diff_srs_v4i16:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srahqs $r1 = $r0, 15
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    srlhqs $r2 = $r1, 12
+; CV2-NEXT:    srlhqs $r3 = $r1, 13
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    srlhqs $r1 = $r1, 15
+; CV2-NEXT:    srlhqs $r2 = $r1, 14
+; CV2-NEXT:    insf $r3 = $r2, 15, 0
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    insf $r2 = $r3, 31, 0
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    insf $r1 = $r2, 47, 0
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    addhq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    srahqs $r1 = $r0, 4
+; CV2-NEXT:    srahqs $r2 = $r0, 3
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    srahqs $r0 = $r0, 1
+; CV2-NEXT:    srahqs $r1 = $r0, 2
+; CV2-NEXT:    insf $r2 = $r1, 15, 0
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    insf $r1 = $r2, 31, 0
+; CV2-NEXT:    ;; # (end cycle 8)
+; CV2-NEXT:    insf $r0 = $r1, 47, 0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 9)
+  %2 = sdiv <4 x i16> %0, <i16 16, i16 8, i16 4, i16 2>
+  ret <4 x i16> %2
+}
+
+; TODO: This should simply be 4 srshqs
+define <16 x i16> @diff_srs16(<16 x i16> %0) {
+; CV1-LABEL: diff_srs16:
+; CV1:       # %bb.0:
+; CV1-NEXT:    srahqs $r5 = $r0, 15
+; CV1-NEXT:    srahqs $r6 = $r1, 15
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    srlhqs $r5 = $r5, 12
+; CV1-NEXT:    srahqs $r7 = $r2, 15
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    addhq $r0 = $r0, $r5
+; CV1-NEXT:    srahqs $r4 = $r3, 15
+; CV1-NEXT:    srlhqs $r5 = $r6, 13
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    addhq $r1 = $r1, $r5
+; CV1-NEXT:    srlhqs $r4 = $r4, 15
+; CV1-NEXT:    srlhqs $r6 = $r7, 14
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    srahqs $r0 = $r0, 4
+; CV1-NEXT:    addhq $r2 = $r2, $r6
+; CV1-NEXT:    avghq $r3 = $r4, $r3
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    srahqs $r1 = $r1, 3
+; CV1-NEXT:    srahqs $r2 = $r2, 2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 5)
+;
+; CV2-LABEL: diff_srs16:
+; CV2:       # %bb.0:
+; CV2-NEXT:    srahqs $r4 = $r0, 15
+; CV2-NEXT:    srahqs $r5 = $r1, 15
+; CV2-NEXT:    srahqs $r6 = $r2, 15
+; CV2-NEXT:    srahqs $r7 = $r3, 15
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    srlhqs $r4 = $r4, 12
+; CV2-NEXT:    srlhqs $r5 = $r5, 13
+; CV2-NEXT:    srlhqs $r6 = $r6, 14
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    addhq $r0 = $r0, $r4
+; CV2-NEXT:    addhq $r1 = $r1, $r5
+; CV2-NEXT:    addhq $r2 = $r2, $r6
+; CV2-NEXT:    srlhqs $r4 = $r7, 15
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    srahqs $r0 = $r0, 4
+; CV2-NEXT:    srahqs $r1 = $r1, 3
+; CV2-NEXT:    srahqs $r2 = $r2, 2
+; CV2-NEXT:    avghq $r3 = $r4, $r3
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 3)
+  %2 = sdiv <16 x i16> %0, <i16 16, i16 16, i16 16, i16 16, i16 8, i16 8, i16 8, i16 8, i16 4, i16 4, i16 4, i16 4, i16 2, i16 2, i16 2, i16 2>
+  ret <16 x i16> %2
+}
+
 define <2 x i32> @srs_v2i32(<2 x i32> %0) {
 ; ALL-LABEL: srs_v2i32:
 ; ALL:       # %bb.0:

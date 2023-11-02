@@ -1523,3 +1523,824 @@ define <4 x i32> @ashr_notwp_r(<4 x i32> %0, <4 x i32> %1) {
   %3 = ashr <4 x i32> %0, %1
   ret <4 x i32> %3
 }
+
+
+define <4 x i32> @sdiv(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: sdiv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r3
+; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r21, 32
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = sdiv <4 x i32> %a, %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @sdiv_vs(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: sdiv_vs:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i32> %a, %splat
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @sdiv_sv(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: sdiv_sv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r20, 32
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i32> %splat, %a
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @sdiv_ss(i32 %a, i32 %b) {
+; CHECK-LABEL: sdiv_ss:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %va = insertelement <4 x i32> undef, i32 %b, i32 0
+  %vb = insertelement <4 x i32> undef, i32 %a, i32 0
+  %splata = shufflevector <4 x i32> %va, <4 x i32> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i32> %vb, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i32> %splata, %splatb
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @srem(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: srem:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r3
+; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r21, 32
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = srem <4 x i32> %a, %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @srem_vs(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: srem_vs:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i32> %a, %splat
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @srem_sv(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: srem_sv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r20, 32
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i32> %splat, %a
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @srem_ss(i32 %a, i32 %b) {
+; CHECK-LABEL: srem_ss:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    call __modsi3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %va = insertelement <4 x i32> undef, i32 %b, i32 0
+  %vb = insertelement <4 x i32> undef, i32 %a, i32 0
+  %splata = shufflevector <4 x i32> %va, <4 x i32> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i32> %vb, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i32> %splata, %splatb
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @udiv(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: udiv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r3
+; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r21, 32
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = udiv <4 x i32> %a, %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @udiv_vs(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: udiv_vs:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i32> %a, %splat
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @udiv_sv(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: udiv_sv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r20, 32
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i32> %splat, %a
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @udiv_ss(i32 %a, i32 %b) {
+; CHECK-LABEL: udiv_ss:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    call __udivsi3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %va = insertelement <4 x i32> undef, i32 %b, i32 0
+  %vb = insertelement <4 x i32> undef, i32 %a, i32 0
+  %splata = shufflevector <4 x i32> %va, <4 x i32> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i32> %vb, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i32> %splata, %splatb
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @urem(<4 x i32> %a, <4 x i32> %b) {
+; CHECK-LABEL: urem:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r3
+; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    srad $r1 = $r18, 32
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r21, 32
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r20, 63, 32
+; CHECK-NEXT:    insf $r18 = $r22, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %r = urem <4 x i32> %a, %b
+  ret <4 x i32> %r
+}
+
+define <4 x i32> @urem_vs(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: urem_vs:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    srad $r0 = $r19, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    srad $r0 = $r20, 32
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i32> %a, %splat
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @urem_sv(<4 x i32> %a, i32 %b) {
+; CHECK-LABEL: urem_sv:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -64
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    sd 48[$r12] = $r22
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
+; CHECK-NEXT:    copyd $r18 = $r2
+; CHECK-NEXT:    copyd $r19 = $r1
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r19, 32
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    srad $r1 = $r20, 32
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    insf $r0 = $r22, 63, 32
+; CHECK-NEXT:    insf $r19 = $r21, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ld $r22 = 48[$r12]
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ld $r16 = 56[$r12]
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %v0 = insertelement <4 x i32> undef, i32 %b, i32 0
+  %splat = shufflevector <4 x i32> %v0, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i32> %splat, %a
+  ret <4 x i32> %div
+}
+
+define <4 x i32> @urem_ss(i32 %a, i32 %b) {
+; CHECK-LABEL: urem_ss:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    addd $r12 = $r12, -32
+; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    call __umodsi3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    insf $r0 = $r0, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+  %va = insertelement <4 x i32> undef, i32 %b, i32 0
+  %vb = insertelement <4 x i32> undef, i32 %a, i32 0
+  %splata = shufflevector <4 x i32> %va, <4 x i32> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i32> %vb, <4 x i32> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i32> %splata, %splatb
+  ret <4 x i32> %div
+}

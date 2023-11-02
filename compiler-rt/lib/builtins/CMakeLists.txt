@@ -693,15 +693,21 @@ set(kvx_SOURCES
   kvx/divdi3.c
   kvx/divmoddi4.c
   kvx/divmodsi4.c
+  kvx/divmodv4hi4.c
   kvx/divsi3.c
+  kvx/divv4hi3.c
   kvx/moddi3.c
   kvx/modsi3.c
+  kvx/modv4hi3.c
   kvx/udivdi3.c
   kvx/udivmoddi4.c
   kvx/udivmodsi4.c
+  kvx/udivmodv4hi4.c
   kvx/udivsi3.c
+  kvx/udivv4hi3.c
   kvx/umoddi3.c
   kvx/umodsi3.c
+  kvx/umodv4hi3.c
   ${GENERIC_SOURCES}
   ${GENERIC_TF_SOURCES}
 )

@@ -468,6 +468,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::TRAP, MVT::Other, Legal);
 
+  const bool IsV1 = Subtarget.isV1();
   for (MVT VT : {MVT::i32, MVT::i64})
     for (auto I : {ISD::SDIV, ISD::SDIVREM, ISD::SREM, ISD::UDIV, ISD::UDIVREM,
                    ISD::UREM})
@@ -838,7 +839,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   for (auto I : {ISD::ABS, ISD::SMAX, ISD::SMIN, ISD::UMAX, ISD::UMIN})
     setOperationAction(I, MVT::v4i32, Legal);
 
-  if (!Subtarget.isV1()) {
+  if (!IsV1) {
     for (auto VT : {MVT::i32, MVT::i64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
                     MVT::v4i8, MVT::v4i16, MVT::v8i8})
       for (auto I : {ISD::ABS, ISD::ADD, ISD::SADDSAT, ISD::SETCC, ISD::SMAX,
@@ -859,11 +860,16 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     // Fall-back to hq in cv1 using dag-combine
     for (auto I : {ISD::FMA, ISD::FMUL, ISD::FSUB, ISD::FNEG, ISD::FADD})
       setOperationAction(I, MVT::v8f16, Expand);
-
-    for (auto I : {ISD::SDIV, ISD::SREM, ISD::SDIVREM})
-      for (MVT VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
-        setOperationAction(I, VT, Expand);
   }
+  for (auto I : {ISD::SDIV, ISD::SREM, ISD::SDIVREM, ISD::UDIV, ISD::UREM,
+                 ISD::UDIVREM}) {
+    for (MVT VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+      setOperationAction(I, VT, Expand);
+
+    for (MVT VT : {MVT::v4i16})
+      setOperationAction(I, VT, Custom);
+  }
+
   // Fall-back to hq using dag-combine
   for (auto I : {ISD::FABS, ISD::FCOPYSIGN})
     setOperationAction(I, MVT::v8f16, Expand);
@@ -927,7 +933,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     for (auto VT : {MVT::i32, MVT::v2i16, MVT::v2i32, MVT::v4i16})
       setOperationAction(I, VT, Legal);
 
-    auto Action = Subtarget.isV1() ? Promote : Legal;
+    auto Action = IsV1 ? Promote : Legal;
     for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
       setOperationAction(I, VT, Action);
   }
@@ -949,7 +955,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EH_SJLJ_SETJMP, MVT::i32, Custom);
   setOperationAction(ISD::EH_SJLJ_SETUP_DISPATCH, MVT::Other, Custom);
 
-  auto RedAction = Subtarget.isV1() ? Expand : Legal;
+  auto RedAction = IsV1 ? Expand : Legal;
   for (MVT VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
                  MVT::v2i32, MVT::v4i32})
     for (auto I :
@@ -1722,6 +1728,42 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
 
     // Split vector op
     return DAG.UnrollVectorOp(Op.getNode(), Sz / 64);
+  }
+  case ISD::SDIV: {
+    const LibCalls Sdivs = {
+        {MVT::v4i16, "__divv4hi3"},
+    };
+    return expandVecLibCall(Sdivs, Op, true, DAG);
+  }
+  case ISD::SREM: {
+    const LibCalls Srems = {
+        {MVT::v4i16, "__modv4hi3"},
+    };
+    return expandVecLibCall(Srems, Op, true, DAG);
+  }
+  case ISD::SDIVREM: {
+    const LibCalls Sdivrem = {
+        {MVT::v4i16, "__divmodv4hi4"},
+    };
+    return expandVecLibCall(Sdivrem, Op, true, DAG);
+  }
+  case ISD::UDIV: {
+    const LibCalls Udivs = {
+        {MVT::v4i16, "__udivv4hi3"},
+    };
+    return expandVecLibCall(Udivs, Op, true, DAG);
+  }
+  case ISD::UREM: {
+    const LibCalls Urems = {
+        {MVT::v4i16, "__umodv4hi3"},
+    };
+    return expandVecLibCall(Urems, Op, true, DAG);
+  }
+  case ISD::UDIVREM: {
+    const LibCalls Udivrem = {
+        {MVT::v4i16, "__udivmodv4hi4"},
+    };
+    return expandVecLibCall(Udivrem, Op, true, DAG);
   }
   }
 }
@@ -5091,4 +5133,72 @@ bool KVX_LOW::isExtended(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
   case ISD::LOAD:
     return cast<LoadSDNode>(N)->getExtensionType() == ISD::ZEXTLOAD;
   }
+}
+
+SDValue KVXTargetLowering::expandVecLibCall(const LibCalls &Names,
+                                            SDValue &Node, bool IsSigned,
+                                            SelectionDAG &DAG) const {
+  auto Evt = Node.getValueType();
+  if (!Evt.isSimple() || !Evt.isVector())
+    return SDValue();
+
+  auto Name = Names.find(Evt.getSimpleVT());
+  if (Names.end() == Name)
+    return SDValue();
+
+  const StringRef LC = Name->second;
+  TargetLowering::ArgListTy Args;
+  TargetLowering::ArgListEntry Entry;
+
+  for (const SDValue &Op : Node->op_values()) {
+    EVT ArgVT = Op.getValueType();
+    Type *ArgTy = ArgVT.getTypeForEVT(*DAG.getContext());
+    Entry.Node = Op;
+    Entry.Ty = ArgTy;
+    Entry.IsSExt = shouldSignExtendTypeInLibCall(ArgVT, IsSigned);
+    Entry.IsZExt = !shouldSignExtendTypeInLibCall(ArgVT, IsSigned);
+    Args.push_back(Entry);
+  }
+  SDValue Callee =
+      DAG.getExternalSymbol(LC.data(), getPointerTy(DAG.getDataLayout()));
+
+  EVT RetVT = Node->getValueType(0);
+  Type *RetTy = RetVT.getTypeForEVT(*DAG.getContext());
+
+  // By default, the input chain to this libcall is the entry node of the
+  // function. If the libcall is going to be emitted as a tail call then
+  // isUsedByReturnOnly will change it to the right chain if the return
+  // node which is being folded has a non-entry input chain.
+  SDValue InChain = DAG.getEntryNode();
+
+  // isTailCall may be true since the callee does not reference caller stack
+  // frame. Check if it's in the right position and that the return types match.
+  SDValue TCChain = InChain;
+  const Function &F = DAG.getMachineFunction().getFunction();
+  bool IsTailCall =
+      isInTailCallPosition(DAG, Node.getNode(), TCChain) &&
+      (RetTy == F.getReturnType() || F.getReturnType()->isVoidTy());
+  if (IsTailCall)
+    InChain = TCChain;
+
+  TargetLowering::CallLoweringInfo CLI(DAG);
+  bool SignExtend = shouldSignExtendTypeInLibCall(RetVT, IsSigned);
+  CLI.setDebugLoc(SDLoc(Node))
+      .setChain(InChain)
+      .setCallee(CallingConv::C, RetTy, Callee, std::move(Args))
+      .setTailCall(IsTailCall)
+      .setSExtResult(SignExtend)
+      .setZExtResult(!SignExtend)
+      .setIsPostTypeLegalization(true);
+
+  std::pair<SDValue, SDValue> CallInfo = LowerCallTo(CLI);
+
+  if (!CallInfo.second.getNode()) {
+    LLVM_DEBUG(dbgs() << "Created tailcall: "; DAG.getRoot().dump(&DAG));
+    // It's a tailcall, return the chain (which is the DAG root).
+    return DAG.getRoot();
+  }
+
+  LLVM_DEBUG(dbgs() << "Created libcall: "; CallInfo.first.dump(&DAG));
+  return CallInfo.first;
 }

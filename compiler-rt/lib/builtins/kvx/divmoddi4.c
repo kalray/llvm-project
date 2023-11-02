@@ -37,12 +37,12 @@ di_int __divmoddi4(di_int num, di_int den, di_int *modwanted) {
 
   if (k != 0) {
     denU >>= 1;
-    du_int mask = (du_int)(-1l) << k;
+    du_int mask = (1l << k) - 1;
 
     for (int i = k; i > 0; --i)
       numU = __builtin_kvx_stsud(denU, numU);
 
-    q += numU - (numU & mask);
+    q += numU & mask;
     numU >>= k;
   }
 

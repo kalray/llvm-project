@@ -64,6 +64,8 @@ class KVXTargetLowering : public TargetLowering {
   SDValue lowerTCAZeroInit(SDValue Op, SelectionDAG &DAG) const;
 
 public:
+  typedef std::map<MVT, StringRef> LibCalls;
+
   explicit KVXTargetLowering(const TargetMachine &TM, const KVXSubtarget &STI);
 
   const char *getTargetNodeName(unsigned Opcode) const override;
@@ -283,6 +285,8 @@ private:
   bool mergeStoresAfterLegalization(EVT MemVT) const override {
     return MemVT.getScalarType() != MVT::i1;
   }
+  SDValue expandVecLibCall(const LibCalls &Funcs, SDValue &Node, bool IsSigned,
+                           SelectionDAG &DAG) const;
 };
 
 } // namespace llvm

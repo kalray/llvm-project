@@ -16,6 +16,18 @@ define i64 @anybo_nez(<8 x i8> %0) {
   ret i64 %2
 }
 
+declare <8 x i8>   @llvm.abs.v8i8(<8 x i8>, i1)
+define i64 @anybo_nez_abs(<8 x i8> %0) {
+; ALL-LABEL: anybo_nez_abs:
+; ALL:       # %bb.0:
+; ALL-NEXT:    compd.ne $r0 = $r0, 0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 0)
+  %2 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %0, i1 false)
+  %3 = tail call i64 @llvm.kvx.any.v8i8(<8 x i8> %2, i32 0)
+  ret i64 %3
+}
+
 declare i64 @llvm.kvx.any.v8i8(<8 x i8>, i32)
 
 define i64 @anybo_eqz(<8 x i8> %0) {

@@ -2085,143 +2085,56 @@ define <16 x i16> @mul_v16i16_i16(<16 x i16> %0, i16 %1) {
 define <16 x i16> @div_v16i16_v16i16(<16 x i16> %0, <16 x i16> %1) {
 ; CHECK-LABEL: div_v16i16_v16i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -96
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 88[$r12] = $r16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    so 56[$r12] = $r24r25r26r27
+; CHECK-NEXT:    sd 48[$r12] = $r24
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
+; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    sq 0[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r7
-; CHECK-NEXT:    copyd $r20 = $r6
-; CHECK-NEXT:    copyd $r21 = $r5
+; CHECK-NEXT:    copyd $r19 = $r6
+; CHECK-NEXT:    copyd $r20 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    copyd $r19 = $r3
-; CHECK-NEXT:    copyd $r22 = $r4
-; CHECK-NEXT:    copyd $r23 = $r2
-; CHECK-NEXT:    copyd $r24 = $r1
+; CHECK-NEXT:    copyd $r1 = $r4
+; CHECK-NEXT:    copyd $r21 = $r3
+; CHECK-NEXT:    copyd $r22 = $r2
+; CHECK-NEXT:    copyd $r23 = $r1
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    srad $r1 = $r22, 48
-; CHECK-NEXT:    copyd $r25 = $r0
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    srad $r0 = $r25, 48
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    extfs $r0 = $r25, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r22, 47, 32
-; CHECK-NEXT:    copyd $r26 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r25, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r22, 31, 16
-; CHECK-NEXT:    copyd $r27 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r27 = $r26, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r25
-; CHECK-NEXT:    sxhd $r1 = $r22
-; CHECK-NEXT:    copyd $r26 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r24, 48
-; CHECK-NEXT:    srad $r1 = $r21, 48
-; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r22 = $r26, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r22 = $r27, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r24, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r21, 47, 32
-; CHECK-NEXT:    copyd $r25 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r24, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r21, 31, 16
-; CHECK-NEXT:    copyd $r26 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r26 = $r25, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r24
-; CHECK-NEXT:    sxhd $r1 = $r21
-; CHECK-NEXT:    copyd $r25 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r23, 48
-; CHECK-NEXT:    srad $r1 = $r20, 48
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r21 = $r25, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r21 = $r26, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r23, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r20, 47, 32
+; CHECK-NEXT:    copyd $r0 = $r23
+; CHECK-NEXT:    copyd $r1 = $r20
 ; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r23, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r20, 31, 16
-; CHECK-NEXT:    copyd $r25 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r25 = $r24, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r23
-; CHECK-NEXT:    sxhd $r1 = $r20
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r19, 48
-; CHECK-NEXT:    srad $r1 = $r18, 48
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r24, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r20 = $r25, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r19, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r18, 47, 32
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r19, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r18, 31, 16
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r24 = $r23, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r19
-; CHECK-NEXT:    sxhd $r1 = $r18
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r22
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    copyd $r2 = $r20
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r18
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r24
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r3 = $r23, 31, 16
+; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    insf $r3 = $r24, 63, 32
+; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
+; CHECK-NEXT:    ld $r24 = 48[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ld $r16 = 88[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 96
+; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
@@ -2237,129 +2150,44 @@ define <16 x i16> @div_v16i16_i16(<16 x i16> %0, i16 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 48[$r12] = $r24
+; CHECK-NEXT:    sd 48[$r12] = $r22
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    so 16[$r12] = $r20r21r22r23
+; CHECK-NEXT:    sq 32[$r12] = $r20r21
+; CHECK-NEXT:    sbmm8 $r21 = $r4, 0x2010201.@
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
+; CHECK-NEXT:    sq 16[$r12] = $r18r19
 ; CHECK-NEXT:    copyd $r18 = $r3
-; CHECK-NEXT:    copyd $r20 = $r2
-; CHECK-NEXT:    copyd $r21 = $r1
+; CHECK-NEXT:    copyd $r19 = $r2
+; CHECK-NEXT:    copyd $r20 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sxhd $r19 = $r4
-; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    copyd $r1 = $r21
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    srad $r0 = $r22, 48
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    extfs $r0 = $r22, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r22, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r24 = $r23, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r22
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r21, 48
-; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r0 = $r20
+; CHECK-NEXT:    copyd $r1 = $r21
 ; CHECK-NEXT:    copyd $r22 = $r0
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r22 = $r23, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r22 = $r24, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r21, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r21, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r24 = $r23, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r21
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r20, 48
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r21 = $r23, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r21 = $r24, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r20, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r20, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r24 = $r23, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r18, 48
-; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r21
 ; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r23, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r20 = $r24, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r18, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r18, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r24 = $r23, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r18
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r21
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r22
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    copyd $r2 = $r20
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    insf $r3 = $r23, 31, 16
+; CHECK-NEXT:    lq $r18r19 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
-; CHECK-NEXT:    insf $r3 = $r24, 63, 32
+; CHECK-NEXT:    lq $r20r21 = 32[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ld $r24 = 48[$r12]
+; CHECK-NEXT:    ld $r22 = 48[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 4)
@@ -5784,125 +5612,42 @@ define <16 x i16> @p_div_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    srad $r0 = $r20, 48
-; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    srad $r1 = $r24, 48
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    extfs $r0 = $r20, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r24, 47, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r20, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r24, 31, 16
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r19 = $r18, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r20
-; CHECK-NEXT:    sxhd $r1 = $r24
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r21, 48
-; CHECK-NEXT:    srad $r1 = $r25, 48
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r18, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r20 = $r19, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r21, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r25, 47, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r21, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r25, 31, 16
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r19 = $r18, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r21
-; CHECK-NEXT:    sxhd $r1 = $r25
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r22, 48
-; CHECK-NEXT:    srad $r1 = $r26, 48
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r21 = $r18, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r21 = $r19, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r22, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r26, 47, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r22, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r26, 31, 16
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r19 = $r18, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r22
-; CHECK-NEXT:    sxhd $r1 = $r26
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r23, 48
-; CHECK-NEXT:    srad $r1 = $r27, 48
-; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r22 = $r18, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r22 = $r19, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r23, 47, 32
-; CHECK-NEXT:    extfs $r1 = $r27, 47, 32
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r23, 31, 16
-; CHECK-NEXT:    extfs $r1 = $r27, 31, 16
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r19 = $r18, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r23
-; CHECK-NEXT:    sxhd $r1 = $r27
-; CHECK-NEXT:    copyd $r18 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    copyd $r2 = $r22
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    copyd $r1 = $r24
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    copyd $r0 = $r21
+; CHECK-NEXT:    copyd $r1 = $r25
+; CHECK-NEXT:    copyd $r18 = $r0
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r22
+; CHECK-NEXT:    copyd $r1 = $r26
+; CHECK-NEXT:    copyd $r19 = $r0
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r23
+; CHECK-NEXT:    copyd $r1 = $r27
+; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r0 = $r18
+; CHECK-NEXT:    copyd $r1 = $r19
+; CHECK-NEXT:    copyd $r2 = $r20
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r3 = $r18, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r3 = $r19, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r16 = 88[$r12]
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <16 x i16>, <16 x i16>* %0, align 32
@@ -5914,139 +5659,54 @@ define <16 x i16> @p_div_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 define <16 x i16> @p_div_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v16i16_i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -96
+; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 88[$r12] = $r16
+; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    so 56[$r12] = $r24r25r26r27
-; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    so 24[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    lhz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    lo $r24r25r26r27 = 0[$r0]
+; CHECK-NEXT:    lo $r20r21r22r23 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    lhs $r18 = 0[$r1]
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    srad $r0 = $r24, 48
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    sbmm8 $r18 = $r1, 0x2010201.@
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    copyd $r0 = $r20
 ; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    extfs $r0 = $r24, 47, 32
+; CHECK-NEXT:    call __divv4hi3
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    copyd $r0 = $r21
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r24, 31, 16
+; CHECK-NEXT:    copyd $r0 = $r22
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r20 = $r0
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r19, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r24
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r25, 48
+; CHECK-NEXT:    copyd $r0 = $r23
 ; CHECK-NEXT:    copyd $r1 = $r18
 ; CHECK-NEXT:    copyd $r21 = $r0
+; CHECK-NEXT:    call __divv4hi3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r21 = $r19, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r21 = $r20, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r25, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r25, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r19, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r25
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r26, 48
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r22 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r22 = $r19, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r22 = $r20, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r26, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r26, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r19, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r26
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    srad $r0 = $r27, 48
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r23 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r23 = $r19, 31, 16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    insf $r23 = $r20, 63, 32
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    extfs $r0 = $r27, 47, 32
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    extfs $r0 = $r27, 31, 16
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r20 = $r19, 31, 16
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sxhd $r0 = $r27
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    call __divsi3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r0 = $r21
-; CHECK-NEXT:    copyd $r1 = $r22
-; CHECK-NEXT:    copyd $r2 = $r23
+; CHECK-NEXT:    copyd $r0 = $r19
+; CHECK-NEXT:    copyd $r1 = $r20
+; CHECK-NEXT:    copyd $r2 = $r21
 ; CHECK-NEXT:    copyd $r3 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
-; CHECK-NEXT:    insf $r3 = $r19, 31, 16
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; CHECK-NEXT:    insf $r3 = $r20, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    lo $r24r25r26r27 = 56[$r12]
+; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ld $r16 = 88[$r12]
-; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    addd $r12 = $r12, 64
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %3 = load <16 x i16>, <16 x i16>* %0, align 32

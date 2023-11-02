@@ -215,49 +215,17 @@ define <4 x i16> @test_mul_2(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-LABEL: test_div:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
+; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 56[$r12] = $r16
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __divv4hi3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    srad $r0 = $r19, 48
-; ALL-NEXT:    srad $r1 = $r18, 48
-; ALL-NEXT:    call __divsi3
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
-; ALL-NEXT:    extfs $r1 = $r18, 47, 32
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divsi3
+; ALL-NEXT:    ld $r16 = 24[$r12]
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    extfs $r0 = $r19, 31, 16
-; ALL-NEXT:    extfs $r1 = $r18, 31, 16
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    insf $r21 = $r20, 31, 16
-; ALL-NEXT:    call __divsi3
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sxhd $r0 = $r19
-; ALL-NEXT:    sxhd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divsi3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %r = sdiv <4 x i16> %a, %b
@@ -267,49 +235,17 @@ define <4 x i16> @test_div(<4 x i16> %a, <4 x i16> %b) #0 {
 define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
 ; ALL-LABEL: test_rem:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
+; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 56[$r12] = $r16
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __modv4hi3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    sq 24[$r12] = $r18r19
-; ALL-NEXT:    copyd $r18 = $r1
-; ALL-NEXT:    copyd $r19 = $r0
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    srad $r0 = $r19, 48
-; ALL-NEXT:    srad $r1 = $r18, 48
-; ALL-NEXT:    call __modsi3
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    extfs $r0 = $r19, 47, 32
-; ALL-NEXT:    extfs $r1 = $r18, 47, 32
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __modsi3
+; ALL-NEXT:    ld $r16 = 24[$r12]
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    extfs $r0 = $r19, 31, 16
-; ALL-NEXT:    extfs $r1 = $r18, 31, 16
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    insf $r21 = $r20, 31, 16
-; ALL-NEXT:    call __modsi3
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sxhd $r0 = $r19
-; ALL-NEXT:    sxhd $r1 = $r18
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __modsi3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
-; ALL-NEXT:    insf $r0 = $r20, 31, 16
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    insf $r0 = $r21, 63, 32
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %r = srem <4 x i16> %a, %b
@@ -1532,3 +1468,388 @@ define <4 x i16> @fshr_vec(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c) {
 
 declare <4 x i16> @llvm.fshr.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)
 declare <4 x i16> @llvm.fshl.v4i16(<4 x i16>, <4 x i16>, <4 x i16>)
+
+define <4 x i16> @sdiv(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: sdiv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __divv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %r = sdiv <4 x i16> %a, %b
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @sdiv_vs(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: sdiv_vs:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __divv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i16> %a, %splat
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @sdiv_sv(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: sdiv_sv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    sbmm8 $r0 = $r1, 0x2010201.@
+; ALL-NEXT:    copyd $r2 = $r0
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    call __divv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i16> %splat, %a
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @sdiv_ss(i16 %a, i16 %b) {
+; ALL-LABEL: sdiv_ss:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r2 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    copyd $r0 = $r2
+; ALL-NEXT:    sbmm8 $r1 = $r0, 0x2010201.@
+; ALL-NEXT:    call __divv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %va = insertelement <4 x i16> undef, i16 %b, i32 0
+  %vb = insertelement <4 x i16> undef, i16 %a, i32 0
+  %splata = shufflevector <4 x i16> %va, <4 x i16> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i16> %vb, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = sdiv <4 x i16> %splata, %splatb
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @srem(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: srem:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __modv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %r = srem <4 x i16> %a, %b
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @srem_vs(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: srem_vs:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __modv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i16> %a, %splat
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @srem_sv(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: srem_sv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    sbmm8 $r0 = $r1, 0x2010201.@
+; ALL-NEXT:    copyd $r2 = $r0
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    call __modv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i16> %splat, %a
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @srem_ss(i16 %a, i16 %b) {
+; ALL-LABEL: srem_ss:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r2 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    copyd $r0 = $r2
+; ALL-NEXT:    sbmm8 $r1 = $r0, 0x2010201.@
+; ALL-NEXT:    call __modv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %va = insertelement <4 x i16> undef, i16 %b, i32 0
+  %vb = insertelement <4 x i16> undef, i16 %a, i32 0
+  %splata = shufflevector <4 x i16> %va, <4 x i16> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i16> %vb, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = srem <4 x i16> %splata, %splatb
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @udiv(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: udiv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __udivv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %r = udiv <4 x i16> %a, %b
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @udiv_vs(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: udiv_vs:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __udivv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i16> %a, %splat
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @udiv_sv(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: udiv_sv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    sbmm8 $r0 = $r1, 0x2010201.@
+; ALL-NEXT:    copyd $r2 = $r0
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    call __udivv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i16> %splat, %a
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @udiv_ss(i16 %a, i16 %b) {
+; ALL-LABEL: udiv_ss:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r2 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    copyd $r0 = $r2
+; ALL-NEXT:    sbmm8 $r1 = $r0, 0x2010201.@
+; ALL-NEXT:    call __udivv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %va = insertelement <4 x i16> undef, i16 %b, i32 0
+  %vb = insertelement <4 x i16> undef, i16 %a, i32 0
+  %splata = shufflevector <4 x i16> %va, <4 x i16> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i16> %vb, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = udiv <4 x i16> %splata, %splatb
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @urem(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: urem:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __umodv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %r = urem <4 x i16> %a, %b
+  ret <4 x i16> %r
+}
+
+define <4 x i16> @urem_vs(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: urem_vs:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r1 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    call __umodv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i16> %a, %splat
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @urem_sv(<4 x i16> %a, i16 %b) {
+; ALL-LABEL: urem_sv:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    sbmm8 $r0 = $r1, 0x2010201.@
+; ALL-NEXT:    copyd $r2 = $r0
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    copyd $r1 = $r2
+; ALL-NEXT:    call __umodv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %v0 = insertelement <4 x i16> undef, i16 %b, i32 0
+  %splat = shufflevector <4 x i16> %v0, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i16> %splat, %a
+  ret <4 x i16> %div
+}
+
+define <4 x i16> @urem_ss(i16 %a, i16 %b) {
+; ALL-LABEL: urem_ss:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sbmm8 $r2 = $r1, 0x2010201.@
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    copyd $r0 = $r2
+; ALL-NEXT:    sbmm8 $r1 = $r0, 0x2010201.@
+; ALL-NEXT:    call __umodv4hi3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %va = insertelement <4 x i16> undef, i16 %b, i32 0
+  %vb = insertelement <4 x i16> undef, i16 %a, i32 0
+  %splata = shufflevector <4 x i16> %va, <4 x i16> undef, <4 x i32> zeroinitializer
+  %splatb = shufflevector <4 x i16> %vb, <4 x i16> undef, <4 x i32> zeroinitializer
+  %div = urem <4 x i16> %splata, %splatb
+  ret <4 x i16> %div
+}
+

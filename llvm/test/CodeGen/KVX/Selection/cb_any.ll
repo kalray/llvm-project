@@ -6,16 +6,15 @@ target triple = "kvx-kalray-cos"
 define <4 x i16> @cbIfAnyEqz(<4 x i16> %0, <4 x i16> %1) {
 ; CV2-LABEL: cbIfAnyEqz:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    abshq $r0 = $r1
-; CV2-NEXT:    addd $r12 = $r12, -32
-; CV2-NEXT:    get $r16 = $ra
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sd 24[$r12] = $r16
 ; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    compnhq.eq $r1 = $r0, 0
+; CV2-NEXT:    compnhq.eq $r1 = $r1, 0
+; CV2-NEXT:    addd $r12 = $r12, -32
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    get $r16 = $ra
 ; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    sd 24[$r12] = $r16
 ; CV2-NEXT:    cb.dnez $r1 ? .LBB0_2
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:  # %bb.1:
 ; CV2-NEXT:    call foo
 ; CV2-NEXT:    ;;
@@ -45,12 +44,11 @@ define <4 x i16> @cbIfAnyEqz(<4 x i16> %0, <4 x i16> %1) {
 define <8 x i8> @cbIfNotAnyEqz(<8 x i8> %0, <8 x i8> %1) {
 ; CV2-LABEL: cbIfNotAnyEqz:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    absbo $r0 = $r1
+; CV2-NEXT:    compnbo.eq $r0 = $r1, 0
 ; CV2-NEXT:    addd $r12 = $r12, -32
 ; CV2-NEXT:    get $r16 = $ra
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 24[$r12] = $r16
-; CV2-NEXT:    compnbo.eq $r0 = $r0, 0
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cb.deqz $r0 ? .LBB1_2
 ; CV2-NEXT:    ;;

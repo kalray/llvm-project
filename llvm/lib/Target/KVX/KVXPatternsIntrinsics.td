@@ -1197,8 +1197,12 @@ def: Pat<(f16(int_kvx_ffms f16:$f1, f16:$f2, f16:$f3, i32:$rounding, silent_s)),
 def: Pat<(f16(int_kvx_ffms f16:$f1, f16:$f2, f16:$f3, i32:$rounding, silent_)),
   (f16 (FFMSHQrr (ZXHD SingleReg:$f1), (ZXHD SingleReg:$f2), (ZXHD SingleReg:$f3), RoundingMod:$rounding, silent_))>;
 
+def kvx_any_frags : PatFrags<(ops node:$a, node:$b),
+                [(int_kvx_any node:$a, node:$b),
+                 (int_kvx_any (abs node:$a), node:$b)]>;
+
 foreach vt = [v8i8, v4i16, v2i32] in
-def: Pat<(int_kvx_any vt:$v, any_nez),
+def: Pat<(kvx_any_frags vt:$v, any_nez),
          (COMPDri10 $v, 0, comparison_ne)>;
 
 foreach vt = [v8i8, v4i16, v2i32, i64] in {
@@ -1208,7 +1212,7 @@ def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_nez),
 def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_nez),
          (ORWrr (LORDrr $v0, $v1), (LORDrr $v2, $v3))>;
 }
-// TODO: select (kvx_any) can also profit from avoiding useless compd
+// TODO: select (kvx_any_frags) can also profit from avoiding useless compd
 foreach vt = [v8i8, v4f16, v4i16, v2f32, v2i32] in {
 foreach pos = [scalarcond_dnez, scalarcond_wnez, scalarcond_odd] in
 def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_nez)), bb:$dst, pos),
@@ -1221,14 +1225,14 @@ def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_nez)), bb:$dst, neg),
 
 multiclass ANYEQZ<ValueType vt, OutPatFrag LEAF, Instruction I = LORDrr> {
     foreach pos = [scalarcond_dnez, scalarcond_wnez, scalarcond_odd] in
-    def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_eqz)), bb:$dst, pos),
+    def : Pat<(KVXBRCond (i64 (kvx_any_frags vt:$cond, any_eqz)), bb:$dst, pos),
             (CB (LEAF $cond), Pcrel17Imm:$dst, scalarcond_dnez)>;
 
     foreach neg = [scalarcond_deqz, scalarcond_weqz, scalarcond_even] in
-    def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_eqz)), bb:$dst, neg),
+    def : Pat<(KVXBRCond (i64 (kvx_any_frags vt:$cond, any_eqz)), bb:$dst, neg),
             (CB (LEAF $cond), Pcrel17Imm:$dst, scalarcond_deqz)>;
 
-    def: Pat<(int_kvx_any vt:$v, any_eqz),
+    def: Pat<(kvx_any_frags vt:$v, any_eqz),
          (COMPDri10 (LEAF $v), (i64 0), comparison_ne)>;
 
     def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_eqz),
