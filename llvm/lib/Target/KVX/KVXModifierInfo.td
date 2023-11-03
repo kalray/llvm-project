@@ -132,14 +132,17 @@ def coherency_g : Coherency<1>;
 def coherency_s : Coherency<2>;
 
 class Shufflev<int N> : PatLeaf<(i32 N)>;
-def shufflev_ : Shufflev<0>;
+def shufflev_no : Shufflev<0>;
 def shufflev_td : Shufflev<1>;
 
 class Shufflex<int N> : PatLeaf<(i32 N)>;
-def shufflex_ : Shufflex<0>;
+def shufflex_no : Shufflex<0>;
 def shufflex_zd : Shufflex<1>;
 def shufflex_ud : Shufflex<2>;
 def shufflex_tq : Shufflex<3>;
+def shufflex_tw : Shufflex<4>;
+def shufflex_zw : Shufflex<5>;
+def shufflex_uw : Shufflex<6>;
 
 class Lsomask<int N> : PatLeaf<(i32 N)>;
 def lsomask_u0 : Lsomask<0>;

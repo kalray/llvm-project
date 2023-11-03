@@ -994,27 +994,24 @@ define void @xcopyv(ptr %0) {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    xcopyv $a4a5a6a7 = $a0a1a2a3
+; CHECK-NEXT:    xso 480[$r0] = $a3
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    xso 448[$r0] = $a2
+; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    xso 416[$r0] = $a1
+; CHECK-NEXT:    xcopyv.td $a4a5a6a7 = $a0a1a2a3
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    xcopyv.td $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    xso 384[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    xso 480[$r0] = $a7
+; CHECK-NEXT:    xso 224[$r0] = $a7
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    xso 448[$r0] = $a6
+; CHECK-NEXT:    xso 192[$r0] = $a6
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    xso 416[$r0] = $a5
+; CHECK-NEXT:    xso 160[$r0] = $a5
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    xso 384[$r0] = $a4
-; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    xso 224[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    xso 192[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    xso 160[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    xso 128[$r0] = $a0
+; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 13)
   %2 = load <1024 x i1>, ptr %0
   %3 = tail call <1024 x i1> @llvm.kvx.xcopyv(<1024 x i1> %2, i32 0)
   %4 = getelementptr inbounds <1024 x i1>, ptr %0, i64 3
@@ -1034,34 +1031,31 @@ define void @xcopyx(ptr %0) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    xso 96[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    xso 64[$r0] = $a0
 ; CHECK-NEXT:    xcopyx.tq $a2a3 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xcopyx $a4a5 = $a0a1
+; CHECK-NEXT:    xcopyx.zd $a4a5 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xcopyx.zd $a6a7 = $a0a1
+; CHECK-NEXT:    xcopyx.ud $a6a7 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    xcopyx.ud $a0a1 = $a0a1
-; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    xcopyx.tw $a2a3 = $a2a3
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    xso 96[$r0] = $a5
+; CHECK-NEXT:    xso 160[$r0] = $a5
 ; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    xso 64[$r0] = $a4
+; CHECK-NEXT:    xso 128[$r0] = $a4
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    xso 160[$r0] = $a7
+; CHECK-NEXT:    xso 224[$r0] = $a7
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    xso 128[$r0] = $a6
+; CHECK-NEXT:    xso 192[$r0] = $a6
 ; CHECK-NEXT:    xcopyx.zw $a2a3 = $a2a3
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    xso 224[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    xso 192[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    xcopyx.uw $a2a3 = $a2a3
+; CHECK-NEXT:    xcopyx.uw $a0a1 = $a2a3
 ; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    xso 288[$r0] = $a3
+; CHECK-NEXT:    xso 288[$r0] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 20)
-; CHECK-NEXT:    xso 256[$r0] = $a2
+; CHECK-NEXT:    xso 256[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 21)
   %2 = load <512 x i1>, ptr %0

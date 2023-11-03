@@ -2281,19 +2281,19 @@ def: Pat<(v512i1 (splat_vector (i32 0))),
          (v512i1 (REG_SEQUENCE WideReg, (XZERO (v256i1 (IMPLICIT_DEF))), sub_v0, (XSPLATDOi16 0), sub_v1))>;
 
 def: Pat<(v1024i1 (splat_vector (i32 0))),
-         (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_))>;
+         (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no))>;
 
 def: Pat<(v2048i1 (splat_vector (i32 0))),
           (v2048i1 (REG_SEQUENCE Buffer8Reg,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m0,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m1))>;
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m0,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m1))>;
 
 def: Pat<(v4096i1 (splat_vector (i32 0))),
           (v4096i1 (REG_SEQUENCE Buffer16Reg,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m0,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m1,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m2,
-                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_)), sub_m3))>;
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m0,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m1,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m2,
+                    (v1024i1 (XSPLATOV (v256i1 (XSPLATDOi16 0)), shufflev_no)), sub_m3))>;
 }
 // SUBD: Only used for FrameLowering and replaced by the correct ADDD
 // instruction at eliminateFrameIndex(). Do not use it in any pattern!
@@ -2419,7 +2419,7 @@ class Pop1024_cv1 <OutPatFrag Leaf256> :
             (v256i1 (Leaf256 $v)), sub_v3)>;
 
 class Pop1024_cv2 <OutPatFrag Leaf256> :
-  OutPatFrag <(ops node:$v), (XSPLATOV (v256i1 (Leaf256 $v)), shufflev_)>;
+  OutPatFrag <(ops node:$v), (XSPLATOV (v256i1 (Leaf256 $v)), shufflev_no)>;
 
 class Pop2048_cv1 <OutPatFrag Leaf1024> :
   OutPatFrag <(ops node:$v),
@@ -2639,4 +2639,12 @@ let AddedComplexity = 2 in
 def : Pat<(vt (is_buildvec_signed16:$IMM)), (MAKEi16 (build_imm_vec $IMM))>;
 let AddedComplexity = 1 in
 def : Pat<(vt (is_buildvec_signed43:$IMM)), (MAKEi43 (build_imm_vec $IMM))>;
+}
+
+let AddedComplexity = 1 in {
+def : Pat <(v512i1 (int_kvx_xcopyx v512i1:$op0, shufflex_no)),
+           (COPY $op0)>;
+
+def : Pat <(v1024i1 (int_kvx_xcopyv v1024i1:$op0, shufflev_no)),
+           (COPY $op0)>;
 }
