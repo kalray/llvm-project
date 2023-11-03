@@ -517,24 +517,23 @@ void xcopyv(__kvx_x1024 *v) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = load <512 x i1>, ptr [[V:%.*]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 0)
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 1
-// CHECK-NEXT:    store <512 x i1> [[TMP1]], ptr [[ARRAYIDX]], align 32, !tbaa [[TBAA6]]
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 1)
-// CHECK-NEXT:    [[ARRAYIDX1:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 2
-// CHECK-NEXT:    store <512 x i1> [[TMP2]], ptr [[ARRAYIDX1]], align 32, !tbaa [[TBAA6]]
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 2)
-// CHECK-NEXT:    [[ARRAYIDX2:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 3
-// CHECK-NEXT:    store <512 x i1> [[TMP3]], ptr [[ARRAYIDX2]], align 32, !tbaa [[TBAA6]]
-// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP0]], i32 3)
-// CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 4
-// CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP1]], i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP2]], i32 2)
+// CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP3]], i32 3)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP4]], i32 4)
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP5]], i32 5)
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <512 x i1> @llvm.kvx.xcopyx(<512 x i1> [[TMP6]], i32 6)
+// CHECK-NEXT:    store <512 x i1> [[TMP7]], ptr [[V]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xcopyx(__kvx_x512 *v) {
-  v[1] = __builtin_kvx_xcopyx(*v, "");
-  v[2] = __builtin_kvx_xcopyx(*v, ".zd");
-  v[3] = __builtin_kvx_xcopyx(*v, ".ud");
-  v[4] = __builtin_kvx_xcopyx(*v, ".TQ");
+  v[0] = __builtin_kvx_xcopyx(*v, "");
+  v[0] = __builtin_kvx_xcopyx(*v, ".zd");
+  v[0] = __builtin_kvx_xcopyx(*v, ".ud");
+  v[0] = __builtin_kvx_xcopyx(*v, ".TQ");
+  v[0] = __builtin_kvx_xcopyx(*v, ".tW");
+  v[0] = __builtin_kvx_xcopyx(*v, ".Zw");
+  v[0] = __builtin_kvx_xcopyx(*v, ".uw");
 }
 
 // CHECK-LABEL: @xfminmaxhx(
@@ -580,6 +579,15 @@ void xsplatov(__kvx_x1024 *v, __kvx_x256 *c) {
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 3)
 // CHECK-NEXT:    [[ARRAYIDX3:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 3
 // CHECK-NEXT:    store <512 x i1> [[TMP4]], ptr [[ARRAYIDX3]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 4)
+// CHECK-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 4
+// CHECK-NEXT:    store <512 x i1> [[TMP5]], ptr [[ARRAYIDX4]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 5)
+// CHECK-NEXT:    [[ARRAYIDX5:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 5
+// CHECK-NEXT:    store <512 x i1> [[TMP6]], ptr [[ARRAYIDX5]], align 32, !tbaa [[TBAA6]]
+// CHECK-NEXT:    [[TMP7:%.*]] = tail call <512 x i1> @llvm.kvx.xsplatox(<256 x i1> [[TMP0]], i32 6)
+// CHECK-NEXT:    [[ARRAYIDX6:%.*]] = getelementptr inbounds <512 x i1>, ptr [[V]], i64 6
+// CHECK-NEXT:    store <512 x i1> [[TMP7]], ptr [[ARRAYIDX6]], align 32, !tbaa [[TBAA6]]
 // CHECK-NEXT:    ret void
 //
 void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
@@ -587,6 +595,9 @@ void xsplatox(__kvx_x512 *v, __kvx_x256 *c) {
   v[1] = __builtin_kvx_xsplatox(*c, ".zd");
   v[2] = __builtin_kvx_xsplatox(*c, ".ud");
   v[3] = __builtin_kvx_xsplatox(*c, ".tq");
+  v[4] = __builtin_kvx_xsplatox(*c, ".tw");
+  v[5] = __builtin_kvx_xsplatox(*c, ".zw");
+  v[6] = __builtin_kvx_xsplatox(*c, ".uw");
 }
 
 // CHECK-LABEL: @xsplatdo(

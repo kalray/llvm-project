@@ -184,7 +184,7 @@ def ShuffleVMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 1);}
   let PrintMethod = "printShuffleVMod";
 }
 
-def ShuffleXMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 3);}]> {
+def ShuffleXMod : Operand<i32>, ImmLeaf<i32, [{return (0 <= Imm) && (Imm <= 6);}]> {
   let PrintMethod = "printShuffleXMod";
 }
 

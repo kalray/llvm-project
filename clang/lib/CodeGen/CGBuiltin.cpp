@@ -19611,8 +19611,13 @@ static const KvxModifier KVX_SATURATE({{"sat", 0}, {"satu", 1}});
 static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;
 static const KvxModifier KVX_SCHANNEL = KVX_RCHANNEL;
 static const KvxModifier KVX_SHUFFLEV({{"", 0}, {"td", 1}});
-static const KvxModifier
-    KVX_SHUFFLEX({{"", 0}, {"zd", 1}, {"ud", 2}, {"tq", 3}});
+static const KvxModifier KVX_SHUFFLEX({{"", 0},
+                                       {"zd", 1},
+                                       {"ud", 2},
+                                       {"tq", 3},
+                                       {"tw", 4},
+                                       {"zw", 5},
+                                       {"uw", 6}});
 static const KvxModifier KVX_SILENT({{"", 0}, {"s", 1}});
 static const KvxModifier KVX_SIMDCOND({{"", 0},
                                        {"nez", 0},

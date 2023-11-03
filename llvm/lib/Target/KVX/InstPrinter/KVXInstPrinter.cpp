@@ -640,20 +640,9 @@ void KVXInstPrinter::printShuffleVMod(const MCInst *MI, unsigned OpNo,
 void KVXInstPrinter::printShuffleXMod(const MCInst *MI, unsigned OpNo,
                                       raw_ostream &O) {
   uint32_t I = MI->getOperand(OpNo).getImm();
-
-  switch (I) {
-  case 0:
-    break;
-  case 1:
-    O << ".zd";
-    break;
-  case 2:
-    O << ".ud";
-    break;
-  case 3:
-    O << ".tq";
-    break;
-  default:
+  static const char *Shuffles[] = {"", "zd", "ud", "tq", "tw", "zw", "uw"};
+  if (I > 6)
     report_fatal_error("Invalid ShuffleXMod value to print.");
-  }
+  if (I)
+    O << '.' << Shuffles[I];
 }
