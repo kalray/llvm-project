@@ -1208,15 +1208,33 @@ def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_nez),
 def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_nez),
          (ORWrr (LORDrr $v0, $v1), (LORDrr $v2, $v3))>;
 }
+// TODO: select (kvx_any) can also profit from avoiding useless compd
+foreach vt = [v8i8, v4f16, v4i16, v2f32, v2i32] in {
+foreach pos = [scalarcond_dnez, scalarcond_wnez, scalarcond_odd] in
+def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_nez)), bb:$dst, pos),
+            (CB SingleReg:$cond, Pcrel17Imm:$dst, scalarcond_dnez)>;
+
+foreach neg = [scalarcond_deqz, scalarcond_weqz, scalarcond_even] in
+def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_nez)), bb:$dst, neg),
+            (CB SingleReg:$cond, Pcrel17Imm:$dst, scalarcond_deqz)>;
+}
 
 multiclass ANYEQZ<ValueType vt, OutPatFrag LEAF, Instruction I = LORDrr> {
+    foreach pos = [scalarcond_dnez, scalarcond_wnez, scalarcond_odd] in
+    def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_eqz)), bb:$dst, pos),
+            (CB (LEAF $cond), Pcrel17Imm:$dst, scalarcond_dnez)>;
+
+    foreach neg = [scalarcond_deqz, scalarcond_weqz, scalarcond_even] in
+    def : Pat<(KVXBRCond (i64 (int_kvx_any vt:$cond, any_eqz)), bb:$dst, neg),
+            (CB (LEAF $cond), Pcrel17Imm:$dst, scalarcond_deqz)>;
+
     def: Pat<(int_kvx_any vt:$v, any_eqz),
          (COMPDri10 (LEAF $v), (i64 0), comparison_ne)>;
 
     def: Pat<(int_kvx_any2 vt:$v0, vt:$v1, any_eqz),
              (I (LEAF $v0), (LEAF $v1))>;
 
-      def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_eqz),
+    def: Pat<(int_kvx_any4 vt:$v0, vt:$v1, vt:$v2, vt:$v3, any_eqz),
                (ORWrr
                   (I (LEAF $v0), (LEAF $v1)),
                   (I (LEAF $v2), (LEAF $v3)))>;
