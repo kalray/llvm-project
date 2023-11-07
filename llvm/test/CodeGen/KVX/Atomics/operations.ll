@@ -176,7 +176,7 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV1-NEXT:    sllw $r6 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    srlw $r2 = $r5, $r3
-; CV1-NEXT:    orw $r4 = $r5, $r6
+; CV1-NEXT:    iorw $r4 = $r5, $r6
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    andw $r2 = $r2, 255
 ; CV1-NEXT:    ;; # (end cycle 4)
@@ -207,7 +207,7 @@ define i8 @atomic_test_and_set(i8* %ptr) {
 ; CV2-NEXT:    sllw $r6 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srlw $r2 = $r5, $r3
-; CV2-NEXT:    orw $r4 = $r5, $r6
+; CV2-NEXT:    iorw $r4 = $r5, $r6
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    andw $r2 = $r2, 255
 ; CV2-NEXT:    ;; # (end cycle 4)

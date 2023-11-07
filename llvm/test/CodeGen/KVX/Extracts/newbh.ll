@@ -330,10 +330,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    andw $r0 = $r0, 4
 ; KV3_1-NEXT:    ;; # (end cycle 5)
-; KV3_1-NEXT:    orw $r0 = $r1, $r0
+; KV3_1-NEXT:    iorw $r0 = $r1, $r0
 ; KV3_1-NEXT:    ld $r1 = 32[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    orw $r0 = $r0, $r2
+; KV3_1-NEXT:    iorw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    addx8uwd $r0 = $r0, $r21
 ; KV3_1-NEXT:    ;; # (end cycle 8)
@@ -678,10 +678,10 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;; # (end cycle 4)
 ; KV3_2-NEXT:    andw $r0 = $r0, 4
 ; KV3_2-NEXT:    ;; # (end cycle 5)
-; KV3_2-NEXT:    orw $r0 = $r1, $r0
+; KV3_2-NEXT:    iorw $r0 = $r1, $r0
 ; KV3_2-NEXT:    ld $r1 = 32[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 6)
-; KV3_2-NEXT:    orw $r0 = $r0, $r2
+; KV3_2-NEXT:    iorw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    addx8uwd $r0 = $r0, $r21
 ; KV3_2-NEXT:    ;; # (end cycle 8)

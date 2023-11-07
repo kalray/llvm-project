@@ -657,10 +657,10 @@ define <4 x i1> @test_fcmp_ord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; KV3_1-NEXT:    ord $r1 = $r1, $r4
+; KV3_1-NEXT:    iord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    iord $r0 = $r0, $r3
 ; KV3_1-NEXT:    sbmm8 $r1 = $r1, 0x1001
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x1001
@@ -676,8 +676,8 @@ define <4 x i1> @test_fcmp_ord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r3
-; KV3_2-NEXT:    ord $r1 = $r1, $r4
+; KV3_2-NEXT:    iord $r0 = $r0, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    sbmm8 $r0 = $r0, 0x1001
 ; KV3_2-NEXT:    sbmm8 $r1 = $r1, 0x1001
@@ -1591,8 +1591,8 @@ define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-NEXT:    fcompnwp.olt $r6 = $r2, $r0
 ; KV3_1-NEXT:    fcompnwp.olt $r7 = $r3, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r4 = $r6, $r4
-; KV3_1-NEXT:    ord $r5 = $r7, $r5
+; KV3_1-NEXT:    iord $r4 = $r6, $r4
+; KV3_1-NEXT:    iord $r5 = $r7, $r5
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r4 ? $r0 = $r2
 ; KV3_1-NEXT:    cmovewp.odd $r5 ? $r1 = $r3
@@ -1631,8 +1631,8 @@ define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-NEXT:    fcompnwp.olt $r6 = $r0, $r2
 ; KV3_1-NEXT:    fcompnwp.olt $r7 = $r1, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r4 = $r6, $r4
-; KV3_1-NEXT:    ord $r5 = $r7, $r5
+; KV3_1-NEXT:    iord $r4 = $r6, $r4
+; KV3_1-NEXT:    iord $r5 = $r7, $r5
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r4 ? $r0 = $r2
 ; KV3_1-NEXT:    cmovewp.odd $r5 ? $r1 = $r3
@@ -1668,8 +1668,8 @@ define <4 x float> @test_copysign(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <4 x float> @llvm.copysign.v4f32(<4 x float> %a, <4 x float> %b)
@@ -1687,8 +1687,8 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    andd $r2 = $r3, 0x80000000.@
 ; KV3_1-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r0 = $r0, $r3
-; KV3_1-NEXT:    ord $r1 = $r1, $r2
+; KV3_1-NEXT:    iord $r0 = $r0, $r3
+; KV3_1-NEXT:    iord $r1 = $r1, $r2
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
@@ -1702,8 +1702,8 @@ define <4 x float> @test_copysign_v4f16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    andd $r2 = $r3, 0x80000000.@
 ; KV3_2-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    ord $r0 = $r0, $r3
-; KV3_2-NEXT:    ord $r1 = $r1, $r2
+; KV3_2-NEXT:    iord $r0 = $r0, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r2
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 2)
   %tb = fpext <4 x half> %b to <4 x float>
@@ -1726,10 +1726,10 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_1-NEXT:    fnarrowdwp $r2 = $r4r5
 ; KV3_1-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    ord $r1 = $r1, $r3
+; KV3_1-NEXT:    iord $r1 = $r1, $r3
 ; KV3_1-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    ord $r0 = $r0, $r2
+; KV3_1-NEXT:    iord $r0 = $r0, $r2
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ;
@@ -1747,10 +1747,10 @@ define <4 x float> @test_copysign_v4f64(<4 x float> %a, <4 x double> %b) #0 {
 ; KV3_2-NEXT:    fnarrowdwp $r2 = $r4r5
 ; KV3_2-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    ord $r1 = $r1, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r3
 ; KV3_2-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    ord $r0 = $r0, $r2
+; KV3_2-NEXT:    iord $r0 = $r0, $r2
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 4)
   %tb = fptrunc <4 x double> %b to <4 x float>
@@ -1766,8 +1766,8 @@ define <4 x double> @test_copysign_extended(<4 x float> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlwd $r2 = $r1
 ; CHECK-NEXT:    fwidenmwd $r3 = $r1
@@ -1792,8 +1792,8 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    andd $r2 = $r3, 0x80000000.@
 ; KV3_1-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r0 = $r0, $r3
-; KV3_1-NEXT:    ord $r1 = $r1, $r2
+; KV3_1-NEXT:    iord $r0 = $r0, $r3
+; KV3_1-NEXT:    iord $r1 = $r1, $r2
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
@@ -1807,8 +1807,8 @@ define <4 x float> @test_copysign_fp16(<4 x float> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    andd $r2 = $r3, 0x80000000.@
 ; KV3_2-NEXT:    andd $r3 = $r4, 0x80000000.@
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    ord $r0 = $r0, $r3
-; KV3_2-NEXT:    ord $r1 = $r1, $r2
+; KV3_2-NEXT:    iord $r0 = $r0, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r2
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 2)
   %eb = fpext <4 x half> %b to <4 x float>
@@ -2344,10 +2344,10 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; KV3_1-NEXT:    ord $r1 = $r1, $r4
+; KV3_1-NEXT:    iord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    iord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
@@ -2358,8 +2358,8 @@ define <4 x i32> @fcmp_setord(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r3
-; KV3_2-NEXT:    ord $r1 = $r1, $r4
+; KV3_2-NEXT:    iord $r0 = $r0, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:
@@ -2744,10 +2744,10 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompnwp.oge $r0 = $r0, $r2
-; KV3_1-NEXT:    ord $r1 = $r1, $r4
+; KV3_1-NEXT:    iord $r1 = $r1, $r4
 ; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r0 = $r0, $r3
+; KV3_1-NEXT:    iord $r0 = $r0, $r3
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
@@ -2758,8 +2758,8 @@ define <4 x i32> @fcmp_setord_fast(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_2-NEXT:    fcompnwp.olt $r3 = $r0, $r2
 ; KV3_2-NEXT:    fcompnwp.olt $r4 = $r1, $r3
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    ord $r0 = $r0, $r3
-; KV3_2-NEXT:    ord $r1 = $r1, $r4
+; KV3_2-NEXT:    iord $r0 = $r0, $r3
+; KV3_2-NEXT:    iord $r1 = $r1, $r4
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 entry:

@@ -11,20 +11,20 @@ declare i1 @llvm.vector.reduce.or.v8i1(<8 x i1>)
 define i32 @reduction_logical_or_01(<8 x i32> %v0, <8 x i32> %v1, <8 x i32> %v2) {
 ; ALL-LABEL: reduction_logical_or_01:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    ord $r0 = $r0, $r4
-; ALL-NEXT:    ord $r1 = $r1, $r5
-; ALL-NEXT:    ord $r2 = $r2, $r6
-; ALL-NEXT:    ord $r3 = $r3, $r7
+; ALL-NEXT:    iord $r0 = $r0, $r4
+; ALL-NEXT:    iord $r1 = $r1, $r5
+; ALL-NEXT:    iord $r2 = $r2, $r6
+; ALL-NEXT:    iord $r3 = $r3, $r7
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    ord $r0 = $r8, $r0
-; ALL-NEXT:    ord $r1 = $r9, $r1
-; ALL-NEXT:    ord $r2 = $r10, $r2
-; ALL-NEXT:    ord $r3 = $r11, $r3
+; ALL-NEXT:    iord $r0 = $r8, $r0
+; ALL-NEXT:    iord $r1 = $r9, $r1
+; ALL-NEXT:    iord $r2 = $r10, $r2
+; ALL-NEXT:    iord $r3 = $r11, $r3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ord $r0 = $r0, $r2
-; ALL-NEXT:    ord $r1 = $r1, $r3
+; ALL-NEXT:    iord $r0 = $r0, $r2
+; ALL-NEXT:    iord $r1 = $r1, $r3
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lord $r0 = $r0, $r1
+; ALL-NEXT:    liord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %cmp0 = icmp ne <8 x i32> %v0, zeroinitializer

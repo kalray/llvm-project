@@ -40,7 +40,7 @@ define i64 @FADDCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = trunc i64 %0 to i32
@@ -84,12 +84,12 @@ define { i64, i64 } @FADDCWCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    ord $r1 = $r3, $r1
+; CHECK-NEXT:    iord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
   %5 = trunc i64 %0 to i32
@@ -151,7 +151,7 @@ define i64 @FMULCWC(i64 %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    zxwd $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    ord $r0 = $r1, $r0
+; CV1-NEXT:    iord $r0 = $r1, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -172,7 +172,7 @@ define i64 @FMULCWC(i64 %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    zxwd $r0 = $r0
 ; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    ord $r0 = $r1, $r0
+; CV2-NEXT:    iord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = trunc i64 %0 to i32
@@ -270,7 +270,7 @@ define i64 @FMULWC(i64 %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    zxwd $r1 = $r2
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -293,7 +293,7 @@ define i64 @FMULWC(i64 %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    zxwd $r1 = $r2
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    iord $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %3 = trunc i64 %0 to i32
@@ -414,7 +414,7 @@ define i64 @FSBFWCC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = lshr i64 %0, 32
@@ -461,11 +461,11 @@ define { i64, i64 } @FSBFWCCP(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r0 = $r3, $r0
+; CHECK-NEXT:    iord $r0 = $r3, $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    ord $r1 = $r2, $r1
+; CHECK-NEXT:    iord $r1 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
   %5 = lshr i64 %0, 32
@@ -545,7 +545,7 @@ define i64 @FADDCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = trunc i64 %0 to i32
@@ -588,12 +588,12 @@ define { i64, i64 } @FADDCWCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    ord $r1 = $r3, $r1
+; CHECK-NEXT:    iord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
   %5 = trunc i64 %0 to i32
@@ -662,7 +662,7 @@ define i64 @FMULCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 12)
   %3 = trunc i64 %0 to i32
@@ -764,7 +764,7 @@ define i64 @FMULWC_2(i64 %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    zxwd $r1 = $r2
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -787,7 +787,7 @@ define i64 @FMULWC_2(i64 %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    zxwd $r1 = $r2
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    ord $r0 = $r0, $r1
+; CV2-NEXT:    iord $r0 = $r0, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %3 = trunc i64 %0 to i32
@@ -854,7 +854,7 @@ define i64 @FSBFWCC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = trunc i64 %0 to i32
@@ -901,11 +901,11 @@ define { i64, i64 } @FSBFWCCP_2(i64 %0, i64 %1, i64 %2, i64 %3) {
 ; CHECK-NEXT:    xorw $r2 = $r2, 0x80000000
 ; CHECK-NEXT:    slld $r3 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r0 = $r3, $r0
+; CHECK-NEXT:    iord $r0 = $r3, $r0
 ; CHECK-NEXT:    zxwd $r1 = $r1
 ; CHECK-NEXT:    slld $r2 = $r2, 32
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    ord $r1 = $r2, $r1
+; CHECK-NEXT:    iord $r1 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
   %5 = trunc i64 %0 to i32

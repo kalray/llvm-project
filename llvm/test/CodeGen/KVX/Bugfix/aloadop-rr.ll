@@ -30,7 +30,7 @@ define void @foo32() {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    lwz.u $r5 = $r1[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    orw $r4 = $r2, $r5
+; CV1-NEXT:    iorw $r4 = $r2, $r5
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    acswapw $r1[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 4)
@@ -62,7 +62,7 @@ define void @foo32() {
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV2-NEXT:    lwz.u $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    orw $r4 = $r2, $r5
+; CV2-NEXT:    iorw $r4 = $r2, $r5
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 4)
@@ -100,7 +100,7 @@ define void @foo64() {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    ld.u $r5 = $r1[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ord $r4 = $r2, $r5
+; CV1-NEXT:    iord $r4 = $r2, $r5
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    acswapd $r1[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 4)
@@ -132,7 +132,7 @@ define void @foo64() {
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV2-NEXT:    ld.u $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ord $r4 = $r2, $r5
+; CV2-NEXT:    iord $r4 = $r2, $r5
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    acswapd $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 4)

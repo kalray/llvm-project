@@ -120,7 +120,7 @@ define signext i64 @uadd_sat64_ri10(i64 signext %a) {
 ; KVXV1:       # %bb.0: # %entry
 ; KVXV1-NEXT:    minud $r0 = $r0, 511
 ; KVXV1-NEXT:    ;; # (end cycle 0)
-; KVXV1-NEXT:    ord $r0 = $r0, -512
+; KVXV1-NEXT:    iord $r0 = $r0, -512
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ;
@@ -202,7 +202,7 @@ define <2 x i32> @uadd_satv2i32(<2 x i32> %a, <2 x i32> %b) {
 ; KVXV1-NEXT:    ;; # (end cycle 0)
 ; KVXV1-NEXT:    compnwp.ltu $r1 = $r0, $r1
 ; KVXV1-NEXT:    ;; # (end cycle 1)
-; KVXV1-NEXT:    ord $r0 = $r1, $r0
+; KVXV1-NEXT:    iord $r0 = $r1, $r0
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -225,7 +225,7 @@ define <2 x i32> @uadd_satv2i32_ri_(<2 x i32> %a) {
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    ;; # (end cycle 2)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -248,7 +248,7 @@ define <2 x i32> @uadd_satv2i32_ri_at(<2 x i32> %a) {
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    ;; # (end cycle 2)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -271,7 +271,7 @@ define <2 x i32> @uadd_satv2i32_rr(<2 x i32> %a) {
 ; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    compnwp.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    ;; # (end cycle 2)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -395,8 +395,8 @@ define <4 x i32> @uadd_satv4i32(<4 x i32> %a, <4 x i32> %b) {
 ; KVXV1-NEXT:    compnwp.ltu $r2 = $r0, $r2
 ; KVXV1-NEXT:    compnwp.ltu $r3 = $r1, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 1)
-; KVXV1-NEXT:    ord $r0 = $r2, $r0
-; KVXV1-NEXT:    ord $r1 = $r3, $r1
+; KVXV1-NEXT:    iord $r0 = $r2, $r0
+; KVXV1-NEXT:    iord $r1 = $r3, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -632,13 +632,13 @@ define <8 x i8> @uadd_satv8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KVXV1-NEXT:    compnhq.ltu $r1 = $r0, $r1
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 2)
-; KVXV1-NEXT:    ord $r0 = $r1, $r0
-; KVXV1-NEXT:    ord $r2 = $r3, $r2
+; KVXV1-NEXT:    iord $r0 = $r1, $r0
+; KVXV1-NEXT:    iord $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 3)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 4)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 5)
 ;
@@ -668,13 +668,13 @@ define <8 x i8> @uadd_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 3)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
-; KVXV1-NEXT:    ord $r2 = $r3, $r2
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 5)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -704,13 +704,13 @@ define <8 x i8> @uadd_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1-NEXT:    compnhq.ltu $r0 = $r1, $r0
 ; KVXV1-NEXT:    compnhq.ltu $r3 = $r2, $r3
 ; KVXV1-NEXT:    ;; # (end cycle 3)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
-; KVXV1-NEXT:    ord $r2 = $r3, $r2
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r2 = $r3, $r2
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ; KVXV1-NEXT:    srlhqs $r0 = $r0, 8
 ; KVXV1-NEXT:    andd $r1 = $r2, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 5)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 6)
 ;

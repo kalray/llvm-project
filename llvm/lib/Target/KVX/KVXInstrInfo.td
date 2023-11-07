@@ -1784,14 +1784,14 @@ defm ANDD : MC_BINOP_64<"andd", PatFrags<(ops node:$l, node:$r), [(and node:$l, 
 
 defm NANDD : MC_11<"nandd">;
 
-defm ORD : MC_BINOP_64<"ord", PatFrags<(ops node:$l, node:$r), [(or node:$l, node:$r)]>>;
+defm ORD : MC_BINOP_64<"iord", PatFrags<(ops node:$l, node:$r), [(or node:$l, node:$r)]>>;
 
 def norpfs : PatFrags<(ops node:$l, node:$r),
                        [(and (not node:$l), (not node:$r)),
                         (not (or node:$l, node:$r)),
                         (vnot (or node:$l, node:$r))]>;
 
-defm NORD : MC_BINOP_64<"nord", norpfs>;
+defm NORD : MC_BINOP_64<"niord", norpfs>;
 
 defm XORD : MC_BINOP_64<"xord", PatFrags<(ops node:$l, node:$r), [(xor node:$l, node:$r)]>>;
 
@@ -1807,7 +1807,7 @@ def andnpfs : PatFrags<(ops node:$l, node:$r),
 
 defm ANDND : MC_BINOP_64<"andnd", andnpfs>;
 
-defm ORND : MC_11<"ornd">;
+defm ORND : MC_11<"iornd">;
 
 defm SBMM8 : MC_12_SWITCH<"sbmm8">;
 
@@ -1864,9 +1864,9 @@ defm LANDD : MC_13<"landd">;
 
 defm LNANDD : MC_13<"lnandd">;
 
-defm LORD : MC_13<"lord">;
+defm LORD : MC_13<"liord">;
 
-defm LNORD : MC_13<"lnord">;
+defm LNORD : MC_13<"lniord">;
 
 defm STSUW : MC_13_SWITCH<"stsuw">; // ri variant cv2 only
 
@@ -1890,9 +1890,9 @@ defm ANDW : MC_14<"andw">;
 
 defm NANDW : MC_14<"nandw">;
 
-defm ORW : MC_14<"orw">;
+defm ORW : MC_14<"iorw">;
 
-defm NORW : MC_14<"norw">;
+defm NORW : MC_14<"niorw">;
 
 defm XORW : MC_14<"xorw">;
 
@@ -1900,7 +1900,7 @@ defm NXORW : MC_14<"nxorw">;
 
 defm ANDNW : MC_14<"andnw">;
 
-defm ORNW : MC_14<"ornw">;
+defm ORNW : MC_14<"iornw">;
 
 let isAdd = 1 in
 defm ADDSW : MC_13_SWITCH<"addsw">;
@@ -1943,9 +1943,9 @@ defm LANDW : MC_13<"landw">;
 
 defm LNANDW : MC_13<"lnandw">;
 
-defm LORW : MC_13<"lorw">;
+defm LORW : MC_13<"liorw">;
 
-defm LNORW : MC_13<"lnorw">;
+defm LNORW : MC_13<"lniorw">;
 
 let isAdd = 1 in
 defm ADDWP : MC_17_TINY<"addwp">;
@@ -2000,9 +2000,9 @@ defm LANDWP : MC_17<"landwp">, Requires<[IsV1]>;
 
 defm LNANDWP : MC_17<"lnandwp">, Requires<[IsV1]>;
 
-defm LORWP : MC_17<"lorwp">, Requires<[IsV1]>;
+defm LORWP : MC_17<"liorwp">, Requires<[IsV1]>;
 
-defm LNORWP : MC_17<"lnorwp">, Requires<[IsV1]>;
+defm LNORWP : MC_17<"lniorwp">, Requires<[IsV1]>;
 
 let isAdd = 1 in
 defm ADDHQ : MC_17_TINY<"addhq">;
@@ -2101,9 +2101,9 @@ defm LANDHQ : MC_17<"landhq">, Requires<[IsV1]>;
 
 defm LNANDHQ : MC_17<"lnandhq">, Requires<[IsV1]>;
 
-defm LORHQ : MC_17<"lorhq">, Requires<[IsV1]>;
+defm LORHQ : MC_17<"liorhq">, Requires<[IsV1]>;
 
-defm LNORHQ : MC_17<"lnorhq">, Requires<[IsV1]>;
+defm LNORHQ : MC_17<"lniorhq">, Requires<[IsV1]>;
 
 defm ADDX2WD : MC_13_SWITCH<"addx2wd">;
 
@@ -2719,9 +2719,9 @@ defm ANDRBOD : I<"andrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ANDRHQD : I<"andrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm ANDRWPD : I<"andrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 
-defm ORRBOD : I<"orrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
-defm ORRHQD : I<"orrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
-defm ORRWPD : I<"orrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ORRBOD : I<"iorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ORRHQD : I<"iorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
+defm ORRWPD : I<"iorrwpd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 
 defm XORRBOD : I<"xorrbod", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
 defm XORRHQD : I<"xorrhqd", ALU_LITE, [SingleReg], [], [], [], [SingleReg]>;
@@ -2868,7 +2868,7 @@ defm XNANDO : I </*asm=*/"xnando", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorR
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnando v256i1:$op0, v256i1:$op1))]>;
 
-defm XNORO : I </*asm=*/"xnoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XNORO : I </*asm=*/"xnioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnioro v256i1:$op0, v256i1:$op1))]>;
 
@@ -2876,11 +2876,11 @@ defm XNXORO : I </*asm=*/"xnxoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorR
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnxoro v256i1:$op0, v256i1:$op1))]>;
 
-defm XORNO : I </*asm=*/"xorno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XORNO : I </*asm=*/"xiorno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xiorno v256i1:$op0, v256i1:$op1))]>;
 
-defm XORO : I </*asm=*/"xoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XORO : I </*asm=*/"xioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xioro v256i1:$op0, v256i1:$op1))]>;
 

@@ -972,7 +972,7 @@ define <4 x i32> @test_select_cmp_2(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4
 ; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
 ; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lnord $r4 = $r5, $r4
+; CHECK-NEXT:    lniord $r4 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
@@ -991,7 +991,7 @@ define <4 x i32> @test_select_cmp_3(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c, <4
 ; CHECK-NEXT:    compnwp.ne $r4 = $r4, $r6
 ; CHECK-NEXT:    compnwp.ne $r5 = $r5, $r7
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lord $r4 = $r5, $r4
+; CHECK-NEXT:    liord $r4 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    cmoved.even $r4 ? $r0 = $r2
 ; CHECK-NEXT:    cmoved.even $r4 ? $r1 = $r3
@@ -1048,14 +1048,14 @@ define <4 x i32> @fshl_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
 ; CHECK-NEXT:    srlw $r5 = $r5, 1
 ; CHECK-NEXT:    srlw $r7 = $r7, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
 ; CHECK-NEXT:    srlw $r2 = $r2, $r4
-; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    iorw $r4 = $r6, $r7
 ; CHECK-NEXT:    srlw $r5 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r8, $r5
+; CHECK-NEXT:    iorw $r3 = $r8, $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
@@ -1084,10 +1084,10 @@ define <4 x i32> @fshl_ri(<4 x i32> %a, <4 x i32> %b) {
 ; CHECK-NEXT:    srlw $r6 = $r6, 29
 ; CHECK-NEXT:    sllw $r7 = $r7, 3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    orw $r1 = $r1, $r3
-; CHECK-NEXT:    orw $r3 = $r7, $r6
-; CHECK-NEXT:    orw $r4 = $r5, $r4
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r3 = $r7, $r6
+; CHECK-NEXT:    iorw $r4 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
@@ -1131,13 +1131,13 @@ define <4 x i32> @fshl_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
 ; CHECK-NEXT:    sllw $r8 = $r10, $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r4
-; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
 ; CHECK-NEXT:    srlw $r2 = $r2, $r11
-; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    iorw $r4 = $r6, $r7
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r8, $r5
+; CHECK-NEXT:    iorw $r3 = $r8, $r5
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
@@ -1169,13 +1169,13 @@ define <4 x i32> @fshr_rr(<4 x i32> %a, <4 x i32> %b, i32 %c) {
 ; CHECK-NEXT:    sllw $r7 = $r7, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r4
-; CHECK-NEXT:    orw $r1 = $r1, $r3
-; CHECK-NEXT:    orw $r4 = $r7, $r6
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r4 = $r7, $r6
 ; CHECK-NEXT:    sllw $r5 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    iorw $r3 = $r5, $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret
@@ -1204,10 +1204,10 @@ define <4 x i32> @fshr_ri(<4 x i32> %a, <4 x i32> %b, i32 %c) {
 ; CHECK-NEXT:    srlw $r6 = $r6, 3
 ; CHECK-NEXT:    sllw $r7 = $r7, 29
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
-; CHECK-NEXT:    orw $r1 = $r1, $r3
-; CHECK-NEXT:    orw $r3 = $r7, $r6
-; CHECK-NEXT:    orw $r4 = $r5, $r4
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r3 = $r7, $r6
+; CHECK-NEXT:    iorw $r4 = $r5, $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
@@ -1251,13 +1251,13 @@ define <4 x i32> @fshr_vec(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) {
 ; CHECK-NEXT:    srlw $r8 = $r8, $r9
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sllw $r0 = $r0, $r4
-; CHECK-NEXT:    orw $r1 = $r1, $r3
+; CHECK-NEXT:    iorw $r1 = $r1, $r3
 ; CHECK-NEXT:    srlw $r2 = $r2, $r11
-; CHECK-NEXT:    orw $r4 = $r6, $r7
+; CHECK-NEXT:    iorw $r4 = $r6, $r7
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    insf $r1 = $r4, 63, 32
-; CHECK-NEXT:    orw $r3 = $r5, $r8
+; CHECK-NEXT:    iorw $r3 = $r5, $r8
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r3, 63, 32
 ; CHECK-NEXT:    ret

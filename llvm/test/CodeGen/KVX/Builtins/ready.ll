@@ -11,7 +11,7 @@ define i64 @ready_int(i32* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load i32, i32* %0
@@ -26,7 +26,7 @@ define i64 @ready_long(i64* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load i64, i64* %0
@@ -39,7 +39,7 @@ define i64 @ready_v2i8(<2 x i8>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x i8>* %0 to half*
@@ -53,7 +53,7 @@ define i64 @ready_v2i16(<2 x i16>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x i16>* %0 to i32*
@@ -67,7 +67,7 @@ define i64 @ready_v2i32(<2 x i32>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x i32>* %0 to i64*
@@ -81,7 +81,7 @@ define i64 @ready_v2i64(<2 x i64>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load <2 x i64>, <2 x i64>* %0
@@ -94,7 +94,7 @@ define i64 @ready_v4i8(<4 x i8>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x i8>* %0 to i32*
@@ -108,7 +108,7 @@ define i64 @ready_v4i16(<4 x i16>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x i16>* %0 to i64*
@@ -122,7 +122,7 @@ define i64 @ready_v4i32(<4 x i32>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x i32>* %0 to <2 x i64>*
@@ -136,7 +136,7 @@ define i64 @ready_v4i64(<4 x i64>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load <4 x i64>, <4 x i64>* %0
@@ -149,7 +149,7 @@ define i64 @ready_v8i8(<8 x i8>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <8 x i8>* %0 to i64*
@@ -163,7 +163,7 @@ define i64 @ready__Float16(half* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load half, half* %0
@@ -176,7 +176,7 @@ define i64 @ready_float(float* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load float, float* %0
@@ -191,7 +191,7 @@ define i64 @ready_double(double* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast double* %0 to i64*
@@ -205,7 +205,7 @@ define i64 @ready_v2f16(<2 x half>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x half>* %0 to i32*
@@ -219,7 +219,7 @@ define i64 @ready_v2f32(<2 x float>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x float>* %0 to i64*
@@ -233,7 +233,7 @@ define i64 @ready_v2f64(<2 x double>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <2 x double>* %0 to <2 x i64>*
@@ -247,7 +247,7 @@ define i64 @ready_v4f16(<4 x half>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x half>* %0 to i64*
@@ -261,7 +261,7 @@ define i64 @ready_v4f32(<4 x float>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x float>* %0 to <2 x i64>*
@@ -275,7 +275,7 @@ define i64 @ready_v4f64(<4 x double>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <4 x double>* %0 to <4 x i64>*
@@ -289,7 +289,7 @@ define i64 @ready___int128(i128* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast i128* %0 to <2 x i64>*
@@ -303,7 +303,7 @@ define i64 @ready_v8i16(<8 x i16>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <8 x i16>* %0 to <2 x i64>*
@@ -317,7 +317,7 @@ define i64 @ready_v8i32(<8 x i32>* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = bitcast <8 x i32>* %0 to <4 x i64>*
@@ -331,7 +331,7 @@ define i64 @ready_char(i8* nocapture readonly %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbs $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = load i8, i8* %0
@@ -347,7 +347,7 @@ define i64 @ready_int_v4f32(i32* nocapture readonly %0, <4 x float>* nocapture r
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lq $r2r3 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = load i32, i32* %0
@@ -364,7 +364,7 @@ define i64 @ready_long_int(i64* nocapture readonly %0, i32* nocapture readonly %
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = load i64, i64* %0
@@ -380,7 +380,7 @@ define i64 @ready_float_v8i8(float* nocapture readonly %0, <8 x i8>* nocapture r
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r1 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = load float, float* %0
@@ -401,8 +401,8 @@ define i64 @ready_int_long_float(i32* nocapture readonly %0, i64* nocapture read
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %4 = load i32, i32* %0
@@ -423,8 +423,8 @@ define i64 @ready___int128_v8i8_v2i64(i128* nocapture readonly %0, <8 x i8>* noc
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    lq $r2r3 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r2, $r4
-; CHECK-NEXT:    ord $r0 = $r4, $r0
+; CHECK-NEXT:    iord $r0 = $r2, $r4
+; CHECK-NEXT:    iord $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %4 = bitcast i128* %0 to <2 x i64>*
@@ -445,8 +445,8 @@ define i64 @ready_char_short_double(i8* nocapture readonly %0, i16* nocapture re
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %4 = load i8, i8* %0
@@ -470,8 +470,8 @@ define i64 @ready_char_short_int_long(i8* nocapture readonly %0, i16* nocapture 
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    ld $r3 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ord $r0 = $r2, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %5 = load i8, i8* %0
@@ -495,8 +495,8 @@ define i64 @ready__Float16_float_double_v4i64(half* nocapture readonly %0, float
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ord $r0 = $r2, $r4
+; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %5 = load half, half* %0
@@ -521,8 +521,8 @@ define i64 @ready_v8f32_v4i32___int128_char(<8 x float>* nocapture readonly %0, 
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    lbs $r2 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r0 = $r4, $r0
-; CHECK-NEXT:    ord $r0 = $r8, $r2
+; CHECK-NEXT:    iord $r0 = $r4, $r0
+; CHECK-NEXT:    iord $r0 = $r8, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %5 = bitcast <8 x float>* %0 to <4 x i64>*

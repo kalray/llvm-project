@@ -54,7 +54,7 @@ define <2 x half> @copysignhp(<2 x half> %0, <2 x half> %1) {
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
 ; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    iorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = tail call <2 x half> @llvm.copysign.v2f16(<2 x half> %0, <2 x half> %1)
@@ -69,7 +69,7 @@ define <4 x half> @copysignhq(<4 x half> %0, <4 x half> %1) {
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = tail call <4 x half> @llvm.copysign.v4f16(<4 x half> %0, <4 x half> %1)
@@ -84,7 +84,7 @@ define <2 x float> @copysignwp(<2 x float> %0, <2 x float> %1) {
 ; CHECK-NEXT:    fabswp $r0 = $r0
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = tail call <2 x float> @llvm.copysign.v2f32(<2 x float> %0, <2 x float> %1)
@@ -152,8 +152,8 @@ define <8 x half> @copysignho(<8 x half> %0, <8 x half> %1) {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80008000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = tail call <8 x half> @llvm.copysign.v8f16(<8 x half> %0, <8 x half> %1)
@@ -175,10 +175,10 @@ define <16 x half> @copysignhx(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    andd $r6 = $r6, 0x80008000.@
 ; CHECK-NEXT:    andd $r7 = $r7, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = tail call <16 x half> @llvm.copysign.v16f16(<16 x half> %0, <16 x half> %1)
@@ -200,10 +200,10 @@ define <8 x float> @copysignwo(<8 x float> %0, <8 x float> %1) {
 ; CHECK-NEXT:    andd $r4 = $r4, 0x80000000.@
 ; CHECK-NEXT:    andd $r5 = $r5, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
   %3 = tail call <8 x float> @llvm.copysign.v8f32(<8 x float> %0, <8 x float> %1)
@@ -220,8 +220,8 @@ define <4 x float> @copysignwq(<4 x float> %0, <4 x float> %1) {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80000000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80000000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = tail call <4 x float> @llvm.copysign.v4f32(<4 x float> %0, <4 x float> %1)

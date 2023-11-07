@@ -35,7 +35,7 @@ entry:
 define i1 @f3(i64 %a, i64 %b){
 ; CHECK-LABEL: f3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnord $r0 = $r1, $r0
+; CHECK-NEXT:    lniord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -47,7 +47,7 @@ entry:
 define i1 @f4(i64 %a, i64 %b){
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lord $r0 = $r1, $r0
+; CHECK-NEXT:    liord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -72,7 +72,7 @@ entry:
 define i1 @f6(i64 %a, i64 %b){
 ; CHECK-LABEL: f6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnord $r0 = $r1, $r0
+; CHECK-NEXT:    lniord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

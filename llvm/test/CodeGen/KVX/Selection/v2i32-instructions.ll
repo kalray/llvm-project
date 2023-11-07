@@ -732,7 +732,7 @@ define <2 x i32> @lnand(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    compnwp.eq $r0 = $r0, 0
 ; V2-NEXT:    compnwp.eq $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    andd $r0 = $r0, 0x1.@
 ; V2-NEXT:    ret
@@ -758,7 +758,7 @@ define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) {
 ; V2-NEXT:    compnwp.eq $r0 = $r0, 0
 ; V2-NEXT:    compnwp.eq $r1 = $r1, 0
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 1)
   %3 = icmp eq <2 x i32> %0, zeroinitializer
@@ -771,13 +771,13 @@ define <2 x i32> @lnandn(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lor:
 ; V1:       # %bb.0:
-; V1-NEXT:    lorwp $r0 = $r0, $r1
+; V1-NEXT:    liorwp $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: lor:
 ; V2:       # %bb.0:
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.ne $r0 = $r0, 0
 ; V2-NEXT:    ;; # (end cycle 1)
@@ -794,7 +794,7 @@ define <2 x i32> @lor(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lorneg:
 ; V1:       # %bb.0:
-; V1-NEXT:    lorwp $r0 = $r0, $r1
+; V1-NEXT:    liorwp $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    negwp $r0 = $r0
 ; V1-NEXT:    ret
@@ -802,7 +802,7 @@ define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 ;
 ; V2-LABEL: lorneg:
 ; V2:       # %bb.0:
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.ne $r0 = $r0, 0
 ; V2-NEXT:    ret
@@ -816,13 +816,13 @@ define <2 x i32> @lorneg(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lnor:
 ; V1:       # %bb.0:
-; V1-NEXT:    lnorwp $r0 = $r0, $r1
+; V1-NEXT:    lniorwp $r0 = $r0, $r1
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 0)
 ;
 ; V2-LABEL: lnor:
 ; V2:       # %bb.0:
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.eq $r0 = $r0, 0
 ; V2-NEXT:    ;; # (end cycle 1)
@@ -839,7 +839,7 @@ define <2 x i32> @lnor(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 ; V1-LABEL: lnorneg:
 ; V1:       # %bb.0:
-; V1-NEXT:    lnorwp $r0 = $r0, $r1
+; V1-NEXT:    lniorwp $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    negwp $r0 = $r0
 ; V1-NEXT:    ret
@@ -847,7 +847,7 @@ define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 ;
 ; V2-LABEL: lnorneg:
 ; V2:       # %bb.0:
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    compnwp.eq $r0 = $r0, 0
 ; V2-NEXT:    ret
@@ -1173,7 +1173,7 @@ define <2 x i32> @fshl_rr(<2 x i32> %a, <2 x i32> %b, i32 %c) {
 ; ALL-NEXT:    sllwps $r0 = $r0, $r2
 ; ALL-NEXT:    srlwps $r1 = $r1, $r3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
   %i = insertelement <2 x i32> undef, i32 %c, i64 0
@@ -1188,7 +1188,7 @@ define <2 x i32> @fshl_ri(<2 x i32> %a, <2 x i32> %b, i32 %c) {
 ; ALL-NEXT:    sllwps $r0 = $r0, 3
 ; ALL-NEXT:    srlwps $r1 = $r1, 29
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 1)
   %r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> <i32 3, i32 3>)
@@ -1213,7 +1213,7 @@ define <2 x i32> @fshl_vec(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
 ; ALL-NEXT:    insf $r0 = $r2, 31, 0
 ; ALL-NEXT:    insf $r1 = $r3, 31, 0
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 4)
   %r = call <2 x i32> @llvm.fshl.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c)
@@ -1230,7 +1230,7 @@ define <2 x i32> @fshr_rr(<2 x i32> %a, <2 x i32> %b, i32 %c) {
 ; ALL-NEXT:    sllwps $r0 = $r0, $r2
 ; ALL-NEXT:    srlwps $r1 = $r1, $r3
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
   %i = insertelement <2 x i32> undef, i32 %c, i64 0
@@ -1245,7 +1245,7 @@ define <2 x i32> @fshr_ri(<2 x i32> %a, <2 x i32> %b, i32 %c) {
 ; ALL-NEXT:    sllwps $r0 = $r0, 29
 ; ALL-NEXT:    srlwps $r1 = $r1, 3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 1)
   %r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> <i32 3, i32 3>)
@@ -1270,7 +1270,7 @@ define <2 x i32> @fshr_vec(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c) {
 ; ALL-NEXT:    insf $r0 = $r2, 31, 0
 ; ALL-NEXT:    insf $r1 = $r3, 31, 0
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    ord $r0 = $r0, $r1
+; ALL-NEXT:    iord $r0 = $r0, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 4)
   %r = call <2 x i32> @llvm.fshr.v2i32(<2 x i32> %a, <2 x i32> %b, <2 x i32> %c)

@@ -96,7 +96,7 @@ define <2 x i16> @test_fshl_v2i16(<2 x i16> %a, <2 x i16> %b) {
 ; CV1-NEXT:    insf $r0 = $r1, 15, 0
 ; CV1-NEXT:    insf $r2 = $r3, 15, 0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    orw $r0 = $r2, $r0
+; CV1-NEXT:    iorw $r0 = $r2, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 5)
 ;
@@ -118,7 +118,7 @@ define <2 x i16> @test_fshl_v2i16(<2 x i16> %a, <2 x i16> %b) {
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r0 = $r2, 15, 0
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    orw $r0 = $r3, $r0
+; CV2-NEXT:    iorw $r0 = $r3, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
 entry:
@@ -164,7 +164,7 @@ define <3 x i16> @test_fshl_v3i16(<3 x i16> %a, <3 x i16> %b) {
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    insf $r2 = $r5, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -201,7 +201,7 @@ define <3 x i16> @test_fshl_v3i16(<3 x i16> %a, <3 x i16> %b) {
 ; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    insf $r0 = $r6, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    ord $r0 = $r1, $r0
+; CV2-NEXT:    iord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
 entry:
@@ -247,7 +247,7 @@ define <4 x i16> @test_fshl_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    insf $r2 = $r5, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -284,7 +284,7 @@ define <4 x i16> @test_fshl_v4i16(<4 x i16> %a, <4 x i16> %b) {
 ; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    insf $r0 = $r6, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    ord $r0 = $r1, $r0
+; CV2-NEXT:    iord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
 entry:
@@ -342,7 +342,7 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV1-NEXT:    insf $r0 = $r5, 47, 0
 ; CV1-NEXT:    extfz $r5 = $r6, 35, 32
 ; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    ord $r0 = $r4, $r0
+; CV1-NEXT:    iord $r0 = $r4, $r0
 ; CV1-NEXT:    srlhqs $r7 = $r1, $r7
 ; CV1-NEXT:    srlhqs $r8 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 14)
@@ -364,7 +364,7 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV1-NEXT:    insf $r1 = $r8, 47, 0
 ; CV1-NEXT:    insf $r2 = $r5, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 20)
-; CV1-NEXT:    ord $r1 = $r2, $r1
+; CV1-NEXT:    iord $r1 = $r2, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 21)
 ;
@@ -428,8 +428,8 @@ define <8 x i16> @test_fshl_v8i16(<8 x i16> %a, <8 x i16> %b) {
 ; CV2-NEXT:    insf $r2 = $r9, 47, 0
 ; CV2-NEXT:    insf $r4 = $r7, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    ord $r0 = $r4, $r0
-; CV2-NEXT:    ord $r1 = $r2, $r1
+; CV2-NEXT:    iord $r0 = $r4, $r0
+; CV2-NEXT:    iord $r1 = $r2, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 12)
 entry:
@@ -493,7 +493,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    insf $r0 = $r10, 47, 0
 ; CV1-NEXT:    extfz $r10 = $r5, 19, 16
 ; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    ord $r0 = $r8, $r0
+; CV1-NEXT:    iord $r0 = $r8, $r0
 ; CV1-NEXT:    insf $r4 = $r11, 47, 0
 ; CV1-NEXT:    srlhqs $r9 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 16)
@@ -527,7 +527,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    insf $r1 = $r9, 47, 0
 ; CV1-NEXT:    extfz $r10 = $r6, 19, 16
 ; CV1-NEXT:    ;; # (end cycle 25)
-; CV1-NEXT:    ord $r1 = $r4, $r1
+; CV1-NEXT:    iord $r1 = $r4, $r1
 ; CV1-NEXT:    insf $r5 = $r11, 47, 0
 ; CV1-NEXT:    srlhqs $r9 = $r2, $r6
 ; CV1-NEXT:    ;; # (end cycle 26)
@@ -555,7 +555,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    insf $r2 = $r9, 47, 0
 ; CV1-NEXT:    extfz $r9 = $r10, 35, 32
 ; CV1-NEXT:    ;; # (end cycle 33)
-; CV1-NEXT:    ord $r2 = $r5, $r2
+; CV1-NEXT:    iord $r2 = $r5, $r2
 ; CV1-NEXT:    srlhqs $r11 = $r3, $r11
 ; CV1-NEXT:    srlhqs $r15 = $r3, $r7
 ; CV1-NEXT:    ;; # (end cycle 34)
@@ -577,7 +577,7 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV1-NEXT:    insf $r3 = $r15, 47, 0
 ; CV1-NEXT:    insf $r6 = $r9, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 40)
-; CV1-NEXT:    ord $r3 = $r6, $r3
+; CV1-NEXT:    iord $r3 = $r6, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 41)
 ;
@@ -695,14 +695,14 @@ define <16 x i16> @test_fshl_v16i16(<16 x i16> %a, <16 x i16> %b) {
 ; CV2-NEXT:    insf $r16 = $r6, 31, 0
 ; CV2-NEXT:    insf $r17 = $r10, 31, 0
 ; CV2-NEXT:    ;; # (end cycle 22)
-; CV2-NEXT:    ord $r0 = $r8, $r0
+; CV2-NEXT:    iord $r0 = $r8, $r0
 ; CV2-NEXT:    insf $r2 = $r11, 47, 0
 ; CV2-NEXT:    insf $r3 = $r17, 47, 0
 ; CV2-NEXT:    insf $r6 = $r16, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 23)
-; CV2-NEXT:    ord $r1 = $r4, $r1
-; CV2-NEXT:    ord $r2 = $r5, $r2
-; CV2-NEXT:    ord $r3 = $r6, $r3
+; CV2-NEXT:    iord $r1 = $r4, $r1
+; CV2-NEXT:    iord $r2 = $r5, $r2
+; CV2-NEXT:    iord $r3 = $r6, $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 24)
 entry:

@@ -139,7 +139,7 @@ define <8 x i8> @v8i8abds_rr(<8 x i8> %0, <8 x i8> %1) #0 {
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxmbhq $r1 = $r0
@@ -180,7 +180,7 @@ define <8 x i8> @v8i8abds_ri_(<8 x i8> %0) #0 {
 ; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxmbhq $r1 = $r0
@@ -221,7 +221,7 @@ define <8 x i8> @v8i8abds_ri_at(<8 x i8> %0) #0 {
 ; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r1, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxmbhq $r1 = $r0
@@ -262,7 +262,7 @@ define <8 x i8> @v8i8abds_ri_at_2(<8 x i8> %0) #0 {
 ; V1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; V1-NEXT:    srlhqs $r1 = $r2, 8
 ; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    ord $r0 = $r0, $r1
+; V1-NEXT:    iord $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
 ; V1-NEXT:    sxlbhq $r0 = $r0
 ; V1-NEXT:    sxmbhq $r1 = $r0

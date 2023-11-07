@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 define i32 @ORNWrr(i32 %0, i32 %1) {
 ; CHECK-LABEL: ORNWrr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornw $r0 = $r0, $r1
+; CHECK-NEXT:    iornw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i32 %0, -1
@@ -20,7 +20,7 @@ define i32 @ORNWrr(i32 %0, i32 %1) {
 define i32 @ORNWri10(i32 %0) {
 ; CHECK-LABEL: ORNWri10:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornw $r0 = $r0, -60
+; CHECK-NEXT:    iornw $r0 = $r0, -60
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i32 %0, -60
@@ -53,7 +53,7 @@ define i32 @ORNWri32(i32 %0) {
 define <2 x i16> @ORNWrr_v2i16(<2 x i16> %0, <2 x i16> %1) {
 ; CHECK-LABEL: ORNWrr_v2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i16> %0, <i16 -1, i16 -1>
@@ -64,7 +64,7 @@ define <2 x i16> @ORNWrr_v2i16(<2 x i16> %0, <2 x i16> %1) {
 define <2 x i16> @ORNWri_v2i16(<2 x i16> %0) {
 ; CHECK-LABEL: ORNWri_v2i16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornw $r0 = $r0, 0x4ffff
+; CHECK-NEXT:    iornw $r0 = $r0, 0x4ffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i16> %0, <i16 -5, i16 -5>
@@ -75,7 +75,7 @@ define <2 x i16> @ORNWri_v2i16(<2 x i16> %0) {
 define <4 x i8> @ORNWrr_v4i8(<4 x i8> %0, <4 x i8> %1) {
 ; CHECK-LABEL: ORNWrr_v4i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <4 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1>
@@ -86,7 +86,7 @@ define <4 x i8> @ORNWrr_v4i8(<4 x i8> %0, <4 x i8> %1) {
 define <4 x i8> @ORNWri_v4i8(<4 x i8> %0) {
 ; CHECK-LABEL: ORNWri_v4i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornw $r0 = $r0, 0x4030201
+; CHECK-NEXT:    iornw $r0 = $r0, 0x4030201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <4 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1>
@@ -97,7 +97,7 @@ define <4 x i8> @ORNWri_v4i8(<4 x i8> %0) {
 define <2 x i8> @ORNWrr_v2i8(<2 x i8> %0, <2 x i8> %1) {
 ; CHECK-LABEL: ORNWrr_v2i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i8> %0, <i8 -1, i8 -1>
@@ -108,7 +108,7 @@ define <2 x i8> @ORNWrr_v2i8(<2 x i8> %0, <2 x i8> %1) {
 define <2 x i8> @ORNWri_v2i8(<2 x i8> %0) {
 ; CHECK-LABEL: ORNWri_v2i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornw $r0 = $r0, 0x4ff
+; CHECK-NEXT:    iornw $r0 = $r0, 0x4ff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i8> %0, <i8 -5, i8 -5>

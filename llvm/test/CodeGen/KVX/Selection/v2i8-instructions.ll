@@ -1306,9 +1306,9 @@ define <2 x i8> @fshl_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V1-NEXT:    zxbd $r3 = $r3
 ; V1-NEXT:    sllw $r4 = $r4, 8
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    orw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r0 = $r0, $r1
 ; V1-NEXT:    andw $r2 = $r2, 7
-; V1-NEXT:    orw $r3 = $r4, $r3
+; V1-NEXT:    iorw $r3 = $r4, $r3
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    sllw $r0 = $r0, $r2
 ; V1-NEXT:    sllw $r1 = $r3, $r2
@@ -1339,7 +1339,7 @@ define <2 x i8> @fshl_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
 ; V2-NEXT:    insf $r1 = $r3, 7, 0
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %i = insertelement <2 x i8> undef, i8 %c, i64 0
@@ -1361,8 +1361,8 @@ define <2 x i8> @fshl_ri(<2 x i8> %a, <2 x i8> %b) {
 ; V1-NEXT:    extfz $r2 = $r2, 7, 5
 ; V1-NEXT:    sllw $r3 = $r3, 3
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    orw $r0 = $r0, $r1
-; V1-NEXT:    orw $r2 = $r3, $r2
+; V1-NEXT:    iorw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r2 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    insf $r0 = $r2, 15, 8
 ; V1-NEXT:    ret
@@ -1375,7 +1375,7 @@ define <2 x i8> @fshl_ri(<2 x i8> %a, <2 x i8> %b) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    srlbos $r1 = $r1, 4
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %r = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> %a, <2 x i8> %b, <2 x i8> <i8 3, i8 3>)
@@ -1397,10 +1397,10 @@ define <2 x i8> @fshl_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sllw $r0 = $r0, 8
 ; V1-NEXT:    zxbd $r2 = $r2
-; V1-NEXT:    orw $r3 = $r4, $r3
+; V1-NEXT:    iorw $r3 = $r4, $r3
 ; V1-NEXT:    andw $r4 = $r5, 7
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    orw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r0 = $r0, $r1
 ; V1-NEXT:    andw $r1 = $r2, 7
 ; V1-NEXT:    sllw $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 3)
@@ -1430,7 +1430,7 @@ define <2 x i8> @fshl_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
 ; V2-NEXT:    insf $r1 = $r3, 7, 0
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
   %r = call <2 x i8> @llvm.fshl.v2i8(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c)
@@ -1449,9 +1449,9 @@ define <2 x i8> @fshr_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V1-NEXT:    zxbd $r3 = $r3
 ; V1-NEXT:    sllw $r4 = $r4, 8
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    orw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r0 = $r0, $r1
 ; V1-NEXT:    andw $r2 = $r2, 7
-; V1-NEXT:    orw $r3 = $r4, $r3
+; V1-NEXT:    iorw $r3 = $r4, $r3
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    srlw $r0 = $r0, $r2
 ; V1-NEXT:    srlw $r1 = $r3, $r2
@@ -1479,7 +1479,7 @@ define <2 x i8> @fshr_rr(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
 ; V2-NEXT:    insf $r1 = $r3, 7, 0
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %i = insertelement <2 x i8> undef, i8 %c, i64 0
@@ -1501,8 +1501,8 @@ define <2 x i8> @fshr_ri(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V1-NEXT:    extfz $r2 = $r2, 7, 3
 ; V1-NEXT:    sllw $r3 = $r3, 5
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    orw $r0 = $r0, $r1
-; V1-NEXT:    orw $r2 = $r3, $r2
+; V1-NEXT:    iorw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r2 = $r3, $r2
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    insf $r0 = $r2, 15, 8
 ; V1-NEXT:    ret
@@ -1515,7 +1515,7 @@ define <2 x i8> @fshr_ri(<2 x i8> %a, <2 x i8> %b, i8 %c) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    sllbos $r0 = $r0, 4
 ; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 2)
   %r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> %a, <2 x i8> %b, <2 x i8> <i8 3, i8 3>)
@@ -1537,10 +1537,10 @@ define <2 x i8> @fshr_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    sllw $r0 = $r0, 8
 ; V1-NEXT:    zxbd $r2 = $r2
-; V1-NEXT:    orw $r3 = $r4, $r3
+; V1-NEXT:    iorw $r3 = $r4, $r3
 ; V1-NEXT:    andw $r4 = $r5, 7
 ; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    orw $r0 = $r0, $r1
+; V1-NEXT:    iorw $r0 = $r0, $r1
 ; V1-NEXT:    andw $r1 = $r2, 7
 ; V1-NEXT:    srlw $r2 = $r3, $r4
 ; V1-NEXT:    ;; # (end cycle 3)
@@ -1567,7 +1567,7 @@ define <2 x i8> @fshr_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
 ; V2-NEXT:    insf $r0 = $r2, 7, 0
 ; V2-NEXT:    insf $r1 = $r3, 7, 0
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    orw $r0 = $r0, $r1
+; V2-NEXT:    iorw $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
   %r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c)

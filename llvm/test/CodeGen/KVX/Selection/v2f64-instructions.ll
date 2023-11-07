@@ -768,11 +768,11 @@ define <2 x i1> @test_fcmp_ord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    make $r0 = -1
-; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    iorw $r1 = $r1, $r4
 ; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
 ; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    iorw $r2 = $r2, $r3
 ; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
@@ -790,8 +790,8 @@ define <2 x i1> @test_fcmp_ord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r1 = $r1, $r4
-; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    iorw $r1 = $r1, $r4
+; CV2-NEXT:    iorw $r2 = $r2, $r3
 ; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
@@ -1452,8 +1452,8 @@ define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-NEXT:    compd.gtu $r4 = $r4, 0xffe0000000000000
 ; CV1-NEXT:    compd.gtu $r5 = $r5, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r4 = $r6, $r4
-; CV1-NEXT:    ord $r5 = $r7, $r5
+; CV1-NEXT:    iord $r4 = $r6, $r4
+; CV1-NEXT:    iord $r5 = $r7, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r5 ? $r0 = $r2
 ; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
@@ -1498,8 +1498,8 @@ define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-NEXT:    compd.gtu $r4 = $r4, 0xffe0000000000000
 ; CV1-NEXT:    compd.gtu $r5 = $r5, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r4 = $r6, $r4
-; CV1-NEXT:    ord $r5 = $r7, $r5
+; CV1-NEXT:    iord $r4 = $r6, $r4
+; CV1-NEXT:    iord $r5 = $r7, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r5 ? $r0 = $r2
 ; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
@@ -2135,11 +2135,11 @@ define <2 x i1> @fcmp_setord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    make $r0 = -1
-; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    iorw $r1 = $r1, $r4
 ; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
 ; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    iorw $r2 = $r2, $r3
 ; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
@@ -2157,8 +2157,8 @@ define <2 x i1> @fcmp_setord(<2 x double> %a, <2 x double> %b) #0 {
 ; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r1 = $r1, $r4
-; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    iorw $r1 = $r1, $r4
+; CV2-NEXT:    iorw $r2 = $r2, $r3
 ; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0
@@ -2787,11 +2787,11 @@ define <2 x i1> @fcmp_setord_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    make $r0 = -1
-; CV1-NEXT:    orw $r1 = $r1, $r4
+; CV1-NEXT:    iorw $r1 = $r1, $r4
 ; CV1-NEXT:    fcompd.oge $r2 = $r0, $r2
 ; CV1-NEXT:    fcompd.olt $r3 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    orw $r2 = $r2, $r3
+; CV1-NEXT:    iorw $r2 = $r2, $r3
 ; CV1-NEXT:    make $r4 = -1
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.even $r2 ? $r0 = 0
@@ -2809,8 +2809,8 @@ define <2 x i1> @fcmp_setord_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    make $r0 = -1
-; CV2-NEXT:    orw $r1 = $r1, $r4
-; CV2-NEXT:    orw $r2 = $r2, $r3
+; CV2-NEXT:    iorw $r1 = $r1, $r4
+; CV2-NEXT:    iorw $r2 = $r2, $r3
 ; CV2-NEXT:    make $r4 = -1
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cmoved.even $r2 ? $r0 = 0

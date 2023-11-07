@@ -52,7 +52,7 @@ entry:
 define void @storec128_mf(<4 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK-LABEL: storec128_mf:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r3 = $r3, 0xffffffffffff0000
+; CHECK-NEXT:    iord $r3 = $r3, 0xffffffffffff0000
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so.mf $r3 ? [$r2] = $r0r1r2r3
 ; CHECK-NEXT:    ret
@@ -86,7 +86,7 @@ entry:
 define void @storec64_mf(<2 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK-LABEL: storec64_mf:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r2 = $r2, -256
+; CHECK-NEXT:    iord $r2 = $r2, -256
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so.mf $r2 ? [$r1] = $r0r1r2r3
 ; CHECK-NEXT:    ret

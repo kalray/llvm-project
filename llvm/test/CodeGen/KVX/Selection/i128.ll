@@ -90,8 +90,8 @@ define i128 @nand(i128 %0, i128 %1) {
 define i128 @nor(i128 %0, i128 %1) {
 ; CHECK-LABEL: nor:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    nord $r0 = $r2, $r0
-; CHECK-NEXT:    nord $r1 = $r3, $r1
+; CHECK-NEXT:    niord $r0 = $r2, $r0
+; CHECK-NEXT:    niord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
@@ -102,8 +102,8 @@ define i128 @nor(i128 %0, i128 %1) {
 define i128 @nor_2(i128 %0, i128 %1) {
 ; CHECK-LABEL: nor_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    nord $r0 = $r2, $r0
-; CHECK-NEXT:    nord $r1 = $r3, $r1
+; CHECK-NEXT:    niord $r0 = $r2, $r0
+; CHECK-NEXT:    niord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
@@ -149,8 +149,8 @@ define i128 @and(i128 %0, i128 %1) {
 define i128 @or(i128 %0, i128 %1) {
 ; CHECK-LABEL: or:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r2, $r0
-; CHECK-NEXT:    ord $r1 = $r3, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = or i128 %1, %0
@@ -160,8 +160,8 @@ define i128 @or(i128 %0, i128 %1) {
 define i32 @land(i128 %0, i128 %1) {
 ; CHECK-LABEL: land:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r0, $r1
-; CHECK-NEXT:    ord $r1 = $r2, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r1 = $r2, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    landd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
@@ -176,10 +176,10 @@ define i32 @land(i128 %0, i128 %1) {
 define i32 @lor(i128 %0, i128 %1) {
 ; CHECK-LABEL: lor:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r2, $r0
-; CHECK-NEXT:    ord $r1 = $r3, $r1
+; CHECK-NEXT:    iord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r1 = $r3, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lord $r0 = $r0, $r1
+; CHECK-NEXT:    liord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = or i128 %1, %0
@@ -541,7 +541,7 @@ define i128 @neg(i128 %0) {
 define i32 @lnot(i128 %0) {
 ; CHECK-LABEL: lnot:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lnord $r0 = $r0, $r1
+; CHECK-NEXT:    lniord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
@@ -552,7 +552,7 @@ define i32 @lnot(i128 %0) {
 define i32 @lnot_eqz(i128 %0) {
 ; CHECK-LABEL: lnot_eqz:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lnord $r0 = $r0, $r1
+; CHECK-NEXT:    lniord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
@@ -563,7 +563,7 @@ define i32 @lnot_eqz(i128 %0) {
 define i32 @nez(i128 %0) {
 ; CHECK-LABEL: nez:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lord $r0 = $r0, $r1
+; CHECK-NEXT:    liord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp ne i128 %0, 0
@@ -611,7 +611,7 @@ define i32 @gtz(i128 %0) {
 define i32 @u_gtz(i128 %0) {
 ; CHECK-LABEL: u_gtz:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lord $r0 = $r0, $r1
+; CHECK-NEXT:    liord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp ne i128 %0, 0
@@ -656,7 +656,7 @@ define i32 @lez(i128 %0) {
 define i32 @u_lez(i128 %0) {
 ; CHECK-LABEL: u_lez:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    lnord $r0 = $r0, $r1
+; CHECK-NEXT:    lniord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = icmp eq i128 %0, 0
@@ -670,7 +670,7 @@ define i32 @eq(i128 %0, i128 %1) {
 ; CHECK-NEXT:    xord $r0 = $r0, $r2
 ; CHECK-NEXT:    xord $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lnord $r0 = $r0, $r1
+; CHECK-NEXT:    lniord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp eq i128 %0, %1
@@ -684,7 +684,7 @@ define i32 @ne(i128 %0, i128 %1) {
 ; CHECK-NEXT:    xord $r0 = $r0, $r2
 ; CHECK-NEXT:    xord $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lord $r0 = $r0, $r1
+; CHECK-NEXT:    liord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = icmp ne i128 %0, %1

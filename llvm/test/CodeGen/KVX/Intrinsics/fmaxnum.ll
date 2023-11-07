@@ -16,7 +16,7 @@ define half @fmaxh(half %a, half %b) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    orw $r2 = $r3, $r2
+; CV1-NEXT:    iorw $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
@@ -49,7 +49,7 @@ define float @fmaxw(float %a, float %b) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compw.gtu $r2 = $r2, 0xff000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    orw $r2 = $r3, $r2
+; CV1-NEXT:    iorw $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
@@ -84,7 +84,7 @@ define double @fmaxd(double %a, double %b) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compd.gtu $r2 = $r2, 0xffe0000000000000
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r2 = $r3, $r2
+; CV1-NEXT:    iord $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret

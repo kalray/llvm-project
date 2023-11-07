@@ -696,7 +696,7 @@ define <4 x i1> @test_fcmp_ord(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CHECK-NEXT:    ret
@@ -1745,7 +1745,7 @@ define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r2 = $r3, $r2
+; KV3_1-NEXT:    iord $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1778,7 +1778,7 @@ define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800.@
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    ord $r2 = $r3, $r2
+; KV3_1-NEXT:    iord $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1809,7 +1809,7 @@ define <4 x half> @test_copysign(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <4 x half> @llvm.copysign.v4f16(<4 x half> %a, <4 x half> %b)
@@ -1827,7 +1827,7 @@ define <4 x half> @test_copysign_v4f32(<4 x half> %a, <4 x float> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %tb = fptrunc <4 x float> %b to <4 x half>
@@ -1853,7 +1853,7 @@ define <4 x half> @test_copysign_v4f64(<4 x half> %a, <4 x double> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %tb = fptrunc <4 x double> %b to <4 x half>
@@ -1867,7 +1867,7 @@ define <4 x float> @test_copysign_extended(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fabshq $r0 = $r0
 ; CHECK-NEXT:    andd $r1 = $r1, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r1 = $r0, $r1
+; CHECK-NEXT:    iord $r1 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r1
 ; CHECK-NEXT:    fwidenmhwp $r1 = $r1
@@ -2474,7 +2474,7 @@ define <4 x i16> @fcmp_setord(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
@@ -2828,7 +2828,7 @@ define <4 x i16> @fcmp_setord_fast(<4 x half> %a, <4 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:

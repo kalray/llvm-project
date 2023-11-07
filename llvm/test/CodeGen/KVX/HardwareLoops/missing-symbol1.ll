@@ -541,7 +541,7 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    sb 5[$r12] = $r1
 ; CHECK-NEXT:    make $r0 = .L.str
 ; CHECK-NEXT:    addd $r26 = $r0, 1
-; CHECK-NEXT:    ord $r27 = $r2, 8
+; CHECK-NEXT:    iord $r27 = $r2, 8
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    sb 6[$r12] = $r22
 ; CHECK-NEXT:    copyd $r1 = $r19

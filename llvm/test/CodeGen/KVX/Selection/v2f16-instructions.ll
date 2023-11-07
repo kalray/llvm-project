@@ -553,7 +553,7 @@ define <2 x i1> @test_fcmp_ord(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; CHECK-NEXT:    ret
@@ -1271,7 +1271,7 @@ define <2 x half> @test_minnum(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    orw $r2 = $r3, $r2
+; KV3_1-NEXT:    iorw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1304,7 +1304,7 @@ define <2 x half> @test_maxnum(<2 x half> %a, <2 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    orw $r2 = $r3, $r2
+; KV3_1-NEXT:    iorw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1335,7 +1335,7 @@ define <2 x half> @test_copysign(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
 ; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    iorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <2 x half> @llvm.copysign.v2f16(<2 x half> %a, <2 x half> %b)
@@ -1353,7 +1353,7 @@ define <2 x half> @test_copysign_v2f32(<2 x half> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    iorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %tb = fptrunc <2 x float> %b to <2 x half>
@@ -1372,7 +1372,7 @@ define <2 x half> @test_copysign_v2f64(<2 x double> %b, <2 x half> %a) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 0x80008000
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r0 = $r2, $r0
+; CHECK-NEXT:    iorw $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %tb = fptrunc <2 x double> %b to <2 x half>
@@ -1386,7 +1386,7 @@ define <2 x float> @test_copysign_extended(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    andw $r0 = $r0, 0x7fff7fff
 ; CHECK-NEXT:    andw $r1 = $r1, 0x80008000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    iorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r0
 ; CHECK-NEXT:    ret
@@ -2018,7 +2018,7 @@ define <2 x i16> @fcmp_setord(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
@@ -2360,7 +2360,7 @@ define <2 x i16> @fcmp_setord_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:

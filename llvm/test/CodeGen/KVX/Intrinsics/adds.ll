@@ -539,7 +539,7 @@ define <8 x i8> @sadd_satv8i8(<8 x i8> %a, <8 x i8> %b) {
 ; KVXV1-NEXT:    ;; # (end cycle 2)
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KVXV1-NEXT:    ;; # (end cycle 3)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -569,7 +569,7 @@ define <8 x i8> @sadd_satv8i8_ri_(<8 x i8> %a) {
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    ;; # (end cycle 3)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -599,7 +599,7 @@ define <8 x i8> @sadd_satv8i8_ri_at(<8 x i8> %a) {
 ; KVXV1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KVXV1-NEXT:    srlhqs $r1 = $r2, 8
 ; KVXV1-NEXT:    ;; # (end cycle 3)
-; KVXV1-NEXT:    ord $r0 = $r0, $r1
+; KVXV1-NEXT:    iord $r0 = $r0, $r1
 ; KVXV1-NEXT:    ret
 ; KVXV1-NEXT:    ;; # (end cycle 4)
 ;

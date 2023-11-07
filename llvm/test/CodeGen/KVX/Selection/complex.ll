@@ -27,7 +27,7 @@ define i64 @ADDCWCrr(i64 %c1, i64 %c2) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    iord $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
@@ -58,7 +58,7 @@ define i64 @SBFCWCrr(i64 %c1, i64 %c2) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 31, 0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
@@ -95,11 +95,11 @@ define i64 @ADDCHCP(i64 %0, i64 %1) {
 ; V2-NEXT:    clrf $r4 = $r4, 47, 0
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
-; V2-NEXT:    ord $r1 = $r2, $r3
+; V2-NEXT:    iord $r1 = $r2, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    ord $r1 = $r1, $r4
+; V2-NEXT:    iord $r1 = $r1, $r4
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %0, 4294901760
@@ -136,7 +136,7 @@ define i64 @ADDCHCP_half(i64 %0, i64 %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 15, 31
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %0, 4294901760
@@ -165,7 +165,7 @@ define i64 @ADDCWC(i64 %0, i64 %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    iord $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
@@ -200,11 +200,11 @@ define i64 @SBFCHCP(i64 %0, i64 %1) {
 ; V2-NEXT:    clrf $r1 = $r1, 47, 0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r2 = $r2, $r3
+; V2-NEXT:    iord $r2 = $r2, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    ord $r1 = $r2, $r1
+; V2-NEXT:    iord $r1 = $r2, $r1
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %0, 281470681743360
@@ -241,7 +241,7 @@ define i64 @SBFCHCP_half(i64 %0, i64 %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    iord $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, 4294901760
@@ -270,7 +270,7 @@ define i64 @SBFCWC(i64 %0, i64 %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r1 = $r1, 31, 0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %0, -4294967296
@@ -300,7 +300,7 @@ define i64 @MULCWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    slld $r0 = $r3, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = lshr i64 %1, 32
@@ -372,7 +372,7 @@ define i64 @MULWC(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r0 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %1, 32
@@ -446,11 +446,11 @@ define i64 @ADDCHCP_2(i64 %0, i64 %1) {
 ; V2-NEXT:    clrf $r4 = $r4, 47, 0
 ; V2-NEXT:    ;; # (end cycle 2)
 ; V2-NEXT:    clrf $r0 = $r0, 15, 31
-; V2-NEXT:    ord $r1 = $r2, $r3
+; V2-NEXT:    iord $r1 = $r2, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    ord $r1 = $r1, $r4
+; V2-NEXT:    iord $r1 = $r1, $r4
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %1, 4294901760
@@ -487,7 +487,7 @@ define i64 @ADDCWC_2(i64 %0, i64 %1) {
 ; V2-NEXT:    ;; # (end cycle 1)
 ; V2-NEXT:    clrf $r0 = $r0, 31, 0
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r0 = $r0, $r1
+; V2-NEXT:    iord $r0 = $r0, $r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
@@ -515,12 +515,12 @@ define i64 @SBFCHCP_2(i64 %0, i64 %1) {
 ; V1-NEXT:    clrf $r2 = $r2, 31, 47
 ; V1-NEXT:    ;; # (end cycle 2)
 ; V1-NEXT:    adduwd $r0 = $r3, $r0
-; V1-NEXT:    ord $r2 = $r2, $r4
+; V1-NEXT:    iord $r2 = $r2, $r4
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    clrf $r0 = $r0, 15, 31
-; V1-NEXT:    ord $r1 = $r2, $r1
+; V1-NEXT:    iord $r1 = $r2, $r1
 ; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    ord $r0 = $r1, $r0
+; V1-NEXT:    iord $r0 = $r1, $r0
 ; V1-NEXT:    ret
 ; V1-NEXT:    ;; # (end cycle 5)
 ;
@@ -540,11 +540,11 @@ define i64 @SBFCHCP_2(i64 %0, i64 %1) {
 ; V2-NEXT:    clrf $r1 = $r1, 47, 0
 ; V2-NEXT:    clrf $r2 = $r2, 31, 47
 ; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ord $r2 = $r2, $r3
+; V2-NEXT:    iord $r2 = $r2, $r3
 ; V2-NEXT:    ;; # (end cycle 3)
-; V2-NEXT:    ord $r1 = $r2, $r1
+; V2-NEXT:    iord $r1 = $r2, $r1
 ; V2-NEXT:    ;; # (end cycle 4)
-; V2-NEXT:    ord $r0 = $r1, $r0
+; V2-NEXT:    iord $r0 = $r1, $r0
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
   %3 = and i64 %1, 4294901760
@@ -575,7 +575,7 @@ define i64 @SBFCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    clrf $r0 = $r0, 31, 0
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = and i64 %1, -4294967296
@@ -621,7 +621,7 @@ define i64 @MULCWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    slld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 19)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 20)
   %3 = trunc i64 %0 to i32
@@ -696,7 +696,7 @@ define i64 @MULWC_2(i64 %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    slld $r0 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %0, 32

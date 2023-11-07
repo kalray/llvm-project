@@ -33,7 +33,7 @@ entry:
 define <8 x i8> @v8i8or(<8 x i8> %a, <8 x i8> %b){
 ; CHECK-LABEL: v8i8or:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -44,7 +44,7 @@ entry:
 define <8 x i8> @v8i8or_imm(<8 x i8> %a){
 ; CHECK-LABEL: v8i8or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf0f0f0f.@
+; CHECK-NEXT:    iord $r0 = $r0, 0xf0f0f0f.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -124,7 +124,7 @@ entry:
 define <4 x i16> @v4i16or(<4 x i16> %a, <4 x i16> %b){
 ; CHECK-LABEL: v4i16or:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -135,7 +135,7 @@ entry:
 define <4 x i16> @v4i16or_imm(<4 x i16> %a){
 ; CHECK-LABEL: v4i16or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf000f.@
+; CHECK-NEXT:    iord $r0 = $r0, 0xf000f.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -216,7 +216,7 @@ entry:
 define <2 x i32> @v2i32or(<2 x i32> %a, <2 x i32> %b){
 ; CHECK-LABEL: v2i32or:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -227,7 +227,7 @@ entry:
 define <2 x i32> @v2i32or_imm(<2 x i32> %a){
 ; CHECK-LABEL: v2i32or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    ord $r0 = $r0, 0xf.@
+; CHECK-NEXT:    iord $r0 = $r0, 0xf.@
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -307,7 +307,7 @@ entry:
 define <4 x i8> @v4i8or(<4 x i8> %a, <4 x i8> %b){
 ; CHECK-LABEL: v4i8or:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    iorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -318,7 +318,7 @@ entry:
 define <4 x i8> @v4i8or_imm(<4 x i8> %a){
 ; CHECK-LABEL: v4i8or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    orw $r0 = $r0, 0x103070f
+; CHECK-NEXT:    iorw $r0 = $r0, 0x103070f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -398,7 +398,7 @@ entry:
 define <2 x i8> @v2i8or(<2 x i8> %a, <2 x i8> %b){
 ; CHECK-LABEL: v2i8or:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    iorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -409,7 +409,7 @@ entry:
 define <2 x i8> @v2i8or_imm(<2 x i8> %a){
 ; CHECK-LABEL: v2i8or_imm:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    orw $r0 = $r0, 0x70f
+; CHECK-NEXT:    iorw $r0 = $r0, 0x70f
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

@@ -1036,7 +1036,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    .loc 1 300 3 is_stmt 1 # cfi-csr.c:300:3
 ; CHECK-NEXT:    sd -24[$r14] = $r3
-; CHECK-NEXT:    ord $r3 = $r3, 8
+; CHECK-NEXT:    iord $r3 = $r3, 8
 ; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:  .Ltmp72:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- $r3

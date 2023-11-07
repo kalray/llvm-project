@@ -1119,10 +1119,10 @@ define <8 x i1> @test_fcmp_ord(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:    fcompnhq.olt $r4 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fcompnhq.oge $r0 = $r0, $r2
-; CV1-NEXT:    ord $r1 = $r1, $r4
+; CV1-NEXT:    iord $r1 = $r1, $r4
 ; CV1-NEXT:    fcompnhq.olt $r3 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r0 = $r0, $r3
+; CV1-NEXT:    iord $r0 = $r0, $r3
 ; CV1-NEXT:    sbmm8 $r1 = $r1, 0x40100401
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
@@ -1138,8 +1138,8 @@ define <8 x i1> @test_fcmp_ord(<8 x half> %a, <8 x half> %b) #0 {
 ; CV2-NEXT:    fcompnhq.olt $r3 = $r0, $r2
 ; CV2-NEXT:    fcompnhq.olt $r4 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ord $r0 = $r0, $r3
-; CV2-NEXT:    ord $r1 = $r1, $r4
+; CV2-NEXT:    iord $r0 = $r0, $r3
+; CV2-NEXT:    iord $r1 = $r1, $r4
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV2-NEXT:    sbmm8 $r1 = $r1, 0x40100401
@@ -3419,8 +3419,8 @@ define <8 x half> @test_minnum(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:    fcompnhq.olt $r6 = $r2, $r0
 ; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r4 = $r6, $r4
-; CV1-NEXT:    ord $r5 = $r7, $r5
+; CV1-NEXT:    iord $r4 = $r6, $r4
+; CV1-NEXT:    iord $r5 = $r7, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r4 ? $r0 = $r2
 ; CV1-NEXT:    cmovehq.odd $r5 ? $r1 = $r3
@@ -3459,8 +3459,8 @@ define <8 x half> @test_maxnum(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:    fcompnhq.olt $r6 = $r0, $r2
 ; CV1-NEXT:    fcompnhq.olt $r7 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r4 = $r6, $r4
-; CV1-NEXT:    ord $r5 = $r7, $r5
+; CV1-NEXT:    iord $r4 = $r6, $r4
+; CV1-NEXT:    iord $r5 = $r7, $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r4 ? $r0 = $r2
 ; CV1-NEXT:    cmovehq.odd $r5 ? $r1 = $r3
@@ -3496,8 +3496,8 @@ define <8 x half> @test_copysign(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80008000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %r = call <8 x half> @llvm.copysign.v8f16(<8 x half> %a, <8 x half> %b)
@@ -3515,8 +3515,8 @@ define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV1-NEXT:    andd $r2 = $r2, 0x80008000.@
 ; CV1-NEXT:    andd $r3 = $r4, 0x80008000.@
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r0 = $r0, $r2
-; CV1-NEXT:    ord $r1 = $r1, $r3
+; CV1-NEXT:    iord $r0 = $r0, $r2
+; CV1-NEXT:    iord $r1 = $r1, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -3530,8 +3530,8 @@ define <8 x half> @test_copysign_v4f32(<8 x half> %a, <8 x float> %b) #0 {
 ; CV2-NEXT:    andd $r2 = $r2, 0x80008000.@
 ; CV2-NEXT:    andd $r3 = $r4, 0x80008000.@
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    ord $r0 = $r0, $r2
-; CV2-NEXT:    ord $r1 = $r1, $r3
+; CV2-NEXT:    iord $r0 = $r0, $r2
+; CV2-NEXT:    iord $r1 = $r1, $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 2)
   %tb = fptrunc <8 x float> %b to <8 x half>
@@ -3547,8 +3547,8 @@ define <8 x float> @test_copysign_extended(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK-NEXT:    andd $r2 = $r2, 0x80008000.@
 ; CHECK-NEXT:    andd $r3 = $r3, 0x80008000.@
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r1 = $r1, $r3
-; CHECK-NEXT:    ord $r4 = $r0, $r2
+; CHECK-NEXT:    iord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r4 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fwidenlhwp $r2 = $r1
 ; CHECK-NEXT:    fwidenmhwp $r3 = $r1
@@ -5073,11 +5073,11 @@ define <8 x i16> @fcmp_setord(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:    fcompnhq.oge $r0 = $r0, $r2
 ; CV1-NEXT:    fcompnhq.olt $r4 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ord $r0 = $r0, $r4
+; CV1-NEXT:    iord $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r3
 ; CV1-NEXT:    fcompnhq.olt $r2 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r1 = $r1, $r2
+; CV1-NEXT:    iord $r1 = $r1, $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -5088,8 +5088,8 @@ define <8 x i16> @fcmp_setord(<8 x half> %a, <8 x half> %b) #0 {
 ; CV2-NEXT:    fcompnhq.olt $r2 = $r1, $r3
 ; CV2-NEXT:    fcompnhq.olt $r4 = $r0, $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ord $r0 = $r0, $r4
-; CV2-NEXT:    ord $r1 = $r1, $r2
+; CV2-NEXT:    iord $r0 = $r0, $r4
+; CV2-NEXT:    iord $r1 = $r1, $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
 entry:
@@ -5545,11 +5545,11 @@ define <8 x i16> @fcmp_setord_fast(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-NEXT:    fcompnhq.oge $r0 = $r0, $r2
 ; CV1-NEXT:    fcompnhq.olt $r4 = $r0, $r2
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ord $r0 = $r0, $r4
+; CV1-NEXT:    iord $r0 = $r0, $r4
 ; CV1-NEXT:    fcompnhq.oge $r1 = $r1, $r3
 ; CV1-NEXT:    fcompnhq.olt $r2 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    ord $r1 = $r1, $r2
+; CV1-NEXT:    iord $r1 = $r1, $r2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 2)
 ;
@@ -5560,8 +5560,8 @@ define <8 x i16> @fcmp_setord_fast(<8 x half> %a, <8 x half> %b) #0 {
 ; CV2-NEXT:    fcompnhq.olt $r2 = $r1, $r3
 ; CV2-NEXT:    fcompnhq.olt $r4 = $r0, $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ord $r0 = $r0, $r4
-; CV2-NEXT:    ord $r1 = $r1, $r2
+; CV2-NEXT:    iord $r0 = $r0, $r4
+; CV2-NEXT:    iord $r1 = $r1, $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 1)
 entry:

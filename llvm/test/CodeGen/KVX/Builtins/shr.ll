@@ -49,7 +49,7 @@ define i64 @shrd_r(i64 %0, i32 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    slld $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r1, $r0
+; CHECK-NEXT:    iord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = tail call i64 @llvm.kvx.shr.i64(i64 %0, i32 %1, i32 3)
@@ -132,10 +132,10 @@ define <2 x i64> @shrdp_r(<2 x i64> %0, <2 x i32> %1) {
 ; CHECK-NEXT:    srld $r3 = $r1, $r3
 ; CHECK-NEXT:    andw $r5 = $r5, 63
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r2, $r0
+; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    slld $r1 = $r1, $r5
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r1 = $r3, $r1
+; CHECK-NEXT:    iord $r1 = $r3, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = extractelement <2 x i64> %0, i64 0
@@ -210,8 +210,8 @@ define <2 x i64> @shrdps_r(<2 x i64> %0, i32 %1) {
 ; CHECK-NEXT:    slld $r0 = $r0, $r3
 ; CHECK-NEXT:    slld $r1 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r4, $r0
-; CHECK-NEXT:    ord $r1 = $r2, $r1
+; CHECK-NEXT:    iord $r0 = $r4, $r0
+; CHECK-NEXT:    iord $r1 = $r2, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = extractelement <2 x i64> %0, i64 0
@@ -343,14 +343,14 @@ define <4 x i64> @shrdq_r(<4 x i64> %0, <4 x i32> %1) {
 ; CHECK-NEXT:    andw $r8 = $r8, 63
 ; CHECK-NEXT:    andw $r9 = $r9, 63
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ord $r0 = $r6, $r0
+; CHECK-NEXT:    iord $r0 = $r6, $r0
 ; CHECK-NEXT:    slld $r2 = $r2, $r7
 ; CHECK-NEXT:    slld $r3 = $r3, $r9
 ; CHECK-NEXT:    srld $r7 = $r3, $r8
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r1 = $r4, $r1
-; CHECK-NEXT:    ord $r2 = $r5, $r2
-; CHECK-NEXT:    ord $r3 = $r7, $r3
+; CHECK-NEXT:    iord $r1 = $r4, $r1
+; CHECK-NEXT:    iord $r2 = $r5, $r2
+; CHECK-NEXT:    iord $r3 = $r7, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = extractelement <4 x i64> %0, i64 0
@@ -461,12 +461,12 @@ define <4 x i64> @shrdqs_r(<4 x i64> %0, i32 %1) {
 ; CHECK-NEXT:    slld $r2 = $r2, $r5
 ; CHECK-NEXT:    srld $r4 = $r3, $r4
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r6, $r0
-; CHECK-NEXT:    ord $r1 = $r7, $r1
-; CHECK-NEXT:    ord $r2 = $r8, $r2
+; CHECK-NEXT:    iord $r0 = $r6, $r0
+; CHECK-NEXT:    iord $r1 = $r7, $r1
+; CHECK-NEXT:    iord $r2 = $r8, $r2
 ; CHECK-NEXT:    slld $r3 = $r3, $r5
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r3 = $r4, $r3
+; CHECK-NEXT:    iord $r3 = $r4, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = extractelement <4 x i64> %0, i64 0
@@ -588,11 +588,11 @@ define <8 x i16> @shrhos_r(<8 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r0 = $r10, 47, 0
 ; CV1-NEXT:    insf $r15 = $r9, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    ord $r0 = $r15, $r0
+; CV1-NEXT:    iord $r0 = $r15, $r0
 ; CV1-NEXT:    insf $r1 = $r2, 47, 0
 ; CV1-NEXT:    insf $r5 = $r3, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 18)
-; CV1-NEXT:    ord $r1 = $r5, $r1
+; CV1-NEXT:    iord $r1 = $r5, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 19)
 ;
@@ -647,8 +647,8 @@ define <8 x i16> @shrhos_r(<8 x i16> %0, i32 %1) {
 ; CV2-NEXT:    insf $r3 = $r6, 47, 0
 ; CV2-NEXT:    insf $r8 = $r9, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    ord $r0 = $r8, $r0
-; CV2-NEXT:    ord $r1 = $r3, $r1
+; CV2-NEXT:    iord $r0 = $r8, $r0
+; CV2-NEXT:    iord $r1 = $r3, $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
@@ -712,7 +712,7 @@ define <2 x i16> @shrhps_r(<2 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r0 = $r1, 15, 0
 ; CV1-NEXT:    insf $r2 = $r3, 15, 0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    orw $r0 = $r2, $r0
+; CV1-NEXT:    iorw $r0 = $r2, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -736,7 +736,7 @@ define <2 x i16> @shrhps_r(<2 x i16> %0, i32 %1) {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    insf $r0 = $r2, 15, 0
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    orw $r0 = $r3, $r0
+; CV2-NEXT:    iorw $r0 = $r3, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 6)
   %3 = tail call <2 x i16> @llvm.kvx.shr.v2i16(<2 x i16> %0, i32 %1, i32 3)
@@ -812,7 +812,7 @@ define <4 x i16> @shrhqs_r(<4 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r0 = $r3, 47, 0
 ; CV1-NEXT:    insf $r2 = $r5, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 12)
 ;
@@ -851,7 +851,7 @@ define <4 x i16> @shrhqs_r(<4 x i16> %0, i32 %1) {
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    insf $r0 = $r6, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    ord $r0 = $r1, $r0
+; CV2-NEXT:    iord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %3 = tail call <4 x i16> @llvm.kvx.shr.v4i16(<4 x i16> %0, i32 %1, i32 3)
@@ -987,7 +987,7 @@ define <16 x i16> @shrhxs_r(<16 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r0 = $r17, 47, 0
 ; CV1-NEXT:    insf $r15 = $r11, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    ord $r0 = $r15, $r0
+; CV1-NEXT:    iord $r0 = $r15, $r0
 ; CV1-NEXT:    srlhqs $r10 = $r1, $r5
 ; CV1-NEXT:    srlhqs $r11 = $r1, $r7
 ; CV1-NEXT:    ;; # (end cycle 12)
@@ -1009,7 +1009,7 @@ define <16 x i16> @shrhxs_r(<16 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r1 = $r17, 47, 0
 ; CV1-NEXT:    insf $r11 = $r10, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 18)
-; CV1-NEXT:    ord $r1 = $r11, $r1
+; CV1-NEXT:    iord $r1 = $r11, $r1
 ; CV1-NEXT:    srlhqs $r10 = $r2, $r5
 ; CV1-NEXT:    srlhqs $r17 = $r2, $r7
 ; CV1-NEXT:    ;; # (end cycle 19)
@@ -1049,11 +1049,11 @@ define <16 x i16> @shrhxs_r(<16 x i16> %0, i32 %1) {
 ; CV1-NEXT:    insf $r2 = $r33, 47, 0
 ; CV1-NEXT:    insf $r17 = $r10, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 31)
-; CV1-NEXT:    ord $r2 = $r17, $r2
+; CV1-NEXT:    iord $r2 = $r17, $r2
 ; CV1-NEXT:    insf $r3 = $r4, 47, 0
 ; CV1-NEXT:    insf $r7 = $r5, 47, 0
 ; CV1-NEXT:    ;; # (end cycle 32)
-; CV1-NEXT:    ord $r3 = $r7, $r3
+; CV1-NEXT:    iord $r3 = $r7, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 33)
 ;
@@ -1139,14 +1139,14 @@ define <16 x i16> @shrhxs_r(<16 x i16> %0, i32 %1) {
 ; CV2-NEXT:    srlhqs $r7 = $r3, $r9
 ; CV2-NEXT:    insf $r8 = $r17, 31, 0
 ; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    ord $r0 = $r15, $r0
+; CV2-NEXT:    iord $r0 = $r15, $r0
 ; CV2-NEXT:    insf $r2 = $r11, 47, 0
 ; CV2-NEXT:    insf $r3 = $r8, 47, 0
 ; CV2-NEXT:    insf $r7 = $r5, 47, 0
 ; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    ord $r1 = $r33, $r1
-; CV2-NEXT:    ord $r2 = $r4, $r2
-; CV2-NEXT:    ord $r3 = $r7, $r3
+; CV2-NEXT:    iord $r1 = $r33, $r1
+; CV2-NEXT:    iord $r2 = $r4, $r2
+; CV2-NEXT:    iord $r3 = $r7, $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 18)
   %3 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>

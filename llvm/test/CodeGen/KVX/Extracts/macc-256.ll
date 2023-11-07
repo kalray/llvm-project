@@ -92,7 +92,7 @@ define { i64, i64 } @triple_add(i64 %a, i64 %b, i64 %c) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    compd.ltu $r2 = $r0, $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r1 = $r1, $r2
+; CHECK-NEXT:    iorw $r1 = $r1, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:

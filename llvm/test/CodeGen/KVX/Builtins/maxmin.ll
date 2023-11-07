@@ -19,7 +19,7 @@ define <8 x i8> @maxbo(<8 x i8> %0, <8 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -118,10 +118,10 @@ define <32 x i8> @maxbv(<32 x i8> %0, <32 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r5 = $r5, 8
 ; CV1-NEXT:    srlhqs $r6 = $r10, 8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    ord $r0 = $r8, $r0
-; CV1-NEXT:    ord $r1 = $r1, $r4
-; CV1-NEXT:    ord $r2 = $r2, $r6
-; CV1-NEXT:    ord $r3 = $r3, $r5
+; CV1-NEXT:    iord $r0 = $r8, $r0
+; CV1-NEXT:    iord $r1 = $r1, $r4
+; CV1-NEXT:    iord $r2 = $r2, $r6
+; CV1-NEXT:    iord $r3 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 7)
 ;
@@ -169,11 +169,11 @@ define <16 x i8> @maxbx(<16 x i8> %0, <16 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r2 = $r4, 8
 ; CV1-NEXT:    maxhq $r5 = $r7, $r6
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r2
+; CV1-NEXT:    iord $r0 = $r0, $r2
 ; CV1-NEXT:    maxhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ord $r1 = $r1, $r3
+; CV1-NEXT:    iord $r1 = $r1, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -332,7 +332,7 @@ define <8 x i8> @maxubo(<8 x i8> %0, <8 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -431,10 +431,10 @@ define <32 x i8> @maxubv(<32 x i8> %0, <32 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r5 = $r5, 8
 ; CV1-NEXT:    srlhqs $r6 = $r10, 8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    ord $r0 = $r8, $r0
-; CV1-NEXT:    ord $r1 = $r1, $r4
-; CV1-NEXT:    ord $r2 = $r2, $r6
-; CV1-NEXT:    ord $r3 = $r3, $r5
+; CV1-NEXT:    iord $r0 = $r8, $r0
+; CV1-NEXT:    iord $r1 = $r1, $r4
+; CV1-NEXT:    iord $r2 = $r2, $r6
+; CV1-NEXT:    iord $r3 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 7)
 ;
@@ -482,11 +482,11 @@ define <16 x i8> @maxubx(<16 x i8> %0, <16 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r2 = $r4, 8
 ; CV1-NEXT:    maxuhq $r5 = $r7, $r6
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r2
+; CV1-NEXT:    iord $r0 = $r0, $r2
 ; CV1-NEXT:    maxuhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ord $r1 = $r1, $r3
+; CV1-NEXT:    iord $r1 = $r1, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -781,7 +781,7 @@ define <8 x i8> @minbo(<8 x i8> %0, <8 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -880,10 +880,10 @@ define <32 x i8> @minbv(<32 x i8> %0, <32 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r5 = $r5, 8
 ; CV1-NEXT:    srlhqs $r6 = $r10, 8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    ord $r0 = $r8, $r0
-; CV1-NEXT:    ord $r1 = $r1, $r4
-; CV1-NEXT:    ord $r2 = $r2, $r6
-; CV1-NEXT:    ord $r3 = $r3, $r5
+; CV1-NEXT:    iord $r0 = $r8, $r0
+; CV1-NEXT:    iord $r1 = $r1, $r4
+; CV1-NEXT:    iord $r2 = $r2, $r6
+; CV1-NEXT:    iord $r3 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 7)
 ;
@@ -931,11 +931,11 @@ define <16 x i8> @minbx(<16 x i8> %0, <16 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r2 = $r4, 8
 ; CV1-NEXT:    minhq $r5 = $r7, $r6
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r2
+; CV1-NEXT:    iord $r0 = $r0, $r2
 ; CV1-NEXT:    minhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ord $r1 = $r1, $r3
+; CV1-NEXT:    iord $r1 = $r1, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 4)
 ;
@@ -1094,7 +1094,7 @@ define <8 x i8> @minubo(<8 x i8> %0, <8 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srlhqs $r1 = $r2, 8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r1
+; CV1-NEXT:    iord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -1193,10 +1193,10 @@ define <32 x i8> @minubv(<32 x i8> %0, <32 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r5 = $r5, 8
 ; CV1-NEXT:    srlhqs $r6 = $r10, 8
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    ord $r0 = $r8, $r0
-; CV1-NEXT:    ord $r1 = $r1, $r4
-; CV1-NEXT:    ord $r2 = $r2, $r6
-; CV1-NEXT:    ord $r3 = $r3, $r5
+; CV1-NEXT:    iord $r0 = $r8, $r0
+; CV1-NEXT:    iord $r1 = $r1, $r4
+; CV1-NEXT:    iord $r2 = $r2, $r6
+; CV1-NEXT:    iord $r3 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 7)
 ;
@@ -1244,11 +1244,11 @@ define <16 x i8> @minubx(<16 x i8> %0, <16 x i8> %1) {
 ; CV1-NEXT:    srlhqs $r2 = $r4, 8
 ; CV1-NEXT:    minuhq $r5 = $r7, $r6
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ord $r0 = $r0, $r2
+; CV1-NEXT:    iord $r0 = $r0, $r2
 ; CV1-NEXT:    minuhq $r1 = $r1, $r3
 ; CV1-NEXT:    srlhqs $r3 = $r5, 8
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    ord $r1 = $r1, $r3
+; CV1-NEXT:    iord $r1 = $r1, $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 4)
 ;

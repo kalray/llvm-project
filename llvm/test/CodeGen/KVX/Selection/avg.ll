@@ -1959,7 +1959,7 @@ define <8 x i8> @avg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 5)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 6)
 ;
@@ -1997,7 +1997,7 @@ define <8 x i8> @avg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
@@ -2035,7 +2035,7 @@ define <8 x i8> @avg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
@@ -2082,7 +2082,7 @@ define <8 x i8> @ravg_v8u8(<8 x i8> %a, <8 x i8> %b) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 8)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 9)
 ;
@@ -2126,7 +2126,7 @@ define <8 x i8> @ravg_v8u8_ri_(<8 x i8> %a) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ;
@@ -2166,7 +2166,7 @@ define <8 x i8> @ravg_v8u8_ri_at(<8 x i8> %a) {
 ; KV3_1-NEXT:    andd $r0 = $r0, 0xff00ff00.@
 ; KV3_1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    ord $r0 = $r0, $r1
+; KV3_1-NEXT:    iord $r0 = $r0, $r1
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ;

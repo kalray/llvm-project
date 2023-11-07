@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 define i64 @ORNDrr(i64 %0, i64 %1) {
 ; CHECK-LABEL: ORNDrr:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor i64 %0, -1
@@ -20,7 +20,7 @@ define i64 @ORNDrr(i64 %0, i64 %1) {
 define i64 @ORNDri10(i64 %0) {
 ; CHECK-LABEL: ORNDri10:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, -60
+; CHECK-NEXT:    iornd $r0 = $r0, -60
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, -60
@@ -31,7 +31,7 @@ define i64 @ORNDri10(i64 %0) {
 define i64 @ORNDri37(i64 %0) {
 ; CHECK-LABEL: ORNDri37:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, 0x1fffffffff
+; CHECK-NEXT:    iornd $r0 = $r0, 0x1fffffffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, 137438953471
@@ -42,7 +42,7 @@ define i64 @ORNDri37(i64 %0) {
 define i64 @ORNDri64(i64 %0) {
 ; CHECK-LABEL: ORNDri64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, 0x2000000000
+; CHECK-NEXT:    iornd $r0 = $r0, 0x2000000000
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = or i64 %0, 137438953472
@@ -53,7 +53,7 @@ define i64 @ORNDri64(i64 %0) {
 define <2 x i32> @ORNDrr_v2i32(<2 x i32> %0, <2 x i32> %1) {
 ; CHECK-LABEL: ORNDrr_v2i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <2 x i32> %0, <i32 -1, i32 -1>
@@ -64,7 +64,7 @@ define <2 x i32> @ORNDrr_v2i32(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @ORNDri_v2i32(<2 x i32> %0) {
 ; CHECK-LABEL: ORNDri_v2i32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, 0x4ffffffff
+; CHECK-NEXT:    iornd $r0 = $r0, 0x4ffffffff
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <2 x i32> %0, <i32 -5, i32 -5>
@@ -75,7 +75,7 @@ define <2 x i32> @ORNDri_v2i32(<2 x i32> %0) {
 define <8 x i8> @ORNDrr_v8i8(<8 x i8> %0, <8 x i8> %1) {
 ; CHECK-LABEL: ORNDrr_v8i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, $r1
+; CHECK-NEXT:    iornd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = xor <8 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
@@ -86,7 +86,7 @@ define <8 x i8> @ORNDrr_v8i8(<8 x i8> %0, <8 x i8> %1) {
 define <8 x i8> @ORNDri_v8i8(<8 x i8> %0) {
 ; CHECK-LABEL: ORNDri_v8i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ornd $r0 = $r0, 0x403020104030201
+; CHECK-NEXT:    iornd $r0 = $r0, 0x403020104030201
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %2 = xor <8 x i8> %0, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
@@ -97,7 +97,7 @@ define <8 x i8> @ORNDri_v8i8(<8 x i8> %0) {
 define i64 @NOT_ORNDri10(i64 %0) {
 ; CHECK-LABEL: NOT_ORNDri10:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    ord $r0 = $r0, -60
+; CHECK-NEXT:    iord $r0 = $r0, -60
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xord $r0 = $r0, 60
 ; CHECK-NEXT:    ret

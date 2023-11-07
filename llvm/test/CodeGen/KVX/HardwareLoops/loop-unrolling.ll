@@ -12,22 +12,22 @@ define void @loop_unrolling(i32* nocapture %t){
 ; CHECK-NEXT:  .LBB0_1: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 0[$r0] = $r1
-; CHECK-NEXT:    ord $r2 = $r1, 1
-; CHECK-NEXT:    ord $r3 = $r1, 2
-; CHECK-NEXT:    ord $r4 = $r1, 7
+; CHECK-NEXT:    iord $r2 = $r1, 1
+; CHECK-NEXT:    iord $r3 = $r1, 2
+; CHECK-NEXT:    iord $r4 = $r1, 7
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 4[$r0] = $r2
-; CHECK-NEXT:    ord $r2 = $r1, 3
+; CHECK-NEXT:    iord $r2 = $r1, 3
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw 12[$r0] = $r2
-; CHECK-NEXT:    ord $r2 = $r1, 4
+; CHECK-NEXT:    iord $r2 = $r1, 4
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sw 8[$r0] = $r3
-; CHECK-NEXT:    ord $r3 = $r1, 6
+; CHECK-NEXT:    iord $r3 = $r1, 6
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw 16[$r0] = $r2
 ; CHECK-NEXT:    addd $r1 = $r1, 8
-; CHECK-NEXT:    ord $r2 = $r1, 5
+; CHECK-NEXT:    iord $r2 = $r1, 5
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    sw 20[$r0] = $r2
 ; CHECK-NEXT:    compd.eq $r2 = $r1, 1024

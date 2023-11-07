@@ -28,12 +28,12 @@ define i1 @v16_vecreduce_and_cmp_ne_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.eq $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.eq $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -46,7 +46,7 @@ define i1 @v16_vecreduce_and_cmp_ne_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.eq $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.eq $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -79,12 +79,12 @@ define i1 @v16_vecreduce_and_cmp_eq_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.ne $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.ne $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -97,7 +97,7 @@ define i1 @v16_vecreduce_and_cmp_eq_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.ne $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.ne $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -130,12 +130,12 @@ define i1 @v16_vecreduce_and_cmp_ult_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.geu $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.geu $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -148,7 +148,7 @@ define i1 @v16_vecreduce_and_cmp_ult_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.geu $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.geu $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -181,12 +181,12 @@ define i1 @v16_vecreduce_and_cmp_ule_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.gtu $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.gtu $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -199,7 +199,7 @@ define i1 @v16_vecreduce_and_cmp_ule_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.gtu $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.gtu $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -232,12 +232,12 @@ define i1 @v16_vecreduce_and_cmp_slt_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sxmbhq $r7 = $r0
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.ge $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.ge $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -250,7 +250,7 @@ define i1 @v16_vecreduce_and_cmp_slt_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.ge $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.ge $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -283,12 +283,12 @@ define i1 @v16_vecreduce_and_cmp_sle_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sxmbhq $r7 = $r0
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.gt $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.gt $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lnord $r0 = $r0, $r1
+; CV1-NEXT:    lniord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -301,7 +301,7 @@ define i1 @v16_vecreduce_and_cmp_sle_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.gt $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.gt $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lnord $r0 = $r1, $r0
+; CV2-NEXT:    lniord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -334,12 +334,12 @@ define i1 @v16_vecreduce_or_cmp_ne_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.ne $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.ne $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -352,7 +352,7 @@ define i1 @v16_vecreduce_or_cmp_ne_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.ne $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.ne $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -385,12 +385,12 @@ define i1 @v16_vecreduce_or_cmp_eq_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.eq $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.eq $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -403,7 +403,7 @@ define i1 @v16_vecreduce_or_cmp_eq_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.eq $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.eq $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -436,12 +436,12 @@ define i1 @v16_vecreduce_or_cmp_ult_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.ltu $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.ltu $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -454,7 +454,7 @@ define i1 @v16_vecreduce_or_cmp_ult_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.ltu $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.ltu $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -487,12 +487,12 @@ define i1 @v16_vecreduce_or_cmp_ule_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sbmm8 $r7 = $r0, 0x80004000200010
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.leu $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.leu $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -505,7 +505,7 @@ define i1 @v16_vecreduce_or_cmp_ule_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.leu $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.leu $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -538,12 +538,12 @@ define i1 @v16_vecreduce_or_cmp_slt_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sxmbhq $r7 = $r0
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.lt $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.lt $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -556,7 +556,7 @@ define i1 @v16_vecreduce_or_cmp_slt_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.lt $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.lt $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -589,12 +589,12 @@ define i1 @v16_vecreduce_or_cmp_sle_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    sxmbhq $r7 = $r0
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    compnhq.le $r0 = $r2, $r0
-; CV1-NEXT:    ord $r1 = $r3, $r1
+; CV1-NEXT:    iord $r1 = $r3, $r1
 ; CV1-NEXT:    compnhq.le $r2 = $r5, $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    ord $r0 = $r2, $r0
+; CV1-NEXT:    iord $r0 = $r2, $r0
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    lord $r0 = $r0, $r1
+; CV1-NEXT:    liord $r0 = $r0, $r1
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 9)
 ;
@@ -607,7 +607,7 @@ define i1 @v16_vecreduce_or_cmp_sle_i8(ptr %p0, ptr %p1) {
 ; CV2-NEXT:    compnbo.le $r0 = $r2, $r0
 ; CV2-NEXT:    compnbo.le $r1 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    lord $r0 = $r1, $r0
+; CV2-NEXT:    liord $r0 = $r1, $r0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
   %l1 = load <16 x i8>, ptr %p0
@@ -677,7 +677,7 @@ define i1 @v8_vecreduce_or_cmp_sle_i8(ptr %p0, ptr %p1) {
 ; CV1-NEXT:    compnhq.le $r0 = $r0, $r1
 ; CV1-NEXT:    compnhq.le $r1 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    lord $r0 = $r1, $r0
+; CV1-NEXT:    liord $r0 = $r1, $r0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 6)
 ;
@@ -790,10 +790,10 @@ define i1 @v8_vecreduce_or_cmp_sle_i32(ptr %p0, ptr %p1) {
 ; ALL-NEXT:    compnwp.le $r2 = $r6, $r2
 ; ALL-NEXT:    compnwp.le $r3 = $r7, $r3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    ord $r0 = $r1, $r0
-; ALL-NEXT:    ord $r2 = $r3, $r2
+; ALL-NEXT:    iord $r0 = $r1, $r0
+; ALL-NEXT:    iord $r2 = $r3, $r2
 ; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    lord $r0 = $r0, $r2
+; ALL-NEXT:    liord $r0 = $r0, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 6)
   %l1 = load <8 x i32>, ptr %p0
@@ -814,7 +814,7 @@ define i1 @v4_vecreduce_or_cmp_sle_i32(ptr %p0, ptr %p1) {
 ; ALL-NEXT:    compnwp.le $r0 = $r2, $r0
 ; ALL-NEXT:    compnwp.le $r1 = $r3, $r1
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    lord $r0 = $r1, $r0
+; ALL-NEXT:    liord $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 5)
   %l1 = load <4 x i32>, ptr %p0
@@ -855,7 +855,7 @@ define i1 @v2_vecreduce_or_cmp_sle_i64(ptr %p0, ptr %p1) {
 ; ALL-NEXT:    compd.le $r0 = $r2, $r0
 ; ALL-NEXT:    compd.le $r1 = $r3, $r1
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    orw $r0 = $r1, $r0
+; ALL-NEXT:    iorw $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 5)
   %l1 = load <2 x i64>, ptr %p0
@@ -878,10 +878,10 @@ define i1 @v4_vecreduce_and_cmp_sle_i64(ptr %p0, ptr %p1) {
 ; ALL-NEXT:    compd.gt $r2 = $r6, $r2
 ; ALL-NEXT:    compd.gt $r3 = $r7, $r3
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    orw $r0 = $r1, $r0
-; ALL-NEXT:    orw $r2 = $r3, $r2
+; ALL-NEXT:    iorw $r0 = $r1, $r0
+; ALL-NEXT:    iorw $r2 = $r3, $r2
 ; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    orw $r0 = $r0, $r2
+; ALL-NEXT:    iorw $r0 = $r0, $r2
 ; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    compd.eq $r0 = $r0, 0
 ; ALL-NEXT:    ret

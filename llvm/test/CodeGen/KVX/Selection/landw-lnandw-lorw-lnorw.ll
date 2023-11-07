@@ -35,7 +35,7 @@ entry:
 define i1 @f3(i32 %a, i32 %b){
 ; CHECK-LABEL: f3:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnorw $r0 = $r1, $r0
+; CHECK-NEXT:    lniorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -47,7 +47,7 @@ entry:
 define i1 @f4(i32 %a, i32 %b){
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lorw $r0 = $r1, $r0
+; CHECK-NEXT:    liorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -72,7 +72,7 @@ entry:
 define i1 @f6(i32 %a, i32 %b){
 ; CHECK-LABEL: f6:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnorw $r0 = $r1, $r0
+; CHECK-NEXT:    lniorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

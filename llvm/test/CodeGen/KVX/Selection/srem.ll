@@ -397,7 +397,7 @@ define <8 x i8> @serm_v8i8(<8 x i8> %0) {
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    andd $r2 = $r2, 0xff00ff00.@
 ; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    ord $r1 = $r2, $r1
+; CV1-NEXT:    iord $r1 = $r2, $r1
 ; CV1-NEXT:    andd $r2 = $r0, 0x7f7f7f7f.@
 ; CV1-NEXT:    ;; # (end cycle 15)
 ; CV1-NEXT:    xord $r1 = $r0, $r1
@@ -457,11 +457,11 @@ define <8 x i8> @serm_v8i8(<8 x i8> %0) {
 ; CV1-NEXT:    andd $r3 = $r1, 0xff00ff00.@
 ; CV1-NEXT:    ;; # (end cycle 31)
 ; CV1-NEXT:    mulhq $r2 = $r3, $r2
-; CV1-NEXT:    ord $r3 = $r0, 0x80808080.@
+; CV1-NEXT:    iord $r3 = $r0, 0x80808080.@
 ; CV1-NEXT:    ;; # (end cycle 32)
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 33)
-; CV1-NEXT:    ord $r1 = $r1, $r2
+; CV1-NEXT:    iord $r1 = $r1, $r2
 ; CV1-NEXT:    ;; # (end cycle 34)
 ; CV1-NEXT:    nxord $r0 = $r0, $r1
 ; CV1-NEXT:    andd $r2 = $r1, 0x7f7f7f7f.@

@@ -48,7 +48,7 @@ define <8 x i8> @shrbos_r(<8 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    andd $r0 = $r0, 0xff00ff.@
 ; CHECK-NEXT:    sllhqs $r1 = $r2, 8
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r1
+; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = tail call <8 x i8> @llvm.kvx.shr.v8i8(<8 x i8> %0, i32 %1, i32 3)
@@ -108,7 +108,7 @@ define <2 x i8> @shrbps_r(<2 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    insf $r0 = $r2, 7, 0
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    orw $r0 = $r3, $r0
+; CHECK-NEXT:    iorw $r0 = $r3, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = tail call <2 x i8> @llvm.kvx.shr.v2i8(<2 x i8> %0, i32 %1, i32 3)
@@ -183,7 +183,7 @@ define <4 x i8> @shrbqs_r(<4 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    insf $r0 = $r6, 23, 0
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    orw $r0 = $r1, $r0
+; CHECK-NEXT:    iorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
   %3 = tail call <4 x i8> @llvm.kvx.shr.v4i8(<4 x i8> %0, i32 %1, i32 3)
@@ -291,13 +291,13 @@ define <32 x i8> @shrbvs_r(<32 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    sllhqs $r5 = $r6, 8
 ; CHECK-NEXT:    sllhqs $r6 = $r7, 8
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
 ; CHECK-NEXT:    andd $r3 = $r3, 0xff00ff.@
 ; CHECK-NEXT:    sllhqs $r7 = $r8, 8
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
@@ -375,11 +375,11 @@ define <16 x i8> @shrbxs_r(<16 x i8> %0, i32 %1) {
 ; CHECK-NEXT:    sllhqs $r2 = $r3, 8
 ; CHECK-NEXT:    srlhqs $r4 = $r4, $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r2
+; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CHECK-NEXT:    sllhqs $r3 = $r4, 8
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r1 = $r1, $r3
+; CHECK-NEXT:    iord $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %3 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>

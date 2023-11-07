@@ -774,7 +774,7 @@ define i64 @lnandd_f16(half %a, half %b){
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    andw $r1 = $r1, 1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    orw $r0 = $r0, $r1
+; CHECK-NEXT:    iorw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
@@ -788,7 +788,7 @@ entry:
 define i64 @lorw_i32(i32 %a, i32 %b){
 ; CHECK-LABEL: lorw_i32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lorw $r0 = $r1, $r0
+; CHECK-NEXT:    liorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -801,7 +801,7 @@ entry:
 define i64 @lord_i64(i64 %a, i64 %b){
 ; CHECK-LABEL: lord_i64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lord $r0 = $r1, $r0
+; CHECK-NEXT:    liord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -814,7 +814,7 @@ entry:
 define i64 @lnorw_i32(i32 %a, i32 %b){
 ; CHECK-LABEL: lnorw_i32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnorw $r0 = $r1, $r0
+; CHECK-NEXT:    lniorw $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -827,7 +827,7 @@ entry:
 define i64 @lnord_i64(i64 %a, i64 %b){
 ; CHECK-LABEL: lnord_i64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lnord $r0 = $r1, $r0
+; CHECK-NEXT:    lniord $r0 = $r1, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

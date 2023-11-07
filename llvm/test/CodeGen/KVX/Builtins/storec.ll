@@ -226,7 +226,7 @@ define i32 @storecbc_r(i8 %a, i8* %ptr, i32* nocapture readonly %load, i64 %cond
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -249,7 +249,7 @@ define i32 @storecbl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -269,7 +269,7 @@ define i32 @storechs_r(i16 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -290,7 +290,7 @@ define i32 @storechl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -310,7 +310,7 @@ define i32 @storecwi_r(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -331,7 +331,7 @@ define i32 @storecwl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -351,7 +351,7 @@ define i32 @storecdl_r(i64 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -371,7 +371,7 @@ define i32 @storecq_r(i128 %a, i8* %ptr, i32* nocapture readonly %load, i64 %con
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq.dltz $r4 ? [$r2] = $r0r1
-; CHECK-NEXT:    ord $r3 = $r3, $r3
+; CHECK-NEXT:    iord $r3 = $r3, $r3
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
@@ -392,7 +392,7 @@ define i32 @storechf_r(half %a, i8* %ptr, i32* nocapture readonly %load, i64 %co
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -412,7 +412,7 @@ define i32 @storecwf_r(float %a, i8* %ptr, i32* nocapture readonly %load, i64 %c
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -432,7 +432,7 @@ define i32 @storecdf_r(double %a, i8* %ptr, i32* nocapture readonly %load, i64 %
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -452,7 +452,7 @@ define i32 @storec64_r(<2 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i6
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -472,7 +472,7 @@ define i32 @storec64h_r(<4 x i16> %a, i8* %ptr, i32* nocapture readonly %load, i
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd.dltz $r3 ? [$r1] = $r0
-; CHECK-NEXT:    ord $r2 = $r2, $r2
+; CHECK-NEXT:    iord $r2 = $r2, $r2
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
@@ -493,7 +493,7 @@ define i32 @storec128_r(<4 x i32> %a, i8* %ptr, i32* nocapture readonly %load, i
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq.dltz $r4 ? [$r2] = $r0r1
-; CHECK-NEXT:    ord $r3 = $r3, $r3
+; CHECK-NEXT:    iord $r3 = $r3, $r3
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
@@ -514,7 +514,7 @@ define i32 @storec128h_r(<8 x i16> %a, i8* %ptr, i32* nocapture readonly %load, 
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sq.dltz $r4 ? [$r2] = $r0r1
-; CHECK-NEXT:    ord $r3 = $r3, $r3
+; CHECK-NEXT:    iord $r3 = $r3, $r3
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r3
 ; CHECK-NEXT:    ret
@@ -535,7 +535,7 @@ define i32 @storec256h_r(<16 x i16> %a, i8* %ptr, i32* nocapture readonly %load,
 ; CHECK-NEXT:    lwz $r5 = 0[$r5]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    so.dltz $r6 ? [$r4] = $r0r1r2r3
-; CHECK-NEXT:    ord $r5 = $r5, $r5
+; CHECK-NEXT:    iord $r5 = $r5, $r5
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    copyd $r0 = $r5
 ; CHECK-NEXT:    ret
@@ -776,7 +776,7 @@ define i32 @storec_r_vol(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 %c
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    sxwd $r4 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r2, $r2
+; CHECK-NEXT:    iord $r0 = $r2, $r2
 ; CHECK-NEXT:    sw.wgez $r3 ? [$r1] = $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw.wgez $r3 ? [$r1] = $r4
@@ -799,7 +799,7 @@ define i32 @storec_r_novol(i32 %a, i8* %ptr, i32* nocapture readonly %load, i64 
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    sxwd $r4 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ord $r0 = $r2, $r2
+; CHECK-NEXT:    iord $r0 = $r2, $r2
 ; CHECK-NEXT:    sw.wgez $r3 ? [$r1] = $r4
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    sw.wgez $r3 ? [$r1] = $r4
@@ -826,8 +826,8 @@ define void @ready_then_storec(i32* nocapture readonly %addr0, i32* nocapture re
 ; CHECK-NEXT:    lws $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sw.wgez $r6 ? [$r3] = $r0
-; CHECK-NEXT:    ord $r7 = $r0, $r1
-; CHECK-NEXT:    ord $r7 = $r2, $r0
+; CHECK-NEXT:    iord $r7 = $r0, $r1
+; CHECK-NEXT:    iord $r7 = $r2, $r0
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sw.wgez $r6 ? [$r4] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)

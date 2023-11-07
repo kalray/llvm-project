@@ -568,7 +568,7 @@ define i1 @test_fcmp_ord(half %a, half %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
@@ -1144,7 +1144,7 @@ define half @test_minnum(half %a, half %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    orw $r2 = $r3, $r2
+; KV3_1-NEXT:    iorw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1177,7 +1177,7 @@ define half @test_maxnum(half %a, half %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    orw $r2 = $r3, $r2
+; KV3_1-NEXT:    iorw $r2 = $r3, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
@@ -1580,7 +1580,7 @@ define i32 @fcmp_setord(half %a, half %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret
@@ -1960,7 +1960,7 @@ define i32 @fcmp_setord_fast(half %a, half %b) #0 {
 ; CHECK-NEXT:    fcompnhq.oge $r0 = $r0, $r1
 ; CHECK-NEXT:    fcompnhq.olt $r2 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    orw $r0 = $r0, $r2
+; CHECK-NEXT:    iorw $r0 = $r0, $r2
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ret

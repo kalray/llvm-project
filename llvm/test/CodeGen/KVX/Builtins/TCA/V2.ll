@@ -1513,13 +1513,13 @@ define void @binOps(ptr writeonly %0) {
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xnando $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    xnoro $a0 = $a0, $a0
+; CHECK-NEXT:    xnioro $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    xnxoro $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 20)
-; CHECK-NEXT:    xorno $a0 = $a0, $a0
+; CHECK-NEXT:    xiorno $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 24)
-; CHECK-NEXT:    xoro $a0 = $a0, $a0
+; CHECK-NEXT:    xioro $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xxoro $a0 = $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 32)

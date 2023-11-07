@@ -1184,13 +1184,13 @@ define <4 x i64> @fshl_rr(<4 x i64> %a, <4 x i64> %b, i64 %c) {
 ; CHECK-NEXT:    srld $r4 = $r4, $r9
 ; CHECK-NEXT:    srld $r6 = $r6, $r9
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
 ; CHECK-NEXT:    slld $r3 = $r3, $r8
 ; CHECK-NEXT:    srld $r7 = $r7, $r9
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %i = insertelement <4 x i64> undef, i64 %c, i64 0
@@ -1212,10 +1212,10 @@ define <4 x i64> @fshl_ri(<4 x i64> %a, <4 x i64> %b) {
 ; CHECK-NEXT:    srld $r6 = $r6, 61
 ; CHECK-NEXT:    srld $r7 = $r7, 61
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
   %r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
@@ -1250,10 +1250,10 @@ define <4 x i64> @fshl_vec(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    srld $r6 = $r6, $r8
 ; CHECK-NEXT:    srld $r7 = $r7, $r10
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %r = call <4 x i64> @llvm.fshl.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c)
@@ -1277,13 +1277,13 @@ define <4 x i64> @fshr_rr(<4 x i64> %a, <4 x i64> %b, i64 %c) {
 ; CHECK-NEXT:    srld $r4 = $r4, $r9
 ; CHECK-NEXT:    srld $r6 = $r6, $r9
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
 ; CHECK-NEXT:    slld $r3 = $r3, $r8
 ; CHECK-NEXT:    srld $r7 = $r7, $r9
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
   %i = insertelement <4 x i64> undef, i64 %c, i64 0
@@ -1305,10 +1305,10 @@ define <4 x i64> @fshr_ri(<4 x i64> %a, <4 x i64> %b, i64 %c) {
 ; CHECK-NEXT:    srld $r6 = $r6, 3
 ; CHECK-NEXT:    srld $r7 = $r7, 3
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
   %r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> <i64 3, i64 3, i64 3, i64 3>)
@@ -1343,10 +1343,10 @@ define <4 x i64> @fshr_vec(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c) {
 ; CHECK-NEXT:    srld $r6 = $r6, $r8
 ; CHECK-NEXT:    srld $r7 = $r7, $r10
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ord $r0 = $r0, $r4
-; CHECK-NEXT:    ord $r1 = $r1, $r5
-; CHECK-NEXT:    ord $r2 = $r2, $r6
-; CHECK-NEXT:    ord $r3 = $r3, $r7
+; CHECK-NEXT:    iord $r0 = $r0, $r4
+; CHECK-NEXT:    iord $r1 = $r1, $r5
+; CHECK-NEXT:    iord $r2 = $r2, $r6
+; CHECK-NEXT:    iord $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
   %r = call <4 x i64> @llvm.fshr.v4i64(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c)
