@@ -283,6 +283,11 @@ unsigned getAtomicOPOpcode(uint64_t Size, unsigned Pseudo) {
   }
 }
 
+static bool isGlobalAddrspace(const int AA) {
+  return AA == KVX::AS_OCL_GLOBAL || AA == KVX::AS_BYPASS ||
+         AA == KVX::AS_PRELOAD;
+}
+
 // Expand an atomic_load_operation operation.
 static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
                         MachineBasicBlock &MBB,
@@ -419,10 +424,11 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
     } else {
       assert(ACSWAP == KVX::ACSWAPWr || ACSWAP == KVX::ACSWAPDr);
     }
-    I.addReg(Base)
-        .addReg(UpdateFetch)
-        .addImm(KVXMOD::BOOLCAS_)
-        .addImm(KVXMOD::COHERENCY_);
+    const auto MemMode = isGlobalAddrspace(MO.getAddrSpace())
+                             ? KVXMOD::COHERENCY_G
+                             : KVXMOD::COHERENCY_;
+
+    I.addReg(Base).addReg(UpdateFetch).addImm(KVXMOD::BOOLCAS_).addImm(MemMode);
   }
   //   cb.even $update ? .csloop
   BuildMI(CSLoopMBB, DL, TII->get(KVX::CB))
@@ -463,7 +469,8 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
     report_fatal_error("expandATAS pseudo-instr expects MemOperands");
   }
 
-  if (MI.memoperands()[0]->getSize() != 1) {
+  MachineMemOperand *MO = MI.memoperands()[0];
+  if (MO->getSize() != 1) {
     MBBI->print(errs());
     report_fatal_error("expandATAS only support atomicrmw xchg i8*, 1 "
                        "operation (test_and_set)");
@@ -552,6 +559,9 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   DoneMBB->setLabelMustBeEmitted();
   DoneMBB->addLiveIn(Output);
   LLVM_DEBUG(dbgs() << "DoneMBB: "; DoneMBB->dump(); dbgs() << "--------\n");
+  const auto MemMode = isGlobalAddrspace(MO->getAddrSpace())
+                           ? KVXMOD::COHERENCY_G
+                           : KVXMOD::COHERENCY_;
 
   for (auto LI : MBB.liveins())
     CSLoopMBB->addLiveIn(LI);
@@ -638,7 +648,7 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
         .addReg(Base)
         .addReg(UpdateFetch)
         .addImm(KVXMOD::BOOLCAS_)
-        .addImm(KVXMOD::COHERENCY_);
+        .addImm(MemMode);
   //   cb.even $update ? .csloop
   BuildMI(CSLoop2MBB, DL, TII->get(KVX::CB))
       .addReg(Update)
@@ -686,6 +696,9 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
   uint64_t MOSize = MO.getSize();
+  const auto MemMode = isGlobalAddrspace(MO.getAddrSpace())
+                           ? KVXMOD::COHERENCY_G
+                           : KVXMOD::COHERENCY_;
 
   Register Output = MI.getOperand(0).getReg();
   MachineOperand Offset = MI.getOperand(2);
@@ -782,7 +795,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
           .addReg(Base)
           .addReg(DesiredExpected)
           .addImm(KVXMOD::BOOLCAS_)
-          .addImm(KVXMOD::COHERENCY_);
+          .addImm(MemMode);
     } else {
       assert(ACSWAP == KVX::ACSWAPWri27 || ACSWAP == KVX::ACSWAPWri54 ||
              ACSWAP == KVX::ACSWAPDri27 || ACSWAP == KVX::ACSWAPDri54);
@@ -791,7 +804,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
           .addReg(Base)
           .addReg(DesiredExpected)
           .addImm(KVXMOD::BOOLCAS_)
-          .addImm(KVXMOD::COHERENCY_);
+          .addImm(MemMode);
     }
   }
   //   cb.odd $desired ? .pass                    # return $expected on

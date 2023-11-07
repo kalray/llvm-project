@@ -129,7 +129,7 @@ def boolcas_ : Boolcas<1>;
 class Coherency<int N> : PatLeaf<(i32 N)>;
 def coherency_ : Coherency<0>;
 def coherency_g : Coherency<1>;
-def coherency_s : Coherency<2>;
+// def coherency_s : Coherency<2>; hw/sw does not support this.
 
 class Shufflev<int N> : PatLeaf<(i32 N)>;
 def shufflev_no : Shufflev<0>;

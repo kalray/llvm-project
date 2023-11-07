@@ -140,7 +140,7 @@ define i64 @atomicrmw_i64_xchg_as(i64 addrspace(1)* %ptr, i64 %c, i64 %s) {
 ; CV2-NEXT:    copyd $r0 = $r18
 ; CV2-NEXT:    ld.u $r1 = 0[$r19]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r0, [$r19] = $r0r1
+; CV2-NEXT:    acswapd.g $r0, [$r19] = $r0r1
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r0 ? .LBB4_1
 ; CV2-NEXT:    ;;
@@ -640,7 +640,7 @@ define i64 @atomicrmw_i64_sub_global_as(i64 addrspace(1)*%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbfd $r0 = $r18, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r0, [$r19] = $r0r1
+; CV2-NEXT:    acswapd.g $r0, [$r19] = $r0r1
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r0 ? .LBB18_1
 ; CV2-NEXT:    ;;
