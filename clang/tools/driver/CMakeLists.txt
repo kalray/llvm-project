@@ -58,7 +58,7 @@ endif()
 add_dependencies(clang clang-resource-headers)
 
 if(NOT CLANG_LINKS_TO_CREATE)
-  set(CLANG_LINKS_TO_CREATE kvx-clang clang++ kvx-clang++ clang-cl kvx-clang-cl clang-cpp kvx-clang-cpp)
+  set(CLANG_LINKS_TO_CREATE kvx-cos-clang clang++ kvx-cos-clang++ clang-cl kvx-cos-clang-cl clang-cpp kvx-cos-clang-cpp)
 endif()
 
 foreach(link ${CLANG_LINKS_TO_CREATE})
