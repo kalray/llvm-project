@@ -36,18 +36,17 @@ void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
 
   auto &CTC = static_cast<const toolchains::ClusterOS &>(getToolChain());
 
-  if (CTC.GCCInstallationIsValid()) {
-    CmdArgs.push_back(
-        Args.MakeArgString("-march=" + CTC.getGCCMultilibArch().str()));
-  } else {
-    // GCCInstallation isn't valid, which means that the toolchain isn't
-    // installed in /opt/kalray/accesscore nor the user didn't provided
-    // --gcc-toolchain installation prefix. We guess here which march to use.
-    const Arg *A = Args.getLastArg(options::OPT_march_EQ);
-    if (A)
-      CmdArgs.push_back(
-          Args.MakeArgString("-march=" + std::string(A->getValue())));
+  StringRef March;
+  const Arg *A = Args.getLastArg(options::OPT_march_EQ);
+  if (A) { // If passed -march to the driver, use that arch
+    StringRef ArgMarch = A->getValue();
+    if (ArgMarch.size())
+      March = ArgMarch;
   }
+  if (March.empty())
+    March = "kv3-1";
+
+  CmdArgs.push_back(Args.MakeArgString("-march=" + March.str()));
 
   Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA, options::OPT_Xassembler);
 
@@ -261,15 +260,6 @@ std::string ClusterOS::getIncludeDirRoot() const {
   std::string LDPath = GetProgramPath("kvx-cos-ld");
   StringRef LDPrefix = llvm::sys::path::parent_path(LDPath);
   return llvm::sys::path::parent_path(LDPrefix).str() + "/kvx-cos/include";
-}
-
-StringRef ClusterOS::getGCCMultilibArch() const {
-  for (StringRef Flag : GCCInstallation.getMultilib().flags()) {
-    if (Flag.startswith("+march="))
-      return Flag.substr(7);
-  }
-
-  llvm_unreachable("Default multilib misses +march flag");
 }
 
 bool ClusterOS::GCCInstallationIsValid() const {
