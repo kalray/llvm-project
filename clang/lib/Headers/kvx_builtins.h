@@ -321,5 +321,82 @@ inline __kvx_v4si __builtin_kvx_mulsumwq(__kvx_v4si a, __kvx_v4su b) {
   return __builtin_convertvector(mul, __kvx_v4si);
 }
 
+#define __builtin_kvx_xpreloado512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d)
+#define __builtin_kvx_xpreloado1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d)
+#define __builtin_kvx_xpreloado2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d)
+#define __builtin_kvx_xpreloado4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d)
+
+#define __builtin_kvx_xpreloadq512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d ".q")
+#define __builtin_kvx_xpreloadq1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d ".q")
+#define __builtin_kvx_xpreloadq2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d ".q")
+#define __builtin_kvx_xpreloadq4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d ".q")
+
+#define __builtin_kvx_xpreloadd512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d ".d")
+#define __builtin_kvx_xpreloadd1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d ".d")
+#define __builtin_kvx_xpreloadd2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d ".d")
+#define __builtin_kvx_xpreloadd4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d ".d")
+
+#define __builtin_kvx_xpreloads512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d ".s")
+#define __builtin_kvx_xpreloads1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d ".s")
+#define __builtin_kvx_xpreloads2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d ".s")
+#define __builtin_kvx_xpreloads4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d ".s")
+
+#define __builtin_kvx_xpreloadh512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d ".h")
+#define __builtin_kvx_xpreloadh1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d ".h")
+#define __builtin_kvx_xpreloadh2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d ".h")
+#define __builtin_kvx_xpreloadh4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d ".h")
+
+#define __builtin_kvx_xpreloadb512(a, b, c, d)                                 \
+  __builtin_kvx_xpreload512(a, b, c, d ".b")
+#define __builtin_kvx_xpreloadb1024(a, b, c, d)                                \
+  __builtin_kvx_xpreload1024(a, b, c, d ".b")
+#define __builtin_kvx_xpreloadb2048(a, b, c, d)                                \
+  __builtin_kvx_xpreload2048(a, b, c, d ".b")
+#define __builtin_kvx_xpreloadb4096(a, b, c, d)                                \
+  __builtin_kvx_xpreload4096(a, b, c, d ".b")
+
+#define __builtin_kvx_xaccessd512(x, y) __builtin_kvx_xaccesso512(x, y)[0]
+#define __builtin_kvx_xaccessd1024(x, y) __builtin_kvx_xaccesso1024(x, y)[0]
+#define __builtin_kvx_xaccessd2048(x, y) __builtin_kvx_xaccesso2048(x, y)[0]
+#define __builtin_kvx_xaccessd4096(x, y) __builtin_kvx_xaccesso4096(x, y)[0]
+
+#define __builtin_kvx_xaccessq512(x, y)                                        \
+  (__kvx_v2di) {                                                               \
+    __builtin_kvx_xaccesso512(x, y)[0], __builtin_kvx_xaccesso512(x, y)[1]     \
+  }
+#define __builtin_kvx_xaccessq1024(x, y)                                       \
+  (__kvx_v2di) {                                                               \
+    __builtin_kvx_xaccesso1024(x, y)[0], __builtin_kvx_xaccesso1024(x, y)[1]   \
+  }
+#define __builtin_kvx_xaccessq2048(x, y)                                       \
+  (__kvx_v2di) {                                                               \
+    __builtin_kvx_xaccesso2048(x, y)[0], __builtin_kvx_xaccesso2048(x, y)[1]   \
+  }
+#define __builtin_kvx_xaccessq4096(x, y)                                       \
+  (__kvx_v2di) {                                                               \
+    __builtin_kvx_xaccesso4096(x, y)[0], __builtin_kvx_xaccesso4096(x, y)[1]   \
+  }
+
+typedef long long int __kvx_v64;
 #endif /* defined(__llvm__) */
 #endif /* __H__KVX_BUILTINS__ */
