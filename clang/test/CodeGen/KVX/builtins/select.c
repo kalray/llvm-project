@@ -59,6 +59,58 @@ v4i64 selectdq(v4i64 t, v4i64 f, v4i64 c) {
   return __builtin_kvx_selectdq(t, f, c, ".even");
 }
 
+// CHECK-LABEL: @selectdo(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[T:%.*]] = load <8 x i64>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    [[F:%.*]] = load <8 x i64>, ptr [[TMP1:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[C:%.*]] = load <8 x i64>, ptr [[TMP2:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP3:%.*]] = extractelement <8 x i64> [[T]], i64 0
+// CHECK-NEXT:    [[TMP4:%.*]] = extractelement <8 x i64> [[F]], i64 0
+// CHECK-NEXT:    [[TMP5:%.*]] = extractelement <8 x i64> [[C]], i64 0
+// CHECK-NEXT:    [[TMP6:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP3]], i64 [[TMP4]], i64 [[TMP5]], i32 7)
+// CHECK-NEXT:    [[TMP7:%.*]] = extractelement <8 x i64> [[T]], i64 1
+// CHECK-NEXT:    [[TMP8:%.*]] = extractelement <8 x i64> [[F]], i64 1
+// CHECK-NEXT:    [[TMP9:%.*]] = extractelement <8 x i64> [[C]], i64 1
+// CHECK-NEXT:    [[TMP10:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP7]], i64 [[TMP8]], i64 [[TMP9]], i32 7)
+// CHECK-NEXT:    [[TMP11:%.*]] = extractelement <8 x i64> [[T]], i64 2
+// CHECK-NEXT:    [[TMP12:%.*]] = extractelement <8 x i64> [[F]], i64 2
+// CHECK-NEXT:    [[TMP13:%.*]] = extractelement <8 x i64> [[C]], i64 2
+// CHECK-NEXT:    [[TMP14:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP11]], i64 [[TMP12]], i64 [[TMP13]], i32 7)
+// CHECK-NEXT:    [[TMP15:%.*]] = extractelement <8 x i64> [[T]], i64 3
+// CHECK-NEXT:    [[TMP16:%.*]] = extractelement <8 x i64> [[F]], i64 3
+// CHECK-NEXT:    [[TMP17:%.*]] = extractelement <8 x i64> [[C]], i64 3
+// CHECK-NEXT:    [[TMP18:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP15]], i64 [[TMP16]], i64 [[TMP17]], i32 7)
+// CHECK-NEXT:    [[TMP19:%.*]] = extractelement <8 x i64> [[T]], i64 4
+// CHECK-NEXT:    [[TMP20:%.*]] = extractelement <8 x i64> [[F]], i64 4
+// CHECK-NEXT:    [[TMP21:%.*]] = extractelement <8 x i64> [[C]], i64 4
+// CHECK-NEXT:    [[TMP22:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP19]], i64 [[TMP20]], i64 [[TMP21]], i32 7)
+// CHECK-NEXT:    [[TMP23:%.*]] = extractelement <8 x i64> [[T]], i64 5
+// CHECK-NEXT:    [[TMP24:%.*]] = extractelement <8 x i64> [[F]], i64 5
+// CHECK-NEXT:    [[TMP25:%.*]] = extractelement <8 x i64> [[C]], i64 5
+// CHECK-NEXT:    [[TMP26:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP23]], i64 [[TMP24]], i64 [[TMP25]], i32 7)
+// CHECK-NEXT:    [[TMP27:%.*]] = extractelement <8 x i64> [[T]], i64 6
+// CHECK-NEXT:    [[TMP28:%.*]] = extractelement <8 x i64> [[F]], i64 6
+// CHECK-NEXT:    [[TMP29:%.*]] = extractelement <8 x i64> [[C]], i64 6
+// CHECK-NEXT:    [[TMP30:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP27]], i64 [[TMP28]], i64 [[TMP29]], i32 7)
+// CHECK-NEXT:    [[TMP31:%.*]] = extractelement <8 x i64> [[T]], i64 7
+// CHECK-NEXT:    [[TMP32:%.*]] = extractelement <8 x i64> [[F]], i64 7
+// CHECK-NEXT:    [[TMP33:%.*]] = extractelement <8 x i64> [[C]], i64 7
+// CHECK-NEXT:    [[TMP34:%.*]] = tail call i64 @llvm.kvx.select.i64(i64 [[TMP31]], i64 [[TMP32]], i64 [[TMP33]], i32 7)
+// CHECK-NEXT:    [[TMP35:%.*]] = insertelement <8 x i64> undef, i64 [[TMP6]], i64 0
+// CHECK-NEXT:    [[TMP36:%.*]] = insertelement <8 x i64> [[TMP35]], i64 [[TMP10]], i64 1
+// CHECK-NEXT:    [[TMP37:%.*]] = insertelement <8 x i64> [[TMP36]], i64 [[TMP14]], i64 2
+// CHECK-NEXT:    [[TMP38:%.*]] = insertelement <8 x i64> [[TMP37]], i64 [[TMP18]], i64 3
+// CHECK-NEXT:    [[TMP39:%.*]] = insertelement <8 x i64> [[TMP38]], i64 [[TMP22]], i64 4
+// CHECK-NEXT:    [[TMP40:%.*]] = insertelement <8 x i64> [[TMP39]], i64 [[TMP26]], i64 5
+// CHECK-NEXT:    [[TMP41:%.*]] = insertelement <8 x i64> [[TMP40]], i64 [[TMP30]], i64 6
+// CHECK-NEXT:    [[TMP42:%.*]] = insertelement <8 x i64> [[TMP41]], i64 [[TMP34]], i64 7
+// CHECK-NEXT:    store <8 x i64> [[TMP42]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
+//
+v8i64 selectdo(v8i64 t, v8i64 f, v8i64 c) {
+  return __builtin_kvx_selectdo(t, f, c, ".even");
+}
+
 // CHECK-LABEL: @selectfd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = fptoui double [[C:%.*]] to i64
