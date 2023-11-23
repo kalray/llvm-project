@@ -974,18 +974,24 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                  ISD::FDIV,
                  ISD::FMA,
                  ISD::FMUL,
-                 ISD::FSUB,
                  ISD::FNEG,
+                 ISD::FSUB,
                  ISD::INTRINSIC_WO_CHAIN,
                  ISD::LOAD,
                  ISD::MUL,
+                 ISD::SDIV,
+                 ISD::SDIVREM,
                  ISD::SETCC,
-                 ISD::SIGN_EXTEND,
                  ISD::SHL,
+                 ISD::SIGN_EXTEND,
                  ISD::SRA,
+                 ISD::SREM,
                  ISD::SRL,
                  ISD::STORE,
                  ISD::TRUNCATE,
+                 ISD::UDIV,
+                 ISD::UDIVREM,
+                 ISD::UREM,
                  ISD::VECREDUCE_ADD,
                  ISD::ZERO_EXTEND})
     setTargetDAGCombine(I);
@@ -1732,40 +1738,62 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::SDIV: {
     const LibCalls Sdivs = {
         {MVT::v4i16, "__divv4hi3"},
+        {MVT::v8i16, "__divv8hi3"},
+        {MVT::v16i16, "__divv16hi3"},
+        {MVT::v8i32, "__divv8si3"},
     };
-    return expandVecLibCall(Sdivs, Op, true, DAG);
+    return expandDivRemLibCall(Sdivs, Op, true, DAG);
   }
   case ISD::SREM: {
     const LibCalls Srems = {
         {MVT::v4i16, "__modv4hi3"},
+        {MVT::v8i16, "__modv8hi3"},
+        {MVT::v16i16, "__modv16hi3"},
+        {MVT::v8i32, "__modv8si3"},
     };
-    return expandVecLibCall(Srems, Op, true, DAG);
-  }
-  case ISD::SDIVREM: {
-    const LibCalls Sdivrem = {
-        {MVT::v4i16, "__divmodv4hi4"},
-    };
-    return expandVecLibCall(Sdivrem, Op, true, DAG);
+    return expandDivRemLibCall(Srems, Op, true, DAG);
   }
   case ISD::UDIV: {
     const LibCalls Udivs = {
         {MVT::v4i16, "__udivv4hi3"},
+        {MVT::v8i16, "__udivv8hi3"},
+        {MVT::v16i16, "__udivv16hi3"},
+        {MVT::v8i32, "__udivv8si3"},
     };
-    return expandVecLibCall(Udivs, Op, true, DAG);
+    return expandDivRemLibCall(Udivs, Op, true, DAG);
   }
   case ISD::UREM: {
     const LibCalls Urems = {
         {MVT::v4i16, "__umodv4hi3"},
+        {MVT::v8i16, "__umodv8hi3"},
+        {MVT::v16i16, "__umodv16hi3"},
+        {MVT::v8i32, "__umodv8si3"},
     };
-    return expandVecLibCall(Urems, Op, true, DAG);
+    return expandDivRemLibCall(Urems, Op, true, DAG);
   }
+  }
+}
+
+bool KVXTargetLowering::shouldSplitVecBinOp(const unsigned Opc,
+                                            const EVT VT) const {
+  switch (Opc) {
+  case ISD::SDIV:
+  case ISD::UDIV:
+  case ISD::SREM:
+  case ISD::UREM:
+  case ISD::SDIVREM:
   case ISD::UDIVREM: {
-    const LibCalls Udivrem = {
-        {MVT::v4i16, "__udivmodv4hi4"},
-    };
-    return expandVecLibCall(Udivrem, Op, true, DAG);
+    if (VT == EVT(MVT::v4i16) || VT == EVT(MVT::v8i16) ||
+        VT == EVT(MVT::v16i16) || VT == EVT(MVT::v8i32))
+      return false;
   }
   }
+  return true;
+}
+
+bool KVXTargetLowering::shouldProduceDivRem(const unsigned Opc,
+                                            const EVT VT) const {
+  return !shouldSplitVecBinOp(Opc, VT);
 }
 
 SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
@@ -3820,6 +3848,82 @@ static SDValue combineFDIV(SDNode *N, SelectionDAG &Dag) {
   Div->setFlags(WithRec);
   return Dag.getFPExtendOrRound(Div, DL, Ty);
 }
+// Called during lowering of vector [us](div|rem|divrem)
+SDValue KVXTargetLowering::expandDivRemLibCall(const LibCalls &Names,
+                                               SDValue &N, bool IsSigned,
+                                               SelectionDAG &Dag,
+                                               bool PackReminder) const {
+  SDValue DivRem = expandVecLibCall(Names, N, IsSigned, Dag);
+
+  if (!DivRem)
+    return DivRem;
+
+  auto DL = SDLoc(N);
+  auto Rty0 = DivRem->getValueType(0);
+  if (Rty0 != N->getValueType(0)) {
+    auto Sz = Rty0.getSizeInBits();
+    if (Sz == N->getValueSizeInBits(0))
+      DivRem = Dag.getBitcast(N->getValueType(0), DivRem);
+
+    // Don't know what is going on here, bail out
+    // TODO: If RTy0 is not a vector, the vector was split down into elements.
+    // At the moment we have no such case.
+    if (Sz > N->getValueSizeInBits(0) || !Rty0.isVector())
+      return SDValue();
+
+    std::vector<SDValue> Args;
+    for (int I = 0; I < (int)DivRem->getNumValues(); ++I)
+      Args.push_back(DivRem.getValue(I));
+
+    DivRem = Dag.getNode(ISD::CONCAT_VECTORS, DL, N->getValueType(0), Args);
+  }
+
+  return DivRem;
+}
+
+SDValue KVXTargetLowering::combineIntDivAlike(SDNode *N,
+                                              SelectionDAG &Dag) const {
+  if (!N->getValueType(0).isVector())
+    return SDValue();
+
+  LLVM_DEBUG(dbgs() << "KVX DagCombine DivAlike: "; N->dump(););
+  auto Div = N->getOperand(1);
+  if (isa<ConstantSDNode>(Div))
+    return SDValue();
+
+  if (auto *BV = dyn_cast<BuildVectorSDNode>(N)) {
+    if (BV->isConstant())
+      return SDValue();
+  }
+
+  SDValue R;
+  LLVM_DEBUG(dbgs() << "KVX DagCombine divisor is not constant: ";
+             Div->dump(););
+  if (N->getOpcode() == ISD::SDIVREM || N->getOpcode() == ISD::UDIVREM) {
+    // DIVREM nodes should be split into div + rem computation before
+    // lowering them to a function call, as the DIVREM result is 2x as
+    // big and would fail lowering for 2 x <8 x i32> nodes.
+    auto DivOpc = N->getOpcode() == ISD::SDIVREM ? ISD::SDIV : ISD::UDIV;
+    auto DL = SDLoc(N);
+    auto VT = N->getValueType(0);
+    SDValue Div = Dag.getNode(DivOpc, DL, VT);
+    Div = LowerOperation(Div, Dag);
+    if (!Div)
+      return Div;
+    SDValue Mul = Dag.getNode(ISD::MUL, DL, VT, Div, N->getOperand(1));
+    SDValue Rem = Dag.getNode(ISD::SUB, DL, VT, N->getOperand(0), Mul);
+    SDVTList VTs = Dag.getVTList(VT, VT);
+
+    R = Dag.getNode(ISD::MERGE_VALUES, DL, VTs, Div, Rem);
+  } else {
+    R = LowerOperation(SDValue(N, 0), Dag);
+    if (!R)
+      return R;
+  }
+  LLVM_DEBUG(dbgs() << "KVX: After int division combine:"; Dag.dump());
+
+  return R;
+}
 
 SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
                                              DAGCombinerInfo &DCI) const {
@@ -3871,6 +3975,16 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::SHL:
   case ISD::SRL:
     return splitDownTo64Bits(N, DCI, DAG);
+
+  case ISD::SDIV:
+  case ISD::SREM:
+  case ISD::SDIVREM:
+  case ISD::UDIV:
+  case ISD::UREM:
+  case ISD::UDIVREM:
+    if (DCI.isBeforeLegalize())
+      return combineIntDivAlike(N, DAG);
+    return SDValue();
   }
 
   return SDValue();

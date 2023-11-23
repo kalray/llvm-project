@@ -74,34 +74,34 @@
   mod = __builtin_convertvector(acc >> TyEltSz, Ty)
 
 #ifndef __kv3_2__
-#define udiv_16(Ty, Ety, IntermTy, Suffix, IntermSuffix, q, a, b)              \
-  IntermTy eb = __builtin_convertvector(b, IntermTy);                          \
-  IntermTy isrc = eb << 15;                                                    \
-  IntermTy iacc = __builtin_convertvector(a, IntermTy);                        \
-  IntermTy src2 = eb << 16;                                                    \
-  isrc = __builtin_kvx_select##IntermSuffix(src2, isrc, (eb > iacc), ".nez");  \
+#define udiv_16(Ty, Ety, Ty32, Suffix64, Suffix32, q, a, b)                    \
+  Ty32 eb = __builtin_convertvector(b, Ty32);                                  \
+  Ty32 isrc = eb << 15;                                                        \
+  Ty32 iacc = __builtin_convertvector(a, Ty32);                                \
+  Ty32 src2 = eb << 16;                                                        \
+  isrc = __builtin_kvx_select##Suffix32(src2, isrc, (eb > iacc), ".nez");      \
   Ety acc = __builtin_convertvector(iacc, Ety);                                \
   Ety src = __builtin_convertvector(isrc, Ety);                                \
   for (int i = 0; i < 16; ++i)                                                 \
-    acc = __builtin_kvx_stsu##Suffix(src, acc);                                \
+    acc = __builtin_kvx_stsu##Suffix64(src, acc);                              \
   q = __builtin_convertvector(acc, Ty)
 
-#define umod_16(Ty, Ety, IntermTy, Suffix, IntermSuffix, mod, a, b)            \
-  IntermTy eb = __builtin_convertvector(b, IntermTy);                          \
-  IntermTy isrc = eb << 15;                                                    \
-  IntermTy iacc = __builtin_convertvector(a, IntermTy);                        \
-  IntermTy src2 = eb << 16;                                                    \
-  isrc = __builtin_kvx_select##IntermSuffix(src2, isrc, (eb > iacc), ".nez");  \
-  Ety src = __builtin_convertvector(isrc, Ety);                                \
-  Ety acc = __builtin_convertvector(iacc, Ety);                                \
+#define umod_16(Ty, Ty64, Ty32, Suffix64, Suffix32, mod, a, b)                 \
+  Ty32 eb = __builtin_convertvector(b, Ty32);                                  \
+  Ty32 isrc = eb << 15;                                                        \
+  Ty32 iacc = __builtin_convertvector(a, Ty32);                                \
+  Ty32 src2 = eb << 16;                                                        \
+  isrc = __builtin_kvx_select##Suffix32(src2, isrc, (eb > iacc), ".nez");      \
+  Ty64 src = __builtin_convertvector(isrc, Ty64);                              \
+  Ty64 acc = __builtin_convertvector(iacc, Ty64);                              \
   for (int i = 0; i < 16; ++i)                                                 \
-    acc = __builtin_kvx_stsu##Suffix(src, acc);                                \
+    acc = __builtin_kvx_stsu##Suffix64(src, acc);                              \
   mod = __builtin_convertvector(acc >> 16, Ty)
 #else
-#define udiv_16(Ty, Ety, IntermTy, Suffix, IntermSuffix, q, a, b)              \
-  udiv(Ty, 16, Ety, Suffix, q, a, b)
+#define udiv_16(Ty, Ty64, Ty32, Suffix64, Suffix32, q, a, b)                   \
+  udiv(Ty, 16, Ty32, Suffix32, q, a, b)
 
-#define umod_16(Ty, Ety, IntermTy, Suffix, IntermSuffix, q, a, b)              \
-  umod(Ty, 16, Ety, Suffix, q, a, b)
+#define umod_16(Ty, Ty64, Ty32, Suffix64, Suffix32, q, a, b)                   \
+  umod(Ty, 16, Ty32, Suffix32, q, a, b)
 
 #endif

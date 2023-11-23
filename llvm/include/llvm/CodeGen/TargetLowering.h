@@ -1179,6 +1179,19 @@ public:
        getOperationAction(Op, VT) == Custom);
   }
 
+  /// Returns false if the target would like an illegal vector binop to
+  /// not be split into smaller vectors. Useful when the target has
+  /// rt functions that implement the operation.
+  virtual bool shouldSplitVecBinOp(const unsigned Opc, const EVT VT) const {
+    return true;
+  }
+
+  /// Returns true if the target would like an illegal divrem operation to
+  /// be produced. Useful if the rt library implements the operation.
+  virtual bool shouldProduceDivRem(const unsigned Opc, const EVT VT) const {
+    return false;
+  }
+
   /// Returns true if at selection dag we know that this instruction is free
   virtual bool isOpFree(const SDNode *) const { return false; }
 

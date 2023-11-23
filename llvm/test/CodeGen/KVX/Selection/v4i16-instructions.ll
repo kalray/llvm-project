@@ -1853,3 +1853,64 @@ define <4 x i16> @urem_ss(i16 %a, i16 %b) {
   ret <4 x i16> %div
 }
 
+define <4 x i16> @sdivrem(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: sdivrem:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sq 8[$r12] = $r18r19
+; ALL-NEXT:    copyd $r18 = $r1
+; ALL-NEXT:    copyd $r19 = $r0
+; ALL-NEXT:    call __divv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    msbfhq $r19 = $r0, $r18
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r18r19 = 8[$r12]
+; ALL-NEXT:    addhq $r0 = $r0, $r19
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 8)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %q = sdiv <4 x i16> %a, %b
+  %r = srem <4 x i16> %a, %b
+  %res = add <4 x i16> %q, %r
+  ret <4 x i16> %res
+}
+
+define <4 x i16> @udivrem(<4 x i16> %a, <4 x i16> %b) {
+; ALL-LABEL: udivrem:
+; ALL:       # %bb.0:
+; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    get $r16 = $ra
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sd 24[$r12] = $r16
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    sq 8[$r12] = $r18r19
+; ALL-NEXT:    copyd $r18 = $r1
+; ALL-NEXT:    copyd $r19 = $r0
+; ALL-NEXT:    call __udivv4hi3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    msbfhq $r19 = $r0, $r18
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lq $r18r19 = 8[$r12]
+; ALL-NEXT:    addhq $r0 = $r0, $r19
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    set $ra = $r16
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 8)
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;;
+  %q = udiv <4 x i16> %a, %b
+  %r = urem <4 x i16> %a, %b
+  %res = add <4 x i16> %q, %r
+  ret <4 x i16> %res
+}

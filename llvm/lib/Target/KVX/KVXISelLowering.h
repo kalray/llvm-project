@@ -287,6 +287,13 @@ private:
   }
   SDValue expandVecLibCall(const LibCalls &Funcs, SDValue &Node, bool IsSigned,
                            SelectionDAG &DAG) const;
+  SDValue expandDivRemLibCall(const LibCalls &Funcs, SDValue &Node,
+                              bool IsSigned, SelectionDAG &DAG,
+                              bool PackReminder = false) const;
+  SDValue combineIntDivAlike(SDNode *N, SelectionDAG &Dag) const;
+
+  bool shouldSplitVecBinOp(const unsigned Opc, const EVT VT) const override;
+  bool shouldProduceDivRem(const unsigned Opc, const EVT VT) const override;
 };
 
 } // namespace llvm

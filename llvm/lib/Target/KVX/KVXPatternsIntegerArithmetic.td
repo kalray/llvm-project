@@ -1581,18 +1581,10 @@ def : Pat<(v2i32 (add v2i32:$a1, (mul v2i32:$a2, v2i32:$a3))),
 
 // TODO: Add immediate sub-vector creation so we can
 // add immediate variant to v4i32, e.g.
-def : Pat<(v4i32 (add v4i32:$a1, (mul v4i32:$a2, v4i32:$a3))),
-      (REG_SEQUENCE PairedReg,
-            (v2i32 (MADDWPrr
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_d0)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_d0)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_d0)))),
-            sub_d0,
-            (v2i32 (MADDWPrr
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a1, sub_d1)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a2, sub_d1)),
-                  (v2i32 (EXTRACT_SUBREG PairedReg:$a3, sub_d1)))),
-            sub_d1)>;
+def : Pat<(add v4i32:$a1, (mul v4i32:$a2, v4i32:$a3)),
+            (v4i32 (BuildPairedReg
+                  (MADDWPrr (v2i32 (PairedRegHi $a1)), (v2i32 (PairedRegHi $a2)), (v2i32 (PairedRegHi $a3))),
+                  (MADDWPrr (v2i32 (PairedRegLo $a1)), (v2i32 (PairedRegLo $a2)), (v2i32 (PairedRegLo $a3)))))>, Requires<[IsV1]>;
 
 // MAXD
 def : Pat<(smax i64:$v1, i64:$v2), (MAXDrr SingleReg:$v1, SingleReg:$v2)>;
@@ -1853,6 +1845,10 @@ def : Pat<(v2i64(sub v2i64:$v2, (v2i64(KVX_sext_mul v2i32:$v0, v2i32:$v1)))),
 
 // MSBFWP
 def : Pat<(sub v2i32:$a1, (mul v2i32:$a2, v2i32:$a3)), (MSBFWP SingleReg:$a1, SingleReg:$a2, SingleReg:$a3)>;
+def : Pat<(sub v4i32:$a1, (mul v4i32:$a2, v4i32:$a3)),
+            (v4i32 (BuildPairedReg
+                  (MSBFWP (v2i32 (PairedRegHi $a1)), (v2i32 (PairedRegHi $a2)), (v2i32 (PairedRegHi $a3))),
+                  (MSBFWP (v2i32 (PairedRegLo $a1)), (v2i32 (PairedRegLo $a2)), (v2i32 (PairedRegLo $a3)))))>, Requires<[IsV1]>;
 
 // MULD
 def : Pat<(mul i64:$rs1, i64:$rs2), (MULDrr SingleReg:$rs1, SingleReg:$rs2)>;

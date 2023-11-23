@@ -38,9 +38,9 @@ define i32 @test_extract_1(<4 x i32> %a) #0 {
 define <4 x i32> @test_fma(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 ; CV1-LABEL: test_fma:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    maddwp $r1 = $r3, $r5
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    maddwp $r0 = $r2, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    maddwp $r1 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 1)
 ;

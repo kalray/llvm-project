@@ -9,9 +9,9 @@ target triple = "kvx-kalray-cos"
 define <4 x i32> @maddwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
 ; CV1-LABEL: maddwq:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    maddwp $r1 = $r3, $r5
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    maddwp $r0 = $r2, $r4
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    maddwp $r1 = $r3, $r5
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 1)
 ;
@@ -28,12 +28,11 @@ define <4 x i32> @maddwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
 define <4 x i32> @msbfwq(<4 x i32> %0, <4 x i32> %1, <4 x i32> %2) {
 ; CV1-LABEL: msbfwq:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    mulwq $r2r3 = $r2r3, $r4r5
+; CV1-NEXT:    msbfwp $r0 = $r2, $r4
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfwp $r0 = $r2, $r0
-; CV1-NEXT:    sbfwp $r1 = $r3, $r1
+; CV1-NEXT:    msbfwp $r1 = $r3, $r5
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: msbfwq:
 ; CV2:       # %bb.0:
