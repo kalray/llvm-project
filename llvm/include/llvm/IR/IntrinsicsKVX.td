@@ -224,7 +224,7 @@ def int_kvx_xmma484bw : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1
 def int_kvx_xmsbfifwo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;
 def int_kvx_xnando : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xnioro : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
-def int_kvx_xnxoro : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xneoro : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xrecvo: Intrinsic<[llvm_v256i1_ty], [llvm_i32_ty], [IntrNoMem, Throws]>;
 def int_kvx_xsbmm8dq : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xsbmmt8dq : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
@@ -237,7 +237,7 @@ def int_kvx_xstore256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty], [IntrWriteMe
 def int_kvx_xstorec256: Intrinsic<[], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty], [IntrWriteMem]>;
 def int_kvx_xsx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
 def int_kvx_xtrunc48wb : Intrinsic<[llvm_v256i1_ty], [llvm_v1024i1_ty], [IntrReadMem]>;
-def int_kvx_xxoro : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xeoro : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty], [IntrNoMem]>;
 def int_kvx_xzx48bw : Intrinsic<[llvm_v1024i1_ty], [llvm_v256i1_ty], [IntrReadMem]>;
 
 //===----------------------------------------------------------------------===//
