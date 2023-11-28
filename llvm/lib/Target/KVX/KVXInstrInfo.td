@@ -2868,7 +2868,7 @@ defm XNANDO : I </*asm=*/"xnando", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorR
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnando v256i1:$op0, v256i1:$op1))]>;
 
-defm XNORO : I </*asm=*/"xnioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XNIORO : I </*asm=*/"xnioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xnioro v256i1:$op0, v256i1:$op1))]>;
 
@@ -2876,11 +2876,11 @@ defm XNEORO : I </*asm=*/"xneoro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorR
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xneoro v256i1:$op0, v256i1:$op1))]>;
 
-defm XORNO : I </*asm=*/"xiorno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XIORNO : I </*asm=*/"xiorno", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xiorno v256i1:$op0, v256i1:$op1))]>;
 
-defm XORO : I </*asm=*/"xioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
+defm XIORO : I </*asm=*/"xioro", /*itin=*/TCA_INT, /*Ops=*/[VectorReg, VectorReg], /*Mods=*/[],
                  /*MemOps=*/[], /*CC=*/[], /*Out=*/[VectorReg], /*inplace =*/ 0, /*pattern =*/
                  [(set v256i1:$r, (int_kvx_xioro v256i1:$op0, v256i1:$op1))]>;
 
