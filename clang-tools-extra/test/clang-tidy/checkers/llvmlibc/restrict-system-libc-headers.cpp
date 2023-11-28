@@ -8,6 +8,9 @@
 // CHECK-MESSAGES: :[[@LINE-1]]:1: warning: system include stdlib.h not allowed
 #include "string.h"
 // CHECK-MESSAGES: :[[@LINE-1]]:1: warning: system include string.h not allowed
+#ifndef __KVX__
+// FIXME: size_t and ptrdiff_t should be defined by includes of stdatomic.h
 #include "stdatomic.h"
+#endif
 #include <stddef.h>
 // Compiler provided headers should not throw warnings.
