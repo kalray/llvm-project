@@ -3638,7 +3638,7 @@ static SDValue combineMUL(SDNode *N, SelectionDAG &Dag) {
 
 static SDValue combineTrunc(SDNode *N, SelectionDAG &DAG) {
   auto Ty = N->getValueType(0);
-  if (!Ty.isSimple() && Ty.getSimpleVT() != MVT::v4i32)
+  if (!Ty.isSimple() || Ty.getSimpleVT() != MVT::v4i32)
     return SDValue();
 
   auto Srl = N->getOperand(0);

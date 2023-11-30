@@ -350,3 +350,43 @@ define <4 x i32> @mulsumwq(<4 x i32> %0, <4 x i32> %1) {
   ret <4 x i32> %7
 }
 
+
+define <3 x i32> @maddsumwq_v3(<3 x i32> %0, <3 x i32> %1, <3 x i32> %2) {
+; CV1-LABEL: maddsumwq_v3:
+; CV1:       # %bb.0:
+; CV1-NEXT:    mulsuwdp $r6r7 = $r3, $r5
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    mulsuwdp $r4r5 = $r2, $r4
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    srld $r2 = $r7, $r0
+; CV1-NEXT:    srld $r3 = $r6, 32
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    insf $r3 = $r2, 63, 32
+; CV1-NEXT:    srld $r4 = $r4, 32
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    addwp $r1 = $r3, $r1
+; CV1-NEXT:    insf $r5 = $r4, 31, 0
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    copyd $r2 = $r5
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    addwp $r0 = $r2, $r0
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    insf $r1 = $r0, 63, 32
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
+;
+; CV2-LABEL: maddsumwq_v3:
+; CV2:       # %bb.0:
+; CV2-NEXT:    maddsumwq $r0r1 = $r2r3, $r4r5
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    insf $r1 = $r0, 63, 32
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 2)
+  %4 = sext <3 x i32> %1 to <3 x i64>
+  %5 = zext <3 x i32> %2 to <3 x i64>
+  %6 = mul nsw <3 x i64> %5, %4
+  %7 = lshr <3 x i64> %6, <i64 32, i64 32, i64 32>
+  %8 = trunc <3 x i64> %7 to <3 x i32>
+  %9 = add <3 x i32> %8, %0
+  ret <3 x i32> %9
+}
