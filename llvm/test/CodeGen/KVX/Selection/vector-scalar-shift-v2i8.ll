@@ -12,15 +12,12 @@ define <2 x i8> @sri_v2i8(<2 x i8> %a){
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    extfs $r0 = $r0, 7, 3
+; CV1-NEXT:    extfs $r1 = $r1, 7, 3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sraw $r0 = $r0, 3
-; CV1-NEXT:    sraw $r1 = $r1, 3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: sri_v2i8:
 ; CV2:       # %bb.0: # %entry
@@ -38,15 +35,12 @@ define <2 x i8> @not_sri_v2i8(<2 x i8> %a){
 ; CV1-NEXT:    zxbd $r0 = $r0
 ; CV1-NEXT:    extfz $r1 = $r0, 15, 8
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sxbd $r0 = $r0
-; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    extfs $r0 = $r0, 7, 2
+; CV1-NEXT:    extfs $r1 = $r1, 7, 3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sraw $r0 = $r0, 2
-; CV1-NEXT:    sraw $r1 = $r1, 3
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    insf $r0 = $r1, 15, 8
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: not_sri_v2i8:
 ; CV2:       # %bb.0: # %entry

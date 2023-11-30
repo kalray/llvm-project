@@ -2877,6 +2877,20 @@ def : Pat<(v2i64(sext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXHD $v), sub
 def : Pat<(v2i64(zanyext v2i16:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXHD $v), sub_d0, (EXTFZ $v, 31, 16), sub_d1))>;
 def : Pat<(v2i64(sext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (SXWD $v), sub_d0, (EXTFS $v, 63, 32), sub_d1))>;
 def : Pat<(v2i64(zanyext v2i32:$v)), (v2i64 (REG_SEQUENCE PairedReg, (ZXWD $v), sub_d0, (EXTFZ $v, 63, 32), sub_d1))>;
+def : Pat<(i64 (sanyext (i32 (sra i32:$r, Unsigned5W:$amt)))),
+          (EXTFS SingleReg:$r, 31, (imm32_to_imm64 $amt))>;
+
+def : Pat<(i64 (sanyext (i32 (sra (i32 (sext_inreg i32:$r, i16)), Unsigned4W:$amt)))),
+          (EXTFS SingleReg:$r, 15, (imm32_to_imm64 $amt))>;
+
+def : Pat<(i32 (sra (i32 (sext_inreg i32:$r, i16)), Unsigned4W:$amt)),
+          (EXTFS SingleReg:$r, 15, (imm32_to_imm64 $amt))>;
+
+def : Pat<(i64 (sanyext (i32 (sra (i32 (sext_inreg i32:$r, i8)), Unsigned3W:$amt)))),
+          (EXTFS SingleReg:$r, 7, (imm32_to_imm64 $amt))>;
+
+def : Pat<(i32 (sra (i32 (sext_inreg i32:$r, i8)), Unsigned3W:$amt)),
+          (EXTFS SingleReg:$r, 7, (imm32_to_imm64 $amt))>;
 
 def : Pat<(add v8i8:$v1, v8i8:$v2),
       (XORDrr

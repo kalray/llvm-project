@@ -991,15 +991,12 @@ define <2 x i8> @test_div_4(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    zxbd $r0 = $r0
 ; V1-NEXT:    extfz $r1 = $r0, 15, 8
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxbd $r0 = $r0
-; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    extfs $r0 = $r0, 7, 2
+; V1-NEXT:    extfs $r1 = $r1, 7, 2
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sraw $r0 = $r0, 2
-; V1-NEXT:    sraw $r1 = $r1, 2
-; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: test_div_4:
 ; V2:       # %bb.0:
@@ -1034,15 +1031,12 @@ define <2 x i8> @test_div_32(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    zxbd $r0 = $r0
 ; V1-NEXT:    extfz $r1 = $r0, 15, 8
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxbd $r0 = $r0
-; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    extfs $r0 = $r0, 7, 5
+; V1-NEXT:    extfs $r1 = $r1, 7, 5
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sraw $r0 = $r0, 5
-; V1-NEXT:    sraw $r1 = $r1, 5
-; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: test_div_32:
 ; V2:       # %bb.0:
@@ -1078,21 +1072,18 @@ define <2 x i8> @test_div_neg64(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-NEXT:    zxbd $r0 = $r0
 ; V1-NEXT:    extfz $r1 = $r0, 15, 8
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxbd $r0 = $r0
-; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    extfs $r0 = $r0, 7, 6
+; V1-NEXT:    extfs $r1 = $r1, 7, 6
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sraw $r0 = $r0, 6
-; V1-NEXT:    sraw $r1 = $r1, 6
-; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
-; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 11)
+; V1-NEXT:    ;; # (end cycle 10)
 ; V1-NEXT:    neghq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 12)
+; V1-NEXT:    ;; # (end cycle 11)
 ; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 13)
+; V1-NEXT:    ;; # (end cycle 12)
 ;
 ; V2-LABEL: test_div_neg64:
 ; V2:       # %bb.0:
@@ -1129,15 +1120,12 @@ define <2 x i8> @test_div_notsrs(<2 x i8> %a, <2 x i8> %b) {
 ; V1-NEXT:    zxbd $r0 = $r0
 ; V1-NEXT:    extfz $r1 = $r0, 15, 8
 ; V1-NEXT:    ;; # (end cycle 7)
-; V1-NEXT:    sxbd $r0 = $r0
-; V1-NEXT:    sxbd $r1 = $r1
+; V1-NEXT:    extfs $r0 = $r0, 7, 5
+; V1-NEXT:    extfs $r1 = $r1, 7, 4
 ; V1-NEXT:    ;; # (end cycle 8)
-; V1-NEXT:    sraw $r0 = $r0, 5
-; V1-NEXT:    sraw $r1 = $r1, 4
-; V1-NEXT:    ;; # (end cycle 9)
 ; V1-NEXT:    insf $r0 = $r1, 15, 8
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 10)
+; V1-NEXT:    ;; # (end cycle 9)
 ;
 ; V2-LABEL: test_div_notsrs:
 ; V2:       # %bb.0:
