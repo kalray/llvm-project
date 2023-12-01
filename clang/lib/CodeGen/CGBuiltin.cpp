@@ -20481,9 +20481,9 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   const auto &Target = getTarget();
 
   const static std::set<unsigned short> SetFxNotCV1Regs = {
-      31, 38, 39, 47, 48, 49, 50,  51,  52,  53,  54,  55,  56,
-      57, 58, 59, 60, 61, 62, 63,  68,  69,  70,  71,  88,  89,
-      90, 91, 92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
+      31, 38, 39, 47, 48,  49,  50,  51,  52,  53,  54,  55,
+      56, 57, 58, 59, 60,  61,  62,  63,  88,  89,  90,  91,
+      92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
   };
 
   const static std::set<unsigned short> GetSetFxCV1OnlyRegs = {40};

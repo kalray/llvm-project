@@ -154,6 +154,42 @@ void wfxl_46(long v) {
   __builtin_kvx_wfxl(46, v);
 }
 
+// CHECK-LABEL: @wfxl_68(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 68, i64 [[V:%.*]], i32 0)
+// CHECK-NEXT:    ret void
+//
+void wfxl_68(long v) {
+  __builtin_kvx_wfxl(68, v);
+}
+
+// CHECK-LABEL: @wfxl_69(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 69, i64 [[V:%.*]], i32 0)
+// CHECK-NEXT:    ret void
+//
+void wfxl_69(long v) {
+  __builtin_kvx_wfxl(69, v);
+}
+
+// CHECK-LABEL: @wfxl_70(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 70, i64 [[V:%.*]], i32 0)
+// CHECK-NEXT:    ret void
+//
+void wfxl_70(long v) {
+  __builtin_kvx_wfxl(70, v);
+}
+
+// CHECK-LABEL: @wfxl_71(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 71, i64 [[V:%.*]], i32 0)
+// CHECK-NEXT:    ret void
+//
+void wfxl_71(long v) {
+  __builtin_kvx_wfxl(71, v);
+}
+
 // CHECK-LABEL: @wfxl_84(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    tail call void @llvm.kvx.wfx(i32 84, i64 [[V:%.*]], i32 0)
