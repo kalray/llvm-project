@@ -706,6 +706,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::FDIV, MVT::f32, Custom);
   setOperationAction(ISD::FSQRT, MVT::f32, Custom);
+  setOperationAction(ISD::FDIV, MVT::f16, Promote);
+  setOperationAction(ISD::FSQRT, MVT::f16, Promote);
 
   for (auto VT :
        {MVT::v2f16, MVT::v2f32, MVT::v2f64, MVT::v2i8, MVT::v2i16, MVT::v2i32,
@@ -971,7 +973,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                  ISD::FABS,
                  ISD::FADD,
                  ISD::FCOPYSIGN,
-                 ISD::FDIV,
                  ISD::FMA,
                  ISD::FMUL,
                  ISD::FNEG,
@@ -3829,25 +3830,6 @@ static SDValue combineStore(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
   return Dag.getStore(Chain, SDLoc(N), Cast, Ptr, ST->getMemOperand());
 }
 
-static SDValue combineFDIV(SDNode *N, SelectionDAG &Dag) {
-  auto Ty = N->getValueType(N->getNumValues() - 1);
-  if (Ty.getScalarType() != EVT(MVT::f16))
-    return SDValue();
-
-  auto DL = SDLoc(N);
-  auto ToTy = EVT(MVT::f32);
-  if (Ty.isVector())
-    ToTy = Ty.changeVectorElementType(ToTy);
-
-  auto Op0 = Dag.getFPExtendOrRound(N->getOperand(0), DL, ToTy);
-  auto Op1 = Dag.getFPExtendOrRound(N->getOperand(1), DL, ToTy);
-
-  auto Div = Dag.getNode(ISD::FDIV, DL, ToTy, Op0, Op1);
-  SDNodeFlags WithRec = N->getFlags();
-  WithRec.setAllowReciprocal(true);
-  Div->setFlags(WithRec);
-  return Dag.getFPExtendOrRound(Div, DL, Ty);
-}
 // Called during lowering of vector [us](div|rem|divrem)
 SDValue KVXTargetLowering::expandDivRemLibCall(const LibCalls &Names,
                                                SDValue &N, bool IsSigned,
@@ -3963,9 +3945,6 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineZext(N, DAG);
   case ISD::VECREDUCE_ADD:
     return (Subtarget.isV1()) ? SDValue() : combineVecRedAdd(N, DAG);
-  case ISD::FDIV: {
-    return combineFDIV(N, DAG);
-  }
   case ISD::SRA: {
     SDValue R = combineSRA(N, DAG);
     if (R)
