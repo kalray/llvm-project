@@ -1761,16 +1761,18 @@ void KVXTargetInfo::adjust(DiagnosticsEngine &Diags, LangOptions &Opts) {
 void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
                                      MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__", "1");
+  Builder.defineMacro("__KVX_64__", "1");
   if (CPU == "kv3-1" || CPU == "kv3-2") {
     Builder.defineMacro("__KVX__", "3");
     Builder.defineMacro("__kvx__", "3");
+    Builder.defineMacro("__KV3_64__", "1");
   } else {
     Builder.defineMacro("__KVX__", "4");
     Builder.defineMacro("__kvx__", "4");
   }
-  Builder.defineMacro("__KV3_64__", "1");
 
   if (CPU == "kv4-1") {
+    Builder.defineMacro("__KV4_64__", "1");
     Builder.defineMacro("__KV4__", "1");
     Builder.defineMacro("__kv4__", "1");
     Builder.defineMacro("__kv4_1__", "1");

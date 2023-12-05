@@ -2,6 +2,7 @@
 // RUN: %clang -target kvx-cos -march=kv3-2 -S -o - %s -E -dM | FileCheck %s --check-prefix V2
 // RUN: %clang -target kvx-cos -march=kv4-1 -S -o - %s -E -dM | FileCheck %s --check-prefix V2
 
+// CHECK: #define __KVX_64__ 1
 // V1: #define __KV3__ 1
 // V2: #define __KV3__ 2
 // CHECK: #define __KVX__ 3
