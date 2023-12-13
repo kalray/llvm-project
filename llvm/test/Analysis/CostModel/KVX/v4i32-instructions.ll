@@ -145,9 +145,13 @@ define <4 x i32> @test_mul_2(<4 x i32> %a, <4 x i32> %b, <4 x i32> %c) #0 {
 }
 
 define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
-; ALL-LABEL: 'test_div'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = sdiv <4 x i32> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+; CV1-LABEL: 'test_div'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 90 for instruction: %r = sdiv <4 x i32> %a, %b
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+;
+; CV2-LABEL: 'test_div'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 58 for instruction: %r = sdiv <4 x i32> %a, %b
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, %b
   ret <4 x i32> %r
@@ -155,7 +159,7 @@ define <4 x i32> @test_div(<4 x i32> %a, <4 x i32> %b) #0 {
 
 define <4 x i32> @test_rem(<4 x i32> %a, <4 x i32> %b) #0 {
 ; ALL-LABEL: 'test_rem'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = srem <4 x i32> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 91 for instruction: %r = srem <4 x i32> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = srem <4 x i32> %a, %b
@@ -574,18 +578,26 @@ define <4 x i32> @MSBFUHWQ(<4 x i32> %0, <4 x i16> %1, <4 x i16> %2) {
 attributes #0 = { nounwind }
 
 define <4 x i32> @test_div_4(<4 x i32> %a, <4 x i32> %b) #0 {
-; ALL-LABEL: 'test_div_4'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+; CV1-LABEL: 'test_div_4'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 90 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+;
+; CV2-LABEL: 'test_div_4'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 58 for instruction: %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, <i32 4, i32 4, i32 4, i32 4>
   ret <4 x i32> %r
 }
 
 define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
-; ALL-LABEL: 'test_div_32'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+; CV1-LABEL: 'test_div_32'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 90 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
+;
+; CV2-LABEL: 'test_div_32'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 58 for instruction: %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = sdiv <4 x i32> %a, <i32 32, i32 32, i32 32, i32 32>
   ret <4 x i32> %r

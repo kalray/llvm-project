@@ -572,6 +572,63 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
                                          Opd2Info, Opd1PropInfo, Opd2PropInfo,
                                          Args, CxtI);
 
+  static CostTblEntry CV1[] = {
+      {ISD::FDIV, MVT::f16, 17},        {ISD::FDIV, MVT::f32, 65},
+      {ISD::FDIV, MVT::f64, 80},        {ISD::SDIV, MVT::i32, 15},
+      {ISD::SDIV, MVT::i64, 12},        {ISD::SDIV, MVT::v16i16, 188},
+      {ISD::SDIV, MVT::v4i16, 57},      {ISD::SDIV, MVT::v4i32, 90},
+      {ISD::SDIV, MVT::v8i16, 101},     {ISD::SDIV, MVT::v8i32, 166},
+      {ISD::SDIVREM, MVT::i32, 26},     {ISD::SDIVREM, MVT::i64, 26},
+      {ISD::SDIVREM, MVT::v16i16, 194}, {ISD::SDIVREM, MVT::v4i16, 59},
+      {ISD::SDIVREM, MVT::v4i32, 94},   {ISD::SDIVREM, MVT::v8i16, 104},
+      {ISD::SDIVREM, MVT::v8i32, 175},  {ISD::SREM, MVT::i32, 18},
+      {ISD::SREM, MVT::i64, 18},        {ISD::SREM, MVT::v16i16, 191},
+      {ISD::SREM, MVT::v4i16, 59},      {ISD::SREM, MVT::v4i32, 91},
+      {ISD::SREM, MVT::v8i16, 102},     {ISD::SREM, MVT::v8i32, 166},
+      {ISD::UDIV, MVT::i32, 24},        {ISD::UDIV, MVT::i64, 24},
+      {ISD::UDIV, MVT::v16i16, 182},    {ISD::UDIV, MVT::v4i16, 54},
+      {ISD::UDIV, MVT::v4i32, 84},      {ISD::UDIV, MVT::v8i16, 96},
+      {ISD::UDIV, MVT::v8i32, 157},     {ISD::UDIVREM, MVT::i32, 22},
+      {ISD::UDIVREM, MVT::i64, 24},     {ISD::UDIVREM, MVT::v16i16, 191},
+      {ISD::UDIVREM, MVT::v4i16, 56},   {ISD::UDIVREM, MVT::v4i32, 88},
+      {ISD::UDIVREM, MVT::v8i16, 99},   {ISD::UDIVREM, MVT::v8i32, 163},
+      {ISD::UREM, MVT::i32, 21},        {ISD::UREM, MVT::i64, 21},
+      {ISD::UREM, MVT::v16i16, 186},    {ISD::UREM, MVT::v4i16, 54},
+      {ISD::UREM, MVT::v4i32, 85},      {ISD::UREM, MVT::v8i16, 97},
+      {ISD::UREM, MVT::v8i32, 158},
+  };
+  static CostTblEntry CV2[] = {
+      {ISD::FDIV, MVT::f16, 17},       {ISD::FDIV, MVT::f32, 65},
+      {ISD::FDIV, MVT::f64, 80},       {ISD::SDIV, MVT::i32, 15},
+      {ISD::SDIV, MVT::i64, 12},       {ISD::SDIV, MVT::v16i16, 70},
+      {ISD::SDIV, MVT::v4i16, 37},     {ISD::SDIV, MVT::v4i32, 58},
+      {ISD::SDIV, MVT::v8i16, 42},     {ISD::SDIV, MVT::v8i32, 101},
+      {ISD::SDIVREM, MVT::i32, 26},    {ISD::SDIVREM, MVT::i64, 26},
+      {ISD::SDIVREM, MVT::v16i16, 73}, {ISD::SDIVREM, MVT::v4i16, 39},
+      {ISD::SDIVREM, MVT::v4i32, 62},  {ISD::SDIVREM, MVT::v8i16, 45},
+      {ISD::SDIVREM, MVT::v8i32, 110}, {ISD::SREM, MVT::i32, 18},
+      {ISD::SREM, MVT::i64, 18},       {ISD::SREM, MVT::v16i16, 73},
+      {ISD::SREM, MVT::v4i16, 39},     {ISD::SREM, MVT::v4i32, 91},
+      {ISD::SREM, MVT::v8i16, 43},     {ISD::SREM, MVT::v8i32, 101},
+      {ISD::UDIV, MVT::i32, 24},       {ISD::UDIV, MVT::i64, 24},
+      {ISD::UDIV, MVT::v16i16, 64},    {ISD::UDIV, MVT::v4i16, 34},
+      {ISD::UDIV, MVT::v4i32, 84},     {ISD::UDIV, MVT::v8i16, 37},
+      {ISD::UDIV, MVT::v8i32, 92},     {ISD::UDIVREM, MVT::i32, 22},
+      {ISD::UDIVREM, MVT::i64, 24},    {ISD::UDIVREM, MVT::v16i16, 73},
+      {ISD::UDIVREM, MVT::v4i16, 36},  {ISD::UDIVREM, MVT::v4i32, 88},
+      {ISD::UDIVREM, MVT::v8i16, 40},  {ISD::UDIVREM, MVT::v8i32, 98},
+      {ISD::UREM, MVT::i32, 21},       {ISD::UREM, MVT::i64, 21},
+      {ISD::UREM, MVT::v16i16, 68},    {ISD::UREM, MVT::v4i16, 34},
+      {ISD::UREM, MVT::v4i32, 85},     {ISD::UREM, MVT::v8i16, 39},
+      {ISD::UREM, MVT::v8i32, 93},
+  };
+
+  auto VT = TLI->getValueType(DL, Ty);
+  if (VT.isSimple())
+    if (const auto *Entry =
+            CostTableLookup(ST->isV1() ? CV1 : CV2, ISDi, VT.getSimpleVT()))
+      return Entry->Cost;
+
   unsigned BitWidth = 256;
   unsigned ElementSize = LT.second.getScalarSizeInBits();
   bool IsVector = LT.second.isVector();

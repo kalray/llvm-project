@@ -28,9 +28,9 @@ define void @equals() {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %faddv2f16 = fadd <2 x half> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %faddv2f32 = fadd <2 x float> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %faddv4f16 = fadd <4 x half> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 50 for instruction: %fdivf16 = fdiv half undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 50 for instruction: %fdivf32 = fdiv float undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 50 for instruction: %fdivf64 = fdiv double undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 17 for instruction: %fdivf16 = fdiv half undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 65 for instruction: %fdivf32 = fdiv float undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 80 for instruction: %fdivf64 = fdiv double undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %fdivv16f16 = fdiv <16 x half> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %fdivv16f32 = fdiv <16 x float> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %fdivv16f64 = fdiv <16 x double> undef, undef
