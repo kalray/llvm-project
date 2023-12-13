@@ -12,11 +12,9 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVX.h"
-#include "Targets.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/Builtins.h"
 #include "clang/Basic/MacroBuilder.h"
-#include "clang/Basic/TargetBuiltins.h"
 #include "llvm/Support/Debug.h"
 
 #define DEBUG_TYPE "KVX-target"
