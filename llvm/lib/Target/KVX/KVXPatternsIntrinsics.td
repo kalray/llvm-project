@@ -549,10 +549,10 @@ def: Pat<(int_kvx_xmovetq v256i1:$o, i64:$z, i64:$y, (i32 0)),
 def: Pat<(int_kvx_xmoveto i64:$z, i64:$y, i64:$x, i64:$w),
             (MOVETOHIp (MOVETOLOp (v256i1(IMPLICIT_DEF)), SingleReg:$x, SingleReg:$w), SingleReg:$z, SingleReg:$y)>;
 
-def: Pat<(int_kvx_xmoveoto QuadReg:$r), (COPY_TO_REGCLASS QuadReg:$r, VectorReg)>;
+def: Pat<(int_kvx_xmoveto256 QuadReg:$r), (COPY_TO_REGCLASS QuadReg:$r, VectorReg)>;
 
 // Copy from TCA to GPR registers
-def: Pat<(int_kvx_xmovefo VectorReg:$v), (COPY_TO_REGCLASS $v, QuadReg)>;
+def: Pat<(int_kvx_xmovefo256 VectorReg:$v), (COPY_TO_REGCLASS $v, QuadReg)>;
 
 // Copy TCA Sub-types (insert/extract sub-registers)
 // Operands:
@@ -616,7 +616,7 @@ def : Pat<(int_kvx_sv  i64:$mem, v256i1:$op0),
 }
 
 // atomic register copy/shift operations
-def: Pat<(int_kvx_xswap256 QuadReg:$r, VectorReg:$v),
+def: Pat<(int_kvx_xswapo256 QuadReg:$r, VectorReg:$v),
          (XSWAP256p QuadReg:$r, VectorReg:$v)>;
 
 def: Pat<(int_kvx_xaccesso WideReg:$a2a3, Unsigned6:$a4), (ALIGNOreroi (EXTRACT_SUBREG WideReg:$a2a3, sub_v0), (EXTRACT_SUBREG WideReg:$a2a3, sub_v1), Unsigned6:$a4)>, Requires<[IsV1]>;

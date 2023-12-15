@@ -19418,9 +19418,9 @@ typedef enum {
   SATURATE_UNSIGNED = 2 // ".us"
 } saturate_t;
 
-static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
+static Value *KVX_emit_xswapo256(CodeGenFunction &CGF, const CallExpr *E) {
   if (E->getNumArgs() != 2) {
-    CGF.CGM.Error(E->getBeginLoc(), "xswap256 expects two arguments.");
+    CGF.CGM.Error(E->getBeginLoc(), "xswapo256 expects two arguments.");
     return nullptr;
   }
 
@@ -19437,7 +19437,7 @@ static Value *KVX_emit_xswap256(CodeGenFunction &CGF, const CallExpr *E) {
   Args.push_back(TCAval);
 
   auto *R = CGF.Builder.CreateCall(
-      CGF.CGM.getIntrinsic(Intrinsic::kvx_xswap256), Args);
+      CGF.CGM.getIntrinsic(Intrinsic::kvx_xswapo256), Args);
   CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
 
   return CGF.Builder.CreateExtractValue(R, 0);
@@ -20927,8 +20927,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return KVX_emitShiftBuiltin(*this, E, BuiltinID);
 
     /// TCA - GPR to TCA copy
-  case KVX::BI__builtin_kvx_xswap256:
-    return KVX_emit_xswap256(*this, E);
+  case KVX::BI__builtin_kvx_xswapo256:
+    return KVX_emit_xswapo256(*this, E);
 
   case KVX::BI__builtin_kvx_ffdmdawq: {
     KvxModifiers KvxMods = {KVX_ROUNDING, KVX_SILENT};

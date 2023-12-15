@@ -92,7 +92,7 @@ define void @test_moveto(i64 %a, i64 %b, i64 %c, i64 %d, <256 x i1>* %p0, <256 x
   ret void
 }
 
-declare <256 x i1> @llvm.kvx.xmoveoto(<4 x i64>)
+declare <256 x i1> @llvm.kvx.xmoveto256(<4 x i64>)
 define void @test_moveoto(<4 x i64> %r, <256 x i1>* %p0){
 ; CHECK-LABEL: test_moveoto:
 ; CHECK:       # %bb.0:
@@ -102,14 +102,14 @@ define void @test_moveoto(<4 x i64> %r, <256 x i1>* %p0){
 ; CHECK-NEXT:    xso 0[$r4] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %v0 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> %r)
+  %v0 = tail call <256 x i1> @llvm.kvx.xmoveto256(<4 x i64> %r)
   store <256 x i1> %v0, <256 x i1>* %p0, align 32
   ret void
 }
 
-declare <4 x i64> @llvm.kvx.xmovefo(<256 x i1>)
-define <4 x i64> @test_xmovefo(<256 x i1>* %p0){
-; CHECK-LABEL: test_xmovefo:
+declare <4 x i64> @llvm.kvx.xmovefo256(<256 x i1>)
+define <4 x i64> @test_xmovefo256(<256 x i1>* %p0){
+; CHECK-LABEL: test_xmovefo256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -118,7 +118,7 @@ define <4 x i64> @test_xmovefo(<256 x i1>* %p0){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <256 x i1>, <256 x i1>* %p0
-  %v1 = tail call <4 x i64> @llvm.kvx.xmovefo(<256 x i1> %v0)
+  %v1 = tail call <4 x i64> @llvm.kvx.xmovefo256(<256 x i1> %v0)
   ret <4 x i64> %v1
 }
 
@@ -783,7 +783,7 @@ define void @test_xfnarrow44wh(<256 x i1>* %p0){
 declare <256 x i1> @llvm.kvx.lv.cond(<256 x i1>, i8*, i64, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
 declare <1024 x i1> @llvm.kvx.lvc.cond(<1024 x i1>, i8*, i64, i32, i32, i32)
-declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64>, <256 x i1>) #2
+declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswapo256(<4 x i64>, <256 x i1>) #2
 declare void @llvm.kvx.sv.cond(i8*, <256 x i1>, i64, i32) #3
 
 ; Test generated from clang's intrinsics_tca.c
@@ -963,7 +963,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %12 = tail call <256 x i1> @llvm.kvx.xmoveto(i64 1, i64 2, i64 3, i64 4)
   %13 = getelementptr inbounds <256 x i1>, <256 x i1>* %4, i64 1
   store volatile <256 x i1> %12, <256 x i1>* %13
-  %14 = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
+  %14 = tail call <256 x i1> @llvm.kvx.xmoveto256(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
   %15 = load volatile <256 x i1>, <256 x i1>* %4
   %16 = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> %14, <256 x i1> %15)
   %17 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %16, i64 16)
@@ -1003,7 +1003,7 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, <256 x i1>* 
   %51 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %27, i32 7, i32 0, i32 0)
   %52 = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> %49, i32 0, i32 1)
   %53 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %51, i32 0, i32 0, i32 1)
-  %54 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> %19, <256 x i1> %53)
+  %54 = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapo256(<4 x i64> %19, <256 x i1> %53)
   %55 = extractvalue { <4 x i64>, <256 x i1> } %54, 1
   %56 = extractvalue { <4 x i64>, <256 x i1> } %54, 0
   %57 = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> %55, i32 7, i32 0, i32 1)

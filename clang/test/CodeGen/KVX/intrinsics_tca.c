@@ -12,7 +12,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP4:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveto(i64 1, i64 2, i64 3, i64 4)
 // CHECK-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds <256 x i1>, ptr [[V]], i64 1
 // CHECK-NEXT:    store volatile <256 x i1> [[TMP4]], ptr [[ARRAYIDX4]], align 32, !tbaa [[TBAA2]]
-// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveoto(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
+// CHECK-NEXT:    [[TMP5:%.*]] = tail call <256 x i1> @llvm.kvx.xmoveto256(<4 x i64> <i64 0, i64 1, i64 2, i64 3>)
 // CHECK-NEXT:    [[TMP6:%.*]] = load volatile <256 x i1>, ptr [[V]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP7:%.*]] = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> [[TMP5]], <256 x i1> [[TMP6]])
 // CHECK-NEXT:    [[TMP8:%.*]] = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> [[TMP7]], i64 16)
@@ -52,7 +52,7 @@ typedef long __attribute__((__vector_size__(32))) v4i64_t;
 // CHECK-NEXT:    [[TMP42:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP18]], i32 7, i32 0, i32 0)
 // CHECK-NEXT:    [[TMP43:%.*]] = tail call <256 x i1> @llvm.kvx.xfnarrow44wh(<512 x i1> [[TMP40]], i32 0, i32 1)
 // CHECK-NEXT:    [[TMP44:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP42]], i32 0, i32 0, i32 1)
-// CHECK-NEXT:    [[TMP45:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswap256(<4 x i64> [[TMP10]], <256 x i1> [[TMP44]])
+// CHECK-NEXT:    [[TMP45:%.*]] = tail call { <4 x i64>, <256 x i1> } @llvm.kvx.xswapo256(<4 x i64> [[TMP10]], <256 x i1> [[TMP44]])
 // CHECK-NEXT:    [[TMP46:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP45]], 1
 // CHECK-NEXT:    [[TMP47:%.*]] = extractvalue { <4 x i64>, <256 x i1> } [[TMP45]], 0
 // CHECK-NEXT:    [[TMP48:%.*]] = tail call <256 x i1> @llvm.kvx.xfscalewv(<256 x i1> [[TMP46]], i32 7, i32 0, i32 1)
@@ -73,8 +73,8 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   v[0] = __builtin_kvx_xmovetq(v[0], 0, 1, ".h1");
   v[0] = __builtin_kvx_xmovetq(v[0], 3, 2, ".h0");
   v[1] = __builtin_kvx_xmoveto(1, 2, 3, 4);
-  lv = __builtin_kvx_xmoveoto(vt);
-  vt = __builtin_kvx_xmovefo(lv);
+  lv = __builtin_kvx_xmoveto256(vt);
+  vt = __builtin_kvx_xmovefo256(lv);
   __kvx_x512 buf = __builtin_kvx_xcat512(lv, v[0]);
   lv2 = __builtin_kvx_xaligno512(buf, 16);
   __kvx_x512 buf2 = __builtin_kvx_xcat512(lv, lv2);
@@ -118,7 +118,7 @@ v4i64_t test_tca_builtins(long a, long b, long c, long d, volatile __kvx_x256 *v
   lv = __builtin_kvx_xfscalewv(lv2, "");
   lv2 = __builtin_kvx_xfnarrow44wh(lw, ".rn.s");
   lv = __builtin_kvx_xfscalewv(lv, ".rn..relu");
-  vt = __builtin_kvx_xswap256(&lv, vt);
+  vt = __builtin_kvx_xswapo256(&lv, vt);
   lv = __builtin_kvx_xfscalewv(lv, "...relu");
   lv = __builtin_kvx_lv_cond(lv, &v[3], a, ".s.even");
   lv2 = __builtin_kvx_lv(v, ".s");
