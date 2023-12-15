@@ -52,7 +52,7 @@ define i32 @main() {
 ; CV1-NEXT:    copyd $r3 = $r6
 ; CV1-NEXT:    copyd $r4 = $r7
 ; CV1-NEXT:    call printf
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    ld $r16 = 56[$r12]
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -102,7 +102,7 @@ define i32 @main() {
 ; CV2-NEXT:    copyd $r3 = $r6
 ; CV2-NEXT:    copyd $r4 = $r7
 ; CV2-NEXT:    call printf
-; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    ;; # (end cycle 6)
 ; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    ld $r16 = 56[$r12]
 ; CV2-NEXT:    ;; # (end cycle 0)

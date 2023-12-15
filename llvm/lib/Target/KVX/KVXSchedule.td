@@ -403,8 +403,8 @@ defm BCU_CRRP_CRWL_CRWH: DataSingleVariants<BCU_CRRP_CRWL_CRWH_ITIN_RT, [
 ]>;
 
 defm BCU_TINY_AUXW_CRRP: DataSingleVariants<BCU_TINY_AUXW_CRRP_ITIN_RT, [
-  LatOpsVariant<"RR", WE3NB_RRx2>,
-  LatOpsVariant<"ID", WE3NB_RRx2_ID>
+  LatOpsVariant<"RR", WE3_RRx2>,
+  LatOpsVariant<"ID", WE3_RRx2_ID>
 ]>;
 
 defm BCU_TINY_TINY_MAU_XNOP: DataSingleVariants<BCU_TINY_TINY_MAU_XNOP_ITIN_RT, [
