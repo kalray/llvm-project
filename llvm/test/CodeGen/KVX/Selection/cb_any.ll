@@ -6,25 +6,16 @@ target triple = "kvx-kalray-cos"
 define <4 x i16> @cbIfAnyEqz(<4 x i16> %0, <4 x i16> %1) {
 ; CV2-LABEL: cbIfAnyEqz:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    compnhq.eq $r1 = $r1, 0
-; CV2-NEXT:    addd $r12 = $r12, -32
+; CV2-NEXT:    compnhq.eq $r0 = $r1, 0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    get $r16 = $ra
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sd 24[$r12] = $r16
-; CV2-NEXT:    cb.dnez $r1 ? .LBB0_2
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:  # %bb.1:
-; CV2-NEXT:    call foo
+; CV2-NEXT:    cb.deqz $r0 ? .LBB0_2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_2:
-; CV2-NEXT:    ld $r16 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    set $ra = $r16
-; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:  # %bb.1:
+; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:  .LBB0_2:
+; CV2-NEXT:    goto foo
 ; CV2-NEXT:    ;;
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %1, i1 false)
   %4 = tail call i64 @llvm.kvx.any.v4i16(<4 x i16> %3, i32 1)
@@ -45,29 +36,16 @@ define <8 x i8> @cbIfNotAnyEqz(<8 x i8> %0, <8 x i8> %1) {
 ; CV2-LABEL: cbIfNotAnyEqz:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    compnbo.eq $r0 = $r1, 0
-; CV2-NEXT:    addd $r12 = $r12, -32
-; CV2-NEXT:    get $r16 = $ra
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sd 24[$r12] = $r16
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cb.deqz $r0 ? .LBB1_2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.1:
-; CV2-NEXT:    call foo
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB1_3
+; CV2-NEXT:    goto foo
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB1_2:
 ; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB1_3:
-; CV2-NEXT:    ld $r16 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    set $ra = $r16
-; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %1, i1 false)
   %4 = tail call i64 @llvm.kvx.any.v8i8(<8 x i8> %3, i32 1)
   %5 = icmp ne i64 %4, 0
@@ -85,25 +63,16 @@ define <8 x i8> @cbIfNotAnyEqz(<8 x i8> %0, <8 x i8> %1) {
 define <4 x i16> @cbIfAnyNez(<4 x i16> %0, <4 x i16> %1) {
 ; CV2-LABEL: cbIfAnyNez:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    abshq $r1 = $r1
-; CV2-NEXT:    addd $r12 = $r12, -32
+; CV2-NEXT:    abshq $r0 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    get $r16 = $ra
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sd 24[$r12] = $r16
-; CV2-NEXT:    cb.dnez $r1 ? .LBB2_2
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:  # %bb.1:
-; CV2-NEXT:    call foo
+; CV2-NEXT:    cb.deqz $r0 ? .LBB2_2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB2_2:
-; CV2-NEXT:    ld $r16 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    set $ra = $r16
-; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:  # %bb.1:
+; CV2-NEXT:    make $r0 = 0
 ; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:  .LBB2_2:
+; CV2-NEXT:    goto foo
 ; CV2-NEXT:    ;;
   %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %1, i1 false)
   %4 = tail call i64 @llvm.kvx.any.v4i16(<4 x i16> %3, i32 0)
@@ -124,29 +93,16 @@ define <8 x i8> @cbIfNotAnyNez(<8 x i8> %0, <8 x i8> %1) {
 ; CV2-LABEL: cbIfNotAnyNez:
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    absbo $r0 = $r1
-; CV2-NEXT:    addd $r12 = $r12, -32
-; CV2-NEXT:    get $r16 = $ra
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sd 24[$r12] = $r16
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    cb.deqz $r0 ? .LBB3_2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.1:
-; CV2-NEXT:    call foo
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB3_3
+; CV2-NEXT:    goto foo
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB3_2:
 ; CV2-NEXT:    make $r0 = 0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB3_3:
-; CV2-NEXT:    ld $r16 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    set $ra = $r16
-; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;;
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %1, i1 false)
   %4 = tail call i64 @llvm.kvx.any.v8i8(<8 x i8> %3, i32 0)
   %5 = icmp ne i64 %4, 0

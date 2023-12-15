@@ -9,18 +9,7 @@ target triple = "kvx-kalray-cos"
 define float @log2f32(float %x) {
 ; CHECK-LABEL: log2f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call log2f
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto log2f
 ; CHECK-NEXT:    ;;
   %tmp = call float @llvm.log2.f32(float %x)
   ret float %tmp
@@ -29,18 +18,7 @@ define float @log2f32(float %x) {
 define double @log2f64(double %x) {
 ; CHECK-LABEL: log2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call log2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto log2
 ; CHECK-NEXT:    ;;
   %tmp = call double @llvm.log2.f64(double %x)
   ret double %tmp

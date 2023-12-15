@@ -9,18 +9,7 @@ target triple = "kvx-kalray-cos"
 define float @fdivf32_normal(float %a, float %b) {
 ; CHECK-LABEL: fdivf32_normal:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto __divsf3
 ; CHECK-NEXT:    ;;
 entry:
   %div = fdiv float %a, %b

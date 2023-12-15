@@ -9,18 +9,7 @@ target triple = "kvx-kalray-cos"
 define float @floorf32(float %x) {
 ; CHECK-LABEL: floorf32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call floorf
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto floorf
 ; CHECK-NEXT:    ;;
   %tmp = call float @llvm.floor.f32(float %x)
   ret float %tmp
@@ -29,18 +18,7 @@ define float @floorf32(float %x) {
 define double @floorf64(double %x) {
 ; CHECK-LABEL: floorf64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call floor
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto floor
 ; CHECK-NEXT:    ;;
   %tmp = call double @llvm.floor.f64(double %x)
   ret double %tmp

@@ -9,18 +9,7 @@ target triple = "kvx-kalray-cos"
 define float @remf32(float %x, float %y) {
 ; CHECK-LABEL: remf32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call fmodf
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto fmodf
 ; CHECK-NEXT:    ;;
   %tmp = frem float %x, %y
   ret float %tmp
@@ -29,18 +18,7 @@ define float @remf32(float %x, float %y) {
 define double @remf64(double %x, double %y) {
 ; CHECK-LABEL: remf64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call fmod
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto fmod
 ; CHECK-NEXT:    ;;
   %tmp = frem double %x, %y
   ret double %tmp

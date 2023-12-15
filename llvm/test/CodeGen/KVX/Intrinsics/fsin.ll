@@ -9,18 +9,7 @@ target triple = "kvx-kalray-cos"
 define float @sinf32(float %x) {
 ; CHECK-LABEL: sinf32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call sinf
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto sinf
 ; CHECK-NEXT:    ;;
   %tmp = call float @llvm.sin.f32(float %x)
   ret float %tmp
@@ -29,18 +18,7 @@ define float @sinf32(float %x) {
 define double @sinf64(double %x) {
 ; CHECK-LABEL: sinf64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call sin
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    goto sin
 ; CHECK-NEXT:    ;;
   %tmp = call double @llvm.sin.f64(double %x)
   ret double %tmp

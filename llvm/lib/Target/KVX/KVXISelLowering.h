@@ -286,7 +286,8 @@ private:
     return MemVT.getScalarType() != MVT::i1;
   }
   SDValue expandVecLibCall(const LibCalls &Funcs, SDValue &Node, bool IsSigned,
-                           SelectionDAG &DAG) const;
+                           SelectionDAG &DAG,
+                           const bool CanTailCall = true) const;
   SDValue expandDivRemLibCall(const LibCalls &Funcs, SDValue &Node,
                               bool IsSigned, SelectionDAG &DAG,
                               bool PackReminder = false) const;
@@ -294,6 +295,11 @@ private:
 
   bool shouldSplitVecBinOp(const unsigned Opc, const EVT VT) const override;
   bool shouldProduceDivRem(const unsigned Opc, const EVT VT) const override;
+  bool mayBeEmittedAsTailCall(const CallInst *CI) const override {
+    return CI->isTailCall();
+  }
+
+  bool isUsedByReturnOnly(SDNode *, SDValue & /*Chain*/) const override;
 };
 
 } // namespace llvm

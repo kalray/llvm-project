@@ -266,7 +266,8 @@ defm : BITCAST<v4f64, v4i64, QuadReg>;
 def SDTKVXTail : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 def Tail : SDNode <"KVXISD::TAIL", SDTKVXTail, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
-let isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
+let Defs = [PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS],
+isCall = 1, isBarrier = 1, isBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def TAIL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "goto $a1",
@@ -275,7 +276,8 @@ def TAIL : KVX_INSTRUCTION
 
 def : Pat<(Tail texternalsym:$func), (TAIL Pcrel27:$func)>;
 
-let isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
+let Defs = [PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS],
+isCall = 1, isBarrier = 1, isBranch = 1, isIndirectBranch = 1, isTerminator = 1, isReturn = 1, Uses = [R12] in
 def ITAIL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "igoto $a1",

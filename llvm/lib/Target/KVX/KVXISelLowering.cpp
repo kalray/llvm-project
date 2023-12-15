@@ -1402,7 +1402,6 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   bool isVarArg = CLI.IsVarArg;
   EVT PtrVT = getPointerTy(DAG.getDataLayout());
   MachineFunction &MF = DAG.getMachineFunction();
-
   // Analyze operands of the call, assigning locations to each operand.
   SmallVector<CCValAssign, 16> ArgLocs;
   CCState CCInfo(CallConv, isVarArg, DAG.getMachineFunction(), ArgLocs,
@@ -3835,7 +3834,7 @@ SDValue KVXTargetLowering::expandDivRemLibCall(const LibCalls &Names,
                                                SDValue &N, bool IsSigned,
                                                SelectionDAG &Dag,
                                                bool PackReminder) const {
-  SDValue DivRem = expandVecLibCall(Names, N, IsSigned, Dag);
+  SDValue DivRem = expandVecLibCall(Names, N, IsSigned, Dag, false);
 
   if (!DivRem)
     return DivRem;
@@ -4948,6 +4947,50 @@ bool KVXTargetLowering::hasPairedLoad(EVT VT, Align &Alg) const {
   return Ret;
 }
 
+bool KVXTargetLowering::isUsedByReturnOnly(SDNode *N, SDValue &Chain) const {
+  if (N->getNumValues() != 1)
+    return false;
+  if (!N->hasNUsesOfValue(1, 0))
+    return false;
+
+  SDValue TCChain = Chain;
+  SDNode *Copy = *N->use_begin();
+  if (Copy->getOpcode() == ISD::CopyToReg) {
+    // If the copy has a glue operand, we conservatively assume it isn't safe to
+    // perform a tail call.
+    if (Copy->getOperand(Copy->getNumOperands() - 1).getValueType() ==
+        MVT::Glue)
+      return false;
+    TCChain = Copy->getOperand(0);
+  } else if (Copy->getOpcode() == ISD::BITCAST) {
+    // f32 returned in a single GPR.
+    if (!Copy->hasOneUse())
+      return false;
+    Copy = *Copy->use_begin();
+    if (Copy->getOpcode() != ISD::CopyToReg || !Copy->hasNUsesOfValue(1, 0))
+      return false;
+    // If the copy has a glue operand, we conservatively assume it isn't safe to
+    // perform a tail call.
+    if (Copy->getOperand(Copy->getNumOperands() - 1).getValueType() ==
+        MVT::Glue)
+      return false;
+    TCChain = Copy->getOperand(0);
+  } else
+    return false;
+
+  // If our copy of the resulting function is copied to a register but not used,
+  // most probably it is in the live-out of the BB. Don't do TailCall.
+  if (Copy->use_empty())
+    return false;
+
+  for (const SDNode *U : Copy->uses())
+    if (U->getOpcode() != KVXISD::RET)
+      return false;
+
+  Chain = TCChain;
+  return true;
+}
+
 // -----------------------------------------------------------------------------
 //        Namespace KVX_LOW
 // -----------------------------------------------------------------------------
@@ -5230,7 +5273,8 @@ bool KVX_LOW::isExtended(llvm::SDNode *N, llvm::SelectionDAG *CurDag,
 
 SDValue KVXTargetLowering::expandVecLibCall(const LibCalls &Names,
                                             SDValue &Node, bool IsSigned,
-                                            SelectionDAG &DAG) const {
+                                            SelectionDAG &DAG,
+                                            const bool CanTailCall) const {
   auto Evt = Node.getValueType();
   if (!Evt.isSimple() || !Evt.isVector())
     return SDValue();
@@ -5269,7 +5313,7 @@ SDValue KVXTargetLowering::expandVecLibCall(const LibCalls &Names,
   SDValue TCChain = InChain;
   const Function &F = DAG.getMachineFunction().getFunction();
   bool IsTailCall =
-      isInTailCallPosition(DAG, Node.getNode(), TCChain) &&
+      CanTailCall && isInTailCallPosition(DAG, Node.getNode(), TCChain) &&
       (RetTy == F.getReturnType() || F.getReturnType()->isVoidTy());
   if (IsTailCall)
     InChain = TCChain;
@@ -5286,7 +5330,7 @@ SDValue KVXTargetLowering::expandVecLibCall(const LibCalls &Names,
 
   std::pair<SDValue, SDValue> CallInfo = LowerCallTo(CLI);
 
-  if (!CallInfo.second.getNode()) {
+  if (IsTailCall) {
     LLVM_DEBUG(dbgs() << "Created tailcall: "; DAG.getRoot().dump(&DAG));
     // It's a tailcall, return the chain (which is the DAG root).
     return DAG.getRoot();
