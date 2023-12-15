@@ -38,7 +38,7 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    igoto $r4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # %return
+; CHECK-NEXT:  .LBB0_2: # %common.ret
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

@@ -151,7 +151,8 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
 ; CHECK-NEXT:    sd $r33[$r1] = $r32
 ; CHECK-NEXT:    copyd $r33 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:  .LBB0_15: # in Loop: Header=BB0_3 Depth=1
+; CHECK-NEXT:  .LBB0_15: # %.preheader
+; CHECK-NEXT:    # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    sbfd $r32 = $r33, $r4
 ; CHECK-NEXT:    addw $r33 = $r6, $r33
 ; CHECK-NEXT:    ;; # (end cycle 0)

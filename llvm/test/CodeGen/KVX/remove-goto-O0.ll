@@ -82,15 +82,12 @@ define i32 @f(){
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    addw $r0 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sw 24[$r12] = $r0
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    addw $r0 = $r0, 1
+; CHECK-NEXT:    addw $r1 = $r1, $r0
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    sw 24[$r12] = $r1
 ; CHECK-NEXT:    goto .LBB1_1
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .LBB1_3: # %for.end
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    addd $r12 = $r12, 32

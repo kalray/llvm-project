@@ -9,11 +9,8 @@ target triple = "kvx-kalray-cos"
 define void @f() {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;;
   %1 = alloca i8, align 1
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
@@ -25,11 +22,8 @@ define void @f() {
 define void @g() {
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;;
   %1 = alloca i8, align 1
   %2 = alloca i8, align 1
   %3 = alloca i32, align 4

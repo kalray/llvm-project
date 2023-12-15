@@ -7,25 +7,23 @@ target triple = "kvx-kalray-cos"
 define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x half]* %3, <256 x i1>* %ptr) {
 ; CHECK-LABEL: c:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    compd.ltu $r0 = $r0, 508
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    compd.ltu $r1 = $r0, 508
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.2: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_1
-; CHECK-NEXT:    ;; # (end cycle 31)
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:    cb.odd $r1 ? .LBB0_1
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:  # %bb.3: # in Loop: Header=BB0_1 Depth=1
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.4:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   br label %5

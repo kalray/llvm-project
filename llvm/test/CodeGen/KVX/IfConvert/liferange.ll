@@ -19,39 +19,26 @@ define void @__kmpc_doacross_post(i32 %0) {
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_15
+; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_10
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:  # %bb.1:
-; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_14
+; CHECK-NEXT:    # implicit-def: $r1
+; CHECK-NEXT:    compd.ltu $r0 = $r0, 2
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    cb.odd $r0 ? .LBB0_7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2:
 ; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compd.ltu $r0 = $r0, 2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.3:
-; CHECK-NEXT:    # implicit-def: $r1
 ; CHECK-NEXT:    make $r19 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r19 ? .LBB0_7
+; CHECK-NEXT:    cb.wnez $r19 ? .LBB0_5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.3: # %.critedge1.preheader
+; CHECK-NEXT:    # implicit-def: $r1
+; CHECK-NEXT:    cb.wnez $r19 ? .LBB0_5
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.4:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.5:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_7
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  # %bb.6:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    negd $r0 = $r0
@@ -61,36 +48,18 @@ define void @__kmpc_doacross_post(i32 %0) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    copyd $r1 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:  .LBB0_5:
+; CHECK-NEXT:    cb.wnez $r19 ? .LBB0_7
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  # %bb.6:
+; CHECK-NEXT:    # implicit-def: $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_7:
-; CHECK-NEXT:    cb.wnez $r19 ? .LBB0_12
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_9
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.9:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.10:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_12
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.11:
-; CHECK-NEXT:    # implicit-def: $r1
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_12:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.13:
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    make $r0 = .str.88
 ; CHECK-NEXT:    copyd $r1 = $r18
@@ -103,7 +72,7 @@ define void @__kmpc_doacross_post(i32 %0) {
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    goto __kmp_debug_printf
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_14:
+; CHECK-NEXT:  .LBB0_9:
 ; CHECK-NEXT:    lq $r18r19 = 8[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
@@ -113,7 +82,7 @@ define void @__kmpc_doacross_post(i32 %0) {
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_15:
+; CHECK-NEXT:  .LBB0_10:
 ; CHECK-NEXT:    make $r0 = 0x40084
 ; CHECK-NEXT:    call __kmp_msg_format
 ; CHECK-NEXT:    ;; # (end cycle 0)

@@ -17,27 +17,21 @@ define i32 @foo(i32 %a){
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lwz $r1 = 0[$r2]
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    lwz $r3 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    addx2w $r1 = $r0, $r1
+; CHECK-NEXT:    addx2w $r0 = $r1, $r3
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sw 0[$r2] = $r1
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_2
+; CHECK-NEXT:    sw 0[$r2] = $r0
+; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_2
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:  # %bb.1: # %if.else
-; CHECK-NEXT:    addw $r0 = $r0, -1
+; CHECK-NEXT:    addw $r0 = $r1, -1
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addw $r0 = $r0, -1
-; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_2: # %return
-; CHECK-NEXT:    copyd $r0 = $r1
+; CHECK-NEXT:  .LBB0_2: # %common.ret
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16

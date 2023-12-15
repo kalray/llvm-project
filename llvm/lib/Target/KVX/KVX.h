@@ -18,9 +18,10 @@
 #include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/CodeGen/MachineInstr.h"
 #include "llvm/PassRegistry.h"
-#include "llvm/Target/TargetMachine.h"
+#include "llvm/Support/CommandLine.h"
 
 class KVXAsmPrinter;
+extern llvm::cl::OptionCategory KVXclOpts;
 namespace llvm {
 class FunctionPass;
 class KVXTargetMachine;

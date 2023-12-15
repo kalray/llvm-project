@@ -2486,9 +2486,10 @@ defm COMPNWP : VecCOMP<"compnwp">;
 defm COMPNHQ : VecCOMP<"compnhq">;
 defm COMPNBO : VecCOMP<"compnbo">, Requires<[IsV2]>;
 
+let isSelect = 1 in
 defm CMOVED : MC_1C<"cmoved">;
 
-let Constraints = "$a3 = $a3o" in
+let isSelect = 1, Constraints = "$a3 = $a3o" in
 def CMOVEWP : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovewp$a1 $a2 ? $a3 = $a4",
@@ -2596,14 +2597,14 @@ def SXMBHQ : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
-let Constraints = "$a3 = $a3o" in
+let isSelect = 1, Constraints = "$a3 = $a3o" in
 def CMOVEHQ : KVX_INSTRUCTION
   <(outs SingleReg:$a3o), (ins SingleReg:$a2, SingleReg:$a3, SingleReg:$a4, SimplecondMod:$a1),
    "cmovehq$a1 $a2 ? $a3 = $a4",
    [/* no straightforward pattern */],
    ALU_SWITCH_LITE_TINY>;
 
-let Constraints = "$f = $r" in
+let isSelect = 1, Constraints = "$f = $r" in
 def CMOVEBO : KVX_INSTRUCTION
   <(outs SingleReg:$r), (ins SingleReg:$c, SingleReg:$f, SingleReg:$t, SimplecondMod:$Mod),
    "cmovebo$Mod $c ? $f = $t",
@@ -3760,7 +3761,7 @@ def FNARROWWHV : KVX_INSTRUCTION
    TCA_INT>, Requires<[IsV1]>;
 } // Uses = [PCR]
 
-let isPredicable = 1 in
+let isPredicable = 1, isMoveReg = 1 in
 def COPYD : KVX_INSTRUCTION
   <(outs SingleReg:$a1), (ins SingleReg:$a2),
    "copyd $a1 = $a2",

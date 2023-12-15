@@ -9,23 +9,6 @@ target triple = "kvx-kalray-cos"
 define void @_pocl_kernel_LUT_workgroup() {
 ; CHECK-LABEL: _pocl_kernel_LUT_workgroup:
 ; CHECK:       # %bb.0: # %pregion_for_entry.pregion_for_init104.i.i
-; CHECK-NEXT:    make $r0 = 0x100000000
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_1: # %pregion_for_entry.for.cond.cleanup.postbarrier.i.i
-; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    lhz $r1 = 0[$r0]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbmm8 $r1 = $r1, 0x200000001
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addx2wp $r1 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    srld $r1 = $r1, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    lbz $r1 = 0[$r1]
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    sb 0[$r0] = $r1
-; CHECK-NEXT:    goto .LBB0_1
-; CHECK-NEXT:    ;; # (end cycle 8)
 pregion_for_entry.pregion_for_init104.i.i:
   br label %pregion_for_entry.entry.i.i
 

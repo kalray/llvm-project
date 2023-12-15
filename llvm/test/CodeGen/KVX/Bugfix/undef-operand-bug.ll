@@ -7,48 +7,19 @@ define void @zext_dagcombine_fail() {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
+; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
-; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:  # %bb.1: # %.critedge4.preheader
+; CHECK-NEXT:    make $r0 = 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_3
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.3: # %.preheader3
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_11
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.4:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.5:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.7:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.8:
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_10
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.9:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_10:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_11:
+; CHECK-NEXT:  .LBB0_2: # %.critedge2
 ; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:  .LBB0_3: # %infloop
+; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
+; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
   br i1 undef, label %2, label %1
 

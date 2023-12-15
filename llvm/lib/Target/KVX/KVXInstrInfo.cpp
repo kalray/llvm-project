@@ -16,10 +16,8 @@
 #include "KVXHazardRecognizer.h"
 #include "KVXTargetMachine.h"
 #include "MCTargetDesc/KVXMCTargetDesc.h"
-#include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
@@ -29,6 +27,11 @@
 
 using namespace llvm;
 #define DEBUG_TYPE "KVX-isel"
+
+static cl::opt<bool> KVXCondTailCall(
+    "kvx-conditional-tailcalls",
+    cl::desc("Enable generation of conditional tail calls for KVX."),
+    cl::init(false), cl::cat(KVXclOpts));
 
 KVXInstrInfo::KVXInstrInfo(KVXSubtarget &ST)
     : KVXGenInstrInfo(KVX::ADJCALLSTACKDOWN, KVX::ADJCALLSTACKUP),
@@ -463,13 +466,34 @@ KVXInstrInfo::CreateTargetMIHazardRecognizer(const InstrItineraryData *II,
   return new KVXHazardRecognizer(II, (const ScheduleDAG *)DAG);
 }
 
+size_t KVXInstrInfo::getBBSizeInBytes(const MachineBasicBlock &MBB) const {
+  size_t Sz = 0;
+  for (const auto &I : MBB)
+    Sz += getInstSizeInBytes(I);
+
+  return Sz;
+}
+
+/// Return size in bytes of MachineFunction.
+size_t KVXInstrInfo::getFuncSizeInBytes(const MachineFunction &MF) const {
+  size_t Sz = 0;
+  for (const MachineBasicBlock &MBB : MF)
+    for (const auto &I : MBB)
+      Sz += getInstSizeInBytes(I);
+
+  return Sz;
+}
+
 static bool parseCondBranch(MachineInstr &LastInst, MachineBasicBlock *&Target,
                             SmallVectorImpl<MachineOperand> &Cond) {
   // Block ends with fall-through condbranch.
   assert(LastInst.getDesc().isConditionalBranch() &&
          "Unknown conditional branch");
   LLVM_DEBUG(dbgs() << "Obtaining conditional branch BB and condition.\n");
-  Target = LastInst.getOperand(1).getMBB();
+  if (LastInst.getOperand(1).isMBB())
+    Target = LastInst.getOperand(1).getMBB();
+  else
+    return true;
   Cond.push_back(MachineOperand::CreateImm(LastInst.getOpcode()));
   Cond.push_back(LastInst.getOperand(0));
   Cond.push_back(LastInst.getOperand(2));
@@ -576,11 +600,20 @@ bool KVXInstrInfo::analyzeBranch(MachineBasicBlock &MBB,
     return true;
   }
 
+  // Handle tail calls
+  switch (I->getOpcode()) {
+  default:
+    break;
+  case KVX::CTAIL:
+  case KVX::TAIL:
+  case KVX::ITAIL:
+    LLVM_DEBUG(dbgs() << "Can't analyse tail calls." << *I << ".\n");
+    return true;
+  }
+
   // Handle a single unconditional branch.
   if (NumTerminators == 1 && I->getDesc().isUnconditionalBranch()) {
     LLVM_DEBUG(dbgs() << "Single unconditional branch: " << *I << ".\n");
-    if (I->getOpcode() == KVX::TAIL)
-      return true;
 
     TBB = I->getOperand(0).getMBB();
     return false;
@@ -1569,7 +1602,7 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
   unsigned Oprrc, Opri27c, Opri54c;
   bool IsRR = false;
   bool IsInplace = false;
-
+  int IsBranchToCB = 0;
   switch (MI.getOpcode()) {
   default:
     return false;
@@ -1782,9 +1815,37 @@ bool KVXInstrInfo::PredicateInstruction(MachineInstr &MI,
     Opri27c = KVX::SWri27c;
     Opri54c = KVX::SWri54c;
     break;
+  case KVX::TAIL:
+    if (!KVXCondTailCall.getValue())
+      return false;
+    ++IsBranchToCB;
+    LLVM_FALLTHROUGH;
+  case KVX::GOTO:
+    if (Pred.empty())
+      return true;
+    ++IsBranchToCB;
+    break;
   }
   DEBUG_WITH_TYPE("if-converter", dbgs() << "Checking if we can predicate: ";
                   MI.dump());
+  if (IsBranchToCB) {
+    DEBUG_WITH_TYPE("if-converter",
+                    dbgs() << "if-converting goto/tailcall to cb.\n");
+    if (Pred[0].getImm() != KVX::CB)
+      report_fatal_error("Predicate does not come from a CB.\n");
+
+    auto To = MI.getOperand(0);
+    while (MI.getNumOperands())
+      MI.removeOperand(0);
+
+    MI.setDesc(get(IsBranchToCB == 1 ? KVX::CB : KVX::CTAIL));
+    MI.addOperand(Pred[1]);
+    MI.addOperand(To);
+    MI.addOperand(Pred[2]);
+    DEBUG_WITH_TYPE("if-converter", dbgs() << "if-converted goto/tailcall to:";
+                    MI.dump(););
+    return true;
+  }
   unsigned NewOpcode = 0;
   bool MustRemoveOffset = false;
   // TODO: Allow to predicate register copy and MAKE operations
@@ -2006,10 +2067,13 @@ bool KVXInstrInfo::isBranchOffsetInRange(unsigned BranchOpc,
                                          int64_t BrOffset) const {
   switch (BranchOpc) {
   case KVX::GOTO:
+  case KVX::TAIL:
     return isInt<27>(BrOffset);
   case KVX::IGOTO:
+  case KVX::ITAIL:
     return true;
   case KVX::CB:
+  case KVX::CTAIL:
     return isInt<17>(BrOffset);
   default: {
     errs() << "Opcode: " << BranchOpc << '\n';
@@ -2049,4 +2113,28 @@ bool KVXInstrInfo::isSafeToMoveRegClassDefs(
          (RC != &KVX::AloneReg_and_GetNotCV1RegRegClass) &&
          (RC != &KVX::GetSetFxNotCV2RegRegClass) &&
          (RC != &KVX::OnlyraRegRegClass);
-} // end namespace KVX}
+}
+
+bool KVXInstrInfo::isUnconditionalTailCall(const MachineInstr &MI) const {
+  switch (MI.getOpcode()) {
+  case KVX::TAIL:
+  case KVX::ITAIL:
+    return KVXCondTailCall.getValue();
+  default:
+    return false;
+  }
+}
+
+bool KVXInstrInfo::canMakeTailCallConditional(
+    SmallVectorImpl<MachineOperand> &Cond, const MachineInstr &TailCall) const {
+  if ((!KVXCondTailCall) || (TailCall.getOpcode() != KVX::TAIL))
+    return false;
+
+  auto *Symb = TailCall.getOperand(0).getMCSymbol();
+  if (Symb->isExternal() || Symb->isUndefined() || Symb->isVariable() ||
+      Symb->isUnset() || Symb->isTemporary())
+    return false;
+  // CB has a 17 bit offset. If the function is over 2^15 bytes, it's rather
+  // unsafe using CB for calling another function.
+  return isUInt<15>(getFuncSizeInBytes(*TailCall.getParent()->getParent()));
+}

@@ -594,25 +594,17 @@ define i1 @test_fcmp_ord(half %a, half %b) #0 {
 
 define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
 ; CHECK-LABEL: test_br_cc:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompnhq.olt $r0 = $r0, $r1
+; CHECK:       # %bb.0: # %common.ret
+; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    andw $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.wnez $r0 ? .LBB38_2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %then
 ; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sw 0[$r2] = $r0
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:  .LBB38_2: # %else
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sw 0[$r3] = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;; # (end cycle 3)
   %c = fcmp uge half %a, %b
   br i1 %c, label %then, label %else
 then:

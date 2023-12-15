@@ -709,14 +709,10 @@ define <4 x i32> @revconcat(<2 x i32> %b, <2 x i32> %a){
 define void @bug() {
 ; CHECK-LABEL: bug:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    # implicit-def: $p2
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB40_1: # %loop
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    insf $r3 = $r0, 31, 0
 ; CHECK-NEXT:    goto .LBB40_1
-; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    ;;
 entry:
   br label %loop
 
@@ -905,13 +901,6 @@ define <4 x i32> @test_div_32(<4 x i32> %a, <4 x i32> %b) #0 {
 define void @subvec0(ptr %0) {
 ; CHECK-LABEL: subvec0:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB53_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sq 0[$r0] = $r0r1
-; CHECK-NEXT:    goto .LBB53_1
-; CHECK-NEXT:    ;; # (end cycle 0)
   br label %2
 
 2:
@@ -926,14 +915,6 @@ define void @subvec0(ptr %0) {
 define void @subvec2(ptr %0) {
 ; CHECK-LABEL: subvec2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:  .LBB54_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sq 0[$r0] = $r0r1
-; CHECK-NEXT:    goto .LBB54_1
-; CHECK-NEXT:    ;; # (end cycle 0)
   br label %2
 
 2:

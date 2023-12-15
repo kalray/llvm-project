@@ -11,11 +11,8 @@ target triple = "kvx-kalray-cos"
 define void @f() {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;;
   %1 = alloca %struct.X, align 8
   ret void
 }

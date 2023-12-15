@@ -3005,13 +3005,6 @@ define <4 x float> @fms(<4 x float>, <4 x float>, <4 x float>) {
 define void @subvec0fp(ptr %0) {
 ; CHECK-LABEL: subvec0fp:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    make $r1 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB142_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sq 0[$r0] = $r0r1
-; CHECK-NEXT:    goto .LBB142_1
-; CHECK-NEXT:    ;; # (end cycle 0)
   br label %2
 
 2:
@@ -3026,14 +3019,6 @@ define void @subvec0fp(ptr %0) {
 define void @subvec2fp(ptr %0) {
 ; CHECK-LABEL: subvec2fp:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    make $r0 = 0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r1 = $r0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:  .LBB143_1: # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sq 0[$r0] = $r0r1
-; CHECK-NEXT:    goto .LBB143_1
-; CHECK-NEXT:    ;; # (end cycle 0)
   br label %2
 
 2:

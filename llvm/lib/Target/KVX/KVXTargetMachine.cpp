@@ -29,6 +29,7 @@
 
 using namespace llvm;
 
+cl::OptionCategory KVXclOpts("KVX Target Machine Options");
 static cl::opt<bool>
     DisableLOOPDO("disable-kvx-hwloops", cl::Hidden, cl::init(false),
                   cl::desc("Disable Hardware Loops for KVX target"));
@@ -222,6 +223,14 @@ KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
 
 void KVXPassConfig::addIRPasses() {
   addPass(createAtomicExpandPass());
+  addPass(createDeadCodeEliminationPass());
+  addPass(createCFGSimplificationPass(SimplifyCFGOptions()
+                                          .forwardSwitchCondToPhi(true)
+                                          .convertSwitchRangeToICmp(true)
+                                          .convertSwitchToLookupTable(true)
+                                          .needCanonicalLoops(false)
+                                          .hoistCommonInsts(true)
+                                          .sinkCommonInsts(true)));
   TargetPassConfig::addIRPasses();
 }
 

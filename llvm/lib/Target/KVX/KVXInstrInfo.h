@@ -180,6 +180,11 @@ public:
   analyzeLoopForPipelining(MachineBasicBlock *LoopBB) const override;
 
   int getPipelinerMaxMII() const override { return 100; }
+  size_t getBBSizeInBytes(const MachineBasicBlock &BB) const;
+  size_t getFuncSizeInBytes(const MachineFunction &MF) const;
+  bool isUnconditionalTailCall(const MachineInstr &MI) const override;
+  bool canMakeTailCallConditional(SmallVectorImpl<MachineOperand> &Cond,
+                                  const MachineInstr &TailCall) const override;
 };
 
 } // namespace llvm
