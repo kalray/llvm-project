@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXTargetObjectFile.h"
-#include "KVXTargetMachine.h"
+#include "llvm/Target/TargetMachine.h"
 
 using namespace llvm;
 

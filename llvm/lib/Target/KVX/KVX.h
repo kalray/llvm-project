@@ -15,7 +15,6 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVX_H
 #define LLVM_LIB_TARGET_KVX_KVX_H
 
-#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/CodeGen/MachineInstr.h"
 #include "llvm/PassRegistry.h"
 #include "llvm/Support/CommandLine.h"

@@ -33,12 +33,11 @@
 
 #include "KVX.h"
 #include "KVXInstrInfo.h"
-
+#include "KVXRegisterInfo.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
-
-#include <unordered_map>
 
 using namespace llvm;
 

@@ -14,10 +14,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXINSTRINFO_H
 #define LLVM_LIB_TARGET_KVX_KVXINSTRINFO_H
 
-#include "KVXRegisterInfo.h"
-#include "llvm/CodeGen/ScheduleHazardRecognizer.h"
 #include "llvm/CodeGen/TargetInstrInfo.h"
-#include "llvm/MC/MCInstrItineraries.h"
 
 #define GET_INSTRINFO_HEADER
 #include "KVXGenInstrInfo.inc"

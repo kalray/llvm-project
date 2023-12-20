@@ -16,8 +16,7 @@
 #ifndef KVX_KVXCodeGenPrepare_H
 #define KVX_KVXCodeGenPrepare_H
 
-#include "KVXTargetMachine.h"
-#include "llvm/IR/IRBuilder.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/Pass.h"
 
 using namespace llvm;

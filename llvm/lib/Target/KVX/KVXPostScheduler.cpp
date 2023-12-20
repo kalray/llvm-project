@@ -21,8 +21,10 @@
 #include "llvm/CodeGen/TargetInstrInfo.h"
 #include "llvm/CodeGen/TargetRegisterInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
-#include "llvm/IR/ModuleSlotTracker.h"
 #include "llvm/MC/MCRegisterInfo.h"
+#ifndef NDEBUG
+#include "llvm/IR/ModuleSlotTracker.h"
+#endif
 #include <set>
 
 #define DEBUG_TYPE "machine-scheduler"

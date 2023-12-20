@@ -29,6 +29,8 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXHardwareLoops.h"
+#include "KVXSubtarget.h"
+#include "llvm/CodeGen/MachineDominators.h"
 #include "llvm/MC/MCContext.h"
 #include <sstream>
 

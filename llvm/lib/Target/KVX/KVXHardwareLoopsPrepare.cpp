@@ -12,14 +12,9 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXHardwareLoopsPrepare.h"
-
 #include "KVX.h"
-#include "KVXInstrInfo.h"
-#include "KVXSubtarget.h"
-
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/IntrinsicsKVX.h"
-#include "llvm/Pass.h"
-#include "llvm/PassRegistry.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 
 using namespace llvm;

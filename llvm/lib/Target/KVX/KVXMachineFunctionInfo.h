@@ -14,10 +14,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXMACHINEFUNCTIONINFO_H
 #define LLVM_LIB_TARGET_KVX_KVXMACHINEFUNCTIONINFO_H
 
-#include "KVX.h"
-#include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/CodeGen/SelectionDAGNodes.h"
 
 namespace llvm {
 

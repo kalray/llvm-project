@@ -91,16 +91,12 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXFrameLowering.h"
+#include "KVXInstrInfo.h"
 #include "KVXMachineFunctionInfo.h"
 #include "KVXSubtarget.h"
-#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/CodeGen/MachineInstrBuilder.h"
-#include "llvm/CodeGen/MachineModuleInfo.h"
-#include "llvm/CodeGen/MachineRegisterInfo.h"
-#include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
+#include "llvm/Target/TargetMachine.h"
 
 using namespace llvm;
 

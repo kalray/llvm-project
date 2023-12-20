@@ -13,12 +13,8 @@
 
 #include "KVX.h"
 #include "KVXTargetMachine.h"
-#include "MCTargetDesc/KVXMCTargetDesc.h"
-#include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/SelectionDAGISel.h"
-#include "llvm/Support/Debug.h"
-#include "llvm/Support/MathExtras.h"
-#include "llvm/Support/raw_ostream.h"
+
 using namespace llvm;
 
 #define DEBUG_TYPE "kvx-isel"
@@ -44,8 +40,8 @@ public:
 
   void Select(SDNode *Node) override;
 
-  bool SelectAddrFI(SDValue Addr, SDValue &Base);
-  bool SelectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
+  bool selectAddrFI(SDValue Addr, SDValue &Base);
+  bool selectAddrRR(SDValue Addr, SDValue &Index, SDValue &Base);
 
   MachineSDNode *buildMake(SDLoc &DL, SDNode *Imm, EVT VT) const;
   bool SelectInlineAsmMemoryOperand(const SDValue &Op, unsigned ConstraintID,
@@ -56,8 +52,8 @@ public:
 
 } // namespace
 
-bool KVXDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
-  if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
+bool KVXDAGToDAGISel::selectAddrFI(SDValue Addr, SDValue &Base) {
+  if (auto *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
     Base = CurDAG->getTargetFrameIndex(
         FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
     return true;
@@ -65,15 +61,15 @@ bool KVXDAGToDAGISel::SelectAddrFI(SDValue Addr, SDValue &Base) {
   return false;
 }
 
-bool KVXDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
+bool KVXDAGToDAGISel::selectAddrRR(SDValue Addr, SDValue &Index,
                                    SDValue &Base) {
-  if (auto FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
+  if (auto *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
     Base = CurDAG->getTargetFrameIndex(
         FIN->getIndex(), TLI->getPointerTy(CurDAG->getDataLayout()));
     Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
     return true;
   }
-  if (auto BaseReg = dyn_cast<RegisterSDNode>(Addr)) {
+  if (auto *BaseReg = dyn_cast<RegisterSDNode>(Addr)) {
     Base = CurDAG->getRegister(BaseReg->getReg(), MVT::i64);
     Index = CurDAG->getTargetConstant(0, SDLoc(Addr), MVT::i64);
     return true;
@@ -83,8 +79,8 @@ bool KVXDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
       (Addr.getOpcode() == ISD::OR &&
        CurDAG->haveNoCommonBitsSet(Addr.getOperand(0), Addr.getOperand(1)))) {
 
-    auto FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0));
-    auto CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1));
+    auto *FIN = dyn_cast<FrameIndexSDNode>(Addr.getOperand(0));
+    auto *CN = dyn_cast<ConstantSDNode>(Addr.getOperand(1));
 
     if (FIN) {
       if (CN) {
@@ -98,14 +94,12 @@ bool KVXDAGToDAGISel::SelectAddrRR(SDValue Addr, SDValue &Index,
       }
 
       return true;
-    } else {
-      if (CN) {
-        Index = CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr),
-                                          MVT::i64);
-        Base = Addr.getOperand(0);
-
-        return true;
-      }
+    }
+    if (CN) {
+      Index =
+          CurDAG->getTargetConstant(CN->getZExtValue(), SDLoc(Addr), MVT::i64);
+      Base = Addr.getOperand(0);
+      return true;
     }
 
     Index = Addr.getOperand(1);

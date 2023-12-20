@@ -10,18 +10,15 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXHARDWARELOOPS_H
 #define LLVM_LIB_TARGET_KVX_KVXHARDWARELOOPS_H
 
-#include "llvm/ADT/StringRef.h"
+#include "llvm/Analysis/LoopInfo.h"
 #include "llvm/CodeGen/MachineBranchProbabilityInfo.h"
 #include "llvm/CodeGen/MachineDominators.h"
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/CodeGen/MachineFunctionPass.h"
-#include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineLoopInfo.h"
 #include "llvm/InitializePasses.h"
+#include "llvm/Pass.h"
 
 #include "KVX.h"
 #include "KVXInstrInfo.h"
-#include "KVXSubtarget.h"
 
 using namespace llvm;
 

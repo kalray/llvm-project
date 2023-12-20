@@ -16,14 +16,11 @@
 #include "KVXPostScheduler.h"
 #include "KVXTargetObjectFile.h"
 #include "KVXTargetTransformInfo.h"
-#include "llvm/ADT/STLExtras.h"
 #include "llvm/CodeGen/MachineScheduler.h"
 #include "llvm/CodeGen/Passes.h"
-#include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/MC/TargetRegistry.h"
-#include "llvm/Support/FormattedStream.h"
 #include "llvm/Target/TargetOptions.h"
 #include "llvm/Transforms/Scalar.h"
 
@@ -32,31 +29,38 @@ using namespace llvm;
 cl::OptionCategory KVXclOpts("KVX Target Machine Options");
 static cl::opt<bool>
     DisableLOOPDO("disable-kvx-hwloops", cl::Hidden, cl::init(false),
-                  cl::desc("Disable Hardware Loops for KVX target"));
+                  cl::desc("Disable Hardware Loops for KVX target"),
+                  cl::cat(KVXclOpts));
 
 static cl::opt<bool>
     ForceDisableBundling("disable-kvx-bundling", cl::Hidden,
-                         cl::desc("Disable Bundling for KVX target"));
+                         cl::desc("Disable Bundling for KVX target"),
+                         cl::cat(KVXclOpts));
 
 static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(false),
-    cl::desc("Disable Load/Store Packing Pass for KVX target"));
+    cl::desc("Disable Load/Store Packing Pass for KVX target"),
+    cl::cat(KVXclOpts));
 
 static cl::opt<bool> DisableCycleEmission(
     "disable-kvx-cycles", cl::Hidden, cl::init(false),
-    cl::desc("Disable machine-cycle emission on KVX target"));
+    cl::desc("Disable machine-cycle emission on KVX target"),
+    cl::cat(KVXclOpts));
 
 static cl::opt<bool>
     EnablePipeliner("enable-kvx-pipeliner", cl::Hidden, cl::init(false),
-                    cl::desc("Enable MachinePipeliner Pass for KVX target"));
+                    cl::desc("Enable MachinePipeliner Pass for KVX target"),
+                    cl::cat(KVXclOpts));
 
 static cl::opt<bool>
     DisablePipeliner("disable-kvx-pipeliner", cl::Hidden, cl::init(false),
-                     cl::desc("Disable MachinePipeliner Pass for KVX target"));
+                     cl::desc("Disable MachinePipeliner Pass for KVX target"),
+                     cl::cat(KVXclOpts));
 
 static cl::opt<std::string>
     StackLimitRegister("fstack-limit-register",
-                       cl::desc("verify stack with a register for KVX"));
+                       cl::desc("verify stack with a register for KVX"),
+                       cl::cat(KVXclOpts));
 
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeKVXTarget() {
   RegisterTargetMachine<KVXTargetMachine> X(getTheKVXTarget());

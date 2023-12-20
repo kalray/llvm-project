@@ -12,10 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXISelLowering.h"
-#include "KVX.h"
-#include "KVXMachineFunctionInfo.h"
-#include "KVXTargetMachine.h"
-
+#include "KVXRegisterInfo.h"
 
 using namespace llvm;
 

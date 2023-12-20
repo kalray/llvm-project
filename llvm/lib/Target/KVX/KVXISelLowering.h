@@ -15,10 +15,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXISELLOWERING_H
 #define LLVM_LIB_TARGET_KVX_KVXISELLOWERING_H
 
-#include "KVX.h"
-#include "llvm/CodeGen/SelectionDAG.h"
 #include "llvm/CodeGen/TargetLowering.h"
-#include "llvm/IR/IRBuilder.h"
 
 // KVXISD = KVX Instruction Selection DAG
 

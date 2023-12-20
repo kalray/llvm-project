@@ -13,16 +13,16 @@
 
 #include "KVXVLIWPacketizer.h"
 #include "KVX.h"
-#include "KVXInstrInfo.h"
-#include "KVXTargetMachine.h"
+#include "KVXRegisterInfo.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
 
-#include "llvm/InitializePasses.h"
 #include "llvm/Analysis/AliasAnalysis.h"
 #include "llvm/CodeGen/MachineDominators.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 #include "llvm/CodeGen/MachineLoopInfo.h"
 #include "llvm/CodeGen/ScheduleDAG.h"
 #include "llvm/CodeGen/TargetSchedule.h"
+#include "llvm/InitializePasses.h"
 
 using namespace llvm;
 
@@ -31,7 +31,8 @@ using namespace llvm;
 
 static cl::opt<bool> KVXKeepKILL("kvx-keep-kill-debug",
                                  cl::desc("Keep KILL debug instructions."),
-                                 cl::init(false), cl::Hidden);
+                                 cl::init(false), cl::Hidden,
+                                 cl::cat(KVXclOpts));
 
 namespace {
 

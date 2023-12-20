@@ -11,19 +11,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "KVXInstrInfo.h"
-#include "KVX.h"
 #include "KVXHazardRecognizer.h"
-#include "KVXTargetMachine.h"
-#include "MCTargetDesc/KVXMCTargetDesc.h"
-#include "llvm/ADT/SmallVector.h"
-#include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineInstrBuilder.h"
-#include "llvm/CodeGen/MachineRegisterInfo.h"
+#include "KVXSubtarget.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/MC/MCDwarf.h"
-#include "llvm/MC/TargetRegistry.h"
-#include "llvm/Support/ErrorHandling.h"
 
 using namespace llvm;
 #define DEBUG_TYPE "KVX-isel"
@@ -314,8 +305,8 @@ Register findScratchRegister(MachineBasicBlock &MBB, bool UseAtEnd,
   // available when looking for a candidate block for shrink wrapping but not
   // available when the actual prologue/epilogue is being emitted because they
   // were added as live-in to the prologue block by PrologueEpilogueInserter.
-  for (int i = 0; CSRegs[i]; ++i)
-    RS.setRegUsed(CSRegs[i]);
+  for (int I = 0; CSRegs[I]; ++I)
+    RS.setRegUsed(CSRegs[I]);
 
   if (RS.isRegUsed(Scratch)) {
     Scratch = RS.FindUnusedReg(&KVX::SingleRegRegClass);

@@ -83,9 +83,9 @@ def : Pat<(KVXFence), (FENCE accesses_all)>;
 // ComplexPatterns definitions.
 //===----------------------------------------------------------------------===//
 
-def AddrFI : ComplexPattern<iPTR, 1, "SelectAddrFI", [frameindex], []>;
+def AddrFI : ComplexPattern<iPTR, 1, "selectAddrFI", [frameindex], []>;
 
-def AddrRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "SelectAddrRR", [], []> {
+def AddrRR : Operand<iPTR>, ComplexPattern<iPTR, 2, "selectAddrRR", [], []> {
   let PrintMethod = "printMemOperand";
   let MIOperandInfo = (ops SingleReg:$offset, SingleReg:$baseReg );
 }

@@ -17,10 +17,8 @@
 #include "KVXFrameLowering.h"
 #include "KVXISelLowering.h"
 #include "KVXInstrInfo.h"
+#include "KVXRegisterInfo.h"
 #include "llvm/CodeGen/SelectionDAGTargetInfo.h"
-#include "llvm/CodeGen/TargetSubtargetInfo.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/Target/TargetMachine.h"
 
 #define GET_SUBTARGETINFO_HEADER
 #include "KVXGenSubtargetInfo.inc"

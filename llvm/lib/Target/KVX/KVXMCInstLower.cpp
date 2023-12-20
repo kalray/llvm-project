@@ -14,7 +14,7 @@
 
 #include "KVX.h"
 #include "KVXAsmPrinter.h"
-#include "KVXRegisterInfo.h"
+#include "llvm/CodeGen/TargetRegisterInfo.h"
 #include "llvm/IR/Constants.h"
 
 using namespace llvm;

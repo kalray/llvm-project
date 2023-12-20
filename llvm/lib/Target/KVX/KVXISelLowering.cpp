@@ -14,14 +14,17 @@
 #include "KVXISelLowering.h"
 #include "KVX.h"
 #include "KVXMachineFunctionInfo.h"
-#include "KVXTargetMachine.h"
+#include "KVXSubtarget.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/CodeGen/CallingConvLower.h"
-#include "llvm/CodeGen/ISDOpcodes.h"
+#include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineJumpTableInfo.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/Support/KnownBits.h"
+#include "llvm/Target/TargetMachine.h"
 
 using namespace llvm;
 
@@ -31,11 +34,12 @@ STATISTIC(NumTailCalls, "Number of tail calls");
 
 static cl::opt<int> MinimumJumpTablesEntries(
     "kvx-minimum-jump-tables-entries", cl::Hidden, cl::ZeroOrMore, cl::init(5),
-    cl::desc("Set minimum jump tables entries count."));
+    cl::desc("Set minimum jump tables entries count."), cl::cat(KVXclOpts));
 
 static cl::opt<bool> UseVLIWSched("use-kvx-vliw-sched", cl::Hidden,
                                   cl::ZeroOrMore, cl::init(false),
-                                  cl::desc("Use VLIW Scheduler."));
+                                  cl::desc("Use VLIW Scheduler."),
+                                  cl::cat(KVXclOpts));
 
 #include "KVXGenCallingConv.inc"
 

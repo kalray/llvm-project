@@ -16,12 +16,7 @@
 #ifndef KVX_KVXHardwareLoopsPrepare_H
 #define KVX_KVXHardwareLoopsPrepare_H
 
-#include "KVX.h"
-#include "KVXSubtarget.h"
-
-#include "llvm/ADT/StringRef.h"
 #include "llvm/Analysis/LoopInfo.h"
-#include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Dominators.h"
 
 using namespace llvm;

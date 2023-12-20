@@ -14,16 +14,9 @@
 // - Before packetizer
 //===----------------------------------------------------------------------===//
 
-#include "KVX.h"
-#include "KVXGenRegisterInfo.inc"
-#include "KVXInstrInfo.h"
 #include "KVXMachineFunctionInfo.h"
-#include "KVXTargetMachine.h"
+#include "KVXSubtarget.h"
 
-#include "llvm/CodeGen/LivePhysRegs.h"
-#include "llvm/CodeGen/MachineFunctionPass.h"
-#include "llvm/CodeGen/MachineInstrBuilder.h"
-#include "llvm/Support/Debug.h"
 using namespace llvm;
 
 #define KVX_PREEMIT_EXPAND_PSEUDO_NAME "KVX pseudo instruction expansion pass"
@@ -349,8 +342,8 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
                                             MOSize, Offset);
 
   // Create and link new MBBs.
-  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
   MF->insert(++MBB.getIterator(), CSLoopMBB);
   MF->insert(++CSLoopMBB->getIterator(), DoneMBB);
@@ -538,9 +531,9 @@ static bool expandATAS(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // .done
 
   // Create and link new MBBs.
-  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
   MF->insert(++MBB.getIterator(), CSLoopMBB);
   MF->insert(++CSLoopMBB->getIterator(), CSLoop2MBB);
@@ -740,10 +733,10 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   unsigned LOAD = getLOADOpcode(MOSize, Offset);
 
   // Create and link new MBBs.
-  auto CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto PassMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
-  auto DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *CSLoopMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *CSLoop2MBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *PassMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
+  auto *DoneMBB = MF->CreateMachineBasicBlock(MBB.getBasicBlock());
 
   MF->insert(++MBB.getIterator(), CSLoopMBB);
   MF->insert(++CSLoopMBB->getIterator(), CSLoop2MBB);
@@ -886,41 +879,41 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 }
 
 static bool expandStore(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                        MachineBasicBlock::iterator MBBI, unsigned ri10,
-                        unsigned ri37, unsigned ri64) {
+                        MachineBasicBlock::iterator MBBI, unsigned Ri10,
+                        unsigned Ri37, unsigned Ri64) {
 
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  int64_t offset = MI.getOperand(0).getImm();
-  unsigned base = MI.getOperand(1).getReg();
-  unsigned val = MI.getOperand(2).getReg();
+  int64_t Offset = MI.getOperand(0).getImm();
+  Register Base = MI.getOperand(1).getReg();
+  Register Val = MI.getOperand(2).getReg();
 
-  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, ri10, ri37, ri64)))
-      .addImm(offset)
-      .addReg(base)
-      .addReg(val, MI.getOperand(2).isKill() ? RegState::Kill : 0);
+  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, Ri10, Ri37, Ri64)))
+      .addImm(Offset)
+      .addReg(Base)
+      .addReg(Val, MI.getOperand(2).isKill() ? RegState::Kill : 0);
 
   MI.eraseFromParent();
   return true;
 }
 
 static bool expandLoad(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
-                       MachineBasicBlock::iterator MBBI, unsigned ri10,
-                       unsigned ri37, unsigned ri64) {
+                       MachineBasicBlock::iterator MBBI, unsigned Ri10,
+                       unsigned Ri37, unsigned Ri64) {
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  unsigned outputReg = MI.getOperand(0).getReg();
-  int64_t offset = MI.getOperand(1).getImm();
-  unsigned base = MI.getOperand(2).getReg();
-  int64_t variant = MI.getOperand(3).getImm();
+  Register OutputReg = MI.getOperand(0).getReg();
+  int64_t Offset = MI.getOperand(1).getImm();
+  Register Base = MI.getOperand(2).getReg();
+  int64_t Variant = MI.getOperand(3).getImm();
 
-  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(offset, ri10, ri37, ri64)),
-          outputReg)
-      .addImm(offset)
-      .addReg(base)
-      .addImm(variant);
+  BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, Ri10, Ri37, Ri64)),
+          OutputReg)
+      .addImm(Offset)
+      .addReg(Base)
+      .addImm(Variant);
 
   MI.eraseFromParent();
   return true;
@@ -931,55 +924,55 @@ static bool expandEXTFZ(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
 
-  unsigned outputReg = MI.getOperand(0).getReg();
-  unsigned valReg = MI.getOperand(1).getReg();
-  int64_t andmask = MI.getOperand(2).getImm();
-  int64_t shiftcount = MI.getOperand(3).getImm();
+  Register OutputReg = MI.getOperand(0).getReg();
+  Register ValReg = MI.getOperand(1).getReg();
+  int64_t Andmask = MI.getOperand(2).getImm();
+  int64_t Shiftcount = MI.getOperand(3).getImm();
 
-  int count = 0, maxcount = 0;
-  int64_t mask = 1;
-  int MaxBit = (Word ? 32 : 64) - shiftcount;
-  for (int i = 0; i < MaxBit; i++) {
-    if ((andmask & mask) != 0) {
-      if (maxcount != 0) {
-        maxcount = 0;
-        count = 0;
+  int Count = 0, Maxcount = 0;
+  int64_t Mask = 1;
+  int MaxBit = (Word ? 32 : 64) - Shiftcount;
+  for (int I = 0; I < MaxBit; I++) {
+    if ((Andmask & Mask) != 0) {
+      if (Maxcount != 0) {
+        Maxcount = 0;
+        Count = 0;
         break;
       }
-      count++;
+      Count++;
     } else {
-      if (i == 0)
+      if (I == 0)
         break;
-      maxcount = count;
+      Maxcount = Count;
     }
-    mask <<= 1;
+    Mask <<= 1;
   }
-  if (maxcount == 0 && count > 0)
-    maxcount = count;
-  LLVM_DEBUG(dbgs() << "EXTFZ word: " << Word << " andmask: " << andmask
-                    << " shiftcount: " << shiftcount
-                    << " maxcount: " << maxcount << "\n");
-  if (maxcount > 0) {
-    BuildMI(MBB, MBBI, DL, TII->get(KVX::EXTFZ), outputReg)
-        .addReg(valReg)
-        .addImm(shiftcount + maxcount - 1)
-        .addImm(shiftcount);
+  if (Maxcount == 0 && Count > 0)
+    Maxcount = Count;
+  LLVM_DEBUG(dbgs() << "EXTFZ word: " << Word << " Andmask: " << Andmask
+                    << " shiftcount: " << Shiftcount
+                    << " maxcount: " << Maxcount << "\n");
+  if (Maxcount > 0) {
+    BuildMI(MBB, MBBI, DL, TII->get(KVX::EXTFZ), OutputReg)
+        .addReg(ValReg)
+        .addImm(Shiftcount + Maxcount - 1)
+        .addImm(Shiftcount);
   } else {
     unsigned OpCode;
     BuildMI(MBB, MBBI, DL, TII->get(Word ? KVX::SRLWri : KVX::SRLDri),
-            outputReg)
-        .addReg(valReg)
-        .addImm(shiftcount);
+            OutputReg)
+        .addReg(ValReg)
+        .addImm(Shiftcount);
 
     if (Word)
-      OpCode = GetImmOpCode(andmask, KVX::ANDWri10, KVX::ANDWri37, KVX::NOP);
+      OpCode = GetImmOpCode(Andmask, KVX::ANDWri10, KVX::ANDWri37, KVX::NOP);
     else
       OpCode =
-          GetImmOpCode(andmask, KVX::ANDDri10, KVX::ANDDri37, KVX::ANDDri64);
+          GetImmOpCode(Andmask, KVX::ANDDri10, KVX::ANDDri37, KVX::ANDDri64);
 
-    BuildMI(MBB, MBBI, DL, TII->get(OpCode), outputReg)
-        .addReg(outputReg)
-        .addImm(andmask);
+    BuildMI(MBB, MBBI, DL, TII->get(OpCode), OutputReg)
+        .addReg(OutputReg)
+        .addImm(Andmask);
   }
 
   MI.eraseFromParent();
@@ -1215,8 +1208,8 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
                          ") is not a VectorReg.");
   }
 
-  auto V_hi = TRI->getSubReg(V, KVX::sub_q1);
-  auto V_lo = TRI->getSubReg(V, KVX::sub_q0);
+  auto VHi = TRI->getSubReg(V, KVX::sub_q1);
+  auto VLo = TRI->getSubReg(V, KVX::sub_q0);
   auto R0 = TRI->getSubReg(R, KVX::sub_d0);
   auto R1 = TRI->getSubReg(R, KVX::sub_d1);
   auto R2 = TRI->getSubReg(R, KVX::sub_d2);
@@ -1231,10 +1224,10 @@ static bool expandXSWAP256p(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
     BuildMI(MBB, InsertHere, DL, TII->get(KVX::BUNDLE));
   }
   BuildMI(MBB, InsertHere, DL, TII->get(MOVEFO), R).addReg(V, RegState::Kill);
-  BuildMI(MBB, InsertHere, DL, TII->get(E), V_lo)
+  BuildMI(MBB, InsertHere, DL, TII->get(E), VLo)
       .addReg(R0, RegState::Kill)
       .addReg(R1, RegState::Kill);
-  BuildMI(MBB, InsertHere, DL, TII->get(O), V_hi)
+  BuildMI(MBB, InsertHere, DL, TII->get(O), VHi)
       .addReg(R2, RegState::Kill)
       .addReg(R3, RegState::Kill);
 
@@ -1584,8 +1577,8 @@ static bool expandSPCHECK(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
 static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
                                         MachineBasicBlock &MBB,
                                         MachineBasicBlock::iterator MBBI,
-                                        unsigned ri10, unsigned ri37,
-                                        unsigned ri64, bool IsStore = false) {
+                                        unsigned Ri10, unsigned Ri37,
+                                        unsigned Ri64, bool IsStore = false) {
   LLVM_DEBUG(dbgs() << "Expanding: "; MBBI->dump());
   MachineInstr &MI = *MBBI;
   DebugLoc DL = MI.getDebugLoc();
@@ -1617,13 +1610,13 @@ static bool expandWideMatrixLoadsStores(const KVXInstrInfo *TII,
 
   for (int C = 0, SubReg = KVX::sub_v0; C < End; C++, ++SubReg) {
     if (IsStore)
-      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, Ri10, Ri37, Ri64)))
           .addImm(Offset)
           .addReg(Base)
           .addReg(InOutReg, VariantKill, SubReg);
 
     else
-      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, ri10, ri37, ri64)))
+      BuildMI(MBB, MBBI, DL, TII->get(GetImmOpCode(Offset, Ri10, Ri37, Ri64)))
           .addReg(InOutReg, RegState::Define, SubReg)
           .addImm(Offset)
           .addReg(Base)

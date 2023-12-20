@@ -16,6 +16,7 @@
 #include "KVXFrameLowering.h"
 #include "llvm/CodeGen/MachineScheduler.h"
 #include "llvm/MC/TargetRegistry.h"
+#include "llvm/Target/TargetMachine.h"
 
 using namespace llvm;
 

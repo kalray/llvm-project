@@ -14,17 +14,10 @@
 #include "KVXCodeGenPrepare.h"
 #include "KVX.h"
 
-#include "llvm/CodeGen/TargetPassConfig.h"
-#include "llvm/IR/Constant.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/InstrTypes.h"
-#include "llvm/IR/Intrinsics.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/IR/MDBuilder.h"
 #include "llvm/IR/PatternMatch.h"
-#include "llvm/Support/MathExtras.h"
-#include "llvm/Support/TypeSize.h"
 #include "llvm/Transforms/Utils/Local.h"
 
 using namespace llvm;

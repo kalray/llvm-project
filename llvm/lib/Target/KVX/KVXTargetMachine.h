@@ -16,7 +16,6 @@
 
 #include "KVXSubtarget.h"
 #include "MCTargetDesc/KVXMCTargetDesc.h"
-#include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetMachine.h"
 
