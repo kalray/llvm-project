@@ -97,7 +97,7 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
       return;
     }
-    if (KVX::BlockRegORegClass.contains(SrcReg)) {
+    if (KVX::BlockRegORegClass.contains(DstReg)) {
       LLVM_DEBUG(
           dbgs() << "It is a GPR PairedReg to TCA BlockRegO movetqrrbo.\n");
       BuildMI(MBB, MBBI, DL, get(KVX::XMOVETQrrbo), DstReg)

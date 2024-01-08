@@ -3578,6 +3578,8 @@ defm MOVETQ : MC_XMOVETQ<"xmovetq", ALU_LITE_CRWL, ALU_LITE_CRWH>, Requires<[IsV
 
 defm XMOVETQ : MC_XMOVETQ<"xmovetq", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
 
+defm XMOVETD : MC_XMOVETD<"xmovetd", ALU_TINY_CRWL, ALU_TINY_CRWH>, Requires<[IsV2]>;
+
 defm ALIGNO : MC_33<"aligno">, Requires<[IsV1]>;
 
 defm ALIGNV : MC_34<"alignv">, Requires<[IsV1]>;
@@ -3900,6 +3902,8 @@ defm COPYV : MC_35<"xcopyo">, Requires<[IsV1]>;
 let isMoveReg = 1 in {
 defm MOVEFO : MC_36<"xmovefo">, Requires<[IsV1]>;
 defm XMOVEFO : I <"xmovefo", BCU_TINY_AUXW_CRRP_RR, [VectorReg], [],[],[], [QuadReg]>, Requires<[IsV2]>;
+defm XMOVEFQ : I <"xmovefq", BCU_TINY_AUXW_CRRP_RR, [BlockReg], [],[],[], [PairedReg]>, Requires<[IsV2]>;
+defm XMOVEFD : I <"xmovefd", BCU_TINY_AUXW_CRRP_RR, [CoproReg], [],[],[], [SingleReg]>, Requires<[IsV2]>;
 }
 
 let Predicates = [IsV2] in {

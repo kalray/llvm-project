@@ -124,13 +124,17 @@ def int_kvx_sxmhwp : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_zxlhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 def int_kvx_zxmhwp  : Intrinsic<[llvm_v2i32_ty], [llvm_v4i16_ty], [IntrNoMem]>;
 
-// Move from GRP to TCA registers
+// Move from GPR to TCA registers
 def int_kvx_xmovetq: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 def int_kvx_xmoveto: Intrinsic<[llvm_v256i1_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 def int_kvx_xmoveto256: Intrinsic<[llvm_v256i1_ty], [llvm_v4i64_ty], [IntrNoMem]>;
+def int_kvx_xmovetq256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v2i64_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xmovetd256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_i64_ty, llvm_i32_ty], [IntrNoMem]>;
 
 // Move from TCA registers to GPR
 def int_kvx_xmovefo256: Intrinsic<[llvm_v4i64_ty], [llvm_v256i1_ty], [IntrNoMem]>;
+def int_kvx_xmovefq256: Intrinsic<[llvm_v2i64_ty], [llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
+def int_kvx_xmovefd256: Intrinsic<[llvm_i64_ty], [llvm_v256i1_ty, llvm_i32_ty], [IntrNoMem]>;
 
 // atomic register copy/shift operations
 def int_kvx_xswapo256 : Intrinsic<[llvm_v4i64_ty, llvm_v256i1_ty], [llvm_v4i64_ty, llvm_v256i1_ty], [IntrNoMem]>;

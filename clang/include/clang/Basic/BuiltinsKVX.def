@@ -24,9 +24,10 @@
 //  ** ID: The kvx builtin id, it will be prefixed with __builtin_kvx_
 //  ** TYPES: The usual BUILTIN TYPES, describing (output value)(input values)
 //  ** MODE: The usual BUILTIN MODE, describing the properties of the builtin
+//  ** NARGS: Number of arguments
+//  ** CPUS: String containing all cpus for which this intrinsic can be compiled.
 //  ** KVXMODS: String containing the name of the intrinsic modifier as the manual,
 //              space separated, and in order they should be checked.
-//  ** CPUS: String containing all cpus for which this intrinsic can be compiled.
 
 // At expansion it is coded that:
 // - If CPUS string does not contain the current cpu, it warns that this intrinsic
@@ -336,13 +337,17 @@ KVX_BUILTIN(xmma444hbd1, "Tx1024Tx256Tx256Tx1024cC*", "n", 4, "kv3-1", KvxUnSign
 KVX_BUILTIN(xmma444hd, "Tx1024Tx256Tx256Tx1024cC*", "n", 4, "kv3-1", KvxUnSignMod)
 KVX_BUILTIN(xmma484bw, "Tx512Tx256Tx256Tx512cC*", "n", 4, "", KvxUnSignMod)
 KVX_BUILTIN(xmma484hbd, "Tx1024Tx512Tx256Tx1024cC*", "n", 4, "kv3-1", KvxUnSignMod)
+KVX_BUILTIN(xmovefd256, "UOiTx256cC*", "n", 2, "kv3-2", KvxQindex)
 KVX_BUILTIN(xmovefmv, "Tx256Tx1024IUi", "n", 2, "", )
 KVX_BUILTIN(xmovefmw, "Tx512Tx1024IUi", "n", 2, "", )
 KVX_BUILTIN(xmovefo256, "V4OiTx256", "n", 1, "", )
+KVX_BUILTIN(xmovefq256, "V2OiTx256cC*", "n", 2, "kv3-2", KvxHindex)
 KVX_BUILTIN(xmovefwv, "Tx256Tx512IUi", "n", 2, "", )
-KVX_BUILTIN(xmoveto256, "Tx256V4Oi", "n", 1, "", )
+KVX_BUILTIN(xmovetd256, "Tx256Tx256UOicC*", "n", 3, "kv3-2", KvxQindex)
 KVX_BUILTIN(xmoveto, "Tx256OiOiOiOi", "n", 4, "", )
+KVX_BUILTIN(xmoveto256, "Tx256V4Oi", "n", 1, "", )
 KVX_BUILTIN(xmovetq, "Tx256Tx256OiOicC*", "n", 4, "", KvxHindex)
+KVX_BUILTIN(xmovetq256, "Tx256Tx256V2OicC*", "n", 3, "kv3-2", KvxHindex)
 KVX_BUILTIN(xmsbfifwo, "Tx256Tx256Tx256Tx256cC*", "n", 4, "kv3-2", KVX_ROUNDING, KVX_SILENT)
 KVX_BUILTIN(xmt44d, "Tx1024Tx1024", "n", 1, "", )
 KVX_BUILTIN(xnando, "Tx256Tx256Tx256", "n", 2, "kv3-2",)

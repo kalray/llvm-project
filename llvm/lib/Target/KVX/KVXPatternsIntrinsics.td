@@ -550,9 +550,39 @@ def: Pat<(int_kvx_xmoveto i64:$z, i64:$y, i64:$x, i64:$w),
             (MOVETOHIp (MOVETOLOp (v256i1(IMPLICIT_DEF)), SingleReg:$x, SingleReg:$w), SingleReg:$z, SingleReg:$y)>;
 
 def: Pat<(int_kvx_xmoveto256 QuadReg:$r), (COPY_TO_REGCLASS QuadReg:$r, VectorReg)>;
+let Predicates = [IsV2] in {
+  def: Pat<(int_kvx_xmovetq256 VectorReg:$a, PairedReg:$p, hindex_h0),
+    (INSERT_SUBREG $a, (XMOVETQrrbe (i64 (EXTRACT_SUBREG $p, sub_d0)), (i64 (EXTRACT_SUBREG $p, sub_d1))), sub_q0)>;
+  def: Pat<(int_kvx_xmovetq256 VectorReg:$a, PairedReg:$p, hindex_h1),
+    (INSERT_SUBREG $a, (XMOVETQrrbo (i64 (EXTRACT_SUBREG $p, sub_d0)), (i64 (EXTRACT_SUBREG $p, sub_d1))), sub_q1)>;
+
+  def: Pat<(int_kvx_xmovetd256 VectorReg:$a, SingleReg:$r, qindex_q0),
+    (INSERT_SUBREG $a, (XMOVETDrc0m4 $r), sub_d0)>;
+  def: Pat<(int_kvx_xmovetd256 VectorReg:$a, SingleReg:$r, qindex_q1),
+    (INSERT_SUBREG $a, (XMOVETDrc1m4 $r), sub_d1)>;
+  def: Pat<(int_kvx_xmovetd256 VectorReg:$a, SingleReg:$r, qindex_q2),
+    (INSERT_SUBREG $a, (XMOVETDrc2m4 $r), sub_d2)>;
+  def: Pat<(int_kvx_xmovetd256 VectorReg:$a, SingleReg:$r, qindex_q3),
+    (INSERT_SUBREG $a, (XMOVETDrc3m4 $r), sub_d3)>;
+}
 
 // Copy from TCA to GPR registers
 def: Pat<(int_kvx_xmovefo256 VectorReg:$v), (COPY_TO_REGCLASS $v, QuadReg)>;
+let Predicates = [IsV2] in {
+  def: Pat<(int_kvx_xmovefq256 VectorReg:$v, hindex_h0),
+    (XMOVEFQ (v128i1 (EXTRACT_SUBREG VectorReg:$v, sub_q0)))>;
+  def: Pat<(int_kvx_xmovefq256 VectorReg:$v, hindex_h1),
+    (XMOVEFQ (v128i1 (EXTRACT_SUBREG VectorReg:$v, sub_q1)))>;
+
+  def: Pat<(int_kvx_xmovefd256 VectorReg:$v, qindex_q0),
+    (XMOVEFD (v64i1 (EXTRACT_SUBREG VectorReg:$v, sub_d0)))>;
+  def: Pat<(int_kvx_xmovefd256 VectorReg:$v, qindex_q1),
+    (XMOVEFD (v64i1 (EXTRACT_SUBREG VectorReg:$v, sub_d1)))>;
+  def: Pat<(int_kvx_xmovefd256 VectorReg:$v, qindex_q2),
+    (XMOVEFD (v64i1 (EXTRACT_SUBREG VectorReg:$v, sub_d2)))>;
+  def: Pat<(int_kvx_xmovefd256 VectorReg:$v, qindex_q3),
+    (XMOVEFD (v64i1 (EXTRACT_SUBREG VectorReg:$v, sub_d3)))>;
+}
 
 // Copy TCA Sub-types (insert/extract sub-registers)
 // Operands:

@@ -562,6 +562,11 @@ multiclass MC_XMOVETQ<string OpcStr, InstrItinClass L, InstrItinClass H> {
   defm rrbo : I <OpcStr, H, [SingleReg, SingleReg], [], [], [], [BlockRegO]>;
 }
 
+multiclass MC_XMOVETD<string OpcStr, InstrItinClass L, InstrItinClass H> {
+  foreach i = [0, 1, 2, 3] in
+    defm rc#i#m4 : I <OpcStr, !if(!lt(i, 2), L, H), [SingleReg], [], [], [], [!cast<DAGOperand>(CoproReg#i#M4)]>;
+}
+
 multiclass CV2_ATOMIC_LOAD <string Opc, Intrinsic Int, ValueType VT,  RegisterClass RC = SingleReg> {
   defm r : I</*asm=*/Opc, /*itin=*/LSU_AUXW_LOAD, /*Ops=*/[], /*Mods=*/[CoherencyMod], /*MemOps=*/[SingleReg], /*CC=*/[], /*Out=*/[RC], /*InPlace=*/0,
   /*pattern=*/ [(set VT:$r, (Int i64:$mem, CoherencyMod:$mod0))]>;
