@@ -46,12 +46,12 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    sxwd $r11 = $r7
 ; KV3_2-NEXT:    zxwd $r32 = $r9
 ; KV3_2-NEXT:    slld $r39 = $r10, 2
-; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    copyq $r10r11 = $r36, $r37
 ; KV3_2-NEXT:    addx4wd $r38 = $r1, 32
 ; KV3_2-NEXT:    slld $r42 = $r11, 2
 ; KV3_2-NEXT:    slld $r45 = $r32, 5
+; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 8)
 ; KV3_2-NEXT:    copyq $r16r17 = $r36, $r37
 ; KV3_2-NEXT:    make $r48 = 32
@@ -59,12 +59,12 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    copyq $r32r33 = $r36, $r37
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    copyq $r34r35 = $r36, $r37
-; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
 ; KV3_2-NEXT:    ;; # (end cycle 11)
 ; KV3_2-NEXT:    copyq $r40r41 = $r36, $r37
-; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
+; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
 ; KV3_2-NEXT:    ;; # (end cycle 12)
 ; KV3_2-NEXT:    copyq $r46r47 = $r36, $r37
+; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
 ; KV3_2-NEXT:    ;; # (end cycle 13)
 ; KV3_2-NEXT:    copyq $r50r51 = $r36, $r37
 ; KV3_2-NEXT:    ;; # (end cycle 14)
@@ -113,9 +113,9 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r60r61, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 12)
 ; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r62r63, $r60r61
-; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 13)
 ; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r62r63, $r62r63
+; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 14)
 ; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r20r21, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 15)
@@ -144,17 +144,16 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    addd $r38 = $r38, 36
 ; KV3_2-NEXT:    ;; # (end cycle 22)
 ; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r62r63, $r62r63
-; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 23)
 ; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r20r21, $r60r61
+; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 24)
 ; KV3_2-NEXT:    fmma222w.nt $r46r47 = $r20r21, $r62r63
-; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 25)
 ; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r20r21, $r20r21
+; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 26)
 ; KV3_2-NEXT:    fmma222w.nt $r34r35 = $r22r23, $r60r61
-; KV3_2-NEXT:    xmovefo $r24r25r26r27 = $a1
 ; KV3_2-NEXT:    ;; # (end cycle 27)
 ; KV3_2-NEXT:    xlo $a0 = $r15[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r22r23, $r62r63
@@ -163,6 +162,7 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    ;; # (end cycle 28)
 ; KV3_2-NEXT:    xlo $a1 = $r9[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r22r23, $r20r21
+; KV3_2-NEXT:    xmovefo $r24r25r26r27 = $a1
 ; KV3_2-NEXT:    addd $r9 = $r9, 36
 ; KV3_2-NEXT:    ;; # (end cycle 29)
 ; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r22r23, $r22r23

@@ -91,7 +91,7 @@ defm ALU_FULL_SFU : ItinSingle;
 defm MAU : ItinXY<["INT", "FP"]>;
 defm MAU_AUXR : ItinXY<["INT", "FP", "INT_AV1"]>; // AV1 = Accumulator Value at 1st operand
 
-defm LSU : ItinXY<["LOAD", "STORE"]>;
+defm LSU : ItinXY<["LOAD", "STORE", "XLOAD"]>;
 defm LSU_CRRP : ItinXY<["STORE", "STORE_SV2", "STORE_SV3"]>; // SV2 = Store Value at 2nd operand
 defm LSU_AUXR : ItinXY<["STORE_SV2", "STORE_SV3"]>;
 defm LSU_AUXW : ItinXY<["LOAD", "ALCLR"]>;
@@ -344,6 +344,7 @@ defvar WE3_RRx2_E1_RRx2 = WE3 # READ_RRx2_E1_RRx2;
 defvar WE3NB_RRx2 = WE3NB # READ_RRx2;
 defvar WE3NB_RRx2_ID = WE3NB_RRx2 # READ_ID;
 defvar WE3NB_RRx3 = WE3NB # READ_RRx3;
+defvar WE3NB_RRx5 = WE3NB # READ_RRx5;
 
 defvar WE4_RRx3 = WE4 # READ_RRx3;
 
@@ -420,7 +421,8 @@ defm TCA: DataXYVariants<TCA_ITIN_RT, [
 // NOTE : stores have up to 5 operands
 defm LSU: DataXYVariants<LSU_ITIN_RT, [
   LatOpsVariant<"STORE", READ_RRx5>,
-  LatOpsVariant<"LOAD", WE3_RRx5>
+  LatOpsVariant<"LOAD", WE3_RRx5>,
+  LatOpsVariant<"XLOAD", WE3NB_RRx5>
 ]>;
 
 defm LSU_CRRP: DataXYVariants<LSU_CRRP_ITIN_RT, [

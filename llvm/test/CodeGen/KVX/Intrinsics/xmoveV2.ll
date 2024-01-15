@@ -10,7 +10,7 @@ define <4 x i64> @xmovefo256(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefo $r0r1r2r3 = $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -27,7 +27,7 @@ define <2 x i64> @xmovefq256_h0(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefq $r0r1 = $a0.lo
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -44,7 +44,7 @@ define <2 x i64> @xmovefq256_h1(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefq $r0r1 = $a0.hi
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -59,7 +59,7 @@ define i64 @xmovefd256_q0(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefd $r0 = $a0.x
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -76,7 +76,7 @@ define i64 @xmovefd256_q1(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefd $r0 = $a0.y
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -91,7 +91,7 @@ define i64 @xmovefd256_q2(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefd $r0 = $a0.z
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
@@ -106,7 +106,7 @@ define i64 @xmovefd256_q3(ptr nocapture noundef readonly %a) {
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefd $r0 = $a0.t
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
