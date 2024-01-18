@@ -2907,13 +2907,13 @@ def DINVALSW : CACHE_OP<"dinvalsw", SingleReg, LSU_STORE,
 def DPURGESW : CACHE_OP<"dpurgesw", SingleReg, LSU_STORE,
                 [(int_kvx_dpurgesw i64:$way, i64:$set, CacheLevelMod:$c)]>;
 
-let AsmString = "xrecvo$mod0 $r" in
+let AsmString = "xrecvo$mod0 $r", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
 defm XRECVO : I <"xrecvo", ALU_TINY_CRWL_CRWH, [], [ChannelMod], [], [], [VectorReg], 0,
                   [(set v256i1:$r, (int_kvx_xrecvo ChannelMod:$mod0))]>;
 let AsmString = "xsendo$mod0 $op0", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
 defm XSENDO : I <"xsendo", ALU_TINY_CRRP, [VectorReg], [ChannelMod], [], [], [], 0,
                   [(int_kvx_xsendo v256i1:$op0, ChannelMod:$mod0)]>;
-let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = ?, mayLoad = ?, mayStore = 1 in
+let AsmString = "xsendrecvo$mod0$mod1 $op0, $r", hasSideEffects = 1, mayLoad = ?, mayStore = ? in
 defm XSENDRECVO : I <"xsendrecvo", ALU_TINY_CRRP_CRWL_CRWH, [VectorReg], [ChannelMod, ChannelMod], [], [], [VectorReg], 0,
                   [(set v256i1:$r, (int_kvx_xsendrecvo v256i1:$op0, ChannelMod:$mod0, ChannelMod:$mod1))]>;
 

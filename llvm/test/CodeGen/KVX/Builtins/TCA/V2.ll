@@ -895,11 +895,11 @@ define void @xsendo(ptr %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xsendo.f $a0
+; CHECK-NEXT:    xsendo.b $a0
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xsendo.b $a0
+; CHECK-NEXT:    xsendo.f $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
   %2 = load <256 x i1>, ptr %0
@@ -914,20 +914,13 @@ declare void @llvm.kvx.xsendo(<256 x i1>, i32)
 define void @xrecvo(ptr writeonly %0) {
 ; CHECK-LABEL: xrecvo:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xrecvo.f $a0
+; CHECK-NEXT:    xrecvo.b $a0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xrecvo.b $a1
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    xrecvo.f $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 1)
   %2 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 1)
-  store <256 x i1> %2, ptr %0
   %3 = tail call <256 x i1> @llvm.kvx.xrecvo(i32 0)
-  %4 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
-  store <256 x i1> %3, ptr %4
   ret void
 }
 
@@ -938,25 +931,25 @@ define void @xsendrecvo(ptr %0) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xsendrecvo.f.f $a0, $a0
+; CHECK-NEXT:    xsendrecvo.b.b $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    xsendrecvo.b.f $a1, $a0
+; CHECK-NEXT:    xsendrecvo.f.b $a1, $a0
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xlo $a1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 128[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    xsendrecvo.f.b $a1, $a0
+; CHECK-NEXT:    xsendrecvo.b.f $a1, $a0
 ; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xlo $a1 = 32[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    xso 96[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    xsendrecvo.b.b $a1, $a0
+; CHECK-NEXT:    xsendrecvo.f.f $a1, $a0
 ; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    xso 160[$r0] = $a0
 ; CHECK-NEXT:    ret

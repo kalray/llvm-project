@@ -622,7 +622,7 @@ void KVXInstPrinter::printChannelMod(const MCInst *MI, unsigned OpNo,
   if (I > 1)
     report_fatal_error("Invalid channel value.");
 
-  O << ((I != 0) ? ".f" : ".b");
+  O << ((I == 0) ? ".f" : ".b");
 }
 
 void KVXInstPrinter::printShuffleVMod(const MCInst *MI, unsigned OpNo,
