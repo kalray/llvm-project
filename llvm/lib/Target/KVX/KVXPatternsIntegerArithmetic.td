@@ -1624,8 +1624,11 @@ multiclass Word_RR_RIsplat_select_H <SDNode irnode, Instruction rinode, Instruct
 defm MAXHQ : Word_RR_RIsplat_select_H<smax, MAXHQri, MAXHQrr>;
 
 multiclass SminSmaxVecReduce<SDNode red, ValueType vt, ValueType eltVt, OutPatFrag out> {
+        def _EXT_i32_i64#outVt : Pat<(sext_inreg (i64 (anyext (i32 (red vt:$v)))), eltVt),
+                              (out $v)>;
+
       foreach outVt = [i32, i64] in
-        def _EXT_#outVt : Pat<(sext_inreg (anyext (outVt (red vt:$v))), eltVt),
+        def _EXT_INREG_#outVt : Pat<(outVt(sext_inreg (outVt (red vt:$v)), eltVt)),
                               (out $v)>;
 
         def "" : Pat<(i32 (red vt:$v)), (out $v)>;

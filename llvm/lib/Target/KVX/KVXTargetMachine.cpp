@@ -233,14 +233,18 @@ KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
 
 void KVXPassConfig::addIRPasses() {
   addPass(createAtomicExpandPass());
-  addPass(createDeadCodeEliminationPass());
-  addPass(createCFGSimplificationPass(SimplifyCFGOptions()
-                                          .forwardSwitchCondToPhi(true)
+  if (getOptLevel() >= CodeGenOpt::Less) {
+    addPass(createDeadCodeEliminationPass());
+    if (getOptLevel() >= CodeGenOpt::Default) {
+      addPass(createCFGSimplificationPass(SimplifyCFGOptions()
+                                              .forwardSwitchCondToPhi(true)
                                           .convertSwitchRangeToICmp(true)
                                           .convertSwitchToLookupTable(true)
                                           .needCanonicalLoops(false)
                                           .hoistCommonInsts(true)
                                           .sinkCommonInsts(true)));
+    }
+  }
   TargetPassConfig::addIRPasses();
 }
 

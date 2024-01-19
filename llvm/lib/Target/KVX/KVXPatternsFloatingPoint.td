@@ -474,10 +474,10 @@ def : Pat<(f32(FdotWPat f32:$lo_a, f32:$lo_b, f32:$hi_a, f32:$hi_b)),
             rounding_, silent_))>;
 
 def : Pat<(f32(FdotWPat
-              (f32(extract_subvector v2f32:$a, (i64 0))),
-              (f32(extract_subvector v2f32:$b, (i64 0))),
-              (f32(extract_subvector v2f32:$a, (i64 1))),
-              (f32(extract_subvector v2f32:$b, (i64 1))))),
+              (f32(vector_extract v2f32:$a, (i64 0))),
+              (f32(vector_extract v2f32:$b, (i64 0))),
+              (f32(vector_extract v2f32:$a, (i64 1))),
+              (f32(vector_extract v2f32:$b, (i64 1))))),
           (f32 (I SingleReg:$a, SingleReg:$b, rounding_, silent_))>;
 }
 
