@@ -692,14 +692,14 @@ def : Pat<(v2f32 (fsubcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 2)))),
          (FFDMASWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 
-def : Pat<(v2f32 (fms v2f32:$lhsLo, v2f32:$rhsLo, (fma v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+def : Pat<(v2f32 (fma v2f32:$lhsLo, v2f32:$rhsLo, (fms v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
           (v2f32 (FFDMASWP SingleReg:$acc,
             (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
             (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d0)),
             rounding_, silent_))>;
 
 // FFDMASWQ
-def PatFFDMASWQ : Pat<(v4f32 (fms v4f32:$lhsLo, v4f32:$rhsLo, (fma v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+def PatFFDMASWQ : Pat<(v4f32 (fma v4f32:$lhsLo, v4f32:$rhsLo, (fms v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
           (v4f32 (FFDMASWQ
             (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
             (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
@@ -728,14 +728,14 @@ def : Pat<(v2f32 (fsubcont
           (extract_subvector (fmulcont v4f32:$lhs, v4f32:$rhs), (i64 0)))),
          (FFDMSAWP SingleReg:$acc, PairedReg:$lhs, PairedReg:$rhs, rounding_, silent_)>;
 
-def : Pat<(v2f32 (fma v2f32:$lhsLo, v2f32:$rhsLo, (fms v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
+def : Pat<(v2f32 (fms v2f32:$lhsLo, v2f32:$rhsLo, (fma v2f32:$lhsHi, v2f32:$rhsHi, v2f32:$acc))),
           (v2f32 (FFDMSAWP SingleReg:$acc,
             (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$lhsHi, sub_d1, SingleReg:$lhsLo, sub_d0)),
             (v4f32 (REG_SEQUENCE PairedReg, SingleReg:$rhsHi, sub_d1, SingleReg:$rhsLo, sub_d0)),
             rounding_, silent_))>;
 
 // FFDMSAWQ
-def PatFFDMSAWQ : Pat<(v4f32 (fma v4f32:$lhsLo, v4f32:$rhsLo, (fms v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
+def PatFFDMSAWQ : Pat<(v4f32 (fms v4f32:$lhsLo, v4f32:$rhsLo, (fma v4f32:$lhsHi, v4f32:$rhsHi, v4f32:$acc))),
           (v4f32 (FFDMSAWQ
             (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$lhsHi, sub_q1, PairedReg:$lhsLo, sub_q0)),
             (v4f64 (REG_SEQUENCE QuadReg, PairedReg:$rhsHi, sub_q1, PairedReg:$rhsLo, sub_q0)),
