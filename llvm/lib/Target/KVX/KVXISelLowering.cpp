@@ -1914,14 +1914,15 @@ Instruction *KVXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
 
     return L2Bypass;
   } // Emit a fence.
-  switch (toCABI(Ord)) {
-  case AtomicOrderingCABI::relaxed:
-  case AtomicOrderingCABI::release:
-    return nullptr;
-  case AtomicOrderingCABI::consume:
-  case AtomicOrderingCABI::acquire:
-  case AtomicOrderingCABI::acq_rel:
-  case AtomicOrderingCABI::seq_cst:
+  switch (Ord) {
+  case AtomicOrdering::NotAtomic:
+  case AtomicOrdering::Unordered:
+  case AtomicOrdering::Monotonic:
+  case AtomicOrdering::Acquire:
+    return nullptr; // Nothing to do
+  case AtomicOrdering::SequentiallyConsistent:
+  case AtomicOrdering::Release:
+  case AtomicOrdering::AcquireRelease:
     return Builder.CreateFence(Ord);
   }
 }
@@ -1960,14 +1961,15 @@ Instruction *KVXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
 
     return L2Bypass;
   } // Emit a fence.
-  switch (toCABI(Ord)) {
-  case AtomicOrderingCABI::relaxed:
-  case AtomicOrderingCABI::acquire:
-    return nullptr;
-  case AtomicOrderingCABI::release:
-  case AtomicOrderingCABI::acq_rel:
-  case AtomicOrderingCABI::consume:
-  case AtomicOrderingCABI::seq_cst:
+  switch (Ord) {
+  case AtomicOrdering::NotAtomic:
+  case AtomicOrdering::Unordered:
+  case AtomicOrdering::Monotonic:
+  case AtomicOrdering::Release:
+    return nullptr; // Nothing to do
+  case AtomicOrdering::Acquire:
+  case AtomicOrdering::AcquireRelease:
+  case AtomicOrdering::SequentiallyConsistent:
     return Builder.CreateFence(Ord);
   }
 }

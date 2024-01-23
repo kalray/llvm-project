@@ -383,10 +383,19 @@ def IsOrAdd: PatFrag<(ops node:$A, node:$B), (or node:$A, node:$B), [{
 }]>;
 
 def get_mem_mod : SDNodeXForm<ld, [{
-    const MemSDNode *M = cast<MemSDNode>(N);
     unsigned Mod = llvm::KVXMOD::VARIANT_;
+    MemSDNode *M = dyn_cast<MemSDNode>(N);
+    if (!M)
+      M = dyn_cast<MemSDNode>(N->getOperand(0));
+    if (!M && N->getOperand(0)->getNumOperands() > 0)
+      M = dyn_cast<MemSDNode>(N->getOperand(0)->getOperand(0));
+    if (!M)
+      return CurDAG->getTargetConstant(Mod, SDLoc(N), MVT::i32);
+
     switch (M->getAddressSpace()){
       default:
+        if (M->isAtomic())
+          Mod = llvm::KVXMOD::VARIANT_U;
       break;
       case 256:
         Mod = llvm::KVXMOD::VARIANT_U;
@@ -395,11 +404,11 @@ def get_mem_mod : SDNodeXForm<ld, [{
         Mod = llvm::KVXMOD::VARIANT_US;
       break;
       case 258:
-        Mod = llvm::KVXMOD::VARIANT_S;
+        Mod = (M->isAtomic()) ?
+        llvm::KVXMOD::VARIANT_US :
+        llvm::KVXMOD::VARIANT_S;
       break;
     }
-    if (M->isAtomic())
-      Mod = llvm::KVXMOD::VARIANT_U;
 
     return CurDAG->getTargetConstant(Mod, SDLoc(N), MVT::i32);
    }]>;
@@ -2658,3 +2667,4 @@ def : Pat <(v512i1 (int_kvx_xcopyx v512i1:$op0, shufflex_no)),
 def : Pat <(v1024i1 (int_kvx_xcopyv v1024i1:$op0, shufflev_no)),
            (COPY $op0)>;
 }
+
