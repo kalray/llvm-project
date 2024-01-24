@@ -20642,7 +20642,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
 
     SourceLocation Loc = E->getExprLoc();
     Value *Addr =
-        Builder.CreateBitCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+        Builder.CreatePointerCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
     Value *Update = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
                                          E->getArg(1)->getType(), Type, Loc);
     Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
