@@ -204,6 +204,17 @@ bool KVXRegisterInfo::isConstantPhysReg(MCRegister PhysReg) const {
   return false;
 }
 
+bool KVXRegisterInfo::isVolatilePhysReg(MCRegister PhysReg) const {
+  // Only check Performance Monitor registers here. Checking $CS or $PCR would
+  // prevent loop-invariant code motion as all our FP/TCA instructions have a
+  // dependency on one of them.
+  for (auto Reg : {KVX::PM0, KVX::PM1, KVX::PM2, KVX::PM3, KVX::PM4, KVX::PM5,
+                   KVX::PM6, KVX::PM7})
+    if (PhysReg == Reg)
+      return true;
+  return false;
+}
+
 const uint32_t *KVXRegisterInfo::getNoPreservedMask() const {
   return CSR_NoRegs_RegMask;
 }

@@ -45,6 +45,7 @@ struct KVXRegisterInfo : public KVXGenRegisterInfo {
   }
 
   bool isConstantPhysReg(MCRegister PhysReg) const override;
+  bool isVolatilePhysReg(MCRegister PhysReg) const override;
   const uint32_t *getNoPreservedMask() const override;
 
   ArrayRef<MCPhysReg>

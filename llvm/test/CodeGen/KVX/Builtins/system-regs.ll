@@ -10,9 +10,9 @@ define i32 @add_pm0() {
 ; CHECK-LABEL: add_pm0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = a
-; CHECK-NEXT:    get $r2 = $pm0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r1 = 0[$r0]
+; CHECK-NEXT:    get $r2 = $pm0
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    addw $r1 = $r1, $r2
 ; CHECK-NEXT:    ;; # (end cycle 4)

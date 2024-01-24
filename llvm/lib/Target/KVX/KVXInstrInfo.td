@@ -1591,15 +1591,17 @@ def LOOPDO : KVX_INSTRUCTION
    [/* no straightforward pattern */],
    ALL_ID>;
 
+let hasSideEffects = 1 in
 defm GET : I <"get", BCU_TINY_TINY_MAU_XNOP_RR, [GetReg], [], [],[],[SingleReg]>;
 
-let Constraints = "$a1 = $a1o" in
+let Constraints = "$a1 = $a1o", hasSideEffects=1 in
 def IGET : KVX_INSTRUCTION
   <(outs SingleReg:$a1o), (ins SingleReg:$a1),
    "iget $a1",
    [/* no straightforward pattern */],
    BCU_TINY_TINY_MAU_XNOP_ID>;
 
+let hasSideEffects = 1 in
 defm SET : MC_03<"set">;
 
 defm RSWAP : MC_04<"rswap">;

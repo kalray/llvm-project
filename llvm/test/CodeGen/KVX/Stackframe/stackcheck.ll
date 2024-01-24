@@ -15,16 +15,16 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %entry
 ; CHECK-NEXT:    addx4wd $r1 = $r0, 31
-; CHECK-NEXT:    get $r2 = $sr
 ; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    andd $r1 = $r1, -32
 ; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    sbfd $r1 = $r1, $r12
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    andd $r1 = $r1, -32
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sd 16[$r12] = $r14
+; CHECK-NEXT:    sbfd $r1 = $r1, $r12
+; CHECK-NEXT:    get $r2 = $sr
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    sbfd $r2 = $r1, $r2
 ; CHECK-NEXT:    addd $r14 = $r12, 16
 ; CHECK-NEXT:    ;; # (end cycle 3)
