@@ -59,15 +59,15 @@ define <4 x i32> @test0(<4 x i32> %0, i8 %1) #1 {
 ; CHECK-NEXT:    make $r3 = 0x300000002
 ; CHECK-NEXT:    make $r4 = 0xfffffffb
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r2 = $r2, 63, 31
-; CHECK-NEXT:    insf $r4 = $r4, 63, 31
+; CHECK-NEXT:    insf $r2 = $r2, 63, 32
+; CHECK-NEXT:    insf $r4 = $r4, 63, 32
 ; CHECK-NEXT:    make $r5 = 0x100000000
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    compnwp.eq $r2 = $r5, $r2
 ; CHECK-NEXT:    compnwp.eq $r3 = $r3, $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    cmovewp.eqz $r2 ? $r0 = $r4
-; CHECK-NEXT:    cmovewp.eqz $r3 ? $r1 = $r4
+; CHECK-NEXT:    cmovewp.nez $r2 ? $r0 = $r4
+; CHECK-NEXT:    cmovewp.nez $r3 ? $r1 = $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %3 = insertelement <4 x i32> %0, i32 -5, i8 %1

@@ -2165,16 +2165,16 @@ define <4 x float> @test_insertelement1(<4 x float> %a, float %x) #0 {
 define <4 x float> @test_insertelement(<4 x float> %a, float %x, i64 %p) #0 {
 ; CHECK-LABEL: test_insertelement:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    insf $r2 = $r2, 63, 31
-; CHECK-NEXT:    insf $r3 = $r3, 63, 31
+; CHECK-NEXT:    insf $r2 = $r2, 63, 32
+; CHECK-NEXT:    insf $r3 = $r3, 63, 32
 ; CHECK-NEXT:    make $r4 = 0x300000002
 ; CHECK-NEXT:    make $r5 = 0x100000000
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    compnwp.eq $r3 = $r5, $r3
 ; CHECK-NEXT:    compnwp.eq $r4 = $r4, $r3
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cmovewp.eqz $r3 ? $r0 = $r2
-; CHECK-NEXT:    cmovewp.eqz $r4 ? $r1 = $r2
+; CHECK-NEXT:    cmovewp.nez $r3 ? $r0 = $r2
+; CHECK-NEXT:    cmovewp.nez $r4 ? $r1 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
   %i = insertelement <4 x float> %a, float %x, i64 %p
