@@ -825,6 +825,11 @@ bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
   case KVX::LOOPDO:
   case TargetOpcode::EH_LABEL:
     return true;
+  case KVX::COPY: {
+    return MI.getOperand(1).isMetadata() ||
+           Subtarget.getRegisterInfo()->isVolatilePhysReg(
+               MI.getOperand(1).getReg());
+  }
   default:
     break;
   }
