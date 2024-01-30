@@ -37,6 +37,12 @@ static cl::opt<bool>
                          cl::desc("Disable Bundling for KVX target"),
                          cl::cat(KVXclOpts));
 
+static cl::opt<bool>
+    SwitchOldBundling("switch-old-bundling", cl::Hidden, cl::init(false),
+                      cl::desc("Use old bundling (VLIWPacketizer) instead of "
+                               "new bundling (MachineScheduler)"),
+                      cl::cat(KVXclOpts));
+
 static cl::opt<bool> DisableLoadStorePacking(
     "disable-kvx-loadstore-packing", cl::Hidden, cl::init(false),
     cl::desc("Disable Load/Store Packing Pass for KVX target"),
@@ -215,8 +221,8 @@ TargetPassConfig *KVXTargetMachine::createPassConfig(PassManagerBase &PM) {
 ScheduleDAGInstrs *
 KVXPassConfig::createPostMachineScheduler(MachineSchedContext *C) const {
   // Disable bundling at -O0 and -O1
-  bool DisableBundling =
-      ForceDisableBundling || getOptLevel() <= CodeGenOpt::Less;
+  bool DisableBundling = SwitchOldBundling || ForceDisableBundling ||
+                         getOptLevel() <= CodeGenOpt::Less;
   if (DisableBundling)
     return new KVXScheduleDAGMI(C, std::make_unique<PostGenericScheduler>(C),
                                 /*RemoveKillFlags=*/true, true);
@@ -266,8 +272,11 @@ void KVXPassConfig::addPreSched2() {
 void KVXPassConfig::addPreEmitPass() {
   addPass(createKVXExpandPseudoPass(KVX::PRE_BUNDLE));
   addPass(&BranchRelaxationPassID);
-  if (getOptLevel() != CodeGenOpt::None)
+  if (getOptLevel() != CodeGenOpt::None) {
     addPass(&PostMachineSchedulerID);
+    if (SwitchOldBundling)
+      addPass(createKVXPacketizerPass());
+  }
 
   addPass(createKVXExpandPseudoPass(KVX::PRE_EMIT));
 }
