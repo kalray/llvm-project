@@ -1857,23 +1857,6 @@ def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, (i64 3))),
               (INSF (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_d1)), SingleReg:$e, 63, 32),
               sub_d1)>;
 
-def : Pat<(v4f32 (insertelt v4f32:$to, f32:$e, i64:$idx)),
-            (REG_SEQUENCE PairedReg,
-              (CMOVEWP
-                (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 32), comparison_eq),
-                (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_d0)),
-                (INSF SingleReg:$e, SingleReg:$e, 63, 32),
-                simplecond_nez
-               ),
-               sub_d0,
-              (CMOVEWP
-                (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 32), comparison_eq),
-                (v2f32 (EXTRACT_SUBREG PairedReg:$to, sub_d1)),
-                (INSF SingleReg:$e, SingleReg:$e, 63, 32),
-                simplecond_nez
-               ),
-               sub_d1)>;
-
 // v4f64
 def : Pat<(v4f64 (insertelt v4f64:$to, f64:$e, i64:$idx)),
           (REG_SEQUENCE QuadReg,

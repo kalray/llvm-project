@@ -1575,24 +1575,26 @@ def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, (i64 3))),
               sub_d0,
               (INSF (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_d1)), SingleReg:$e, 63, 32),
               sub_d1)>;
-
-def : Pat<(v4i32 (insertelt v4i32:$to, i32:$e, i64:$idx)),
+class InsertIndexEv4x32bits <ValueType VecT, ValueType SubVecT, ValueType ElT>
+: Pat<(VecT (insertelt VecT:$to, ElT:$e, i64:$idx)),
             (REG_SEQUENCE PairedReg,
               (CMOVEWP
                 (COMPNWP (MAKEi64 0x100000000), (INSF SingleReg:$idx, SingleReg:$idx, 63, 32), comparison_eq),
-                (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_d0)),
+                (SubVecT (EXTRACT_SUBREG PairedReg:$to, sub_d0)),
                 (INSF SingleReg:$e, SingleReg:$e, 63, 32),
                 simplecond_nez
                ),
                sub_d0,
               (CMOVEWP
                 (COMPNWP (MAKEi64 0x300000002), (INSF SingleReg:$idx, SingleReg:$idx, 63, 32), comparison_eq),
-                (v2i32 (EXTRACT_SUBREG PairedReg:$to, sub_d1)),
+                (SubVecT (EXTRACT_SUBREG PairedReg:$to, sub_d1)),
                 (INSF SingleReg:$e, SingleReg:$e, 63, 32),
                 simplecond_nez
                ),
                sub_d1)>;
 
+def : InsertIndexEv4x32bits<v4i32, v2i32, i32>;
+def : InsertIndexEv4x32bits<v4f32, v2f32, f32>;
 // v2i64
 def : Pat<(v2i64 (insertelt v2i64:$to, i64:$e, i64:$idx)),
           (REG_SEQUENCE PairedReg,
