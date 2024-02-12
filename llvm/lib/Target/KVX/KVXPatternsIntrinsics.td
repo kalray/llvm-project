@@ -1058,14 +1058,35 @@ def: Pat<(int_kvx_xload256 (add i64:$mem, i64:$off), VariantMod:$mod0),
 def: Pat<(int_kvx_xload256 i64:$mem, VariantMod:$mod0),
          (XLOri10 0, SingleReg:$mem, VariantMod:$mod0)>;
 
-def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, (shiftMulPats <5, i64> i64:$off)), VariantMod:$mod0, QindexMod:$mod1),
-         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_xs, QindexMod:$mod1, MatrixReg:$z)>;
+foreach i = [0, 1, 2, 3] in {
+  defvar xload1024q = !cast<Intrinsic>(!strconcat("int_kvx_xload1024q", !cast<string>(i)));
+  defvar qindex = i;
 
-def: Pat<(int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, i64:$off), VariantMod:$mod0, QindexMod:$mod1),
-         (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_, QindexMod:$mod1, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, (add i64:$mem, Signed10:$off), VariantMod:$mod0),
+           (XLOri10q Signed10:$off, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, (add i64:$mem, Signed37:$off), VariantMod:$mod0),
+           (XLOri37q Signed37:$off, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, (add i64:$mem, Wrapped64:$off), VariantMod:$mod0),
+           (XLOri64q Wrapped64:$off, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z)>;
 
-def: Pat<(int_kvx_xloads1024 v1024i1:$z, i64:$mem, VariantMod:$mod0, QindexMod:$mod1),
-         (XLOri10q 0, SingleReg:$mem, VariantMod:$mod0, QindexMod:$mod1, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, (add i64:$mem, (shiftMulPats <5, i64> i64:$off)), VariantMod:$mod0),
+           (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_xs, qindex, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, (add i64:$mem, i64:$off), VariantMod:$mod0),
+           (XLOrrq SingleReg:$off, SingleReg:$mem, VariantMod:$mod0, scale_, qindex, MatrixReg:$z)>;
+  def: Pat<(xload1024q v1024i1:$z, i64:$mem, VariantMod:$mod0),
+           (XLOri10q 0, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z)>;
+}
+
+foreach i = [0, 1, 2, 3] in {
+  defvar xloadc1024q = !cast<Intrinsic>(!strconcat("int_kvx_xloadc1024q", !cast<string>(i)));
+  defvar qindex = i;
+  def: Pat<(xloadc1024q v1024i1:$z, i64:$mem, i64:$val, VariantMod:$mod0, LsumaskMod:$cond),
+           (XLOrrcq SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z, LsumaskMod:$cond, i64:$val)>;
+  def: Pat<(xloadc1024q v1024i1:$z, (add i64:$mem, Signed27:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond),
+           (XLOri27cq Signed27:$off, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z, LsumaskMod:$cond, i64:$val)>;
+  def: Pat<(xloadc1024q v1024i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond),
+           (XLOri54cq Signed54:$off, SingleReg:$mem, VariantMod:$mod0, qindex, MatrixReg:$z, LsumaskMod:$cond, i64:$val)>;
+}
 
 def: Pat<(int_kvx_xload512 i64:$mem, VariantMod:$mod0),
          (REG_SEQUENCE WideReg,

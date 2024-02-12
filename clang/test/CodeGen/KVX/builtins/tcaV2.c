@@ -277,40 +277,40 @@ void xloadc256(__kvx_x256 *v, long x) {
   v[0] = __builtin_kvx_xloadc256(c, &v[2], 1, ".us.mfc");
 }
 
-// CHECK-LABEL: @xloads1024(
+// CHECK-LABEL: @xload1024q(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, ptr [[M:%.*]], i32 0, i32 0)
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP0]], ptr [[M]], i32 0, i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP1]], ptr [[M]], i32 1, i32 2)
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> [[TMP2]], ptr [[M]], i32 3, i32 3)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024q0(<1024 x i1> undef, ptr [[M:%.*]], i32 0)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024q1(<1024 x i1> [[TMP0]], ptr [[M]], i32 0)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024q2(<1024 x i1> [[TMP1]], ptr [[M]], i32 1)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xload1024q3(<1024 x i1> [[TMP2]], ptr [[M]], i32 3)
 // CHECK-NEXT:    store <1024 x i1> [[TMP3]], ptr [[M]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
-void xloads1024(__kvx_x1024 *m) {
+void xload1024q(__kvx_x1024 *m) {
   __kvx_x1024 l;
-  l = __builtin_kvx_xloads1024(l, &m[0], ".q0");
-  l = __builtin_kvx_xloads1024(l, &m[0], "..q1");
-  l = __builtin_kvx_xloads1024(l, &m[0], ".s.q2");
-  m[0] = __builtin_kvx_xloads1024(l, &m[0], ".us.q3");
+  l = __builtin_kvx_xload1024q0(l, &m[0], "");
+  l = __builtin_kvx_xload1024q1(l, &m[0], "");
+  l = __builtin_kvx_xload1024q2(l, &m[0], ".s");
+  m[0] = __builtin_kvx_xload1024q3(l, &m[0], ".us");
 }
 
-// CHECK-LABEL: @xloadsc1024(
+// CHECK-LABEL: @xloadc1024q(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, ptr [[M:%.*]], i64 [[X:%.*]], i32 0, i32 4, i32 0)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024q0(<1024 x i1> undef, ptr [[M:%.*]], i64 [[X:%.*]], i32 0, i32 4)
 // CHECK-NEXT:    [[TOBOOL_NOT:%.*]] = icmp eq i64 [[X]], 0
 // CHECK-NEXT:    [[CONV:%.*]] = zext i1 [[TOBOOL_NOT]] to i64
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP0]], ptr [[M]], i64 [[CONV]], i32 1, i32 5, i32 1)
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP1]], ptr [[M]], i64 0, i32 2, i32 6, i32 2)
-// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> [[TMP2]], ptr [[M]], i64 1, i32 3, i32 7, i32 3)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024q1(<1024 x i1> [[TMP0]], ptr [[M]], i64 [[CONV]], i32 1, i32 5)
+// CHECK-NEXT:    [[TMP2:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024q2(<1024 x i1> [[TMP1]], ptr [[M]], i64 0, i32 2, i32 6)
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <1024 x i1> @llvm.kvx.xloadc1024q3(<1024 x i1> [[TMP2]], ptr [[M]], i64 1, i32 3, i32 7)
 // CHECK-NEXT:    store <1024 x i1> [[TMP3]], ptr [[M]], align 32, !tbaa [[TBAA8]]
 // CHECK-NEXT:    ret void
 //
-void xloadsc1024(__kvx_x1024 *m, long x) {
+void xloadc1024q(__kvx_x1024 *m, long x) {
   __kvx_x1024 l;
-  l = __builtin_kvx_xloadsc1024(l, &m[0], x, ".mt.q0");
-  l = __builtin_kvx_xloadsc1024(l, &m[0], !x, ".s.mf.q1");
-  l = __builtin_kvx_xloadsc1024(l, &m[0], 0, ".u.mtc.q2");
-  m[0] = __builtin_kvx_xloadsc1024(l, &m[0], 1, ".us.mfc.q3");
+  l = __builtin_kvx_xloadc1024q0(l, &m[0], x, ".mt");
+  l = __builtin_kvx_xloadc1024q1(l, &m[0], !x, ".s.mf");
+  l = __builtin_kvx_xloadc1024q2(l, &m[0], 0, ".u.mtc");
+  m[0] = __builtin_kvx_xloadc1024q3(l, &m[0], 1, ".us.mfc");
 }
 
 // CHECK-LABEL: @xload512(

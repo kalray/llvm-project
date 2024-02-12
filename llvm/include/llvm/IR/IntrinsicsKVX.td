@@ -218,8 +218,14 @@ def int_kvx_xload512: Intrinsic<[llvm_v512i1_ty], [llvm_ptr_ty, llvm_i32_ty], [I
 def int_kvx_xloadc1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_v4i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc256: Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xloadc512: Intrinsic<[llvm_v512i1_ty], [llvm_v512i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_xloads1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
-def int_kvx_xloadsc1024: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xload1024q0: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xload1024q1: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xload1024q2: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xload1024q3: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc1024q0: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc1024q1: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc1024q2: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
+def int_kvx_xloadc1024q3: Intrinsic<[llvm_v1024i1_ty], [llvm_v1024i1_ty, llvm_ptr_ty, llvm_i64_ty, llvm_i32_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xmadd44bw0 : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xmadd44bw1 : Intrinsic<[llvm_v512i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v512i1_ty, llvm_i32_ty], [IntrReadMem]>;
 def int_kvx_xmaddifwo : Intrinsic<[llvm_v256i1_ty], [llvm_v256i1_ty, llvm_v256i1_ty, llvm_v256i1_ty, llvm_i32_ty, llvm_i32_ty], [IntrHasSideEffects]>;

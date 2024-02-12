@@ -529,8 +529,8 @@ define void @xloadc256(ptr %0, i64 %1) {
 
 declare <256 x i1> @llvm.kvx.xloadc256(<256 x i1>, ptr, i64, i32, i32)
 
-define void @xloads1024(ptr %0) {
-; CHECK-LABEL: xloads1024:
+define void @xload1024q(ptr %0) {
+; CHECK-LABEL: xload1024q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo.q0 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -549,18 +549,21 @@ define void @xloads1024(ptr %0) {
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 19)
-  %2 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> undef, ptr %0, i32 0, i32 0)
-  %3 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> %2, ptr %0, i32 0, i32 1)
-  %4 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> %3, ptr %0, i32 1, i32 2)
-  %5 = tail call <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1> %4, ptr %0, i32 3, i32 3)
+  %2 = tail call <1024 x i1> @llvm.kvx.xload1024q0(<1024 x i1> undef, ptr %0, i32 0)
+  %3 = tail call <1024 x i1> @llvm.kvx.xload1024q1(<1024 x i1> %2, ptr %0, i32 0)
+  %4 = tail call <1024 x i1> @llvm.kvx.xload1024q2(<1024 x i1> %3, ptr %0, i32 1)
+  %5 = tail call <1024 x i1> @llvm.kvx.xload1024q3(<1024 x i1> %4, ptr %0, i32 3)
   store <1024 x i1> %5, ptr %0
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.xloads1024(<1024 x i1>, ptr, i32, i32)
+declare <1024 x i1> @llvm.kvx.xload1024q0(<1024 x i1>, ptr, i32)
+declare <1024 x i1> @llvm.kvx.xload1024q1(<1024 x i1>, ptr, i32)
+declare <1024 x i1> @llvm.kvx.xload1024q2(<1024 x i1>, ptr, i32)
+declare <1024 x i1> @llvm.kvx.xload1024q3(<1024 x i1>, ptr, i32)
 
-define void @xloadsc1024(ptr %0, i64 %1) {
-; CHECK-LABEL: xloadsc1024:
+define void @xloadc1024q(ptr %0, i64 %1) {
+; CHECK-LABEL: xloadc1024q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compd.eq $r1 = $r1, 0
 ; CHECK-NEXT:    xlo.mt.q0 $r1 ? $a0a1a2a3 = [$r0]
@@ -582,17 +585,20 @@ define void @xloadsc1024(ptr %0, i64 %1) {
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 19)
-  %3 = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> undef, ptr %0, i64 %1, i32 0, i32 4, i32 0)
+  %3 = tail call <1024 x i1> @llvm.kvx.xloadc1024q0(<1024 x i1> undef, ptr %0, i64 %1, i32 0, i32 4)
   %4 = icmp eq i64 %1, 0
   %5 = zext i1 %4 to i64
-  %6 = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> %3, ptr %0, i64 %5, i32 1, i32 5, i32 1)
-  %7 = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> %6, ptr %0, i64 0, i32 2, i32 6, i32 2)
-  %8 = tail call <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1> %7, ptr %0, i64 1, i32 3, i32 7, i32 3)
+  %6 = tail call <1024 x i1> @llvm.kvx.xloadc1024q1(<1024 x i1> %3, ptr %0, i64 %5, i32 1, i32 5)
+  %7 = tail call <1024 x i1> @llvm.kvx.xloadc1024q2(<1024 x i1> %6, ptr %0, i64 0, i32 2, i32 6)
+  %8 = tail call <1024 x i1> @llvm.kvx.xloadc1024q3(<1024 x i1> %7, ptr %0, i64 1, i32 3, i32 7)
   store <1024 x i1> %8, ptr %0
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.xloadsc1024(<1024 x i1>, ptr, i64, i32, i32, i32)
+declare <1024 x i1> @llvm.kvx.xloadc1024q0(<1024 x i1>, ptr, i64, i32, i32)
+declare <1024 x i1> @llvm.kvx.xloadc1024q1(<1024 x i1>, ptr, i64, i32, i32)
+declare <1024 x i1> @llvm.kvx.xloadc1024q2(<1024 x i1>, ptr, i64, i32, i32)
+declare <1024 x i1> @llvm.kvx.xloadc1024q3(<1024 x i1>, ptr, i64, i32, i32)
 
 define void @xload512(ptr %0, i64 %1) {
 ; CHECK-LABEL: xload512:

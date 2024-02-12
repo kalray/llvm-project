@@ -337,13 +337,13 @@ multiclass MC_XLO <string OpcStr = "xlo"> {
 
   // xlovariantqindex registerAq = signed10[registerZ]
   defm ri10q : I <OpcStr, LSU_XLOAD, [], [VariantMod, QindexMod], [Signed10, SingleReg], [], [MatrixReg], 1,
-                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Signed10:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+                [/* no straightforward pattern */]>;
   // xlovariantqindex registerAq = upper27 lower10[registerZ]
   defm ri37q : I <OpcStr, LSU_XLOAD_X_, [], [VariantMod, QindexMod], [Signed37, SingleReg], [], [MatrixReg], 1,
-                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Signed37:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+                [/* no straightforward pattern */]>;
   //xlovariantqindex registerAq = extend27 upper27 lower10[registerZ]
   defm ri64q : I <OpcStr, LSU_XLOAD_Y_, [], [VariantMod, QindexMod], [Wrapped64, SingleReg], [], [MatrixReg], 1,
-                [(set v1024i1:$r, (int_kvx_xloads1024 v1024i1:$z, (add i64:$mem, Wrapped64:$off), VariantMod:$mod0, QindexMod:$mod1))]>;
+                [/* no straightforward pattern */]>;
 
   // xlovariantlsumask registerY? registerA = [registerZ]
   defm rrc    : I <OpcStr, LSU_XLOAD, [], [VariantMod], [SingleReg], [LsumaskMod, SingleReg], [VectorReg], 1,
@@ -357,13 +357,13 @@ multiclass MC_XLO <string OpcStr = "xlo"> {
 
   // xlovariantlsumaskqindex registerY? registerAq = [registerZ]
   defm rrcq    : I <OpcStr, LSU_XLOAD, [], [VariantMod, QindexMod], [SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
-                  [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, i64:$mem, i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+                  [/* no straightforward pattern */]>;
   // xlovariantlsumaskqindex registerY? registerAq = offset27[registerZ]
   defm ri27cq : I <OpcStr, LSU_XLOAD_X_, [], [VariantMod, QindexMod], [Signed27, SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
-                    [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed27:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+                    [/* no straightforward pattern */]>;
   // xlovariantlsumaskqindex registerY? registerAq = extend27 offset27[registerZ]
   defm ri54cq : I <OpcStr, LSU_XLOAD_Y_, [], [VariantMod, QindexMod], [Signed54, SingleReg], [LsumaskMod, SingleReg], [MatrixReg], 1,
-                    [(set v1024i1:$r, (int_kvx_xloadsc1024 v1024i1:$z, (add i64:$mem, Signed54:$off), i64:$val, VariantMod:$mod0, LsumaskMod:$cond, QindexMod:$mod1))]>;
+                    [/* no straightforward pattern */]>;
 
   // xlovariantlsupack registerAg, registerY = [registerZ]
   defm rvp    : I <OpcStr, LSU_XLOAD, [SingleReg], [VariantMod, LsupackMod], [SingleReg], [], [BufferReg], 1>;
