@@ -16,7 +16,9 @@
 #include "kmp_wrapper_getpid.h"
 #include <float.h>
 
+#if !KMP_OS_CLUSTER_OS
 static const char *unknown = "unknown";
+#endif
 
 #if KMP_ARCH_X86 || KMP_ARCH_X86_64
 
@@ -220,7 +222,9 @@ void __kmp_query_cpuid(kmp_cpuinfo_t *p) {
 #endif /* KMP_ARCH_X86 || KMP_ARCH_X86_64 */
 
 void __kmp_expand_host_name(char *buffer, size_t size) {
+#if !KMP_OS_CLUSTER_OS
   KMP_DEBUG_ASSERT(size >= sizeof(unknown));
+#endif
 #if KMP_OS_WINDOWS
   {
     DWORD s = size;
@@ -230,6 +234,16 @@ void __kmp_expand_host_name(char *buffer, size_t size) {
   }
 #elif KMP_OS_WASI
   KMP_STRCPY_S(buffer, size, unknown);
+#elif KMP_OS_CLUSTER_OS
+  // gethostname is not yet implemented for COS.
+  // We return a default name KMP_CLUSTER_OS_HOSTNAME, defined in kmp.h
+  int name_size = KMP_CLUSTER_OS_HOSTNAME_LENGTH;
+  //+ 1 for the \0 at the end
+  if (size < name_size + 1)
+    return;
+  const char *name = KMP_CLUSTER_OS_HOSTNAME;
+  strncpy(buffer, name, name_size);
+  buffer[name_size + 1] = '\0';
 #else
   buffer[size - 2] = 0;
   if (gethostname(buffer, size) || buffer[size - 2] != 0)

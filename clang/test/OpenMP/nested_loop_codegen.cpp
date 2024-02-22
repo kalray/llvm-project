@@ -260,8 +260,8 @@ int inline_decl() {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[I:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[K:%.*]] = alloca i32, align 4
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META12:![0-9]+]], metadata !DIExpression()), !dbg [[DBG13:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META14:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META12:![0-9]+]], metadata !DIExpression()), !dbg [[DBG13:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META14:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15:![0-9]+]]
 // CHECK2-NEXT:    call void (ptr, i32, ptr, ...) @__kmpc_fork_call(ptr @[[GLOB6:[0-9]+]], i32 1, ptr @_Z12outline_declv.omp_outlined, ptr [[I]]), !dbg [[DBG16:![0-9]+]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load i32, ptr [[K]], align 4, !dbg [[DBG17:![0-9]+]]
 // CHECK2-NEXT:    ret i32 [[TMP0]], !dbg [[DBG18:![0-9]+]]
@@ -281,11 +281,11 @@ int inline_decl() {
 // CHECK2-NEXT:    [[DOTOMP_IS_LAST:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[K:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    store ptr [[DOTGLOBAL_TID_]], ptr [[DOTGLOBAL_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META27:![0-9]+]], metadata !DIExpression()), !dbg [[DBG28:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META27:![0-9]+]], metadata !DIExpression()), !dbg [[DBG28:![0-9]+]]
 // CHECK2-NEXT:    store ptr [[DOTBOUND_TID_]], ptr [[DOTBOUND_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META29:![0-9]+]], metadata !DIExpression()), !dbg [[DBG28]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META29:![0-9]+]], metadata !DIExpression()), !dbg [[DBG28]]
 // CHECK2-NEXT:    store ptr [[I]], ptr [[I_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META30:![0-9]+]], metadata !DIExpression()), !dbg [[DBG31:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META30:![0-9]+]], metadata !DIExpression()), !dbg [[DBG31:![0-9]+]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[I_ADDR]], align 8, !dbg [[DBG32:![0-9]+]]
 // CHECK2-NEXT:    store i32 0, ptr [[TMP0]], align 4, !dbg [[DBG33:![0-9]+]]
 // CHECK2-NEXT:    br label [[FOR_COND:%.*]], !dbg [[DBG35:![0-9]+]]
@@ -294,16 +294,16 @@ int inline_decl() {
 // CHECK2-NEXT:    [[CMP:%.*]] = icmp slt i32 [[TMP1]], 10, !dbg [[DBG38:![0-9]+]]
 // CHECK2-NEXT:    br i1 [[CMP]], label [[FOR_BODY:%.*]], label [[FOR_END:%.*]], !dbg [[DBG39:![0-9]+]]
 // CHECK2:       for.body:
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IV]], metadata [[META40:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_LB]], metadata [[META44:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IV]], metadata [[META40:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_LB]], metadata [[META44:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
 // CHECK2-NEXT:    store i32 0, ptr [[DOTOMP_LB]], align 4, !dbg [[DBG45:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_UB]], metadata [[META46:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_UB]], metadata [[META46:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
 // CHECK2-NEXT:    store i32 4, ptr [[DOTOMP_UB]], align 4, !dbg [[DBG45]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_STRIDE]], metadata [[META47:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_STRIDE]], metadata [[META47:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
 // CHECK2-NEXT:    store i32 1, ptr [[DOTOMP_STRIDE]], align 4, !dbg [[DBG45]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IS_LAST]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IS_LAST]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
 // CHECK2-NEXT:    store i32 0, ptr [[DOTOMP_IS_LAST]], align 4, !dbg [[DBG45]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META49:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META49:![0-9]+]], metadata !DIExpression()), !dbg [[DBG43]]
 // CHECK2-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DOTGLOBAL_TID__ADDR]], align 8, !dbg [[DBG50:![0-9]+]]
 // CHECK2-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG50]]
 // CHECK2-NEXT:    call void @__kmpc_for_static_init_4(ptr @[[GLOB1:[0-9]+]], i32 [[TMP3]], i32 34, ptr [[DOTOMP_IS_LAST]], ptr [[DOTOMP_LB]], ptr [[DOTOMP_UB]], ptr [[DOTOMP_STRIDE]], i32 1, i32 1), !dbg [[DBG51:![0-9]+]]
@@ -368,11 +368,11 @@ int inline_decl() {
 // CHECK2-NEXT:    [[DOTBOUND_TID__ADDR:%.*]] = alloca ptr, align 8
 // CHECK2-NEXT:    [[I_ADDR:%.*]] = alloca ptr, align 8
 // CHECK2-NEXT:    store ptr [[DOTGLOBAL_TID_]], ptr [[DOTGLOBAL_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META67:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META67:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68:![0-9]+]]
 // CHECK2-NEXT:    store ptr [[DOTBOUND_TID_]], ptr [[DOTBOUND_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META69:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META69:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68]]
 // CHECK2-NEXT:    store ptr [[I]], ptr [[I_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META70:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META70:![0-9]+]], metadata !DIExpression()), !dbg [[DBG68]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[I_ADDR]], align 8, !dbg [[DBG71:![0-9]+]]
 // CHECK2-NEXT:    [[TMP1:%.*]] = load ptr, ptr [[DOTGLOBAL_TID__ADDR]], align 8, !dbg [[DBG71]]
 // CHECK2-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DOTBOUND_TID__ADDR]], align 8, !dbg [[DBG71]]
@@ -386,8 +386,8 @@ int inline_decl() {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[I:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[RES:%.*]] = alloca i32, align 4
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META75:![0-9]+]], metadata !DIExpression()), !dbg [[DBG76:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[RES]], metadata [[META77:![0-9]+]], metadata !DIExpression()), !dbg [[DBG78:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META75:![0-9]+]], metadata !DIExpression()), !dbg [[DBG76:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[RES]], metadata [[META77:![0-9]+]], metadata !DIExpression()), !dbg [[DBG78:![0-9]+]]
 // CHECK2-NEXT:    call void (ptr, i32, ptr, ...) @__kmpc_fork_call(ptr @[[GLOB13:[0-9]+]], i32 2, ptr @_Z11inline_declv.omp_outlined, ptr [[I]], ptr [[RES]]), !dbg [[DBG79:![0-9]+]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load i32, ptr [[RES]], align 4, !dbg [[DBG80:![0-9]+]]
 // CHECK2-NEXT:    ret i32 [[TMP0]], !dbg [[DBG81:![0-9]+]]
@@ -408,13 +408,13 @@ int inline_decl() {
 // CHECK2-NEXT:    [[DOTOMP_IS_LAST:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[K:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    store ptr [[DOTGLOBAL_TID_]], ptr [[DOTGLOBAL_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META85:![0-9]+]], metadata !DIExpression()), !dbg [[DBG86:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META85:![0-9]+]], metadata !DIExpression()), !dbg [[DBG86:![0-9]+]]
 // CHECK2-NEXT:    store ptr [[DOTBOUND_TID_]], ptr [[DOTBOUND_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META87:![0-9]+]], metadata !DIExpression()), !dbg [[DBG86]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META87:![0-9]+]], metadata !DIExpression()), !dbg [[DBG86]]
 // CHECK2-NEXT:    store ptr [[I]], ptr [[I_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META88:![0-9]+]], metadata !DIExpression()), !dbg [[DBG89:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META88:![0-9]+]], metadata !DIExpression()), !dbg [[DBG89:![0-9]+]]
 // CHECK2-NEXT:    store ptr [[RES]], ptr [[RES_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[RES_ADDR]], metadata [[META90:![0-9]+]], metadata !DIExpression()), !dbg [[DBG91:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[RES_ADDR]], metadata [[META90:![0-9]+]], metadata !DIExpression()), !dbg [[DBG91:![0-9]+]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[I_ADDR]], align 8, !dbg [[DBG92:![0-9]+]]
 // CHECK2-NEXT:    [[TMP1:%.*]] = load ptr, ptr [[RES_ADDR]], align 8, !dbg [[DBG92]]
 // CHECK2-NEXT:    store i32 0, ptr [[TMP0]], align 4, !dbg [[DBG93:![0-9]+]]
@@ -424,16 +424,16 @@ int inline_decl() {
 // CHECK2-NEXT:    [[CMP:%.*]] = icmp slt i32 [[TMP2]], 10, !dbg [[DBG98:![0-9]+]]
 // CHECK2-NEXT:    br i1 [[CMP]], label [[FOR_BODY:%.*]], label [[FOR_END:%.*]], !dbg [[DBG99:![0-9]+]]
 // CHECK2:       for.body:
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IV]], metadata [[META100:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_LB]], metadata [[META104:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IV]], metadata [[META100:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_LB]], metadata [[META104:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
 // CHECK2-NEXT:    store i32 0, ptr [[DOTOMP_LB]], align 4, !dbg [[DBG105:![0-9]+]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_UB]], metadata [[META106:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_UB]], metadata [[META106:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
 // CHECK2-NEXT:    store i32 4, ptr [[DOTOMP_UB]], align 4, !dbg [[DBG105]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_STRIDE]], metadata [[META107:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_STRIDE]], metadata [[META107:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
 // CHECK2-NEXT:    store i32 1, ptr [[DOTOMP_STRIDE]], align 4, !dbg [[DBG105]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IS_LAST]], metadata [[META108:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTOMP_IS_LAST]], metadata [[META108:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
 // CHECK2-NEXT:    store i32 0, ptr [[DOTOMP_IS_LAST]], align 4, !dbg [[DBG105]]
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META109:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META109:![0-9]+]], metadata !DIExpression()), !dbg [[DBG103]]
 // CHECK2-NEXT:    [[TMP3:%.*]] = load ptr, ptr [[DOTGLOBAL_TID__ADDR]], align 8, !dbg [[DBG110:![0-9]+]]
 // CHECK2-NEXT:    [[TMP4:%.*]] = load i32, ptr [[TMP3]], align 4, !dbg [[DBG110]]
 // CHECK2-NEXT:    call void @__kmpc_for_static_init_4(ptr @[[GLOB8:[0-9]+]], i32 [[TMP4]], i32 34, ptr [[DOTOMP_IS_LAST]], ptr [[DOTOMP_LB]], ptr [[DOTOMP_UB]], ptr [[DOTOMP_STRIDE]], i32 1, i32 1), !dbg [[DBG111:![0-9]+]]
@@ -499,13 +499,13 @@ int inline_decl() {
 // CHECK2-NEXT:    [[I_ADDR:%.*]] = alloca ptr, align 8
 // CHECK2-NEXT:    [[RES_ADDR:%.*]] = alloca ptr, align 8
 // CHECK2-NEXT:    store ptr [[DOTGLOBAL_TID_]], ptr [[DOTGLOBAL_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META126:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127:![0-9]+]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTGLOBAL_TID__ADDR]], metadata [[META126:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127:![0-9]+]]
 // CHECK2-NEXT:    store ptr [[DOTBOUND_TID_]], ptr [[DOTBOUND_TID__ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META128:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTBOUND_TID__ADDR]], metadata [[META128:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
 // CHECK2-NEXT:    store ptr [[I]], ptr [[I_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META129:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I_ADDR]], metadata [[META129:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
 // CHECK2-NEXT:    store ptr [[RES]], ptr [[RES_ADDR]], align 8
-// CHECK2-NEXT:    call void @llvm.dbg.declare(metadata ptr [[RES_ADDR]], metadata [[META130:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
+// CHECK2-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[RES_ADDR]], metadata [[META130:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
 // CHECK2-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[I_ADDR]], align 8, !dbg [[DBG131:![0-9]+]]
 // CHECK2-NEXT:    [[TMP1:%.*]] = load ptr, ptr [[RES_ADDR]], align 8, !dbg [[DBG131]]
 // CHECK2-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[DOTGLOBAL_TID__ADDR]], align 8, !dbg [[DBG131]]
@@ -859,8 +859,8 @@ int inline_decl() {
 // CHECK4-NEXT:    [[STRUCTARG:%.*]] = alloca { ptr, ptr }, align 8
 // CHECK4-NEXT:    [[I:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[K:%.*]] = alloca i32, align 4
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META14:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15:![0-9]+]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META16:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META14:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META16:![0-9]+]], metadata !DIExpression()), !dbg [[DBG15]]
 // CHECK4-NEXT:    [[OMP_GLOBAL_THREAD_NUM:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB1:[0-9]+]]), !dbg [[DBG17:![0-9]+]]
 // CHECK4-NEXT:    br label [[OMP_PARALLEL:%.*]]
 // CHECK4:       omp_parallel:
@@ -972,18 +972,18 @@ int inline_decl() {
 // CHECK4-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49:![0-9]+]]
 // CHECK4-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META50:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META50:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49]]
 // CHECK4-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META51:![0-9]+]], metadata !DIExpression()), !dbg [[DBG53:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META51:![0-9]+]], metadata !DIExpression()), !dbg [[DBG53:![0-9]+]]
 // CHECK4-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG54:![0-9]+]]
 // CHECK4-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG54]]
 // CHECK4-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG54]]
 // CHECK4-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG53]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META56:![0-9]+]], metadata !DIExpression()), !dbg [[DBG57:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META56:![0-9]+]], metadata !DIExpression()), !dbg [[DBG57:![0-9]+]]
 // CHECK4-NEXT:    store i32 5, ptr [[DOTSTOP]], align 4, !dbg [[DBG57]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META58:![0-9]+]], metadata !DIExpression()), !dbg [[DBG57]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META58:![0-9]+]], metadata !DIExpression()), !dbg [[DBG57]]
 // CHECK4-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG57]]
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG57]]
 // CHECK4-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG57]]
@@ -1015,11 +1015,11 @@ int inline_decl() {
 // CHECK4-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK4-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META69:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META69:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70:![0-9]+]]
 // CHECK4-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META71:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META71:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70]]
 // CHECK4-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META72:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META72:![0-9]+]], metadata !DIExpression()), !dbg [[DBG70]]
 // CHECK4-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK4-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_0:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG73:![0-9]+]]
 // CHECK4-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG73]]
@@ -1037,8 +1037,8 @@ int inline_decl() {
 // CHECK4-NEXT:    [[STRUCTARG:%.*]] = alloca { ptr, ptr }, align 8
 // CHECK4-NEXT:    [[I:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[RES:%.*]] = alloca i32, align 4
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META79:![0-9]+]], metadata !DIExpression()), !dbg [[DBG80:![0-9]+]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[RES]], metadata [[META81:![0-9]+]], metadata !DIExpression()), !dbg [[DBG80]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META79:![0-9]+]], metadata !DIExpression()), !dbg [[DBG80:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[RES]], metadata [[META81:![0-9]+]], metadata !DIExpression()), !dbg [[DBG80]]
 // CHECK4-NEXT:    [[OMP_GLOBAL_THREAD_NUM:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB6:[0-9]+]]), !dbg [[DBG82:![0-9]+]]
 // CHECK4-NEXT:    br label [[OMP_PARALLEL:%.*]]
 // CHECK4:       omp_parallel:
@@ -1089,7 +1089,7 @@ int inline_decl() {
 // CHECK4:       omp.par.pre_finalize:
 // CHECK4-NEXT:    br label [[OMP_PAR_OUTLINED_EXIT_EXITSTUB:%.*]], !dbg [[DBG91]]
 // CHECK4:       for.body:
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META92:![0-9]+]], metadata !DIExpression()), !dbg [[DBG96:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[K]], metadata [[META92:![0-9]+]], metadata !DIExpression()), !dbg [[DBG96:![0-9]+]]
 // CHECK4-NEXT:    store i32 0, ptr [[K]], align 4, !dbg [[DBG96]]
 // CHECK4-NEXT:    [[TMP3:%.*]] = getelementptr inbounds [[STRUCT_ANON_1]], ptr [[AGG_CAPTURED]], i32 0, i32 0, !dbg [[DBG96]]
 // CHECK4-NEXT:    store ptr [[K]], ptr [[TMP3]], align 8, !dbg [[DBG96]]
@@ -1152,18 +1152,18 @@ int inline_decl() {
 // CHECK4-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META104:![0-9]+]], metadata !DIExpression()), !dbg [[DBG105:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META104:![0-9]+]], metadata !DIExpression()), !dbg [[DBG105:![0-9]+]]
 // CHECK4-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META106:![0-9]+]], metadata !DIExpression()), !dbg [[DBG105]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META106:![0-9]+]], metadata !DIExpression()), !dbg [[DBG105]]
 // CHECK4-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META107:![0-9]+]], metadata !DIExpression()), !dbg [[DBG109:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META107:![0-9]+]], metadata !DIExpression()), !dbg [[DBG109:![0-9]+]]
 // CHECK4-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_1:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG110:![0-9]+]]
 // CHECK4-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG110]]
 // CHECK4-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG110]]
 // CHECK4-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG109]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META112:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META112:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113:![0-9]+]]
 // CHECK4-NEXT:    store i32 5, ptr [[DOTSTOP]], align 4, !dbg [[DBG113]]
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META114:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META114:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113]]
 // CHECK4-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG113]]
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG113]]
 // CHECK4-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG113]]
@@ -1195,11 +1195,11 @@ int inline_decl() {
 // CHECK4-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK4-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META118:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119:![0-9]+]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META118:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119:![0-9]+]]
 // CHECK4-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META120:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META120:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119]]
 // CHECK4-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK4-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META121:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119]]
+// CHECK4-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META121:![0-9]+]], metadata !DIExpression()), !dbg [[DBG119]]
 // CHECK4-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK4-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_2:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG122:![0-9]+]]
 // CHECK4-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG122]]

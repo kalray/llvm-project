@@ -253,7 +253,7 @@ void ModuloScheduleExpander::generateEpilog(
   // this call to analyze branch uses the kernel rather than the original BB.
   MachineBasicBlock *TBB = nullptr, *FBB = nullptr;
   SmallVector<MachineOperand, 4> Cond;
-  bool checkBranch = TII->analyzeBranch(*KernelBB, TBB, FBB, Cond);
+  bool checkBranch = TII->analyzeBranchPipeliner(*KernelBB, TBB, FBB, Cond);
   assert(!checkBranch && "generateEpilog must be able to analyze the branch");
   if (checkBranch)
     return;
@@ -1885,7 +1885,7 @@ MachineBasicBlock *PeelingModuloScheduleExpander::CreateLCSSAExitingBlock() {
 
   MachineBasicBlock *TBB = nullptr, *FBB = nullptr;
   SmallVector<MachineOperand, 4> Cond;
-  bool CanAnalyzeBr = !TII->analyzeBranch(*BB, TBB, FBB, Cond);
+  bool CanAnalyzeBr = !TII->analyzeBranchPipeliner(*BB, TBB, FBB, Cond);
   (void)CanAnalyzeBr;
   assert(CanAnalyzeBr && "Must be able to analyze the loop branch!");
   TII->removeBranch(*BB);

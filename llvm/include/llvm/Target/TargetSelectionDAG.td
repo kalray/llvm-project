@@ -438,8 +438,8 @@ def saddsat    : SDNode<"ISD::SADDSAT"   , SDTIntBinOp, [SDNPCommutative]>;
 def uaddsat    : SDNode<"ISD::UADDSAT"   , SDTIntBinOp, [SDNPCommutative]>;
 def ssubsat    : SDNode<"ISD::SSUBSAT"   , SDTIntBinOp>;
 def usubsat    : SDNode<"ISD::USUBSAT"   , SDTIntBinOp>;
-def sshlsat    : SDNode<"ISD::SSHLSAT"   , SDTIntBinOp>;
-def ushlsat    : SDNode<"ISD::USHLSAT"   , SDTIntBinOp>;
+def sshlsat    : SDNode<"ISD::SSHLSAT"   , SDTIntShiftOp>;
+def ushlsat    : SDNode<"ISD::USHLSAT"   , SDTIntShiftOp>;
 
 def smulfix    : SDNode<"ISD::SMULFIX"   , SDTIntScaledBinOp, [SDNPCommutative]>;
 def smulfixsat : SDNode<"ISD::SMULFIXSAT", SDTIntScaledBinOp, [SDNPCommutative]>;
@@ -482,6 +482,10 @@ def vecreduce_fmin  : SDNode<"ISD::VECREDUCE_FMIN", SDTFPVecReduce>;
 def vecreduce_fmax  : SDNode<"ISD::VECREDUCE_FMAX", SDTFPVecReduce>;
 def vecreduce_fminimum : SDNode<"ISD::VECREDUCE_FMINIMUM", SDTFPVecReduce>;
 def vecreduce_fmaximum : SDNode<"ISD::VECREDUCE_FMAXIMUM", SDTFPVecReduce>;
+
+def vecreduce_and  : SDNode<"ISD::VECREDUCE_AND", SDTVecReduce>;
+def vecreduce_or  : SDNode<"ISD::VECREDUCE_OR", SDTVecReduce>;
+def vecreduce_xor  : SDNode<"ISD::VECREDUCE_XOR", SDTVecReduce>;
 
 def fadd       : SDNode<"ISD::FADD"       , SDTFPBinOp, [SDNPCommutative]>;
 def fsub       : SDNode<"ISD::FSUB"       , SDTFPBinOp>;
@@ -1040,6 +1044,10 @@ def ineg : PatFrag<(ops node:$in), (sub 0, node:$in)>;
 
 def zanyext : PatFrags<(ops node:$op),
                        [(zext node:$op),
+                        (anyext node:$op)]>;
+
+def sanyext : PatFrags<(ops node:$op),
+                       [(sext node:$op),
                         (anyext node:$op)]>;
 
 // null_frag - The null pattern operator is used in multiclass instantiations

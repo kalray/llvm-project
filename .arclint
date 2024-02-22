@@ -1,0 +1,29 @@
+{
+    "linters": {
+        "Text linter": {
+            "type": "text",
+            "severity": {
+                "2": "warning"
+            },
+            "exclude" : [
+                "(/test/)",
+                "(\\.td$)",
+                "(\\.def)",
+                "(\\.inc)"
+            ]
+        },
+        "Merge Conflicts": {
+            "type": "merge-conflict"
+        },
+        "clang-format": {
+            "type": "clang-format",
+            "bin": "/nfs/tools/software/work1_common/tools/creduce-llvm/root/bin/clang-format",
+            "flags": ["-style=llvm"],
+            "include": [
+                "(\\.(c|h)$)",
+                "(\\.(cpp|hpp)$)"
+            ],
+            "exclude" : "(/test/)"
+        }
+    }
+}

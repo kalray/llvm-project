@@ -390,7 +390,7 @@ __kmp_wait_template(kmp_info_t *this_thr,
     if (team && team->t.t_cancel_request == cancel_parallel)
       return true;
   }
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
   if (final_spin)
     KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, true);
 #endif
@@ -633,12 +633,12 @@ final_spin=FALSE)
     } else {
 #endif
       KF_TRACE(50, ("__kmp_wait_sleep: T#%d suspend time reached\n", th_gtid));
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
       if (final_spin)
         KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, false);
 #endif
       flag->suspend(th_gtid);
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
       if (final_spin)
         KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, true);
 #endif
@@ -680,7 +680,7 @@ final_spin=FALSE)
   }
 #endif
 
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
   if (final_spin)
     KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, false);
 #endif

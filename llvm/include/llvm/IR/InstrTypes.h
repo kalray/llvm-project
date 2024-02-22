@@ -852,15 +852,23 @@ public:
       Type *DestTy, ///< The Type to which the value should be cast.
       const DataLayout &DL);
 
-  /// Returns the opcode necessary to cast Val into Ty using usual casting
-  /// rules.
-  /// Infer the opcode for cast operand and type
-  static Instruction::CastOps getCastOpcode(
-    const Value *Val, ///< The value to cast
+  /// Returns the opcode necessary to cast SrcTy into DesTy using
+  /// usual casting rules.
+  static Instruction::CastOps getCastOpcode(Type *SrcTy,      ///< The srct type to cast
+                bool SrcIsSigned, ///< Whether to treat the source as signed
+                Type *DesTy, ///< The Type to which the value should be casted
+                bool DstIsSigned ///< Whether to treat the dest. as signed
+  );
+
+  /// Wrapper to getCastOpcode passing value being converted
+  inline static Instruction::CastOps
+  getCastOpcode(const Value *Val, ///< The value to cast
     bool SrcIsSigned, ///< Whether to treat the source as signed
     Type *Ty,   ///< The Type to which the value should be casted
-    bool DstIsSigned  ///< Whether to treate the dest. as signed
-  );
+                bool DstIsSigned ///< Whether to treat the dest. as signed
+  ) {
+    return getCastOpcode(Val->getType(), SrcIsSigned, Ty, DstIsSigned);
+  }
 
   /// There are several places where we need to know if a cast instruction
   /// only deals with integer source and destination types. To simplify that

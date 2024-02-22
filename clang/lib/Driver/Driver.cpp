@@ -15,6 +15,7 @@
 #include "ToolChains/BareMetal.h"
 #include "ToolChains/CSKYToolChain.h"
 #include "ToolChains/Clang.h"
+#include "ToolChains/ClusterOS.h"
 #include "ToolChains/CrossWindows.h"
 #include "ToolChains/Cuda.h"
 #include "ToolChains/Darwin.h"
@@ -28,6 +29,7 @@
 #include "ToolChains/Haiku.h"
 #include "ToolChains/Hexagon.h"
 #include "ToolChains/Hurd.h"
+#include "ToolChains/KVXOSPorting.h"
 #include "ToolChains/Lanai.h"
 #include "ToolChains/Linux.h"
 #include "ToolChains/MSP430.h"
@@ -6297,6 +6299,12 @@ const ToolChain &Driver::getToolChain(const ArgList &Args,
       break;
     case llvm::Triple::Haiku:
       TC = std::make_unique<toolchains::Haiku>(*this, Target, Args);
+      break;
+    case llvm::Triple::ClusterOS:
+      TC = std::make_unique<toolchains::ClusterOS>(*this, Target, Args);
+      break;
+    case llvm::Triple::KVXOSPorting:
+      TC = std::make_unique<toolchains::KVXOSPorting>(*this, Target, Args);
       break;
     case llvm::Triple::Darwin:
     case llvm::Triple::MacOSX:

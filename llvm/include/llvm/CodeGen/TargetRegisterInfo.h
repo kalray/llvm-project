@@ -580,6 +580,10 @@ public:
   /// function.  Used by MachineRegisterInfo::isConstantPhysReg().
   virtual bool isConstantPhysReg(MCRegister PhysReg) const { return false; }
 
+  /// Returns true if PhysReg may be modified at any time by micro-architectural
+  /// side effects.
+  virtual bool isVolatilePhysReg(MCRegister PhysReg) const { return false; }
+
   /// Returns true if the register class is considered divergent.
   virtual bool isDivergentRegClass(const TargetRegisterClass *RC) const {
     return false;

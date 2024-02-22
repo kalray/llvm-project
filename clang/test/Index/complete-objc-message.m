@@ -1,3 +1,5 @@
+// No support to block at the moment.
+// UNSUPPORTED: target=kvx{{.*}}
 // Note: the run lines follow their respective tests, since line/column
 // matter in this test.
 #define nil (void*)0

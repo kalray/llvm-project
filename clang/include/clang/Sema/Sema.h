@@ -2309,6 +2309,7 @@ private:
   bool BuiltinWasmTableGrow(CallExpr *TheCall);
   bool BuiltinWasmTableFill(CallExpr *TheCall);
   bool BuiltinWasmTableCopy(CallExpr *TheCall);
+  bool CheckKVXTCAType(QualType Type, SourceLocation TypeLoc);
 
   bool CheckFormatArguments(const FormatAttr *Format,
                             ArrayRef<const Expr *> Args, bool IsCXXMember,

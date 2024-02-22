@@ -1,5 +1,8 @@
 // RUN: %clang_cc1 -fsyntax-only -verify %s
 
+// UNSUPPORTED: target=kvx{{.*}}
+// T18165 kvx does not implement _ExtInt
+
 #if __has_feature(__builtin_add_overflow)
 #warning defined as expected
 // expected-warning@-1 {{defined as expected}}

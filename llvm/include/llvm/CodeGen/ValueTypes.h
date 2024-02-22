@@ -423,6 +423,26 @@ namespace llvm {
       }
       return getIntegerVT(Context, (EVTSize + 1) / 2);
     }
+    /// Return a VT for an type with the double size.
+    /// If vector, returns a vector where each element is doubled.
+    EVT widenVectorOrScalarElementType(LLVMContext &Context) const {
+      if (isVector())
+        return widenVectorElementType(Context);
+      if (isFloatingPoint())
+        return EVT::getFloatingPointVT(2 * getSizeInBits());
+      return getIntegerVT(Context, 2 * getSizeInBits());
+    }
+
+    /// Return a VT for an vector type with the size of the
+    /// elements doubled. The typed returned may be an extended type.
+    EVT widenVectorElementType(LLVMContext &Context) const {
+      EVT EltVT = getVectorElementType();
+      if (!EltVT.isFloatingPoint())
+        return widenIntegerVectorElementType(Context);
+
+      EltVT = EVT::getFloatingPointVT(2 * EltVT.getSizeInBits());
+      return EVT::getVectorVT(Context, EltVT, getVectorElementCount());
+    }
 
     /// Return a VT for an integer vector type with the size of the
     /// elements doubled. The typed returned may be an extended type.

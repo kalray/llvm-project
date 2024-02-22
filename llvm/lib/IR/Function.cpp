@@ -1292,6 +1292,12 @@ static void DecodeIITType(unsigned &NextElt, ArrayRef<unsigned char> Infos,
                                              ArgInfo));
     return;
   }
+  case IIT_DOUBLE_VEC: {
+    unsigned ArgInfo = (NextElt == Infos.size() ? 0 : Infos[NextElt++]);
+    OutputTable.push_back(
+        IITDescriptor::get(IITDescriptor::DoubleVec, ArgInfo));
+    return;
+  }
   }
   llvm_unreachable("unhandled");
 }
@@ -1371,22 +1377,10 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
   }
   case IITDescriptor::Argument:
     return Tys[D.getArgumentNumber()];
-  case IITDescriptor::ExtendArgument: {
-    Type *Ty = Tys[D.getArgumentNumber()];
-    if (VectorType *VTy = dyn_cast<VectorType>(Ty))
-      return VectorType::getExtendedElementVectorType(VTy);
-
-    return IntegerType::get(Context, 2 * cast<IntegerType>(Ty)->getBitWidth());
-  }
-  case IITDescriptor::TruncArgument: {
-    Type *Ty = Tys[D.getArgumentNumber()];
-    if (VectorType *VTy = dyn_cast<VectorType>(Ty))
-      return VectorType::getTruncatedElementVectorType(VTy);
-
-    IntegerType *ITy = cast<IntegerType>(Ty);
-    assert(ITy->getBitWidth() % 2 == 0);
-    return IntegerType::get(Context, ITy->getBitWidth() / 2);
-  }
+  case IITDescriptor::ExtendArgument:
+    return Tys[D.getArgumentNumber()]->getExtendedType();
+  case IITDescriptor::TruncArgument:
+    return Tys[D.getArgumentNumber()]->getTruncatedType();
   case IITDescriptor::Subdivide2Argument:
   case IITDescriptor::Subdivide4Argument: {
     Type *Ty = Tys[D.getArgumentNumber()];
@@ -1420,6 +1414,14 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
   case IITDescriptor::VecOfAnyPtrsToElt:
     // Return the overloaded type (which determines the pointers address space)
     return Tys[D.getOverloadArgNumber()];
+
+  case IITDescriptor::DoubleVec: {
+    Type *Ty = Tys[D.getArgumentNumber()];
+    VectorType *VTy = dyn_cast<VectorType>(Ty);
+    if (VTy)
+      return VectorType::getDoubleElementsVectorType(VTy);
+    return VectorType::get(Ty, ElementCount::get(2, false));
+  }
   }
   llvm_unreachable("unhandled");
 }
@@ -1569,15 +1571,8 @@ static bool matchIntrinsicType(
       if (D.getArgumentNumber() >= ArgTys.size())
         return IsDeferredCheck || DeferCheck(Ty);
 
-      Type *NewTy = ArgTys[D.getArgumentNumber()];
-      if (VectorType *VTy = dyn_cast<VectorType>(NewTy))
-        NewTy = VectorType::getExtendedElementVectorType(VTy);
-      else if (IntegerType *ITy = dyn_cast<IntegerType>(NewTy))
-        NewTy = IntegerType::get(ITy->getContext(), 2 * ITy->getBitWidth());
-      else
-        return true;
-
-      return Ty != NewTy;
+      Type *RefTy = ArgTys[D.getArgumentNumber()];
+      return Ty != RefTy->getExtendedType(false);
     }
     case IITDescriptor::TruncArgument: {
       // If this is a forward reference, defer the check for later.
@@ -1585,14 +1580,7 @@ static bool matchIntrinsicType(
         return IsDeferredCheck || DeferCheck(Ty);
 
       Type *NewTy = ArgTys[D.getArgumentNumber()];
-      if (VectorType *VTy = dyn_cast<VectorType>(NewTy))
-        NewTy = VectorType::getTruncatedElementVectorType(VTy);
-      else if (IntegerType *ITy = dyn_cast<IntegerType>(NewTy))
-        NewTy = IntegerType::get(ITy->getContext(), ITy->getBitWidth() / 2);
-      else
-        return true;
-
-      return Ty != NewTy;
+      return Ty != NewTy->getTruncatedType(false);
     }
     case IITDescriptor::HalfVecArgument:
       // If this is a forward reference, defer the check for later.
@@ -1678,6 +1666,23 @@ static bool matchIntrinsicType(
         return true;
       return ThisArgVecTy != VectorType::getInteger(ReferenceType);
     }
+
+  case IITDescriptor::DoubleVec: {
+    if (D.getArgumentNumber() >= ArgTys.size())
+      return IsDeferredCheck || DeferCheck(Ty);
+
+    if (!Ty->isVectorTy())
+      return true;
+
+    VectorType *ThisVt = dyn_cast<VectorType>(Ty);
+    auto *RefType = ArgTys[D.getArgumentNumber()];
+    auto *RefVecType = dyn_cast<VectorType>(RefType);
+
+    if (RefVecType)
+      return VectorType::getDoubleElementsVectorType(RefVecType) != ThisVt;
+
+    return VectorType::get(RefType, ElementCount::get(2, false)) != ThisVt;
+  }
   }
   llvm_unreachable("unhandled");
 }

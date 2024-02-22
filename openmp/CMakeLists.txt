@@ -102,7 +102,7 @@ set(ENABLE_LIBOMPTARGET ON)
 # Since the device plugins are only supported on Linux anyway,
 # there is no point in trying to compile libomptarget on other OSes.
 # 32-bit systems are not supported either.
-if (APPLE OR WIN32 OR WASM OR NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES
+if (APPLE OR WIN32 OR WASM OR KVX OR NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES
     OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8 OR ${CMAKE_SYSTEM_NAME} MATCHES "AIX")
   set(ENABLE_LIBOMPTARGET OFF)
 endif()
@@ -125,7 +125,7 @@ add_subdirectory(runtime)
 
 if (OPENMP_ENABLE_LIBOMPTARGET)
   # Check that the library can actually be built.
-  if (APPLE OR WIN32)
+  if (APPLE OR WIN32 OR KVX)
     message(FATAL_ERROR "libomptarget cannot be built on Windows and MacOS X!")
   elseif (NOT "cxx_std_17" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
     message(FATAL_ERROR "Host compiler must support C++17 to build libomptarget!")

@@ -1,0 +1,25 @@
+//===-- KVXTypes.def - Metadata about KVX types -----------------*- C++ -*-===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+//
+//  This file defines KVX types.
+//  Custom code should define this macro:
+//
+//    KVX_TCA_VECTOR_TYPE(Name, Id, Size)
+//       - Name: The proper vector type being defined.
+//       - Id: Clang type identifier.
+//       - Size: The total size of the vector in bits.
+//
+//===----------------------------------------------------------------------===//
+
+KVX_TCA_VECTOR_TYPE(__kvx_x256, Kvx_x256, 256)
+KVX_TCA_VECTOR_TYPE(__kvx_x512, Kvx_x512, 512)
+KVX_TCA_VECTOR_TYPE(__kvx_x1024, Kvx_x1024, 1024)
+KVX_TCA_VECTOR_TYPE(__kvx_x2048, Kvx_x2048, 2048)
+KVX_TCA_VECTOR_TYPE(__kvx_x4096, Kvx_x4096, 4096)
+
+#undef KVX_TCA_VECTOR_TYPE

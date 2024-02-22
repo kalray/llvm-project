@@ -282,20 +282,20 @@ void simple(float *a, float *b, int *c) {
 // CHECK-NEXT:    ret void
 //
 //.
-// CHECK: attributes #0 = { mustprogress noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
-// CHECK: attributes #1 = { noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
-// CHECK: attributes #2 = { nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: write) }
+// CHECK: attributes #[[ATTR0]] = { mustprogress noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
+// CHECK: attributes #[[ATTR1]] = { noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
+// CHECK: attributes #[[ATTR2:[0-9]+]] = { nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: write) }
 //.
-// CHECK: !0 = !{i32 1, !"wchar_size", i32 4}
-// CHECK: !1 = !{i32 7, !"openmp", i32 50}
-// CHECK: !2 = !{!"
-// CHECK: !3 = distinct !{!3, !4}
-// CHECK: !4 = !{!"llvm.loop.mustprogress"}
-// CHECK: !5 = distinct !{}
-// CHECK: !6 = distinct !{!6, !7, !8}
-// CHECK: !7 = !{!"llvm.loop.parallel_accesses", !5}
-// CHECK: !8 = !{!"llvm.loop.vectorize.enable", i1 true}
-// CHECK: !9 = distinct !{}
-// CHECK: !10 = distinct !{!10, !11, !8}
-// CHECK: !11 = !{!"llvm.loop.parallel_accesses", !9}
+// CHECK: [[META0:![0-9]+]] = !{i32 1, !"wchar_size", i32 4}
+// CHECK: [[META1:![0-9]+]] = !{i32 7, !"openmp", i32 50}
+// CHECK: [[META2:![0-9]+]] = !{!"{{.*}}clang version {{.*}}"}
+// CHECK: [[LOOP3]] = distinct !{[[LOOP3]], [[META4:![0-9]+]]}
+// CHECK: [[META4]] = !{!"llvm.loop.mustprogress"}
+// CHECK: [[ACC_GRP5]] = distinct !{}
+// CHECK: [[LOOP6]] = distinct !{[[LOOP6]], [[META7:![0-9]+]], [[META8:![0-9]+]]}
+// CHECK: [[META7]] = !{!"llvm.loop.parallel_accesses", [[ACC_GRP5]]}
+// CHECK: [[META8]] = !{!"llvm.loop.vectorize.enable", i1 true}
+// CHECK: [[ACC_GRP9]] = distinct !{}
+// CHECK: [[LOOP10]] = distinct !{[[LOOP10]], [[META11:![0-9]+]], [[META8]]}
+// CHECK: [[META11]] = !{!"llvm.loop.parallel_accesses", [[ACC_GRP9]]}
 //.

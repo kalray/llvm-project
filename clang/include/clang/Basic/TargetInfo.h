@@ -14,6 +14,7 @@
 #ifndef LLVM_CLANG_BASIC_TARGETINFO_H
 #define LLVM_CLANG_BASIC_TARGETINFO_H
 
+#include "clang/AST/ASTContext.h"
 #include "clang/Basic/AddressSpaces.h"
 #include "clang/Basic/BitmaskEnum.h"
 #include "clang/Basic/CodeGenOptions.h"
@@ -981,6 +982,14 @@ public:
   getVScaleRange(const LangOptions &LangOpts) const {
     return std::nullopt;
   }
+  /// Decode a target-specific builtins type to the current primary target.
+  /// Returns true if there was an type decoding error.
+  virtual bool DecodeTargetTypeFromStr(const char *&Str,
+                                       const ASTContext &Context,
+                                       bool &AllowTypeModifiers,
+                                       QualType &Type) const {
+    return true;
+  };
   /// The __builtin_clz* and __builtin_ctz* built-in
   /// functions are specified to have undefined results for zero inputs, but
   /// on targets that support these operations in a way that provides
@@ -1480,6 +1489,9 @@ public:
   // Validate the contents of the __builtin_cpu_is(const char*)
   // argument.
   virtual bool validateCpuIs(StringRef Name) const { return false; }
+
+  // Obtain the defined cpu name string.
+  virtual StringRef getCPUstr() const { return "None"; }
 
   // Validate a cpu_dispatch/cpu_specific CPU option, which is a different list
   // from cpu_is, since it checks via features rather than CPUs directly.

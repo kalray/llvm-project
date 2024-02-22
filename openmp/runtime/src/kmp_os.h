@@ -162,7 +162,7 @@ typedef unsigned __int64 kmp_uintptr_t;
 #endif
 #endif /* KMP_OS_WINDOWS */
 
-#if KMP_OS_UNIX
+#if KMP_OS_UNIX || KMP_OS_CLUSTER_OS
 #define KMP_END_OF_LINE "\n"
 typedef char kmp_int8;
 typedef unsigned char kmp_uint8;
@@ -183,7 +183,7 @@ typedef unsigned long long kmp_uint64;
 #define KMP_SIZE_T_SPEC KMP_UINT32_SPEC
 #elif KMP_ARCH_X86_64 || KMP_ARCH_PPC64 || KMP_ARCH_AARCH64 ||                 \
     KMP_ARCH_MIPS64 || KMP_ARCH_RISCV64 || KMP_ARCH_LOONGARCH64 ||             \
-    KMP_ARCH_VE || KMP_ARCH_S390X
+    KMP_ARCH_VE || KMP_ARCH_S390X || KMP_ARCH_KVX
 #define KMP_SIZE_T_SPEC KMP_UINT64_SPEC
 #else
 #error "Can't determine size_t printf format specifier."
@@ -1294,6 +1294,9 @@ extern void *__kmp_lookup_symbol(const char *name, bool next = false);
 #define KMP_DLSYM(name) __kmp_lookup_symbol(name)
 #define KMP_DLSYM_NEXT(name) __kmp_lookup_symbol(name, true)
 #elif KMP_OS_WASI
+#define KMP_DLSYM(name) nullptr
+#define KMP_DLSYM_NEXT(name) nullptr
+#elif KMP_OS_CLUSTER_OS
 #define KMP_DLSYM(name) nullptr
 #define KMP_DLSYM_NEXT(name) nullptr
 #else

@@ -1,3 +1,4 @@
+// UNSUPPORTED: target=kvx{{.*}}
 // RUN: %check_clang_tidy %s llvm-prefer-register-over-unsigned %t
 
 namespace llvm {

@@ -3,8 +3,7 @@
 
 define i1 @reduction_logical_or(<4 x i1> %x) {
 ; CHECK-LABEL: @reduction_logical_or(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <4 x i1> [[X:%.*]] to i4
-; CHECK-NEXT:    [[R:%.*]] = icmp ne i4 [[TMP1]], 0
+; CHECK-NEXT:    [[R:%.*]] = call i1 @llvm.vector.reduce.or.v4i1(<4 x i1> [[X:%.*]])
 ; CHECK-NEXT:    ret i1 [[R]]
 ;
   %r = call i1 @llvm.vector.reduce.or.v4i1(<4 x i1> %x)
@@ -13,8 +12,7 @@ define i1 @reduction_logical_or(<4 x i1> %x) {
 
 define i1 @reduction_logical_and(<4 x i1> %x) {
 ; CHECK-LABEL: @reduction_logical_and(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <4 x i1> [[X:%.*]] to i4
-; CHECK-NEXT:    [[R:%.*]] = icmp eq i4 [[TMP1]], -1
+; CHECK-NEXT:    [[R:%.*]] = call i1 @llvm.vector.reduce.and.v4i1(<4 x i1> [[X:%.*]])
 ; CHECK-NEXT:    ret i1 [[R]]
 ;
   %r = call i1 @llvm.vector.reduce.and.v4i1(<4 x i1> %x)

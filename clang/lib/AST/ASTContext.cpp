@@ -1369,6 +1369,12 @@ void ASTContext::InitBuiltinTypes(const TargetInfo &Target,
 #include "clang/Basic/PPCTypes.def"
   }
 
+  if (Target.getTriple().isKVX()) {
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+    InitBuiltinType(Id##Ty, BuiltinType::Id);
+#include "clang/Basic/KVXTypes.def"
+  }
+
   if (Target.hasRISCVVTypes()) {
 #define RVV_TYPE(Name, Id, SingletonId)                                        \
   InitBuiltinType(SingletonId, BuiltinType::Id);
@@ -2186,6 +2192,12 @@ TypeInfo ASTContext::getTypeInfoImpl(const Type *T) const {
     Align = Size;                                                              \
     break;
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size)                                    \
+  case BuiltinType::Id:                                                        \
+    Width = Size;                                                              \
+    Align = 256;                                                              \
+      break;
+#include "clang/Basic/KVXTypes.def"
 #define RVV_VECTOR_TYPE(Name, Id, SingletonId, ElKind, ElBits, NF, IsSigned,   \
                         IsFP, IsBF)                                            \
   case BuiltinType::Id:                                                        \
@@ -8146,6 +8158,9 @@ static char getObjCEncodingForPrimitiveType(const ASTContext *C,
 #define PPC_VECTOR_TYPE(Name, Id, Size) \
     case BuiltinType::Id:
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+    case BuiltinType::Id:
+#include "clang/Basic/KVXTypes.def"
 #define BUILTIN_TYPE(KIND, ID)
 #define PLACEHOLDER_TYPE(KIND, ID) \
     case BuiltinType::KIND:
@@ -11264,6 +11279,7 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   bool Signed = false, Unsigned = false;
   RequiresICE = false;
 
+  bool IsTargetType = false;
   // Read the prefixed modifiers first.
   bool Done = false;
   #ifndef NDEBUG
@@ -11272,6 +11288,9 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   while (!Done) {
     switch (*Str++) {
     default: Done = true; --Str; break;
+    case 'T':
+      IsTargetType = true;
+      break;
     case 'I':
       RequiresICE = true;
       break;
@@ -11355,6 +11374,13 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
 
   QualType Type;
 
+  if (IsTargetType) {
+    bool Fail = Context.getTargetInfo().DecodeTargetTypeFromStr(
+        Str, Context, AllowTypeModifiers, Type);
+    if (Fail)
+      Error = ASTContext::GE_Missing_type;
+  } else {
+  // KVX: Do ne reindent this to avoid rebase issues.
   // Read the base type.
   switch (*Str++) {
   default: llvm_unreachable("Unknown builtin type letter!");
@@ -11554,6 +11580,7 @@ static QualType DecodeTypeFromStr(const char *&Str, const ASTContext &Context,
   case 'p':
     Type = Context.getProcessIDType();
     break;
+  }
   }
 
   // If there are modifiers and if we're allowed to parse them, go for it.

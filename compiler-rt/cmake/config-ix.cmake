@@ -299,6 +299,9 @@ macro(get_test_cc_for_arch arch cc_out cflags_out)
     endif()
     string(REPLACE ";" " " ${cflags_out} "${${cflags_out}}")
   endif()
+  if(${arch} MATCHES "kvx")
+    set(${cflags_out} ${COMPILER_RT_TEST_COMPILER_CFLAGS})
+  endif()
 endmacro()
 
 # Returns CFLAGS that should be used to run tests for the
@@ -724,6 +727,8 @@ set(ALL_SANITIZERS asan;dfsan;msan;hwasan;tsan;safestack;cfi;scudo_standalone;ub
 set(COMPILER_RT_SANITIZERS_TO_BUILD all CACHE STRING
     "sanitizers to build if supported on the target (all;${ALL_SANITIZERS})")
 list_replace(COMPILER_RT_SANITIZERS_TO_BUILD all "${ALL_SANITIZERS}")
+
+set(OS_NAME "ClusterOS")
 
 if (SANITIZER_COMMON_SUPPORTED_ARCH AND NOT LLVM_USE_SANITIZER AND
     (OS_NAME MATCHES "Android|Darwin|Linux|FreeBSD|NetBSD|Fuchsia|SunOS" OR

@@ -645,6 +645,7 @@ enum UseListCodes {
 
 enum AttributeKindCodes {
   // = 0 is unused
+  ATTR_KIND_MPPANATIVE = 127,
   ATTR_KIND_ALIGNMENT = 1,
   ATTR_KIND_ALWAYS_INLINE = 2,
   ATTR_KIND_BY_VAL = 3,

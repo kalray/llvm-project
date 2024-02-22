@@ -22,6 +22,7 @@
 #include "Targets/CSKY.h"
 #include "Targets/DirectX.h"
 #include "Targets/Hexagon.h"
+#include "Targets/KVX.h"
 #include "Targets/Lanai.h"
 #include "Targets/Le64.h"
 #include "Targets/LoongArch.h"
@@ -530,6 +531,14 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
 
   case llvm::Triple::tcele:
     return std::make_unique<TCELETargetInfo>(Triple, Opts);
+
+  case llvm::Triple::kvx:
+    switch (os) {
+    case llvm::Triple::KVXOSPorting:
+      return std::make_unique<KVXOSPortingTargetInfo<KVXTargetInfo>>(Triple, Opts);
+    default:
+      return std::make_unique<ClusterOSTargetInfo<KVXTargetInfo>>(Triple, Opts);
+    }
 
   case llvm::Triple::x86:
     if (Triple.isOSDarwin())
