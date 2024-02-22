@@ -192,6 +192,11 @@ public:
   /// TargetLowering preference). It does not yet disable the postRA scheduler.
   virtual bool enableMachineScheduler() const;
 
+  /// True if the machine scheduler should alternate between top and bottom
+  /// default candidates when bidirectional scheduling is activated.
+  /// Only activated on KVX target for now.
+  virtual bool alternateTopBottomBidirectional() const { return false; };
+
   /// True if the machine scheduler should disable the TLI preference
   /// for preRA scheduling with the source level scheduler.
   virtual bool enableMachineSchedDefaultSched() const { return true; }

@@ -689,6 +689,45 @@ void VectorLegalizer::PromoteSTRICT(SDNode *Node,
   Results.push_back(Round.getValue(1));
 }
 
+static unsigned getExtensionTypeFor(const SDNode *Node) {
+  switch (Node->getOpcode()) {
+  default:
+    return ISD::ZERO_EXTEND;
+  case ISD::SETCC: {
+    llvm::ISD::CondCode Cond =
+        cast<CondCodeSDNode>(Node->getOperand(Node->getNumOperands() - 1))
+            ->get();
+    if (isSignedIntSetCC(Cond))
+      return ISD::SIGN_EXTEND;
+    return ISD::ZERO_EXTEND;
+  }
+  case ISD::ABS:
+  case ISD::MULHS:
+  case ISD::SADDO:
+  case ISD::SADDSAT:
+  case ISD::SDIV:
+  case ISD::SDIVFIX:
+  case ISD::SDIVFIXSAT:
+  case ISD::SDIVREM:
+  case ISD::SINT_TO_FP:
+  case ISD::SMAX:
+  case ISD::SMIN:
+  case ISD::SMUL_LOHI:
+  case ISD::SMULFIX:
+  case ISD::SMULFIXSAT:
+  case ISD::SMULO:
+  case ISD::SRA:
+  case ISD::SREM:
+  case ISD::SSHLSAT:
+  case ISD::SSUBO:
+  case ISD::SSUBSAT:
+  case ISD::STRICT_SINT_TO_FP:
+  case ISD::VECREDUCE_SMAX:
+  case ISD::VECREDUCE_SMIN:
+    return ISD::SIGN_EXTEND;
+  }
+}
+
 void VectorLegalizer::Promote(SDNode *Node, SmallVectorImpl<SDValue> &Results) {
   // For a few operations there is a specific concept for promotion based on
   // the operand's type.
@@ -744,11 +783,13 @@ void VectorLegalizer::Promote(SDNode *Node, SmallVectorImpl<SDValue> &Results) {
     llvm_unreachable("Don't know how to promote this operation!");
   }
 
-  // There are currently two cases of vector promotion:
+  // There are currently three cases of vector promotion:
   // 1) Bitcasting a vector of integers to a different type to a vector of the
   //    same overall length. For example, x86 promotes ISD::AND v2i32 to v1i64.
   // 2) Extending a vector of floats to a vector of the same number of larger
   //    floats. For example, AArch64 promotes ISD::FADD on v4f16 to v4f32.
+  // 3) Expanding a vector to another one with same number of elements and
+  //    larger type, defined by the target with AddPromotedToType
   assert(Node->getNumValues() == 1 &&
          "Can't promote a vector with multiple results!");
   MVT VT = Node->getSimpleValueType(0);
@@ -760,16 +801,22 @@ void VectorLegalizer::Promote(SDNode *Node, SmallVectorImpl<SDValue> &Results) {
     // Do not promote the mask operand of a VP OP.
     bool SkipPromote = ISD::isVPOpcode(Node->getOpcode()) &&
                        ISD::getVPMaskIdx(Node->getOpcode()) == j;
-    if (Node->getOperand(j).getValueType().isVector() && !SkipPromote)
+    if (Node->getOperand(j).getValueType().isVector() && !SkipPromote) {
       if (Node->getOperand(j)
               .getValueType()
               .getVectorElementType()
               .isFloatingPoint() &&
           NVT.isVector() && NVT.getVectorElementType().isFloatingPoint())
         Operands[j] = DAG.getNode(ISD::FP_EXTEND, dl, NVT, Node->getOperand(j));
-      else
+      else if (VT.getSizeInBits() == NVT.getSizeInBits())
         Operands[j] = DAG.getNode(ISD::BITCAST, dl, NVT, Node->getOperand(j));
-    else
+      else if (VT.getSizeInBits() < NVT.getSizeInBits()) {
+        unsigned ExtType = getExtensionTypeFor(Node);
+        Operands[j] = DAG.getNode(ExtType, dl, NVT, Node->getOperand(j));
+      } else
+        report_fatal_error(
+            "Obtained a smaller vector type when promoting the existing one");
+    } else
       Operands[j] = Node->getOperand(j);
   }
 
@@ -781,8 +828,10 @@ void VectorLegalizer::Promote(SDNode *Node, SmallVectorImpl<SDValue> &Results) {
        NVT.isVector() && NVT.getVectorElementType().isFloatingPoint()))
     Res = DAG.getNode(ISD::FP_ROUND, dl, VT, Res,
                       DAG.getIntPtrConstant(0, dl, /*isTarget=*/true));
-  else
+  else if (VT.getSizeInBits() == NVT.getSizeInBits())
     Res = DAG.getNode(ISD::BITCAST, dl, VT, Res);
+  else
+    Res = DAG.getNode(ISD::TRUNCATE, dl, VT, Res);
 
   Results.push_back(Res);
 }
@@ -837,14 +886,16 @@ void VectorLegalizer::PromoteFP_TO_INT(SDNode *Node,
          "Vectors have different number of elements!");
 
   unsigned NewOpc = Node->getOpcode();
-  // Change FP_TO_UINT to FP_TO_SINT if possible.
-  // TODO: Should we only do this if FP_TO_UINT itself isn't legal?
+  // Change FP_TO_UINT to FP_TO_SINT if possible and
+  // if FP_TO_UINT itself isn't legal.
   if (NewOpc == ISD::FP_TO_UINT &&
-      TLI.isOperationLegalOrCustom(ISD::FP_TO_SINT, NVT))
+      TLI.isOperationLegalOrCustom(ISD::FP_TO_SINT, NVT) &&
+      !TLI.isOperationLegalOrCustom(ISD::FP_TO_UINT, NVT))
     NewOpc = ISD::FP_TO_SINT;
 
   if (NewOpc == ISD::STRICT_FP_TO_UINT &&
-      TLI.isOperationLegalOrCustom(ISD::STRICT_FP_TO_SINT, NVT))
+      TLI.isOperationLegalOrCustom(ISD::STRICT_FP_TO_SINT, NVT) &&
+      !TLI.isOperationLegalOrCustom(ISD::STRICT_FP_TO_UINT, NVT))
     NewOpc = ISD::STRICT_FP_TO_SINT;
 
   SDLoc dl(Node);

@@ -179,6 +179,7 @@ public:
                                 HardwareLoopInfo &HWLoopInfo) const {
     return false;
   }
+  bool shouldAddRemainderMetaData() { return false; }
 
   bool preferPredicateOverEpilogue(TailFoldingInfo *TFI) const { return false; }
 

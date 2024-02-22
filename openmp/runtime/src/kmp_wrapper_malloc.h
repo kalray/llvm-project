@@ -97,7 +97,7 @@
 #endif
 #elif KMP_OS_DRAGONFLY || KMP_OS_FREEBSD || KMP_OS_NETBSD || KMP_OS_OPENBSD
 // Declared in "stdlib.h".
-#elif KMP_OS_UNIX
+#elif KMP_OS_UNIX || KMP_OS_CLUSTER_OS
 #include <alloca.h> // Linux* OS and OS X*: alloc() declared in "alloca".
 #else
 #error Unknown or unsupported OS.

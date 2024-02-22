@@ -530,6 +530,9 @@ bool MachineRegisterInfo::isConstantPhysReg(MCRegister PhysReg) const {
   if (TRI->isConstantPhysReg(PhysReg))
     return true;
 
+  if (TRI->isVolatilePhysReg(PhysReg))
+    return false;
+
   // Check if any overlapping register is modified, or allocatable so it may be
   // used later.
   for (MCRegAliasIterator AI(PhysReg, TRI, true);

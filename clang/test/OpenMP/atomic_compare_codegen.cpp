@@ -27865,6 +27865,225 @@ double fail_dxevd() {
 // CHECK-NEXT:    ret double [[TMP168]]
 //
 //
+// CHECK-LABEL: @fail_dxevd(
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[DX:%.*]] = alloca double, align 8
+// CHECK-NEXT:    [[DV:%.*]] = alloca double, align 8
+// CHECK-NEXT:    [[DE:%.*]] = alloca double, align 8
+// CHECK-NEXT:    [[DD:%.*]] = alloca double, align 8
+// CHECK-NEXT:    [[TMP0:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP2:%.*]] = bitcast double [[TMP0]] to i64
+// CHECK-NEXT:    [[TMP3:%.*]] = bitcast double [[TMP1]] to i64
+// CHECK-NEXT:    [[TMP4:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP2]], i64 [[TMP3]] monotonic monotonic, align 8
+// CHECK-NEXT:    [[TMP5:%.*]] = extractvalue { i64, i1 } [[TMP4]], 0
+// CHECK-NEXT:    [[TMP6:%.*]] = bitcast i64 [[TMP5]] to double
+// CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { i64, i1 } [[TMP4]], 1
+// CHECK-NEXT:    br i1 [[TMP7]], label [[DX_ATOMIC_EXIT:%.*]], label [[DX_ATOMIC_CONT:%.*]]
+// CHECK:       dx.atomic.cont:
+// CHECK-NEXT:    store double [[TMP6]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT]]
+// CHECK:       dx.atomic.exit:
+// CHECK-NEXT:    [[TMP8:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP9:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP10:%.*]] = bitcast double [[TMP8]] to i64
+// CHECK-NEXT:    [[TMP11:%.*]] = bitcast double [[TMP9]] to i64
+// CHECK-NEXT:    [[TMP12:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP10]], i64 [[TMP11]] acquire monotonic, align 8
+// CHECK-NEXT:    [[TMP13:%.*]] = extractvalue { i64, i1 } [[TMP12]], 0
+// CHECK-NEXT:    [[TMP14:%.*]] = bitcast i64 [[TMP13]] to double
+// CHECK-NEXT:    [[TMP15:%.*]] = extractvalue { i64, i1 } [[TMP12]], 1
+// CHECK-NEXT:    br i1 [[TMP15]], label [[DX_ATOMIC_EXIT1:%.*]], label [[DX_ATOMIC_CONT2:%.*]]
+// CHECK:       dx.atomic.cont2:
+// CHECK-NEXT:    store double [[TMP14]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT1]]
+// CHECK:       dx.atomic.exit1:
+// CHECK-NEXT:    [[TMP16:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP17:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP18:%.*]] = bitcast double [[TMP16]] to i64
+// CHECK-NEXT:    [[TMP19:%.*]] = bitcast double [[TMP17]] to i64
+// CHECK-NEXT:    [[TMP20:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP18]], i64 [[TMP19]] release monotonic, align 8
+// CHECK-NEXT:    [[TMP21:%.*]] = extractvalue { i64, i1 } [[TMP20]], 0
+// CHECK-NEXT:    [[TMP22:%.*]] = bitcast i64 [[TMP21]] to double
+// CHECK-NEXT:    [[TMP23:%.*]] = extractvalue { i64, i1 } [[TMP20]], 1
+// CHECK-NEXT:    br i1 [[TMP23]], label [[DX_ATOMIC_EXIT3:%.*]], label [[DX_ATOMIC_CONT4:%.*]]
+// CHECK:       dx.atomic.cont4:
+// CHECK-NEXT:    store double [[TMP22]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT3]]
+// CHECK:       dx.atomic.exit3:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP24:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP25:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP26:%.*]] = bitcast double [[TMP24]] to i64
+// CHECK-NEXT:    [[TMP27:%.*]] = bitcast double [[TMP25]] to i64
+// CHECK-NEXT:    [[TMP28:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP26]], i64 [[TMP27]] acq_rel monotonic, align 8
+// CHECK-NEXT:    [[TMP29:%.*]] = extractvalue { i64, i1 } [[TMP28]], 0
+// CHECK-NEXT:    [[TMP30:%.*]] = bitcast i64 [[TMP29]] to double
+// CHECK-NEXT:    [[TMP31:%.*]] = extractvalue { i64, i1 } [[TMP28]], 1
+// CHECK-NEXT:    br i1 [[TMP31]], label [[DX_ATOMIC_EXIT5:%.*]], label [[DX_ATOMIC_CONT6:%.*]]
+// CHECK:       dx.atomic.cont6:
+// CHECK-NEXT:    store double [[TMP30]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT5]]
+// CHECK:       dx.atomic.exit5:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP32:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP33:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP34:%.*]] = bitcast double [[TMP32]] to i64
+// CHECK-NEXT:    [[TMP35:%.*]] = bitcast double [[TMP33]] to i64
+// CHECK-NEXT:    [[TMP36:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP34]], i64 [[TMP35]] seq_cst monotonic, align 8
+// CHECK-NEXT:    [[TMP37:%.*]] = extractvalue { i64, i1 } [[TMP36]], 0
+// CHECK-NEXT:    [[TMP38:%.*]] = bitcast i64 [[TMP37]] to double
+// CHECK-NEXT:    [[TMP39:%.*]] = extractvalue { i64, i1 } [[TMP36]], 1
+// CHECK-NEXT:    br i1 [[TMP39]], label [[DX_ATOMIC_EXIT7:%.*]], label [[DX_ATOMIC_CONT8:%.*]]
+// CHECK:       dx.atomic.cont8:
+// CHECK-NEXT:    store double [[TMP38]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT7]]
+// CHECK:       dx.atomic.exit7:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP40:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP41:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP42:%.*]] = bitcast double [[TMP40]] to i64
+// CHECK-NEXT:    [[TMP43:%.*]] = bitcast double [[TMP41]] to i64
+// CHECK-NEXT:    [[TMP44:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP42]], i64 [[TMP43]] monotonic acquire, align 8
+// CHECK-NEXT:    [[TMP45:%.*]] = extractvalue { i64, i1 } [[TMP44]], 0
+// CHECK-NEXT:    [[TMP46:%.*]] = bitcast i64 [[TMP45]] to double
+// CHECK-NEXT:    [[TMP47:%.*]] = extractvalue { i64, i1 } [[TMP44]], 1
+// CHECK-NEXT:    br i1 [[TMP47]], label [[DX_ATOMIC_EXIT9:%.*]], label [[DX_ATOMIC_CONT10:%.*]]
+// CHECK:       dx.atomic.cont10:
+// CHECK-NEXT:    store double [[TMP46]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT9]]
+// CHECK:       dx.atomic.exit9:
+// CHECK-NEXT:    [[TMP48:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP49:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP50:%.*]] = bitcast double [[TMP48]] to i64
+// CHECK-NEXT:    [[TMP51:%.*]] = bitcast double [[TMP49]] to i64
+// CHECK-NEXT:    [[TMP52:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP50]], i64 [[TMP51]] acquire acquire, align 8
+// CHECK-NEXT:    [[TMP53:%.*]] = extractvalue { i64, i1 } [[TMP52]], 0
+// CHECK-NEXT:    [[TMP54:%.*]] = bitcast i64 [[TMP53]] to double
+// CHECK-NEXT:    [[TMP55:%.*]] = extractvalue { i64, i1 } [[TMP52]], 1
+// CHECK-NEXT:    br i1 [[TMP55]], label [[DX_ATOMIC_EXIT11:%.*]], label [[DX_ATOMIC_CONT12:%.*]]
+// CHECK:       dx.atomic.cont12:
+// CHECK-NEXT:    store double [[TMP54]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT11]]
+// CHECK:       dx.atomic.exit11:
+// CHECK-NEXT:    [[TMP56:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP57:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP58:%.*]] = bitcast double [[TMP56]] to i64
+// CHECK-NEXT:    [[TMP59:%.*]] = bitcast double [[TMP57]] to i64
+// CHECK-NEXT:    [[TMP60:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP58]], i64 [[TMP59]] release acquire, align 8
+// CHECK-NEXT:    [[TMP61:%.*]] = extractvalue { i64, i1 } [[TMP60]], 0
+// CHECK-NEXT:    [[TMP62:%.*]] = bitcast i64 [[TMP61]] to double
+// CHECK-NEXT:    [[TMP63:%.*]] = extractvalue { i64, i1 } [[TMP60]], 1
+// CHECK-NEXT:    br i1 [[TMP63]], label [[DX_ATOMIC_EXIT13:%.*]], label [[DX_ATOMIC_CONT14:%.*]]
+// CHECK:       dx.atomic.cont14:
+// CHECK-NEXT:    store double [[TMP62]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT13]]
+// CHECK:       dx.atomic.exit13:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP64:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP65:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP66:%.*]] = bitcast double [[TMP64]] to i64
+// CHECK-NEXT:    [[TMP67:%.*]] = bitcast double [[TMP65]] to i64
+// CHECK-NEXT:    [[TMP68:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP66]], i64 [[TMP67]] acq_rel acquire, align 8
+// CHECK-NEXT:    [[TMP69:%.*]] = extractvalue { i64, i1 } [[TMP68]], 0
+// CHECK-NEXT:    [[TMP70:%.*]] = bitcast i64 [[TMP69]] to double
+// CHECK-NEXT:    [[TMP71:%.*]] = extractvalue { i64, i1 } [[TMP68]], 1
+// CHECK-NEXT:    br i1 [[TMP71]], label [[DX_ATOMIC_EXIT15:%.*]], label [[DX_ATOMIC_CONT16:%.*]]
+// CHECK:       dx.atomic.cont16:
+// CHECK-NEXT:    store double [[TMP70]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT15]]
+// CHECK:       dx.atomic.exit15:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP72:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP73:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP74:%.*]] = bitcast double [[TMP72]] to i64
+// CHECK-NEXT:    [[TMP75:%.*]] = bitcast double [[TMP73]] to i64
+// CHECK-NEXT:    [[TMP76:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP74]], i64 [[TMP75]] seq_cst acquire, align 8
+// CHECK-NEXT:    [[TMP77:%.*]] = extractvalue { i64, i1 } [[TMP76]], 0
+// CHECK-NEXT:    [[TMP78:%.*]] = bitcast i64 [[TMP77]] to double
+// CHECK-NEXT:    [[TMP79:%.*]] = extractvalue { i64, i1 } [[TMP76]], 1
+// CHECK-NEXT:    br i1 [[TMP79]], label [[DX_ATOMIC_EXIT17:%.*]], label [[DX_ATOMIC_CONT18:%.*]]
+// CHECK:       dx.atomic.cont18:
+// CHECK-NEXT:    store double [[TMP78]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT17]]
+// CHECK:       dx.atomic.exit17:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP80:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP81:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP82:%.*]] = bitcast double [[TMP80]] to i64
+// CHECK-NEXT:    [[TMP83:%.*]] = bitcast double [[TMP81]] to i64
+// CHECK-NEXT:    [[TMP84:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP82]], i64 [[TMP83]] monotonic seq_cst, align 8
+// CHECK-NEXT:    [[TMP85:%.*]] = extractvalue { i64, i1 } [[TMP84]], 0
+// CHECK-NEXT:    [[TMP86:%.*]] = bitcast i64 [[TMP85]] to double
+// CHECK-NEXT:    [[TMP87:%.*]] = extractvalue { i64, i1 } [[TMP84]], 1
+// CHECK-NEXT:    br i1 [[TMP87]], label [[DX_ATOMIC_EXIT19:%.*]], label [[DX_ATOMIC_CONT20:%.*]]
+// CHECK:       dx.atomic.cont20:
+// CHECK-NEXT:    store double [[TMP86]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT19]]
+// CHECK:       dx.atomic.exit19:
+// CHECK-NEXT:    [[TMP88:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP89:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP90:%.*]] = bitcast double [[TMP88]] to i64
+// CHECK-NEXT:    [[TMP91:%.*]] = bitcast double [[TMP89]] to i64
+// CHECK-NEXT:    [[TMP92:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP90]], i64 [[TMP91]] acquire seq_cst, align 8
+// CHECK-NEXT:    [[TMP93:%.*]] = extractvalue { i64, i1 } [[TMP92]], 0
+// CHECK-NEXT:    [[TMP94:%.*]] = bitcast i64 [[TMP93]] to double
+// CHECK-NEXT:    [[TMP95:%.*]] = extractvalue { i64, i1 } [[TMP92]], 1
+// CHECK-NEXT:    br i1 [[TMP95]], label [[DX_ATOMIC_EXIT21:%.*]], label [[DX_ATOMIC_CONT22:%.*]]
+// CHECK:       dx.atomic.cont22:
+// CHECK-NEXT:    store double [[TMP94]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT21]]
+// CHECK:       dx.atomic.exit21:
+// CHECK-NEXT:    [[TMP96:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP97:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP98:%.*]] = bitcast double [[TMP96]] to i64
+// CHECK-NEXT:    [[TMP99:%.*]] = bitcast double [[TMP97]] to i64
+// CHECK-NEXT:    [[TMP100:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP98]], i64 [[TMP99]] release seq_cst, align 8
+// CHECK-NEXT:    [[TMP101:%.*]] = extractvalue { i64, i1 } [[TMP100]], 0
+// CHECK-NEXT:    [[TMP102:%.*]] = bitcast i64 [[TMP101]] to double
+// CHECK-NEXT:    [[TMP103:%.*]] = extractvalue { i64, i1 } [[TMP100]], 1
+// CHECK-NEXT:    br i1 [[TMP103]], label [[DX_ATOMIC_EXIT23:%.*]], label [[DX_ATOMIC_CONT24:%.*]]
+// CHECK:       dx.atomic.cont24:
+// CHECK-NEXT:    store double [[TMP102]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT23]]
+// CHECK:       dx.atomic.exit23:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP104:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP105:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP106:%.*]] = bitcast double [[TMP104]] to i64
+// CHECK-NEXT:    [[TMP107:%.*]] = bitcast double [[TMP105]] to i64
+// CHECK-NEXT:    [[TMP108:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP106]], i64 [[TMP107]] acq_rel seq_cst, align 8
+// CHECK-NEXT:    [[TMP109:%.*]] = extractvalue { i64, i1 } [[TMP108]], 0
+// CHECK-NEXT:    [[TMP110:%.*]] = bitcast i64 [[TMP109]] to double
+// CHECK-NEXT:    [[TMP111:%.*]] = extractvalue { i64, i1 } [[TMP108]], 1
+// CHECK-NEXT:    br i1 [[TMP111]], label [[DX_ATOMIC_EXIT25:%.*]], label [[DX_ATOMIC_CONT26:%.*]]
+// CHECK:       dx.atomic.cont26:
+// CHECK-NEXT:    store double [[TMP110]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT25]]
+// CHECK:       dx.atomic.exit25:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP112:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP113:%.*]] = load double, ptr [[DV]], align 8
+// CHECK-NEXT:    [[TMP114:%.*]] = bitcast double [[TMP112]] to i64
+// CHECK-NEXT:    [[TMP115:%.*]] = bitcast double [[TMP113]] to i64
+// CHECK-NEXT:    [[TMP116:%.*]] = cmpxchg ptr [[DX]], i64 [[TMP114]], i64 [[TMP115]] seq_cst seq_cst, align 8
+// CHECK-NEXT:    [[TMP117:%.*]] = extractvalue { i64, i1 } [[TMP116]], 0
+// CHECK-NEXT:    [[TMP118:%.*]] = bitcast i64 [[TMP117]] to double
+// CHECK-NEXT:    [[TMP119:%.*]] = extractvalue { i64, i1 } [[TMP116]], 1
+// CHECK-NEXT:    br i1 [[TMP119]], label [[DX_ATOMIC_EXIT27:%.*]], label [[DX_ATOMIC_CONT28:%.*]]
+// CHECK:       dx.atomic.cont28:
+// CHECK-NEXT:    store double [[TMP118]], ptr [[DD]], align 8
+// CHECK-NEXT:    br label [[DX_ATOMIC_EXIT27]]
+// CHECK:       dx.atomic.exit27:
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP120:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP121:%.*]] = atomicrmw fmax ptr [[DX]], double [[TMP120]] seq_cst, align 8
+// CHECK-NEXT:    call void @__kmpc_flush(ptr @[[GLOB1]])
+// CHECK-NEXT:    [[TMP122:%.*]] = load double, ptr [[DE]], align 8
+// CHECK-NEXT:    [[TMP123:%.*]] = atomicrmw fmin ptr [[DX]], double [[TMP122]] monotonic, align 8
+// CHECK-NEXT:    [[TMP124:%.*]] = load double, ptr [[DX]], align 8
+// CHECK-NEXT:    ret double [[TMP124]]
+//
+//
 // SIMD-ONLY0-LABEL: @foo(
 // SIMD-ONLY0-NEXT:  entry:
 // SIMD-ONLY0-NEXT:    [[CX:%.*]] = alloca i8, align 1
@@ -62024,89 +62243,234 @@ double fail_dxevd() {
 // SIMD-ONLY0-NEXT:    [[TMP180:%.*]] = load double, ptr [[DV]], align 8
 // SIMD-ONLY0-NEXT:    ret double [[TMP180]]
 //
-// CHECK-LABEL: {{.+}}fail_dxevd{{.+}}
-// CHECK-NEXT:  entry:
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:    {{.+}}cmpxchg ptr {{.+}} monotonic monotonic{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acquire monotonic{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} release monotonic{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acq_rel monotonic{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}}cmpxchg ptr {{.+}} seq_cst monotonic{{.+}}
-// CHECK:    {{.+}}__kmpc_flush{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} monotonic acquire{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acquire acquire{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} release acquire{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acq_rel acquire{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} seq_cst acquire{{.+}}
-// CHECK:    {{.+}}__kmpc_flush{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} monotonic seq_cst{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acquire seq_cst{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} release seq_cst{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} acq_rel seq_cst{{.+}}
-// CHECK:       {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK-NEXT:  {{.+}} bitcast double{{.+}}
-// CHECK:    {{.+}}cmpxchg ptr {{.+}} seq_cst seq_cst{{.+}}
-// CHECK:    call void {{.+}}__kmpc_flush{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} atomicrmw fmax {{.+}} seq_cst{{.+}}
-// CHECK-NEXT:  call void {{.+}}__kmpc_flush{{.+}}
-// CHECK-NEXT:  {{.+}} load double,{{.+}}
-// CHECK-NEXT:  {{.+}} atomicrmw fmin {{.+}} monotonic{{.+}}
-// CHECK:    ret double {{.+}}
+//
+// SIMD-ONLY0-LABEL: @fail_dxevd(
+// SIMD-ONLY0-NEXT:  entry:
+// SIMD-ONLY0-NEXT:    [[DX:%.*]] = alloca double, align 8
+// SIMD-ONLY0-NEXT:    [[DV:%.*]] = alloca double, align 8
+// SIMD-ONLY0-NEXT:    [[DE:%.*]] = alloca double, align 8
+// SIMD-ONLY0-NEXT:    [[DD:%.*]] = alloca double, align 8
+// SIMD-ONLY0-NEXT:    [[TMP0:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP1:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP:%.*]] = fcmp oeq double [[TMP0]], [[TMP1]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP]], label [[IF_THEN:%.*]], label [[IF_ELSE:%.*]]
+// SIMD-ONLY0:       if.then:
+// SIMD-ONLY0-NEXT:    [[TMP2:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP2]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END:%.*]]
+// SIMD-ONLY0:       if.else:
+// SIMD-ONLY0-NEXT:    [[TMP3:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP3]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END]]
+// SIMD-ONLY0:       if.end:
+// SIMD-ONLY0-NEXT:    [[TMP4:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP5:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP1:%.*]] = fcmp oeq double [[TMP4]], [[TMP5]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP1]], label [[IF_THEN2:%.*]], label [[IF_ELSE3:%.*]]
+// SIMD-ONLY0:       if.then2:
+// SIMD-ONLY0-NEXT:    [[TMP6:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP6]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END4:%.*]]
+// SIMD-ONLY0:       if.else3:
+// SIMD-ONLY0-NEXT:    [[TMP7:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP7]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END4]]
+// SIMD-ONLY0:       if.end4:
+// SIMD-ONLY0-NEXT:    [[TMP8:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP9:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP5:%.*]] = fcmp oeq double [[TMP8]], [[TMP9]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP5]], label [[IF_THEN6:%.*]], label [[IF_ELSE7:%.*]]
+// SIMD-ONLY0:       if.then6:
+// SIMD-ONLY0-NEXT:    [[TMP10:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP10]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END8:%.*]]
+// SIMD-ONLY0:       if.else7:
+// SIMD-ONLY0-NEXT:    [[TMP11:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP11]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END8]]
+// SIMD-ONLY0:       if.end8:
+// SIMD-ONLY0-NEXT:    [[TMP12:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP13:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP9:%.*]] = fcmp oeq double [[TMP12]], [[TMP13]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP9]], label [[IF_THEN10:%.*]], label [[IF_ELSE11:%.*]]
+// SIMD-ONLY0:       if.then10:
+// SIMD-ONLY0-NEXT:    [[TMP14:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP14]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END12:%.*]]
+// SIMD-ONLY0:       if.else11:
+// SIMD-ONLY0-NEXT:    [[TMP15:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP15]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END12]]
+// SIMD-ONLY0:       if.end12:
+// SIMD-ONLY0-NEXT:    [[TMP16:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP17:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP13:%.*]] = fcmp oeq double [[TMP16]], [[TMP17]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP13]], label [[IF_THEN14:%.*]], label [[IF_ELSE15:%.*]]
+// SIMD-ONLY0:       if.then14:
+// SIMD-ONLY0-NEXT:    [[TMP18:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP18]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END16:%.*]]
+// SIMD-ONLY0:       if.else15:
+// SIMD-ONLY0-NEXT:    [[TMP19:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP19]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END16]]
+// SIMD-ONLY0:       if.end16:
+// SIMD-ONLY0-NEXT:    [[TMP20:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP21:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP17:%.*]] = fcmp oeq double [[TMP20]], [[TMP21]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP17]], label [[IF_THEN18:%.*]], label [[IF_ELSE19:%.*]]
+// SIMD-ONLY0:       if.then18:
+// SIMD-ONLY0-NEXT:    [[TMP22:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP22]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END20:%.*]]
+// SIMD-ONLY0:       if.else19:
+// SIMD-ONLY0-NEXT:    [[TMP23:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP23]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END20]]
+// SIMD-ONLY0:       if.end20:
+// SIMD-ONLY0-NEXT:    [[TMP24:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP25:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP21:%.*]] = fcmp oeq double [[TMP24]], [[TMP25]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP21]], label [[IF_THEN22:%.*]], label [[IF_ELSE23:%.*]]
+// SIMD-ONLY0:       if.then22:
+// SIMD-ONLY0-NEXT:    [[TMP26:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP26]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END24:%.*]]
+// SIMD-ONLY0:       if.else23:
+// SIMD-ONLY0-NEXT:    [[TMP27:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP27]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END24]]
+// SIMD-ONLY0:       if.end24:
+// SIMD-ONLY0-NEXT:    [[TMP28:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP29:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP25:%.*]] = fcmp oeq double [[TMP28]], [[TMP29]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP25]], label [[IF_THEN26:%.*]], label [[IF_ELSE27:%.*]]
+// SIMD-ONLY0:       if.then26:
+// SIMD-ONLY0-NEXT:    [[TMP30:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP30]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END28:%.*]]
+// SIMD-ONLY0:       if.else27:
+// SIMD-ONLY0-NEXT:    [[TMP31:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP31]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END28]]
+// SIMD-ONLY0:       if.end28:
+// SIMD-ONLY0-NEXT:    [[TMP32:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP33:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP29:%.*]] = fcmp oeq double [[TMP32]], [[TMP33]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP29]], label [[IF_THEN30:%.*]], label [[IF_ELSE31:%.*]]
+// SIMD-ONLY0:       if.then30:
+// SIMD-ONLY0-NEXT:    [[TMP34:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP34]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END32:%.*]]
+// SIMD-ONLY0:       if.else31:
+// SIMD-ONLY0-NEXT:    [[TMP35:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP35]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END32]]
+// SIMD-ONLY0:       if.end32:
+// SIMD-ONLY0-NEXT:    [[TMP36:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP37:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP33:%.*]] = fcmp oeq double [[TMP36]], [[TMP37]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP33]], label [[IF_THEN34:%.*]], label [[IF_ELSE35:%.*]]
+// SIMD-ONLY0:       if.then34:
+// SIMD-ONLY0-NEXT:    [[TMP38:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP38]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END36:%.*]]
+// SIMD-ONLY0:       if.else35:
+// SIMD-ONLY0-NEXT:    [[TMP39:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP39]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END36]]
+// SIMD-ONLY0:       if.end36:
+// SIMD-ONLY0-NEXT:    [[TMP40:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP41:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP37:%.*]] = fcmp oeq double [[TMP40]], [[TMP41]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP37]], label [[IF_THEN38:%.*]], label [[IF_ELSE39:%.*]]
+// SIMD-ONLY0:       if.then38:
+// SIMD-ONLY0-NEXT:    [[TMP42:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP42]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END40:%.*]]
+// SIMD-ONLY0:       if.else39:
+// SIMD-ONLY0-NEXT:    [[TMP43:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP43]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END40]]
+// SIMD-ONLY0:       if.end40:
+// SIMD-ONLY0-NEXT:    [[TMP44:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP45:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP41:%.*]] = fcmp oeq double [[TMP44]], [[TMP45]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP41]], label [[IF_THEN42:%.*]], label [[IF_ELSE43:%.*]]
+// SIMD-ONLY0:       if.then42:
+// SIMD-ONLY0-NEXT:    [[TMP46:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP46]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END44:%.*]]
+// SIMD-ONLY0:       if.else43:
+// SIMD-ONLY0-NEXT:    [[TMP47:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP47]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END44]]
+// SIMD-ONLY0:       if.end44:
+// SIMD-ONLY0-NEXT:    [[TMP48:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP49:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP45:%.*]] = fcmp oeq double [[TMP48]], [[TMP49]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP45]], label [[IF_THEN46:%.*]], label [[IF_ELSE47:%.*]]
+// SIMD-ONLY0:       if.then46:
+// SIMD-ONLY0-NEXT:    [[TMP50:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP50]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END48:%.*]]
+// SIMD-ONLY0:       if.else47:
+// SIMD-ONLY0-NEXT:    [[TMP51:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP51]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END48]]
+// SIMD-ONLY0:       if.end48:
+// SIMD-ONLY0-NEXT:    [[TMP52:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP53:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP49:%.*]] = fcmp oeq double [[TMP52]], [[TMP53]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP49]], label [[IF_THEN50:%.*]], label [[IF_ELSE51:%.*]]
+// SIMD-ONLY0:       if.then50:
+// SIMD-ONLY0-NEXT:    [[TMP54:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP54]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END52:%.*]]
+// SIMD-ONLY0:       if.else51:
+// SIMD-ONLY0-NEXT:    [[TMP55:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP55]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END52]]
+// SIMD-ONLY0:       if.end52:
+// SIMD-ONLY0-NEXT:    [[TMP56:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP57:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP53:%.*]] = fcmp oeq double [[TMP56]], [[TMP57]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP53]], label [[IF_THEN54:%.*]], label [[IF_ELSE55:%.*]]
+// SIMD-ONLY0:       if.then54:
+// SIMD-ONLY0-NEXT:    [[TMP58:%.*]] = load double, ptr [[DV]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP58]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END56:%.*]]
+// SIMD-ONLY0:       if.else55:
+// SIMD-ONLY0-NEXT:    [[TMP59:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    store double [[TMP59]], ptr [[DD]], align 8
+// SIMD-ONLY0-NEXT:    br label [[IF_END56]]
+// SIMD-ONLY0:       if.end56:
+// SIMD-ONLY0-NEXT:    [[TMP60:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP61:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP57:%.*]] = fcmp olt double [[TMP60]], [[TMP61]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP57]], label [[COND_TRUE:%.*]], label [[COND_FALSE:%.*]]
+// SIMD-ONLY0:       cond.true:
+// SIMD-ONLY0-NEXT:    [[TMP62:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    br label [[COND_END:%.*]]
+// SIMD-ONLY0:       cond.false:
+// SIMD-ONLY0-NEXT:    [[TMP63:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[COND_END]]
+// SIMD-ONLY0:       cond.end:
+// SIMD-ONLY0-NEXT:    [[COND:%.*]] = phi double [ [[TMP62]], [[COND_TRUE]] ], [ [[TMP63]], [[COND_FALSE]] ]
+// SIMD-ONLY0-NEXT:    store double [[COND]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP64:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP65:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    [[CMP58:%.*]] = fcmp ogt double [[TMP64]], [[TMP65]]
+// SIMD-ONLY0-NEXT:    br i1 [[CMP58]], label [[COND_TRUE59:%.*]], label [[COND_FALSE60:%.*]]
+// SIMD-ONLY0:       cond.true59:
+// SIMD-ONLY0-NEXT:    [[TMP66:%.*]] = load double, ptr [[DE]], align 8
+// SIMD-ONLY0-NEXT:    br label [[COND_END61:%.*]]
+// SIMD-ONLY0:       cond.false60:
+// SIMD-ONLY0-NEXT:    [[TMP67:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    br label [[COND_END61]]
+// SIMD-ONLY0:       cond.end61:
+// SIMD-ONLY0-NEXT:    [[COND62:%.*]] = phi double [ [[TMP66]], [[COND_TRUE59]] ], [ [[TMP67]], [[COND_FALSE60]] ]
+// SIMD-ONLY0-NEXT:    store double [[COND62]], ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    [[TMP68:%.*]] = load double, ptr [[DX]], align 8
+// SIMD-ONLY0-NEXT:    ret double [[TMP68]]
+//

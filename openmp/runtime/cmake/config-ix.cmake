@@ -129,7 +129,7 @@ check_symbol_exists(_aligned_malloc "malloc.h" LIBOMP_HAVE__ALIGNED_MALLOC)
 # Check linker flags
 if(WIN32)
   llvm_check_compiler_linker_flag(C /SAFESEH LIBOMP_HAVE_SAFESEH_FLAG)
-elseif(NOT APPLE)
+elseif(NOT (APPLE OR KVX))
   llvm_check_compiler_linker_flag(C -Wl,-x LIBOMP_HAVE_X_FLAG)
   llvm_check_compiler_linker_flag(C -Wl,--as-needed LIBOMP_HAVE_AS_NEEDED_FLAG)
   llvm_check_compiler_linker_flag(C "-Wl,--version-script=${LIBOMP_SRC_DIR}/exports_test_so.txt" LIBOMP_HAVE_VERSION_SCRIPT_FLAG)

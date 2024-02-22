@@ -593,7 +593,7 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_THREAD_NUM)(void) {
     return 0;
   }
   --gtid; // We keep (gtid+1) in TLS
-#elif KMP_OS_LINUX || KMP_OS_WASI
+#elif KMP_OS_LINUX || KMP_OS_WASI || KMP_OS_CLUSTER_OS
 #ifdef KMP_TDATA_GTID
   if (__kmp_gtid_mode >= 3) {
     if ((gtid = __kmp_gtid) == KMP_GTID_DNE) {
@@ -1043,7 +1043,7 @@ void FTN_STDCALL KMP_EXPAND_NAME(FTN_SET_DEFAULT_DEVICE)(int KMP_DEREF arg) {
 int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_NUM_DEVICES)(void)
     KMP_WEAK_ATTRIBUTE_EXTERNAL;
 int FTN_STDCALL KMP_EXPAND_NAME(FTN_GET_NUM_DEVICES)(void) {
-#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WASI || defined(KMP_STUB)
+#if KMP_MIC || KMP_OS_DARWIN || KMP_OS_WASI || defined(KMP_STUB) || KMP_OS_CLUSTER_OS
   return 0;
 #else
   int (*fptr)();
@@ -1430,11 +1430,15 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE)(kmp_pause_status_t kind,
   if (device_num == KMP_EXPAND_NAME(FTN_GET_INITIAL_DEVICE)())
     return __kmpc_pause_resource(kind);
   else {
+#if KMP_OS_CLUSTER_OS
+    return 1;
+#else
     int (*fptr)(kmp_pause_status_t, int);
     if ((*(void **)(&fptr) = KMP_DLSYM("tgt_pause_resource")))
       return (*fptr)(kind, device_num);
     else
       return 1; // just fail if there is no libomptarget
+#endif
   }
 #endif
 }
@@ -1442,7 +1446,7 @@ int FTN_STDCALL KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE)(kmp_pause_status_t kind,
 // Compiler will ensure that this is only called from host in sequential region
 int FTN_STDCALL
     KMP_EXPAND_NAME(FTN_PAUSE_RESOURCE_ALL)(kmp_pause_status_t kind) {
-#ifdef KMP_STUB
+#if defined(KMP_STUB) || defined(KMP_OS_CLUSTER_OS)
   return 1; // just fail
 #else
   int fails = 0;

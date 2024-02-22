@@ -1535,7 +1535,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION:%.*]]
 // CHECK-DEBUG:       omp.par.region:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META21:![0-9]+]], metadata !DIExpression()), !dbg [[DBG26:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META21:![0-9]+]], metadata !DIExpression()), !dbg [[DBG26:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I]], align 4, !dbg [[DBG26]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON]], ptr [[AGG_CAPTURED]], i32 0, i32 0, !dbg [[DBG27:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I]], ptr [[TMP1]], align 8, !dbg [[DBG27]]
@@ -1594,18 +1594,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META40:![0-9]+]], metadata !DIExpression()), !dbg [[DBG41:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META40:![0-9]+]], metadata !DIExpression()), !dbg [[DBG41:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META42:![0-9]+]], metadata !DIExpression()), !dbg [[DBG41]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META42:![0-9]+]], metadata !DIExpression()), !dbg [[DBG41]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META43:![0-9]+]], metadata !DIExpression()), !dbg [[DBG45:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META43:![0-9]+]], metadata !DIExpression()), !dbg [[DBG45:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG46:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG46]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG46]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG45]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META48:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG49]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META50:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META50:![0-9]+]], metadata !DIExpression()), !dbg [[DBG49]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG49]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG49]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG49]]
@@ -1637,11 +1637,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META61:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META61:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META63:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META63:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META64:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META64:![0-9]+]], metadata !DIExpression()), !dbg [[DBG62]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_0:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG65:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG65]]
@@ -1661,11 +1661,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[A_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[B_ADDR:%.*]] = alloca double, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[R]], ptr [[R_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[R_ADDR]], metadata [[META76:![0-9]+]], metadata !DIExpression()), !dbg [[DBG77:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[R_ADDR]], metadata [[META76:![0-9]+]], metadata !DIExpression()), !dbg [[DBG77:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[A]], ptr [[A_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[A_ADDR]], metadata [[META78:![0-9]+]], metadata !DIExpression()), !dbg [[DBG79:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[A_ADDR]], metadata [[META78:![0-9]+]], metadata !DIExpression()), !dbg [[DBG79:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store double [[B]], ptr [[B_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[B_ADDR]], metadata [[META80:![0-9]+]], metadata !DIExpression()), !dbg [[DBG81:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[B_ADDR]], metadata [[META80:![0-9]+]], metadata !DIExpression()), !dbg [[DBG81:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[OMP_GLOBAL_THREAD_NUM:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB6:[0-9]+]]), !dbg [[DBG82:![0-9]+]]
 // CHECK-DEBUG-NEXT:    br label [[OMP_PARALLEL:%.*]]
 // CHECK-DEBUG:       omp_parallel:
@@ -1745,7 +1745,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION5:%.*]]
 // CHECK-DEBUG:       omp.par.region5:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META95:![0-9]+]], metadata !DIExpression()), !dbg [[DBG100:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META95:![0-9]+]], metadata !DIExpression()), !dbg [[DBG100:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I]], align 4, !dbg [[DBG100]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_ANON_1]], ptr [[AGG_CAPTURED]], i32 0, i32 0, !dbg [[DBG101:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I]], ptr [[TMP2]], align 8, !dbg [[DBG101]]
@@ -1811,18 +1811,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META112:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META112:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META114:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META114:![0-9]+]], metadata !DIExpression()), !dbg [[DBG113]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META115:![0-9]+]], metadata !DIExpression()), !dbg [[DBG117:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META115:![0-9]+]], metadata !DIExpression()), !dbg [[DBG117:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_1:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG118:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG118]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG118]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG117]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META120:![0-9]+]], metadata !DIExpression()), !dbg [[DBG121:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META120:![0-9]+]], metadata !DIExpression()), !dbg [[DBG121:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG121]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META122:![0-9]+]], metadata !DIExpression()), !dbg [[DBG121]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META122:![0-9]+]], metadata !DIExpression()), !dbg [[DBG121]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG121]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG121]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG121]]
@@ -1854,11 +1854,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META126:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META126:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META128:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META128:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META129:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META129:![0-9]+]], metadata !DIExpression()), !dbg [[DBG127]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_2:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG130:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG130]]
@@ -1886,11 +1886,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_UPPERBOUND205:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[P_STRIDE206:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[R]], ptr [[R_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[R_ADDR]], metadata [[META134:![0-9]+]], metadata !DIExpression()), !dbg [[DBG135:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[R_ADDR]], metadata [[META134:![0-9]+]], metadata !DIExpression()), !dbg [[DBG135:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[A]], ptr [[A_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[A_ADDR]], metadata [[META136:![0-9]+]], metadata !DIExpression()), !dbg [[DBG137:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[A_ADDR]], metadata [[META136:![0-9]+]], metadata !DIExpression()), !dbg [[DBG137:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store double [[B]], ptr [[B_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[B_ADDR]], metadata [[META138:![0-9]+]], metadata !DIExpression()), !dbg [[DBG139:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[B_ADDR]], metadata [[META138:![0-9]+]], metadata !DIExpression()), !dbg [[DBG139:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[OMP_GLOBAL_THREAD_NUM:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB13:[0-9]+]]), !dbg [[DBG140:![0-9]+]]
 // CHECK-DEBUG-NEXT:    br label [[OMP_PARALLEL:%.*]]
 // CHECK-DEBUG:       omp_parallel:
@@ -1905,7 +1905,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG:       omp.par.outlined.exit184:
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_EXIT_SPLIT:%.*]]
 // CHECK-DEBUG:       omp.par.exit.split:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I185]], metadata [[META145:![0-9]+]], metadata !DIExpression()), !dbg [[DBG148:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I185]], metadata [[META145:![0-9]+]], metadata !DIExpression()), !dbg [[DBG148:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I185]], align 4, !dbg [[DBG148]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = getelementptr inbounds [[STRUCT_ANON_17]], ptr [[AGG_CAPTURED186]], i32 0, i32 0, !dbg [[DBG149:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I185]], ptr [[TMP0]], align 8, !dbg [[DBG149]]
@@ -1988,7 +1988,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE181:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION:%.*]]
 // CHECK-DEBUG:       omp.par.region:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META158:![0-9]+]], metadata !DIExpression()), !dbg [[DBG162:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I]], metadata [[META158:![0-9]+]], metadata !DIExpression()), !dbg [[DBG162:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I]], align 4, !dbg [[DBG162]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_ANON_3]], ptr [[AGG_CAPTURED]], i32 0, i32 0, !dbg [[DBG163:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I]], ptr [[TMP2]], align 8, !dbg [[DBG163]]
@@ -2036,7 +2036,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG:       omp.par.outlined.exit159:
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_EXIT11_SPLIT:%.*]]
 // CHECK-DEBUG:       omp.par.exit11.split:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I160]], metadata [[META171:![0-9]+]], metadata !DIExpression()), !dbg [[DBG174:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I160]], metadata [[META171:![0-9]+]], metadata !DIExpression()), !dbg [[DBG174:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I160]], align 4, !dbg [[DBG174]]
 // CHECK-DEBUG-NEXT:    [[TMP10:%.*]] = getelementptr inbounds [[STRUCT_ANON_15]], ptr [[AGG_CAPTURED161]], i32 0, i32 0, !dbg [[DBG175:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I160]], ptr [[TMP10]], align 8, !dbg [[DBG175]]
@@ -2148,7 +2148,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE156:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION9:%.*]]
 // CHECK-DEBUG:       omp.par.region9:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I16]], metadata [[META188:![0-9]+]], metadata !DIExpression()), !dbg [[DBG193:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I16]], metadata [[META188:![0-9]+]], metadata !DIExpression()), !dbg [[DBG193:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I16]], align 4, !dbg [[DBG193]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_ANON_5]], ptr [[AGG_CAPTURED17]], i32 0, i32 0, !dbg [[DBG194:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I16]], ptr [[TMP2]], align 8, !dbg [[DBG194]]
@@ -2196,7 +2196,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG:       omp.par.outlined.exit:
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_EXIT46_SPLIT:%.*]]
 // CHECK-DEBUG:       omp.par.exit46.split:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I75]], metadata [[META202:![0-9]+]], metadata !DIExpression()), !dbg [[DBG205:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I75]], metadata [[META202:![0-9]+]], metadata !DIExpression()), !dbg [[DBG205:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I75]], align 4, !dbg [[DBG205]]
 // CHECK-DEBUG-NEXT:    [[TMP10:%.*]] = getelementptr inbounds [[STRUCT_ANON_9]], ptr [[AGG_CAPTURED76]], i32 0, i32 0, !dbg [[DBG206:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I75]], ptr [[TMP10]], align 8, !dbg [[DBG206]]
@@ -2244,7 +2244,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG:       omp.par.outlined.exit134:
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_EXIT105_SPLIT:%.*]]
 // CHECK-DEBUG:       omp.par.exit105.split:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I135]], metadata [[META214:![0-9]+]], metadata !DIExpression()), !dbg [[DBG217:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I135]], metadata [[META214:![0-9]+]], metadata !DIExpression()), !dbg [[DBG217:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I135]], align 4, !dbg [[DBG217]]
 // CHECK-DEBUG-NEXT:    [[TMP18:%.*]] = getelementptr inbounds [[STRUCT_ANON_13]], ptr [[AGG_CAPTURED136]], i32 0, i32 0, !dbg [[DBG218:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I135]], ptr [[TMP18]], align 8, !dbg [[DBG218]]
@@ -2352,7 +2352,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE131:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION103:%.*]]
 // CHECK-DEBUG:       omp.par.region103:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I110]], metadata [[META235:![0-9]+]], metadata !DIExpression()), !dbg [[DBG241:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I110]], metadata [[META235:![0-9]+]], metadata !DIExpression()), !dbg [[DBG241:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I110]], align 4, !dbg [[DBG241]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_ANON_11]], ptr [[AGG_CAPTURED111]], i32 0, i32 0, !dbg [[DBG242:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I110]], ptr [[TMP2]], align 8, !dbg [[DBG242]]
@@ -2432,7 +2432,7 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[P_STRIDE72:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    br label [[OMP_PAR_REGION44:%.*]]
 // CHECK-DEBUG:       omp.par.region44:
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[I51]], metadata [[META251:![0-9]+]], metadata !DIExpression()), !dbg [[DBG257:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[I51]], metadata [[META251:![0-9]+]], metadata !DIExpression()), !dbg [[DBG257:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 0, ptr [[I51]], align 4, !dbg [[DBG257]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_ANON_7]], ptr [[AGG_CAPTURED52]], i32 0, i32 0, !dbg [[DBG258:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[I51]], ptr [[TMP2]], align 8, !dbg [[DBG258]]
@@ -2498,18 +2498,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META267:![0-9]+]], metadata !DIExpression()), !dbg [[DBG268:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META267:![0-9]+]], metadata !DIExpression()), !dbg [[DBG268:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META269:![0-9]+]], metadata !DIExpression()), !dbg [[DBG268]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META269:![0-9]+]], metadata !DIExpression()), !dbg [[DBG268]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META270:![0-9]+]], metadata !DIExpression()), !dbg [[DBG272:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META270:![0-9]+]], metadata !DIExpression()), !dbg [[DBG272:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_3:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG273:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG273]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG273]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG272]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META275:![0-9]+]], metadata !DIExpression()), !dbg [[DBG276:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META275:![0-9]+]], metadata !DIExpression()), !dbg [[DBG276:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG276]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META277:![0-9]+]], metadata !DIExpression()), !dbg [[DBG276]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META277:![0-9]+]], metadata !DIExpression()), !dbg [[DBG276]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG276]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG276]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG276]]
@@ -2541,11 +2541,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META281:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META281:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META283:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META283:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META284:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META284:![0-9]+]], metadata !DIExpression()), !dbg [[DBG282]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_4:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG285:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG285]]
@@ -2566,18 +2566,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META289:![0-9]+]], metadata !DIExpression()), !dbg [[DBG290:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META289:![0-9]+]], metadata !DIExpression()), !dbg [[DBG290:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META291:![0-9]+]], metadata !DIExpression()), !dbg [[DBG290]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META291:![0-9]+]], metadata !DIExpression()), !dbg [[DBG290]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META292:![0-9]+]], metadata !DIExpression()), !dbg [[DBG294:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META292:![0-9]+]], metadata !DIExpression()), !dbg [[DBG294:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_5:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG295:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG295]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG295]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG294]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META297:![0-9]+]], metadata !DIExpression()), !dbg [[DBG298:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META297:![0-9]+]], metadata !DIExpression()), !dbg [[DBG298:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG298]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META299:![0-9]+]], metadata !DIExpression()), !dbg [[DBG298]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META299:![0-9]+]], metadata !DIExpression()), !dbg [[DBG298]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG298]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG298]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG298]]
@@ -2609,11 +2609,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META303:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META303:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META305:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META305:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META306:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META306:![0-9]+]], metadata !DIExpression()), !dbg [[DBG304]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_6:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG307:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG307]]
@@ -2634,18 +2634,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META311:![0-9]+]], metadata !DIExpression()), !dbg [[DBG312:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META311:![0-9]+]], metadata !DIExpression()), !dbg [[DBG312:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META313:![0-9]+]], metadata !DIExpression()), !dbg [[DBG312]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META313:![0-9]+]], metadata !DIExpression()), !dbg [[DBG312]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META314:![0-9]+]], metadata !DIExpression()), !dbg [[DBG316:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META314:![0-9]+]], metadata !DIExpression()), !dbg [[DBG316:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_7:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG317:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG317]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG317]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG316]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META319:![0-9]+]], metadata !DIExpression()), !dbg [[DBG320:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META319:![0-9]+]], metadata !DIExpression()), !dbg [[DBG320:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG320]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META321:![0-9]+]], metadata !DIExpression()), !dbg [[DBG320]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META321:![0-9]+]], metadata !DIExpression()), !dbg [[DBG320]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG320]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG320]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG320]]
@@ -2677,11 +2677,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META325:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META325:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META327:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META327:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META328:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META328:![0-9]+]], metadata !DIExpression()), !dbg [[DBG326]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_8:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG329:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG329]]
@@ -2702,18 +2702,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META333:![0-9]+]], metadata !DIExpression()), !dbg [[DBG334:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META333:![0-9]+]], metadata !DIExpression()), !dbg [[DBG334:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META335:![0-9]+]], metadata !DIExpression()), !dbg [[DBG334]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META335:![0-9]+]], metadata !DIExpression()), !dbg [[DBG334]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META336:![0-9]+]], metadata !DIExpression()), !dbg [[DBG338:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META336:![0-9]+]], metadata !DIExpression()), !dbg [[DBG338:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_9:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG339:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG339]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG339]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG338]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META341:![0-9]+]], metadata !DIExpression()), !dbg [[DBG342:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META341:![0-9]+]], metadata !DIExpression()), !dbg [[DBG342:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG342]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META343:![0-9]+]], metadata !DIExpression()), !dbg [[DBG342]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META343:![0-9]+]], metadata !DIExpression()), !dbg [[DBG342]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG342]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG342]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG342]]
@@ -2745,11 +2745,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META347:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META347:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META349:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META349:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META350:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META350:![0-9]+]], metadata !DIExpression()), !dbg [[DBG348]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_10:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG351:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG351]]
@@ -2770,18 +2770,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META355:![0-9]+]], metadata !DIExpression()), !dbg [[DBG356:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META355:![0-9]+]], metadata !DIExpression()), !dbg [[DBG356:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META357:![0-9]+]], metadata !DIExpression()), !dbg [[DBG356]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META357:![0-9]+]], metadata !DIExpression()), !dbg [[DBG356]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META358:![0-9]+]], metadata !DIExpression()), !dbg [[DBG360:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META358:![0-9]+]], metadata !DIExpression()), !dbg [[DBG360:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_11:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG361:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG361]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG361]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG360]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META363:![0-9]+]], metadata !DIExpression()), !dbg [[DBG364:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META363:![0-9]+]], metadata !DIExpression()), !dbg [[DBG364:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG364]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META365:![0-9]+]], metadata !DIExpression()), !dbg [[DBG364]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META365:![0-9]+]], metadata !DIExpression()), !dbg [[DBG364]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG364]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG364]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG364]]
@@ -2813,11 +2813,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META369:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META369:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META371:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META371:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META372:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META372:![0-9]+]], metadata !DIExpression()), !dbg [[DBG370]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_12:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG373:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG373]]
@@ -2838,18 +2838,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META377:![0-9]+]], metadata !DIExpression()), !dbg [[DBG378:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META377:![0-9]+]], metadata !DIExpression()), !dbg [[DBG378:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META379:![0-9]+]], metadata !DIExpression()), !dbg [[DBG378]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META379:![0-9]+]], metadata !DIExpression()), !dbg [[DBG378]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META380:![0-9]+]], metadata !DIExpression()), !dbg [[DBG382:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META380:![0-9]+]], metadata !DIExpression()), !dbg [[DBG382:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_13:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG383:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG383]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG383]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG382]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META385:![0-9]+]], metadata !DIExpression()), !dbg [[DBG386:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META385:![0-9]+]], metadata !DIExpression()), !dbg [[DBG386:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG386]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META387:![0-9]+]], metadata !DIExpression()), !dbg [[DBG386]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META387:![0-9]+]], metadata !DIExpression()), !dbg [[DBG386]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG386]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG386]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG386]]
@@ -2881,11 +2881,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META391:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META391:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META393:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META393:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META394:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META394:![0-9]+]], metadata !DIExpression()), !dbg [[DBG392]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_14:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG395:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG395]]
@@ -2906,18 +2906,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META399:![0-9]+]], metadata !DIExpression()), !dbg [[DBG400:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META399:![0-9]+]], metadata !DIExpression()), !dbg [[DBG400:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META401:![0-9]+]], metadata !DIExpression()), !dbg [[DBG400]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META401:![0-9]+]], metadata !DIExpression()), !dbg [[DBG400]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META402:![0-9]+]], metadata !DIExpression()), !dbg [[DBG404:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META402:![0-9]+]], metadata !DIExpression()), !dbg [[DBG404:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_15:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG405:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG405]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG405]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG404]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META407:![0-9]+]], metadata !DIExpression()), !dbg [[DBG408:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META407:![0-9]+]], metadata !DIExpression()), !dbg [[DBG408:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG408]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META409:![0-9]+]], metadata !DIExpression()), !dbg [[DBG408]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META409:![0-9]+]], metadata !DIExpression()), !dbg [[DBG408]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG408]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG408]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG408]]
@@ -2949,11 +2949,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META413:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META413:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META415:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META415:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META416:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META416:![0-9]+]], metadata !DIExpression()), !dbg [[DBG414]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_16:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG417:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG417]]
@@ -2974,18 +2974,18 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[DOTSTOP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[DOTSTEP:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    store ptr [[DISTANCE]], ptr [[DISTANCE_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META421:![0-9]+]], metadata !DIExpression()), !dbg [[DBG422:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DISTANCE_ADDR]], metadata [[META421:![0-9]+]], metadata !DIExpression()), !dbg [[DBG422:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META423:![0-9]+]], metadata !DIExpression()), !dbg [[DBG422]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META423:![0-9]+]], metadata !DIExpression()), !dbg [[DBG422]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META424:![0-9]+]], metadata !DIExpression()), !dbg [[DBG426:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTART]], metadata [[META424:![0-9]+]], metadata !DIExpression()), !dbg [[DBG426:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_17:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG427:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load ptr, ptr [[TMP1]], align 8, !dbg [[DBG427]]
 // CHECK-DEBUG-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4, !dbg [[DBG427]]
 // CHECK-DEBUG-NEXT:    store i32 [[TMP3]], ptr [[DOTSTART]], align 4, !dbg [[DBG426]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META429:![0-9]+]], metadata !DIExpression()), !dbg [[DBG430:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTOP]], metadata [[META429:![0-9]+]], metadata !DIExpression()), !dbg [[DBG430:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 100, ptr [[DOTSTOP]], align 4, !dbg [[DBG430]]
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META431:![0-9]+]], metadata !DIExpression()), !dbg [[DBG430]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[DOTSTEP]], metadata [[META431:![0-9]+]], metadata !DIExpression()), !dbg [[DBG430]]
 // CHECK-DEBUG-NEXT:    store i32 1, ptr [[DOTSTEP]], align 4, !dbg [[DBG430]]
 // CHECK-DEBUG-NEXT:    [[TMP4:%.*]] = load i32, ptr [[DOTSTART]], align 4, !dbg [[DBG430]]
 // CHECK-DEBUG-NEXT:    [[TMP5:%.*]] = load i32, ptr [[DOTSTOP]], align 4, !dbg [[DBG430]]
@@ -3017,11 +3017,11 @@ void parallel_for_2(float *r, int a, double b) {
 // CHECK-DEBUG-NEXT:    [[LOGICAL_ADDR:%.*]] = alloca i32, align 4
 // CHECK-DEBUG-NEXT:    [[__CONTEXT_ADDR:%.*]] = alloca ptr, align 8
 // CHECK-DEBUG-NEXT:    store ptr [[LOOPVAR]], ptr [[LOOPVAR_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META435:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436:![0-9]+]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOOPVAR_ADDR]], metadata [[META435:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436:![0-9]+]]
 // CHECK-DEBUG-NEXT:    store i32 [[LOGICAL]], ptr [[LOGICAL_ADDR]], align 4
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META437:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[LOGICAL_ADDR]], metadata [[META437:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436]]
 // CHECK-DEBUG-NEXT:    store ptr [[__CONTEXT]], ptr [[__CONTEXT_ADDR]], align 8
-// CHECK-DEBUG-NEXT:    call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META438:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436]]
+// CHECK-DEBUG-NEXT:    tail call void @llvm.dbg.declare(metadata ptr [[__CONTEXT_ADDR]], metadata [[META438:![0-9]+]], metadata !DIExpression()), !dbg [[DBG436]]
 // CHECK-DEBUG-NEXT:    [[TMP0:%.*]] = load ptr, ptr [[__CONTEXT_ADDR]], align 8
 // CHECK-DEBUG-NEXT:    [[TMP1:%.*]] = getelementptr inbounds [[STRUCT_ANON_18:%.*]], ptr [[TMP0]], i32 0, i32 0, !dbg [[DBG439:![0-9]+]]
 // CHECK-DEBUG-NEXT:    [[TMP2:%.*]] = load i32, ptr [[TMP1]], align 4, !dbg [[DBG439]]

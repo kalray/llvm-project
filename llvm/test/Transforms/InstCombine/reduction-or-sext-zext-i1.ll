@@ -5,8 +5,7 @@ target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 
 define i1 @reduce_or_self(<8 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_self(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <8 x i1> [[X:%.*]] to i8
-; CHECK-NEXT:    [[RES:%.*]] = icmp ne i8 [[TMP1]], 0
+; CHECK-NEXT:    [[RES:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[X:%.*]])
 ; CHECK-NEXT:    ret i1 [[RES]]
 ;
   %res = call i1 @llvm.vector.reduce.or.v8i32(<8 x i1> %x)
@@ -15,9 +14,8 @@ define i1 @reduce_or_self(<8 x i1> %x) {
 
 define i32 @reduce_or_sext(<4 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_sext(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <4 x i1> [[X:%.*]] to i4
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i4 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = sext i1 [[TMP2]] to i32
+; CHECK-NEXT:    [[SEXT:%.*]] = sext <4 x i1> [[X:%.*]] to <4 x i32>
+; CHECK-NEXT:    [[RES:%.*]] = call i32 @llvm.vector.reduce.or.v4i32(<4 x i32> [[SEXT]])
 ; CHECK-NEXT:    ret i32 [[RES]]
 ;
   %sext = sext <4 x i1> %x to <4 x i32>
@@ -27,9 +25,8 @@ define i32 @reduce_or_sext(<4 x i1> %x) {
 
 define i64 @reduce_or_zext(<8 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_zext(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <8 x i1> [[X:%.*]] to i8
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i8 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = zext i1 [[TMP2]] to i64
+; CHECK-NEXT:    [[ZEXT:%.*]] = zext <8 x i1> [[X:%.*]] to <8 x i64>
+; CHECK-NEXT:    [[RES:%.*]] = call i64 @llvm.vector.reduce.or.v8i64(<8 x i64> [[ZEXT]])
 ; CHECK-NEXT:    ret i64 [[RES]]
 ;
   %zext = zext <8 x i1> %x to <8 x i64>
@@ -39,9 +36,8 @@ define i64 @reduce_or_zext(<8 x i1> %x) {
 
 define i16 @reduce_or_sext_same(<16 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_sext_same(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <16 x i1> [[X:%.*]] to i16
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i16 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = sext i1 [[TMP2]] to i16
+; CHECK-NEXT:    [[SEXT:%.*]] = sext <16 x i1> [[X:%.*]] to <16 x i16>
+; CHECK-NEXT:    [[RES:%.*]] = call i16 @llvm.vector.reduce.or.v16i16(<16 x i16> [[SEXT]])
 ; CHECK-NEXT:    ret i16 [[RES]]
 ;
   %sext = sext <16 x i1> %x to <16 x i16>
@@ -51,9 +47,8 @@ define i16 @reduce_or_sext_same(<16 x i1> %x) {
 
 define i8 @reduce_or_zext_long(<128 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_zext_long(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <128 x i1> [[X:%.*]] to i128
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i128 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = sext i1 [[TMP2]] to i8
+; CHECK-NEXT:    [[SEXT:%.*]] = sext <128 x i1> [[X:%.*]] to <128 x i8>
+; CHECK-NEXT:    [[RES:%.*]] = call i8 @llvm.vector.reduce.or.v128i8(<128 x i8> [[SEXT]])
 ; CHECK-NEXT:    ret i8 [[RES]]
 ;
   %sext = sext <128 x i1> %x to <128 x i8>
@@ -64,12 +59,10 @@ define i8 @reduce_or_zext_long(<128 x i1> %x) {
 @glob = external global i8, align 1
 define i8 @reduce_or_zext_long_external_use(<128 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_zext_long_external_use(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <128 x i1> [[X:%.*]] to i128
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i128 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = sext i1 [[TMP2]] to i8
-; CHECK-NEXT:    [[TMP3:%.*]] = extractelement <128 x i1> [[X]], i64 0
-; CHECK-NEXT:    [[EXT:%.*]] = sext i1 [[TMP3]] to i8
-; CHECK-NEXT:    store i8 [[EXT]], ptr @glob, align 1
+; CHECK-NEXT:    [[SEXT:%.*]] = sext <128 x i1> [[X:%.*]] to <128 x i8>
+; CHECK-NEXT:    [[RES:%.*]] = call i8 @llvm.vector.reduce.or.v128i8(<128 x i8> [[SEXT]])
+; CHECK-NEXT:    [[EXT:%.*]] = extractelement <128 x i8> [[SEXT]], i64 0
+; CHECK-NEXT:    store i8 [[EXT]], i8* @glob, align 1
 ; CHECK-NEXT:    ret i8 [[RES]]
 ;
   %sext = sext <128 x i1> %x to <128 x i8>
@@ -82,12 +75,10 @@ define i8 @reduce_or_zext_long_external_use(<128 x i1> %x) {
 @glob1 = external global i64, align 8
 define i64 @reduce_or_zext_external_use(<8 x i1> %x) {
 ; CHECK-LABEL: @reduce_or_zext_external_use(
-; CHECK-NEXT:    [[TMP1:%.*]] = bitcast <8 x i1> [[X:%.*]] to i8
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp ne i8 [[TMP1]], 0
-; CHECK-NEXT:    [[RES:%.*]] = zext i1 [[TMP2]] to i64
-; CHECK-NEXT:    [[TMP3:%.*]] = extractelement <8 x i1> [[X]], i64 0
-; CHECK-NEXT:    [[EXT:%.*]] = zext i1 [[TMP3]] to i64
-; CHECK-NEXT:    store i64 [[EXT]], ptr @glob1, align 8
+; CHECK-NEXT:    [[ZEXT:%.*]] = zext <8 x i1> [[X:%.*]] to <8 x i64>
+; CHECK-NEXT:    [[RES:%.*]] = call i64 @llvm.vector.reduce.or.v8i64(<8 x i64> [[ZEXT]])
+; CHECK-NEXT:    [[EXT:%.*]] = extractelement <8 x i64> [[ZEXT]], i64 0
+; CHECK-NEXT:    store i64 [[EXT]], i64* @glob1, align 8
 ; CHECK-NEXT:    ret i64 [[RES]]
 ;
   %zext = zext <8 x i1> %x to <8 x i64>
@@ -100,10 +91,14 @@ define i64 @reduce_or_zext_external_use(<8 x i1> %x) {
 define i1 @reduce_or_pointer_cast(ptr %arg, ptr %arg1) {
 ; CHECK-LABEL: @reduce_or_pointer_cast(
 ; CHECK-NEXT:  bb:
-; CHECK-NEXT:    [[LHS1:%.*]] = load i64, ptr [[ARG1:%.*]], align 8
-; CHECK-NEXT:    [[RHS2:%.*]] = load i64, ptr [[ARG:%.*]], align 8
-; CHECK-NEXT:    [[ANY_NE_NOT:%.*]] = icmp eq i64 [[LHS1]], [[RHS2]]
-; CHECK-NEXT:    ret i1 [[ANY_NE_NOT]]
+; CHECK-NEXT:    [[PTR1:%.*]] = bitcast i8* [[ARG1:%.*]] to <8 x i8>*
+; CHECK-NEXT:    [[PTR2:%.*]] = bitcast i8* [[ARG:%.*]] to <8 x i8>*
+; CHECK-NEXT:    [[LHS:%.*]] = load <8 x i8>, <8 x i8>* [[PTR1]], align 8
+; CHECK-NEXT:    [[RHS:%.*]] = load <8 x i8>, <8 x i8>* [[PTR2]], align 8
+; CHECK-NEXT:    [[CMP:%.*]] = icmp ne <8 x i8> [[LHS]], [[RHS]]
+; CHECK-NEXT:    [[ANY_NE:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[CMP]])
+; CHECK-NEXT:    [[ALL_EQ:%.*]] = xor i1 [[ANY_NE]], true
+; CHECK-NEXT:    ret i1 [[ALL_EQ]]
 ;
 bb:
   %lhs = load <8 x i8>, ptr %arg1
@@ -120,9 +115,9 @@ define i1 @reduce_or_pointer_cast_wide(ptr %arg, ptr %arg1) {
 ; CHECK-NEXT:    [[LHS:%.*]] = load <8 x i16>, ptr [[ARG1:%.*]], align 16
 ; CHECK-NEXT:    [[RHS:%.*]] = load <8 x i16>, ptr [[ARG:%.*]], align 16
 ; CHECK-NEXT:    [[CMP:%.*]] = icmp ne <8 x i16> [[LHS]], [[RHS]]
-; CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i1> [[CMP]] to i8
-; CHECK-NEXT:    [[ANY_NE_NOT:%.*]] = icmp eq i8 [[TMP0]], 0
-; CHECK-NEXT:    ret i1 [[ANY_NE_NOT]]
+; CHECK-NEXT:    [[ANY_NE:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[CMP]])
+; CHECK-NEXT:    [[ALL_EQ:%.*]] = xor i1 [[ANY_NE]], true
+; CHECK-NEXT:    ret i1 [[ALL_EQ]]
 ;
 bb:
   %lhs = load <8 x i16>, ptr %arg1
@@ -137,9 +132,12 @@ bb:
 define i1 @reduce_or_pointer_cast_ne(ptr %arg, ptr %arg1) {
 ; CHECK-LABEL: @reduce_or_pointer_cast_ne(
 ; CHECK-NEXT:  bb:
-; CHECK-NEXT:    [[LHS1:%.*]] = load i64, ptr [[ARG1:%.*]], align 8
-; CHECK-NEXT:    [[RHS2:%.*]] = load i64, ptr [[ARG:%.*]], align 8
-; CHECK-NEXT:    [[ANY_NE:%.*]] = icmp ne i64 [[LHS1]], [[RHS2]]
+; CHECK-NEXT:    [[PTR1:%.*]] = bitcast i8* [[ARG1:%.*]] to <8 x i8>*
+; CHECK-NEXT:    [[PTR2:%.*]] = bitcast i8* [[ARG:%.*]] to <8 x i8>*
+; CHECK-NEXT:    [[LHS:%.*]] = load <8 x i8>, <8 x i8>* [[PTR1]], align 8
+; CHECK-NEXT:    [[RHS:%.*]] = load <8 x i8>, <8 x i8>* [[PTR2]], align 8
+; CHECK-NEXT:    [[CMP:%.*]] = icmp ne <8 x i8> [[LHS]], [[RHS]]
+; CHECK-NEXT:    [[ANY_NE:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[CMP]])
 ; CHECK-NEXT:    ret i1 [[ANY_NE]]
 ;
 bb:
@@ -156,8 +154,7 @@ define i1 @reduce_or_pointer_cast_ne_wide(ptr %arg, ptr %arg1) {
 ; CHECK-NEXT:    [[LHS:%.*]] = load <8 x i16>, ptr [[ARG1:%.*]], align 16
 ; CHECK-NEXT:    [[RHS:%.*]] = load <8 x i16>, ptr [[ARG:%.*]], align 16
 ; CHECK-NEXT:    [[CMP:%.*]] = icmp ne <8 x i16> [[LHS]], [[RHS]]
-; CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i1> [[CMP]] to i8
-; CHECK-NEXT:    [[ANY_NE:%.*]] = icmp ne i8 [[TMP0]], 0
+; CHECK-NEXT:    [[ANY_NE:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[CMP]])
 ; CHECK-NEXT:    ret i1 [[ANY_NE]]
 ;
 bb:

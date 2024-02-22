@@ -2129,6 +2129,8 @@ static Attribute::AttrKind getAttrFromCode(uint64_t Code) {
     return Attribute::MustProgress;
   case bitc::ATTR_KIND_HOT:
     return Attribute::Hot;
+  case bitc::ATTR_KIND_MPPANATIVE:
+    return Attribute::MPPANative;
   case bitc::ATTR_KIND_PRESPLIT_COROUTINE:
     return Attribute::PresplitCoroutine;
   case bitc::ATTR_KIND_WRITABLE:

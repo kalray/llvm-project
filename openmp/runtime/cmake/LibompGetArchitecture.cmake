@@ -57,6 +57,8 @@ function(libomp_get_architecture return_arch)
       #error ARCHITECTURE=s390x
     #elif defined(__wasm32__)
       #error ARCHITECTURE=wasm32
+    #elif defined(__KVX__)
+      #error ARCHITECTURE=kvx
     #else
       #error ARCHITECTURE=UnknownArchitecture
     #endif

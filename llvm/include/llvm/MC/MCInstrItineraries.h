@@ -224,6 +224,9 @@ public:
         hasPipelineForwarding(DefClass, DefIdx, UseClass, UseIdx))
       // FIXME: This assumes one cycle benefit for every pipeline forwarding.
       UseCycle = *UseCycle - 1;
+    // VLIW processors should not have 0-latency data or output dependencies
+    if (SchedModel.IsVLIWProcessor && UseCycle <= 0)
+      *UseCycle = 1;
     return UseCycle;
   }
 

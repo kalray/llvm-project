@@ -614,6 +614,7 @@ public:
     llvm_unreachable(
         "Mach-O IFunc lowering is not yet supported on this target");
   }
+  void emitKill(const MachineInstr *MI) const;
 
   /// Emit N NOP instructions.
   void emitNops(unsigned N);

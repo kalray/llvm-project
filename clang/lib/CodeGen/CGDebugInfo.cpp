@@ -714,6 +714,12 @@ llvm::DIType *CGDebugInfo::CreateType(const BuiltinType *BT) {
                                          TheCU->getFile(), 0);
     return SelTy;
   }
+  // TODO: What debug info should we return for a TCA register types?
+  // For now we return a safe type here to avoid generating an error.
+#define KVX_TCA_VECTOR_TYPE(Name, Id, size) \
+  case BuiltinType::Id:
+#include "clang/Basic/KVXTypes.def"
+    return CreateType(cast<const BuiltinType>(CGM.getContext().IntTy));
 
 #define IMAGE_TYPE(ImgType, Id, SingletonId, Access, Suffix)                   \
   case BuiltinType::Id:                                                        \

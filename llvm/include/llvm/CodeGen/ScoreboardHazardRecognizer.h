@@ -65,6 +65,24 @@ class ScoreboardHazardRecognizer : public ScheduleHazardRecognizer {
       return Data[(Head + idx) & (Depth-1)];
     }
 
+    void copyFrom(const Scoreboard &S) {
+      Head = S.Head;
+
+      if (Depth != S.Depth) {
+        Depth = S.Depth;
+        // Array size changed, need to realloc
+        if (Data) {
+          delete[] Data;
+          Data = nullptr;
+        }
+      }
+
+      if (!Data)
+        Data = new InstrStage::FuncUnits[Depth];
+
+      memcpy(Data, S.Data, Depth * sizeof(Data[0]));
+    }
+
     void reset(size_t d = 1) {
       if (!Data) {
         Depth = d;
@@ -102,6 +120,9 @@ class ScoreboardHazardRecognizer : public ScheduleHazardRecognizer {
   /// IssueCount - Count instructions issued in this cycle.
   unsigned IssueCount = 0;
 
+  /// HasSoloInstruction - True if a solo instruction was issued this cycle
+  bool HasSoloInstruction = false;
+
   Scoreboard ReservedScoreboard;
   Scoreboard RequiredScoreboard;
 
@@ -121,6 +142,9 @@ public:
   void EmitInstruction(SUnit *SU) override;
   void AdvanceCycle() override;
   void RecedeCycle() override;
+
+protected:
+  virtual bool shouldUpdateBetweenStages() const { return false; }
 };
 
 } // end namespace llvm

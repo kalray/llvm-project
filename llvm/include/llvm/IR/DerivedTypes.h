@@ -68,6 +68,11 @@ public:
     return Type::getIntNTy(getContext(), 2 * getScalarSizeInBits());
   }
 
+  /// Returns type that fits at least half size of input type.
+  IntegerType *getTruncatedType() const {
+    return Type::getIntNTy(getContext(), (getScalarSizeInBits() + 1) / 2);
+  }
+
   /// Get the number of bits in this IntegerType
   unsigned getBitWidth() const { return getSubclassData(); }
 
@@ -460,34 +465,18 @@ public:
 
   /// This static method is like getInteger except that the element types are
   /// twice as wide as the elements in the input type.
-  static VectorType *getExtendedElementVectorType(VectorType *VTy) {
-    assert(VTy->isIntOrIntVectorTy() && "VTy expected to be a vector of ints.");
-    auto *EltTy = cast<IntegerType>(VTy->getElementType());
-    return VectorType::get(EltTy->getExtendedType(), VTy->getElementCount());
+  static VectorType *getExtendedElementVectorType(VectorType *VTy,
+                                                  const bool PPC128 = false) {
+    auto *EltTy = VTy->getElementType()->getExtendedType(PPC128);
+    return VectorType::get(EltTy, VTy->getElementCount());
   }
 
   // This static method gets a VectorType with the same number of elements as
   // the input type, and the element type is an integer or float type which
   // is half as wide as the elements in the input type.
-  static VectorType *getTruncatedElementVectorType(VectorType *VTy) {
-    Type *EltTy;
-    if (VTy->getElementType()->isFloatingPointTy()) {
-      switch(VTy->getElementType()->getTypeID()) {
-      case DoubleTyID:
-        EltTy = Type::getFloatTy(VTy->getContext());
-        break;
-      case FloatTyID:
-        EltTy = Type::getHalfTy(VTy->getContext());
-        break;
-      default:
-        llvm_unreachable("Cannot create narrower fp vector element type");
-      }
-    } else {
-      unsigned EltBits = VTy->getElementType()->getPrimitiveSizeInBits();
-      assert((EltBits & 1) == 0 &&
-             "Cannot truncate vector element with odd bit-width");
-      EltTy = IntegerType::get(VTy->getContext(), EltBits / 2);
-    }
+  static VectorType *getTruncatedElementVectorType(VectorType *VTy,
+                                                   const bool BFloat = false) {
+    auto *EltTy = VTy->getElementType()->getTruncatedType(BFloat);
     return VectorType::get(EltTy, VTy->getElementCount());
   }
 
@@ -684,13 +673,28 @@ public:
   }
 };
 
-Type *Type::getExtendedType() const {
-  assert(
-      isIntOrIntVectorTy() &&
-      "Original type expected to be a vector of integers or a scalar integer.");
+Type *Type::getExtendedType(const bool PPC128) const {
   if (auto *VTy = dyn_cast<VectorType>(this))
     return VectorType::getExtendedElementVectorType(
         const_cast<VectorType *>(VTy));
+
+  if (this->isFloatingPointTy()) {
+    auto &C = this->getContext();
+    switch (this->getTypeID()) {
+    case DoubleTyID: {
+      if (PPC128)
+        return Type::getPPC_FP128Ty(C);
+      return Type::getFP128Ty(C);
+    }
+    case FloatTyID:
+      return Type::getDoubleTy(C);
+    case HalfTyID:
+    case BFloatTyID:
+      return Type::getFloatTy(C);
+    default:
+      llvm_unreachable("Cannot create wider fp element type");
+    }
+  }
   return cast<IntegerType>(this)->getExtendedType();
 }
 
@@ -698,6 +702,30 @@ Type *Type::getWithNewType(Type *EltTy) const {
   if (auto *VTy = dyn_cast<VectorType>(this))
     return VectorType::get(EltTy, VTy->getElementCount());
   return EltTy;
+}
+
+Type *Type::getTruncatedType(const bool BFloat) const {
+  if (auto *VTy = dyn_cast<VectorType>(this))
+    return VectorType::getTruncatedElementVectorType(
+        const_cast<VectorType *>(VTy));
+
+  if (this->isFloatingPointTy()) {
+    auto &C = this->getContext();
+    switch (this->getTypeID()) {
+    case DoubleTyID:
+      return Type::getFloatTy(C);
+    case FloatTyID: {
+      if (BFloat)
+        return Type::getBFloatTy(C);
+      return Type::getHalfTy(C);
+    }
+    case HalfTyID:
+      return Type::getDoubleTy(C);
+    default:
+      llvm_unreachable("Cannot create truncated fp element type");
+    }
+  }
+  return cast<IntegerType>(this)->getTruncatedType();
 }
 
 Type *Type::getWithNewBitWidth(unsigned NewBitWidth) const {

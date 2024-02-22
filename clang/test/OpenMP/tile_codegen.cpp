@@ -98,7 +98,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@_ZN1SC1Ev
-// CHECK1-SAME: (ptr noundef nonnull align 4 dereferenceable(4) [[THIS:%.*]]) unnamed_addr #[[ATTR2:[0-9]+]] comdat align 2 {
+// CHECK1-SAME: (ptr noundef nonnull align 4 dereferenceable(4) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat align 2 {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
@@ -108,7 +108,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@_ZN1SC2Ev
-// CHECK1-SAME: (ptr noundef nonnull align 4 dereferenceable(4) [[THIS:%.*]]) unnamed_addr #[[ATTR2]] comdat align 2 {
+// CHECK1-SAME: (ptr noundef nonnull align 4 dereferenceable(4) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat align 2 {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    [[I:%.*]] = alloca ptr, align 8
@@ -885,7 +885,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@foo6.omp_outlined
-// CHECK1-SAME: (ptr noalias noundef [[DOTGLOBAL_TID_:%.*]], ptr noalias noundef [[DOTBOUND_TID_:%.*]]) #[[ATTR5:[0-9]+]] {
+// CHECK1-SAME: (ptr noalias noundef [[DOTGLOBAL_TID_:%.*]], ptr noalias noundef [[DOTBOUND_TID_:%.*]]) #[[ATTR4:[0-9]+]] {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[DOTGLOBAL_TID__ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    [[DOTBOUND_TID__ADDR:%.*]] = alloca ptr, align 8
@@ -1159,13 +1159,13 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@body
-// CHECK2-SAME: (...) #[[ATTR2:[0-9]+]] {
+// CHECK2-SAME: (...) #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    ret void
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo1
-// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]], i32 noundef [[STEP:%.*]]) #[[ATTR2]] {
+// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]], i32 noundef [[STEP:%.*]]) #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[START_ADDR:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[END_ADDR:%.*]] = alloca i32, align 4
@@ -1255,7 +1255,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo2
-// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]], i32 noundef [[STEP:%.*]]) #[[ATTR2]] {
+// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]], i32 noundef [[STEP:%.*]]) #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[START_ADDR:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[END_ADDR:%.*]] = alloca i32, align 4
@@ -1368,7 +1368,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo3
-// CHECK2-SAME: () #[[ATTR2]] {
+// CHECK2-SAME: () #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[DOTOMP_IV:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[TMP:%.*]] = alloca i32, align 4
@@ -1510,7 +1510,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo4
-// CHECK2-SAME: () #[[ATTR2]] {
+// CHECK2-SAME: () #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[DOTOMP_IV:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[TMP:%.*]] = alloca i32, align 4
@@ -1663,7 +1663,7 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo5
-// CHECK2-SAME: () #[[ATTR2]] {
+// CHECK2-SAME: () #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[DOTOMP_IV:%.*]] = alloca i64, align 8
 // CHECK2-NEXT:    [[TMP:%.*]] = alloca i32, align 4
@@ -1872,14 +1872,14 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo6
-// CHECK2-SAME: () #[[ATTR2]] {
+// CHECK2-SAME: () #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    call void (ptr, i32, ptr, ...) @__kmpc_fork_call(ptr @[[GLOB2]], i32 0, ptr @foo6.omp_outlined)
 // CHECK2-NEXT:    ret void
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@foo6.omp_outlined
-// CHECK2-SAME: (ptr noalias noundef [[DOTGLOBAL_TID_:%.*]], ptr noalias noundef [[DOTBOUND_TID_:%.*]]) #[[ATTR5:[0-9]+]] {
+// CHECK2-SAME: (ptr noalias noundef [[DOTGLOBAL_TID_:%.*]], ptr noalias noundef [[DOTBOUND_TID_:%.*]]) #[[ATTR4:[0-9]+]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[DOTGLOBAL_TID__ADDR:%.*]] = alloca ptr, align 8
 // CHECK2-NEXT:    [[DOTBOUND_TID__ADDR:%.*]] = alloca ptr, align 8
@@ -1975,14 +1975,14 @@ extern "C" void tfoo7() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@tfoo7
-// CHECK2-SAME: () #[[ATTR2]] {
+// CHECK2-SAME: () #[[ATTR1]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    call void @_Z4foo7IiTnT_Li3ETnS0_Li5EEvS0_S0_(i32 noundef 0, i32 noundef 42)
 // CHECK2-NEXT:    ret void
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@_Z4foo7IiTnT_Li3ETnS0_Li5EEvS0_S0_
-// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]]) #[[ATTR2]] comdat {
+// CHECK2-SAME: (i32 noundef [[START:%.*]], i32 noundef [[END:%.*]]) #[[ATTR1]] comdat {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[START_ADDR:%.*]] = alloca i32, align 4
 // CHECK2-NEXT:    [[END_ADDR:%.*]] = alloca i32, align 4

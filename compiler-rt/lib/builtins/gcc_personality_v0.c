@@ -152,6 +152,8 @@ _Unwind_Reason_Code __gnu_unwind_frame(struct _Unwind_Exception *,
 static inline _Unwind_Reason_Code
 continueUnwind(struct _Unwind_Exception *exceptionObject,
                struct _Unwind_Context *context) {
+  (void)exceptionObject;
+  (void)context;
 #if USING_ARM_EHABI
   // On ARM EHABI the personality routine is responsible for actually
   // unwinding a single stack frame before returning (ARM EHABI Sec. 6.1).
@@ -188,6 +190,8 @@ COMPILER_RT_ABI _Unwind_Reason_Code __gcc_personality_v0(
     struct _Unwind_Exception *exceptionObject, struct _Unwind_Context *context)
 #endif
 {
+  (void)(version);
+  (void)(exceptionClass);
   // Since C does not have catch clauses, there is nothing to do during
   // phase 1 (the search phase).
 #if USING_ARM_EHABI

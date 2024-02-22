@@ -21,8 +21,15 @@ S A;
 
 #endif
 //.
+// CHECK: @__omp_rtl_debug_kind = weak_odr hidden addrspace(1) constant i32 0
+// CHECK: @__omp_rtl_assume_teams_oversubscription = weak_odr hidden addrspace(1) constant i32 0
+// CHECK: @__omp_rtl_assume_threads_oversubscription = weak_odr hidden addrspace(1) constant i32 0
+// CHECK: @__omp_rtl_assume_no_thread_state = weak_odr hidden addrspace(1) constant i32 0
+// CHECK: @__omp_rtl_assume_no_nested_parallelism = weak_odr hidden addrspace(1) constant i32 0
+// CHECK: @A = addrspace(1) global %struct.S zeroinitializer, align 4
 // CHECK: @llvm.global_ctors = appending global [1 x { i32, ptr, ptr }] [{ i32, ptr, ptr } { i32 65535, ptr @_GLOBAL__sub_I_amdgcn_target_global_constructor.cpp, ptr null }]
 // CHECK: @llvm.global_dtors = appending global [1 x { i32, ptr, ptr }] [{ i32, ptr, ptr } { i32 65535, ptr @__dtor_A, ptr null }]
+// CHECK: @__oclc_ABI_version = weak_odr hidden local_unnamed_addr addrspace(4) constant i32 500
 //.
 // CHECK-LABEL: define {{[^@]+}}@__cxx_global_var_init
 // CHECK-SAME: () #[[ATTR0:[0-9]+]] {
@@ -88,3 +95,18 @@ S A;
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    call void @__cxx_global_var_init()
 // CHECK-NEXT:    ret void
+//
+//.
+// CHECK: attributes #[[ATTR0]] = { convergent noinline nounwind "no-trapping-math"="true" "stack-protector-buffer-size"="8" }
+// CHECK: attributes #[[ATTR1]] = { convergent mustprogress noinline nounwind optnone "no-trapping-math"="true" "stack-protector-buffer-size"="8" }
+// CHECK: attributes #[[ATTR2:[0-9]+]] = { convergent "no-trapping-math"="true" "stack-protector-buffer-size"="8" }
+// CHECK: attributes #[[ATTR3]] = { convergent }
+// CHECK: attributes #[[ATTR4]] = { convergent nounwind }
+//.
+// CHECK: [[META0:![0-9]+]] = !{i32 1, !"A", i32 0, i32 0}
+// CHECK: [[META1:![0-9]+]] = !{i32 1, !"amdgpu_code_object_version", i32 500}
+// CHECK: [[META2:![0-9]+]] = !{i32 1, !"wchar_size", i32 4}
+// CHECK: [[META3:![0-9]+]] = !{i32 7, !"openmp", i32 51}
+// CHECK: [[META4:![0-9]+]] = !{i32 7, !"openmp-device", i32 51}
+// CHECK: [[META5:![0-9]+]] = !{!"{{.*}}clang version {{.*}}"}
+//.

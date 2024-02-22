@@ -244,18 +244,18 @@ void simple(float *a, float *b, int *c) {
 // CHECK-NEXT:    ret void
 //
 //.
-// CHECK: attributes #0 = { mustprogress noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
-// CHECK: attributes #1 = { noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
+// CHECK: attributes #[[ATTR0]] = { mustprogress noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
+// CHECK: attributes #[[ATTR1]] = { noinline nounwind optnone "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
 //.
-// CHECK: !0 = !{i32 1, !"wchar_size", i32 4}
-// CHECK: !1 = !{i32 7, !"openmp", i32 45}
-// CHECK: !2 = !{!"
-// CHECK: !3 = distinct !{}
-// CHECK: !4 = distinct !{!4, !5, !6, !7}
-// CHECK: !5 = !{!"llvm.loop.parallel_accesses", !3}
-// CHECK: !6 = !{!"llvm.loop.vectorize.enable", i1 true}
-// CHECK: !7 = !{!"llvm.loop.vectorize.width", i32 3}
-// CHECK: !8 = distinct !{}
-// CHECK: !9 = distinct !{!9, !10, !6}
-// CHECK: !10 = !{!"llvm.loop.parallel_accesses", !8}
+// CHECK: [[META0:![0-9]+]] = !{i32 1, !"wchar_size", i32 4}
+// CHECK: [[META1:![0-9]+]] = !{i32 7, !"openmp", i32 45}
+// CHECK: [[META2:![0-9]+]] = !{!"{{.*}}clang version {{.*}}"}
+// CHECK: [[ACC_GRP3]] = distinct !{}
+// CHECK: [[LOOP4]] = distinct !{[[LOOP4]], [[META5:![0-9]+]], [[META6:![0-9]+]], [[META7:![0-9]+]]}
+// CHECK: [[META5]] = !{!"llvm.loop.parallel_accesses", [[ACC_GRP3]]}
+// CHECK: [[META6]] = !{!"llvm.loop.vectorize.enable", i1 true}
+// CHECK: [[META7]] = !{!"llvm.loop.vectorize.width", i32 3}
+// CHECK: [[ACC_GRP8]] = distinct !{}
+// CHECK: [[LOOP9]] = distinct !{[[LOOP9]], [[META10:![0-9]+]], [[META6]]}
+// CHECK: [[META10]] = !{!"llvm.loop.parallel_accesses", [[ACC_GRP8]]}
 //.

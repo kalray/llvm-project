@@ -244,6 +244,12 @@ public:
   /// Tell the strategy that current MBB is done.
   virtual void leaveMBB() {};
 
+  /// Tell the strategy that a region is about to be processed.
+  virtual void enterRegion(){};
+
+  /// Tell the strategy that the current region is done.
+  virtual void leaveRegion(){};
+
   /// Notify this strategy that all roots have been released (including those
   /// that depend on EntrySU or ExitSU).
   virtual void registerRoots() {}
@@ -1264,6 +1270,8 @@ protected:
   SchedCandidate TopCand;
   /// Candidate last picked from Bot boundary.
   SchedCandidate BotCand;
+  /// Was the last picked candidate from Top boundary?
+  bool BidirectionalPickedFromTop;
 
   void checkAcyclicLatency();
 

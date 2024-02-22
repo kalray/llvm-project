@@ -22,7 +22,8 @@
 // CHECK-COMPILELINK-SUFFIXES: "-o" "{{.*}}lto.i" "-x" "c" "{{.*}}lto.c"
 // CHECK-COMPILELINK-SUFFIXES: "-o" "{{.*}}lto.bc" {{.*}}"{{.*}}lto.i"
 // CHECK-COMPILELINK-SUFFIXES: "-o" "{{.*}}lto.o" {{.*}}"{{.*}}lto.bc"
-// CHECK-COMPILELINK-SUFFIXES: "{{.*}}a.{{(out|exe)}}" {{.*}}"{{.*}}lto.o"
+// CHECK-COMPILELINK-SUFFIXES-DAG: "lto.o"
+// CHECK-COMPILELINK-SUFFIXES-DAG: "{{.*}}a.{{(out|exe)}}"
 
 // RUN: %clang --target=x86_64-linux-gnu %s -flto -S -### 2> %t
 // RUN: FileCheck -check-prefix=CHECK-COMPILE-SUFFIXES < %t %s

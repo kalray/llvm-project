@@ -221,6 +221,7 @@ public:
 
 protected:
   void scheduleRegions(ScheduleDAGInstrs &Scheduler, bool FixKillFlags);
+  virtual bool isPostRA() const { return false; }
 };
 
 /// MachineScheduler runs after coalescing and before register allocation.
@@ -251,6 +252,7 @@ public:
 
 protected:
   ScheduleDAGInstrs *createPostMachineScheduler();
+  bool isPostRA() const override { return true; }
 };
 
 } // end anonymous namespace
@@ -523,8 +525,10 @@ bool PostMachineScheduler::runOnMachineFunction(MachineFunction &mf) {
 static bool isSchedBoundary(MachineBasicBlock::iterator MI,
                             MachineBasicBlock *MBB,
                             MachineFunction *MF,
-                            const TargetInstrInfo *TII) {
-  return MI->isCall() || TII->isSchedulingBoundary(*MI, MBB, *MF);
+                            const TargetInstrInfo *TII, bool IsPostRA) {
+  bool IsBoundary = IsPostRA ? TII->isSchedulingBoundaryPostRA(*MI, MBB, *MF)
+                             : TII->isSchedulingBoundary(*MI, MBB, *MF);
+  return MI->isCall() || IsBoundary;
 }
 
 /// A region of an MBB for scheduling.
@@ -550,7 +554,7 @@ using MBBRegionsVector = SmallVector<SchedRegion, 16>;
 static void
 getSchedRegions(MachineBasicBlock *MBB,
                 MBBRegionsVector &Regions,
-                bool RegionsTopDown) {
+                            bool RegionsTopDown, bool IsPostRA) {
   MachineFunction *MF = MBB->getParent();
   const TargetInstrInfo *TII = MF->getSubtarget().getInstrInfo();
 
@@ -560,7 +564,7 @@ getSchedRegions(MachineBasicBlock *MBB,
 
     // Avoid decrementing RegionEnd for blocks with no terminator.
     if (RegionEnd != MBB->end() ||
-        isSchedBoundary(&*std::prev(RegionEnd), &*MBB, MF, TII)) {
+        isSchedBoundary(&*std::prev(RegionEnd), &*MBB, MF, TII, IsPostRA)) {
       --RegionEnd;
     }
 
@@ -570,7 +574,7 @@ getSchedRegions(MachineBasicBlock *MBB,
     I = RegionEnd;
     for (;I != MBB->begin(); --I) {
       MachineInstr &MI = *std::prev(I);
-      if (isSchedBoundary(&MI, &*MBB, MF, TII))
+      if (isSchedBoundary(&MI, &*MBB, MF, TII, IsPostRA))
         break;
       if (!MI.isDebugOrPseudoInstr()) {
         // MBB::size() uses instr_iterator to count. Here we need a bundle to
@@ -624,7 +628,8 @@ void MachineSchedulerBase::scheduleRegions(ScheduleDAGInstrs &Scheduler,
     // added to other regions than the current one without updating MBBRegions.
 
     MBBRegionsVector MBBRegions;
-    getSchedRegions(&*MBB, MBBRegions, Scheduler.doMBBSchedRegionsTopDown());
+    getSchedRegions(&*MBB, MBBRegions, Scheduler.doMBBSchedRegionsTopDown(),
+                    isPostRA());
     for (const SchedRegion &R : MBBRegions) {
       MachineBasicBlock::iterator I = R.RegionBegin;
       MachineBasicBlock::iterator RegionEnd = R.RegionEnd;
@@ -635,7 +640,8 @@ void MachineSchedulerBase::scheduleRegions(ScheduleDAGInstrs &Scheduler,
       Scheduler.enterRegion(&*MBB, I, RegionEnd, NumRegionInstrs);
 
       // Skip empty scheduling regions (0 or 1 schedulable instructions).
-      if (I == RegionEnd || I == std::prev(RegionEnd)) {
+      if (I == RegionEnd ||
+          (Scheduler.skipSingleInstrRegions() && I == std::prev(RegionEnd))) {
         // Close the current region. Bundle the terminator if needed.
         // This invalidates 'RegionEnd' and 'I'.
         Scheduler.exitRegion();
@@ -827,6 +833,7 @@ bool ScheduleDAGMI::checkSchedLimit() {
 /// that does not consider liveness or register pressure. It is useful for
 /// PostRA scheduling and potentially other custom schedulers.
 void ScheduleDAGMI::schedule() {
+  SchedImpl->enterRegion();
   LLVM_DEBUG(dbgs() << "ScheduleDAGMI::schedule starting\n");
   LLVM_DEBUG(SchedImpl->dumpPolicy());
 
@@ -897,6 +904,7 @@ void ScheduleDAGMI::schedule() {
     dumpSchedule();
     dbgs() << '\n';
   });
+  SchedImpl->leaveRegion();
 }
 
 /// Apply each ScheduleDAGMutation step in order.
@@ -1453,6 +1461,7 @@ void ScheduleDAGMILive::dump() const {
 /// ScheduleDAGMILive then it will want to override this virtual method in order
 /// to update any specialized state.
 void ScheduleDAGMILive::schedule() {
+  SchedImpl->enterRegion();
   LLVM_DEBUG(dbgs() << "ScheduleDAGMILive::schedule starting\n");
   LLVM_DEBUG(SchedImpl->dumpPolicy());
   buildDAGWithRegPressure();
@@ -1509,6 +1518,7 @@ void ScheduleDAGMILive::schedule() {
     dumpSchedule();
     dbgs() << '\n';
   });
+  SchedImpl->leaveRegion();
 }
 
 /// Build the DAG and setup three register pressure trackers.
@@ -3317,6 +3327,8 @@ void GenericScheduler::initPolicy(MachineBasicBlock::iterator Begin,
     if (RegionPolicy.OnlyTopDown)
       RegionPolicy.OnlyBottomUp = false;
   }
+
+  BidirectionalPickedFromTop = false; // pick Top first
 }
 
 void GenericScheduler::dumpPolicy() const {
@@ -3681,7 +3693,6 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   setPolicy(TopPolicy, /*IsPostRA=*/false, Top, &Bot);
 
   // See if BotCand is still valid (because we previously scheduled from Top).
-  LLVM_DEBUG(dbgs() << "Picking from Bot:\n");
   if (!BotCand.isValid() || BotCand.SU->isScheduled ||
       BotCand.Policy != BotPolicy) {
     BotCand.reset(CandPolicy());
@@ -3701,7 +3712,6 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   }
 
   // Check if the top Q has a better candidate.
-  LLVM_DEBUG(dbgs() << "Picking from Top:\n");
   if (!TopCand.isValid() || TopCand.SU->isScheduled ||
       TopCand.Policy != TopPolicy) {
     TopCand.reset(CandPolicy());
@@ -3723,14 +3733,30 @@ SUnit *GenericScheduler::pickNodeBidirectional(bool &IsTopNode) {
   // Pick best from BotCand and TopCand.
   assert(BotCand.isValid());
   assert(TopCand.isValid());
-  SchedCandidate Cand = BotCand;
-  TopCand.Reason = NoCand;
+
+  // Possibly alternate top/bottom
+  bool TopIsDefaultCand =
+      Context->MF->getSubtarget().alternateTopBottomBidirectional() &&
+      !BidirectionalPickedFromTop;
+  SchedCandidate &TryCand = TopIsDefaultCand ? BotCand : TopCand;
+  SchedCandidate &Cand = TopIsDefaultCand ? TopCand : BotCand;
+  CandReason TryCandReason = TryCand.Reason;
+  TryCand.Reason = NoCand;
+  LLVM_DEBUG(dbgs() << (TopIsDefaultCand ? "Cand=BotCand, TryCand=TopCand\n"
+                                         : "Cand=TopCand, TryCand=BotCand\n"));
   if (tryCandidate(Cand, TopCand, nullptr)) {
-    Cand.setBest(TopCand);
+    Cand.setBest(TryCand);
+    BidirectionalPickedFromTop = !TopIsDefaultCand;
+    LLVM_DEBUG(dbgs() << "TryCand won: ");
     LLVM_DEBUG(traceCandidate(Cand));
+  } else {
+    // Undo the NoCand assignment to preserve BotCand state
+    TryCand.Reason = TryCandReason;
+    BidirectionalPickedFromTop = !BidirectionalPickedFromTop;
   }
 
   IsTopNode = Cand.AtTop;
+  LLVM_DEBUG(dbgs() << "Final pick: ");
   tracePick(Cand);
   return Cand.SU;
 }
