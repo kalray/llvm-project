@@ -125,6 +125,7 @@ add_clang_library(clangCodeGen
   Targets/Hexagon.cpp
   Targets/Lanai.cpp
   Targets/LoongArch.cpp
+  Targets/KVX.cpp
   Targets/M68k.cpp
   Targets/MSP430.cpp
   Targets/Mips.cpp

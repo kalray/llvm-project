@@ -486,6 +486,12 @@ void Sema::Initialize() {
 #include "clang/Basic/PPCTypes.def"
   }
 
+  if (Context.getTargetInfo().getTriple().isKVX()) {
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+    addImplicitTypedef(#Name, Context.Id##Ty);
+#include "clang/Basic/KVXTypes.def"
+  }
+
   if (Context.getTargetInfo().hasRISCVVTypes()) {
 #define RVV_TYPE(Name, Id, SingletonId)                                        \
   addImplicitTypedef(Name, Context.SingletonId);

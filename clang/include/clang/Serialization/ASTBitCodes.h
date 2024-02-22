@@ -1112,6 +1112,9 @@ enum PredefinedTypeIDs {
 // \brief  PowerPC MMA types with auto numeration
 #define PPC_VECTOR_TYPE(Name, Id, Size) PREDEF_TYPE_##Id##_ID,
 #include "clang/Basic/PPCTypes.def"
+    // \brief  KVX TCA types with auto numeration
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) PREDEF_TYPE_##Id##_ID,
+#include "clang/Basic/KVXTypes.def"
 // \brief RISC-V V types with auto numeration
 #define RVV_TYPE(Name, Id, SingletonId) PREDEF_TYPE_##Id##_ID,
 #include "clang/Basic/RISCVVTypes.def"
@@ -1133,7 +1136,7 @@ enum PredefinedTypeIDs {
 ///
 /// Type IDs for non-predefined types will start at
 /// NUM_PREDEF_TYPE_IDs.
-const unsigned NUM_PREDEF_TYPE_IDS = 504;
+const unsigned NUM_PREDEF_TYPE_IDS = 509;
 
 // Ensure we do not overrun the predefined types we reserved
 // in the enum PredefinedTypeIDs above.

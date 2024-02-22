@@ -1,0 +1,81 @@
+//===- KVXFrameLowering.cpp - KVX Frame Lowering ---------------*- C++ -*-====//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file contains the KVX implementation of TargetFrameLowering class.
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef LLVM_LIB_TARGET_KVX_KVXFRAMELOWERING_H
+#define LLVM_LIB_TARGET_KVX_KVXFRAMELOWERING_H
+
+#include "KVX.h"
+#include "MCTargetDesc/KVXMCTargetDesc.h"
+#include "llvm/CodeGen/TargetFrameLowering.h"
+
+namespace llvm {
+class KVXSubtarget;
+
+class KVXFrameLowering : public TargetFrameLowering {
+public:
+  explicit KVXFrameLowering(const KVXSubtarget &STI)
+      : TargetFrameLowering(StackGrowsDown,
+                            /*StackAlignment=*/Align(32),
+                            /*LocalAreaOffset=*/0,
+                            /*TransientStackAlignment*/ Align(32),
+                            /*StackRealignable*/ true),
+        STI(STI) {}
+
+  void emitPrologue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
+  void emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB) const override;
+
+  void emitStackCheck(MachineFunction &MF, MachineBasicBlock &MBB) const;
+
+  StackOffset getFrameIndexReference(const MachineFunction &MF, int FI,
+                                     Register &FrameReg) const override;
+
+  void determineCalleeSaves(MachineFunction &MF, BitVector &SavedRegs,
+                            RegScavenger *RS) const override;
+
+  bool spillCalleeSavedRegisters(MachineBasicBlock &MBB,
+                                 MachineBasicBlock::iterator MI,
+                                 ArrayRef<CalleeSavedInfo> CSI,
+                                 const TargetRegisterInfo *TRI) const override;
+
+  bool restoreCalleeSavedRegisters(MachineBasicBlock &MBB,
+                                   MachineBasicBlock::iterator MI,
+                              MutableArrayRef<CalleeSavedInfo> CSI,
+                              const TargetRegisterInfo *TRI) const override;
+
+  bool hasFP(const MachineFunction &MF) const override;
+
+  bool hasReservedCallFrame(const MachineFunction &MF) const override;
+  MachineBasicBlock::iterator
+  eliminateCallFramePseudoInstr(MachineFunction &MF, MachineBasicBlock &MBB,
+                                MachineBasicBlock::iterator MI) const override;
+  DwarfFrameBase getDwarfFrameBase(const MachineFunction &MF) const override;
+
+protected:
+  const KVXSubtarget &STI;
+
+private:
+  unsigned getStackADDOpcode(int64_t StackSize) const {
+    return GetImmOpCode(StackSize, KVX::ADDDri10, KVX::ADDDri37, KVX::ADDDri64);
+  }
+  unsigned getStackANDOpcode(int64_t StackSize) const {
+    return GetImmOpCode(StackSize, KVX::ANDDri10, KVX::ANDDri37, KVX::ANDDri64);
+  }
+
+  void emitAdjustSPReg(MachineBasicBlock &MBB, MachineBasicBlock::iterator MBBI,
+                       const DebugLoc &DL, unsigned Opcode, int64_t StackSize,
+                       MachineInstr::MIFlag) const;
+};
+
+} // namespace llvm
+
+#endif

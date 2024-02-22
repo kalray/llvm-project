@@ -111,6 +111,9 @@ else()
       # AArch64 with MSVC gets implementations of the functions from
       # ifdeffed sections in z_Windows_NT-586_util.cpp.
     endif()
+  elseif(KVX)
+    libomp_append(LIBOMP_CXXFILES z_ClusterOS_util.cpp)
+    libomp_append(LIBOMP_CXXFILES kmp_gsupport.cpp)
   else()
     # Unix specific files
     libomp_append(LIBOMP_CXXFILES z_Linux_util.cpp)

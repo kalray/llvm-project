@@ -59,6 +59,17 @@ uintptr_t GetCurrentProcess(void);
 // specified range.
 
 void __clear_cache(void *start, void *end) {
+#ifdef __KVX__
+  const uintptr_t cache_line_size = 64;
+  const uintptr_t mask = ~(cache_line_size - 1);
+  const uintptr_t start_dword = ((uintptr_t)start) & mask;
+  const uintptr_t end_dword = ((uintptr_t)(end + cache_line_size - 1) & mask);
+  __builtin_kvx_fence();
+  for (uintptr_t p = start_dword; p <= end_dword; p += cache_line_size)
+    __builtin_kvx_i1invals((void *)(p));
+  __builtin_kvx_fence();
+  return;
+#endif
 #if __i386__ || __x86_64__ || defined(_M_IX86) || defined(_M_X64)
 // Intel processors have a unified instruction and data cache
 // so there is nothing to do

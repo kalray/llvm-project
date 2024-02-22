@@ -672,6 +672,10 @@ public:
     return BaseT::isHardwareLoopProfitable(L, SE, AC, LibInfo, HWLoopInfo);
   }
 
+  bool shouldAddRemainderMetaData() {
+    return BaseT::shouldAddRemainderMetaData();
+  }
+
   bool preferPredicateOverEpilogue(TailFoldingInfo *TFI) {
     return BaseT::preferPredicateOverEpilogue(TFI);
   }

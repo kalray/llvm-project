@@ -654,6 +654,22 @@ public:
     return true;
   }
 
+  /// Version of analyseBranch specifically called by MachinePipeliner and
+  /// ModuloSchedule. This variation allows these passes to recognize hardware
+  /// loops without enabling CFG optimizations which might be too complex to
+  /// handle for hardware loops.
+  virtual bool analyzeBranchPipeliner(MachineBasicBlock &MBB,
+                                      MachineBasicBlock *&TBB,
+                                      MachineBasicBlock *&FBB,
+                                      SmallVectorImpl<MachineOperand> &Cond,
+                                      bool AllowModify = false) const {
+    return analyzeBranch(MBB, TBB, FBB, Cond, AllowModify);
+  }
+
+  /// Specifies the maximum MII MachinePipeliner will consider. The bigger it
+  /// is, the bigger the analyzed loops can be.
+  virtual int getPipelinerMaxMII() const { return 27; }
+
   /// Represents a predicate at the MachineFunction level.  The control flow a
   /// MachineBranchPredicate represents is:
   ///
@@ -1669,6 +1685,17 @@ public:
   virtual bool isSchedulingBoundary(const MachineInstr &MI,
                                     const MachineBasicBlock *MBB,
                                     const MachineFunction &MF) const;
+
+  /// isSchedulingBoundary specialized for PostRA Machine Scheduler
+  virtual bool isSchedulingBoundaryPostRA(const MachineInstr &MI,
+                                          const MachineBasicBlock *MBB,
+                                          const MachineFunction &MF) const {
+    return isSchedulingBoundary(MI, MBB, MF);
+  }
+
+  /// For VLIW architectures, returns true if the instruction should be
+  /// scheduled at a different cycle than other instructions of the region.
+  virtual bool isSoloInstruction(const MachineInstr &MI) const { return false; }
 
   /// Measure the specified inline asm to determine an approximation of its
   /// length.

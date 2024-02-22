@@ -125,9 +125,9 @@ static cl::opt<bool> EnableSWPOptSize("enable-pipeliner-opt-size",
                                       cl::init(false));
 
 /// A command line argument to limit minimum initial interval for pipelining.
-static cl::opt<int> SwpMaxMii("pipeliner-max-mii",
-                              cl::desc("Size limit for the MII."),
-                              cl::Hidden, cl::init(27));
+static cl::opt<int> SwpMaxMiiOpt("pipeliner-max-mii",
+                                 cl::desc("Size limit for the MII."),
+                                 cl::Hidden, cl::init(0));
 
 /// A command line argument to force pipeliner to use specified initial
 /// interval.
@@ -394,8 +394,9 @@ bool MachinePipeliner::canPipelineLoop(MachineLoop &L) {
   LI.TBB = nullptr;
   LI.FBB = nullptr;
   LI.BrCond.clear();
-  if (TII->analyzeBranch(*L.getHeader(), LI.TBB, LI.FBB, LI.BrCond)) {
-    LLVM_DEBUG(dbgs() << "Unable to analyzeBranch, can NOT pipeline Loop\n");
+  if (TII->analyzeBranchPipeliner(*L.getHeader(), LI.TBB, LI.FBB, LI.BrCond)) {
+    LLVM_DEBUG(
+        dbgs() << "Unable to analyzeBranchPipeliner, can NOT pipeline Loop\n");
     NumFailBranch++;
     ORE->emit([&]() {
       return MachineOptimizationRemarkAnalysis(DEBUG_TYPE, "canPipelineLoop",
@@ -597,6 +598,7 @@ void SwingSchedulerDAG::schedule() {
   }
 
   // Don't pipeline large loops.
+  int SwpMaxMii = SwpMaxMiiOpt != 0 ? SwpMaxMiiOpt : TII->getPipelinerMaxMII();
   if (SwpMaxMii != -1 && (int)MII > SwpMaxMii) {
     LLVM_DEBUG(dbgs() << "MII > " << SwpMaxMii
                       << ", we don't pipeline large loops\n");

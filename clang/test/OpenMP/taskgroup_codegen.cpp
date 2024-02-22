@@ -65,7 +65,7 @@ void parallel_taskgroup() {
 // CHECK1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]])
 // CHECK1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]])
 // CHECK1-NEXT:    invoke void @_Z3foov()
-// CHECK1-NEXT:    to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]]
+// CHECK1-NEXT:            to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]]
 // CHECK1:       invoke.cont:
 // CHECK1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]])
 // CHECK1-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A]], align 1
@@ -73,7 +73,7 @@ void parallel_taskgroup() {
 // CHECK1-NEXT:    ret i32 [[CONV]]
 // CHECK1:       terminate.lpad:
 // CHECK1-NEXT:    [[TMP2:%.*]] = landingpad { ptr, i32 }
-// CHECK1-NEXT:    catch ptr null
+// CHECK1-NEXT:            catch ptr null
 // CHECK1-NEXT:    [[TMP3:%.*]] = extractvalue { ptr, i32 } [[TMP2]], 0
 // CHECK1-NEXT:    call void @__clang_call_terminate(ptr [[TMP3]]) #[[ATTR8:[0-9]+]]
 // CHECK1-NEXT:    unreachable
@@ -104,13 +104,13 @@ void parallel_taskgroup() {
 // CHECK1-NEXT:    [[TMP1:%.*]] = load i32, ptr [[TMP0]], align 4
 // CHECK1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB1]], i32 [[TMP1]])
 // CHECK1-NEXT:    invoke void @_Z3foov()
-// CHECK1-NEXT:    to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]]
+// CHECK1-NEXT:            to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]]
 // CHECK1:       invoke.cont:
 // CHECK1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB1]], i32 [[TMP1]])
 // CHECK1-NEXT:    ret void
 // CHECK1:       terminate.lpad:
 // CHECK1-NEXT:    [[TMP2:%.*]] = landingpad { ptr, i32 }
-// CHECK1-NEXT:    catch ptr null
+// CHECK1-NEXT:            catch ptr null
 // CHECK1-NEXT:    [[TMP3:%.*]] = extractvalue { ptr, i32 } [[TMP2]], 0
 // CHECK1-NEXT:    call void @__clang_call_terminate(ptr [[TMP3]]) #[[ATTR8]]
 // CHECK1-NEXT:    unreachable
@@ -128,14 +128,14 @@ void parallel_taskgroup() {
 // DEBUG1-NEXT:  entry:
 // DEBUG1-NEXT:    [[RETVAL:%.*]] = alloca i32, align 4
 // DEBUG1-NEXT:    [[A:%.*]] = alloca i8, align 1
-// DEBUG1-NEXT:    [[TMP0:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB1:[0-9]+]])
+// DEBUG1-NEXT:    [[TMP0:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB1:[0-9]+]]), !dbg [[DBG13:![0-9]+]]
 // DEBUG1-NEXT:    store i32 0, ptr [[RETVAL]], align 4
-// DEBUG1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]]), !dbg [[DBG13:![0-9]+]]
+// DEBUG1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]]), !dbg [[DBG13]]
 // DEBUG1-NEXT:    store i8 2, ptr [[A]], align 1, !dbg [[DBG14:![0-9]+]]
 // DEBUG1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB1]], i32 [[TMP0]]), !dbg [[DBG15:![0-9]+]]
 // DEBUG1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB3:[0-9]+]], i32 [[TMP0]]), !dbg [[DBG16:![0-9]+]]
 // DEBUG1-NEXT:    invoke void @_Z3foov()
-// DEBUG1-NEXT:    to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]], !dbg [[DBG17:![0-9]+]]
+// DEBUG1-NEXT:            to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]], !dbg [[DBG17:![0-9]+]]
 // DEBUG1:       invoke.cont:
 // DEBUG1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB3]], i32 [[TMP0]]), !dbg [[DBG17]]
 // DEBUG1-NEXT:    [[TMP1:%.*]] = load i8, ptr [[A]], align 1, !dbg [[DBG18:![0-9]+]]
@@ -143,7 +143,7 @@ void parallel_taskgroup() {
 // DEBUG1-NEXT:    ret i32 [[CONV]], !dbg [[DBG19:![0-9]+]]
 // DEBUG1:       terminate.lpad:
 // DEBUG1-NEXT:    [[TMP2:%.*]] = landingpad { ptr, i32 }
-// DEBUG1-NEXT:    catch ptr null, !dbg [[DBG17]]
+// DEBUG1-NEXT:            catch ptr null, !dbg [[DBG17]]
 // DEBUG1-NEXT:    [[TMP3:%.*]] = extractvalue { ptr, i32 } [[TMP2]], 0, !dbg [[DBG17]]
 // DEBUG1-NEXT:    call void @__clang_call_terminate(ptr [[TMP3]]) #[[ATTR8:[0-9]+]], !dbg [[DBG17]]
 // DEBUG1-NEXT:    unreachable, !dbg [[DBG17]]
@@ -174,13 +174,13 @@ void parallel_taskgroup() {
 // DEBUG1-NEXT:    [[TMP1:%.*]] = load i32, ptr [[TMP0]], align 4, !dbg [[DBG24]]
 // DEBUG1-NEXT:    call void @__kmpc_taskgroup(ptr @[[GLOB5:[0-9]+]], i32 [[TMP1]]), !dbg [[DBG24]]
 // DEBUG1-NEXT:    invoke void @_Z3foov()
-// DEBUG1-NEXT:    to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]], !dbg [[DBG25:![0-9]+]]
+// DEBUG1-NEXT:            to label [[INVOKE_CONT:%.*]] unwind label [[TERMINATE_LPAD:%.*]], !dbg [[DBG25:![0-9]+]]
 // DEBUG1:       invoke.cont:
 // DEBUG1-NEXT:    call void @__kmpc_end_taskgroup(ptr @[[GLOB5]], i32 [[TMP1]]), !dbg [[DBG25]]
 // DEBUG1-NEXT:    ret void, !dbg [[DBG26:![0-9]+]]
 // DEBUG1:       terminate.lpad:
 // DEBUG1-NEXT:    [[TMP2:%.*]] = landingpad { ptr, i32 }
-// DEBUG1-NEXT:    catch ptr null, !dbg [[DBG25]]
+// DEBUG1-NEXT:            catch ptr null, !dbg [[DBG25]]
 // DEBUG1-NEXT:    [[TMP3:%.*]] = extractvalue { ptr, i32 } [[TMP2]], 0, !dbg [[DBG25]]
 // DEBUG1-NEXT:    call void @__clang_call_terminate(ptr [[TMP3]]) #[[ATTR8]], !dbg [[DBG25]]
 // DEBUG1-NEXT:    unreachable, !dbg [[DBG25]]

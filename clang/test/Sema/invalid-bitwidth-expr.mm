@@ -1,5 +1,6 @@
 // RUN: %clang_cc1 -fobjc-runtime=gcc -frecovery-ast -verify %s
-
+// UNSUPPORTED: target=kvx{{.*}}
+// kvx does not implement _ExtInt T18165
 @interface Ivar
 {
   int Foo : foo(); // expected-error {{use of undeclared identifier}}

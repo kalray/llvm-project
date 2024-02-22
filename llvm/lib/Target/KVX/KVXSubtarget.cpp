@@ -1,0 +1,71 @@
+//===--- KVXSubtarget.h - Define Subtarget for the KVX ---------*- C++ -*--===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file declares the KVX specific subclass of TargetSubtarget.
+//
+//===----------------------------------------------------------------------===//
+
+#include "KVXSubtarget.h"
+#include "KVX.h"
+#include "KVXFrameLowering.h"
+#include "llvm/CodeGen/MachineScheduler.h"
+#include "llvm/MC/TargetRegistry.h"
+#include "llvm/Target/TargetMachine.h"
+
+using namespace llvm;
+
+#define DEBUG_TYPE "kvx-subtarget"
+
+#define GET_SUBTARGETINFO_TARGET_DESC
+#define GET_SUBTARGETINFO_CTOR
+#include "KVXGenSubtargetInfo.inc"
+
+void KVXSubtarget::anchor() {}
+
+KVXSubtarget &KVXSubtarget::initializeSubtargetDependencies(StringRef CPU,
+                                                            StringRef FS) {
+
+  if (CPU.empty())
+    CPU = "kv3-1";
+
+  ParseSubtargetFeatures(CPU, /* TuneCPU */ CPU, FS);
+
+  return *this;
+}
+
+KVXSubtarget::KVXSubtarget(const Triple &TT, StringRef CPU,
+                           const std::string &FS, const TargetMachine &TM)
+    : KVXGenSubtargetInfo(TT, CPU, /* TuneCPU */ CPU, FS),
+      OptLevel(TM.getOptLevel()), FrameLowering(*this), InstrInfo(initializeSubtargetDependencies(CPU, FS)),
+      RegInfo(getHwMode()), TLInfo(TM, *this),
+      InstrItins(getInstrItineraryForCPU(KVX_MC::selectKVXCPU(CPU))) {
+  assert(InstrItins.Itineraries != nullptr && "InstrItins not initialized");
+}
+
+void KVXSubtarget::overrideSchedPolicy(MachineSchedPolicy &Policy,
+                                       unsigned NumRegionInstrs) const {
+  // Enable bidirectional scheduling
+  Policy.OnlyTopDown = false;
+  Policy.OnlyBottomUp = false;
+
+  // Always activate ShouldTrackPressure, as its heuristics may decrease
+  // register pressure without impacting latency.
+  Policy.ShouldTrackPressure = true;
+}
+
+bool KVXSubtarget::enableMachineScheduler() const { return true; }
+bool KVXSubtarget::enableMachineSchedDefaultSched() const { return false; }
+bool KVXSubtarget::enablePostRAScheduler() const { return true; }
+bool KVXSubtarget::enablePostRAMachineScheduler() const { return true; }
+bool KVXSubtarget::enableSubRegLiveness() const {
+  return OptLevel > CodeGenOptLevel::Less;
+}
+bool KVXSubtarget::useAA() const { return (OptLevel != CodeGenOptLevel::None); }
+bool KVXSubtarget::isV1() const { return IsV1; }
+bool KVXSubtarget::isV2() const { return IsV2; }

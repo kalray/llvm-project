@@ -1248,6 +1248,17 @@ public:
     return Legal;
   }
 
+  /// This function defines that the target prefers to convert a node
+  /// `From` to a `ToOpcode` node of the same ValueType. This can be
+  /// used by the target to prevent undesired dag combinations, such
+  /// as converting a vector multiplication by a vector shift, or
+  /// infinite expansions between ROTL and ROTR. Optional field
+  /// Ops hold the new instruction operands.
+  virtual bool shouldReplaceBy(SDNode *From, unsigned ToOpcode,
+                               SmallVector<SDValue> Ops = {}) const {
+    return true;
+  }
+
   /// Return how this operation should be treated: either it is legal, needs to
   /// be promoted to a larger size, needs to be expanded to some other code
   /// sequence, or the target has a custom expander for it.
@@ -1329,6 +1340,22 @@ public:
       (getOperationAction(Op, VT) == Legal ||
        getOperationAction(Op, VT) == Custom);
   }
+
+  /// Returns false if the target would like an illegal vector binop to
+  /// not be split into smaller vectors. Useful when the target has
+  /// rt functions that implement the operation.
+  virtual bool shouldSplitVecBinOp(const unsigned Opc, const EVT VT) const {
+    return true;
+  }
+
+  /// Returns true if the target would like an illegal divrem operation to
+  /// be produced. Useful if the rt library implements the operation.
+  virtual bool shouldProduceDivRem(const unsigned Opc, const EVT VT) const {
+    return false;
+  }
+
+  /// Returns true if at selection dag we know that this instruction is free
+  virtual bool isOpFree(const SDNode *) const { return false; }
 
   /// Return true if the specified operation is legal on this target or can be
   /// made legal using promotion. This is used to help guide high-level lowering

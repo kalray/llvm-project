@@ -50,6 +50,9 @@ __attribute__((weak))
 __attribute__((visibility("hidden")))
 #endif
 void __compilerrt_abort_impl(const char *file, int line, const char *function) {
+  (void)(file);
+  (void)(line);
+  (void)(function);
 #if !__STDC_HOSTED__
   // Avoid depending on libc when compiling with -ffreestanding.
   __builtin_trap();

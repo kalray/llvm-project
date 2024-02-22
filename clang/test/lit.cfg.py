@@ -294,7 +294,7 @@ if platform.system() not in ["Windows"]:
     config.available_features.add("can-remove-opened-file")
 
 # Features
-known_arches = ["x86_64", "mips64", "ppc64", "aarch64"]
+known_arches = ["x86_64", "mips64", "ppc64", "aarch64", "kvx"]
 if any(config.target_triple.startswith(x) for x in known_arches):
     config.available_features.add("clang-target-64-bits")
 
@@ -345,6 +345,24 @@ if config.clang_vendor_uti:
 
 if config.have_llvm_driver:
     config.available_features.add("llvm-driver")
+def exclude_unsupported_files_for_kvx(dirname):
+    for filename in os.listdir(dirname):
+        source_path = os.path.join( dirname, filename)
+        if os.path.isdir(source_path):
+            continue
+        f = open(source_path, 'r', encoding='ISO-8859-1')
+        try:
+           data = f.read()
+           # object files are not supported on kvx, so exclude the tests.
+           if (any(option in data for option in ('llvm-mc', '-emit-obj', '-fmodule-format=obj', '-fintegrated-as', '-integrated-as'))):
+               config.excludes += [ filename ]
+        finally:
+           f.close()
+
+if 'kvx' in config.target_triple:
+    for directory in ('/CodeGenCXX', '/Misc', '/Modules', '/PCH', '/Driver',
+                      '/ASTMerge/anonymous-fields', '/ASTMerge/injected-class-name-decl'):
+        exclude_unsupported_files_for_kvx(config.test_source_root + directory)
 
 
 # Some tests perform deep recursion, which requires a larger pthread stack size

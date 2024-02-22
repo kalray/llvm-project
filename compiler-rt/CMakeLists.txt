@@ -815,7 +815,7 @@ if(COMPILER_RT_INCLUDE_TESTS)
     # If we have a valid source tree, generate llvm-lit into the bin directory.
     # The user can still choose to have the check targets *use* a different lit
     # by specifying -DLLVM_EXTERNAL_LIT, but we generate it regardless.
-    if (EXISTS ${LLVM_MAIN_SRC_DIR}/utils/llvm-lit)
+    if (EXISTS ${LLVM_MAIN_SRC_DIR}/utils/llvm-lit AND NOT ${COMPILER_RT_DEFAULT_TARGET_ARCH} MATCHES "kvx")
       # Needed for lit support in standalone builds.
       include(AddLLVM)
       add_subdirectory(${LLVM_MAIN_SRC_DIR}/utils/llvm-lit ${CMAKE_CURRENT_BINARY_DIR}/llvm-lit)

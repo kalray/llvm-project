@@ -774,6 +774,10 @@ void USRGenerator::VisitType(QualType T) {
         case BuiltinType::Id: \
           Out << "@BT@" << #Name; break;
 #include "clang/Basic/PPCTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) \
+        case BuiltinType::Id: \
+          Out << "@BT@" << #Name; break;
+#include "clang/Basic/KVXTypes.def"
 #define RVV_TYPE(Name, Id, SingletonId) \
         case BuiltinType::Id: \
           Out << "@BT@" << Name; break;

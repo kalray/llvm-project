@@ -57,6 +57,13 @@ typedef int pid_t;
 #define getpid _getpid
 #define __kmp_gettid() GetCurrentThreadId()
 
+#elif KMP_OS_CLUSTER_OS
+
+#include <mppa_cos.h>
+
+#define __kmp_getpid(void) getpid()
+#define __kmp_gettid(void) gettid()
+
 #else
 
 #error Unknown or unsupported OS.

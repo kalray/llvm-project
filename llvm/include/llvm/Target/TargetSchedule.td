@@ -86,6 +86,7 @@ class SchedMachineModel {
   ProcessorItineraries Itineraries = NoItineraries;
 
   bit PostRAScheduler = false; // Enable Post RegAlloc Scheduler pass.
+  bit IsVLIWProcessor = false; // Indicates the target is VLIW
 
   // Subtargets that define a model for only a subset of instructions
   // that have a scheduling class (itinerary class or SchedRW list)

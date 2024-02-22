@@ -64,7 +64,7 @@ int main() {
 // CHECK1-NEXT:    store ptr [[DOTBOUND_TID_]], ptr [[DOTBOUND_TID__ADDR]], align 8
 // CHECK1-NEXT:    store ptr [[DOTGLOBAL_TID_]], ptr [[DOTGLOBAL_TID__ADDR]], align 8
 // CHECK1-NEXT:    invoke void @"?foo@@YAXXZ"()
-// CHECK1-NEXT:    to label [[INVOKE_CONT:%.*]] unwind label [[CATCH_DISPATCH:%.*]]
+// CHECK1-NEXT:            to label [[INVOKE_CONT:%.*]] unwind label [[CATCH_DISPATCH:%.*]]
 // CHECK1:       catch.dispatch:
 // CHECK1-NEXT:    [[TMP0:%.*]] = catchswitch within none [label %catch] unwind label [[TERMINATE:%.*]]
 // CHECK1:       catch:
@@ -73,7 +73,7 @@ int main() {
 // CHECK1-NEXT:    [[TMP3:%.*]] = load i32, ptr [[TMP2]], align 4
 // CHECK1-NEXT:    call void @__kmpc_critical(ptr @[[GLOB1]], i32 [[TMP3]], ptr @.gomp_critical_user_.var) [ "funclet"(token [[TMP1]]) ]
 // CHECK1-NEXT:    invoke void @"?bar@@YAXXZ"() [ "funclet"(token [[TMP1]]) ]
-// CHECK1-NEXT:    to label [[INVOKE_CONT1:%.*]] unwind label [[TERMINATE2:%.*]]
+// CHECK1-NEXT:            to label [[INVOKE_CONT1:%.*]] unwind label [[TERMINATE2:%.*]]
 // CHECK1:       invoke.cont1:
 // CHECK1-NEXT:    call void @__kmpc_end_critical(ptr @[[GLOB1]], i32 [[TMP3]], ptr @.gomp_critical_user_.var) [ "funclet"(token [[TMP1]]) ]
 // CHECK1-NEXT:    catchret from [[TMP1]] to label [[CATCHRET_DEST:%.*]]

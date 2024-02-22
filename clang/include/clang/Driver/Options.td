@@ -6624,6 +6624,10 @@ defm : FlangIgnoredDiagOpt<"realloc-lhs">;
 defm : FlangIgnoredDiagOpt<"realloc-lhs-all">;
 defm : FlangIgnoredDiagOpt<"frontend-loop-interchange">;
 defm : FlangIgnoredDiagOpt<"target-lifetime">;
+// KVX Options
+def m_kvx_Features_Group : OptionGroup<"<kvx features group>">,
+                             Group<m_Group>, DocName<"KVX">;
+def fstack_limit_register : Joined<["-"], "fstack-limit-register">, Group<m_kvx_Features_Group>;
 
 // C++ SYCL options
 def fsycl : Flag<["-"], "fsycl">,

@@ -4361,6 +4361,7 @@ template <class MatchContextClass> SDValue DAGCombiner::visitMUL(SDNode *N) {
 
   // fold (mul x, (1 << c)) -> x << c
   if (isConstantOrConstantVector(N1, /*NoOpaques*/ true) &&
+      TLI.shouldReplaceBy(N, ISD::SHL) &&
       (!VT.isVector() || Level <= AfterLegalizeVectorOps)) {
     if (SDValue LogBase2 = BuildLogBase2(N1, DL)) {
       EVT ShiftVT = getShiftAmountTy(N0.getValueType());
@@ -4370,7 +4371,8 @@ template <class MatchContextClass> SDValue DAGCombiner::visitMUL(SDNode *N) {
   }
 
   // fold (mul x, -(1 << c)) -> -(x << c) or (-x) << c
-  if (N1IsConst && !N1IsOpaqueConst && ConstValue1.isNegatedPowerOf2()) {
+  if (N1IsConst && !N1IsOpaqueConst && ConstValue1.isNegatedPowerOf2() &&
+      TLI.shouldReplaceBy(N, ISD::SHL)) {
     unsigned Log2Val = (-ConstValue1).logBase2();
 
     // FIXME: If the input is something that is easily negated (e.g. a
@@ -4586,32 +4588,33 @@ SDValue DAGCombiner::useDivRem(SDNode *Node) {
     return SDValue(); // This is a dead node, leave it alone.
 
   unsigned Opcode = Node->getOpcode();
-  bool isSigned = (Opcode == ISD::SDIV) || (Opcode == ISD::SREM);
-  unsigned DivRemOpc = isSigned ? ISD::SDIVREM : ISD::UDIVREM;
-
-  // DivMod lib calls can still work on non-legal types if using lib-calls.
+  bool IsSigned = (Opcode == ISD::SDIV) || (Opcode == ISD::SREM);
+  unsigned DivRemOpc = IsSigned ? ISD::SDIVREM : ISD::UDIVREM;
   EVT VT = Node->getValueType(0);
-  if (VT.isVector() || !VT.isInteger())
-    return SDValue();
+  bool ShouldDivRem = TLI.shouldProduceDivRem(DivRemOpc, VT);
+  if (!ShouldDivRem) {
+    // DivMod lib calls can still work on non-legal types if using lib-calls.
+    if (VT.isVector() || !VT.isInteger())
+      return SDValue();
 
-  if (!TLI.isTypeLegal(VT) && !TLI.isOperationCustom(DivRemOpc, VT))
-    return SDValue();
+    if (!TLI.isTypeLegal(VT) && !TLI.isOperationCustom(DivRemOpc, VT))
+      return SDValue();
 
-  // If DIVREM is going to get expanded into a libcall,
-  // but there is no libcall available, then don't combine.
-  if (!TLI.isOperationLegalOrCustom(DivRemOpc, VT) &&
-      !isDivRemLibcallAvailable(Node, isSigned, TLI))
-    return SDValue();
-
+    // If DIVREM is going to get expanded into a libcall,
+    // but there is no libcall available, then don't combine.
+    if (!TLI.isOperationLegalOrCustom(DivRemOpc, VT) &&
+        !isDivRemLibcallAvailable(Node, IsSigned, TLI))
+      return SDValue();
+  }
   // If div is legal, it's better to do the normal expansion
   unsigned OtherOpcode = 0;
   if ((Opcode == ISD::SDIV) || (Opcode == ISD::UDIV)) {
-    OtherOpcode = isSigned ? ISD::SREM : ISD::UREM;
-    if (TLI.isOperationLegalOrCustom(Opcode, VT))
+    OtherOpcode = IsSigned ? ISD::SREM : ISD::UREM;
+    if (!ShouldDivRem && TLI.isOperationLegalOrCustom(Opcode, VT))
       return SDValue();
   } else {
-    OtherOpcode = isSigned ? ISD::SDIV : ISD::UDIV;
-    if (TLI.isOperationLegalOrCustom(OtherOpcode, VT))
+    OtherOpcode = IsSigned ? ISD::SDIV : ISD::UDIV;
+    if (!ShouldDivRem && TLI.isOperationLegalOrCustom(OtherOpcode, VT))
       return SDValue();
   }
 
@@ -23891,6 +23894,11 @@ static SDValue combineConcatVectorOfConcatVectors(SDNode *N,
     }
     ConcatOps.append(Op->op_begin(), Op->op_end());
   }
+
+  const auto &TLI = DAG.getTargetLoweringInfo();
+  if (!TLI.shouldReplaceBy(N, ISD::CONCAT_VECTORS, ConcatOps))
+    return SDValue();
+
   return DAG.getNode(ISD::CONCAT_VECTORS, SDLoc(N), VT, ConcatOps);
 }
 
@@ -24363,6 +24371,16 @@ static SDValue narrowInsertExtractVectorBinOp(SDNode *Extract,
   SDValue Index = Extract->getOperand(1);
   EVT SubVT = Extract->getValueType(0);
   if (!TLI.isOperationLegalOrCustom(BinOpcode, SubVT, LegalOperations))
+    return SDValue();
+
+  // If the extract operation is free and the wider vector is legal
+  // then we don't split the binop.
+  if (TLI.isOpFree(Extract) &&
+      TLI.isOperationLegalOrCustom(BinOpcode, VecVT, LegalOperations))
+    return SDValue();
+
+  // Does the target like the idea of spliting this binOp ?
+  if (!TLI.shouldSplitVecBinOp(BinOpcode, VecVT))
     return SDValue();
 
   SDValue Sub0 = getSubVectorSrc(Bop0, Index, SubVT);

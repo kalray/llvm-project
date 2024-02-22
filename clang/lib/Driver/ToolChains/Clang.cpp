@@ -1727,6 +1727,10 @@ void Clang::RenderTargetOptions(const llvm::Triple &EffectiveTriple,
     AddLanaiTargetArgs(Args, CmdArgs);
     break;
 
+  case llvm::Triple::kvx:
+    AddKVXTargetArgs(Args, CmdArgs);
+    break;
+
   case llvm::Triple::hexagon:
     AddHexagonTargetArgs(Args, CmdArgs);
     break;
@@ -2390,6 +2394,16 @@ void Clang::AddLanaiTargetArgs(const ArgList &Args,
             << A->getSpelling() << Value;
       }
     }
+  }
+}
+
+void Clang::AddKVXTargetArgs(const ArgList &Args,
+                             ArgStringList &CmdArgs) const {
+  if (Arg *A = Args.getLastArg(options::OPT_march_EQ)) {
+    StringRef CPUName = A->getValue();
+
+    CmdArgs.push_back("-target-cpu");
+    CmdArgs.push_back(Args.MakeArgString(CPUName));
   }
 }
 
@@ -7205,6 +7219,19 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
        Std->containsValue("c++2c") || Std->containsValue("gnu++2c") ||
        Std->containsValue("c++26") || Std->containsValue("gnu++26") ||
        Std->containsValue("c++latest") || Std->containsValue("gnu++latest"));
+
+  if (getToolChain().getTriple().isKVX()) {
+    if (Arg *A = Args.getLastArg(options::OPT_fstack_limit_register)) {
+      if (strncmp(A->getValue(), "=sr", 3) != 0) {
+        getToolChain().getDriver().Diag(
+            diag::err_drv_unsupported_option_argument)
+            << A->getOption().getName() << A->getValue();
+      } else {
+        CmdArgs.push_back("-mllvm");
+        Args.AddLastArg(CmdArgs, options::OPT_fstack_limit_register);
+      }
+    }
+  }
   bool HaveModules =
       RenderModulesOptions(C, D, Args, Input, Output, HaveCxx20, CmdArgs);
 

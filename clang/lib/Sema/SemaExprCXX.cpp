@@ -923,6 +923,10 @@ ExprResult Sema::BuildCXXThrow(SourceLocation OpLoc, Expr *Ex,
   if (Ex && Context.getTargetInfo().getTriple().isPPC64())
     PPC().CheckPPCMMAType(Ex->getType(), Ex->getBeginLoc());
 
+  // KVX TCA non-pointer types are not allowed as throw expr types.
+  if (Ex && Context.getTargetInfo().getTriple().isKVX())
+    CheckKVXTCAType(Ex->getType(), Ex->getBeginLoc());
+
   return new (Context)
       CXXThrowExpr(Ex, Context.VoidTy, OpLoc, IsThrownVarInScope);
 }

@@ -26,6 +26,8 @@ typedef int pid_t;
 #endif
 #define gettid GetCurrentThreadId
 #define my_gethostname(buf, sz) GetComputerNameA(buf, &(sz))
+#elif defined(__KVX__)
+#define my_gethostname(buf, sz) __kmp_expand_host_name(buf, sz)
 #else
 #include <unistd.h>
 #include <sys/types.h>

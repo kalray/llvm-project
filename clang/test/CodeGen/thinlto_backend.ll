@@ -1,4 +1,5 @@
 ; REQUIRES: x86-registered-target
+; UNSUPPORTED: kvx
 
 ; RUN: opt -module-summary -o %t1.o %s
 ; RUN: opt -module-summary -o %t2.o %S/Inputs/thinlto_backend.ll

@@ -773,6 +773,56 @@ set(ve_SOURCES
   ${GENERIC_TF_SOURCES}
   ${GENERIC_SOURCES})
 
+set(kvx_SOURCES
+  kvx/divdi3.c
+  kvx/divmoddi4.c
+  kvx/divmodsi4.c
+  kvx/divmodv16hi4.c
+  kvx/divmodv4hi4.c
+  kvx/divmodv4si4.c
+  kvx/divmodv8hi4.c
+  kvx/divmodv8si4.c
+  kvx/divsi3.c
+  kvx/divv16hi3.c
+  kvx/divv4hi3.c
+  kvx/divv4si3.c
+  kvx/divv8hi3.c
+  kvx/divv8si3.c
+  kvx/moddi3.c
+  kvx/modsi3.c
+  kvx/modv16hi3.c
+  kvx/modv4hi3.c
+  kvx/modv4si3.c
+  kvx/modv8hi3.c
+  kvx/modv8si3.c
+  kvx/udivdi3.c
+  kvx/udivmoddi4.c
+  kvx/udivmodsi4.c
+  kvx/udivmodv16hi4.c
+  kvx/udivmodv4hi4.c
+  kvx/udivmodv4si4.c
+  kvx/udivmodv8hi4.c
+  kvx/udivmodv8si4.c
+  kvx/udivsi3.c
+  kvx/udivv16hi3.c
+  kvx/udivv4hi3.c
+  kvx/udivv4si3.c
+  kvx/udivv8hi3.c
+  kvx/udivv8si3.c
+  kvx/umoddi3.c
+  kvx/umodsi3.c
+  kvx/umodv16hi3.c
+  kvx/umodv4hi3.c
+  kvx/umodv4si3.c
+  kvx/umodv8hi3.c
+  kvx/umodv8si3.c
+  ${GENERIC_SOURCES}
+  ${GENERIC_TF_SOURCES}
+)
+list(REMOVE_ITEM kvx_SOURCES
+  enable_execute_stack.c  # sys/mman.h file not found
+)
+
 add_custom_target(builtins)
 set_target_properties(builtins PROPERTIES FOLDER "Compiler-RT/Metatargets")
 
@@ -785,7 +835,7 @@ if (APPLE)
   add_subdirectory(macho_embedded)
   darwin_add_builtin_libraries(${BUILTIN_SUPPORTED_OS})
 else ()
-  set(BUILTIN_CFLAGS "")
+  set(BUILTIN_CFLAGS -Wall -Wextra)
   add_security_warnings(BUILTIN_CFLAGS 0)
 
   if (COMPILER_RT_HAS_FCF_PROTECTION_FLAG)

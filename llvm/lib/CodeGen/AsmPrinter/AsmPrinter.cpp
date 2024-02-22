@@ -1119,17 +1119,17 @@ void AsmPrinter::emitImplicitDef(const MachineInstr *MI) const {
   OutStreamer->addBlankLine();
 }
 
-static void emitKill(const MachineInstr *MI, AsmPrinter &AP) {
+void AsmPrinter::emitKill(const MachineInstr *MI) const {
   std::string Str;
   raw_string_ostream OS(Str);
   OS << "kill:";
   for (const MachineOperand &Op : MI->operands()) {
     assert(Op.isReg() && "KILL instruction must have only register operands");
     OS << ' ' << (Op.isDef() ? "def " : "killed ")
-       << printReg(Op.getReg(), AP.MF->getSubtarget().getRegisterInfo());
+       << printReg(Op.getReg(), MF->getSubtarget().getRegisterInfo());
   }
-  AP.OutStreamer->AddComment(Str);
-  AP.OutStreamer->addBlankLine();
+  OutStreamer->AddComment(Str);
+  OutStreamer->addBlankLine();
 }
 
 /// emitDebugValueComment - This method handles the target-independent form
@@ -1800,7 +1800,7 @@ void AsmPrinter::emitFunctionBody() {
         if (isVerbose()) emitImplicitDef(&MI);
         break;
       case TargetOpcode::KILL:
-        if (isVerbose()) emitKill(&MI, *this);
+        if (isVerbose()) emitKill(&MI);
         break;
       case TargetOpcode::PSEUDO_PROBE:
         emitPseudoProbe(MI);

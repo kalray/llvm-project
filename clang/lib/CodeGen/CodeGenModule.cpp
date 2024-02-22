@@ -2862,8 +2862,11 @@ void CodeGenModule::SetFunctionAttributes(GlobalDecl GD, llvm::Function *F,
   setGVProperties(F, FD);
 
   // Setup target-specific attributes.
-  if (!IsIncompleteFunction && F->isDeclaration())
+  if (!IsIncompleteFunction && F->isDeclaration()) {
     getTargetCodeGenInfo().setTargetAttributes(FD, F, *this);
+    if (FD->hasAttr<MPPANativeAttr>())
+      F->addFnAttr(llvm::Attribute::MPPANative);
+  }
 
   if (const auto *CSA = FD->getAttr<CodeSegAttr>())
     F->setSection(CSA->getName());

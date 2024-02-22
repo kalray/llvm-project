@@ -4702,6 +4702,7 @@ public:
   void ProcessOrderScopeAMDGCN(llvm::Value *Order, llvm::Value *Scope,
                                llvm::AtomicOrdering &AO,
                                llvm::SyncScope::ID &SSID);
+  llvm::Value *EmitKVXBuiltinExpr(unsigned BuiltinID, const CallExpr *E);
 
   enum class MSVCIntrin;
   llvm::Value *EmitMSVCBuiltinExpr(MSVCIntrin BuiltinID, const CallExpr *E);

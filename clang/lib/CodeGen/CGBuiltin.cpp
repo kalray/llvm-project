@@ -47,6 +47,7 @@
 #include "llvm/IR/IntrinsicsBPF.h"
 #include "llvm/IR/IntrinsicsDirectX.h"
 #include "llvm/IR/IntrinsicsHexagon.h"
+#include "llvm/IR/IntrinsicsKVX.h"
 #include "llvm/IR/IntrinsicsNVPTX.h"
 #include "llvm/IR/IntrinsicsPowerPC.h"
 #include "llvm/IR/IntrinsicsR600.h"
@@ -6311,6 +6312,8 @@ static Value *EmitTargetArchBuiltinExpr(CodeGenFunction *CGF,
     return CGF->EmitWebAssemblyBuiltinExpr(BuiltinID, E);
   case llvm::Triple::hexagon:
     return CGF->EmitHexagonBuiltinExpr(BuiltinID, E);
+  case llvm::Triple::kvx:
+    return CGF->EmitKVXBuiltinExpr(BuiltinID, E);
   case llvm::Triple::riscv32:
   case llvm::Triple::riscv64:
     return CGF->EmitRISCVBuiltinExpr(BuiltinID, E, ReturnValue);
@@ -22080,4 +22083,1657 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
 
   llvm::Function *F = CGM.getIntrinsic(ID, IntrinsicTypes);
   return Builder.CreateCall(F, Ops, "");
+}
+
+typedef enum {
+  SATURATE_INVALID = -1,
+  SATURATE_DEFAULT = 0,
+  SATURATE_SIGNED = 1,  // ".s"
+  SATURATE_UNSIGNED = 2 // ".us"
+} saturate_t;
+
+static Value *KVX_emit_xswapo256(CodeGenFunction &CGF, const CallExpr *E) {
+  if (E->getNumArgs() != 2) {
+    CGF.CGM.Error(E->getBeginLoc(), "xswapo256 expects two arguments.");
+    return nullptr;
+  }
+
+  const int TCAPos = 0;
+  const int GPRPos = 1;
+
+  Address AddrTCA = CGF.EmitPointerWithAlignment(E->getArg(TCAPos));
+  Value *TCAval = CGF.Builder.CreateLoad(AddrTCA);
+
+  Value *GPRval = CGF.EmitScalarExpr(E->getArg(GPRPos));
+
+  SmallVector<Value *, 4> Args;
+  Args.push_back(GPRval);
+  Args.push_back(TCAval);
+
+  auto *R = CGF.Builder.CreateCall(
+      CGF.CGM.getIntrinsic(Intrinsic::kvx_xswapo256), Args);
+  CGF.Builder.CreateStore(CGF.Builder.CreateExtractValue(R, 1), AddrTCA);
+
+  return CGF.Builder.CreateExtractValue(R, 0);
+}
+
+static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                   unsigned int BuiltinID) {
+  int64_t ShiftIndexBits;
+  switch (BuiltinID) {
+  case KVX::BI__builtin_kvx_shiftfwp:
+  case KVX::BI__builtin_kvx_shiftfdp:
+  case KVX::BI__builtin_kvx_shiftwp:
+  case KVX::BI__builtin_kvx_shiftdp:
+    ShiftIndexBits = 1;
+    break;
+  case KVX::BI__builtin_kvx_shiftfhq:
+  case KVX::BI__builtin_kvx_shiftfwq:
+  case KVX::BI__builtin_kvx_shiftfdq:
+  case KVX::BI__builtin_kvx_shifthq:
+  case KVX::BI__builtin_kvx_shiftwq:
+  case KVX::BI__builtin_kvx_shiftdq:
+    ShiftIndexBits = 2;
+    break;
+  case KVX::BI__builtin_kvx_shiftbo:
+  case KVX::BI__builtin_kvx_shiftdo:
+  case KVX::BI__builtin_kvx_shiftfdo:
+  case KVX::BI__builtin_kvx_shiftfho:
+  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftho:
+  case KVX::BI__builtin_kvx_shiftwo:
+    ShiftIndexBits = 3;
+    break;
+  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftfwx:
+  case KVX::BI__builtin_kvx_shifthx:
+  case KVX::BI__builtin_kvx_shiftwx:
+    ShiftIndexBits = 4;
+    break;
+  case KVX::BI__builtin_kvx_shiftbv:
+  case KVX::BI__builtin_kvx_shiftfhv:
+  case KVX::BI__builtin_kvx_shifthv:
+    ShiftIndexBits = 5;
+    break;
+  case KVX::BI__builtin_kvx_shiftbt:
+    ShiftIndexBits = 6;
+    break;
+  }
+
+  unsigned int MaxShiftIndex = (1 << ShiftIndexBits) - 1;
+
+  std::string ErrorMsg = "Unsigned immediate of ";
+  ErrorMsg += std::to_string(ShiftIndexBits);
+  ErrorMsg += " bits expected";
+
+  const Expr *ShiftIndexE = E->getArg(1);
+  if (!ShiftIndexE->isIntegerConstantExpr(CGF.getContext())) {
+    CGF.CGM.Error(ShiftIndexE->getBeginLoc(), ErrorMsg);
+    return nullptr;
+  }
+
+  uint64_t ShiftIndex =
+      ShiftIndexE->EvaluateKnownConstInt(CGF.getContext()).getZExtValue();
+  if (ShiftIndex > MaxShiftIndex) {
+    CGF.CGM.Error(ShiftIndexE->getBeginLoc(), ErrorMsg);
+    return nullptr;
+  }
+
+  const Expr *Input = E->getArg(0);
+  llvm::VectorType *VT = (llvm::VectorType *)CGF.ConvertType(Input->getType());
+  unsigned long VectorSize = VT->getElementCount().getFixedValue();
+  Value *InputV = CGF.EmitScalarExpr(Input);
+
+  const Expr *Fill = E->getArg(2);
+  Value *FillV = CGF.EmitScalarExpr(Fill);
+
+  /* Create vector <FillV, undef, undef, ...> */
+  Value *FillVec = UndefValue::get(VT);
+  FillVec = CGF.Builder.CreateInsertElement(FillVec, FillV, (uint64_t)0);
+
+  /* Create mask vector */
+  SmallVector<Constant *, 16> MaskVector;
+  for (auto maskVal = VectorSize + ShiftIndex; maskVal < 2 * VectorSize;
+       maskVal++) {
+    MaskVector.push_back(ConstantInt::get(CGF.Int32Ty, maskVal));
+  }
+  for (uint64_t i = 0; i < ShiftIndex; i++) {
+    MaskVector.push_back(ConstantInt::get(CGF.Int32Ty, 0));
+  }
+  Value *MaskVec = ConstantVector::get(ArrayRef<Constant *>(MaskVector));
+
+  /* Generate shufflevector */
+  Value *OutputV = CGF.Builder.CreateShuffleVector(FillVec, InputV, MaskVec);
+
+  return OutputV;
+}
+
+struct KvxModifier : StringMap<int> {
+  static const int INVALID_MODIFIER = -1;
+  inline int getModifierValue(const StringRef &M) const {
+    const auto V = find(M.lower());
+    return (V == end()) ? INVALID_MODIFIER : V->second;
+  }
+
+  KvxModifier(const std::vector<std::pair<StringRef, int>> Vals) {
+    for (const auto &V : Vals)
+      insert(V);
+  }
+
+  std::string getModifierStrList(void) const {
+    std::string Ret = "";
+    std::string InnerPrefix = "";
+    if (getModifierValue("") != KvxModifier::INVALID_MODIFIER) {
+      Ret += "''";
+      InnerPrefix = ", ";
+    }
+    for (const auto &Map : *this) {
+      Ret += InnerPrefix + "'." + Map.first().str() + "'";
+      InnerPrefix = ", ";
+    }
+    return Ret;
+  }
+};
+
+static const KvxModifier
+    KVX_ACCESSES({{"", 0}, {"all", 0}, {"w", 1}, {"r", 2}, {"wa", 3}});
+static const KvxModifier KVX_BOOLCAS({{"", 1}, {"v", 0}});
+static const KvxModifier KVX_CACHELEVEL({{"l1", 0}, {"l2", 1}});
+static const KvxModifier KVX_CARRY({{"", 0}, {"i", 1}});
+// System coherency (S == 2) is not implemented in cv2 yet.
+static const KvxModifier KVX_COHERENCY({{"", 0}, {"g", 1}});
+static const KvxModifier KVX_CONJUGATE({{"", 0}, {"c", 1}});
+static const KvxModifier
+    KVX_LSOMASK_LOAD({{"mt", 4}, {"mf", 5}, {"mtc", 6}, {"mfc", 7}});
+static const KvxModifier KVX_LSOMASK_STORE({{"mt", 4}, {"mf", 5}});
+static const KvxModifier KVX_LSUCOND({{"dnez", 0},
+                                      {"deqz", 1},
+                                      {"dltz", 2},
+                                      {"dgez", 3},
+                                      {"dlez", 4},
+                                      {"dgtz", 5},
+                                      {"odd", 6},
+                                      {"even", 7},
+                                      {"wnez", 8},
+                                      {"weqz", 9},
+                                      {"wltz", 10},
+                                      {"wgez", 11},
+                                      {"wlez", 12},
+                                      {"wgtz", 13}});
+static const KvxModifier KVX_LSUMASK({{"dnez", 0},
+                                      {"deqz", 1},
+                                      {"wnez", 2},
+                                      {"weqz", 3},
+                                      {"mt", 4},
+                                      {"mf", 5},
+                                      {"mtc", 6},
+                                      {"mfc", 7}});
+static const KvxModifier
+    KVX_LSUPACK({{"", 0}, {"q", 1}, {"d", 2}, {"w", 3}, {"h", 4}, {"b", 5}});
+static const KvxModifier
+    KVX_MTRANSPOSE({{"", 0}, {"nn", 0}, {"tn", 1}, {"nt", 2}, {"tt", 3}});
+static const KvxModifier
+    KVX_QINDEX({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
+static const KvxModifier KVX_RCHANNEL({{"f", 0}, {"b", 1}});
+static const KvxModifier KVX_RECTIFY({{"", 0}, {"relu", 1}});
+static const KvxModifier
+    KVX_ROUNDING({{"", 7}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}});
+static const KvxModifier KVX_ROUNDINT(
+    {{"", 0}, {"rn", 0}, {"ru", 1}, {"rd", 2}, {"rz", 3}, {"rhu", 4}});
+static const KvxModifier KVX_SATURATE({{"sat", 0}, {"satu", 1}});
+static const KvxModifier KVX_SCALARCOND = KVX_LSUCOND;
+static const KvxModifier KVX_SCHANNEL = KVX_RCHANNEL;
+static const KvxModifier KVX_SHUFFLEV({{"", 0}, {"td", 1}});
+static const KvxModifier KVX_SHUFFLEX({{"", 0},
+                                       {"zd", 1},
+                                       {"ud", 2},
+                                       {"tq", 3},
+                                       {"tw", 4},
+                                       {"zw", 5},
+                                       {"uw", 6}});
+static const KvxModifier KVX_SILENT({{"", 0}, {"s", 1}});
+static const KvxModifier KVX_SIMDCOND({{"", 0},
+                                       {"nez", 0},
+                                       {"eqz", 1},
+                                       {"ltz", 2},
+                                       {"gez", 3},
+                                       {"lez", 4},
+                                       {"gtz", 5},
+                                       {"odd", 6},
+                                       {"even", 7}});
+static const KvxModifier KVX_SPECULATE = KVX_SILENT;
+static const KvxModifier KVX_VARIANT({{"", 0}, {"s", 1}, {"u", 2}, {"us", 3}});
+// Synthetic modifiers for choosing different instructions
+static const KvxModifier KvxAny({{"", 0}, {"nez", 0}, {"eqz", 1}});
+static const KvxModifier KvxAverage({{"", 0}, {"r", 1}, {"u", 2}, {"ru", 3}});
+static const KvxModifier
+    KvxBitCount({{"", 0}, {"lz", 1}, {"ls", 2}, {"tz", 3}});
+static const KvxModifier KvxDiffMod({{"", 0}, {"s", 1}, {"u", 2}});
+static const KvxModifier KvxExtendMul({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}});
+static const KvxModifier KvxHindex({{"h0", 0}, {"h1", 1}});
+static const KvxModifier
+    KvxQindex({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
+static const KvxModifier KvxLdStAddrSpaceMod(
+    {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
+static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
+static const KvxModifier KvxShiftLeft({{"", 0}, {"s", 1}, {"us", 2}, {"r", 3}});
+static const KvxModifier
+    KvxShiftRight({{"", 0}, {"a", 1}, {"as", 2}, {"r", 3}});
+static const KvxModifier KVXSignSat = KVX_SILENT;
+static const KvxModifier
+    KvxUnSignMod({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}, {"us", 3}});
+static const KvxModifier KvxWidenInt({{"", 0}, {"z", 1}, {"q", 2}});
+
+typedef const std::vector<KvxModifier> KvxModifiers;
+typedef std::vector<KvxModifier> KvxVecModifiers;
+
+static void KVX_emitInvalidIntrinsicForCPU(CodeGenModule &CGM,
+                                           const CallExpr *E,
+                                           const llvm::StringRef &cpus,
+                                           const llvm::StringRef &cpu) {
+  unsigned diagID =
+      CGM.getDiags().getCustomDiagID(DiagnosticsEngine::Warning, "%0");
+  std::string Err = "This builtin is restricted to use with the cpu(s) '" +
+                    cpus.str() +
+                    "' where the module is being compiled to: " + cpu.str();
+  CGM.getDiags().Report(E->getBeginLoc(), diagID) << Err;
+}
+
+void KVX_ModifierError(CodeGenModule &CGM, const KvxModifiers &Modifiers,
+                       const SourceLocation &Loc) {
+  std::string ErrorM = "This builtin accepts a modifier string composed by:";
+  for (const auto &Mod : Modifiers) {
+    ErrorM += " [";
+    ErrorM += Mod.getModifierStrList();
+    ErrorM += "]";
+    if (*Modifiers.rbegin() != Mod)
+      ErrorM += ",";
+  }
+  CGM.Error(Loc, ErrorM);
+}
+
+static bool ParseModifiers(SmallVectorImpl<Value *> &Mods,
+                           const KvxModifiers &Modifiers,
+                           const clang::CallExpr *E, CodeGenModule &CGM,
+                           llvm::IntegerType *IntTy) {
+  const auto *ModStr = E->getArg(E->getNumArgs() - 1)->IgnoreParenImpCasts();
+
+  if (!isa<clang::StringLiteral>(ModStr)) {
+    KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+    return false;
+  }
+
+  auto ModTokens = cast<clang::StringLiteral>(ModStr)->getString().split(".");
+  if (!ModTokens.first.empty()) {
+    CGM.Error(ModStr->getBeginLoc(),
+              "All modifiers should either be empty or start with '.'");
+    return false;
+  }
+
+  ModTokens = ModTokens.second.split(".");
+
+  for (const auto &Mod : Modifiers) {
+    int ModVal = Mod.getModifierValue(ModTokens.first);
+
+    if (ModVal == KvxModifier::INVALID_MODIFIER) {
+      int DefaultVal = Mod.getModifierValue("");
+      if (DefaultVal == KvxModifier::INVALID_MODIFIER) {
+        KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+        return false;
+      }
+      ModVal = DefaultVal;
+    } else
+      ModTokens = ModTokens.second.split(".");
+
+    Mods.push_back(ConstantInt::get(IntTy, ModVal));
+  }
+
+  if (!ModTokens.first.empty()) {
+    KVX_ModifierError(CGM, Modifiers, ModStr->getBeginLoc());
+    return false;
+  }
+
+  return true;
+}
+
+enum KVX_OVERLOAD_VALUE : int {
+  KVX_OVERLOAD_RES = INT_MAX,
+  KVX_NO_OVERLOAD = INT_MIN
+};
+
+static Value *KVX_emit(int NumArgs, CodeGenFunction &CGF, const CallExpr *E,
+                       const unsigned IntrinsicID, KvxModifiers &Modifiers,
+                       const StringRef &CPUSstr, int NumParts = 1,
+                       int Overloaded = KVX_NO_OVERLOAD) {
+  // Double check the number of arguments, including the modifier string.
+  if ((int)(E->getNumArgs()) != NumArgs) {
+    CGF.CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+    return nullptr;
+  }
+
+  if (NumParts > 1) {
+    llvm::FixedVectorType *Rty =
+        dyn_cast<FixedVectorType>(CGF.ConvertType(E->getType()));
+    if (!Rty)
+      report_fatal_error("Internal clang error: Can't split intrinsics that do "
+                         "not generate a vector type.");
+    if (Rty->getNumElements() % NumParts)
+      report_fatal_error("Internal clang error: Result vector type not a "
+                         "multiple of number of parts");
+    for (int I = 0; I < NumArgs; I++) {
+      llvm::FixedVectorType *Aty =
+          dyn_cast<FixedVectorType>(CGF.ConvertType(E->getArg(I)->getType()));
+      if (!Aty)
+        continue;
+
+      if (Aty->getNumElements() % NumParts)
+        report_fatal_error("Internal clang error: Argument vector type not a "
+                           "multiple of number of parts");
+    }
+  }
+
+  const auto &Target = CGF.getTarget();
+  auto &CGM = CGF.CGM;
+  if (!CPUSstr.empty()) {
+    auto CPU = CPUSstr.split(" ");
+    bool isInvalid = true;
+    for (; isInvalid && (CPU.first != ""); CPU = CPU.second.split(" "))
+      isInvalid = !Target.validateCpuIs(CPU.first);
+
+    if (isInvalid) {
+      KVX_emitInvalidIntrinsicForCPU(CGM, E, CPUSstr, Target.getCPUstr());
+      return nullptr;
+    }
+  }
+
+  // Parse KVX modifiers if any.
+  SmallVector<Value *, 4> Mods;
+  if (!Modifiers.empty()) {
+    if (!ParseModifiers(Mods, Modifiers, E, CGF.CGM, CGF.IntTy))
+      return nullptr;
+
+    --NumArgs;
+  }
+
+  Function *Callee;
+  int Pts = std::abs(NumParts);
+  if (Overloaded == KVX_NO_OVERLOAD)
+    Callee = CGM.getIntrinsic(IntrinsicID);
+  else {
+    auto Ty = (Overloaded == KVX_OVERLOAD_RES)
+                  ? E->getType()
+                  : E->getArg(Overloaded)->getType();
+
+    llvm::Type *RT = CGF.ConvertType(Ty);
+    // Split vector types used in overload if the
+    // call is split into distinct calls or if it
+    // is the type of a splitted argument.
+    if ((Pts > 1) && ((Pts == NumParts) || // Split into multiple calls
+                      (Overloaded != KVX_OVERLOAD_RES))) { // Split an argument
+
+      auto *VRT = cast<llvm::FixedVectorType>(RT);
+      int Vparts = VRT->getNumElements();
+      if (Vparts == Pts)
+        RT = VRT->getElementType();
+      else
+        RT = FixedVectorType::get(VRT->getElementType(),
+                                  VRT->getNumElements() / Pts);
+    }
+    Callee = CGM.getIntrinsic(IntrinsicID, RT);
+  }
+
+  if (Pts == 1) {
+    SmallVector<Value *, 4> Args;
+
+    for (int I = 0; I < NumArgs; ++I)
+      Args.push_back(CGF.EmitScalarExpr(E->getArg(I)));
+
+    if (!Mods.empty())
+      Args.append(Mods);
+
+    return CGF.Builder.CreateCall(Callee, Args);
+  }
+
+  // Hacky hack: Negative NumParts means that vector arguments should be split
+  // in -NumParts slices, and joined congruently to a single intrinsic call.
+  if (Pts != NumParts) {
+    SmallVector<Value *, 4> Args = {};
+    for (int I = 0; I < NumArgs; ++I) {
+      const auto *Arg = E->getArg(I);
+      auto *Aty = CGF.ConvertType(Arg->getType());
+
+      if (!Aty->isVectorTy()) {
+        Args.push_back(CGF.EmitScalarExpr(Arg));
+        continue;
+      }
+      auto NumElts = cast<FixedVectorType>(Aty)->getNumElements();
+
+      auto NumEltsPerPart = NumElts / Pts;
+      for (int Part = 0; Part < Pts; ++Part) {
+        if (NumEltsPerPart == 1) {
+          Args.push_back(
+              CGF.Builder.CreateExtractElement(CGF.EmitScalarExpr(Arg), Part));
+          continue;
+        }
+        SmallVector<int, 8> Inds;
+        for (int Pos = Part * NumEltsPerPart, C = NumEltsPerPart; C > 0;
+             --C, ++Pos)
+          Inds.push_back(Pos);
+
+        Args.push_back(CGF.Builder.CreateShuffleVector(
+            CGF.EmitScalarExpr(Arg), CGF.EmitScalarExpr(Arg), Inds));
+      }
+    }
+    if (!Mods.empty())
+      Args.append(Mods);
+
+    return CGF.Builder.CreateCall(Callee, Args);
+  }
+
+  // Split all vector elements by their number of parts.
+  SmallVector<Value *, 8> Results;
+  for (int Part = 0; Part < Pts; ++Part) {
+    SmallVector<Value *, 4> Args = {};
+    for (int I = 0; I < NumArgs; ++I) {
+      const auto *Arg = E->getArg(I);
+      auto *Aty = CGF.ConvertType(Arg->getType());
+
+      if (!Aty->isVectorTy()) {
+        Args.push_back(CGF.EmitScalarExpr(Arg));
+        continue;
+      }
+      auto NumElts = cast<FixedVectorType>(Aty)->getNumElements();
+
+      auto NumEltsPerPart = NumElts / Pts;
+      if (NumEltsPerPart == 1) {
+        Args.push_back(
+            CGF.Builder.CreateExtractElement(CGF.EmitScalarExpr(Arg), Part));
+        continue;
+      }
+      SmallVector<int, 8> Inds;
+      for (int Pos = Part * NumEltsPerPart, C = NumEltsPerPart; C > 0;
+           --C, ++Pos)
+        Inds.push_back(Pos);
+
+      Args.push_back(CGF.Builder.CreateShuffleVector(
+          CGF.EmitScalarExpr(Arg), CGF.EmitScalarExpr(Arg), Inds));
+    }
+    if (!Mods.empty())
+      Args.append(Mods);
+
+    Results.push_back(CGF.Builder.CreateCall(Callee, Args));
+  }
+
+  auto *Rty = cast<FixedVectorType>(CGF.ConvertType(E->getType()));
+  // If we operated at distinct element level, just use insert elements to
+  // rebuild the vector.
+  if (Results.size() == Rty->getNumElements())
+    return CGF.BuildVector(Results);
+
+  // 2 by 2, merge the result vectors into double-sized vectors
+  SmallVector<int, 8> Inds;
+  while (Results.size() > 1) {
+    SmallVector<Value *, 8> Results2 = {};
+    unsigned NumElts =
+        2 * cast<llvm::FixedVectorType>(Results.back()->getType())
+                ->getNumElements();
+    while (Inds.size() < NumElts)
+      Inds.push_back(Inds.size());
+
+    for (unsigned I = 0; I < Results.size(); I += 2) {
+      Value *Op0 = Results[I];
+      Value *Op1 = Results[I + 1];
+      Results2.push_back(CGF.Builder.CreateShuffleVector(Op0, Op1, Inds));
+    }
+
+    std::swap(Results, Results2);
+  }
+
+  return Results.back();
+}
+
+static int KVX_getLoadAS(clang::ASTContext &Ctx, const clang::Expr *E,
+                         const KvxModifier &Mod) {
+  if (E->isNullPointerConstant(Ctx, Expr::NPC_NeverValueDependent))
+    return 0;
+
+  if (E->getStmtClass() != Stmt::StringLiteralClass)
+    return -1;
+
+  const StringRef Str = cast<clang::StringLiteral>(E)->getString();
+
+  return Mod.getModifierValue(Str);
+}
+
+static bool KVX_isVolatile(CodeGenFunction &CGF, const CallExpr *E) {
+  bool Volatile = false;
+  if (E->getNumArgs() == 3) {
+    auto *VolatileExpr = E->getArg(2)->IgnoreParenImpCasts();
+
+  if (VolatileExpr->getStmtClass() == Stmt::IntegerLiteralClass)
+    Volatile = cast<clang::IntegerLiteral>(VolatileExpr)->getValue().getZExtValue() != 0;
+  else if (VolatileExpr->getStmtClass() == Stmt::CXXBoolLiteralExprClass)
+    Volatile = cast<clang::CXXBoolLiteralExpr>(VolatileExpr)->getValue();
+  else
+    CGF.CGM.Error(E->getArg(2)->getBeginLoc(), "is not a bool immediate value");
+  }
+  QualType PtrTy = E->getArg(0)->IgnoreImpCasts()->getType();
+  Volatile |= PtrTy->castAs<clang::PointerType>()
+                  ->getPointeeType()
+                  .isVolatileQualified();
+
+  return Volatile;
+}
+
+static Value *
+KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                    llvm::Type *DataType,
+                    const KvxModifier &Mod = KvxLdStAddrSpaceMod) {
+  if (E->getNumArgs() < 2 || E->getNumArgs() > 3) {
+    CGF.CGM.Error(E->getBeginLoc(),
+                  "This buildin accept 2 or 3 arguments:\n\t(void * ptr, "
+                  "\"modifierString\"[ bool isVolatile]");
+    return nullptr;
+  }
+
+  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
+  if (int AS = KVX_getLoadAS(CGF.getContext(),
+                             E->getArg(1)->IgnoreParenImpCasts(), Mod)) {
+
+    if (AS == KvxModifier::INVALID_MODIFIER)
+      CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
+
+    llvm::Type *ASType = DataType->getPointerTo(AS);
+    Addr = CGF.Builder.CreateAddrSpaceCast(Addr, ASType);
+  }
+
+  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, Addr.getPointer(),
+                                             Addr.getAlignment(), "kvxld");
+
+  Load->setVolatile(KVX_isVolatile(CGF, E));
+
+  return Load;
+}
+
+static bool KVX_getVolatileReadyArgs(CodeGenFunction &CGF, const CallExpr *E,
+                                     unsigned int NumPosArgs, bool &Volatile,
+                                     Value *&Ready, bool OnlyVolatile = false) {
+  // No var arg to parse
+  if (E->getNumArgs() == NumPosArgs)
+    return true;
+
+  const int FirstExtraArgPos = NumPosArgs;
+  const int SecondExtraArgPos = NumPosArgs + 1;
+
+  int VolatilePos = OnlyVolatile ? FirstExtraArgPos : -1;
+  int ReadyPos = -1;
+
+  // Do not seek positions if there is only volatile flag to parse
+  if (!OnlyVolatile) {
+    if (E->getNumArgs() == NumPosArgs + 1) {
+      (E->getArg(NumPosArgs)->isIntegerConstantExpr(CGF.getContext())
+           ? VolatilePos
+           : ReadyPos) = FirstExtraArgPos;
+    } else if (E->getNumArgs() == NumPosArgs + 2) {
+      ReadyPos = FirstExtraArgPos;
+      VolatilePos = SecondExtraArgPos;
+    }
+  }
+
+  if (VolatilePos >= 0) {
+    if (!E->getArg(VolatilePos)->isIntegerConstantExpr(CGF.getContext())) {
+      CGF.CGM.Error(
+          E->getArg(VolatilePos)->getBeginLoc(),
+          "volatile flag should be a constant argument (e.g. 0 or 1)");
+      return false;
+    }
+    Volatile = E->getArg(VolatilePos)
+                   ->EvaluateKnownConstInt(CGF.getContext())
+                   .getBoolValue();
+  }
+  if (ReadyPos >= 0) {
+    if (!CGF.hasScalarEvaluationKind(E->getArg(ReadyPos)->getType())) {
+      CGF.CGM.Error(E->getArg(ReadyPos)->getBeginLoc(),
+                    "ready argument should be a scalar");
+      return false;
+    }
+    Value *ScalarArg = CGF.EmitScalarExpr(E->getArg(ReadyPos));
+    if (ScalarArg->getType()->getPrimitiveSizeInBits() > 256) {
+      CGF.CGM.Error(E->getArg(ReadyPos)->getBeginLoc(),
+                    "ready argument size > 256 bits not supported");
+      return false;
+    }
+    Ready = ScalarArg;
+  }
+
+  return true;
+}
+
+static bool KVX_getVolatileArg(CodeGenFunction &CGF, const CallExpr *E,
+                               unsigned int NumPosArgs, bool &Volatile) {
+  Value *Ready; // unused
+  return KVX_getVolatileReadyArgs(CGF, E, NumPosArgs, Volatile, Ready, true);
+}
+
+static Value *KVX_truncateOrBitcast(CodeGenFunction &CGF, Value *StoreVal,
+                                    llvm::Type *DataType) {
+  llvm::Type *StoreValType = StoreVal->getType();
+  if (StoreVal->getType() != DataType) {
+    if (DataType->isIntegerTy() && StoreValType->isIntegerTy()) {
+      StoreVal = CGF.Builder.CreateTrunc(StoreVal, DataType);
+    } else if (DataType->isVectorTy() || StoreValType->isVectorTy()) {
+      StoreVal = CGF.Builder.CreateBitCast(StoreVal, DataType);
+    }
+  }
+  return StoreVal;
+}
+
+static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                   llvm::Type *DataType,
+                                   llvm::Type *DataTypeIntrinsic = nullptr) {
+  constexpr int NumPosArgs = 2;
+
+  if (E->getNumArgs() > NumPosArgs + 2) {
+    CGF.CGM.Error(E->getBeginLoc(), "No more than " +
+                                        std::to_string(NumPosArgs + 2) +
+                                        " arguments are allowed");
+    return nullptr;
+  }
+
+  bool Volatile = false;
+  Value *Ready = nullptr;
+  if (!KVX_getVolatileReadyArgs(CGF, E, NumPosArgs, Volatile, Ready))
+    return nullptr;
+
+  const TypeSize StoreSize = DataType->getPrimitiveSizeInBits();
+
+  if (Ready && DataTypeIntrinsic)
+    DataType = DataTypeIntrinsic;
+
+  Value *ToStore = CGF.EmitScalarExpr(E->getArg(0));
+  Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
+
+  Address Addr = CGF.EmitPointerWithAlignment(E->getArg(1));
+
+  if (Ready) {
+    unsigned IID = Volatile ? Intrinsic::kvx_store_vol : Intrinsic::kvx_store;
+    Value *Ptr = Addr.getPointer();
+    Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
+    SmallVector<Value *, 4> Ops = {StoreVal, Ptr, SizeInfo, Ready};
+    Function *StoreI =
+        CGF.CGM.getIntrinsic(IID, {StoreVal->getType(), Ready->getType()});
+    return CGF.Builder.CreateCall(StoreI, Ops);
+  }
+
+  return CGF.Builder.CreateAlignedStore(StoreVal, Addr.getPointer(),
+                                        Addr.getAlignment(), Volatile);
+}
+
+static bool KVX_getLsucondOrLsomask(CodeGenFunction &CGF, const Expr *E,
+                                    StringRef ModStr, bool HasLsumask,
+                                    int &LsucondMod, int &LsomaskMod,
+                                    StringRef Name,
+                                    KvxModifier LsomaskModParser) {
+  const auto &Target = CGF.getTarget();
+  bool IsCV1 = Target.getCPUstr() == "kv3-1";
+
+  if ((LsomaskMod = LsomaskModParser.getModifierValue(ModStr)) >= 0) {
+    if (!HasLsumask) {
+      CGF.CGM.Error(E->getBeginLoc(),
+                    "lsomask modifier is not available for this builtin. Try "
+                    "using __builtin_kvx_" +
+                        std::string(Name) + "[64|128|256] instead");
+      return false;
+    }
+    if (IsCV1) {
+      CGF.CGM.Error(E->getBeginLoc(),
+                    "lsumask modifier requires kv3-2 architecture");
+      return false;
+    }
+    return true;
+  }
+
+  if ((LsucondMod = KVX_LSUCOND.getModifierValue(ModStr)) >= 0)
+    return true;
+
+  std::string ErrorMsg =
+      !HasLsumask || IsCV1
+          ? "Expects a lsucond, one of: " + KVX_LSUCOND.getModifierStrList()
+          : "Expects either a lsucond: [" + KVX_LSUCOND.getModifierStrList() +
+                "]" + " or a lsomask: [" +
+                LsomaskModParser.getModifierStrList() + "]";
+
+  CGF.CGM.Error(E->getBeginLoc(), ErrorMsg);
+  return false;
+}
+
+llvm::Value *KVX_extendVectorTo256(clang::CodeGen::CodeGenFunction &CGF,
+                                   llvm::Value *Vector) {
+  TypeSize VectorSize = Vector->getType()->getPrimitiveSizeInBits();
+  assert(VectorSize % 64 == 0);
+
+  // Cast to vxi64 with x in {1, 2}
+  unsigned NumElements = VectorSize / 64;
+  auto *VectorType = llvm::FixedVectorType::get(CGF.Int64Ty, NumElements);
+  Vector = KVX_truncateOrBitcast(CGF, Vector, VectorType);
+
+  llvm::Type *ExtendedVecType = llvm::FixedVectorType::get(CGF.Int64Ty, 4);
+  llvm::Value *ExtendedVec = UndefValue::get(ExtendedVecType);
+
+  for (unsigned I = 0; I < NumElements; I++) {
+    llvm::Value *Index = ConstantInt::get(CGF.IntTy, I);
+    llvm::Value *Extract = CGF.Builder.CreateExtractElement(Vector, Index);
+    ExtendedVec = CGF.Builder.CreateInsertElement(ExtendedVec, Extract, Index);
+  }
+
+  return ExtendedVec;
+}
+
+llvm::Value *KVX_extractVectorFrom256(clang::CodeGen::CodeGenFunction &CGF,
+                                      llvm::Value *Vector,
+                                      unsigned OriginalSize) {
+  assert(Vector->getType()->getPrimitiveSizeInBits() == 256);
+
+  unsigned NumElements = OriginalSize / 64;
+  llvm::Type *ExtractedVecType =
+      llvm::FixedVectorType::get(CGF.Int64Ty, NumElements);
+  llvm::Value *ExtractedVec = UndefValue::get(ExtractedVecType);
+
+  for (unsigned I = 0; I < NumElements; I++) {
+    llvm::Value *Index = ConstantInt::get(CGF.IntTy, I);
+    llvm::Value *Extract = CGF.Builder.CreateExtractElement(Vector, Index);
+    ExtractedVec =
+        CGF.Builder.CreateInsertElement(ExtractedVec, Extract, Index);
+  }
+
+  return ExtractedVec;
+}
+
+static StringRef KVX_getModStr(CodeGenFunction &CGF, const CallExpr *E,
+                               const unsigned N, bool &IsConsString) {
+  IsConsString = true;
+  if (E->isNullPointerConstant(CGF.getContext(),
+                               Expr::NPC_NeverValueDependent) ||
+      E->getArg(N)->isNullPointerConstant(CGF.getContext(),
+                                          Expr::NPC_NeverValueDependent))
+    return "";
+
+  const clang::Expr *V = E->getArg(N)->IgnoreParenImpCasts();
+  if (!isa<clang::StringLiteral>(V)) {
+    IsConsString = false;
+    return "";
+  }
+
+  return cast<clang::StringLiteral>(V)->getString();
+}
+
+static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                       llvm::Type *DataType,
+                                       llvm::Type *DataTypeIntrinsic = nullptr,
+                                       bool HasLsomask = false) {
+  constexpr int NumPosArgs = 4;
+
+  if (E->getNumArgs() > NumPosArgs + 2) {
+    CGF.CGM.Error(E->getBeginLoc(), "No more than " +
+                                        std::to_string(NumPosArgs + 2) +
+                                        " arguments are allowed");
+    return nullptr;
+  }
+
+  bool Volatile = false;
+  Value *Ready = nullptr;
+  if (!KVX_getVolatileReadyArgs(CGF, E, NumPosArgs, Volatile, Ready))
+    return nullptr;
+
+  Value *Cond = CGF.EmitScalarExpr(E->getArg(2));
+  bool Unused;
+  StringRef ModsStr = KVX_getModStr(CGF, E, 3, Unused).split(".").second;
+  int LsucondMod = -1, LsomaskMod = -1;
+  if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
+                               ModsStr, HasLsomask, LsucondMod, LsomaskMod,
+                               "storec", KVX_LSOMASK_STORE))
+    return nullptr;
+
+  Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
+  Value *LsumaskModVal = ConstantInt::get(CGF.IntTy, LsomaskMod);
+
+  size_t StoreSize = DataType->getPrimitiveSizeInBits().getFixedValue();
+  if (DataTypeIntrinsic)
+    DataType = DataTypeIntrinsic;
+
+  Value *ToStore = CGF.EmitScalarExpr(E->getArg(0));
+  Value *StoreVal = KVX_truncateOrBitcast(CGF, ToStore, DataType);
+
+  if (LsomaskMod >= 0 && StoreSize < 256) {
+    unsigned ShiftValue = StoreSize >> 3;  // bits -> bytes
+    uint64_t Mask = (1 << ShiftValue) - 1; // 0xff for StoreSize == 64
+
+    if (LsomaskMod == 5) { // .mf
+      Mask = ~Mask;
+      Value *MaskVal = ConstantInt::get(CGF.Int64Ty, Mask);
+      Cond = CGF.Builder.CreateOr(Cond, MaskVal);
+    } else { // .mt
+      assert(LsomaskMod == 4 && "Wrong expected value??");
+      Value *MaskVal = ConstantInt::get(CGF.Int64Ty, Mask);
+      Cond = CGF.Builder.CreateAnd(Cond, MaskVal);
+    }
+
+    StoreVal = KVX_extendVectorTo256(CGF, StoreVal);
+    StoreSize = 256;
+  }
+
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
+
+  unsigned IID = Volatile ? Intrinsic::kvx_storec_vol : Intrinsic::kvx_storec;
+  Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
+
+  SmallVector<Value *, 8> Ops = {StoreVal, Ptr,           SizeInfo,
+                                 Cond,     LsucondModVal, LsumaskModVal};
+  if (Ready)
+    Ops.push_back(Ready);
+  Function *StoreCI = CGF.CGM.getIntrinsic(IID, {StoreVal->getType()});
+
+  return CGF.Builder.CreateCall(StoreCI, Ops);
+}
+
+static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                      llvm::Type *DataType,
+                                      llvm::Type *DataTypeIntrinsic = nullptr,
+                                      bool HasLsomask = false) {
+  constexpr int NumPosArgs = 4;
+
+  if (E->getNumArgs() > NumPosArgs + 1) {
+    CGF.CGM.Error(E->getBeginLoc(), "No more than " +
+                                        std::to_string(NumPosArgs + 1) +
+                                        " arguments are allowed");
+    return nullptr;
+  }
+
+  bool Volatile = false;
+  if (!KVX_getVolatileArg(CGF, E, NumPosArgs, Volatile))
+    return nullptr;
+
+  bool Unused;
+  StringRef ModsStr = KVX_getModStr(CGF, E, 3, Unused);
+  int NumDots = ModsStr.count('.');
+
+  // If it is a .variant.(lsucond|lsumask) format
+  int VariantMod = 0;
+  if (NumDots == 2) {
+    ModsStr = ModsStr.split(".").second; // eliminate first .
+    if ((VariantMod = KVX_VARIANT.getModifierValue(ModsStr.split(".").first)) <
+        0) {
+      CGF.CGM.Error(E->getArg(3)->IgnoreParenImpCasts()->getBeginLoc(),
+                    "invalid variant modifier, should be one of: " +
+                        KVX_VARIANT.getModifierStrList());
+      return nullptr;
+    }
+  }
+
+  ModsStr = ModsStr.split(".").second;
+  Value *Cond = CGF.EmitScalarExpr(E->getArg(2));
+  int LsucondMod = -1, LsomaskMod = -1;
+  if (!KVX_getLsucondOrLsomask(CGF, E->getArg(3)->IgnoreParenImpCasts(),
+                               ModsStr, HasLsomask, LsucondMod, LsomaskMod,
+                               "loadc", KVX_LSOMASK_LOAD))
+    return nullptr;
+
+  Value *LsucondModVal = ConstantInt::get(CGF.IntTy, LsucondMod);
+  Value *LsumaskModVal = ConstantInt::get(CGF.IntTy, LsomaskMod);
+
+  size_t LoadSize = DataType->getPrimitiveSizeInBits().getFixedValue();
+  llvm::Type *CastType = DataTypeIntrinsic ? DataTypeIntrinsic : DataType;
+
+  Value *Preload = CGF.EmitScalarExpr(E->getArg(0));
+  llvm::Type *OriginalType = Preload->getType();
+  Value *PreloadVal = KVX_truncateOrBitcast(CGF, Preload, CastType);
+
+  unsigned OriginalSize = LoadSize;
+  if (LsomaskMod >= 0 && OriginalSize < 256) {
+    PreloadVal = KVX_extendVectorTo256(CGF, PreloadVal);
+    LoadSize = 256;
+  }
+
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
+
+  unsigned IID = Volatile ? Intrinsic::kvx_loadc_u_vol : Intrinsic::kvx_loadc_u;
+  Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, LoadSize);
+
+  Value *VariantModVal = ConstantInt::get(CGF.Int32Ty, VariantMod);
+
+  SmallVector<Value *, 8> Ops = {PreloadVal,   Ptr,           SizeInfo,
+                                 Cond,         VariantModVal, LsucondModVal,
+                                 LsumaskModVal};
+  Function *LoadCI = CGF.CGM.getIntrinsic(IID, {PreloadVal->getType()});
+
+  Value *Call = CGF.Builder.CreateCall(LoadCI, Ops);
+
+  if (LsomaskMod >= 0 && OriginalSize < 256)
+    Call = KVX_extractVectorFrom256(CGF, Call, OriginalSize);
+
+  // Cast back to the original type
+  return KVX_truncateOrBitcast(CGF, Call, OriginalType);
+}
+
+static saturate_t KVX_getSaturateModifier(const StringRef &Str) {
+  return StringSwitch<saturate_t>(Str)
+      .Case("", SATURATE_DEFAULT)
+      .Case(".s", SATURATE_SIGNED)
+      .Case(".us", SATURATE_UNSIGNED)
+      .Default(SATURATE_INVALID);
+}
+
+// isAdd == false -> it is an subtraction
+static Value *KVX_emitIntAddSubBuiltin(CodeGenFunction &CGF, const CallExpr *E,
+                                       bool isAdd) {
+  constexpr int StringModOperand = 2;
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  saturate_t SaturateMod = KVX_getSaturateModifier(Mods);
+  Intrinsic::IndependentIntrinsics SatIntrinsic;
+
+  int LHSpos = isAdd ? 0 : 1;
+  int RHSpos = isAdd ? 1 : 0;
+
+  const Expr *LHS = E->getArg(LHSpos);
+  Value *LHSv = CGF.EmitScalarExpr(LHS);
+  llvm::Type *LHSt = LHSv->getType();
+
+  const Expr *RHS = E->getArg(RHSpos);
+  Value *RHSv = CGF.EmitScalarExpr(RHS);
+
+  switch (SaturateMod) {
+  case SATURATE_DEFAULT: {
+    // Emit a regular add or sub
+    return isAdd ? CGF.Builder.CreateAdd(LHSv, RHSv)
+                 : CGF.Builder.CreateSub(LHSv, RHSv);
+  }
+  case SATURATE_SIGNED:
+    SatIntrinsic = isAdd ? Intrinsic::sadd_sat : Intrinsic::ssub_sat;
+    break;
+  case SATURATE_UNSIGNED:
+    SatIntrinsic = isAdd ? Intrinsic::uadd_sat : Intrinsic::usub_sat;
+    break;
+  case SATURATE_INVALID:
+    CGF.CGM.Error(
+        E->getArg(StringModOperand)->getBeginLoc(),
+        "invalid saturate_t modifier, expected \"\", \".s\" or \".us\"");
+    return nullptr;
+  }
+
+  /* Emit saturated intrinsic, specialized with the type of LHS and RHS */
+#ifndef NDEBUG
+  llvm::Type *RHSt = RHSv->getType();
+  assert(LHSt == RHSt);
+#endif
+  Function *SatIntrinsicF = CGF.CGM.getIntrinsic(SatIntrinsic, {LHSt});
+  return CGF.Builder.CreateCall(SatIntrinsicF, {LHSv, RHSv});
+}
+
+static inline Value *KVX_emitIntAddBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  return KVX_emitIntAddSubBuiltin(CGF, E, true);
+}
+
+static inline Value *KVX_emitIntSubBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  return KVX_emitIntAddSubBuiltin(CGF, E, false);
+}
+
+static int KVX_getSpeculateModValue(const StringRef &Str,
+                                    bool EnforceUPrefix = false) {
+  if (!EnforceUPrefix)
+    return StringSwitch<int>(Str).Case("", 0).Case("s", 1).Default(-1);
+  return StringSwitch<int>(Str).Case("u", 0).Case("us", 1).Default(-1);
+}
+
+static inline Value *KVX_emitIntNegBuiltin(CodeGenFunction &CGF,
+                                           const CallExpr *E) {
+  constexpr int StringModOperand = 1;
+  const auto *SL = dyn_cast<clang::StringLiteral>(
+      E->getArg(StringModOperand)->IgnoreParenImpCasts());
+  auto Mods = SL->getString();
+
+  int SaturateMod = KVX_getSpeculateModValue(Mods.split(".").second);
+
+  const Expr *EV = E->getArg(0);
+  Value *V = CGF.EmitScalarExpr(EV);
+
+  switch (SaturateMod) {
+  case 0:
+    return CGF.Builder.CreateNeg(V, "neg");
+
+  case 1: {
+    auto *VT = V->getType();
+
+    return CGF.Builder.CreateBinaryIntrinsic(
+        Intrinsic::ssub_sat, Constant::getNullValue(VT), V, nullptr, "neg.sat");
+  }
+  default:
+    CGF.CGM.Error(E->getArg(StringModOperand)->getBeginLoc(),
+                  "invalid saturate_t modifier, expected \"\", \".s\"");
+  }
+  return nullptr;
+}
+
+Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
+                                           const CallExpr *E) {
+  static const std::string SystemRegNames[] = {
+      // System Function Registers
+      "$pc",      "$ps",      "$pcr",     "$ra",      "$cs",      "$csit",
+      "$aespc",   "$ls",      "$le",      "$lc",      "$ipe",     "$men",
+      "$pmc",     "$pm0",     "$pm1",     "$pm2",     "$pm3",     "$pmsa",
+      "$tcr",     "$t0v",     "$t1v",     "$t0r",     "$t1r",     "$wdv",
+      "$wdr",     "$ile",     "$ill",     "$ilr",     "$mmc",     "$tel",
+      "$teh",     "$ixc",     "$syo",     "$hto",     "$ito",     "$do",
+      "$mo",      "$pso",     "$s38",     "$s39",     "$s40",     "$dba0",
+      "$dba1",    "$dwa0",    "$dwa1",    "$mes",     "$ws",      "$s47",
+      "$s48",     "$s49",     "$s50",     "$s51",     "$s52",     "$s53",
+      "$s54",     "$s55",     "$s56",     "$s57",     "$s58",     "$s59",
+      "$s60",     "$s61",     "$s62",     "$s63",     "$spc_pl0", "$spc_pl1",
+      "$spc_pl2", "$spc_pl3", "$sps_pl0", "$sps_pl1", "$sps_pl2", "$sps_pl3",
+      "$ea_pl0",  "$ea_pl1",  "$ea_pl2",  "$ea_pl3",  "$ev_pl0",  "$ev_pl1",
+      "$ev_pl2",  "$ev_pl3",  "$sr_pl0",  "$sr_pl1",  "$sr_pl2",  "$sr_pl3",
+      "$es_pl0",  "$es_pl1",  "$es_pl2",  "$es_pl3",  "$s88",     "$s89",
+      "$s90",     "$s91",     "$s92",     "$s93",     "$s94",     "$s95",
+      "$syow",    "$htow",    "$itow",    "$dow",     "$mow",     "$psow",
+      "$res102",  "$res103",  "$s104",    "$s105",    "$s106",    "$s107",
+      "$res108",  "$res109",  "$res110",  "$res111",  "$res112",  "$res113",
+      "$res114",  "$res115",  "$res116",  "$res117",  "$res118",  "$res119",
+      "$res120",  "$res121",  "$res122",  "$res123",  "$res124",  "$res125",
+      "$res126",  "$res127",  "$spc",     "$res129",  "$res130",  "$res131",
+      "$sps",     "$res133",  "$res134",  "$res135",  "$ea",      "$res137",
+      "$res138",  "$res139",  "$ev",      "$res141",  "$res142",  "$res143",
+      "$sr",      "$res145",  "$res146",  "$res147",  "$es",      "$res149",
+      "$res150",  "$res151",  "$s152",    "$res153",  "$res154",  "$res155",
+      "$s156",    "$res157",  "$res158",  "$res159",  "$res160",  "$res161",
+      "$res162",  "$res163",  "$res164",  "$res165",  "$res166",  "$res167",
+      "$s168"};
+
+  const auto &Target = getTarget();
+
+  const static std::set<unsigned short> SetFxNotCV1Regs = {
+      31, 38, 39, 47, 48,  49,  50,  51,  52,  53,  54,  55,
+      56, 57, 58, 59, 60,  61,  62,  63,  88,  89,  90,  91,
+      92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
+  };
+
+  const static std::set<unsigned short> GetSetFxCV1OnlyRegs = {40};
+
+  switch (BuiltinID) {
+  case KVX::BI__builtin_kvx_get:
+  case KVX::BI__builtin_kvx_set: {
+    const static std::set<unsigned short> GetRegs = {
+        0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11, 12,  13,
+        14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25, 26,  27,
+        28,  29,  30,  31,  32,  33,  34,  35,  36,  37,  38,  39, 40,  41,
+        42,  43,  44,  45,  46,  47,  48,  49,  50,  51,  52,  53, 54,  55,
+        56,  57,  58,  59,  60,  61,  62,  63,  64,  65,  66,  67, 68,  69,
+        70,  71,  72,  73,  74,  75,  76,  77,  78,  79,  80,  81, 82,  83,
+        84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95, 104, 105,
+        106, 107, 128, 132, 136, 140, 144, 148, 152, 156, 168,
+    };
+
+    const static std::set<unsigned short> GetNotCV1Regs = {
+        31, 38, 39, 47, 48, 49, 50,  51,  52,  53,  54,  55,  56,
+        57, 58, 59, 60, 61, 62, 63,  68,  69,  70,  71,  88,  89,
+        90, 91, 92, 93, 94, 95, 104, 105, 106, 107, 152, 156, 168,
+    };
+
+    const static std::set<unsigned short> SetRegs = {
+        1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,
+        15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,
+        29,  30,  31,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,  48,
+        49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,
+        63,  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,
+        77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
+        91,  92,  93,  94,  95,  96,  97,  98,  99,  100, 101, 104, 105, 106,
+        107, 128, 132, 136, 140, 144, 148, 152, 156, 168,
+    };
+
+    auto *SystemRegMacro = E->getArg(0)->IgnoreParenImpCasts();
+    uint64_t SystemRegNumber =
+        cast<clang::IntegerLiteral>(SystemRegMacro)->getValue().getZExtValue();
+
+    const auto Access = (BuiltinID == KVX::BI__builtin_kvx_get)
+                            ? SpecialRegisterAccessKind::VolatileRead
+                            : SpecialRegisterAccessKind::Write;
+
+    bool BadRegister = false;
+    std::string BadCpu = "";
+    std::string Action = "";
+    if (Access == SpecialRegisterAccessKind::Write) {
+      Action = "set";
+      if (SetRegs.find(SystemRegNumber) == SetRegs.end())
+        BadRegister = true;
+      else if (Target.getCPUstr() == "kv3-1") {
+        if (SetFxNotCV1Regs.count(SystemRegNumber))
+          BadCpu = "kv3-1";
+      } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+        BadCpu = "kv3-2";
+    } else {
+      Action = "get";
+      if (GetRegs.find(SystemRegNumber) == GetRegs.end())
+        BadRegister = true;
+      else if (Target.getCPUstr() == "kv3-1") {
+        if (GetNotCV1Regs.count(SystemRegNumber))
+          BadCpu = "kv3-1";
+      } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+        BadCpu = "kv3-2";
+    }
+
+    if (BadRegister) {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin.";
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    if (BadCpu != "") {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin for target cpu " << BadCpu << '.';
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    const auto &SystemReg = SystemRegNames[SystemRegNumber];
+    return EmitSpecialRegisterBuiltin(*this, E, Int64Ty, Int64Ty, Access,
+                                      SystemReg);
+  }
+
+  case KVX::BI__builtin_kvx_wfxl:
+  case KVX::BI__builtin_kvx_wfxm: {
+    bool WFXM = (BuiltinID == KVX::BI__builtin_kvx_wfxm);
+
+    auto *SystemRegMacro = E->getArg(0)->IgnoreParenImpCasts();
+    uint64_t SystemRegNumber =
+        cast<clang::IntegerLiteral>(SystemRegMacro)->getValue().getZExtValue();
+
+    const static std::set<unsigned short> WfxRegs = {
+        1,  2,  4,  5,  10, 11,  12,  18,  25,  26,  27,  28,  29,  30,  31,
+        40, 45, 46, 47, 48, 49,  50,  61,  68,  69,  70,  71,  84,  85,  86,
+        87, 96, 97, 98, 99, 100, 101, 104, 105, 106, 107, 132, 148, 168,
+    };
+
+    bool BadRegister = false;
+    std::string BadCpu = "";
+    if (WfxRegs.find(SystemRegNumber) == WfxRegs.end())
+      BadRegister = true;
+    else if (Target.getCPUstr() == "kv3-1") {
+      if (SetFxNotCV1Regs.count(SystemRegNumber))
+        BadCpu = "kv3-1";
+    } else if (GetSetFxCV1OnlyRegs.count(SystemRegNumber))
+      BadCpu = "kv3-2";
+
+    const std::string Action = (WFXM) ? "wfxm" : "wfxl";
+    if (BadRegister) {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin.";
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    if (BadCpu != "") {
+      SmallString<64> Str;
+      raw_svector_ostream OS(Str);
+      OS << "Register #" << SystemRegNumber << " can't be used with " << Action
+         << " builtin for target cpu " << BadCpu << '.';
+      CGM.Error(E->getArg(0)->getBeginLoc(), OS.str());
+      return nullptr;
+    }
+
+    Function *F = CGM.getIntrinsic(llvm::Intrinsic::kvx_wfx);
+    Value *ArgValue = EmitScalarExpr(E->getArg(1));
+    Value *InstrType = ConstantInt::get(IntTy, WFXM);
+    Value *RegNum = ConstantInt::get(IntTy, SystemRegNumber);
+    return Builder.CreateCall(F, {RegNum, ArgValue, InstrType});
+  }
+
+  case KVX::BI__builtin_kvx_acswapd:
+  case KVX::BI__builtin_kvx_acswapw: {
+    if (!(E->getNumArgs() == 3 ||
+          (E->getNumArgs() == 4 && (Target.getCPUstr() != "kv3-1"))))
+      CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+
+    Intrinsic::KVXIntrinsics Intr = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+                                        ? Intrinsic::kvx_acswapw
+                                        : Intrinsic::kvx_acswapd;
+    const auto Type = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+                          ? getContext().IntTy
+                          : getContext().LongTy;
+    if (E->getNumArgs() == 4)
+      return KVX_emit(4, *this, E, Intr, {KVX_BOOLCAS, KVX_COHERENCY}, "");
+
+    SourceLocation Loc = E->getExprLoc();
+    Value *Addr =
+        Builder.CreatePointerCast(EmitScalarExpr(E->getArg(0)), Int8PtrTy);
+    Value *Update = EmitScalarConversion(EmitScalarExpr(E->getArg(1)),
+                                         E->getArg(1)->getType(), Type, Loc);
+    Value *Expect = EmitScalarConversion(EmitScalarExpr(E->getArg(2)),
+                                         E->getArg(2)->getType(), Type, Loc);
+
+    Function *Callee = CGM.getIntrinsic(Intr);
+    auto *const Zero = ConstantInt::get(IntTy, 0);
+    auto *const One = ConstantInt::get(IntTy, 1);
+    return Builder.CreateCall(Callee, {Addr, Update, Expect, One, Zero});
+  }
+  case KVX::BI__builtin_kvx_fence: {
+    if (E->getNumArgs() == 1)
+      return KVX_emit(1, *this, E, llvm::Intrinsic::kvx_fence, {KVX_ACCESSES},
+                      "kv3-2");
+
+    if (E->getNumArgs())
+      CGM.Error(E->getArg(0)->getBeginLoc(),
+                "Incorrect number of arguments to builtin.");
+
+    Function *Callee = CGM.getIntrinsic(llvm::Intrinsic::kvx_fence);
+    auto *const Zero = ConstantInt::get(IntTy, 0);
+    return Builder.CreateCall(Callee, {Zero});
+  }
+
+  case KVX::BI__builtin_kvx_lbz:
+    return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int8Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lbs:
+    return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int8Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lhz:
+    return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int16Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lhs:
+    return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int16Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lwz:
+    return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int32Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lws:
+    return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int32Ty), Int64Ty);
+  case KVX::BI__builtin_kvx_lwf:
+    return KVX_emitLoadBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_ld:
+    return KVX_emitLoadBuiltin(*this, E, Int64Ty);
+  case KVX::BI__builtin_kvx_ldf:
+    return KVX_emitLoadBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_lbo:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 8));
+  case KVX::BI__builtin_kvx_lhq:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 4));
+  case KVX::BI__builtin_kvx_lwp:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 2));
+  case KVX::BI__builtin_kvx_lfwp:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 2));
+  case KVX::BI__builtin_kvx_lbx:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 16));
+  case KVX::BI__builtin_kvx_lho:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 8));
+  case KVX::BI__builtin_kvx_lwq:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 4));
+  case KVX::BI__builtin_kvx_ldp:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_lfwq:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 4));
+  case KVX::BI__builtin_kvx_lfdp:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 2));
+  case KVX::BI__builtin_kvx_lbv:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 32));
+  case KVX::BI__builtin_kvx_lhx:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 16));
+  case KVX::BI__builtin_kvx_lwo:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 8));
+  case KVX::BI__builtin_kvx_ldq:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int64Ty, 4));
+  case KVX::BI__builtin_kvx_lfwo:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 8));
+  case KVX::BI__builtin_kvx_lfdq:
+    return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 4));
+
+  case KVX::BI__builtin_kvx_storeb:
+    return KVX_emitStoreBuiltin(*this, E, Int8Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storeh:
+    return KVX_emitStoreBuiltin(*this, E, Int16Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storew:
+    return KVX_emitStoreBuiltin(*this, E, Int32Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_stored:
+    return KVX_emitStoreBuiltin(*this, E, Int64Ty);
+  case KVX::BI__builtin_kvx_storeq:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::IntegerType::get(getLLVMContext(), 128),
+                                llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_storehf:
+    return KVX_emitStoreBuiltin(*this, E, HalfTy);
+  case KVX::BI__builtin_kvx_storewf:
+    return KVX_emitStoreBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_storedf:
+    return KVX_emitStoreBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_store64:
+    return KVX_emitStoreBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 1), Int64Ty);
+  case KVX::BI__builtin_kvx_store128:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_store256:
+    return KVX_emitStoreBuiltin(*this, E,
+                                llvm::FixedVectorType::get(Int64Ty, 4));
+
+  case KVX::BI__builtin_kvx_storecb:
+    return KVX_emitStoreCondBuiltin(*this, E, Int8Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storech:
+    return KVX_emitStoreCondBuiltin(*this, E, Int16Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storecw:
+    return KVX_emitStoreCondBuiltin(*this, E, Int32Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_storecd:
+    return KVX_emitStoreCondBuiltin(*this, E, Int64Ty);
+  case KVX::BI__builtin_kvx_storecq:
+    return KVX_emitStoreCondBuiltin(*this, E,
+                                    llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_storechf:
+    return KVX_emitStoreCondBuiltin(*this, E, HalfTy);
+  case KVX::BI__builtin_kvx_storecwf:
+    return KVX_emitStoreCondBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_storecdf:
+    return KVX_emitStoreCondBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_storec64:
+    return KVX_emitStoreCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int32Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_storec128:
+    return KVX_emitStoreCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_storec256:
+    return KVX_emitStoreCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
+
+  case KVX::BI__builtin_kvx_loadcbz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int8Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadchz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int16Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcwz:
+    return KVX_emitLoadCondBuiltin(*this, E, Int32Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcd:
+    return KVX_emitLoadCondBuiltin(*this, E, Int64Ty, Int64Ty);
+  case KVX::BI__builtin_kvx_loadcq:
+    return KVX_emitLoadCondBuiltin(*this, E,
+                                   llvm::FixedVectorType::get(Int64Ty, 2));
+  case KVX::BI__builtin_kvx_loadchf:
+    return KVX_emitLoadCondBuiltin(*this, E, HalfTy);
+  case KVX::BI__builtin_kvx_loadcwf:
+    return KVX_emitLoadCondBuiltin(*this, E, FloatTy);
+  case KVX::BI__builtin_kvx_loadcdf:
+    return KVX_emitLoadCondBuiltin(*this, E, DoubleTy);
+  case KVX::BI__builtin_kvx_loadc64:
+    return KVX_emitLoadCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int32Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_loadc128:
+    return KVX_emitLoadCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
+  case KVX::BI__builtin_kvx_loadc256:
+    return KVX_emitLoadCondBuiltin(
+        *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
+
+  case KVX::BI__builtin_kvx_ready: {
+    int N = E->getNumArgs();
+    unsigned int IID = Intrinsic::kvx_ready;
+
+    if (N == 0 || N > 4) {
+      CGM.Error(E->getBeginLoc(),
+                "__builtin_kvx_ready must have one to four arguments");
+      return nullptr;
+    }
+
+    SmallVector<Value *, 4> Args;
+    for (int I = 0; I < N; I++) {
+      if (E->getArg(I)->isIntegerConstantExpr(CGM.getContext())) {
+        CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Constant values should not be used in __builtin_kvx_ready");
+        return nullptr;
+      }
+      if (E->getArg(I)->getType()->isAggregateType()) {
+        CGM.Error(E->getArg(I)->getBeginLoc(),
+                  "Aggregate types not supported in __builtin_kvx_ready");
+        return nullptr;
+      }
+      Value *Arg = EmitScalarExpr(E->getArg(I));
+      llvm::Type *BitcastTy;
+      llvm::Type *ArgType = Arg->getType();
+      TypeSize Size = ArgType->getPrimitiveSizeInBits();
+      switch (Size) {
+      case 16:
+        BitcastTy = HalfTy;
+        break;
+      case 32:
+        BitcastTy = Int32Ty;
+        break;
+      case 64:
+        BitcastTy = Int64Ty;
+        break;
+      case 128:
+        BitcastTy = llvm::FixedVectorType::get(Int64Ty, 2);
+        break;
+      case 256:
+        BitcastTy = llvm::FixedVectorType::get(Int64Ty, 4);
+        break;
+      default:
+        CGM.Error(
+            E->getArg(I)->getBeginLoc(),
+            "Scalar size > 256 bits not supported in __builtin_kvx_ready");
+        return nullptr;
+      }
+      Arg = Builder.CreateBitCast(Arg, BitcastTy);
+      Args.push_back(Arg);
+    }
+
+    return Builder.CreateCall(CGM.getIntrinsic(IID), Args);
+  }
+
+  case KVX::BI__builtin_kvx_addbo:
+  case KVX::BI__builtin_kvx_addbx:
+  case KVX::BI__builtin_kvx_addbv:
+  case KVX::BI__builtin_kvx_addhq:
+  case KVX::BI__builtin_kvx_addho:
+  case KVX::BI__builtin_kvx_addhx:
+  case KVX::BI__builtin_kvx_addw:
+  case KVX::BI__builtin_kvx_addwp:
+  case KVX::BI__builtin_kvx_addwq:
+  case KVX::BI__builtin_kvx_addwo:
+  case KVX::BI__builtin_kvx_addd:
+  case KVX::BI__builtin_kvx_adddp:
+  case KVX::BI__builtin_kvx_adddq:
+    return KVX_emitIntAddBuiltin(*this, E);
+
+  case KVX::BI__builtin_kvx_sbfbo:
+  case KVX::BI__builtin_kvx_sbfbx:
+  case KVX::BI__builtin_kvx_sbfbv:
+  case KVX::BI__builtin_kvx_sbfhq:
+  case KVX::BI__builtin_kvx_sbfho:
+  case KVX::BI__builtin_kvx_sbfhx:
+  case KVX::BI__builtin_kvx_sbfw:
+  case KVX::BI__builtin_kvx_sbfwp:
+  case KVX::BI__builtin_kvx_sbfwq:
+  case KVX::BI__builtin_kvx_sbfwo:
+  case KVX::BI__builtin_kvx_sbfd:
+  case KVX::BI__builtin_kvx_sbfdp:
+  case KVX::BI__builtin_kvx_sbfdq:
+    return KVX_emitIntSubBuiltin(*this, E);
+
+  case KVX::BI__builtin_kvx_negbo:
+  case KVX::BI__builtin_kvx_negbx:
+  case KVX::BI__builtin_kvx_negbv:
+  case KVX::BI__builtin_kvx_neghq:
+  case KVX::BI__builtin_kvx_negho:
+  case KVX::BI__builtin_kvx_neghx:
+  case KVX::BI__builtin_kvx_negw:
+  case KVX::BI__builtin_kvx_negwp:
+  case KVX::BI__builtin_kvx_negwq:
+  case KVX::BI__builtin_kvx_negwo:
+  case KVX::BI__builtin_kvx_negd:
+  case KVX::BI__builtin_kvx_negdp:
+  case KVX::BI__builtin_kvx_negdq:
+    return KVX_emitIntNegBuiltin(*this, E);
+
+  case KVX::BI__builtin_kvx_shiftbo:
+  case KVX::BI__builtin_kvx_shiftbt:
+  case KVX::BI__builtin_kvx_shiftbv:
+  case KVX::BI__builtin_kvx_shiftbx:
+  case KVX::BI__builtin_kvx_shiftdo:
+  case KVX::BI__builtin_kvx_shiftdp:
+  case KVX::BI__builtin_kvx_shiftdq:
+  case KVX::BI__builtin_kvx_shiftfdo:
+  case KVX::BI__builtin_kvx_shiftfdp:
+  case KVX::BI__builtin_kvx_shiftfdq:
+  case KVX::BI__builtin_kvx_shiftfho:
+  case KVX::BI__builtin_kvx_shiftfhq:
+  case KVX::BI__builtin_kvx_shiftfhv:
+  case KVX::BI__builtin_kvx_shiftfhx:
+  case KVX::BI__builtin_kvx_shiftfwo:
+  case KVX::BI__builtin_kvx_shiftfwp:
+  case KVX::BI__builtin_kvx_shiftfwq:
+  case KVX::BI__builtin_kvx_shiftfwx:
+  case KVX::BI__builtin_kvx_shiftho:
+  case KVX::BI__builtin_kvx_shifthq:
+  case KVX::BI__builtin_kvx_shifthv:
+  case KVX::BI__builtin_kvx_shifthx:
+  case KVX::BI__builtin_kvx_shiftwo:
+  case KVX::BI__builtin_kvx_shiftwp:
+  case KVX::BI__builtin_kvx_shiftwq:
+  case KVX::BI__builtin_kvx_shiftwx:
+    return KVX_emitShiftBuiltin(*this, E, BuiltinID);
+
+    /// TCA - GPR to TCA copy
+  case KVX::BI__builtin_kvx_xswapo256:
+    return KVX_emit_xswapo256(*this, E);
+
+  case KVX::BI__builtin_kvx_ffdmdawq: {
+    KvxModifiers KvxMods = {KVX_ROUNDING, KVX_SILENT};
+    if (Target.getCPUstr() != "kv3-1")
+      return KVX_emit(4, *this, E, Intrinsic::kvx_ffdmda, KvxMods, "", 1,
+                      KVX_OVERLOAD_RES);
+
+    if (E->getNumArgs() != 4) {
+      CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
+      return nullptr;
+    }
+
+    // Parse KVX modifiers if any.
+    SmallVector<Value *, 4> Mods;
+    KvxModifiers Modifiers = {KVX_ROUNDING, KVX_SILENT};
+    if (!ParseModifiers(Mods, Modifiers, E, CGM, IntTy))
+      return nullptr;
+
+    /** This code computes the following:
+     * ASubvec[0] = vector(a[0], a[1], a[4], a[5]);
+     * ASubvec[1] = vector(a[2], a[3], a[6], a[7]);
+     * BSubvec[0] = vector(b[0], b[1], b[4], b[5]);
+     * BSubvec[1] = vector(b[2], b[3], b[6], b[7]);
+     * CSubvec[0] = vector(c[0], c[1]);
+     * CSubvec[1] = vector(c[2], c[3]);
+     * V0 = ffdmdawp(ASubvec[0], BSubvec[0], CSubvec[0]);
+     * V1 = ffdmdawp(ASubvec[1], BSubvec[1], CSubvec[1]);
+     * concatenate(V0, V1) // with a shufflevector
+     */
+    Value *A = EmitScalarExpr(E->getArg(0));
+    Value *B = EmitScalarExpr(E->getArg(1));
+    Value *C = EmitScalarExpr(E->getArg(2));
+
+    constexpr int VectorLength = 8;
+    constexpr int CVectorLength = VectorLength >> 1;
+    Value *AElt[VectorLength];
+    Value *BElt[VectorLength];
+    Value *CElt[CVectorLength];
+    for (int i = 0; i < VectorLength; i++) {
+      AElt[i] = Builder.CreateExtractElement(A, i);
+      BElt[i] = Builder.CreateExtractElement(B, i);
+      if (i < CVectorLength)
+        CElt[i] = Builder.CreateExtractElement(C, i);
+    }
+
+    llvm::Type *V4F32 = llvm::FixedVectorType::get(FloatTy, 4);
+    llvm::Type *V2F32 = llvm::FixedVectorType::get(FloatTy, 2);
+    Value *ASubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *BSubvec[2] = {UndefValue::get(V4F32), UndefValue::get(V4F32)};
+    Value *CSubvec[2] = {UndefValue::get(V2F32), UndefValue::get(V2F32)};
+
+    constexpr int SubvecLength = VectorLength >> 1;
+    constexpr int CSubvecLength = CVectorLength >> 1;
+    int SubvecIndices[2][SubvecLength] = {{0, 1, 4, 5}, {2, 3, 6, 7}};
+    for (int sv = 0; sv < 2; sv++) {
+      int InsertCount = 0;
+      for (int i : SubvecIndices[sv]) {
+        ASubvec[sv] =
+            Builder.CreateInsertElement(ASubvec[sv], AElt[i], InsertCount);
+        BSubvec[sv] =
+            Builder.CreateInsertElement(BSubvec[sv], BElt[i], InsertCount);
+        if (InsertCount < CSubvecLength)
+          CSubvec[sv] = Builder.CreateInsertElement(
+              CSubvec[sv], CElt[CSubvecLength * sv + InsertCount], InsertCount);
+
+        InsertCount++;
+      }
+    }
+
+    Value *Result[2];
+    Function *Callee = CGM.getIntrinsic(Intrinsic::kvx_ffdmda, V2F32);
+    for (int sv = 0; sv < 2; sv++)
+      Result[sv] = Builder.CreateCall(
+          Callee, {ASubvec[sv], BSubvec[sv], CSubvec[sv], Mods[0], Mods[1]});
+
+    return Builder.CreateVectorConcat(Result[0], Result[1]);
+  }
+
+  case KVX::BI__builtin_kvx_xundef1024:
+  case KVX::BI__builtin_kvx_xundef2048:
+  case KVX::BI__builtin_kvx_xundef256:
+  case KVX::BI__builtin_kvx_xundef4096:
+  case KVX::BI__builtin_kvx_xundef512:
+    return UndefValue::get(ConvertType(E->getType()));
+
+  case KVX::BI__builtin_kvx_xzero1024:
+  case KVX::BI__builtin_kvx_xzero2048:
+  case KVX::BI__builtin_kvx_xzero256:
+  case KVX::BI__builtin_kvx_xzero4096:
+  case KVX::BI__builtin_kvx_xzero512:
+    return Constant::getNullValue(ConvertType(E->getType()));
+  case KVX::BI__builtin_kvx_cat128:
+  case KVX::BI__builtin_kvx_cat256:
+  case KVX::BI__builtin_kvx_cat512:
+    return Builder.CreateVectorConcat(EmitScalarExpr(E->getArg(0)),
+                                      EmitScalarExpr(E->getArg(1)), "kvx_cat");
+  case KVX::BI__builtin_kvx_low64:
+  case KVX::BI__builtin_kvx_low128:
+  case KVX::BI__builtin_kvx_low256:
+    return Builder
+        .SplitVector(EmitScalarExpr(E->getArg(0)), true, false, "kvx_low")
+        .first;
+
+  case KVX::BI__builtin_kvx_high64:
+  case KVX::BI__builtin_kvx_high128:
+  case KVX::BI__builtin_kvx_high256:
+    return Builder
+        .SplitVector(EmitScalarExpr(E->getArg(0)), false, true, "kvx_high")
+        .second;
+
+#define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
+  case KVX::BI__builtin_kvx_##ID: {                                            \
+    const auto IDVal = Intrinsic::kvx_##ID;                                    \
+    const StringRef CPUSstr(CPUS);                                             \
+    KvxModifiers KvxMods = {__VA_ARGS__};                                      \
+    return KVX_emit(NARGS, *this, E, IDVal, KvxMods, CPUSstr);                 \
+  }
+#define KVX_MANY_BUILTIN(IDin, TYPES, MODE, NARGS, CPUS, IDout, NumParts, O,   \
+                         ...)                                                  \
+  case KVX::BI__builtin_kvx_##IDin: {                                          \
+    const auto IDVal = Intrinsic::IDout;                                       \
+    const StringRef CPUSstr(CPUS);                                             \
+    KvxModifiers KvxMods = {__VA_ARGS__};                                      \
+    return KVX_emit(NARGS, *this, E, IDVal, KvxMods, CPUSstr, NumParts, O);    \
+  }
+
+#include "clang/Basic/BuiltinsKVX.def"
+
+  default:
+    CGM.Error(E->getBeginLoc(), "Unhandled builtin.");
+    return nullptr;
+  }
 }

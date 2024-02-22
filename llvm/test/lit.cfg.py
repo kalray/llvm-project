@@ -480,7 +480,7 @@ if config.libcxx_used:
 if config.target_triple:
     config.available_features.add("default_triple")
     # Direct object generation
-    if not config.target_triple.startswith(("nvptx", "xcore")):
+    if not config.target_triple.startswith(("nvptx", "xcore", "kvx")):
         config.available_features.add("object-emission")
 
 if config.have_llvm_driver:
@@ -605,6 +605,24 @@ if config.have_opt_viewer_modules:
 
 if config.expensive_checks:
     config.available_features.add("expensive_checks")
+
+def exclude_unsupported_files_for_kvx(dirname):
+   for filename in os.listdir(dirname):
+       source_path = os.path.join( dirname, filename)
+       if os.path.isdir(source_path):
+           continue
+       f = open(source_path, 'r')
+       try:
+          data = f.read()
+          # object files are not supported on kvx, so exclude the tests.
+          if (any(option in data for option in ('llvm-mc', '-emit-obj', '-filetype=obj'))):
+            config.excludes += [ filename ]
+       finally:
+          f.close()
+
+if 'kvx' in config.target_triple:
+    for directory in ('/CodeGen/X86', '/DebugInfo', '/DebugInfo/X86', '/DebugInfo/Generic', '/LTO/X86', '/Linker'):
+        exclude_unsupported_files_for_kvx(config.test_source_root + directory)
 
 if "MemoryWithOrigins" in config.llvm_use_sanitizer:
     config.available_features.add("use_msan_with_origins")

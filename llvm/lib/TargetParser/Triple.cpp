@@ -84,6 +84,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case wasm64:         return "wasm64";
   case x86:            return "i386";
   case x86_64:         return "x86_64";
+  case kvx:            return "kvx";
   case xcore:          return "xcore";
   case xtensa:         return "xtensa";
   }
@@ -230,6 +231,8 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
   case loongarch32:
   case loongarch64: return "loongarch";
 
+  case kvx:         return "kvx";
+
   case dxil:        return "dx";
 
   case xtensa:      return "xtensa";
@@ -253,6 +256,7 @@ StringRef Triple::getVendorTypeName(VendorType Kind) {
   case PC: return "pc";
   case SCEI: return "scei";
   case SUSE: return "suse";
+  case Kalray: return "kalray";
   }
 
   llvm_unreachable("Invalid VendorType!");
@@ -298,6 +302,8 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case WatchOS: return "watchos";
   case Win32: return "windows";
   case ZOS: return "zos";
+  case ClusterOS: return "cos";
+  case KVXOSPorting: return "osp";
   case ShaderModel: return "shadermodel";
   case LiteOS: return "liteos";
   case XROS: return "xros";
@@ -454,6 +460,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("renderscript64", renderscript64)
     .Case("ve", ve)
     .Case("csky", csky)
+    .Case("kvx", kvx)
     .Case("loongarch32", loongarch32)
     .Case("loongarch64", loongarch64)
     .Case("dxil", dxil)
@@ -600,6 +607,7 @@ static Triple::ArchType parseArch(StringRef ArchName) {
           .Case("wasm32", Triple::wasm32)
           .Case("wasm64", Triple::wasm64)
           .Case("csky", Triple::csky)
+          .Case("kvx", Triple::kvx)
           .Case("loongarch32", Triple::loongarch32)
           .Case("loongarch64", Triple::loongarch64)
           .Cases("dxil", "dxilv1.0", "dxilv1.1", "dxilv1.2", "dxilv1.3",
@@ -637,6 +645,7 @@ static Triple::VendorType parseVendor(StringRef VendorName) {
     .Case("mesa", Triple::Mesa)
     .Case("suse", Triple::SUSE)
     .Case("oe", Triple::OpenEmbedded)
+    .Case("kalray", Triple::Kalray)
     .Default(Triple::UnknownVendor);
 }
 
@@ -680,6 +689,8 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("hurd", Triple::Hurd)
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("emscripten", Triple::Emscripten)
+    .StartsWith("cos", Triple::ClusterOS)
+    .StartsWith("osp", Triple::KVXOSPorting)
     .StartsWith("shadermodel", Triple::ShaderModel)
     .StartsWith("liteos", Triple::LiteOS)
     .StartsWith("serenity", Triple::Serenity)
@@ -936,6 +947,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::tce:
   case Triple::tcele:
   case Triple::thumbeb:
+  case Triple::kvx:
   case Triple::ve:
   case Triple::xcore:
   case Triple::xtensa:
@@ -1656,6 +1668,7 @@ unsigned Triple::getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::ve:
   case llvm::Triple::wasm64:
   case llvm::Triple::x86_64:
+  case llvm::Triple::kvx:
     return 64;
   }
   llvm_unreachable("Invalid architecture value");
@@ -1684,6 +1697,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::msp430:
   case Triple::systemz:
   case Triple::ve:
+  case Triple::kvx:
     T.setArch(UnknownArch);
     break;
 
@@ -1800,6 +1814,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::ve:
   case Triple::wasm64:
   case Triple::x86_64:
+  case Triple::kvx:
     // Already 64-bit.
     break;
 
@@ -1874,6 +1889,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::x86:
   case Triple::x86_64:
   case Triple::xcore:
+  case Triple::kvx:
   case Triple::ve:
   case Triple::csky:
   case Triple::xtensa:
@@ -1984,6 +2000,7 @@ bool Triple::isLittleEndian() const {
   case Triple::ve:
   case Triple::wasm32:
   case Triple::wasm64:
+  case Triple::kvx:
   case Triple::x86:
   case Triple::x86_64:
   case Triple::xcore:

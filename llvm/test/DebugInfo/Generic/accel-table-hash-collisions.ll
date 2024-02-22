@@ -2,6 +2,9 @@
 ; RUN: %llc_dwarf -accel-tables=Apple -filetype=obj -o - < %s \
 ; RUN:   | llvm-dwarfdump -apple-names - | FileCheck %s
 
+; Mark this test as unsupported for kvx target because of large RAM consumption on ARM systems. See T16455.
+; UNSUPPORTED: target=kvx{{.*}}
+
 ; Generated from the following C code using
 ; clang -S -emit-llvm hash-collision.c
 ;

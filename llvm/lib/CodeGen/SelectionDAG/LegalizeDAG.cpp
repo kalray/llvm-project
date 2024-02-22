@@ -2875,7 +2875,12 @@ void SelectionDAGLegalize::PromoteLegalINT_TO_FP(
 
   // Scan for the appropriate larger type to use.
   while (true) {
-    NewInTy = (MVT::SimpleValueType)(NewInTy.getSimpleVT().SimpleTy+1);
+    if (!NewInTy.isVector())
+      NewInTy = (MVT::SimpleValueType)(NewInTy.getSimpleVT().SimpleTy + 1);
+    else
+      NewInTy = NewInTy.changeVectorElementType((MVT::SimpleValueType)(
+          NewInTy.getVectorElementType().getSimpleVT().SimpleTy + 1));
+
     assert(NewInTy.isInteger() && "Ran out of possibilities!");
 
     // If the target supports SINT_TO_FP of this type, use it.
@@ -2933,7 +2938,12 @@ void SelectionDAGLegalize::PromoteLegalFP_TO_INT(SDNode *N, const SDLoc &dl,
 
   // Scan for the appropriate larger type to use.
   while (true) {
-    NewOutTy = (MVT::SimpleValueType)(NewOutTy.getSimpleVT().SimpleTy+1);
+    if (!NewOutTy.isVector())
+      NewOutTy = (MVT::SimpleValueType)(NewOutTy.getSimpleVT().SimpleTy + 1);
+    else
+      NewOutTy = NewOutTy.changeVectorElementType((MVT::SimpleValueType)(
+          NewOutTy.getVectorElementType().getSimpleVT().SimpleTy + 1));
+
     assert(NewOutTy.isInteger() && "Ran out of possibilities!");
 
     // A larger signed type can hold all unsigned values of the requested type,

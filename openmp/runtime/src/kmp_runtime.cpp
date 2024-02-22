@@ -52,7 +52,11 @@ static char *ProfileTraceFile = nullptr;
 // Windows and WASI do not need these include files as they don't use shared
 // memory.
 #else
+#if KMP_OS_CLUSTER_OS
+// ClusterOS doesn't have mman.h
+#else
 #include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 #include <fcntl.h>
 #define SHM_SIZE 1024
@@ -8952,7 +8956,7 @@ __kmp_determine_reduction_method(
 
 #if KMP_OS_LINUX || KMP_OS_DRAGONFLY || KMP_OS_FREEBSD || KMP_OS_NETBSD ||     \
     KMP_OS_OPENBSD || KMP_OS_WINDOWS || KMP_OS_DARWIN || KMP_OS_HURD ||        \
-    KMP_OS_SOLARIS || KMP_OS_WASI || KMP_OS_AIX
+    KMP_OS_SOLARIS || KMP_OS_WASI || KMP_OS_AIX || KMP_OS_CLUSTER_OS
 
     int teamsize_cutoff = 4;
 

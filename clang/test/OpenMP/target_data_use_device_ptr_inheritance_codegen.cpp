@@ -152,7 +152,7 @@ void foo() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@_ZN1BC1Ev
-// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR2:[0-9]+]] comdat {
+// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
@@ -162,7 +162,7 @@ void foo() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@_ZN1BC2Ev
-// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR2]] comdat {
+// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
@@ -173,7 +173,7 @@ void foo() {
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@_ZN1AC2Ev
-// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR2]] comdat {
+// CHECK1-SAME: (ptr noundef nonnull align 8 dereferenceable(16) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK1-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
@@ -233,7 +233,7 @@ void foo() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@_ZN1BC1Ev
-// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR2:[0-9]+]] comdat align 2 {
+// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat align 2 {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 4
 // CHECK2-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 4
@@ -243,7 +243,7 @@ void foo() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@_ZN1BC2Ev
-// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR2]] comdat align 2 {
+// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat align 2 {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 4
 // CHECK2-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 4
@@ -254,7 +254,7 @@ void foo() {
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@_ZN1AC2Ev
-// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR2]] comdat align 2 {
+// CHECK2-SAME: (ptr noundef nonnull align 4 dereferenceable(8) [[THIS:%.*]]) unnamed_addr #[[ATTR0]] comdat align 2 {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 4
 // CHECK2-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 4
