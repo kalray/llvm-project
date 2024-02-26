@@ -18,325 +18,325 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    addd $r12 = $r12, -512
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 128[$r0]
+; CV1-NEXT:    xlo.u $a0 = 64[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 480[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 160[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 352[$r12] = $a0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 192[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 224[$r12] = $a0
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a0 = 224[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 96[$r12] = $a0
+; CV1-NEXT:    xlo.u $a28 = 96[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 640[$r0]
+; CV1-NEXT:    xlo.u $a9 = 0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a33 = 0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a32 = 32[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a19 = 64[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a17 = 96[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 384[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a9 = 416[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a10 = 448[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a11 = 480[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a12 = 256[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a13 = 288[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a14 = 320[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a15 = 352[$r0]
+; CV1-NEXT:    xlo.u $a3 = 32[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 448[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 672[$r0]
+; CV1-NEXT:    xlo.u $a0 = 320[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 320[$r12] = $a0
+; CV1-NEXT:    xlo.u $a20 = 192[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 704[$r0]
+; CV1-NEXT:    xlo.u $a6 = 128[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 192[$r12] = $a0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 736[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 64[$r12] = $a0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x480[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a34 = 512[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a21 = 544[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a22 = 576[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a23 = 608[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a24 = 896[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a25 = 928[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a26 = 960[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a27 = 992[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a28 = 768[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a29 = 800[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a30 = 832[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a31 = 864[$r0]
+; CV1-NEXT:    xlo.u $a7 = 160[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 416[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x4a0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 448[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 288[$r12] = $a0
+; CV1-NEXT:    xlo.u $a32 = 352[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x4c0[$r0]
+; CV1-NEXT:    xlo.u $a10 = 256[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 160[$r12] = $a0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x4e0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 32[$r12] = $a0
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x680[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a36 = 1024[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a37 = 0x420[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a38 = 0x440[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a39 = 0x460[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a40 = 0x580[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a41 = 0x5a0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a42 = 0x5c0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a43 = 0x5e0[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a44 = 0x500[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a45 = 0x520[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a46 = 0x540[$r0]
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a47 = 0x560[$r0]
+; CV1-NEXT:    xlo.u $a11 = 288[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 384[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x6a0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 576[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a44 = 480[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a14 = 384[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a15 = 416[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 352[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 704[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a17 = 608[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a18 = 512[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a19 = 544[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 320[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 832[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a21 = 736[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a22 = 640[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a23 = 672[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 288[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 960[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a25 = 864[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a26 = 768[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a27 = 800[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 256[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x6c0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 0x440[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a29 = 992[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a30 = 896[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a31 = 928[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 224[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 0x4c0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a33 = 0x460[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a34 = 1024[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a35 = 0x420[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 192[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 0x540[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a37 = 0x4e0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a38 = 0x480[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a39 = 0x4a0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 160[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 0x5c0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a41 = 0x560[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a42 = 0x500[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a43 = 0x520[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 128[$r12] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x6e0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 0x640[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0[$r12] = $a0
+; CV1-NEXT:    xlo.u $a45 = 0x5e0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a35 = 0x600[$r0]
+; CV1-NEXT:    xlo.u $a46 = 0x580[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a20 = 0x620[$r0]
+; CV1-NEXT:    xlo.u $a47 = 0x5a0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a18 = 0x640[$r0]
+; CV1-NEXT:    xso 96[$r12] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a1 = 0x6c0[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a16 = 0x660[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a7 = 0x780[$r0]
+; CV1-NEXT:    xlo.u $a5 = 0x600[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a6 = 0x7a0[$r0]
+; CV1-NEXT:    xlo.u $a0 = 0x620[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a5 = 0x7c0[$r0]
+; CV1-NEXT:    xso 64[$r12] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a4 = 0x7e0[$r0]
+; CV1-NEXT:    xlo.u $a2 = 0x740[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a3 = 0x700[$r0]
+; CV1-NEXT:    xlo.u $a40 = 0x6e0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a13 = 0x680[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a1 = 0x6a0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 32[$r12] = $a2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a4 = 0x7c0[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a24 = 0x760[$r0]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a8 = 0x700[$r0]
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a2 = 0x720[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a1 = 0x740[$r0]
+; CV1-NEXT:    xso 0[$r12] = $a4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0x760[$r0]
+; CV1-NEXT:    xlo.u $a36 = 0x7e0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 352[$r1] = $a15
+; CV1-NEXT:    xlo.u $a12 = 0x780[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 320[$r1] = $a14
+; CV1-NEXT:    xlo.u $a4 = 0x7a0[$r0]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 288[$r1] = $a13
+; CV1-NEXT:    xso 32[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 256[$r1] = $a12
+; CV1-NEXT:    xso 0[$r1] = $a9
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 480[$r1] = $a11
+; CV1-NEXT:    xso 96[$r1] = $a28
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 448[$r1] = $a10
+; CV1-NEXT:    xlo.u $a3 = 480[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 416[$r1] = $a9
+; CV1-NEXT:    xso 160[$r1] = $a7
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 384[$r1] = $a8
+; CV1-NEXT:    xso 128[$r1] = $a6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 96[$r1] = $a17
+; CV1-NEXT:    xso 64[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 64[$r1] = $a19
+; CV1-NEXT:    xso 192[$r1] = $a20
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 32[$r1] = $a32
+; CV1-NEXT:    xlo.u $a3 = 448[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0[$r1] = $a33
+; CV1-NEXT:    xso 288[$r1] = $a11
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 96[$r12]
+; CV1-NEXT:    xso 256[$r1] = $a10
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 224[$r1] = $a8
+; CV1-NEXT:    xso 224[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 224[$r12]
+; CV1-NEXT:    xso 352[$r1] = $a32
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 192[$r1] = $a8
+; CV1-NEXT:    xlo.u $a3 = 416[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 352[$r12]
+; CV1-NEXT:    xso 416[$r1] = $a15
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 160[$r1] = $a8
+; CV1-NEXT:    xso 384[$r1] = $a14
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 480[$r12]
+; CV1-NEXT:    xso 320[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 864[$r1] = $a31
+; CV1-NEXT:    xso 480[$r1] = $a44
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 832[$r1] = $a30
+; CV1-NEXT:    xlo.u $a3 = 384[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 128[$r1] = $a8
+; CV1-NEXT:    xso 544[$r1] = $a19
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 800[$r1] = $a29
+; CV1-NEXT:    xso 512[$r1] = $a18
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 768[$r1] = $a28
+; CV1-NEXT:    xso 448[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 992[$r1] = $a27
+; CV1-NEXT:    xso 608[$r1] = $a17
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 960[$r1] = $a26
+; CV1-NEXT:    xlo.u $a3 = 352[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 928[$r1] = $a25
+; CV1-NEXT:    xso 672[$r1] = $a23
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 896[$r1] = $a24
+; CV1-NEXT:    xso 640[$r1] = $a22
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 608[$r1] = $a23
+; CV1-NEXT:    xso 576[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 576[$r1] = $a22
+; CV1-NEXT:    xso 736[$r1] = $a21
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 544[$r1] = $a21
+; CV1-NEXT:    xlo.u $a3 = 320[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 512[$r1] = $a34
+; CV1-NEXT:    xso 800[$r1] = $a27
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 64[$r12]
+; CV1-NEXT:    xso 768[$r1] = $a26
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 736[$r1] = $a8
+; CV1-NEXT:    xso 704[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 192[$r12]
+; CV1-NEXT:    xso 864[$r1] = $a25
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 704[$r1] = $a8
+; CV1-NEXT:    xlo.u $a3 = 288[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 320[$r12]
+; CV1-NEXT:    xso 928[$r1] = $a31
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 672[$r1] = $a8
+; CV1-NEXT:    xso 896[$r1] = $a30
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 448[$r12]
+; CV1-NEXT:    xso 832[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x560[$r1] = $a47
+; CV1-NEXT:    xso 992[$r1] = $a29
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x540[$r1] = $a46
+; CV1-NEXT:    xlo.u $a3 = 256[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 640[$r1] = $a8
+; CV1-NEXT:    xso 0x420[$r1] = $a35
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x520[$r1] = $a45
+; CV1-NEXT:    xso 1024[$r1] = $a34
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x500[$r1] = $a44
+; CV1-NEXT:    xso 960[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x5e0[$r1] = $a43
+; CV1-NEXT:    xso 0x460[$r1] = $a33
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x5c0[$r1] = $a42
+; CV1-NEXT:    xlo.u $a3 = 224[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x5a0[$r1] = $a41
+; CV1-NEXT:    xso 0x4a0[$r1] = $a39
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x580[$r1] = $a40
+; CV1-NEXT:    xso 0x480[$r1] = $a38
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x460[$r1] = $a39
+; CV1-NEXT:    xso 0x440[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x440[$r1] = $a38
+; CV1-NEXT:    xso 0x4e0[$r1] = $a37
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x420[$r1] = $a37
+; CV1-NEXT:    xlo.u $a3 = 192[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 1024[$r1] = $a36
+; CV1-NEXT:    xso 0x520[$r1] = $a43
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 32[$r12]
+; CV1-NEXT:    xso 0x500[$r1] = $a42
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x4e0[$r1] = $a8
+; CV1-NEXT:    xso 0x4c0[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 160[$r12]
+; CV1-NEXT:    xso 0x560[$r1] = $a41
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x4c0[$r1] = $a8
+; CV1-NEXT:    xlo.u $a3 = 160[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 288[$r12]
+; CV1-NEXT:    xso 0x5a0[$r1] = $a47
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x4a0[$r1] = $a8
+; CV1-NEXT:    xso 0x580[$r1] = $a46
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a8 = 416[$r12]
+; CV1-NEXT:    xso 0x540[$r1] = $a3
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x760[$r1] = $a0
+; CV1-NEXT:    xso 0x5e0[$r1] = $a45
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x740[$r1] = $a1
+; CV1-NEXT:    xlo.u $a3 = 128[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x480[$r1] = $a8
+; CV1-NEXT:    xso 0x620[$r1] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x720[$r1] = $a2
+; CV1-NEXT:    xso 0x600[$r1] = $a5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x700[$r1] = $a3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x7e0[$r1] = $a4
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x7c0[$r1] = $a5
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x7a0[$r1] = $a6
-; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x780[$r1] = $a7
+; CV1-NEXT:    xso 0x5c0[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x660[$r1] = $a16
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x640[$r1] = $a18
+; CV1-NEXT:    xlo.u $a0 = 96[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x620[$r1] = $a20
+; CV1-NEXT:    xso 0x6a0[$r1] = $a1
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x600[$r1] = $a35
+; CV1-NEXT:    xso 0x680[$r1] = $a13
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 0[$r12]
+; CV1-NEXT:    xso 0x640[$r1] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x6e0[$r1] = $a0
+; CV1-NEXT:    xso 0x6e0[$r1] = $a40
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 128[$r12]
+; CV1-NEXT:    xlo.u $a0 = 64[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x720[$r1] = $a2
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x700[$r1] = $a8
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x6c0[$r1] = $a0
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 256[$r12]
+; CV1-NEXT:    xso 0x760[$r1] = $a24
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x6a0[$r1] = $a0
+; CV1-NEXT:    xlo.u $a0 = 32[$r12]
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xlo.u $a0 = 384[$r12]
+; CV1-NEXT:    xso 0x7a0[$r1] = $a4
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x680[$r1] = $a0
+; CV1-NEXT:    xso 0x780[$r1] = $a12
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x740[$r1] = $a0
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x7e0[$r1] = $a36
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xlo.u $a0 = 0[$r12]
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x7c0[$r1] = $a0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    addd $r12 = $r12, 512
 ; CV1-NEXT:    ;;
@@ -345,261 +345,261 @@ define void @move_all(ptr %from, ptr %to) {
 ;
 ; CV2-LABEL: move_all:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    xlo $a0 = 128[$r0]
+; CV2-NEXT:    xlo $a0 = 64[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a1 = 160[$r0]
+; CV2-NEXT:    xlo $a1 = 96[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a2 = 192[$r0]
+; CV2-NEXT:    xlo $a2 = 0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a3 = 224[$r0]
+; CV2-NEXT:    xlo $a3 = 32[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a4 = 0[$r0]
+; CV2-NEXT:    xlo $a4 = 224[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a5 = 32[$r0]
+; CV2-NEXT:    xlo $a5 = 192[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a6 = 64[$r0]
+; CV2-NEXT:    xlo $a6 = 128[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a7 = 96[$r0]
+; CV2-NEXT:    xlo $a7 = 160[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a8 = 384[$r0]
+; CV2-NEXT:    xlo $a8 = 320[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a9 = 416[$r0]
+; CV2-NEXT:    xlo $a9 = 352[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a10 = 448[$r0]
+; CV2-NEXT:    xlo $a10 = 256[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a11 = 480[$r0]
+; CV2-NEXT:    xlo $a11 = 288[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a12 = 256[$r0]
+; CV2-NEXT:    xlo $a12 = 448[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a13 = 288[$r0]
+; CV2-NEXT:    xlo $a13 = 480[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a14 = 320[$r0]
+; CV2-NEXT:    xlo $a14 = 384[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a15 = 352[$r0]
+; CV2-NEXT:    xlo $a15 = 416[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a16 = 640[$r0]
+; CV2-NEXT:    xlo $a16 = 576[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a17 = 672[$r0]
+; CV2-NEXT:    xlo $a17 = 608[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a18 = 704[$r0]
+; CV2-NEXT:    xlo $a18 = 512[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a19 = 736[$r0]
+; CV2-NEXT:    xlo $a19 = 544[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a20 = 512[$r0]
+; CV2-NEXT:    xlo $a20 = 704[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a21 = 544[$r0]
+; CV2-NEXT:    xlo $a21 = 736[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a22 = 576[$r0]
+; CV2-NEXT:    xlo $a22 = 640[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a23 = 608[$r0]
+; CV2-NEXT:    xlo $a23 = 672[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a24 = 896[$r0]
+; CV2-NEXT:    xlo $a24 = 832[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a25 = 928[$r0]
+; CV2-NEXT:    xlo $a25 = 864[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a26 = 960[$r0]
+; CV2-NEXT:    xlo $a26 = 768[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a27 = 992[$r0]
+; CV2-NEXT:    xlo $a27 = 800[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a28 = 768[$r0]
+; CV2-NEXT:    xlo $a28 = 960[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a29 = 800[$r0]
+; CV2-NEXT:    xlo $a29 = 992[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a30 = 832[$r0]
+; CV2-NEXT:    xlo $a30 = 896[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a31 = 864[$r0]
+; CV2-NEXT:    xlo $a31 = 928[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a32 = 0x480[$r0]
+; CV2-NEXT:    xlo $a32 = 0x440[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a33 = 0x4a0[$r0]
+; CV2-NEXT:    xlo $a33 = 0x460[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a34 = 0x4c0[$r0]
+; CV2-NEXT:    xlo $a34 = 1024[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a35 = 0x4e0[$r0]
+; CV2-NEXT:    xlo $a35 = 0x420[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a36 = 1024[$r0]
+; CV2-NEXT:    xlo $a36 = 0x4c0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a37 = 0x420[$r0]
+; CV2-NEXT:    xlo $a37 = 0x4e0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a38 = 0x440[$r0]
+; CV2-NEXT:    xlo $a38 = 0x480[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a39 = 0x460[$r0]
+; CV2-NEXT:    xlo $a39 = 0x4a0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a40 = 0x580[$r0]
+; CV2-NEXT:    xlo $a40 = 0x540[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a41 = 0x5a0[$r0]
+; CV2-NEXT:    xlo $a41 = 0x560[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a42 = 0x5c0[$r0]
+; CV2-NEXT:    xlo $a42 = 0x500[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a43 = 0x5e0[$r0]
+; CV2-NEXT:    xlo $a43 = 0x520[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a44 = 0x500[$r0]
+; CV2-NEXT:    xlo $a44 = 0x5c0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a45 = 0x520[$r0]
+; CV2-NEXT:    xlo $a45 = 0x5e0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a46 = 0x540[$r0]
+; CV2-NEXT:    xlo $a46 = 0x580[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a47 = 0x560[$r0]
+; CV2-NEXT:    xlo $a47 = 0x5a0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a52 = 0x600[$r0]
+; CV2-NEXT:    xlo $a48 = 0x640[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a53 = 0x620[$r0]
+; CV2-NEXT:    xlo $a49 = 0x660[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a54 = 0x640[$r0]
+; CV2-NEXT:    xlo $a50 = 0x600[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a55 = 0x660[$r0]
+; CV2-NEXT:    xlo $a51 = 0x620[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a56 = 0x780[$r0]
+; CV2-NEXT:    xlo $a52 = 0x6c0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a57 = 0x7a0[$r0]
+; CV2-NEXT:    xlo $a53 = 0x6e0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a58 = 0x7c0[$r0]
+; CV2-NEXT:    xlo $a54 = 0x680[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a59 = 0x7e0[$r0]
+; CV2-NEXT:    xlo $a55 = 0x6a0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a60 = 0x700[$r0]
+; CV2-NEXT:    xlo $a56 = 0x740[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a61 = 0x720[$r0]
+; CV2-NEXT:    xlo $a57 = 0x760[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a62 = 0x740[$r0]
+; CV2-NEXT:    xlo $a58 = 0x700[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a63 = 0x760[$r0]
+; CV2-NEXT:    xlo $a59 = 0x720[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a48 = 0x680[$r0]
+; CV2-NEXT:    xlo $a60 = 0x7c0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a49 = 0x6a0[$r0]
+; CV2-NEXT:    xlo $a61 = 0x7e0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a50 = 0x6c0[$r0]
+; CV2-NEXT:    xlo $a62 = 0x780[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xlo $a51 = 0x6e0[$r0]
+; CV2-NEXT:    xlo $a63 = 0x7a0[$r0]
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 352[$r1] = $a15
+; CV2-NEXT:    xso 32[$r1] = $a3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 320[$r1] = $a14
+; CV2-NEXT:    xso 0[$r1] = $a2
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 288[$r1] = $a13
+; CV2-NEXT:    xso 96[$r1] = $a1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 256[$r1] = $a12
+; CV2-NEXT:    xso 64[$r1] = $a0
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 480[$r1] = $a11
+; CV2-NEXT:    xso 160[$r1] = $a7
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 448[$r1] = $a10
+; CV2-NEXT:    xso 128[$r1] = $a6
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 416[$r1] = $a9
+; CV2-NEXT:    xso 192[$r1] = $a5
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 384[$r1] = $a8
+; CV2-NEXT:    xso 224[$r1] = $a4
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 96[$r1] = $a7
+; CV2-NEXT:    xso 288[$r1] = $a11
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 64[$r1] = $a6
+; CV2-NEXT:    xso 256[$r1] = $a10
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 32[$r1] = $a5
+; CV2-NEXT:    xso 352[$r1] = $a9
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0[$r1] = $a4
+; CV2-NEXT:    xso 320[$r1] = $a8
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 224[$r1] = $a3
+; CV2-NEXT:    xso 416[$r1] = $a15
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 192[$r1] = $a2
+; CV2-NEXT:    xso 384[$r1] = $a14
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 160[$r1] = $a1
+; CV2-NEXT:    xso 480[$r1] = $a13
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 128[$r1] = $a0
+; CV2-NEXT:    xso 448[$r1] = $a12
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 864[$r1] = $a31
+; CV2-NEXT:    xso 544[$r1] = $a19
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 832[$r1] = $a30
+; CV2-NEXT:    xso 512[$r1] = $a18
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 800[$r1] = $a29
+; CV2-NEXT:    xso 608[$r1] = $a17
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 768[$r1] = $a28
+; CV2-NEXT:    xso 576[$r1] = $a16
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 992[$r1] = $a27
+; CV2-NEXT:    xso 672[$r1] = $a23
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 960[$r1] = $a26
+; CV2-NEXT:    xso 640[$r1] = $a22
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 928[$r1] = $a25
+; CV2-NEXT:    xso 736[$r1] = $a21
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 896[$r1] = $a24
+; CV2-NEXT:    xso 704[$r1] = $a20
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 608[$r1] = $a23
+; CV2-NEXT:    xso 800[$r1] = $a27
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 576[$r1] = $a22
+; CV2-NEXT:    xso 768[$r1] = $a26
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 544[$r1] = $a21
+; CV2-NEXT:    xso 864[$r1] = $a25
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 512[$r1] = $a20
+; CV2-NEXT:    xso 832[$r1] = $a24
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 736[$r1] = $a19
+; CV2-NEXT:    xso 928[$r1] = $a31
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 704[$r1] = $a18
+; CV2-NEXT:    xso 896[$r1] = $a30
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 672[$r1] = $a17
+; CV2-NEXT:    xso 992[$r1] = $a29
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 640[$r1] = $a16
+; CV2-NEXT:    xso 960[$r1] = $a28
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x560[$r1] = $a47
+; CV2-NEXT:    xso 0x420[$r1] = $a35
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x540[$r1] = $a46
+; CV2-NEXT:    xso 1024[$r1] = $a34
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x520[$r1] = $a45
+; CV2-NEXT:    xso 0x460[$r1] = $a33
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x500[$r1] = $a44
+; CV2-NEXT:    xso 0x440[$r1] = $a32
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x5e0[$r1] = $a43
+; CV2-NEXT:    xso 0x4a0[$r1] = $a39
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x5c0[$r1] = $a42
+; CV2-NEXT:    xso 0x480[$r1] = $a38
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x5a0[$r1] = $a41
+; CV2-NEXT:    xso 0x4e0[$r1] = $a37
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x580[$r1] = $a40
+; CV2-NEXT:    xso 0x4c0[$r1] = $a36
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x460[$r1] = $a39
+; CV2-NEXT:    xso 0x520[$r1] = $a43
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x440[$r1] = $a38
+; CV2-NEXT:    xso 0x500[$r1] = $a42
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x420[$r1] = $a37
+; CV2-NEXT:    xso 0x560[$r1] = $a41
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 1024[$r1] = $a36
+; CV2-NEXT:    xso 0x540[$r1] = $a40
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x4e0[$r1] = $a35
+; CV2-NEXT:    xso 0x5a0[$r1] = $a47
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x4c0[$r1] = $a34
+; CV2-NEXT:    xso 0x580[$r1] = $a46
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x4a0[$r1] = $a33
+; CV2-NEXT:    xso 0x5e0[$r1] = $a45
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x480[$r1] = $a32
+; CV2-NEXT:    xso 0x5c0[$r1] = $a44
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x760[$r1] = $a63
+; CV2-NEXT:    xso 0x620[$r1] = $a51
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x740[$r1] = $a62
+; CV2-NEXT:    xso 0x600[$r1] = $a50
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x720[$r1] = $a61
+; CV2-NEXT:    xso 0x660[$r1] = $a49
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x700[$r1] = $a60
+; CV2-NEXT:    xso 0x640[$r1] = $a48
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x7e0[$r1] = $a59
+; CV2-NEXT:    xso 0x6a0[$r1] = $a55
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x7c0[$r1] = $a58
+; CV2-NEXT:    xso 0x680[$r1] = $a54
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x7a0[$r1] = $a57
+; CV2-NEXT:    xso 0x6e0[$r1] = $a53
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x780[$r1] = $a56
+; CV2-NEXT:    xso 0x6c0[$r1] = $a52
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x660[$r1] = $a55
+; CV2-NEXT:    xso 0x720[$r1] = $a59
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x640[$r1] = $a54
+; CV2-NEXT:    xso 0x700[$r1] = $a58
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x620[$r1] = $a53
+; CV2-NEXT:    xso 0x760[$r1] = $a57
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x600[$r1] = $a52
+; CV2-NEXT:    xso 0x740[$r1] = $a56
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x6e0[$r1] = $a51
+; CV2-NEXT:    xso 0x7a0[$r1] = $a63
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x6c0[$r1] = $a50
+; CV2-NEXT:    xso 0x780[$r1] = $a62
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x6a0[$r1] = $a49
+; CV2-NEXT:    xso 0x7e0[$r1] = $a61
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    xso 0x680[$r1] = $a48
+; CV2-NEXT:    xso 0x7c0[$r1] = $a60
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;

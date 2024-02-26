@@ -505,8 +505,8 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sq 40[$r12] = $r18r19
 ; CV1-NEXT:    copyd $r21 = $r7
-; CV1-NEXT:    copyd $r22 = $r6
-; CV1-NEXT:    copyd $r23 = $r5
+; CV1-NEXT:    copyd $r22 = $r5
+; CV1-NEXT:    copyd $r23 = $r6
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r19 = $r4
 ; CV1-NEXT:    copyd $r24 = $r3
@@ -546,18 +546,18 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r25
 ; CV1-NEXT:    fnarrowwh $r24 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r22
+; CV1-NEXT:    fwidenmhw $r1 = $r23
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    fwidenlhw $r1 = $r22
+; CV1-NEXT:    fwidenlhw $r1 = $r23
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 16[$r12] = $r0
 ; CV1-NEXT:    fwidenlhw $r0 = $r25
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 48
-; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    srld $r1 = $r23, 48
 ; CV1-NEXT:    fnarrowwh $r21 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -565,7 +565,7 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 32
-; CV1-NEXT:    srld $r1 = $r22, 32
+; CV1-NEXT:    srld $r1 = $r23, 32
 ; CV1-NEXT:    fnarrowwh $r30 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -575,25 +575,25 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r25 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r23
+; CV1-NEXT:    fwidenmhw $r1 = $r22
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fwidenlhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r31 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenlhw $r1 = $r23
+; CV1-NEXT:    fwidenlhw $r1 = $r22
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 48
-; CV1-NEXT:    srld $r1 = $r23, 48
-; CV1-NEXT:    fnarrowwh $r22 = $r0
+; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    fnarrowwh $r23 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 32
-; CV1-NEXT:    srld $r1 = $r23, 32
+; CV1-NEXT:    srld $r1 = $r22, 32
 ; CV1-NEXT:    fnarrowwh $r27 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -614,7 +614,7 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r20, 48
 ; CV1-NEXT:    srld $r1 = $r19, 48
-; CV1-NEXT:    fnarrowwh $r23 = $r0
+; CV1-NEXT:    fnarrowwh $r22 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
@@ -629,16 +629,16 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call __divsf3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    insf $r23 = $r28, 31, 16
+; CV1-NEXT:    insf $r22 = $r28, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r29, 31, 16
 ; CV1-NEXT:    insf $r26 = $r27, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r0 = 16[$r12]
-; CV1-NEXT:    insf $r22 = $r31, 31, 16
-; CV1-NEXT:    insf $r23 = $r0, 63, 32
+; CV1-NEXT:    insf $r22 = $r0, 63, 32
+; CV1-NEXT:    insf $r23 = $r31, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r22 = $r26, 63, 32
+; CV1-NEXT:    insf $r23 = $r26, 63, 32
 ; CV1-NEXT:    insf $r25 = $r30, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ld $r0 = 24[$r12]
@@ -649,8 +649,8 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ld $r0 = 32[$r12]
 ; CV1-NEXT:    insf $r24 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    copyd $r0 = $r23
-; CV1-NEXT:    copyd $r1 = $r22
+; CV1-NEXT:    copyd $r0 = $r22
+; CV1-NEXT:    copyd $r1 = $r23
 ; CV1-NEXT:    copyd $r2 = $r21
 ; CV1-NEXT:    insf $r18 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 11)
@@ -688,8 +688,8 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sq 40[$r12] = $r18r19
 ; CV2-NEXT:    copyd $r21 = $r7
-; CV2-NEXT:    copyd $r22 = $r6
-; CV2-NEXT:    copyd $r23 = $r5
+; CV2-NEXT:    copyd $r22 = $r5
+; CV2-NEXT:    copyd $r23 = $r6
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    copyd $r19 = $r4
 ; CV2-NEXT:    copyd $r24 = $r3
@@ -729,18 +729,18 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r25
 ; CV2-NEXT:    fnarrowwh $r24 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r22
+; CV2-NEXT:    fwidenmhw $r1 = $r23
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
-; CV2-NEXT:    fwidenlhw $r1 = $r22
+; CV2-NEXT:    fwidenlhw $r1 = $r23
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 16[$r12] = $r0
 ; CV2-NEXT:    fwidenlhw $r0 = $r25
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 48
-; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    srld $r1 = $r23, 48
 ; CV2-NEXT:    fnarrowwh $r21 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -748,7 +748,7 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 32
-; CV2-NEXT:    srld $r1 = $r22, 32
+; CV2-NEXT:    srld $r1 = $r23, 32
 ; CV2-NEXT:    fnarrowwh $r30 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -758,25 +758,25 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r25 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r23
+; CV2-NEXT:    fwidenmhw $r1 = $r22
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fwidenlhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r31 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenlhw $r1 = $r23
+; CV2-NEXT:    fwidenlhw $r1 = $r22
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 48
-; CV2-NEXT:    srld $r1 = $r23, 48
-; CV2-NEXT:    fnarrowwh $r22 = $r0
+; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    fnarrowwh $r23 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
 ; CV2-NEXT:    call __divsf3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 32
-; CV2-NEXT:    srld $r1 = $r23, 32
+; CV2-NEXT:    srld $r1 = $r22, 32
 ; CV2-NEXT:    fnarrowwh $r27 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -797,7 +797,7 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r20, 48
 ; CV2-NEXT:    srld $r1 = $r19, 48
-; CV2-NEXT:    fnarrowwh $r23 = $r0
+; CV2-NEXT:    fnarrowwh $r22 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
@@ -813,26 +813,26 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
 ; CV2-NEXT:    ld $r1 = 16[$r12]
-; CV2-NEXT:    insf $r23 = $r28, 31, 16
+; CV2-NEXT:    insf $r22 = $r28, 31, 16
 ; CV2-NEXT:    insf $r26 = $r27, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r29, 31, 16
-; CV2-NEXT:    insf $r22 = $r31, 31, 16
+; CV2-NEXT:    insf $r23 = $r31, 31, 16
 ; CV2-NEXT:    insf $r25 = $r30, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r22 = $r26, 63, 32
-; CV2-NEXT:    insf $r23 = $r0, 63, 32
+; CV2-NEXT:    insf $r22 = $r0, 63, 32
+; CV2-NEXT:    insf $r23 = $r26, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld $r1 = 24[$r12]
 ; CV2-NEXT:    insf $r21 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r21 = $r25, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    copyd $r0 = $r23
+; CV2-NEXT:    copyd $r0 = $r22
 ; CV2-NEXT:    ld $r1 = 32[$r12]
 ; CV2-NEXT:    insf $r24 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    copyd $r1 = $r22
+; CV2-NEXT:    copyd $r1 = $r23
 ; CV2-NEXT:    copyd $r2 = $r21
 ; CV2-NEXT:    insf $r18 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 9)
@@ -874,8 +874,8 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sq 40[$r12] = $r18r19
 ; CV1-NEXT:    copyd $r21 = $r7
-; CV1-NEXT:    copyd $r22 = $r6
-; CV1-NEXT:    copyd $r23 = $r5
+; CV1-NEXT:    copyd $r22 = $r5
+; CV1-NEXT:    copyd $r23 = $r6
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r19 = $r4
 ; CV1-NEXT:    copyd $r24 = $r3
@@ -915,18 +915,18 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r25
 ; CV1-NEXT:    fnarrowwh $r24 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r22
+; CV1-NEXT:    fwidenmhw $r1 = $r23
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    fwidenlhw $r1 = $r22
+; CV1-NEXT:    fwidenlhw $r1 = $r23
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 16[$r12] = $r0
 ; CV1-NEXT:    fwidenlhw $r0 = $r25
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 48
-; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    srld $r1 = $r23, 48
 ; CV1-NEXT:    fnarrowwh $r21 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -934,7 +934,7 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 32
-; CV1-NEXT:    srld $r1 = $r22, 32
+; CV1-NEXT:    srld $r1 = $r23, 32
 ; CV1-NEXT:    fnarrowwh $r30 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -944,25 +944,25 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r25 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r23
+; CV1-NEXT:    fwidenmhw $r1 = $r22
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fwidenlhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r31 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenlhw $r1 = $r23
+; CV1-NEXT:    fwidenlhw $r1 = $r22
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 48
-; CV1-NEXT:    srld $r1 = $r23, 48
-; CV1-NEXT:    fnarrowwh $r22 = $r0
+; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    fnarrowwh $r23 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 32
-; CV1-NEXT:    srld $r1 = $r23, 32
+; CV1-NEXT:    srld $r1 = $r22, 32
 ; CV1-NEXT:    fnarrowwh $r27 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -983,7 +983,7 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r20, 48
 ; CV1-NEXT:    srld $r1 = $r19, 48
-; CV1-NEXT:    fnarrowwh $r23 = $r0
+; CV1-NEXT:    fnarrowwh $r22 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
@@ -998,16 +998,16 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call fmodf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    insf $r23 = $r28, 31, 16
+; CV1-NEXT:    insf $r22 = $r28, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r29, 31, 16
 ; CV1-NEXT:    insf $r26 = $r27, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r0 = 16[$r12]
-; CV1-NEXT:    insf $r22 = $r31, 31, 16
-; CV1-NEXT:    insf $r23 = $r0, 63, 32
+; CV1-NEXT:    insf $r22 = $r0, 63, 32
+; CV1-NEXT:    insf $r23 = $r31, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r22 = $r26, 63, 32
+; CV1-NEXT:    insf $r23 = $r26, 63, 32
 ; CV1-NEXT:    insf $r25 = $r30, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ld $r0 = 24[$r12]
@@ -1018,8 +1018,8 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ld $r0 = 32[$r12]
 ; CV1-NEXT:    insf $r24 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    copyd $r0 = $r23
-; CV1-NEXT:    copyd $r1 = $r22
+; CV1-NEXT:    copyd $r0 = $r22
+; CV1-NEXT:    copyd $r1 = $r23
 ; CV1-NEXT:    copyd $r2 = $r21
 ; CV1-NEXT:    insf $r18 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 11)
@@ -1057,8 +1057,8 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sq 40[$r12] = $r18r19
 ; CV2-NEXT:    copyd $r21 = $r7
-; CV2-NEXT:    copyd $r22 = $r6
-; CV2-NEXT:    copyd $r23 = $r5
+; CV2-NEXT:    copyd $r22 = $r5
+; CV2-NEXT:    copyd $r23 = $r6
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    copyd $r19 = $r4
 ; CV2-NEXT:    copyd $r24 = $r3
@@ -1098,18 +1098,18 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r25
 ; CV2-NEXT:    fnarrowwh $r24 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r22
+; CV2-NEXT:    fwidenmhw $r1 = $r23
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
-; CV2-NEXT:    fwidenlhw $r1 = $r22
+; CV2-NEXT:    fwidenlhw $r1 = $r23
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 16[$r12] = $r0
 ; CV2-NEXT:    fwidenlhw $r0 = $r25
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 48
-; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    srld $r1 = $r23, 48
 ; CV2-NEXT:    fnarrowwh $r21 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -1117,7 +1117,7 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 32
-; CV2-NEXT:    srld $r1 = $r22, 32
+; CV2-NEXT:    srld $r1 = $r23, 32
 ; CV2-NEXT:    fnarrowwh $r30 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -1127,25 +1127,25 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r25 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r23
+; CV2-NEXT:    fwidenmhw $r1 = $r22
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fwidenlhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r31 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenlhw $r1 = $r23
+; CV2-NEXT:    fwidenlhw $r1 = $r22
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 48
-; CV2-NEXT:    srld $r1 = $r23, 48
-; CV2-NEXT:    fnarrowwh $r22 = $r0
+; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    fnarrowwh $r23 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
 ; CV2-NEXT:    call fmodf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 32
-; CV2-NEXT:    srld $r1 = $r23, 32
+; CV2-NEXT:    srld $r1 = $r22, 32
 ; CV2-NEXT:    fnarrowwh $r27 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -1166,7 +1166,7 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r20, 48
 ; CV2-NEXT:    srld $r1 = $r19, 48
-; CV2-NEXT:    fnarrowwh $r23 = $r0
+; CV2-NEXT:    fnarrowwh $r22 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
@@ -1182,26 +1182,26 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
 ; CV2-NEXT:    ld $r1 = 16[$r12]
-; CV2-NEXT:    insf $r23 = $r28, 31, 16
+; CV2-NEXT:    insf $r22 = $r28, 31, 16
 ; CV2-NEXT:    insf $r26 = $r27, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r29, 31, 16
-; CV2-NEXT:    insf $r22 = $r31, 31, 16
+; CV2-NEXT:    insf $r23 = $r31, 31, 16
 ; CV2-NEXT:    insf $r25 = $r30, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r22 = $r26, 63, 32
-; CV2-NEXT:    insf $r23 = $r0, 63, 32
+; CV2-NEXT:    insf $r22 = $r0, 63, 32
+; CV2-NEXT:    insf $r23 = $r26, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld $r1 = 24[$r12]
 ; CV2-NEXT:    insf $r21 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r21 = $r25, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    copyd $r0 = $r23
+; CV2-NEXT:    copyd $r0 = $r22
 ; CV2-NEXT:    ld $r1 = 32[$r12]
 ; CV2-NEXT:    insf $r24 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    copyd $r1 = $r22
+; CV2-NEXT:    copyd $r1 = $r23
 ; CV2-NEXT:    copyd $r2 = $r21
 ; CV2-NEXT:    insf $r18 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 9)
@@ -3873,8 +3873,8 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sq 40[$r12] = $r18r19
 ; CV1-NEXT:    copyd $r21 = $r7
-; CV1-NEXT:    copyd $r22 = $r6
-; CV1-NEXT:    copyd $r23 = $r5
+; CV1-NEXT:    copyd $r22 = $r5
+; CV1-NEXT:    copyd $r23 = $r6
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r19 = $r4
 ; CV1-NEXT:    copyd $r24 = $r3
@@ -3914,18 +3914,18 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r25
 ; CV1-NEXT:    fnarrowwh $r24 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r22
+; CV1-NEXT:    fwidenmhw $r1 = $r23
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    fwidenlhw $r1 = $r22
+; CV1-NEXT:    fwidenlhw $r1 = $r23
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 16[$r12] = $r0
 ; CV1-NEXT:    fwidenlhw $r0 = $r25
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 48
-; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    srld $r1 = $r23, 48
 ; CV1-NEXT:    fnarrowwh $r21 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -3933,7 +3933,7 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r25, 32
-; CV1-NEXT:    srld $r1 = $r22, 32
+; CV1-NEXT:    srld $r1 = $r23, 32
 ; CV1-NEXT:    fnarrowwh $r30 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -3943,25 +3943,25 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    fwidenmhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r25 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenmhw $r1 = $r23
+; CV1-NEXT:    fwidenmhw $r1 = $r22
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fwidenlhw $r0 = $r26
 ; CV1-NEXT:    fnarrowwh $r31 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fwidenlhw $r1 = $r23
+; CV1-NEXT:    fwidenlhw $r1 = $r22
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 48
-; CV1-NEXT:    srld $r1 = $r23, 48
-; CV1-NEXT:    fnarrowwh $r22 = $r0
+; CV1-NEXT:    srld $r1 = $r22, 48
+; CV1-NEXT:    fnarrowwh $r23 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r26, 32
-; CV1-NEXT:    srld $r1 = $r23, 32
+; CV1-NEXT:    srld $r1 = $r22, 32
 ; CV1-NEXT:    fnarrowwh $r27 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
@@ -3982,7 +3982,7 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    srld $r0 = $r20, 48
 ; CV1-NEXT:    srld $r1 = $r19, 48
-; CV1-NEXT:    fnarrowwh $r23 = $r0
+; CV1-NEXT:    fnarrowwh $r22 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fwidenlhw $r0 = $r0
 ; CV1-NEXT:    fwidenlhw $r1 = $r1
@@ -3997,16 +3997,16 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    call powf
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    fnarrowwh $r0 = $r0
-; CV1-NEXT:    insf $r23 = $r28, 31, 16
+; CV1-NEXT:    insf $r22 = $r28, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    insf $r0 = $r29, 31, 16
 ; CV1-NEXT:    insf $r26 = $r27, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    ld $r0 = 16[$r12]
-; CV1-NEXT:    insf $r22 = $r31, 31, 16
-; CV1-NEXT:    insf $r23 = $r0, 63, 32
+; CV1-NEXT:    insf $r22 = $r0, 63, 32
+; CV1-NEXT:    insf $r23 = $r31, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r22 = $r26, 63, 32
+; CV1-NEXT:    insf $r23 = $r26, 63, 32
 ; CV1-NEXT:    insf $r25 = $r30, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    ld $r0 = 24[$r12]
@@ -4017,8 +4017,8 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV1-NEXT:    ld $r0 = 32[$r12]
 ; CV1-NEXT:    insf $r24 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    copyd $r0 = $r23
-; CV1-NEXT:    copyd $r1 = $r22
+; CV1-NEXT:    copyd $r0 = $r22
+; CV1-NEXT:    copyd $r1 = $r23
 ; CV1-NEXT:    copyd $r2 = $r21
 ; CV1-NEXT:    insf $r18 = $r0, 31, 16
 ; CV1-NEXT:    ;; # (end cycle 11)
@@ -4056,8 +4056,8 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    sq 40[$r12] = $r18r19
 ; CV2-NEXT:    copyd $r21 = $r7
-; CV2-NEXT:    copyd $r22 = $r6
-; CV2-NEXT:    copyd $r23 = $r5
+; CV2-NEXT:    copyd $r22 = $r5
+; CV2-NEXT:    copyd $r23 = $r6
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    copyd $r19 = $r4
 ; CV2-NEXT:    copyd $r24 = $r3
@@ -4097,18 +4097,18 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r25
 ; CV2-NEXT:    fnarrowwh $r24 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r22
+; CV2-NEXT:    fwidenmhw $r1 = $r23
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
-; CV2-NEXT:    fwidenlhw $r1 = $r22
+; CV2-NEXT:    fwidenlhw $r1 = $r23
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 16[$r12] = $r0
 ; CV2-NEXT:    fwidenlhw $r0 = $r25
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 48
-; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    srld $r1 = $r23, 48
 ; CV2-NEXT:    fnarrowwh $r21 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -4116,7 +4116,7 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r25, 32
-; CV2-NEXT:    srld $r1 = $r22, 32
+; CV2-NEXT:    srld $r1 = $r23, 32
 ; CV2-NEXT:    fnarrowwh $r30 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -4126,25 +4126,25 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    fwidenmhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r25 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenmhw $r1 = $r23
+; CV2-NEXT:    fwidenmhw $r1 = $r22
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fwidenlhw $r0 = $r26
 ; CV2-NEXT:    fnarrowwh $r31 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fwidenlhw $r1 = $r23
+; CV2-NEXT:    fwidenlhw $r1 = $r22
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 48
-; CV2-NEXT:    srld $r1 = $r23, 48
-; CV2-NEXT:    fnarrowwh $r22 = $r0
+; CV2-NEXT:    srld $r1 = $r22, 48
+; CV2-NEXT:    fnarrowwh $r23 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
 ; CV2-NEXT:    call powf
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r26, 32
-; CV2-NEXT:    srld $r1 = $r23, 32
+; CV2-NEXT:    srld $r1 = $r22, 32
 ; CV2-NEXT:    fnarrowwh $r27 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
@@ -4165,7 +4165,7 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    srld $r0 = $r20, 48
 ; CV2-NEXT:    srld $r1 = $r19, 48
-; CV2-NEXT:    fnarrowwh $r23 = $r0
+; CV2-NEXT:    fnarrowwh $r22 = $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fwidenlhw $r0 = $r0
 ; CV2-NEXT:    fwidenlhw $r1 = $r1
@@ -4181,26 +4181,26 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    fnarrowwh $r0 = $r0
 ; CV2-NEXT:    ld $r1 = 16[$r12]
-; CV2-NEXT:    insf $r23 = $r28, 31, 16
+; CV2-NEXT:    insf $r22 = $r28, 31, 16
 ; CV2-NEXT:    insf $r26 = $r27, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    insf $r0 = $r29, 31, 16
-; CV2-NEXT:    insf $r22 = $r31, 31, 16
+; CV2-NEXT:    insf $r23 = $r31, 31, 16
 ; CV2-NEXT:    insf $r25 = $r30, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    insf $r22 = $r26, 63, 32
-; CV2-NEXT:    insf $r23 = $r0, 63, 32
+; CV2-NEXT:    insf $r22 = $r0, 63, 32
+; CV2-NEXT:    insf $r23 = $r26, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld $r1 = 24[$r12]
 ; CV2-NEXT:    insf $r21 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:    insf $r21 = $r25, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    copyd $r0 = $r23
+; CV2-NEXT:    copyd $r0 = $r22
 ; CV2-NEXT:    ld $r1 = 32[$r12]
 ; CV2-NEXT:    insf $r24 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    copyd $r1 = $r22
+; CV2-NEXT:    copyd $r1 = $r23
 ; CV2-NEXT:    copyd $r2 = $r21
 ; CV2-NEXT:    insf $r18 = $r1, 31, 16
 ; CV2-NEXT:    ;; # (end cycle 9)

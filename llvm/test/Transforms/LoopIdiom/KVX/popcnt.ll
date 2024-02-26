@@ -1,4 +1,4 @@
-; RUN: opt -loop-idiom < %s -mtriple=kvx-kalray-cos -S | FileCheck %s
+; RUN: opt -passes=loop-idiom < %s -mtriple=kvx-kalray-cos -S | FileCheck %s
 
 target triple = "kvx-kalray-cos"
 

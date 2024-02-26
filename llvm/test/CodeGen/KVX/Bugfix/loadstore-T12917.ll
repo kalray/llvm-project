@@ -44,9 +44,12 @@ define i32 @f(){
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %if.then
 ; CHECK-NEXT:    faddd $r15 = $r32, 0x0
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    faddd $r15 = $r15, $r33
 ; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    set $ra = $r16
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    faddd $r15 = $r15, $r34
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    faddd $r15 = $r15, $r35
@@ -74,7 +77,8 @@ define i32 @f(){
 ; CHECK-NEXT:    faddd $r0 = $r0, $r10
 ; CHECK-NEXT:    ;; # (end cycle 56)
 ; CHECK-NEXT:    faddd $r0 = $r0, $r11
-; CHECK-NEXT:    call h
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    goto h
 ; CHECK-NEXT:    ;; # (end cycle 60)
 ; CHECK-NEXT:  .LBB0_2: # %if.end
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

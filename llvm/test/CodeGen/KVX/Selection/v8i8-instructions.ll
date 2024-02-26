@@ -924,7 +924,6 @@ define <8 x i8> @test_call_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
   ret <8 x i8> %r
 }
 
-; TODO: Can perform swap in a single bundle
 define <8 x i8> @test_tailcall_flipped(<8 x i8> %a, <8 x i8> %b) #0 {
 ; ALL-LABEL: test_tailcall_flipped:
 ; ALL:       # %bb.0:
