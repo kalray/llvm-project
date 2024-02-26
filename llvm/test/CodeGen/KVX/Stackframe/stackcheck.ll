@@ -47,13 +47,11 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
-; CHECK-NEXT:    addw $r0 = $r0, -2
+; CHECK-NEXT:    addx4wd $r0 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sxwd $r0 = $r0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lwz.xs $r0 = $r0[$r1]
+; CHECK-NEXT:    lwz $r0 = -8[$r0]
 ; CHECK-NEXT:    addd $r12 = $r14, -16
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]

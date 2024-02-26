@@ -16,16 +16,16 @@ define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sq 8[$r12] = $r18r19
+; CHECK-NEXT:    cb.deqz $r1 ? .LBB0_2
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:  # %bb.1: # %if.end
+; CHECK-NEXT:    ld $r2 = 8[$r1]
 ; CHECK-NEXT:    copyd $r18 = $r0
 ; CHECK-NEXT:    copyd $r19 = $r1
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    cb.deqz $r19 ? .LBB0_2
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1: # %if.end
-; CHECK-NEXT:    copyd $r0 = $r18
-; CHECK-NEXT:    ld $r1 = 8[$r19]
-; CHECK-NEXT:    call reveachList
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    copyd $r1 = $r2
+; CHECK-NEXT:    call reveachList
+; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    ld $r0 = 0[$r19]
 ; CHECK-NEXT:    copyd $r4 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
