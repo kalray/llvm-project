@@ -235,7 +235,7 @@ def nxv8i16  : VTScalableVec<8,  i16, 155>;  // n x  8 x i16 vector value
 def nxv16i16 : VTScalableVec<16, i16, 156>;  // n x 16 x i16 vector value
 def nxv32i16 : VTScalableVec<32, i16, 157>;  // n x 32 x i16 vector value
 
-nxv1i32  : VTScalableVec<1,  i32, 158>;  // n x  1 x i32 vector value
+def nxv1i32  : VTScalableVec<1,  i32, 158>;  // n x  1 x i32 vector value
 def nxv2i32  : VTScalableVec<2,  i32, 159>;  // n x  2 x i32 vector value
 def nxv4i32  : VTScalableVec<4,  i32, 160>;  // n x  4 x i32 vector value
 def nxv8i32  : VTScalableVec<8,  i32, 161>;  // n x  8 x i32 vector value
