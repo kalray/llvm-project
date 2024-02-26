@@ -657,14 +657,14 @@ define <8 x i16> @strict_vector_fptosi_v8f64_to_v8i16(<8 x double> %a) #0 {
 define <8 x i16> @strict_vector_fptoui_v8f64_to_v8i16(<8 x double> %a) #0 {
 ; AVX512VL-LABEL: strict_vector_fptoui_v8f64_to_v8i16:
 ; AVX512VL:       # %bb.0:
-; AVX512VL-NEXT:    vcvttpd2dq %zmm0, %ymm0
+; AVX512VL-NEXT:    vcvttpd2udq %zmm0, %ymm0
 ; AVX512VL-NEXT:    vpmovdw %ymm0, %xmm0
 ; AVX512VL-NEXT:    vzeroupper
 ; AVX512VL-NEXT:    ret{{[l|q]}}
 ;
 ; AVX512DQ-LABEL: strict_vector_fptoui_v8f64_to_v8i16:
 ; AVX512DQ:       # %bb.0:
-; AVX512DQ-NEXT:    vcvttpd2dq %zmm0, %ymm0
+; AVX512DQ-NEXT:    vcvttpd2udq %zmm0, %ymm0
 ; AVX512DQ-NEXT:    vpmovdw %zmm0, %ymm0
 ; AVX512DQ-NEXT:    # kill: def $xmm0 killed $xmm0 killed $ymm0
 ; AVX512DQ-NEXT:    vzeroupper
@@ -740,7 +740,7 @@ define <8 x i1> @strict_vector_fptosi_v8f64_to_v8i1(<8 x double> %a) #0 {
 define <8 x i1> @strict_vector_fptoui_v8f64_to_v8i1(<8 x double> %a) #0 {
 ; AVX512VL-LABEL: strict_vector_fptoui_v8f64_to_v8i1:
 ; AVX512VL:       # %bb.0:
-; AVX512VL-NEXT:    vcvttpd2dq %zmm0, %ymm0
+; AVX512VL-NEXT:    vcvttpd2udq %zmm0, %ymm0
 ; AVX512VL-NEXT:    vpslld $31, %ymm0, %ymm0
 ; AVX512VL-NEXT:    vptestmd %ymm0, %ymm0, %k1
 ; AVX512VL-NEXT:    vpcmpeqd %ymm0, %ymm0, %ymm0
@@ -751,7 +751,7 @@ define <8 x i1> @strict_vector_fptoui_v8f64_to_v8i1(<8 x double> %a) #0 {
 ;
 ; AVX512DQ-LABEL: strict_vector_fptoui_v8f64_to_v8i1:
 ; AVX512DQ:       # %bb.0:
-; AVX512DQ-NEXT:    vcvttpd2dq %zmm0, %ymm0
+; AVX512DQ-NEXT:    vcvttpd2udq %zmm0, %ymm0
 ; AVX512DQ-NEXT:    vpslld $31, %ymm0, %ymm0
 ; AVX512DQ-NEXT:    vpmovd2m %zmm0, %k0
 ; AVX512DQ-NEXT:    vpmovm2d %k0, %zmm0
@@ -821,7 +821,7 @@ define <16 x i8> @strict_vector_fptosi_v16f32_to_v16i8(<16 x float> %a) #0 {
 define <16 x i8> @strict_vector_fptoui_v16f32_to_v16i8(<16 x float> %a) #0 {
 ; CHECK-LABEL: strict_vector_fptoui_v16f32_to_v16i8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vcvttps2dq %zmm0, %zmm0
+; CHECK-NEXT:    vcvttps2udq %zmm0, %zmm0
 ; CHECK-NEXT:    vpmovdb %zmm0, %xmm0
 ; CHECK-NEXT:    vzeroupper
 ; CHECK-NEXT:    ret{{[l|q]}}
@@ -856,7 +856,7 @@ define <16 x i1> @strict_vector_fptosi_v16f32_to_v16i1(<16 x float> %a) #0 {
 define <16 x i1> @strict_vector_fptoui_v16f32_to_v16i1(<16 x float> %a) #0 {
 ; AVX512VL-LABEL: strict_vector_fptoui_v16f32_to_v16i1:
 ; AVX512VL:       # %bb.0:
-; AVX512VL-NEXT:    vcvttps2dq %zmm0, %zmm0
+; AVX512VL-NEXT:    vcvttps2udq %zmm0, %zmm0
 ; AVX512VL-NEXT:    vpslld $31, %zmm0, %zmm0
 ; AVX512VL-NEXT:    vptestmd %zmm0, %zmm0, %k1
 ; AVX512VL-NEXT:    vpternlogd $255, %zmm0, %zmm0, %zmm0 {%k1} {z}
@@ -866,7 +866,7 @@ define <16 x i1> @strict_vector_fptoui_v16f32_to_v16i1(<16 x float> %a) #0 {
 ;
 ; AVX512DQ-LABEL: strict_vector_fptoui_v16f32_to_v16i1:
 ; AVX512DQ:       # %bb.0:
-; AVX512DQ-NEXT:    vcvttps2dq %zmm0, %zmm0
+; AVX512DQ-NEXT:    vcvttps2udq %zmm0, %zmm0
 ; AVX512DQ-NEXT:    vpslld $31, %zmm0, %zmm0
 ; AVX512DQ-NEXT:    vpmovd2m %zmm0, %k0
 ; AVX512DQ-NEXT:    vpmovm2d %k0, %zmm0

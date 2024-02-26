@@ -7,237 +7,240 @@ target triple = "kvx-kalray-cos"
 define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-LABEL: loadons:
 ; KV3_2:       # %bb.0: # %entry
-; KV3_2-NEXT:    sllw $r3 = $r1, 1
-; KV3_2-NEXT:    mulw $r4 = $r1, 3
-; KV3_2-NEXT:    sxwd $r5 = $r1
-; KV3_2-NEXT:    addd $r12 = $r12, -64
+; KV3_2-NEXT:    mulw $r3 = $r1, 3
+; KV3_2-NEXT:    sxwd $r4 = $r1
+; KV3_2-NEXT:    sllw $r8 = $r1, 1
+; KV3_2-NEXT:    addd $r12 = $r12, -96
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    so 32[$r12] = $r24r25r26r27
-; KV3_2-NEXT:    slld $r5 = $r5, 2
-; KV3_2-NEXT:    mulw $r6 = $r1, 5
-; KV3_2-NEXT:    sxwd $r7 = $r3
+; KV3_2-NEXT:    so 64[$r12] = $r28r29r30r31
+; KV3_2-NEXT:    slld $r4 = $r4, 2
+; KV3_2-NEXT:    mulw $r5 = $r1, 5
+; KV3_2-NEXT:    sxwd $r11 = $r8
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    so 0[$r12] = $r20r21r22r23
-; KV3_2-NEXT:    slld $r7 = $r7, 2
-; KV3_2-NEXT:    sxwd $r8 = $r4
-; KV3_2-NEXT:    make $r37 = 0
+; KV3_2-NEXT:    so 32[$r12] = $r24r25r26r27
+; KV3_2-NEXT:    mulw $r6 = $r1, 6
+; KV3_2-NEXT:    slld $r11 = $r11, 2
+; KV3_2-NEXT:    sxwd $r17 = $r3
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    xlo $a2 = 0[$r0]
-; KV3_2-NEXT:    sllw $r8 = $r1, 2
-; KV3_2-NEXT:    slld $r9 = $r8, 2
-; KV3_2-NEXT:    sxwd $r16 = $r6
+; KV3_2-NEXT:    so 0[$r12] = $r20r21r22r23
+; KV3_2-NEXT:    sllw $r7 = $r1, 2
+; KV3_2-NEXT:    maxw $r10 = $r2, 0
+; KV3_2-NEXT:    sxwd $r34 = $r5
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    xlo $a3 = $r5[$r0]
-; KV3_2-NEXT:    mulw $r5 = $r1, 7
-; KV3_2-NEXT:    sxwd $r17 = $r8
-; KV3_2-NEXT:    make $r36 = 0
+; KV3_2-NEXT:    xlo $a2 = 0[$r0]
+; KV3_2-NEXT:    zxwd $r10 = $r10
+; KV3_2-NEXT:    sxwd $r16 = $r7
+; KV3_2-NEXT:    make $r35 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 4)
-; KV3_2-NEXT:    xlo $a0 = $r7[$r0]
-; KV3_2-NEXT:    mulw $r7 = $r1, 6
-; KV3_2-NEXT:    slld $r43 = $r16, 2
-; KV3_2-NEXT:    slld $r44 = $r17, 2
+; KV3_2-NEXT:    xlo $a3 = $r4[$r0]
+; KV3_2-NEXT:    mulw $r4 = $r1, 7
+; KV3_2-NEXT:    sxwd $r33 = $r6
+; KV3_2-NEXT:    slld $r45 = $r34, 2
 ; KV3_2-NEXT:    ;; # (end cycle 5)
-; KV3_2-NEXT:    xlo $a1 = $r9[$r0]
-; KV3_2-NEXT:    maxw $r9 = $r2, 0
-; KV3_2-NEXT:    sxwd $r10 = $r5
-; KV3_2-NEXT:    addx4wd $r15 = $r3, 32
+; KV3_2-NEXT:    xlo $a0 = $r11[$r0]
+; KV3_2-NEXT:    slld $r11 = $r17, 2
+; KV3_2-NEXT:    make $r34 = 0
+; KV3_2-NEXT:    slld $r44 = $r33, 2
 ; KV3_2-NEXT:    ;; # (end cycle 6)
-; KV3_2-NEXT:    addx4wd $r9 = $r4, 32
-; KV3_2-NEXT:    sxwd $r11 = $r7
-; KV3_2-NEXT:    zxwd $r32 = $r9
-; KV3_2-NEXT:    slld $r39 = $r10, 2
+; KV3_2-NEXT:    xlo $a1 = $r11[$r0]
+; KV3_2-NEXT:    sxwd $r32 = $r4
+; KV3_2-NEXT:    slld $r46 = $r16, 2
+; KV3_2-NEXT:    slld $r47 = $r10, 5
 ; KV3_2-NEXT:    ;; # (end cycle 7)
-; KV3_2-NEXT:    copyq $r10r11 = $r36, $r37
-; KV3_2-NEXT:    addx4wd $r38 = $r1, 32
-; KV3_2-NEXT:    slld $r42 = $r11, 2
-; KV3_2-NEXT:    slld $r45 = $r32, 5
-; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
+; KV3_2-NEXT:    copyq $r32r33 = $r34, $r35
+; KV3_2-NEXT:    addx4wd $r9 = $r1, 32
+; KV3_2-NEXT:    addx4wd $r15 = $r8, 32
+; KV3_2-NEXT:    slld $r39 = $r32, 2
 ; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    copyq $r16r17 = $r36, $r37
-; KV3_2-NEXT:    make $r48 = 32
+; KV3_2-NEXT:    copyq $r16r17 = $r34, $r35
+; KV3_2-NEXT:    addx4wd $r38 = $r3, 32
+; KV3_2-NEXT:    make $r52 = 32
+; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    copyq $r32r33 = $r36, $r37
+; KV3_2-NEXT:    copyq $r10r11 = $r34, $r35
 ; KV3_2-NEXT:    ;; # (end cycle 10)
-; KV3_2-NEXT:    copyq $r34r35 = $r36, $r37
+; KV3_2-NEXT:    copyq $r36r37 = $r34, $r35
 ; KV3_2-NEXT:    ;; # (end cycle 11)
-; KV3_2-NEXT:    copyq $r40r41 = $r36, $r37
-; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
+; KV3_2-NEXT:    copyq $r40r41 = $r34, $r35
 ; KV3_2-NEXT:    ;; # (end cycle 12)
-; KV3_2-NEXT:    copyq $r46r47 = $r36, $r37
-; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
+; KV3_2-NEXT:    copyq $r42r43 = $r34, $r35
+; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
 ; KV3_2-NEXT:    ;; # (end cycle 13)
-; KV3_2-NEXT:    copyq $r50r51 = $r36, $r37
+; KV3_2-NEXT:    copyq $r48r49 = $r34, $r35
+; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
 ; KV3_2-NEXT:    ;; # (end cycle 14)
-; KV3_2-NEXT:    copyq $r52r53 = $r36, $r37
+; KV3_2-NEXT:    copyq $r50r51 = $r34, $r35
 ; KV3_2-NEXT:    ;; # (end cycle 15)
-; KV3_2-NEXT:    copyq $r54r55 = $r36, $r37
+; KV3_2-NEXT:    copyq $r54r55 = $r34, $r35
 ; KV3_2-NEXT:    ;; # (end cycle 16)
-; KV3_2-NEXT:    copyq $r56r57 = $r36, $r37
-; KV3_2-NEXT:    compd.ne $r37 = $r45, $r36
+; KV3_2-NEXT:    copyq $r56r57 = $r34, $r35
+; KV3_2-NEXT:    compd.ne $r35 = $r47, $r34
 ; KV3_2-NEXT:    ;; # (end cycle 17)
-; KV3_2-NEXT:    cb.even $r37 ? .LBB0_2
+; KV3_2-NEXT:    cb.even $r35 ? .LBB0_2
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_1: # %for.body
 ; KV3_2-NEXT:    # =>This Inner Loop Header: Depth=1
 ; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r20r21, $r20r21
-; KV3_2-NEXT:    addd $r36 = $r36, 32
+; KV3_2-NEXT:    addd $r34 = $r34, 32
 ; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r22r23, $r20r21
-; KV3_2-NEXT:    compd.ne $r37 = $r45, $r36
+; KV3_2-NEXT:    compd.ne $r35 = $r47, $r34
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r22r23, $r22r23
+; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r22r23, $r22r23
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r60r61, $r20r21
+; KV3_2-NEXT:    fmma222w.nt $r48r49 = $r60r61, $r20r21
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    fmma222w.nt $r46r47 = $r60r61, $r22r23
+; KV3_2-NEXT:    fmma222w.nt $r42r43 = $r60r61, $r22r23
 ; KV3_2-NEXT:    ;; # (end cycle 4)
 ; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r60r61, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 5)
-; KV3_2-NEXT:    fmma222w.nt $r34r35 = $r62r63, $r20r21
+; KV3_2-NEXT:    fmma222w.nt $r36r37 = $r62r63, $r20r21
 ; KV3_2-NEXT:    ;; # (end cycle 6)
-; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r62r63, $r22r23
+; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r62r63, $r22r23
 ; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a1
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r62r63, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    xlo $a0 = $r44[$r0]
-; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r62r63, $r62r63
+; KV3_2-NEXT:    xlo $a0 = $r46[$r0]
+; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r62r63, $r62r63
 ; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a0
-; KV3_2-NEXT:    addd $r44 = $r44, 36
+; KV3_2-NEXT:    addd $r46 = $r46, 36
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    xlo $a1 = $r43[$r0]
+; KV3_2-NEXT:    xlo $a1 = $r45[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r20r21, $r20r21
-; KV3_2-NEXT:    addd $r43 = $r43, 36
+; KV3_2-NEXT:    addd $r45 = $r45, 36
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r60r61, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 12)
 ; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r62r63, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 13)
-; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r62r63, $r62r63
+; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r62r63, $r62r63
 ; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 14)
-; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r20r21, $r60r61
+; KV3_2-NEXT:    fmma222w.nt $r48r49 = $r20r21, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 15)
-; KV3_2-NEXT:    fmma222w.nt $r46r47 = $r20r21, $r62r63
+; KV3_2-NEXT:    fmma222w.nt $r42r43 = $r20r21, $r62r63
 ; KV3_2-NEXT:    ;; # (end cycle 16)
-; KV3_2-NEXT:    fmma222w.nt $r34r35 = $r22r23, $r60r61
+; KV3_2-NEXT:    fmma222w.nt $r36r37 = $r22r23, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 17)
-; KV3_2-NEXT:    xlo $a0 = $r42[$r0]
-; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r22r23, $r62r63
+; KV3_2-NEXT:    xlo $a0 = $r44[$r0]
+; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r22r23, $r62r63
 ; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a0
-; KV3_2-NEXT:    addd $r42 = $r42, 36
+; KV3_2-NEXT:    addd $r44 = $r44, 36
 ; KV3_2-NEXT:    ;; # (end cycle 18)
 ; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r22r23, $r20r21
 ; KV3_2-NEXT:    ;; # (end cycle 19)
 ; KV3_2-NEXT:    xlo $a1 = $r39[$r0]
-; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r22r23, $r22r23
+; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r22r23, $r22r23
 ; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a1
 ; KV3_2-NEXT:    addd $r39 = $r39, 36
 ; KV3_2-NEXT:    ;; # (end cycle 20)
-; KV3_2-NEXT:    xlo $a2 = $r48[$r0]
+; KV3_2-NEXT:    xlo $a2 = $r52[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r60r61, $r60r61
-; KV3_2-NEXT:    addd $r48 = $r48, 36
+; KV3_2-NEXT:    addd $r52 = $r52, 36
 ; KV3_2-NEXT:    ;; # (end cycle 21)
-; KV3_2-NEXT:    xlo $a3 = $r38[$r0]
+; KV3_2-NEXT:    xlo $a3 = $r9[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r62r63, $r60r61
-; KV3_2-NEXT:    addd $r38 = $r38, 36
+; KV3_2-NEXT:    addd $r9 = $r9, 36
 ; KV3_2-NEXT:    ;; # (end cycle 22)
-; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r62r63, $r62r63
+; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r62r63, $r62r63
 ; KV3_2-NEXT:    ;; # (end cycle 23)
-; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r20r21, $r60r61
+; KV3_2-NEXT:    fmma222w.nt $r48r49 = $r20r21, $r60r61
 ; KV3_2-NEXT:    xcopyx.zd $a0a1 = $a0a1
 ; KV3_2-NEXT:    ;; # (end cycle 24)
-; KV3_2-NEXT:    fmma222w.nt $r46r47 = $r20r21, $r62r63
+; KV3_2-NEXT:    fmma222w.nt $r42r43 = $r20r21, $r62r63
 ; KV3_2-NEXT:    ;; # (end cycle 25)
 ; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r20r21, $r20r21
 ; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 26)
-; KV3_2-NEXT:    fmma222w.nt $r34r35 = $r22r23, $r60r61
+; KV3_2-NEXT:    fmma222w.nt $r36r37 = $r22r23, $r60r61
 ; KV3_2-NEXT:    ;; # (end cycle 27)
 ; KV3_2-NEXT:    xlo $a0 = $r15[$r0]
-; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r22r23, $r62r63
-; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a0
+; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r22r23, $r62r63
+; KV3_2-NEXT:    xmovefo $r24r25r26r27 = $a0
 ; KV3_2-NEXT:    addd $r15 = $r15, 36
 ; KV3_2-NEXT:    ;; # (end cycle 28)
-; KV3_2-NEXT:    xlo $a1 = $r9[$r0]
+; KV3_2-NEXT:    xlo $a1 = $r38[$r0]
 ; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r22r23, $r20r21
-; KV3_2-NEXT:    xmovefo $r24r25r26r27 = $a1
-; KV3_2-NEXT:    addd $r9 = $r9, 36
+; KV3_2-NEXT:    xmovefo $r28r29r30r31 = $a1
+; KV3_2-NEXT:    addd $r38 = $r38, 36
 ; KV3_2-NEXT:    ;; # (end cycle 29)
-; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r22r23, $r22r23
-; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
-; KV3_2-NEXT:    ;; # (end cycle 30)
-; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r60r61, $r60r61
-; KV3_2-NEXT:    ;; # (end cycle 31)
-; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r62r63, $r60r61
-; KV3_2-NEXT:    ;; # (end cycle 32)
-; KV3_2-NEXT:    fmma222w.nt $r52r53 = $r62r63, $r62r63
-; KV3_2-NEXT:    ;; # (end cycle 33)
-; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r24r25, $r60r61
-; KV3_2-NEXT:    ;; # (end cycle 34)
-; KV3_2-NEXT:    fmma222w.nt $r46r47 = $r24r25, $r62r63
-; KV3_2-NEXT:    ;; # (end cycle 35)
-; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r24r25, $r24r25
-; KV3_2-NEXT:    ;; # (end cycle 36)
-; KV3_2-NEXT:    fmma222w.nt $r34r35 = $r26r27, $r60r61
-; KV3_2-NEXT:    ;; # (end cycle 37)
-; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r26r27, $r62r63
+; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r22r23, $r22r23
 ; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
+; KV3_2-NEXT:    ;; # (end cycle 30)
+; KV3_2-NEXT:    fmma222w.nt $r56r57 = $r24r25, $r24r25
+; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
+; KV3_2-NEXT:    ;; # (end cycle 31)
+; KV3_2-NEXT:    fmma222w.nt $r54r55 = $r26r27, $r24r25
+; KV3_2-NEXT:    ;; # (end cycle 32)
+; KV3_2-NEXT:    fmma222w.nt $r50r51 = $r26r27, $r26r27
+; KV3_2-NEXT:    ;; # (end cycle 33)
+; KV3_2-NEXT:    fmma222w.nt $r48r49 = $r28r29, $r24r25
+; KV3_2-NEXT:    ;; # (end cycle 34)
+; KV3_2-NEXT:    fmma222w.nt $r42r43 = $r28r29, $r26r27
+; KV3_2-NEXT:    ;; # (end cycle 35)
+; KV3_2-NEXT:    fmma222w.nt $r40r41 = $r28r29, $r28r29
+; KV3_2-NEXT:    ;; # (end cycle 36)
+; KV3_2-NEXT:    fmma222w.nt $r36r37 = $r30r31, $r24r25
+; KV3_2-NEXT:    ;; # (end cycle 37)
+; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r30r31, $r26r27
 ; KV3_2-NEXT:    ;; # (end cycle 38)
-; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r26r27, $r24r25
+; KV3_2-NEXT:    fmma222w.nt $r16r17 = $r30r31, $r28r29
 ; KV3_2-NEXT:    ;; # (end cycle 39)
-; KV3_2-NEXT:    fmma222w.nt $r32r33 = $r26r27, $r26r27
-; KV3_2-NEXT:    cb.odd $r37 ? .LBB0_1
+; KV3_2-NEXT:    fmma222w.nt $r10r11 = $r30r31, $r30r31
+; KV3_2-NEXT:    cb.odd $r35 ? .LBB0_1
 ; KV3_2-NEXT:    ;; # (end cycle 40)
 ; KV3_2-NEXT:  .LBB0_2: # %for.cond.cleanup
 ; KV3_2-NEXT:    addw $r3 = $r3, $r2
-; KV3_2-NEXT:    addw $r4 = $r4, $r2
+; KV3_2-NEXT:    addw $r8 = $r8, $r2
 ; KV3_2-NEXT:    sxwd $r9 = $r2
 ; KV3_2-NEXT:    addw $r15 = $r2, $r1
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sxwd $r3 = $r3
-; KV3_2-NEXT:    addw $r8 = $r8, $r2
+; KV3_2-NEXT:    addw $r7 = $r7, $r2
+; KV3_2-NEXT:    sxwd $r8 = $r8
 ; KV3_2-NEXT:    sq.xs $r9[$r0] = $r56r57
 ; KV3_2-NEXT:    sxwd $r9 = $r15
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    sxwd $r4 = $r4
+; KV3_2-NEXT:    sxwd $r3 = $r3
+; KV3_2-NEXT:    addw $r5 = $r5, $r2
 ; KV3_2-NEXT:    sq.xs $r9[$r0] = $r54r55
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    sq.xs $r3[$r0] = $r52r53
-; KV3_2-NEXT:    sxwd $r3 = $r8
+; KV3_2-NEXT:    sq.xs $r8[$r0] = $r50r51
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    sq.xs $r4[$r0] = $r50r51
-; KV3_2-NEXT:    addw $r4 = $r6, $r2
+; KV3_2-NEXT:    sq.xs $r3[$r0] = $r48r49
+; KV3_2-NEXT:    sxwd $r3 = $r7
 ; KV3_2-NEXT:    ;; # (end cycle 4)
-; KV3_2-NEXT:    sq.xs $r3[$r0] = $r46r47
-; KV3_2-NEXT:    sxwd $r3 = $r4
-; KV3_2-NEXT:    addw $r4 = $r7, $r2
+; KV3_2-NEXT:    sq.xs $r3[$r0] = $r42r43
+; KV3_2-NEXT:    sxwd $r3 = $r5
+; KV3_2-NEXT:    addw $r5 = $r6, $r2
 ; KV3_2-NEXT:    ;; # (end cycle 5)
 ; KV3_2-NEXT:    sq.xs $r3[$r0] = $r40r41
-; KV3_2-NEXT:    sxwd $r3 = $r4
-; KV3_2-NEXT:    addx8w $r4 = $r1, $r2
+; KV3_2-NEXT:    sxwd $r3 = $r5
 ; KV3_2-NEXT:    ;; # (end cycle 6)
-; KV3_2-NEXT:    sq.xs $r3[$r0] = $r34r35
-; KV3_2-NEXT:    addw $r3 = $r5, $r2
+; KV3_2-NEXT:    sq.xs $r3[$r0] = $r36r37
+; KV3_2-NEXT:    addw $r3 = $r4, $r2
+; KV3_2-NEXT:    addx8w $r4 = $r1, $r2
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    sxwd $r1 = $r4
 ; KV3_2-NEXT:    maddw $r2 = $r1, 9
 ; KV3_2-NEXT:    sxwd $r3 = $r3
 ; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    sq.xs $r3[$r0] = $r10r11
+; KV3_2-NEXT:    sq.xs $r3[$r0] = $r32r33
 ; KV3_2-NEXT:    ;; # (end cycle 9)
 ; KV3_2-NEXT:    sq.xs $r1[$r0] = $r16r17
 ; KV3_2-NEXT:    sxwd $r1 = $r2
 ; KV3_2-NEXT:    ;; # (end cycle 10)
-; KV3_2-NEXT:    sq.xs $r1[$r0] = $r32r33
+; KV3_2-NEXT:    sq.xs $r1[$r0] = $r10r11
 ; KV3_2-NEXT:    ;; # (end cycle 11)
 ; KV3_2-NEXT:    lo $r20r21r22r23 = 0[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 12)
 ; KV3_2-NEXT:    lo $r24r25r26r27 = 32[$r12]
-; KV3_2-NEXT:    addd $r12 = $r12, 64
-; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;; # (end cycle 13)
+; KV3_2-NEXT:    lo $r28r29r30r31 = 64[$r12]
+; KV3_2-NEXT:    addd $r12 = $r12, 96
+; KV3_2-NEXT:    ret
+; KV3_2-NEXT:    ;; # (end cycle 14)
 entry:
   %0 = tail call <256 x i1> @llvm.kvx.xload256(ptr %a, i32 0)
   %idxprom = sext i32 %n to i64

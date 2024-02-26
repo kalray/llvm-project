@@ -60,7 +60,7 @@ define i8 @reduce_add_zext_long_external_use(<128 x i1> %x) {
 ; CHECK-NEXT:    [[SEXT:%.*]] = sext <128 x i1> [[X:%.*]] to <128 x i8>
 ; CHECK-NEXT:    [[RES:%.*]] = call i8 @llvm.vector.reduce.add.v128i8(<128 x i8> [[SEXT]])
 ; CHECK-NEXT:    [[EXT:%.*]] = extractelement <128 x i8> [[SEXT]], i64 0
-; CHECK-NEXT:    store i8 [[EXT]], i8* @glob, align 1
+; CHECK-NEXT:    store i8 [[EXT]], ptr @glob, align 1
 ; CHECK-NEXT:    ret i8 [[RES]]
 ;
   %sext = sext <128 x i1> %x to <128 x i8>
@@ -76,7 +76,7 @@ define i64 @reduce_add_zext_external_use(<8 x i1> %x) {
 ; CHECK-NEXT:    [[ZEXT:%.*]] = zext <8 x i1> [[X:%.*]] to <8 x i64>
 ; CHECK-NEXT:    [[RES:%.*]] = call i64 @llvm.vector.reduce.add.v8i64(<8 x i64> [[ZEXT]])
 ; CHECK-NEXT:    [[EXT:%.*]] = extractelement <8 x i64> [[ZEXT]], i64 0
-; CHECK-NEXT:    store i64 [[EXT]], i64* @glob1, align 8
+; CHECK-NEXT:    store i64 [[EXT]], ptr @glob1, align 8
 ; CHECK-NEXT:    ret i64 [[RES]]
 ;
   %zext = zext <8 x i1> %x to <8 x i64>

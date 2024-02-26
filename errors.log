@@ -52,13 +52,9 @@
 	FAIL: LLVM :: CodeGen/Generic/APIntParam.ll
 	FAIL: LLVM :: CodeGen/Generic/APIntSextParam.ll
 	FAIL: LLVM :: CodeGen/Generic/APIntZextParam.ll
-	FAIL: LLVM :: CodeGen/KVX/Asm/tca-O0.ll
 	FAIL: LLVM :: CodeGen/KVX/Atomics/ld-st.ll
 	FAIL: LLVM :: CodeGen/KVX/Atomics/operations.ll
 	FAIL: LLVM :: CodeGen/KVX/Bugfix/T15272.ll
-	FAIL: LLVM :: CodeGen/KVX/Bugfix/jfdctint.ll
-	FAIL: LLVM :: CodeGen/KVX/Bugfix/loadstore-T12917.ll
-	FAIL: LLVM :: CodeGen/KVX/Builtins/vector-shift.ll
 	FAIL: LLVM :: CodeGen/KVX/Bundling/vliw-packetizer-debug.ll
 	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/cb.ll
 	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/cfi.ll
@@ -67,51 +63,15 @@
 	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/order.ll
 	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/tail-call3-dbg.ll
 	FAIL: LLVM :: CodeGen/KVX/Debug/dwarf.ll
-	FAIL: LLVM :: CodeGen/KVX/Extracts/loadons.ll
-	FAIL: LLVM :: CodeGen/KVX/Extracts/newbh.ll
-	FAIL: LLVM :: CodeGen/KVX/Extracts/tco-burg.ll
-	FAIL: LLVM :: CodeGen/KVX/IfConvert/liferange.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/jumptable.ll
 	FAIL: LLVM :: CodeGen/KVX/Selection/compnbo.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v16f16-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v16i8-instructions.ll
 	FAIL: LLVM :: CodeGen/KVX/Selection/v2i8-instructions.ll
 	FAIL: LLVM :: CodeGen/KVX/Selection/v4i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v8i32-instructions.ll
 	FAIL: LLVM :: CodeGen/KVX/Selection/v8i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/vector-256bit-arithmetics.ll
 	FAIL: LLVM :: CodeGen/KVX/Selection/vector_select.ll
-	FAIL: LLVM :: CodeGen/KVX/Stackframe/anonymous-arguments.ll
-	FAIL: LLVM :: CodeGen/KVX/Stackframe/stack-realign.ll
-	FAIL: LLVM :: CodeGen/KVX/Stackframe/stackcheck.ll
-	FAIL: LLVM :: CodeGen/KVX/Tailcalls/tail-call2.ll
-	FAIL: LLVM :: CodeGen/KVX/copro-regs.ll
-	FAIL: LLVM :: CodeGen/X86/avx-cvt-2.ll
-	FAIL: LLVM :: CodeGen/X86/avx512-cvt.ll
-	FAIL: LLVM :: CodeGen/X86/min-legal-vector-width.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-128-fp16.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-128.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-256-fp16.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-256.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-512-fp16.ll
-	FAIL: LLVM :: CodeGen/X86/vec-strict-fptoint-512.ll
-	FAIL: LLVM :: CodeGen/X86/vec_cast2.ll
-	FAIL: LLVM :: CodeGen/X86/vec_fp_to_int.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-add-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-and-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-mul-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-or-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-smax-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-smin-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-umax-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-umin-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/InstCombine/reduction-xor-sext-zext-i1.ll
-	FAIL: LLVM :: Transforms/LoopIdiom/KVX/popcnt.ll
-	FAIL: LLVM :: Transforms/LoopVectorize/reduction-inloop.ll
-	FAIL: LLVM :: Transforms/PhaseOrdering/X86/vector-reductions-logical.ll
 	FAIL: LLVM :: Transforms/SLPVectorizer/KVX/zext-trunc-bug.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  116
+Failures:  76

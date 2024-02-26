@@ -9,28 +9,36 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r2 = $r1
+; CHECK-NEXT:    sd 120[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    sd 112[$r12] = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 120[$r12] = $r1
+; CHECK-NEXT:    ld $r0 = 112[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 112[$r12] = $r2
+; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    addd $r3 = $r2, 1
+; CHECK-NEXT:    sd 104[$r12] = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 104[$r12] = $r3
+; CHECK-NEXT:    ld $r1 = 120[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r2 = 112[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r3 = 104[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
-; CHECK-NEXT:    xlo.u $a0 = $r2[$r1]
+; CHECK-NEXT:    xlo.u $a1 = $r2[$r1]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.us $a1 = $r3[$r1]
+; CHECK-NEXT:    xlo.us $a0 = $r3[$r1]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
-; CHECK-NEXT:    xso 64[$r12] = $a0
+; CHECK-NEXT:    xso 64[$r12] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r12] = $a1
+; CHECK-NEXT:    xso 32[$r12] = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo.u $a0 = 64[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo.u $a1 = 32[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 120[$r12]
 ; CHECK-NEXT:    ;;
@@ -149,6 +157,8 @@ define void @asm_clobber_wide_vec(<256 x i1>* %a) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
+; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
@@ -174,13 +184,17 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -96
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 64[$r12] = $r1
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 72[$r12] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 88[$r12] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 80[$r12] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 88[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 64[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r1 = 80[$r12]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 72[$r12] = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -202,9 +216,9 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 72[$r12]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r0] = $a1
+; CHECK-NEXT:    xso 0[$r1] = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 0[$r1] = $a0
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r12, 96
 ; CHECK-NEXT:    ;;
@@ -236,6 +250,8 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 24[$r12] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 24[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r0]
 ; CHECK-NEXT:    ;;
@@ -277,11 +293,13 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r31 = $r12, -64
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 144[$r31] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 160[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 152[$r31] = $r1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 160[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 144[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a0 = 32[$r0]
 ; CHECK-NEXT:    ;;
@@ -290,7 +308,9 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    # kill: def $a4 killed $a4 def $w2
 ; CHECK-NEXT:    xcopyo $a5 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
+; CHECK-NEXT:    ld $r0 = 152[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xlo.u $a6 = 0[$r0]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmma484bw $a4a5 = $a4a5, $a6, $a6
@@ -360,9 +380,11 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    andd $r31 = $r12, -128
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    sd 344[$r31] = $r0
-; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    sd 352[$r31] = $r0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ld $r0 = 352[$r31]
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sd 344[$r31] = $r0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    xlo.u $a2 = 96[$r0]
 ; CHECK-NEXT:    ;;

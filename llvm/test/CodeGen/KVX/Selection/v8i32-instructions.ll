@@ -1381,21 +1381,21 @@ define <8 x i32> @nandd_v4i32_rr(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @nandd_v4i32_ri10(<8 x i32> %0) {
 ; ALL-LABEL: nandd_v4i32_ri10:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r4 = 1023
-; ALL-NEXT:    make $r5 = 0
+; ALL-NEXT:    make $r7 = -1
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    andd $r0 = $r0, $r4
-; ALL-NEXT:    andd $r1 = $r1, $r5
 ; ALL-NEXT:    andd $r2 = $r2, $r4
-; ALL-NEXT:    andd $r3 = $r3, $r5
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    make $r4 = -1
-; ALL-NEXT:    make $r5 = -1
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    eord $r0 = $r0, $r4
-; ALL-NEXT:    eord $r1 = $r1, $r5
+; ALL-NEXT:    andd $r1 = $r0, $r1
 ; ALL-NEXT:    eord $r2 = $r2, $r4
-; ALL-NEXT:    eord $r3 = $r3, $r5
+; ALL-NEXT:    andd $r5 = $r0, $r1
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    eord $r1 = $r5, $r7
+; ALL-NEXT:    eord $r3 = $r1, $r7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %2 = and <8 x i32> %0, <i32 1023, i32 0, i32 0, i32 0, i32 1023, i32 0, i32 0, i32 0>
@@ -1406,21 +1406,21 @@ define <8 x i32> @nandd_v4i32_ri10(<8 x i32> %0) {
 define <8 x i32> @nandd_v4i32_ri37_0(<8 x i32> %0) {
 ; ALL-LABEL: nandd_v4i32_ri37_0:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r4 = 0xfffffffd00000400
-; ALL-NEXT:    make $r5 = 0
+; ALL-NEXT:    make $r7 = -1
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    andd $r0 = $r0, $r4
-; ALL-NEXT:    andd $r1 = $r1, $r5
 ; ALL-NEXT:    andd $r2 = $r2, $r4
-; ALL-NEXT:    andd $r3 = $r3, $r5
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    make $r4 = -1
-; ALL-NEXT:    make $r5 = -1
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    eord $r0 = $r0, $r4
-; ALL-NEXT:    eord $r1 = $r1, $r5
+; ALL-NEXT:    andd $r1 = $r0, $r1
 ; ALL-NEXT:    eord $r2 = $r2, $r4
-; ALL-NEXT:    eord $r3 = $r3, $r5
+; ALL-NEXT:    andd $r5 = $r0, $r1
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    eord $r1 = $r5, $r7
+; ALL-NEXT:    eord $r3 = $r1, $r7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %2 = and <8 x i32> %0, <i32 1024, i32 -3, i32 0, i32 0, i32 1024, i32 -3, i32 0, i32 0>
@@ -1431,21 +1431,21 @@ define <8 x i32> @nandd_v4i32_ri37_0(<8 x i32> %0) {
 define <8 x i32> @nandd_v4i32_ri37_1(<8 x i32> %0) {
 ; ALL-LABEL: nandd_v4i32_ri37_1:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    make $r4 = 0xfffffffd00000400
-; ALL-NEXT:    make $r5 = 0
+; ALL-NEXT:    make $r7 = -1
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    andd $r0 = $r0, $r4
-; ALL-NEXT:    andd $r1 = $r1, $r5
 ; ALL-NEXT:    andd $r2 = $r2, $r4
-; ALL-NEXT:    andd $r3 = $r3, $r5
-; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    make $r4 = -1
-; ALL-NEXT:    make $r5 = -1
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    eord $r0 = $r0, $r4
-; ALL-NEXT:    eord $r1 = $r1, $r5
+; ALL-NEXT:    andd $r1 = $r0, $r1
 ; ALL-NEXT:    eord $r2 = $r2, $r4
-; ALL-NEXT:    eord $r3 = $r3, $r5
+; ALL-NEXT:    andd $r5 = $r0, $r1
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    eord $r1 = $r5, $r7
+; ALL-NEXT:    eord $r3 = $r1, $r7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %2 = and <8 x i32> %0, <i32 1024, i32 -3, i32 0, i32 0, i32 1024, i32 -3, i32 0, i32 0>

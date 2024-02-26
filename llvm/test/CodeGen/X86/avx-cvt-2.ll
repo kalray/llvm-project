@@ -10,7 +10,11 @@
 define void @fptoui16(%f32vec_t %a, ptr%p) {
 ; CHECK-LABEL: fptoui16:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vcvttps2dq %ymm0, %ymm1
+; CHECK-NEXT:    vsubps {{\.?LCPI[0-9]+_[0-9]+}}(%rip), %ymm0, %ymm0
 ; CHECK-NEXT:    vcvttps2dq %ymm0, %ymm0
+; CHECK-NEXT:    vorps %ymm0, %ymm1, %ymm0
+; CHECK-NEXT:    vblendvps %ymm1, %ymm0, %ymm1, %ymm0
 ; CHECK-NEXT:    vextractf128 $1, %ymm0, %xmm1
 ; CHECK-NEXT:    vpackusdw %xmm1, %xmm0, %xmm0
 ; CHECK-NEXT:    vmovdqa %xmm0, (%rdi)

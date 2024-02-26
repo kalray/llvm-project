@@ -68,7 +68,8 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:  .LBB0_3:
 ; FP-NONE-NEXT:    make $r0 = 0
-; FP-NONE-NEXT:    goto .LBB0_9
+; FP-NONE-NEXT:    addd $r12 = $r12, 96
+; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:  .LBB0_4: # %for.body.preheader.new
 ; FP-NONE-NEXT:    andw $r0 = $r0, -8
