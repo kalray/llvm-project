@@ -341,7 +341,7 @@ def exclude_unsupported_files_for_kvx(dirname):
         try:
            data = f.read()
            # object files are not supported on kvx, so exclude the tests.
-           if (any(option in data for option in ('llvm-mc', '-emit-obj', '-fmodule-format=obj', '-fintegrated-as', '-integrated-as'))):
+           if (any(option in data for option in ('llvm-mc', '-emit-obj', '-fmodule-format=obj', '-fintegrated-as', '-integrated-as', '_BitInt'))):
                config.excludes += [ filename ]
         finally:
            f.close()

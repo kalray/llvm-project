@@ -1,6 +1,1 @@
-	FAIL: LLVM :: CodeGen/KVX/Selection/v16f16-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v16i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v2i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v4i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v8i32-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v8i8-instructions.ll
+CodeGen/KVX/Debug/*

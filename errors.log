@@ -1,8 +1,5 @@
-	FAIL: Clang :: AST/Interp/complex.cpp
-	FAIL: Clang :: AST/Interp/intap.cpp
 	FAIL: Clang :: ASTMerge/codegen-body/test.c
 	FAIL: Clang :: CXX/module/module.import/p7.cpp
-	FAIL: Clang :: CXX/temp/temp.param/p7.cpp
 	FAIL: Clang :: ClangScanDeps/P1689.cppm
 	FAIL: Clang :: ClangScanDeps/headerwithdirname.cpp
 	FAIL: Clang :: ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
@@ -41,14 +38,9 @@
 	FAIL: Clang :: Driver/modules.mm
 	FAIL: Clang :: Frontend/rewrite-includes-macros.cpp
 	FAIL: Clang :: Misc/pragma-attribute-supported-attributes-list.test
-	FAIL: Clang :: Modules/odr_hash.cpp
 	FAIL: Clang :: PCH/gch-probe.c
-	FAIL: Clang :: Sema/builtin-classify-type.c
-	FAIL: Clang :: Sema/generic-selection-type-extension.c
-	FAIL: Clang :: SemaCXX/builtin-classify-type.cpp
 	FAIL: Clang :: SemaCXX/kvx-tca-types.cpp
 	FAIL: Clang Tools :: clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c
-	FAIL: Clang Tools :: clang-tidy/checkers/readability/bitint-no-crash.c
 	FAIL: LLVM :: CodeGen/Generic/APIntParam.ll
 	FAIL: LLVM :: CodeGen/Generic/APIntSextParam.ll
 	FAIL: LLVM :: CodeGen/Generic/APIntZextParam.ll
@@ -67,11 +59,5 @@
 	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/jumptable.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/compnbo.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v2i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v4i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/v8i8-instructions.ll
-	FAIL: LLVM :: CodeGen/KVX/Selection/vector_select.ll
-	FAIL: LLVM :: Transforms/SLPVectorizer/KVX/zext-trunc-bug.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  76
+Failures:  62

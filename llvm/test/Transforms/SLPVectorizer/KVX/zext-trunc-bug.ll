@@ -2,11 +2,11 @@
 ; RUN: opt -mcpu=kv3-1 -passes=loop-vectorize --disable-symbolication -S %s
 ; RUN: opt -mcpu=kv3-2 -passes=loop-vectorize --disable-symbolication -S %s
 
-; RUN: opt -mcpu=kv3-1 -slp-vectorizer --disable-symbolication -S %s
-; RUN: opt -mcpu=kv3-2 -slp-vectorizer --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-1 -passes=slp-vectorizer --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 -passes=slp-vectorizer --disable-symbolication -S %s
 
-; RUN: opt -mcpu=kv3-1 --aggressive-instcombine --disable-symbolication -S %s
-; RUN: opt -mcpu=kv3-2 --aggressive-instcombine --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-1 -passes=aggressive-instcombine --disable-symbolication -S %s
+; RUN: opt -mcpu=kv3-2 -passes=aggressive-instcombine --disable-symbolication -S %s
 
 target triple = "kvx-kalray-cos"
 
