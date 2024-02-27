@@ -508,11 +508,6 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                      ISD::USHLSAT, ISD::USUBSAT, ISD::VSELECT})
         setOperationAction(I, VT, Legal);
 
-    for (auto I : {ISD::ABS, ISD::ADD, ISD::SETCC, ISD::SHL, ISD::SRA, ISD::SRL,
-                   ISD::SSHLSAT, ISD::SUB, ISD::UADDSAT, ISD::USHLSAT,
-                   ISD::USUBSAT, ISD::VSELECT})
-      setOperationAction(I, MVT::v8i8, Legal);
-
     setOperationAction(ISD::MULHU, MVT::v4i32, Legal);
     setOperationAction(ISD::MULHS, MVT::v4i32, Legal);
 
@@ -661,12 +656,21 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
                                           EVT VT) const {
   LLVM_DEBUG(dbgs() << "Obtaining setcc result type for: "
-                    << getMVTName(VT.getSimpleVT()) << '\n');
+                    << getMVTName(VT.getSimpleVT()));
   if (!VT.isVector())
     return MVT::i32;
-  return EVT::getVectorVT(
-      C, VT.getIntegerVT(C, VT.getVectorElementType().getSizeInBits()),
-      VT.getVectorNumElements());
+
+  TypeSize EltSz = VT.getVectorElementType().getSizeInBits();
+  TypeSize MinEltSz = TypeSize::getFixed(
+      (Subtarget.isV1() || VT.isFloatingPoint()) ? 16 : 8);
+
+  if (MinEltSz > EltSz)
+    EltSz = MinEltSz;
+
+  auto EltTy = VT.getIntegerVT(C, EltSz);
+  EVT RVT = EVT::getVectorVT(C, EltTy, VT.getVectorNumElements());
+  LLVM_DEBUG(dbgs() << ": "; RVT.dump());
+  return RVT;
 }
 
 const char *KVXTargetLowering::getTargetNodeName(unsigned Opcode) const {

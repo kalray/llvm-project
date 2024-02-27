@@ -9,11 +9,11 @@ target triple = "kvx-kalray-cos"
 define <8 x i8> @eq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-LABEL: eq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
-; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
+; CV1-NEXT:    sxmbhq $r2 = $r1
+; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1
@@ -39,11 +39,11 @@ entry:
 define <8 x i8> @neq(<8 x i8> %a, <8 x i8> %b){
 ; CV1-LABEL: neq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
-; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
+; CV1-NEXT:    sxmbhq $r2 = $r1
+; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.ne $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    compnhq.ne $r0 = $r0, $r1
@@ -189,8 +189,8 @@ entry:
 define <4 x i8> @v2_eq(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_eq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -212,8 +212,8 @@ entry:
 define <4 x i8> @v2_neq(<4 x i8> %a, <4 x i8> %b){
 ; CV1-LABEL: v2_neq:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ne $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -329,11 +329,11 @@ entry:
 define <8 x i8> @azext(<8 x i8> %a, <8 x i8> %b){
 ; CV1-LABEL: azext:
 ; CV1:       # %bb.0: # %entry
-; CV1-NEXT:    sbmm8 $r2 = $r1, 0x80004000200010
-; CV1-NEXT:    sbmm8 $r3 = $r0, 0x80004000200010
+; CV1-NEXT:    sxmbhq $r2 = $r1
+; CV1-NEXT:    sxmbhq $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    compnhq.eq $r2 = $r3, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    compnhq.eq $r0 = $r0, $r1

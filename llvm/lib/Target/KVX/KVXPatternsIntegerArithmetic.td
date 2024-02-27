@@ -1201,6 +1201,22 @@ multiclass COMP_Pat<PatFrag Node, Comparison Mod, Comparison RevMod> {
   def : Pat<(sra (shl (v2i16 (Node v2i16:$lhs, v2i16:$rhs)), (v2i16 v2_splat_15)), (v2i16 v2_splat_15)),
         (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod)>;
 
+  // TRUNCATE(COMPNHQ) for i8
+  def : Pat<(v4i8 (Node v4i16:$lhs, is_imm_vec_kvx_splat32_:$rhs)),
+        (SBMM8ri37 (COMPNHQri SingleReg:$lhs,  (build_imm_vec $rhs), Mod), 0x40100401)>;
+
+  def : Pat<(v4i8 (Node v4i16:$lhs, is_imm_vec_kvx_splat32_at:$rhs)),
+        (SBMM8ri37 (COMPNHQris SingleReg:$lhs,  (build_imm_vec $rhs), Mod), 0x40100401)>;
+
+  def : Pat<(v4i8 (Node v4i16:$lhs, v4i16:$rhs)),
+        (SBMM8ri37 (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod), 0x40100401)>;
+
+  def : Pat<(v2i8 (Node v2i16:$lhs, is_imm_vec:$rhs)),
+        (SBMM8ri37 (COMPNHQri SingleReg:$lhs,  (build_imm_vec $rhs), Mod), 0x0401)>;
+
+  def : Pat<(v2i8 (Node v2i16:$lhs, v2i16:$rhs)),
+        (SBMM8ri37 (COMPNHQ SingleReg:$lhs, SingleReg:$rhs, Mod), 0x0401)>;
+
   //COMPNWP
   def : Pat<(v2i32 (Node v2i32:$lhs, (v2i32(is_imm_vec_kvx_splat32_:$rhs)))),
         (COMPNWPri SingleReg:$lhs, (build_imm_vec $rhs), Mod)>;
