@@ -26,6 +26,7 @@ define void @f() local_unnamed_addr #0 !dbg !7 {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .loc 1 12 1 epilogue_begin is_stmt 0 # cfi.c:12:1
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -46,7 +47,7 @@ entry:
 define void @g() local_unnamed_addr #0 !dbg !20 {
 ; CHECK-LABEL: g:
 ; CHECK:       .Lfunc_begin1:
-; CHECK-NEXT:    .loc 1 14 0 # cfi.c:14:0
+; CHECK-NEXT:    .loc 1 14 0 is_stmt 1 # cfi.c:14:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -63,6 +64,7 @@ define void @g() local_unnamed_addr #0 !dbg !20 {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    .cfi_def_cfa 14, 16
 ; CHECK-NEXT:    .cfi_offset 14, -16
+; CHECK-NEXT:    .loc 1 22 1 epilogue_begin is_stmt 0 # cfi.c:22:1
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -83,7 +85,7 @@ entry:
 define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-LABEL: h:
 ; CHECK:       .Lfunc_begin2:
-; CHECK-NEXT:    .loc 1 24 0 # cfi.c:24:0
+; CHECK-NEXT:    .loc 1 24 0 is_stmt 1 # cfi.c:24:0
 ; CHECK-NEXT:    .cfi_startproc
 ; CHECK-NEXT:  # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 236
@@ -110,7 +112,7 @@ define i8 @h() local_unnamed_addr #0 !dbg !28 {
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 8 8] -2
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 16 8] -3
 ; CHECK-NEXT:    #DEBUG_VALUE: h:b <- [DW_OP_LLVM_fragment 24 8] -4
-; CHECK-NEXT:    .loc 1 33 3 prologue_end is_stmt 1 # cfi.c:33:3
+; CHECK-NEXT:    .loc 1 33 3 prologue_end epilogue_begin is_stmt 1 # cfi.c:33:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]

@@ -24,6 +24,7 @@ class KVXMCAsmInfo : public MCAsmInfoELF {
 
 public:
   explicit KVXMCAsmInfo(const Triple &TargetTriple);
+  bool shouldOmitSectionDirective(StringRef SectionName) const override;
 };
 
 } // namespace llvm

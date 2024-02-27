@@ -83,7 +83,7 @@ define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-NEXT:    .loc 1 11 10 is_stmt 1 # dwarf.c:11:10
 ; CHECK-NEXT:    call other
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 11 3 is_stmt 0 # dwarf.c:11:3
+; CHECK-NEXT:    .loc 1 11 3 epilogue_begin is_stmt 0 # dwarf.c:11:3
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 48[$r12]
@@ -214,7 +214,7 @@ define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-NEXT:    .loc 1 37 10 is_stmt 1 # dwarf.c:37:10
 ; CHECK-NEXT:    call other1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 37 3 is_stmt 0 # dwarf.c:37:3
+; CHECK-NEXT:    .loc 1 37 3 epilogue_begin is_stmt 0 # dwarf.c:37:3
 ; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r31 = 232[$r12]
@@ -383,7 +383,7 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    .loc 1 73 10 # dwarf.c:73:10
 ; CHECK-NEXT:    call other2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 73 3 # dwarf.c:73:3
+; CHECK-NEXT:    .loc 1 73 3 epilogue_begin # dwarf.c:73:3
 ; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r31 = 232[$r12]
@@ -565,7 +565,7 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    .loc 1 119 10 # dwarf.c:119:10
 ; CHECK-NEXT:    call other4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .loc 1 119 3 # dwarf.c:119:3
+; CHECK-NEXT:    .loc 1 119 3 epilogue_begin # dwarf.c:119:3
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 48[$r12]

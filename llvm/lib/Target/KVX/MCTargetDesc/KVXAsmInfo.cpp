@@ -17,18 +17,25 @@ using namespace llvm;
 void KVXMCAsmInfo::anchor() {}
 
 KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
-  CodePointerSize = 8;
   CalleeSaveStackSlotSize = 8;
+  CodePointerSize = 8;
   CommentString = "#";
+  CompressDebugSections = DebugCompressionType::None;
   Data64bitsDirective = "\t.8byte\t";
   DwarfRegNumForCFI = true;
   ExceptionsType = ExceptionHandling::SjLj;
+  HasBasenameOnlyForFileDirective = false;
   MaxInstLength = 12;
   MinInstAlignment = 4;
-  SupportsDebugInformation = true;
-  UseIntegratedAssembler = false;
-  UsesELFSectionDirectiveForBSS = true;
-  UsesCFIWithoutEH = true;
   ParseInlineAsmUsingAsmParser = false;
   PreserveAsmComments = true;
+  SupportsDebugInformation = true;
+  UseIntegratedAssembler = false;
+  UsesCFIForDebug = true;
+  UsesCFIWithoutEH = false;
+  UsesELFSectionDirectiveForBSS = false;
+}
+
+bool KVXMCAsmInfo::shouldOmitSectionDirective(StringRef SectionName) const {
+  return false;
 }
