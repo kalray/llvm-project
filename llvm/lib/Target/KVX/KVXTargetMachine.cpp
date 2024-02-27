@@ -152,7 +152,7 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
   Options.EnableFastISel = false;
   Options.EnableGlobalISel = false;
   Options.EnableCFIFixup = true;
-  setSupportsDebugEntryValues(true);
+    setSupportsDebugEntryValues(true);
   initAsmInfo();
 }
 

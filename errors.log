@@ -47,17 +47,9 @@
 	FAIL: LLVM :: CodeGen/KVX/Atomics/ld-st.ll
 	FAIL: LLVM :: CodeGen/KVX/Atomics/operations.ll
 	FAIL: LLVM :: CodeGen/KVX/Bugfix/T15272.ll
-	FAIL: LLVM :: CodeGen/KVX/Bundling/vliw-packetizer-debug.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/cb.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/cfi.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/csr.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/emit-cfi.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/order.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/CFI/tail-call3-dbg.ll
-	FAIL: LLVM :: CodeGen/KVX/Debug/dwarf.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/jumptable.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  62
+Failures:  54

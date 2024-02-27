@@ -34,7 +34,7 @@ define i64 @f_1_nopack() local_unnamed_addr #0 !dbg !16 {
 ; CHECK-NEXT:    ld $r18 = 0[$r0]
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    .loc 1 12 3 # cfi-csr.c:12:3
+; CHECK-NEXT:    .loc 1 12 3 epilogue_begin # cfi-csr.c:12:3
 ; CHECK-NEXT:    copyd $r0 = $r18
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -97,7 +97,7 @@ define i64 @f_2_pairpack() local_unnamed_addr #0 !dbg !29 {
 ; CHECK-NEXT:    ld $r19 = 8[$r0]
 ; CHECK-NEXT:    call foo
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    .loc 1 34 12 # cfi-csr.c:34:12
+; CHECK-NEXT:    .loc 1 34 12 epilogue_begin # cfi-csr.c:34:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -170,7 +170,7 @@ define i64 @f_3_pairpack() local_unnamed_addr #0 !dbg !39 {
 ; CHECK-NEXT:    .loc 1 58 12 # cfi-csr.c:58:12
 ; CHECK-NEXT:    addd $r0 = $r19, $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .loc 1 58 16 is_stmt 0 # cfi-csr.c:58:16
+; CHECK-NEXT:    .loc 1 58 16 epilogue_begin is_stmt 0 # cfi-csr.c:58:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -257,7 +257,7 @@ define i64 @f_4_quadpack() local_unnamed_addr #0 !dbg !52 {
 ; CHECK-NEXT:    .loc 1 87 16 is_stmt 0 # cfi-csr.c:87:16
 ; CHECK-NEXT:    addd $r0 = $r0, $r20
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    .loc 1 87 20 # cfi-csr.c:87:20
+; CHECK-NEXT:    .loc 1 87 20 epilogue_begin # cfi-csr.c:87:20
 ; CHECK-NEXT:    addd $r0 = $r0, $r21
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -359,7 +359,7 @@ define i64 @f_5_quadpack() local_unnamed_addr #0 !dbg !68 {
 ; CHECK-NEXT:    .loc 1 116 20 # cfi-csr.c:116:20
 ; CHECK-NEXT:    addd $r0 = $r0, $r21
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    .loc 1 116 24 # cfi-csr.c:116:24
+; CHECK-NEXT:    .loc 1 116 24 epilogue_begin # cfi-csr.c:116:24
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 3)
@@ -473,7 +473,7 @@ define i64 @f_6_1quad1pairpack() local_unnamed_addr #0 !dbg !87 {
 ; CHECK-NEXT:    .loc 1 150 24 # cfi-csr.c:150:24
 ; CHECK-NEXT:    addd $r0 = $r0, $r22
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    .loc 1 150 28 # cfi-csr.c:150:28
+; CHECK-NEXT:    .loc 1 150 28 epilogue_begin # cfi-csr.c:150:28
 ; CHECK-NEXT:    addd $r0 = $r0, $r23
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 4)
@@ -664,7 +664,7 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    .loc 1 192 56 # cfi-csr.c:192:56
 ; CHECK-NEXT:    addd $r0 = $r0, $r30
 ; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    .loc 1 192 60 # cfi-csr.c:192:60
+; CHECK-NEXT:    .loc 1 192 60 epilogue_begin # cfi-csr.c:192:60
 ; CHECK-NEXT:    addd $r0 = $r0, $r31
 ; CHECK-NEXT:    addd $r12 = $r14, -112
 ; CHECK-NEXT:    ;; # (end cycle 12)
@@ -902,7 +902,7 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:    .loc 1 249 60 # cfi-csr.c:249:60
 ; CHECK-NEXT:    addd $r0 = $r0, $r31
 ; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    .loc 1 249 64 # cfi-csr.c:249:64
+; CHECK-NEXT:    .loc 1 249 64 epilogue_begin # cfi-csr.c:249:64
 ; CHECK-NEXT:    addd $r0 = $r0, $r18
 ; CHECK-NEXT:    addd $r12 = $r14, -144
 ; CHECK-NEXT:    ;; # (end cycle 16)
@@ -1113,7 +1113,7 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args <- [DW_OP_constu 112, DW_OP_minus, DW_OP_deref] $r14
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:args2 <- [DW_OP_constu 120, DW_OP_minus, DW_OP_deref] $r14
-; CHECK-NEXT:    .loc 1 309 3 is_stmt 1 # cfi-csr.c:309:3
+; CHECK-NEXT:    .loc 1 309 3 epilogue_begin is_stmt 1 # cfi-csr.c:309:3
 ; CHECK-NEXT:    addd $r12 = $r14, -32
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r18 = 24[$r12]

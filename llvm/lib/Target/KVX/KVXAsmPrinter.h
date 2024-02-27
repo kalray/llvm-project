@@ -43,5 +43,5 @@ public:
 
   bool runOnMachineFunction(MachineFunction &MF) override;
 
-  const TargetRegisterInfo *TRI;
+    const TargetRegisterInfo *TRI;
 };
