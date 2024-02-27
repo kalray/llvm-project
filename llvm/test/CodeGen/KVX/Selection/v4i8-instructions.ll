@@ -694,36 +694,34 @@ define <4 x i8> @test_select_cc(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c, <4 x i8> %d) #0 {
 ; CV1-LABEL: test_select_cc_f32_f32:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r8 = $r8, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r9 = $r9, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r8 = $r8
+; CV1-NEXT:    sxlbhq $r9 = $r9
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ltu $r8 = $r8, $r9
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r8 = $r8, 0x40100401
+; CV1-NEXT:    srlw $r8 = $r8, 16
+; CV1-NEXT:    srld $r9 = $r8, 48
+; CV1-NEXT:    extfz $r10 = $r8, 47, 32
+; CV1-NEXT:    zxhd $r11 = $r8
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    zxbd $r8 = $r8
-; CV1-NEXT:    srlw $r9 = $r8, 24
-; CV1-NEXT:    extfz $r10 = $r8, 23, 16
-; CV1-NEXT:    extfz $r11 = $r8, 15, 8
+; CV1-NEXT:    sxhd $r9 = $r9
+; CV1-NEXT:    sxhd $r10 = $r10
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    sxbd $r9 = $r9
-; CV1-NEXT:    sxbd $r10 = $r10
+; CV1-NEXT:    sxhd $r8 = $r8
+; CV1-NEXT:    sxhd $r11 = $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    sxbd $r8 = $r8
-; CV1-NEXT:    sxbd $r11 = $r11
+; CV1-NEXT:    cmoved.dnez $r11 ? $r4 = $r0
+; CV1-NEXT:    cmoved.dnez $r8 ? $r5 = $r1
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    cmoved.dnez $r8 ? $r4 = $r0
-; CV1-NEXT:    cmoved.dnez $r11 ? $r5 = $r1
-; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    copyd $r1 = $r5
 ; CV1-NEXT:    cmoved.dnez $r10 ? $r6 = $r2
 ; CV1-NEXT:    cmoved.dnez $r9 ? $r7 = $r3
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r2 = $r6
 ; CV1-NEXT:    copyd $r3 = $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: test_select_cc_f32_f32:
 ; CV2:       # %bb.0:
@@ -758,8 +756,8 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 define <4 x i1> @test_icmp_ule(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ule:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -800,8 +798,8 @@ define <4 x i1> @test_icmp_slt(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_ugt(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ugt:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -821,8 +819,8 @@ define <4 x i1> @test_icmp_ugt(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_uge(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_uge:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -842,8 +840,8 @@ define <4 x i1> @test_icmp_uge(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_ult(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ult:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r0 = $r0
+; CV1-NEXT:    sxlbhq $r1 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -1382,18 +1380,16 @@ define <4 x i8> @lshr_val_splat_w_undefs(<4 x i8> %lhs, i32 %s ) {
 define <4 x i8> @test_select_cmp(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> %d) #0 {
 ; CV1-LABEL: test_select_cmp:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x8000400020001
-; CV1-NEXT:    sbmm8 $r3 = $r3, 0x8000400020001
+; CV1-NEXT:    sxlbhq $r2 = $r2
+; CV1-NEXT:    sxlbhq $r3 = $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ne $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sbmm8 $r2 = $r2, 0x40100401
+; CV1-NEXT:    compd.eq $r2 = $r2, -1
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    compw.eq $r2 = $r2, -1
-; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.even $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 3)
 ;
 ; CV2-LABEL: test_select_cmp:
 ; CV2:       # %bb.0:
