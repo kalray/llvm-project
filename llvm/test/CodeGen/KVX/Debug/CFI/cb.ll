@@ -49,7 +49,6 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:doAdd <- [DW_OP_LLVM_entry_value 1] $r2
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:y <- [DW_OP_LLVM_entry_value 1] $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:x <- [DW_OP_LLVM_entry_value 1] $r0
-; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:S <- undef
 ; CHECK-NEXT:    .loc 1 0 10 is_stmt 0 # test.c:0:10
 ; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;;
@@ -65,7 +64,6 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:doAdd <- [DW_OP_LLVM_entry_value 1] $r2
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:y <- [DW_OP_LLVM_entry_value 1] $r1
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:x <- [DW_OP_LLVM_entry_value 1] $r0
-; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:S <- undef
 ; CHECK-NEXT:  .LBB0_3: # %if.end
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:doAdd <- [DW_OP_LLVM_entry_value 1] $r2
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:y <- [DW_OP_LLVM_entry_value 1] $r1
@@ -80,6 +78,7 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    .loc 1 12 3 # test.c:12:3
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    .loc 1 12 3 epilogue_begin is_stmt 0 # test.c:12:3
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)

@@ -460,6 +460,9 @@ protected:
   /// (debugging / sanitizers) when `ExceptionsType == ExceptionHandling::None`.
   bool UsesCFIWithoutEH = false;
 
+  /// True if target uses CFI unwind information is used for debugging
+  bool UsesCFIForDebug = false;
+
   /// Windows exception handling data (.pdata) encoding.  Defaults to Invalid.
   WinEH::EncodingType WinEHEncodingType = WinEH::EncodingType::Invalid;
 
@@ -780,6 +783,10 @@ public:
 
   bool usesCFIWithoutEH() const {
     return ExceptionsType == ExceptionHandling::None && UsesCFIWithoutEH;
+  }
+
+  bool usesCFIForDebug() const {
+    return UsesCFIForDebug;
   }
 
   /// Returns true if the exception handling method for the platform uses call

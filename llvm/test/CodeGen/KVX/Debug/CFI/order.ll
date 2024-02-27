@@ -78,7 +78,7 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r21 = $r19, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    .loc 1 5 47 # cfi-order.c:5:47
+; CHECK-NEXT:    .loc 1 5 47 epilogue_begin # cfi-order.c:5:47
 ; CHECK-NEXT:    sq 0[$r18] = $r20r21
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -182,7 +182,7 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    insf $r21 = $r19, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    .loc 1 6 47 # cfi-order.c:6:47
+; CHECK-NEXT:    .loc 1 6 47 epilogue_begin # cfi-order.c:6:47
 ; CHECK-NEXT:    sq 0[$r18] = $r20r21
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 2)
@@ -243,7 +243,7 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S1 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U2 <- undef
 ; CHECK-NEXT:    #DEBUG_VALUE: f:U1 <- undef
-; CHECK-NEXT:    .loc 1 32 3 prologue_end is_stmt 1 # cfi-order.c:32:3
+; CHECK-NEXT:    .loc 1 32 3 prologue_end epilogue_begin is_stmt 1 # cfi-order.c:32:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]

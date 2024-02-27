@@ -568,7 +568,8 @@ bool AsmPrinter::doInitialization(Module &M) {
         break;
     }
     assert(MAI->getExceptionHandlingType() == ExceptionHandling::DwarfCFI ||
-           usesCFIWithoutEH() || ModuleCFISection != CFISection::EH);
+           usesCFIWithoutEH() || ModuleCFISection != CFISection::EH ||
+           (MAI->usesCFIForDebug() && ModuleCFISection == CFISection::Debug));
     break;
   default:
     break;
@@ -1299,13 +1300,16 @@ bool AsmPrinter::usesCFIWithoutEH() const {
 
 void AsmPrinter::emitCFIInstruction(const MachineInstr &MI) {
   ExceptionHandling ExceptionHandlingType = MAI->getExceptionHandlingType();
-  if (!usesCFIWithoutEH() &&
-      ExceptionHandlingType != ExceptionHandling::DwarfCFI &&
-      ExceptionHandlingType != ExceptionHandling::ARM)
+  const CFISection CFIS = getFunctionCFISectionType(*MF);
+  if (CFIS == CFISection::None)
     return;
 
-  if (getFunctionCFISectionType(*MF) == CFISection::None)
+  if (!usesCFIWithoutEH() &&
+      ExceptionHandlingType != ExceptionHandling::DwarfCFI &&
+      ExceptionHandlingType != ExceptionHandling::ARM &&
+      !(MAI->usesCFIForDebug() && CFIS == CFISection::Debug))
     return;
+
 
   // If there is no "real" instruction following this CFI instruction, skip
   // emitting it; it would be beyond the end of the function's FDE range.
