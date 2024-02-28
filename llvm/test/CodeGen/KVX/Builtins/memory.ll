@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @d1inval(){
+define void @d1inval() {
 ; CHECK-LABEL: d1inval:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    d1inval
@@ -15,9 +15,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.d1inval() #1
+declare void @llvm.kvx.d1inval()
 
-define void @dinvall(ptr %p){
+define void @dinvall(ptr %p) {
 ; CHECK-LABEL: dinvall:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    dinvall 0[$r0]
@@ -28,9 +28,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.dinvall(ptr ) #1
+declare void @llvm.kvx.dinvall(ptr)
 
-define void @dtouchl(ptr %p){
+define void @dtouchl(ptr %p) {
 ; CHECK-LABEL: dtouchl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    dtouchl 0[$r0]
@@ -41,9 +41,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.dtouchl(ptr ) #1
+declare void @llvm.kvx.dtouchl(ptr)
 
-define void @dzerol(ptr %p){
+define void @dzerol(ptr %p) {
 ; CHECK-LABEL: dzerol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    dzerol 0[$r0]
@@ -54,9 +54,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.dzerol(ptr ) #1
+declare void @llvm.kvx.dzerol(ptr)
 
-define void @fence(){
+define void @fence() {
 ; CHECK-LABEL: fence:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    fence
@@ -67,9 +67,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.fence(i32) #1
+declare void @llvm.kvx.fence(i32)
 
-define void @i1inval(){
+define void @i1inval() {
 ; CHECK-LABEL: i1inval:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    i1inval
@@ -80,9 +80,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.i1inval() #1
+declare void @llvm.kvx.i1inval()
 
-define void @i1invals(ptr %p){
+define void @i1invals(ptr %p) {
 ; CHECK-LABEL: i1invals:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    i1invals 0[$r0]
@@ -93,9 +93,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.i1invals(ptr ) #1
+declare void @llvm.kvx.i1invals(ptr)
 
-define void @tlbdinval(){
+define void @tlbdinval() {
 ; CHECK-LABEL: tlbdinval:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    tlbdinval
@@ -107,9 +107,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.tlbdinval() #1
+declare void @llvm.kvx.tlbdinval()
 
-define void @tlbiinval(){
+define void @tlbiinval() {
 ; CHECK-LABEL: tlbiinval:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    tlbiinval
@@ -121,9 +121,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.tlbiinval() #1
+declare void @llvm.kvx.tlbiinval()
 
-define void @tlbprobe(){
+define void @tlbprobe() {
 ; CHECK-LABEL: tlbprobe:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    tlbprobe
@@ -135,9 +135,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.tlbprobe() #1
+declare void @llvm.kvx.tlbprobe()
 
-define void @tlbread(){
+define void @tlbread() {
 ; CHECK-LABEL: tlbread:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    tlbread
@@ -149,9 +149,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.tlbread() #1
+declare void @llvm.kvx.tlbread()
 
-define void @tlbwrite(){
+define void @tlbwrite() {
 ; CHECK-LABEL: tlbwrite:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    tlbwrite
@@ -163,9 +163,9 @@ entry:
   ret void
 }
 
-declare void @llvm.kvx.tlbwrite() #1
+declare void @llvm.kvx.tlbwrite()
 
-define i8 @lbz(ptr nocapture readonly %p){
+define i8 @lbz(ptr %p) {
 ; CHECK-LABEL: lbz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.u $r0 = 0[$r0]
@@ -177,7 +177,7 @@ entry:
   ret i8 %1
 }
 
-define i32 @lbs(ptr nocapture readonly %p){
+define i32 @lbs(ptr %p) {
 ; CHECK-LABEL: lbs:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbs.u $r0 = 0[$r0]
@@ -190,197 +190,182 @@ entry:
   ret i32 %conv
 }
 
-define i16 @lhz(ptr nocapture readonly %p){
+define i16 @lhz(ptr %p) {
 ; CHECK-LABEL: lhz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(256)
-  %2 = load i16, ptr addrspace(256) %1, align 2
-  ret i16 %2
+  %0 = addrspacecast ptr %p to ptr addrspace(256)
+  %1 = load i16, ptr addrspace(256) %0, align 2
+  ret i16 %1
 }
 
-define i64 @lhs(ptr nocapture readonly %p){
+define i64 @lhs(ptr %p) {
 ; CHECK-LABEL: lhs:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhs.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(256)
-  %2 = load i16, ptr addrspace(256) %1, align 2
-  %3 = sext i16 %2 to i64
-  ret i64 %3
+  %0 = addrspacecast ptr %p to ptr addrspace(256)
+  %1 = load i16, ptr addrspace(256) %0, align 2
+  %2 = sext i16 %1 to i64
+  ret i64 %2
 }
 
-define i32 @lwz(ptr nocapture readonly %p){
+define i32 @lwz(ptr %p) {
 ; CHECK-LABEL: lwz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(256)
-  %2 = load i32, ptr addrspace(256) %1, align 4
-  ret i32 %2
+  %0 = addrspacecast ptr %p to ptr addrspace(256)
+  %1 = load i32, ptr addrspace(256) %0, align 4
+  ret i32 %1
 }
 
-define i64 @lws(ptr nocapture readonly %p){
+define i64 @lws(ptr %p) {
 ; CHECK-LABEL: lws:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws.u $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(256)
-  %2 = load i32, ptr addrspace(256) %1, align 4
-  %3 = sext i32 %2 to i64
-  ret i64 %3
+  %0 = addrspacecast ptr %p to ptr addrspace(256)
+  %1 = load i32, ptr addrspace(256) %0, align 4
+  %2 = sext i32 %1 to i64
+  ret i64 %2
 }
 
-define float @lwf(ptr %p){
+define float @lwf(ptr %p) {
 ; CHECK-LABEL: lwf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile float, ptr addrspace(258) %1, align 4
-  ret float %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile float, ptr addrspace(258) %0, align 4
+  ret float %1
 }
 
-define i64 @ld(ptr %p){
+define i64 @ld(ptr %p) {
 ; CHECK-LABEL: ld:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile i64, ptr addrspace(258) %1, align 8
-  ret i64 %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile i64, ptr addrspace(258) %0, align 8
+  ret i64 %1
 }
 
-define double @ldf(ptr %p){
+define double @ldf(ptr %p) {
 ; CHECK-LABEL: ldf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile double, ptr addrspace(258) %1, align 8
-  ret double %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile double, ptr addrspace(258) %0, align 8
+  ret double %1
 }
 
-define <8 x i8> @ldbo(ptr %p){
+define <8 x i8> @ldbo(ptr %p) {
 ; CHECK-LABEL: ldbo:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile <8 x i8>, ptr addrspace(258) %1, align 8
-  ret <8 x i8> %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile <8 x i8>, ptr addrspace(258) %0, align 8
+  ret <8 x i8> %1
 }
 
-define <4 x i16> @ldhq(ptr %p){
+define <4 x i16> @ldhq(ptr %p) {
 ; CHECK-LABEL: ldhq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile <4 x i16>, ptr addrspace(258) %1, align 8
-  ret <4 x i16> %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile <4 x i16>, ptr addrspace(258) %0, align 8
+  ret <4 x i16> %1
 }
 
-define <2 x i32> @ldwp(ptr %p){
+define <2 x i32> @ldwp(ptr %p) {
 ; CHECK-LABEL: ldwp:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile <2 x i32>, ptr addrspace(258) %1, align 8
-  ret <2 x i32> %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile <2 x i32>, ptr addrspace(258) %0, align 8
+  ret <2 x i32> %1
 }
 
-define <2 x float> @ldfwp(ptr %p){
+define <2 x float> @ldfwp(ptr %p) {
 ; CHECK-LABEL: ldfwp:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.s $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = addrspacecast ptr %0 to ptr addrspace(258)
-  %2 = load volatile <2 x float>, ptr addrspace(258) %1, align 8
-  ret <2 x float> %2
+  %0 = addrspacecast ptr %p to ptr addrspace(258)
+  %1 = load volatile <2 x float>, ptr addrspace(258) %0, align 8
+  ret <2 x float> %1
 }
 
-define void @sdbo(ptr %p, <8 x i8> %v){
+define void @sdbo(ptr %p, <8 x i8> %v) {
 ; CHECK-LABEL: sdbo:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  store volatile <8 x i8> %v, ptr %0, align 8
+  store volatile <8 x i8> %v, ptr %p, align 8
   ret void
 }
 
-define void @sdhq(ptr %p, <4 x i16> %v){
+define void @sdhq(ptr %p, <4 x i16> %v) {
 ; CHECK-LABEL: sdhq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  store volatile <4 x i16> %v, ptr %0, align 8
+  store volatile <4 x i16> %v, ptr %p, align 8
   ret void
 }
 
-define void @sdwp(ptr %p, <2 x i32> %v){
+define void @sdwp(ptr %p, <2 x i32> %v) {
 ; CHECK-LABEL: sdwp:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  store volatile <2 x i32> %v, ptr %0, align 8
+  store volatile <2 x i32> %v, ptr %p, align 8
   ret void
 }
 
-define void @sdfwp(ptr %p, <2 x float> %v){
+define void @sdfwp(ptr %p, <2 x float> %v) {
 ; CHECK-LABEL: sdfwp:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = bitcast ptr %p to ptr 
-  %1 = bitcast <2 x float> %v to <4 x i16>
-  store volatile <4 x i16> %1, ptr %0, align 8
+  %0 = bitcast <2 x float> %v to <4 x i16>
+  store volatile <4 x i16> %0, ptr %p, align 8
   ret void
 }
 

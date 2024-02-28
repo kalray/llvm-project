@@ -13,7 +13,7 @@ target triple = "kvx-kalray-cos"
 ;   return *a + *b + *c;
 ; }
 
-define dso_local i32 @f(i32 %sz) {
+define i32 @f(i32 %sz) {
 ; FP-ALL-LABEL: f:
 ; FP-ALL:       # %bb.0: # %entry
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
@@ -68,18 +68,15 @@ define dso_local i32 @f(i32 %sz) {
 entry:
   %conv = sext i32 %sz to i64
   %0 = alloca i8, i64 %conv, align 128
-  %1 = bitcast ptr %0 to ptr 
-  %2 = alloca [2 x i32], align 32
-  %3 = alloca i8, i64 %conv, align 32
-  %.sub = getelementptr inbounds [2 x i32], ptr %2, i64 0, i64 0
-  %4 = bitcast ptr %3 to ptr 
-  %call = call i32 @g(ptr nonnull %1, ptr nonnull %.sub, ptr nonnull %4)
-  %5 = load i32, ptr %1, align 128
-  %6 = load i32, ptr %.sub, align 32
-  %add = add nsw i32 %6, %5
-  %7 = load i32, ptr %4, align 32
-  %add2 = add nsw i32 %add, %7
+  %1 = alloca [2 x i32], align 32
+  %2 = alloca i8, i64 %conv, align 32
+  %call = call i32 @g(ptr nonnull %0, ptr nonnull %1, ptr nonnull %2)
+  %3 = load i32, ptr %0, align 128
+  %4 = load i32, ptr %1, align 32
+  %add = add nsw i32 %4, %3
+  %5 = load i32, ptr %2, align 32
+  %add2 = add nsw i32 %add, %5
   ret i32 %add2
 }
 
-declare dso_local i32 @g(ptr, ptr, ptr )
+declare i32 @g(ptr, ptr, ptr) local_unnamed_addr

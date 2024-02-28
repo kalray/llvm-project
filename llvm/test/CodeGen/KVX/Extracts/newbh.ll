@@ -6,73 +6,39 @@
 
 target triple = "kvx-kalray-cos"
 
-%struct.node = type { i16, double, [3 x double], i32, i32 }
-%struct.bnode = type { i16, double, [3 x double], i32, i32, [3 x double], [3 x double], [3 x double], double, %struct.bnode*, %struct.bnode* }
-%struct.hgstruct = type { %struct.bnode*, [3 x double], double, [3 x double] }
-%struct.tree = type { [3 x double], double, %struct.node*, [64 x %struct.bnode*], [64 x %struct.bnode*] }
-%struct.cnode = type { i16, double, [3 x double], i32, i32, [8 x %struct.node*], %struct.cnode* }
+%struct.cnode = type { i16, double, [3 x double], i32, i32, [8 x ptr], ptr }
 
-@.str = private unnamed_addr constant [27 x i8] c"nbody = %d, numnodes = %d\0A\00"
 @nbody = common global i32 0
 @NumNodes = common global i32 0
-@.str.2 = private unnamed_addr constant [20 x i8] c"Bodies per %d = %d\0A\00"
 @.str.3 = private unnamed_addr constant [22 x i8] c"Assertion Failure #%d\00"
-@cp_free_list = global %struct.node* null
-@bp_free_list = global %struct.bnode* null
-@.str.5 = private unnamed_addr constant [24 x i8] c"%2d BODY@%x %f, %f, %f\0A\00"
-@.str.6 = private unnamed_addr constant [24 x i8] c"%2d CELL@%x %f, %f, %f\0A\00"
-@.str.7 = private unnamed_addr constant [15 x i8] c"%2d NULL TREE\0A\00"
-@root = common global %struct.node* null
+@cp_free_list = global ptr null
+@bp_free_list = global ptr null
+@root = common global ptr null
 @rmin = common global [3 x double] zeroinitializer
 @xxxrsize = common global double 0.000000e+00
 @arg1 = common global i32 0
-@str = private unnamed_addr constant [16 x i8] c"bodies created \00"
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
+declare i32 @printf(ptr readonly, ...)
 
-declare i32 @dealwithargs(...)
+declare noalias ptr @malloc(i64 noundef)
 
-declare noundef i32 @printf(ptr nocapture noundef readonly, ...)
+declare void @abort() local_unnamed_addr
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
-
-declare void @srand(i32)
-
-declare noalias noundef ptr @malloc(i64)
-
-declare void @llvm.memcpy.p0i8.p0i8.i64(ptr noalias nocapture writeonly, ptr noalias nocapture readonly, i64, i1 immarg)
-
-declare void @abort()
-
-declare double @llvm.sqrt.f64(double)
-
-declare double @my_rand(...)
-
-declare double @xrand(...)
-
-declare double @llvm.pow.f64(double, double)
-
-declare i32 @__fpclassifyd(double)
-
-declare double @llvm.fabs.f64(double)
-
-declare void @walksub(%struct.hgstruct* sret(%struct.hgstruct) align 8, %struct.node*, double, double, %struct.hgstruct*, i32)
-
-define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocapture %1, i32 %2, i32 %3) {
+define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-LABEL: expandbox:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    addd $r12 = $r12, -160
+; KV3_1-NEXT:    addd $r12 = $r12, -128
 ; KV3_1-NEXT:    get $r16 = $ra
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 152[$r12] = $r16
+; KV3_1-NEXT:    sd 120[$r12] = $r16
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    so 120[$r12] = $r28r29r30r31
+; KV3_1-NEXT:    so 88[$r12] = $r28r29r30r31
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    so 88[$r12] = $r24r25r26r27
+; KV3_1-NEXT:    so 56[$r12] = $r24r25r26r27
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    so 56[$r12] = $r20r21r22r23
+; KV3_1-NEXT:    so 24[$r12] = $r20r21r22r23
 ; KV3_1-NEXT:    ;; # (end cycle 4)
-; KV3_1-NEXT:    sq 40[$r12] = $r18r19
+; KV3_1-NEXT:    sq 8[$r12] = $r18r19
 ; KV3_1-NEXT:    copyd $r18 = $r1
 ; KV3_1-NEXT:    copyd $r19 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 5)
@@ -115,23 +81,23 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.2:
+; KV3_1-NEXT:    make $r0 = 0x4000000000000000
+; KV3_1-NEXT:    ;; # (end cycle 0)
+; KV3_1-NEXT:    fcompd.ult $r0 = $r0, $r22
+; KV3_1-NEXT:    ;; # (end cycle 1)
+; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_7
+; KV3_1-NEXT:    ;;
+; KV3_1-NEXT:  # %bb.3:
 ; KV3_1-NEXT:    make $r0 = 0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompd.ult $r0 = $r22, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:  # %bb.3:
+; KV3_1-NEXT:  # %bb.4:
 ; KV3_1-NEXT:    make $r0 = 0x3ff0000000000000
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fcompd.uge $r0 = $r22, $r0
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_7
-; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:  # %bb.4:
-; KV3_1-NEXT:    make $r0 = 0x4000000000000000
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fcompd.ult $r0 = $r0, $r22
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_1-NEXT:    ;;
@@ -150,17 +116,11 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_25
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_7:
-; KV3_1-NEXT:    addd $r0 = $r18, 8
 ; KV3_1-NEXT:    make $r3 = cp_free_list
 ; KV3_1-NEXT:    make $r27 = 0x3ff0000000000000
 ; KV3_1-NEXT:    make $r28 = 0
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 32[$r12] = $r0
-; KV3_1-NEXT:    addd $r0 = $r18, 32
-; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    sd 24[$r12] = $r0
 ; KV3_1-NEXT:    goto .LBB0_9
-; KV3_1-NEXT:    ;; # (end cycle 2)
+; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:  .LBB0_8: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    make $r0 = 0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
@@ -177,12 +137,12 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    fmuld $r0 = $r20, 0x3fe0000000000000
 ; KV3_1-NEXT:    ld $r1 = 16[$r19]
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    faddd $r22 = $r0, $r26
+; KV3_1-NEXT:    faddd $r22 = $r26, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    copyd $r1 = $r0
 ; KV3_1-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_1-NEXT:    ;; # (end cycle 8)
-; KV3_1-NEXT:    fadddp $r24r25 = $r0r1, $r30r31
+; KV3_1-NEXT:    fadddp $r24r25 = $r30r31, $r0r1
 ; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_1-NEXT:    ;;
@@ -199,10 +159,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    ld $r0 = 32[$r12]
 ; KV3_1-NEXT:    fsbfd $r30 = $r20, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 0[$r0] = $r30
+; KV3_1-NEXT:    sd 8[$r18] = $r30
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 32[$r19]
@@ -263,17 +222,15 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 8)
-; KV3_1-NEXT:    ld $r0 = 32[$r12]
+; KV3_1-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    lq $r30r31 = 0[$r0]
-; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
-; KV3_1-NEXT:    ;; # (end cycle 6)
+; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    copyd $r0 = $r25
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
-; KV3_1-NEXT:    ;; # (end cycle 10)
+; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    copyd $r0 = $r24
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    copyd $r25 = $r0
@@ -301,18 +258,20 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    cb.even $r1 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.21: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    zxbd $r0 = $r0
+; KV3_1-NEXT:    fcompd.ult $r1 = $r22, $r23
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    cb.even $r0 ? .LBB0_26
+; KV3_1-NEXT:    cb.wnez $r1 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.22: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fcompd.ult $r0 = $r22, $r23
+; KV3_1-NEXT:    fcompd.uge $r1 = $r22, $r27
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_26
+; KV3_1-NEXT:    cb.wnez $r1 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.23: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fcompd.olt $r0 = $r22, $r27
+; KV3_1-NEXT:    zxbd $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
+; KV3_1-NEXT:    andw $r0 = $r0, 1
+; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.24: # in Loop: Header=BB0_9 Depth=1
@@ -332,7 +291,6 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    fixedd.rz $r0 = $r0, 0
 ; KV3_1-NEXT:    srlw $r1 = $r24, 28
 ; KV3_1-NEXT:    extfz $r2 = $r25, 29, 29
-; KV3_1-NEXT:    ld $r3 = 24[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andw $r1 = $r1, 2
 ; KV3_1-NEXT:    ;; # (end cycle 1)
@@ -341,7 +299,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    andw $r0 = $r0, 4
 ; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    iorw $r0 = $r1, $r0
-; KV3_1-NEXT:    ld $r1 = 0[$r3]
+; KV3_1-NEXT:    ld $r1 = 32[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 6)
 ; KV3_1-NEXT:    iorw $r0 = $r0, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 7)
@@ -349,7 +307,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    sd 48[$r0] = $r1
 ; KV3_1-NEXT:    ;; # (end cycle 9)
-; KV3_1-NEXT:    sd 0[$r3] = $r21
+; KV3_1-NEXT:    sd 32[$r18] = $r21
 ; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    ld $r0 = 16[$r19]
 ; KV3_1-NEXT:    ;; # (end cycle 11)
@@ -387,19 +345,19 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_9
 ; KV3_1-NEXT:    ;;
-; KV3_1-NEXT:  .LBB0_25:
-; KV3_1-NEXT:    lq $r18r19 = 40[$r12]
+; KV3_1-NEXT:  .LBB0_25: # %.loopexit
+; KV3_1-NEXT:    lq $r18r19 = 8[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; KV3_1-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; KV3_1-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; KV3_1-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    ld $r16 = 152[$r12]
+; KV3_1-NEXT:    ld $r16 = 120[$r12]
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    set $ra = $r16
-; KV3_1-NEXT:    addd $r12 = $r12, 160
+; KV3_1-NEXT:    addd $r12 = $r12, 128
 ; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;;
@@ -420,18 +378,18 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ;
 ; KV3_2-LABEL: expandbox:
 ; KV3_2:       # %bb.0:
-; KV3_2-NEXT:    addd $r12 = $r12, -160
+; KV3_2-NEXT:    addd $r12 = $r12, -128
 ; KV3_2-NEXT:    get $r16 = $ra
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 152[$r12] = $r16
+; KV3_2-NEXT:    sd 120[$r12] = $r16
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    so 120[$r12] = $r28r29r30r31
+; KV3_2-NEXT:    so 88[$r12] = $r28r29r30r31
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    so 88[$r12] = $r24r25r26r27
+; KV3_2-NEXT:    so 56[$r12] = $r24r25r26r27
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    so 56[$r12] = $r20r21r22r23
+; KV3_2-NEXT:    so 24[$r12] = $r20r21r22r23
 ; KV3_2-NEXT:    ;; # (end cycle 4)
-; KV3_2-NEXT:    sq 40[$r12] = $r18r19
+; KV3_2-NEXT:    sq 8[$r12] = $r18r19
 ; KV3_2-NEXT:    copyd $r18 = $r1
 ; KV3_2-NEXT:    copyd $r19 = $r0
 ; KV3_2-NEXT:    ;; # (end cycle 5)
@@ -474,23 +432,23 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.2:
+; KV3_2-NEXT:    make $r0 = 0x4000000000000000
+; KV3_2-NEXT:    ;; # (end cycle 0)
+; KV3_2-NEXT:    fcompd.ult $r0 = $r0, $r22
+; KV3_2-NEXT:    ;; # (end cycle 1)
+; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_7
+; KV3_2-NEXT:    ;;
+; KV3_2-NEXT:  # %bb.3:
 ; KV3_2-NEXT:    make $r0 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fcompd.ult $r0 = $r22, $r0
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:  # %bb.3:
+; KV3_2-NEXT:  # %bb.4:
 ; KV3_2-NEXT:    make $r0 = 0x3ff0000000000000
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fcompd.uge $r0 = $r22, $r0
-; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_7
-; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:  # %bb.4:
-; KV3_2-NEXT:    make $r0 = 0x4000000000000000
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fcompd.ult $r0 = $r0, $r22
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_7
 ; KV3_2-NEXT:    ;;
@@ -509,17 +467,11 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_25
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_7:
-; KV3_2-NEXT:    addd $r0 = $r18, 8
 ; KV3_2-NEXT:    make $r3 = cp_free_list
 ; KV3_2-NEXT:    make $r27 = 0x3ff0000000000000
 ; KV3_2-NEXT:    make $r28 = 0
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 32[$r12] = $r0
-; KV3_2-NEXT:    addd $r0 = $r18, 32
-; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    sd 24[$r12] = $r0
 ; KV3_2-NEXT:    goto .LBB0_9
-; KV3_2-NEXT:    ;; # (end cycle 2)
+; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:  .LBB0_8: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    make $r0 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
@@ -538,12 +490,12 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fmuld $r0 = $r20, $r0
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    faddd $r22 = $r0, $r26
+; KV3_2-NEXT:    faddd $r22 = $r26, $r0
 ; KV3_2-NEXT:    ;; # (end cycle 5)
 ; KV3_2-NEXT:    copyd $r1 = $r0
 ; KV3_2-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    fadddp $r24r25 = $r0r1, $r30r31
+; KV3_2-NEXT:    fadddp $r24r25 = $r30r31, $r0r1
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_2-NEXT:    ;;
@@ -560,10 +512,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    ld $r0 = 32[$r12]
 ; KV3_2-NEXT:    fsbfd $r30 = $r20, $r30
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 0[$r0] = $r30
+; KV3_2-NEXT:    sd 8[$r18] = $r30
 ; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 32[$r19]
@@ -624,17 +575,15 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    ld $r0 = 32[$r12]
+; KV3_2-NEXT:    lq $r30r31 = 8[$r18]
 ; KV3_2-NEXT:    copyd $r22 = $r0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    lq $r30r31 = 0[$r0]
-; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
-; KV3_2-NEXT:    ;; # (end cycle 6)
+; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:    copyd $r0 = $r25
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
-; KV3_2-NEXT:    ;; # (end cycle 10)
+; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    copyd $r0 = $r24
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    copyd $r25 = $r0
@@ -657,18 +606,20 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    cb.even $r1 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.21: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    zxbd $r0 = $r0
+; KV3_2-NEXT:    fcompd.ult $r1 = $r22, $r23
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    cb.even $r0 ? .LBB0_26
+; KV3_2-NEXT:    cb.wnez $r1 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.22: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fcompd.ult $r0 = $r22, $r23
+; KV3_2-NEXT:    fcompd.uge $r1 = $r22, $r27
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_26
+; KV3_2-NEXT:    cb.wnez $r1 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.23: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fcompd.olt $r0 = $r22, $r27
+; KV3_2-NEXT:    zxbd $r0 = $r0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
+; KV3_2-NEXT:    andw $r0 = $r0, 1
+; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.24: # in Loop: Header=BB0_9 Depth=1
@@ -690,7 +641,6 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    fixedd.rz $r0 = $r0, 0
 ; KV3_2-NEXT:    srlw $r1 = $r24, 28
 ; KV3_2-NEXT:    extfz $r2 = $r25, 29, 29
-; KV3_2-NEXT:    ld $r3 = 24[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andw $r1 = $r1, 2
 ; KV3_2-NEXT:    ;; # (end cycle 1)
@@ -699,7 +649,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    andw $r0 = $r0, 4
 ; KV3_2-NEXT:    ;; # (end cycle 5)
 ; KV3_2-NEXT:    iorw $r0 = $r1, $r0
-; KV3_2-NEXT:    ld $r1 = 0[$r3]
+; KV3_2-NEXT:    ld $r1 = 32[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 6)
 ; KV3_2-NEXT:    iorw $r0 = $r0, $r2
 ; KV3_2-NEXT:    ;; # (end cycle 7)
@@ -707,7 +657,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;; # (end cycle 8)
 ; KV3_2-NEXT:    sd 48[$r0] = $r1
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    sd 0[$r3] = $r21
+; KV3_2-NEXT:    sd 32[$r18] = $r21
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    ld $r0 = 16[$r19]
 ; KV3_2-NEXT:    ;; # (end cycle 11)
@@ -745,19 +695,19 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_9
 ; KV3_2-NEXT:    ;;
-; KV3_2-NEXT:  .LBB0_25:
-; KV3_2-NEXT:    lq $r18r19 = 40[$r12]
+; KV3_2-NEXT:  .LBB0_25: # %.loopexit
+; KV3_2-NEXT:    lq $r18r19 = 8[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; KV3_2-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; KV3_2-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; KV3_2-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    ld $r16 = 152[$r12]
+; KV3_2-NEXT:    ld $r16 = 120[$r12]
 ; KV3_2-NEXT:    ;; # (end cycle 4)
 ; KV3_2-NEXT:    set $ra = $r16
-; KV3_2-NEXT:    addd $r12 = $r12, 160
+; KV3_2-NEXT:    addd $r12 = $r12, 128
 ; KV3_2-NEXT:    ;; # (end cycle 9)
 ; KV3_2-NEXT:    ret
 ; KV3_2-NEXT:    ;;
@@ -775,234 +725,219 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    call abort
 ; KV3_2-NEXT:    ;;
-  %5 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 0
-  %6 = load double, ptr %5
-  %7 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 1
-  %8 = load double, ptr %7
-  %9 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 2
-  %10 = load double, ptr %9
-  %11 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 1
-  %12 = load double, ptr %11
-  %13 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 0
-  %14 = load double, ptr %13
-  %15 = fsub double %6, %14
-  %16 = fdiv double %15, %12
-  %17 = fcmp oge double %16, 0.000000e+00
-  %18 = fcmp olt double %16, 1.000000e+00
-  %toto = fcmp ole double %16, 2.000000e+00
-  %19 = and i1 %17, %18
-  %titi = and i1 %19, %toto
-  %20 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 1
-  %21 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 2
-  %22 = bitcast ptr %20 to ptr 
-  %23 = load <2 x double>, ptr %22
-  %24 = extractelement <2 x double> %23, i32 0
-  %25 = fsub double %8, %24
-  %26 = fdiv double %25, %12
-  %27 = fcmp oge double %26, 0.000000e+00
-  %28 = fcmp olt double %26, 1.000000e+00
-  %29 = and i1 %27, %28
-  %30 = and i1 %titi, %29
-  %31 = extractelement <2 x double> %23, i32 1
-  %32 = fsub double %10, %31
-  %33 = fdiv double %32, %12
-  %34 = fcmp oge double %33, 0.000000e+00
-  %35 = fcmp olt double %33, 1.000000e+00
-  %36 = and i1 %34, %35
-  %37 = and i1 %36, %30
-  br i1 %37, label %155, label %38
+  %5 = getelementptr inbounds i8, ptr %0, i64 16
+  %6 = load double, ptr %5, align 8
+  %7 = getelementptr inbounds i8, ptr %0, i64 24
+  %8 = load double, ptr %7, align 8
+  %9 = getelementptr inbounds i8, ptr %0, i64 32
+  %10 = load double, ptr %9, align 8
+  %11 = getelementptr inbounds i8, ptr %1, i64 24
+  %12 = load double, ptr %11, align 8
+  %13 = load double, ptr %1, align 8
+  %14 = fsub double %6, %13
+  %15 = fdiv double %14, %12
+  %16 = fcmp oge double %15, 0.000000e+00
+  %17 = fcmp olt double %15, 1.000000e+00
+  %toto = fcmp ole double %15, 2.000000e+00
+  %18 = and i1 %16, %17
+  %titi = and i1 %toto, %18
+  %19 = getelementptr inbounds i8, ptr %1, i64 8
+  %20 = getelementptr inbounds i8, ptr %1, i64 16
+  %21 = load <2 x double>, ptr %19, align 16
+  %22 = extractelement <2 x double> %21, i64 0
+  %23 = fsub double %8, %22
+  %24 = fdiv double %23, %12
+  %25 = fcmp oge double %24, 0.000000e+00
+  %26 = fcmp olt double %24, 1.000000e+00
+  %27 = and i1 %25, %26
+  %28 = and i1 %titi, %27
+  %29 = extractelement <2 x double> %21, i64 1
+  %30 = fsub double %10, %29
+  %31 = fdiv double %30, %12
+  %32 = fcmp oge double %31, 0.000000e+00
+  %33 = fcmp olt double %31, 1.000000e+00
+  %34 = and i1 %32, %33
+  %35 = and i1 %34, %28
+  br i1 %35, label %.loopexit, label %36
+
+36:
+  %37 = getelementptr inbounds i8, ptr %1, i64 32
+  br label %38
 
 38:
-  %39 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 2
-  %40 = bitcast %struct.node** %39 to %struct.cnode**
-  %41 = bitcast ptr %20 to ptr 
-  br label %42
+  %39 = phi double [ %13, %36 ], [ %141, %140 ]
+  %40 = phi double [ %12, %36 ], [ %142, %140 ]
+  %41 = phi <2 x double> [ %21, %36 ], [ %144, %140 ]
+  %42 = fcmp olt double %40, 1.000000e+03
+  br i1 %42, label %43, label %51
 
-42:
-  %43 = phi double [ %14, %38 ], [ %150, %149 ]
-  %44 = phi double [ %12, %38 ], [ %151, %149 ]
-  %45 = phi <2 x double> [ %23, %38 ], [ %153, %149 ]
-  %46 = fcmp olt double %44, 1.000000e+03
-  br i1 %46, label %47, label %55
+43:
+  %44 = fmul double %40, 5.000000e-01
+  %45 = fadd double %39, %44
+  %46 = insertelement <2 x double> poison, double %44, i64 0
+  %47 = shufflevector <2 x double> %46, <2 x double> poison, <2 x i32> zeroinitializer
+  %48 = fadd <2 x double> %41, %47
+  %49 = load double, ptr %5, align 8
+  %50 = fcmp olt double %49, %45
+  br i1 %50, label %53, label %55
 
-47:
-  %48 = fmul double %44, 5.000000e-01
-  %49 = fadd double %48, %43
-  %50 = insertelement <2 x double> poison, double %48, i32 0
-  %51 = shufflevector <2 x double> %50, <2 x double> undef, <2 x i32> zeroinitializer
-  %52 = fadd <2 x double> %51, %45
-  %53 = load double, ptr %5
-  %54 = fcmp olt double %53, %49
-  br i1 %54, label %57, label %59
+51:
+  %52 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) @.str.3, i32 999)
+  tail call void @abort()
+  unreachable
+
+53:
+  %54 = fsub double %39, %40
+  store double %54, ptr %1, align 8
+  br label %55
 
 55:
-  %56 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], ptr @.str.3, i64 0, i64 0), i32 999)
+  %56 = phi double [ %39, %43 ], [ %54, %53 ]
+  %57 = load double, ptr %7, align 8
+  %58 = extractelement <2 x double> %48, i64 0
+  %59 = fcmp olt double %57, %58
+  %60 = extractelement <2 x double> %41, i64 0
+  br i1 %59, label %146, label %148
+
+61:
+  %62 = load ptr, ptr @cp_free_list, align 8
+  %63 = icmp eq ptr %62, null
+  br i1 %63, label %67, label %64
+
+64:
+  %65 = getelementptr inbounds i8, ptr %62, i64 112
+  %66 = load ptr, ptr %65, align 8
+  store ptr %66, ptr @cp_free_list, align 8
+  br label %69
+
+67:
+  %68 = tail call noalias dereferenceable_or_null(120) ptr @malloc(i64 120)
+  br label %69
+
+69:
+  %70 = phi ptr [ %62, %64 ], [ %68, %67 ]
+  store i16 2, ptr %70, align 2
+  %71 = getelementptr inbounds i8, ptr %70, i64 40
+  store i32 0, ptr %71, align 4
+  %72 = getelementptr i8, ptr %70, i64 48
+  tail call void @llvm.memset.p0.i64(ptr nonnull align 8 dereferenceable(64) %72, i8 0, i64 64, i1 false)
+  %73 = load double, ptr %1, align 8
+  %74 = fsub double %45, %73
+  %75 = load double, ptr %11, align 8
+  %76 = fdiv double %74, %75
+  %77 = fcmp oge double %76, 0.000000e+00
+  %78 = fcmp olt double %76, 1.000000e+00
+  %79 = and i1 %77, %78
+  %80 = load <2 x double>, ptr %19, align 16
+  %81 = fsub <2 x double> %48, %80
+  %82 = insertelement <2 x double> poison, double %75, i64 0
+  %83 = shufflevector <2 x double> %82, <2 x double> poison, <2 x i32> zeroinitializer
+  %84 = fdiv <2 x double> %81, %83
+  %85 = fcmp oge <2 x double> %84, zeroinitializer
+  %86 = fcmp olt <2 x double> %84, <double 1.000000e+00, double 1.000000e+00>
+  %87 = and <2 x i1> %85, %86
+  %88 = extractelement <2 x i1> %87, i64 0
+  %89 = and i1 %79, %88
+  %90 = extractelement <2 x i1> %87, i64 1
+  %91 = and i1 %90, %89
+  br i1 %91, label %94, label %92
+
+92:
+  %93 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) @.str.3, i32 1)
   tail call void @abort()
   unreachable
 
-57:
-  %58 = fsub double %43, %44
-  store double %58, ptr %13
-  br label %59
+94:
+  %95 = extractelement <2 x double> %84, i64 1
+  %96 = fmul double %95, 0x41D0000000000000
+  %97 = tail call double @llvm.floor.f64(double %96)
+  %98 = fptosi double %97 to i32
+  %99 = extractelement <2 x double> %84, i64 0
+  %100 = fmul double %99, 0x41D0000000000000
+  %101 = tail call double @llvm.floor.f64(double %100)
+  %102 = fptosi double %101 to i32
+  %103 = fmul double %76, 0x41D0000000000000
+  %104 = tail call double @llvm.floor.f64(double %103)
+  %105 = fptosi double %104 to i32
+  %106 = lshr i32 %105, 27
+  %107 = and i32 %106, 4
+  %108 = lshr i32 %102, 28
+  %109 = and i32 %108, 2
+  %110 = or disjoint i32 %109, %107
+  %111 = lshr i32 %98, 29
+  %112 = and i32 %111, 1
+  %113 = or disjoint i32 %110, %112
+  %114 = load ptr, ptr %37, align 8
+  %115 = zext nneg i32 %113 to i64
+  %116 = getelementptr inbounds %struct.cnode, ptr %70, i64 0, i32 5, i64 %115
+  store ptr %114, ptr %116, align 8
+  store ptr %70, ptr %37, align 8
+  %117 = load double, ptr %5, align 8
+  %118 = load double, ptr %7, align 8
+  %119 = load double, ptr %9, align 8
+  %120 = fsub double %117, %73
+  %121 = fdiv double %120, %75
+  %122 = fcmp oge double %121, 0.000000e+00
+  %123 = fcmp olt double %121, 1.000000e+00
+  %124 = and i1 %122, %123
+  %125 = extractelement <2 x double> %80, i64 0
+  %126 = fsub double %118, %125
+  %127 = fdiv double %126, %75
+  %128 = fcmp oge double %127, 0.000000e+00
+  %129 = fcmp olt double %127, 1.000000e+00
+  %130 = and i1 %128, %129
+  %131 = and i1 %124, %130
+  %132 = extractelement <2 x double> %80, i64 1
+  %133 = fsub double %119, %132
+  %134 = fdiv double %133, %75
+  %135 = fcmp oge double %134, 0.000000e+00
+  %136 = fcmp olt double %134, 1.000000e+00
+  %137 = and i1 %135, %136
+  %138 = and i1 %137, %131
+  %139 = zext i1 %138 to i32
+  br label %140
 
-59:
-  %60 = phi double [ %43, %47 ], [ %58, %57 ]
-  %61 = load double, ptr %7
-  %62 = extractelement <2 x double> %52, i32 0
-  %63 = fcmp olt double %61, %62
-  %64 = extractelement <2 x double> %45, i32 0
-  br i1 %63, label %156, label %158
+140:
+  %141 = phi double [ %73, %94 ], [ %56, %156 ]
+  %142 = phi double [ %75, %94 ], [ %158, %156 ]
+  %143 = phi i32 [ %139, %94 ], [ 0, %156 ]
+  %144 = phi <2 x double> [ %80, %94 ], [ %162, %156 ]
+  %145 = icmp eq i32 %143, 0
+  br i1 %145, label %38, label %.loopexit
 
-65:
-  %66 = load %struct.node*, %struct.node** @cp_free_list
-  %67 = icmp eq %struct.node* %66, null
-  br i1 %67, label %73, label %68
-
-68:
-  %69 = bitcast %struct.node* %66 to %struct.cnode*
-  %70 = getelementptr inbounds %struct.node, %struct.node* %66, i64 2, i32 2
-  %71 = bitcast [3 x double]* %70 to %struct.node**
-  %72 = load %struct.node*, %struct.node** %71
-  store %struct.node* %72, %struct.node** @cp_free_list
-  br label %76
-
-73:
-  %74 = tail call noalias dereferenceable_or_null(120) ptr @malloc(i64 120)
-  %75 = bitcast ptr %74 to %struct.cnode*
-  br label %76
-
-76:
-  %77 = phi %struct.cnode* [ %69, %68 ], [ %75, %73 ]
-  %78 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 0
-  store i16 2, ptr %78
-  %79 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 3
-  store i32 0, ptr %79
-  %80 = getelementptr %struct.cnode, %struct.cnode* %77, i64 0, i32 5, i64 0
-  %81 = bitcast %struct.node** %80 to ptr 
-  tail call void @llvm.memset.p0i8.i64(ptr nonnull align 8 dereferenceable(64) %81, i8 0, i64 64, i1 false)
-  %82 = load double, ptr %13
-  %83 = fsub double %49, %82
-  %84 = load double, ptr %11
-  %85 = fdiv double %83, %84
-  %86 = fcmp oge double %85, 0.000000e+00
-  %87 = fcmp olt double %85, 1.000000e+00
-  %88 = and i1 %86, %87
-  %89 = load <2 x double>, ptr %41
-  %90 = fsub <2 x double> %52, %89
-  %91 = insertelement <2 x double> poison, double %84, i32 0
-  %92 = shufflevector <2 x double> %91, <2 x double> undef, <2 x i32> zeroinitializer
-  %93 = fdiv <2 x double> %90, %92
-  %94 = fcmp oge <2 x double> %93, zeroinitializer
-  %95 = fcmp olt <2 x double> %93, <double 1.000000e+00, double 1.000000e+00>
-  %96 = and <2 x i1> %94, %95
-  %97 = extractelement <2 x i1> %96, i32 0
-  %98 = and i1 %97, %88
-  %99 = extractelement <2 x i1> %96, i32 1
-  %100 = and i1 %99, %98
-  br i1 %100, label %103, label %101
-
-101:
-  %102 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], ptr @.str.3, i64 0, i64 0), i32 1)
-  tail call void @abort()
-  unreachable
-
-103:
-  %104 = extractelement <2 x double> %93, i32 1
-  %105 = fmul double %104, 0x41D0000000000000
-  %106 = tail call double @llvm.floor.f64(double %105)
-  %107 = fptosi double %106 to i32
-  %108 = extractelement <2 x double> %93, i32 0
-  %109 = fmul double %108, 0x41D0000000000000
-  %110 = tail call double @llvm.floor.f64(double %109)
-  %111 = fptosi double %110 to i32
-  %112 = fmul double %85, 0x41D0000000000000
-  %113 = tail call double @llvm.floor.f64(double %112)
-  %114 = fptosi double %113 to i32
-  %115 = lshr i32 %114, 27
-  %116 = and i32 %115, 4
-  %117 = lshr i32 %111, 28
-  %118 = and i32 %117, 2
-  %119 = or i32 %118, %116
-  %120 = lshr i32 %107, 29
-  %121 = and i32 %120, 1
-  %122 = or i32 %119, %121
-  %123 = load %struct.node*, %struct.node** %39
-  %124 = zext i32 %122 to i64
-  %125 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 5, i64 %124
-  store %struct.node* %123, %struct.node** %125
-  store %struct.cnode* %77, %struct.cnode** %40
-  %126 = load double, ptr %5
-  %127 = load double, ptr %7
-  %128 = load double, ptr %9
-  %129 = fsub double %126, %82
-  %130 = fdiv double %129, %84
-  %131 = fcmp oge double %130, 0.000000e+00
-  %132 = fcmp olt double %130, 1.000000e+00
-  %133 = and i1 %131, %132
-  %134 = extractelement <2 x double> %89, i32 0
-  %135 = fsub double %127, %134
-  %136 = fdiv double %135, %84
-  %137 = fcmp oge double %136, 0.000000e+00
-  %138 = fcmp olt double %136, 1.000000e+00
-  %139 = and i1 %137, %138
-  %140 = and i1 %133, %139
-  %141 = extractelement <2 x double> %89, i32 1
-  %142 = fsub double %128, %141
-  %143 = fdiv double %142, %84
-  %144 = fcmp oge double %143, 0.000000e+00
-  %145 = fcmp olt double %143, 1.000000e+00
-  %146 = and i1 %144, %145
-  %147 = and i1 %146, %140
-  %148 = zext i1 %147 to i32
-  br label %149
-
-149:
-  %150 = phi double [ %82, %103 ], [ %60, %166 ]
-  %151 = phi double [ %84, %103 ], [ %168, %166 ]
-  %152 = phi i32 [ %148, %103 ], [ 0, %166 ]
-  %153 = phi <2 x double> [ %89, %103 ], [ %172, %166 ]
-  %154 = icmp eq i32 %152, 0
-  br i1 %154, label %42, label %155
-
-155:
+.loopexit:
   ret void
 
+146:
+  %147 = fsub double %60, %40
+  store double %147, ptr %19, align 8
+  br label %148
+
+148:
+  %149 = phi double [ %147, %146 ], [ %60, %55 ]
+  %150 = load double, ptr %9, align 8
+  %151 = extractelement <2 x double> %48, i64 1
+  %152 = fcmp olt double %150, %151
+  %153 = extractelement <2 x double> %41, i64 1
+  br i1 %152, label %154, label %156
+
+154:
+  %155 = fsub double %153, %40
+  store double %155, ptr %20, align 8
+  br label %156
+
 156:
-  %157 = fsub double %64, %44
-  store double %157, ptr %20
-  br label %158
-
-158:
-  %159 = phi double [ %157, %156 ], [ %64, %59 ]
-  %160 = load double, ptr %9
-  %161 = extractelement <2 x double> %52, i32 1
-  %162 = fcmp olt double %160, %161
-  %163 = extractelement <2 x double> %45, i32 1
-  br i1 %162, label %164, label %166
-
-164:
-  %165 = fsub double %163, %44
-  store double %165, ptr %21
-  br label %166
-
-166:
-  %167 = phi double [ %165, %164 ], [ %163, %158 ]
-  %168 = fmul double %44, 2.000000e+00
-  store double %168, ptr %11
-  %169 = load %struct.node*, %struct.node** %39
-  %170 = icmp eq %struct.node* %169, null
-  %171 = insertelement <2 x double> poison, double %159, i32 0
-  %172 = insertelement <2 x double> %171, double %167, i32 1
-  br i1 %170, label %149, label %65
+  %157 = phi double [ %155, %154 ], [ %153, %148 ]
+  %158 = fmul double %40, 2.000000e+00
+  store double %158, ptr %11, align 8
+  %159 = load ptr, ptr %37, align 8
+  %160 = icmp eq ptr %159, null
+  %161 = insertelement <2 x double> poison, double %149, i64 0
+  %162 = insertelement <2 x double> %161, double %157, i64 1
+  br i1 %160, label %140, label %61
 }
 
 declare double @llvm.floor.f64(double)
 
-declare double @llvm.ceil.f64(double)
-
-declare noundef i32 @puts(ptr nocapture noundef readonly)
-
-declare void @llvm.memset.p0i8.i64(ptr nocapture writeonly, i8, i64, i1 immarg)
-
-declare <2 x double> @llvm.floor.v2f64(<2 x double>)
+declare void @llvm.memset.p0.i64(ptr writeonly, i8, i64, i1 immarg)
 

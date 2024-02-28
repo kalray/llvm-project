@@ -54,12 +54,10 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; FP-NONE-NEXT:    ;; # (end cycle 12)
 ; FP-NONE-NEXT:  # %bb.1: # %for.body.preheader
-; FP-NONE-NEXT:    addw $r1 = $r0, -1
-; FP-NONE-NEXT:    ld $r2 = 0[$r12]
-; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    andw $r1 = $r0, 7
-; FP-NONE-NEXT:    compw.ltu $r3 = $r1, 7
-; FP-NONE-NEXT:    ;; # (end cycle 1)
+; FP-NONE-NEXT:    ld $r2 = 0[$r12]
+; FP-NONE-NEXT:    compw.ltu $r3 = $r0, 8
+; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    cb.even $r3 ? .LBB0_4
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  # %bb.2:
@@ -72,7 +70,7 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    ret
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:  .LBB0_4: # %for.body.preheader.new
-; FP-NONE-NEXT:    andw $r0 = $r0, -8
+; FP-NONE-NEXT:    andw $r0 = $r0, 0x7ffffff8
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
 ; FP-NONE-NEXT:    addw $r0 = $r0, -8
 ; FP-NONE-NEXT:    ;; # (end cycle 1)
@@ -85,59 +83,39 @@ define i32 @add(i32 %n, ...) {
 ; FP-NONE-NEXT:    ;;
 ; FP-NONE-NEXT:  .LBB0_5: # %for.body
 ; FP-NONE-NEXT:    # =>This Inner Loop Header: Depth=1
-; FP-NONE-NEXT:    copyd $r3 = $r2
+; FP-NONE-NEXT:    addd $r3 = $r2, 8
 ; FP-NONE-NEXT:    ;; # (end cycle 0)
-; FP-NONE-NEXT:    addd $r2 = $r3, 8
-; FP-NONE-NEXT:    addd $r6 = $r3, 32
-; FP-NONE-NEXT:    addd $r7 = $r3, 40
-; FP-NONE-NEXT:    addd $r8 = $r3, 48
+; FP-NONE-NEXT:    sd 0[$r12] = $r3
 ; FP-NONE-NEXT:    ;; # (end cycle 1)
-; FP-NONE-NEXT:    sd 0[$r12] = $r2
-; FP-NONE-NEXT:    addd $r2 = $r3, 16
+; FP-NONE-NEXT:    lwz $r3 = 0[$r2]
 ; FP-NONE-NEXT:    ;; # (end cycle 2)
-; FP-NONE-NEXT:    lwz $r4 = 0[$r3]
+; FP-NONE-NEXT:    lwz $r4 = 8[$r2]
 ; FP-NONE-NEXT:    ;; # (end cycle 3)
-; FP-NONE-NEXT:    sd 0[$r12] = $r2
-; FP-NONE-NEXT:    addd $r2 = $r3, 24
+; FP-NONE-NEXT:    lwz $r5 = 16[$r2]
 ; FP-NONE-NEXT:    ;; # (end cycle 4)
-; FP-NONE-NEXT:    lwz $r5 = 8[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 5)
-; FP-NONE-NEXT:    sd 0[$r12] = $r2
-; FP-NONE-NEXT:    addw $r0 = $r4, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 6)
-; FP-NONE-NEXT:    lwz $r2 = 16[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 7)
-; FP-NONE-NEXT:    sd 0[$r12] = $r6
-; FP-NONE-NEXT:    addw $r0 = $r5, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 8)
-; FP-NONE-NEXT:    lwz $r6 = 24[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 9)
-; FP-NONE-NEXT:    sd 0[$r12] = $r7
-; FP-NONE-NEXT:    addw $r0 = $r2, $r0
-; FP-NONE-NEXT:    addd $r2 = $r3, 64
-; FP-NONE-NEXT:    ;; # (end cycle 10)
-; FP-NONE-NEXT:    lwz $r7 = 32[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 11)
-; FP-NONE-NEXT:    sd 0[$r12] = $r8
-; FP-NONE-NEXT:    addw $r0 = $r6, $r0
-; FP-NONE-NEXT:    addd $r8 = $r3, 56
-; FP-NONE-NEXT:    ;; # (end cycle 12)
-; FP-NONE-NEXT:    lwz $r4 = 40[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 13)
-; FP-NONE-NEXT:    sd 0[$r12] = $r8
-; FP-NONE-NEXT:    addw $r0 = $r7, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 14)
-; FP-NONE-NEXT:    lwz $r5 = 48[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 15)
-; FP-NONE-NEXT:    sd 0[$r12] = $r2
-; FP-NONE-NEXT:    addw $r0 = $r4, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 16)
-; FP-NONE-NEXT:    lwz $r3 = 56[$r3]
-; FP-NONE-NEXT:    ;; # (end cycle 17)
-; FP-NONE-NEXT:    addw $r0 = $r5, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 18)
 ; FP-NONE-NEXT:    addw $r0 = $r3, $r0
-; FP-NONE-NEXT:    ;; # (end cycle 20)
+; FP-NONE-NEXT:    lwz $r3 = 24[$r2]
+; FP-NONE-NEXT:    ;; # (end cycle 5)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r4
+; FP-NONE-NEXT:    lwz $r4 = 32[$r2]
+; FP-NONE-NEXT:    ;; # (end cycle 6)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r5
+; FP-NONE-NEXT:    lwz $r5 = 40[$r2]
+; FP-NONE-NEXT:    ;; # (end cycle 7)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r3
+; FP-NONE-NEXT:    lwz $r3 = 48[$r2]
+; FP-NONE-NEXT:    ;; # (end cycle 8)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r4
+; FP-NONE-NEXT:    addd $r2 = $r2, 64
+; FP-NONE-NEXT:    lwz $r4 = 56[$r2]
+; FP-NONE-NEXT:    ;; # (end cycle 9)
+; FP-NONE-NEXT:    sd 0[$r12] = $r2
+; FP-NONE-NEXT:    addw $r0 = $r0, $r5
+; FP-NONE-NEXT:    ;; # (end cycle 10)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r3
+; FP-NONE-NEXT:    ;; # (end cycle 11)
+; FP-NONE-NEXT:    addw $r0 = $r0, $r4
+; FP-NONE-NEXT:    ;; # (end cycle 12)
 ; FP-NONE-NEXT:  .__LOOPDO_1_END_:
 ; FP-NONE-NEXT:  .LBB0_6: # %for.cond.cleanup.loopexit.unr-lcssa
 ; FP-NONE-NEXT:    cb.weqz $r1 ? .LBB0_9
@@ -202,12 +180,10 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    cb.wlez $r0 ? .LBB0_3
 ; FP-ALL-NEXT:    ;; # (end cycle 14)
 ; FP-ALL-NEXT:  # %bb.1: # %for.body.preheader
-; FP-ALL-NEXT:    addw $r1 = $r0, -1
-; FP-ALL-NEXT:    ld $r2 = -8[$r14]
-; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    andw $r1 = $r0, 7
-; FP-ALL-NEXT:    compw.ltu $r3 = $r1, 7
-; FP-ALL-NEXT:    ;; # (end cycle 1)
+; FP-ALL-NEXT:    ld $r2 = -8[$r14]
+; FP-ALL-NEXT:    compw.ltu $r3 = $r0, 8
+; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    cb.even $r3 ? .LBB0_4
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  # %bb.2:
@@ -219,7 +195,7 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    goto .LBB0_9
 ; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:  .LBB0_4: # %for.body.preheader.new
-; FP-ALL-NEXT:    andw $r0 = $r0, -8
+; FP-ALL-NEXT:    andw $r0 = $r0, 0x7ffffff8
 ; FP-ALL-NEXT:    ;; # (end cycle 0)
 ; FP-ALL-NEXT:    addw $r0 = $r0, -8
 ; FP-ALL-NEXT:    ;; # (end cycle 1)
@@ -232,59 +208,39 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    ;;
 ; FP-ALL-NEXT:  .LBB0_5: # %for.body
 ; FP-ALL-NEXT:    # =>This Inner Loop Header: Depth=1
-; FP-ALL-NEXT:    copyd $r3 = $r2
+; FP-ALL-NEXT:    addd $r3 = $r2, 8
 ; FP-ALL-NEXT:    ;; # (end cycle 0)
-; FP-ALL-NEXT:    addd $r2 = $r3, 8
-; FP-ALL-NEXT:    addd $r6 = $r3, 32
-; FP-ALL-NEXT:    addd $r7 = $r3, 40
-; FP-ALL-NEXT:    addd $r8 = $r3, 48
+; FP-ALL-NEXT:    sd -8[$r14] = $r3
 ; FP-ALL-NEXT:    ;; # (end cycle 1)
-; FP-ALL-NEXT:    sd -8[$r14] = $r2
-; FP-ALL-NEXT:    addd $r2 = $r3, 16
+; FP-ALL-NEXT:    lwz $r3 = 0[$r2]
 ; FP-ALL-NEXT:    ;; # (end cycle 2)
-; FP-ALL-NEXT:    lwz $r4 = 0[$r3]
+; FP-ALL-NEXT:    lwz $r4 = 8[$r2]
 ; FP-ALL-NEXT:    ;; # (end cycle 3)
-; FP-ALL-NEXT:    sd -8[$r14] = $r2
-; FP-ALL-NEXT:    addd $r2 = $r3, 24
+; FP-ALL-NEXT:    lwz $r5 = 16[$r2]
 ; FP-ALL-NEXT:    ;; # (end cycle 4)
-; FP-ALL-NEXT:    lwz $r5 = 8[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 5)
-; FP-ALL-NEXT:    sd -8[$r14] = $r2
-; FP-ALL-NEXT:    addw $r0 = $r4, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 6)
-; FP-ALL-NEXT:    lwz $r2 = 16[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 7)
-; FP-ALL-NEXT:    sd -8[$r14] = $r6
-; FP-ALL-NEXT:    addw $r0 = $r5, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 8)
-; FP-ALL-NEXT:    lwz $r6 = 24[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 9)
-; FP-ALL-NEXT:    sd -8[$r14] = $r7
-; FP-ALL-NEXT:    addw $r0 = $r2, $r0
-; FP-ALL-NEXT:    addd $r2 = $r3, 64
-; FP-ALL-NEXT:    ;; # (end cycle 10)
-; FP-ALL-NEXT:    lwz $r7 = 32[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 11)
-; FP-ALL-NEXT:    sd -8[$r14] = $r8
-; FP-ALL-NEXT:    addw $r0 = $r6, $r0
-; FP-ALL-NEXT:    addd $r8 = $r3, 56
-; FP-ALL-NEXT:    ;; # (end cycle 12)
-; FP-ALL-NEXT:    lwz $r4 = 40[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 13)
-; FP-ALL-NEXT:    sd -8[$r14] = $r8
-; FP-ALL-NEXT:    addw $r0 = $r7, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 14)
-; FP-ALL-NEXT:    lwz $r5 = 48[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 15)
-; FP-ALL-NEXT:    sd -8[$r14] = $r2
-; FP-ALL-NEXT:    addw $r0 = $r4, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 16)
-; FP-ALL-NEXT:    lwz $r3 = 56[$r3]
-; FP-ALL-NEXT:    ;; # (end cycle 17)
-; FP-ALL-NEXT:    addw $r0 = $r5, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 18)
 ; FP-ALL-NEXT:    addw $r0 = $r3, $r0
-; FP-ALL-NEXT:    ;; # (end cycle 20)
+; FP-ALL-NEXT:    lwz $r3 = 24[$r2]
+; FP-ALL-NEXT:    ;; # (end cycle 5)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r4
+; FP-ALL-NEXT:    lwz $r4 = 32[$r2]
+; FP-ALL-NEXT:    ;; # (end cycle 6)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r5
+; FP-ALL-NEXT:    lwz $r5 = 40[$r2]
+; FP-ALL-NEXT:    ;; # (end cycle 7)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r3
+; FP-ALL-NEXT:    lwz $r3 = 48[$r2]
+; FP-ALL-NEXT:    ;; # (end cycle 8)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r4
+; FP-ALL-NEXT:    addd $r2 = $r2, 64
+; FP-ALL-NEXT:    lwz $r4 = 56[$r2]
+; FP-ALL-NEXT:    ;; # (end cycle 9)
+; FP-ALL-NEXT:    sd -8[$r14] = $r2
+; FP-ALL-NEXT:    addw $r0 = $r0, $r5
+; FP-ALL-NEXT:    ;; # (end cycle 10)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r3
+; FP-ALL-NEXT:    ;; # (end cycle 11)
+; FP-ALL-NEXT:    addw $r0 = $r0, $r4
+; FP-ALL-NEXT:    ;; # (end cycle 12)
 ; FP-ALL-NEXT:  .__LOOPDO_1_END_:
 ; FP-ALL-NEXT:  .LBB0_6: # %for.cond.cleanup.loopexit.unr-lcssa
 ; FP-ALL-NEXT:    cb.weqz $r1 ? .LBB0_9
@@ -321,103 +277,92 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    ;;
 entry:
   %args = alloca ptr, align 8
-  %0 = bitcast ptr %args to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 8, ptr nonnull %0)
-  call void @llvm.va_start(ptr nonnull %0)
+  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %args)
+  call void @llvm.va_start(ptr nonnull %args)
   %cmp7 = icmp sgt i32 %n, 0
   br i1 %cmp7, label %for.body.preheader, label %for.cond.cleanup
 
-for.body.preheader:                               ; preds = %entry
+for.body.preheader:
   %ap.cur.pre = load ptr, ptr %args, align 8
-  %1 = add i32 %n, -1
   %xtraiter = and i32 %n, 7
-  %2 = icmp ult i32 %1, 7
-  br i1 %2, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
+  %0 = icmp ult i32 %n, 8
+  br i1 %0, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
 
-for.body.preheader.new:                           ; preds = %for.body.preheader
-  %unroll_iter = sub i32 %n, %xtraiter
+for.body.preheader.new:
+  %unroll_iter = and i32 %n, 2147483640
   br label %for.body
 
-for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body.preheader
+for.cond.cleanup.loopexit.unr-lcssa:
   %add.lcssa.ph = phi i32 [ undef, %for.body.preheader ], [ %add.7, %for.body ]
   %ap.cur.unr = phi ptr [ %ap.cur.pre, %for.body.preheader ], [ %ap.next.7, %for.body ]
   %sum.08.unr = phi i32 [ 0, %for.body.preheader ], [ %add.7, %for.body ]
   %lcmp.mod = icmp eq i32 %xtraiter, 0
   br i1 %lcmp.mod, label %for.cond.cleanup, label %for.body.epil
 
-for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil
+for.body.epil:
   %ap.cur.epil = phi ptr [ %ap.next.epil, %for.body.epil ], [ %ap.cur.unr, %for.cond.cleanup.loopexit.unr-lcssa ]
   %sum.08.epil = phi i32 [ %add.epil, %for.body.epil ], [ %sum.08.unr, %for.cond.cleanup.loopexit.unr-lcssa ]
   %epil.iter = phi i32 [ %epil.iter.sub, %for.body.epil ], [ %xtraiter, %for.cond.cleanup.loopexit.unr-lcssa ]
   %ap.next.epil = getelementptr inbounds i8, ptr %ap.cur.epil, i64 8
   store ptr %ap.next.epil, ptr %args, align 8
-  %arg.addr.epil = bitcast ptr %ap.cur.epil to ptr 
-  %3 = load i32, ptr %arg.addr.epil, align 8
-  %add.epil = add nsw i32 %3, %sum.08.epil
-  %epil.iter.sub = add i32 %epil.iter, -1
+  %1 = load i32, ptr %ap.cur.epil, align 8
+  %add.epil = add nsw i32 %1, %sum.08.epil
+  %epil.iter.sub = add nsw i32 %epil.iter, -1
   %epil.iter.cmp = icmp eq i32 %epil.iter.sub, 0
   br i1 %epil.iter.cmp, label %for.cond.cleanup, label %for.body.epil
 
-for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil, %entry
+for.cond.cleanup:
   %sum.0.lcssa = phi i32 [ 0, %entry ], [ %add.lcssa.ph, %for.cond.cleanup.loopexit.unr-lcssa ], [ %add.epil, %for.body.epil ]
-  call void @llvm.va_end(ptr nonnull %0)
-  call void @llvm.lifetime.end.p0i8(i64 8, ptr nonnull %0)
+  call void @llvm.va_end(ptr nonnull %args)
+  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %args)
   ret i32 %sum.0.lcssa
 
-for.body:                                         ; preds = %for.body, %for.body.preheader.new
+for.body:
   %ap.cur = phi ptr [ %ap.cur.pre, %for.body.preheader.new ], [ %ap.next.7, %for.body ]
   %sum.08 = phi i32 [ 0, %for.body.preheader.new ], [ %add.7, %for.body ]
   %niter = phi i32 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
   %ap.next = getelementptr inbounds i8, ptr %ap.cur, i64 8
   store ptr %ap.next, ptr %args, align 8
-  %arg.addr = bitcast ptr %ap.cur to ptr 
-  %4 = load i32, ptr %arg.addr, align 8
-  %add = add nsw i32 %4, %sum.08
+  %2 = load i32, ptr %ap.cur, align 8
+  %add = add nsw i32 %2, %sum.08
   %ap.next.1 = getelementptr inbounds i8, ptr %ap.cur, i64 16
   store ptr %ap.next.1, ptr %args, align 8
-  %arg.addr.1 = bitcast ptr %ap.next to ptr 
-  %5 = load i32, ptr %arg.addr.1, align 8
-  %add.1 = add nsw i32 %5, %add
+  %3 = load i32, ptr %ap.next, align 8
+  %add.1 = add nsw i32 %add, %3
   %ap.next.2 = getelementptr inbounds i8, ptr %ap.cur, i64 24
   store ptr %ap.next.2, ptr %args, align 8
-  %arg.addr.2 = bitcast ptr %ap.next.1 to ptr 
-  %6 = load i32, ptr %arg.addr.2, align 8
-  %add.2 = add nsw i32 %6, %add.1
+  %4 = load i32, ptr %ap.next.1, align 8
+  %add.2 = add nsw i32 %add.1, %4
   %ap.next.3 = getelementptr inbounds i8, ptr %ap.cur, i64 32
   store ptr %ap.next.3, ptr %args, align 8
-  %arg.addr.3 = bitcast ptr %ap.next.2 to ptr 
-  %7 = load i32, ptr %arg.addr.3, align 8
-  %add.3 = add nsw i32 %7, %add.2
+  %5 = load i32, ptr %ap.next.2, align 8
+  %add.3 = add nsw i32 %add.2, %5
   %ap.next.4 = getelementptr inbounds i8, ptr %ap.cur, i64 40
   store ptr %ap.next.4, ptr %args, align 8
-  %arg.addr.4 = bitcast ptr %ap.next.3 to ptr 
-  %8 = load i32, ptr %arg.addr.4, align 8
-  %add.4 = add nsw i32 %8, %add.3
+  %6 = load i32, ptr %ap.next.3, align 8
+  %add.4 = add nsw i32 %add.3, %6
   %ap.next.5 = getelementptr inbounds i8, ptr %ap.cur, i64 48
   store ptr %ap.next.5, ptr %args, align 8
-  %arg.addr.5 = bitcast ptr %ap.next.4 to ptr 
-  %9 = load i32, ptr %arg.addr.5, align 8
-  %add.5 = add nsw i32 %9, %add.4
+  %7 = load i32, ptr %ap.next.4, align 8
+  %add.5 = add nsw i32 %add.4, %7
   %ap.next.6 = getelementptr inbounds i8, ptr %ap.cur, i64 56
   store ptr %ap.next.6, ptr %args, align 8
-  %arg.addr.6 = bitcast ptr %ap.next.5 to ptr 
-  %10 = load i32, ptr %arg.addr.6, align 8
-  %add.6 = add nsw i32 %10, %add.5
+  %8 = load i32, ptr %ap.next.5, align 8
+  %add.6 = add nsw i32 %add.5, %8
   %ap.next.7 = getelementptr inbounds i8, ptr %ap.cur, i64 64
   store ptr %ap.next.7, ptr %args, align 8
-  %arg.addr.7 = bitcast ptr %ap.next.6 to ptr 
-  %11 = load i32, ptr %arg.addr.7, align 8
-  %add.7 = add nsw i32 %11, %add.6
-  %niter.nsub.7 = add i32 %niter, -8
+  %9 = load i32, ptr %ap.next.6, align 8
+  %add.7 = add nsw i32 %add.6, %9
+  %niter.nsub.7 = add nsw i32 %niter, -8
   %niter.ncmp.7 = icmp eq i32 %niter.nsub.7, 0
   br i1 %niter.ncmp.7, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body
-; CHECK: addd $r12 = $r12, 96
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
+declare void @llvm.va_start(ptr)
 
-declare void @llvm.va_start(ptr )
+declare void @llvm.va_end(ptr)
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
+declare void @llvm.lifetime.start.p0(i64 immarg, ptr nocapture)
 
-declare void @llvm.va_end(ptr )
+declare void @llvm.lifetime.end.p0(i64 immarg, ptr nocapture)
+

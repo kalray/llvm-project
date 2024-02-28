@@ -94,12 +94,12 @@ define zeroext i32 @test() {
 entry:
   %a = alloca [1600 x i32], align 4
   %c = alloca [1600 x i32], align 4
-  %0 = bitcast [1600 x i32]* %a to ptr 
+  %0 = bitcast [1600 x i32]* %a to ptr
   call void @llvm.lifetime.start(i64 6400, ptr %0)
   br label %for.body
 
 for.cond.cleanup:
-  %1 = bitcast [1600 x i32]* %c to ptr 
+  %1 = bitcast [1600 x i32]* %c to ptr
   call void @llvm.lifetime.start(i64 6400, ptr %1)
   %arraydecay = getelementptr inbounds [1600 x i32], [1600 x i32]* %a, i64 0, i64 0
   %arraydecay1 = getelementptr inbounds [1600 x i32], [1600 x i32]* %c, i64 0, i64 0

@@ -12,12 +12,9 @@ define void @storec256_mt(<8 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 -1, i32 4)
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %0, ptr %ptr, i32 256, i64 %cond, i32 -1, i32 4)
   ret void
 }
-
-declare void @llvm.kvx.storec.v4i64(<4 x i64>, ptr, i32, i64, i32, i32, ...)
 
 define void @storec256_mf(<8 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec256_mf:
@@ -27,8 +24,7 @@ define void @storec256_mf(<8 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 -1, i32 5)
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %0, ptr %ptr, i32 256, i64 %cond, i32 -1, i32 5)
   ret void
 }
 
@@ -43,9 +39,8 @@ define void @storec128_mt(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = and i64 %cond, 65535
-  %2 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-  %3 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %1, i32 -1, i32 4)
+  %2 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %1, i32 -1, i32 4)
   ret void
 }
 
@@ -60,9 +55,8 @@ define void @storec128_mf(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = or i64 %cond, -65536
-  %2 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-  %3 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %1, i32 -1, i32 5)
+  %2 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %1, i32 -1, i32 5)
   ret void
 }
 
@@ -77,9 +71,8 @@ define void @storec64_mt(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = and i64 %cond, 255
   %1 = bitcast <2 x i32> %a to <1 x i64>
-  %2 = shufflevector <1 x i64> %1, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-  %3 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %0, i32 -1, i32 4)
+  %2 = shufflevector <1 x i64> %1, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %0, i32 -1, i32 4)
   ret void
 }
 
@@ -94,9 +87,10 @@ define void @storec64_mf(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = or i64 %cond, -256
   %1 = bitcast <2 x i32> %a to <1 x i64>
-  %2 = shufflevector <1 x i64> %1, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-  %3 = bitcast ptr %ptr to ptr 
-  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %0, i32 -1, i32 5)
+  %2 = shufflevector <1 x i64> %1, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %0, i32 -1, i32 5)
   ret void
 }
+
+declare void @llvm.kvx.storec.v4i64.p0(<4 x i64>, ptr, i32, i64, i32, i32, ...)
 
