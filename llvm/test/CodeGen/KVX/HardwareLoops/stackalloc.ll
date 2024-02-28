@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @set(ptr nocapture %x, i32 %num){
+define void @set(ptr %x, i32 %num) {
 ; CHECK-LABEL: set:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_3
@@ -50,7 +50,7 @@ for.body:
   br i1 %cmp, label %for.cond.cleanup, label %for.body
 }
 
-define i32 @f(i32 %num){
+define i32 @f(i32 %num) {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addx4wd $r1 = $r0, 31
@@ -66,7 +66,7 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_8
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader.i
 ; CHECK-NEXT:    zxwd $r2 = $r0
@@ -104,16 +104,13 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    addd $r4 = $r4, 1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
-; CHECK-NEXT:  # %bb.5: # %set.exit37
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_8
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6: # %for.body.preheader
+; CHECK-NEXT:  # %bb.5: # %for.body.preheader
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    sxwd $r4 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r2, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_7: # %for.body
+; CHECK-NEXT:  .LBB1_6: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    addd $r1 = $r1, 4
 ; CHECK-NEXT:    lwz $r2 = 0[$r1]
@@ -130,12 +127,12 @@ define i32 @f(i32 %num){
 ; CHECK-NEXT:    addw $r0 = $r0, $r6
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:    goto .LBB1_9
+; CHECK-NEXT:    goto .LBB1_8
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB1_8:
+; CHECK-NEXT:  .LBB1_7:
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB1_9: # %for.cond.cleanup
+; CHECK-NEXT:  .LBB1_8: # %for.cond.cleanup
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
@@ -151,69 +148,63 @@ entry:
   %mul = shl nsw i32 %num, 2
   %conv = sext i32 %mul to i64
   %0 = alloca i8, i64 %conv, align 8
-  %1 = bitcast ptr %0 to ptr 
   %cmp6.i = icmp eq i32 %num, 0
   br i1 %cmp6.i, label %for.cond.cleanup, label %for.body.preheader.i
 
 for.body.preheader.i:
-  %2 = zext i32 %num to i64
+  %1 = zext i32 %num to i64
   br label %for.body.i
 
 for.body.i:
   %indvars.iv.i = phi i64 [ 0, %for.body.preheader.i ], [ %indvars.iv.next.i, %for.body.i ]
-  %3 = trunc i64 %indvars.iv.i to i32
-  %mul.i = mul nsw i32 %3, %3
-  %arrayidx.i = getelementptr inbounds i32, ptr %1, i64 %indvars.iv.i
+  %2 = trunc i64 %indvars.iv.i to i32
+  %mul.i = mul nsw i32 %2, %2
+  %arrayidx.i = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.i
   store i32 %mul.i, ptr %arrayidx.i, align 4
   %indvars.iv.next.i = add nuw nsw i64 %indvars.iv.i, 1
-  %cmp.i = icmp eq i64 %indvars.iv.next.i, %2
+  %cmp.i = icmp eq i64 %indvars.iv.next.i, %1
   br i1 %cmp.i, label %set.exit, label %for.body.i
 
 set.exit:
   %mul1 = shl nsw i32 %num, 3
   %conv2 = sext i32 %mul1 to i64
-  %4 = alloca i8, i64 %conv2, align 8
-  %5 = bitcast ptr %4 to ptr 
+  %3 = alloca i8, i64 %conv2, align 8
   %mul3 = shl nsw i32 %num, 1
-  %6 = zext i32 %mul3 to i64
+  %4 = zext i32 %mul3 to i64
   br label %for.body.i36
 
 for.body.i36:
   %indvars.iv.i31 = phi i64 [ 0, %set.exit ], [ %indvars.iv.next.i34, %for.body.i36 ]
-  %7 = trunc i64 %indvars.iv.i31 to i32
-  %mul.i32 = mul nsw i32 %7, %7
-  %arrayidx.i33 = getelementptr inbounds i32, ptr %5, i64 %indvars.iv.i31
+  %5 = trunc i64 %indvars.iv.i31 to i32
+  %mul.i32 = mul nsw i32 %5, %5
+  %arrayidx.i33 = getelementptr inbounds i32, ptr %3, i64 %indvars.iv.i31
   store i32 %mul.i32, ptr %arrayidx.i33, align 4
   %indvars.iv.next.i34 = add nuw nsw i64 %indvars.iv.i31, 1
-  %cmp.i35 = icmp eq i64 %indvars.iv.next.i34, %6
-  br i1 %cmp.i35, label %set.exit37, label %for.body.i36
-
-set.exit37:
-  br i1 %cmp6.i, label %for.cond.cleanup, label %for.body.preheader
+  %cmp.i35 = icmp eq i64 %indvars.iv.next.i34, %4
+  br i1 %cmp.i35, label %for.body.preheader, label %for.body.i36
 
 for.body.preheader:
-  %8 = sext i32 %num to i64
-  %9 = zext i32 %num to i64
+  %6 = sext i32 %num to i64
   br label %for.body
 
 for.cond.cleanup:
-  %sum.0.lcssa = phi i32 [ 0, %set.exit37 ], [ 0, %entry ], [ %add11, %for.body ]
+  %sum.0.lcssa = phi i32 [ 0, %entry ], [ %add11, %for.body ]
   ret i32 %sum.0.lcssa
 
 for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %sum.043 = phi i32 [ 0, %for.body.preheader ], [ %add11, %for.body ]
-  %arrayidx = getelementptr inbounds i32, ptr %1, i64 %indvars.iv
-  %10 = load i32, ptr %arrayidx, align 4
-  %arrayidx6 = getelementptr inbounds i32, ptr %5, i64 %indvars.iv
-  %11 = load i32, ptr %arrayidx6, align 4
-  %12 = add nsw i64 %indvars.iv, %8
-  %arrayidx9 = getelementptr inbounds i32, ptr %5, i64 %12
-  %13 = load i32, ptr %arrayidx9, align 4
-  %add = add i32 %10, %sum.043
-  %add10 = add i32 %add, %11
-  %add11 = add i32 %add10, %13
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
+  %7 = load i32, ptr %arrayidx, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %3, i64 %indvars.iv
+  %8 = load i32, ptr %arrayidx6, align 4
+  %arrayidx9 = getelementptr i32, ptr %arrayidx6, i64 %6
+  %9 = load i32, ptr %arrayidx9, align 4
+  %add = add i32 %7, %sum.043
+  %add10 = add i32 %add, %8
+  %add11 = add i32 %add10, %9
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
-  %cmp = icmp eq i64 %indvars.iv.next, %9
+  %cmp = icmp eq i64 %indvars.iv.next, %1
   br i1 %cmp, label %for.cond.cleanup, label %for.body
 }
+

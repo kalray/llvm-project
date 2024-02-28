@@ -7,7 +7,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
+define i32 @main(i32 %0, ptr readnone %1) {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x2710
@@ -83,14 +83,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  # %bb.3: # %.preheader6
+; CHECK-NEXT:  # %bb.3: # %.preheader6.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_4: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_4: # %.preheader6
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
 ; CHECK-NEXT:    addd $r5 = $r3, 16
@@ -104,14 +105,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.5: # %.preheader5
+; CHECK-NEXT:  # %bb.5: # %.preheader5.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_2_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_6: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_6: # %.preheader5
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -140,14 +142,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_2_END_:
-; CHECK-NEXT:  # %bb.7: # %.preheader4
+; CHECK-NEXT:  # %bb.7: # %.preheader4.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_8: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_8: # %.preheader4
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
 ; CHECK-NEXT:    addd $r5 = $r3, 16
@@ -161,14 +164,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
-; CHECK-NEXT:  # %bb.9: # %.preheader3
+; CHECK-NEXT:  # %bb.9: # %.preheader3.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_10: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_10: # %.preheader3
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -197,14 +201,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_4_END_:
-; CHECK-NEXT:  # %bb.11: # %.preheader2
+; CHECK-NEXT:  # %bb.11: # %.preheader2.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_5_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_12: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_12: # %.preheader2
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
 ; CHECK-NEXT:    addd $r5 = $r3, 16
@@ -218,14 +223,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r3 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:  .__LOOPDO_5_END_:
-; CHECK-NEXT:  # %bb.13: # %.preheader1
+; CHECK-NEXT:  # %bb.13: # %.preheader1.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_6_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_14: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_14: # %.preheader1
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 0[$r3]
 ; CHECK-NEXT:    ;; # (end cycle 0)
@@ -254,14 +260,15 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    copyd $r2 = $r5
 ; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:  .__LOOPDO_6_END_:
-; CHECK-NEXT:  # %bb.15: # %.preheader
+; CHECK-NEXT:  # %bb.15: # %.preheader.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    copyd $r2 = $r19
 ; CHECK-NEXT:    copyd $r3 = $r18
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r1, .__LOOPDO_7_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_16: # Parent Loop BB0_1 Depth=1
+; CHECK-NEXT:  .LBB0_16: # %.preheader
+; CHECK-NEXT:    # Parent Loop BB0_1 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
 ; CHECK-NEXT:    ld $r4 = 8[$r2]
 ; CHECK-NEXT:    addd $r5 = $r3, 16
@@ -296,205 +303,190 @@ define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
   %3 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
   %4 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
   %5 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
-  %6 = bitcast ptr %3 to ptr 
-  %7 = bitcast ptr %5 to ptr 
-  %8 = tail call i32 bitcast (i32 (...)* @init_array to i32 (i32, ptr, ptr )*)(i32 10000, ptr %6, ptr %7)
+  %6 = tail call i32 @init_array(i32 10000, ptr %3, ptr %5)
+  br label %7
+
+7:
+  %8 = phi i32 [ 0, %2 ], [ %140, %139 ]
   br label %9
 
-9:                                                ; preds = %160, %2
-  %10 = phi i32 [ 0, %2 ], [ %161, %160 ]
-  br label %11
+9:
+  %10 = phi i64 [ 1, %7 ], [ %25, %9 ]
+  %11 = getelementptr double, ptr %3, i64 %10
+  %12 = getelementptr i8, ptr %11, i64 -8
+  %13 = load double, ptr %12, align 8
+  %14 = load double, ptr %11, align 8
+  %15 = fadd double %13, %14
+  %16 = add nuw nsw i64 %10, 1
+  %17 = getelementptr inbounds double, ptr %3, i64 %16
+  %18 = load double, ptr %17, align 8
+  %19 = fadd double %15, %18
+  %20 = fmul double %19, 3.333300e-01
+  %21 = getelementptr inbounds double, ptr %5, i64 %10
+  store double %20, ptr %21, align 8
+  %22 = load double, ptr %11, align 8
+  %23 = load double, ptr %17, align 8
+  %24 = fadd double %22, %23
+  %25 = add nuw nsw i64 %10, 2
+  %26 = getelementptr inbounds double, ptr %3, i64 %25
+  %27 = load double, ptr %26, align 8
+  %28 = fadd double %24, %27
+  %29 = fmul double %28, 3.333300e-01
+  %30 = getelementptr inbounds double, ptr %5, i64 %16
+  store double %29, ptr %30, align 8
+  %31 = icmp eq i64 %25, 9999
+  br i1 %31, label %.preheader6, label %9
 
-11:                                               ; preds = %11, %9
-  %12 = phi i64 [ 1, %9 ], [ %30, %11 ]
-  %13 = add nsw i64 %12, -1
-  %14 = getelementptr inbounds double, ptr %6, i64 %13
-  %15 = load double, ptr %14, align 8
-  %16 = getelementptr inbounds double, ptr %6, i64 %12
-  %17 = load double, ptr %16, align 8
-  %18 = fadd double %15, %17
-  %19 = add nuw nsw i64 %12, 1
-  %20 = getelementptr inbounds double, ptr %6, i64 %19
-  %21 = load double, ptr %20, align 8
-  %22 = fadd double %18, %21
-  %23 = fmul double %22, 3.333300e-01
-  %24 = getelementptr inbounds double, ptr %7, i64 %12
-  store double %23, ptr %24, align 8
-  %25 = getelementptr inbounds double, ptr %6, i64 %12
-  %26 = load double, ptr %25, align 8
-  %27 = getelementptr inbounds double, ptr %6, i64 %19
-  %28 = load double, ptr %27, align 8
-  %29 = fadd double %26, %28
-  %30 = add nuw nsw i64 %12, 2
-  %31 = getelementptr inbounds double, ptr %6, i64 %30
-  %32 = load double, ptr %31, align 8
-  %33 = fadd double %29, %32
-  %34 = fmul double %33, 3.333300e-01
-  %35 = getelementptr inbounds double, ptr %7, i64 %19
+.preheader6:
+  %32 = phi i64 [ %40, %.preheader6 ], [ 1, %9 ]
+  %33 = getelementptr inbounds double, ptr %5, i64 %32
+  %34 = load double, ptr %33, align 8
+  %35 = getelementptr inbounds double, ptr %3, i64 %32
   store double %34, ptr %35, align 8
-  %36 = icmp eq i64 %30, 9999
-  br i1 %36, label %37, label %11
+  %36 = add nuw nsw i64 %32, 1
+  %37 = getelementptr inbounds double, ptr %5, i64 %36
+  %38 = load double, ptr %37, align 8
+  %39 = getelementptr inbounds double, ptr %3, i64 %36
+  store double %38, ptr %39, align 8
+  %40 = add nuw nsw i64 %32, 2
+  %41 = icmp eq i64 %40, 9999
+  br i1 %41, label %.preheader5, label %.preheader6
 
-37:                                               ; preds = %11, %37
-  %38 = phi i64 [ %46, %37 ], [ 1, %11 ]
-  %39 = getelementptr inbounds double, ptr %7, i64 %38
-  %40 = load double, ptr %39, align 8
-  %41 = getelementptr inbounds double, ptr %6, i64 %38
-  store double %40, ptr %41, align 8
-  %42 = add nuw nsw i64 %38, 1
-  %43 = getelementptr inbounds double, ptr %7, i64 %42
-  %44 = load double, ptr %43, align 8
-  %45 = getelementptr inbounds double, ptr %6, i64 %42
-  store double %44, ptr %45, align 8
-  %46 = add nuw nsw i64 %38, 2
-  %47 = icmp eq i64 %46, 9999
-  br i1 %47, label %49, label %37
-
-48:                                               ; preds = %160
+42:
   ret i32 0
 
-49:                                               ; preds = %37, %49
-  %50 = phi i64 [ %68, %49 ], [ 1, %37 ]
-  %51 = add nsw i64 %50, -1
-  %52 = getelementptr inbounds double, ptr %6, i64 %51
-  %53 = load double, ptr %52, align 8
-  %54 = getelementptr inbounds double, ptr %6, i64 %50
-  %55 = load double, ptr %54, align 8
-  %56 = fadd double %53, %55
-  %57 = add nuw nsw i64 %50, 1
-  %58 = getelementptr inbounds double, ptr %6, i64 %57
-  %59 = load double, ptr %58, align 8
-  %60 = fadd double %56, %59
-  %61 = fmul double %60, 3.333300e-01
-  %62 = getelementptr inbounds double, ptr %7, i64 %50
-  store double %61, ptr %62, align 8
-  %63 = getelementptr inbounds double, ptr %6, i64 %50
-  %64 = load double, ptr %63, align 8
-  %65 = getelementptr inbounds double, ptr %6, i64 %57
-  %66 = load double, ptr %65, align 8
-  %67 = fadd double %64, %66
-  %68 = add nuw nsw i64 %50, 2
-  %69 = getelementptr inbounds double, ptr %6, i64 %68
-  %70 = load double, ptr %69, align 8
-  %71 = fadd double %67, %70
-  %72 = fmul double %71, 3.333300e-01
-  %73 = getelementptr inbounds double, ptr %7, i64 %57
-  store double %72, ptr %73, align 8
-  %74 = icmp eq i64 %68, 9999
-  br i1 %74, label %75, label %49
+.preheader5:
+  %43 = phi i64 [ %58, %.preheader5 ], [ 1, %.preheader6 ]
+  %44 = getelementptr double, ptr %3, i64 %43
+  %45 = getelementptr i8, ptr %44, i64 -8
+  %46 = load double, ptr %45, align 8
+  %47 = load double, ptr %44, align 8
+  %48 = fadd double %46, %47
+  %49 = add nuw nsw i64 %43, 1
+  %50 = getelementptr inbounds double, ptr %3, i64 %49
+  %51 = load double, ptr %50, align 8
+  %52 = fadd double %48, %51
+  %53 = fmul double %52, 3.333300e-01
+  %54 = getelementptr inbounds double, ptr %5, i64 %43
+  store double %53, ptr %54, align 8
+  %55 = load double, ptr %44, align 8
+  %56 = load double, ptr %50, align 8
+  %57 = fadd double %55, %56
+  %58 = add nuw nsw i64 %43, 2
+  %59 = getelementptr inbounds double, ptr %3, i64 %58
+  %60 = load double, ptr %59, align 8
+  %61 = fadd double %57, %60
+  %62 = fmul double %61, 3.333300e-01
+  %63 = getelementptr inbounds double, ptr %5, i64 %49
+  store double %62, ptr %63, align 8
+  %64 = icmp eq i64 %58, 9999
+  br i1 %64, label %.preheader4, label %.preheader5
 
-75:                                               ; preds = %49, %75
-  %76 = phi i64 [ %84, %75 ], [ 1, %49 ]
-  %77 = getelementptr inbounds double, ptr %7, i64 %76
+.preheader4:
+  %65 = phi i64 [ %73, %.preheader4 ], [ 1, %.preheader5 ]
+  %66 = getelementptr inbounds double, ptr %5, i64 %65
+  %67 = load double, ptr %66, align 8
+  %68 = getelementptr inbounds double, ptr %3, i64 %65
+  store double %67, ptr %68, align 8
+  %69 = add nuw nsw i64 %65, 1
+  %70 = getelementptr inbounds double, ptr %5, i64 %69
+  %71 = load double, ptr %70, align 8
+  %72 = getelementptr inbounds double, ptr %3, i64 %69
+  store double %71, ptr %72, align 8
+  %73 = add nuw nsw i64 %65, 2
+  %74 = icmp eq i64 %73, 9999
+  br i1 %74, label %.preheader3, label %.preheader4
+
+.preheader3:
+  %75 = phi i64 [ %90, %.preheader3 ], [ 1, %.preheader4 ]
+  %76 = getelementptr double, ptr %3, i64 %75
+  %77 = getelementptr i8, ptr %76, i64 -8
   %78 = load double, ptr %77, align 8
-  %79 = getelementptr inbounds double, ptr %6, i64 %76
-  store double %78, ptr %79, align 8
-  %80 = add nuw nsw i64 %76, 1
-  %81 = getelementptr inbounds double, ptr %7, i64 %80
-  %82 = load double, ptr %81, align 8
-  %83 = getelementptr inbounds double, ptr %6, i64 %80
-  store double %82, ptr %83, align 8
-  %84 = add nuw nsw i64 %76, 2
-  %85 = icmp eq i64 %84, 9999
-  br i1 %85, label %86, label %75
-
-86:                                               ; preds = %75, %86
-  %87 = phi i64 [ %105, %86 ], [ 1, %75 ]
-  %88 = add nsw i64 %87, -1
-  %89 = getelementptr inbounds double, ptr %6, i64 %88
-  %90 = load double, ptr %89, align 8
-  %91 = getelementptr inbounds double, ptr %6, i64 %87
+  %79 = load double, ptr %76, align 8
+  %80 = fadd double %78, %79
+  %81 = add nuw nsw i64 %75, 1
+  %82 = getelementptr inbounds double, ptr %3, i64 %81
+  %83 = load double, ptr %82, align 8
+  %84 = fadd double %80, %83
+  %85 = fmul double %84, 3.333300e-01
+  %86 = getelementptr inbounds double, ptr %5, i64 %75
+  store double %85, ptr %86, align 8
+  %87 = load double, ptr %76, align 8
+  %88 = load double, ptr %82, align 8
+  %89 = fadd double %87, %88
+  %90 = add nuw nsw i64 %75, 2
+  %91 = getelementptr inbounds double, ptr %3, i64 %90
   %92 = load double, ptr %91, align 8
-  %93 = fadd double %90, %92
-  %94 = add nuw nsw i64 %87, 1
-  %95 = getelementptr inbounds double, ptr %6, i64 %94
-  %96 = load double, ptr %95, align 8
-  %97 = fadd double %93, %96
-  %98 = fmul double %97, 3.333300e-01
-  %99 = getelementptr inbounds double, ptr %7, i64 %87
-  store double %98, ptr %99, align 8
-  %100 = getelementptr inbounds double, ptr %6, i64 %87
-  %101 = load double, ptr %100, align 8
-  %102 = getelementptr inbounds double, ptr %6, i64 %94
+  %93 = fadd double %89, %92
+  %94 = fmul double %93, 3.333300e-01
+  %95 = getelementptr inbounds double, ptr %5, i64 %81
+  store double %94, ptr %95, align 8
+  %96 = icmp eq i64 %90, 9999
+  br i1 %96, label %.preheader2, label %.preheader3
+
+.preheader2:
+  %97 = phi i64 [ %105, %.preheader2 ], [ 1, %.preheader3 ]
+  %98 = getelementptr inbounds double, ptr %5, i64 %97
+  %99 = load double, ptr %98, align 8
+  %100 = getelementptr inbounds double, ptr %3, i64 %97
+  store double %99, ptr %100, align 8
+  %101 = add nuw nsw i64 %97, 1
+  %102 = getelementptr inbounds double, ptr %5, i64 %101
   %103 = load double, ptr %102, align 8
-  %104 = fadd double %101, %103
-  %105 = add nuw nsw i64 %87, 2
-  %106 = getelementptr inbounds double, ptr %6, i64 %105
-  %107 = load double, ptr %106, align 8
-  %108 = fadd double %104, %107
-  %109 = fmul double %108, 3.333300e-01
-  %110 = getelementptr inbounds double, ptr %7, i64 %94
-  store double %109, ptr %110, align 8
-  %111 = icmp eq i64 %105, 9999
-  br i1 %111, label %112, label %86
+  %104 = getelementptr inbounds double, ptr %3, i64 %101
+  store double %103, ptr %104, align 8
+  %105 = add nuw nsw i64 %97, 2
+  %106 = icmp eq i64 %105, 9999
+  br i1 %106, label %.preheader1, label %.preheader2
 
-112:                                              ; preds = %86, %112
-  %113 = phi i64 [ %121, %112 ], [ 1, %86 ]
-  %114 = getelementptr inbounds double, ptr %7, i64 %113
+.preheader1:
+  %107 = phi i64 [ %122, %.preheader1 ], [ 1, %.preheader2 ]
+  %108 = getelementptr double, ptr %3, i64 %107
+  %109 = getelementptr i8, ptr %108, i64 -8
+  %110 = load double, ptr %109, align 8
+  %111 = load double, ptr %108, align 8
+  %112 = fadd double %110, %111
+  %113 = add nuw nsw i64 %107, 1
+  %114 = getelementptr inbounds double, ptr %3, i64 %113
   %115 = load double, ptr %114, align 8
-  %116 = getelementptr inbounds double, ptr %6, i64 %113
-  store double %115, ptr %116, align 8
-  %117 = add nuw nsw i64 %113, 1
-  %118 = getelementptr inbounds double, ptr %7, i64 %117
-  %119 = load double, ptr %118, align 8
-  %120 = getelementptr inbounds double, ptr %6, i64 %117
-  store double %119, ptr %120, align 8
-  %121 = add nuw nsw i64 %113, 2
-  %122 = icmp eq i64 %121, 9999
-  br i1 %122, label %123, label %112
+  %116 = fadd double %112, %115
+  %117 = fmul double %116, 3.333300e-01
+  %118 = getelementptr inbounds double, ptr %5, i64 %107
+  store double %117, ptr %118, align 8
+  %119 = load double, ptr %108, align 8
+  %120 = load double, ptr %114, align 8
+  %121 = fadd double %119, %120
+  %122 = add nuw nsw i64 %107, 2
+  %123 = getelementptr inbounds double, ptr %3, i64 %122
+  %124 = load double, ptr %123, align 8
+  %125 = fadd double %121, %124
+  %126 = fmul double %125, 3.333300e-01
+  %127 = getelementptr inbounds double, ptr %5, i64 %113
+  store double %126, ptr %127, align 8
+  %128 = icmp eq i64 %122, 9999
+  br i1 %128, label %.preheader, label %.preheader1
 
-123:                                              ; preds = %112, %123
-  %124 = phi i64 [ %142, %123 ], [ 1, %112 ]
-  %125 = add nsw i64 %124, -1
-  %126 = getelementptr inbounds double, ptr %6, i64 %125
-  %127 = load double, ptr %126, align 8
-  %128 = getelementptr inbounds double, ptr %6, i64 %124
-  %129 = load double, ptr %128, align 8
-  %130 = fadd double %127, %129
-  %131 = add nuw nsw i64 %124, 1
-  %132 = getelementptr inbounds double, ptr %6, i64 %131
-  %133 = load double, ptr %132, align 8
-  %134 = fadd double %130, %133
-  %135 = fmul double %134, 3.333300e-01
-  %136 = getelementptr inbounds double, ptr %7, i64 %124
+.preheader:
+  %129 = phi i64 [ %137, %.preheader ], [ 1, %.preheader1 ]
+  %130 = getelementptr inbounds double, ptr %5, i64 %129
+  %131 = load double, ptr %130, align 8
+  %132 = getelementptr inbounds double, ptr %3, i64 %129
+  store double %131, ptr %132, align 8
+  %133 = add nuw nsw i64 %129, 1
+  %134 = getelementptr inbounds double, ptr %5, i64 %133
+  %135 = load double, ptr %134, align 8
+  %136 = getelementptr inbounds double, ptr %3, i64 %133
   store double %135, ptr %136, align 8
-  %137 = getelementptr inbounds double, ptr %6, i64 %124
-  %138 = load double, ptr %137, align 8
-  %139 = getelementptr inbounds double, ptr %6, i64 %131
-  %140 = load double, ptr %139, align 8
-  %141 = fadd double %138, %140
-  %142 = add nuw nsw i64 %124, 2
-  %143 = getelementptr inbounds double, ptr %6, i64 %142
-  %144 = load double, ptr %143, align 8
-  %145 = fadd double %141, %144
-  %146 = fmul double %145, 3.333300e-01
-  %147 = getelementptr inbounds double, ptr %7, i64 %131
-  store double %146, ptr %147, align 8
-  %148 = icmp eq i64 %142, 9999
-  br i1 %148, label %149, label %123
+  %137 = add nuw nsw i64 %129, 2
+  %138 = icmp eq i64 %137, 9999
+  br i1 %138, label %139, label %.preheader
 
-149:                                              ; preds = %123, %149
-  %150 = phi i64 [ %158, %149 ], [ 1, %123 ]
-  %151 = getelementptr inbounds double, ptr %7, i64 %150
-  %152 = load double, ptr %151, align 8
-  %153 = getelementptr inbounds double, ptr %6, i64 %150
-  store double %152, ptr %153, align 8
-  %154 = add nuw nsw i64 %150, 1
-  %155 = getelementptr inbounds double, ptr %7, i64 %154
-  %156 = load double, ptr %155, align 8
-  %157 = getelementptr inbounds double, ptr %6, i64 %154
-  store double %156, ptr %157, align 8
-  %158 = add nuw nsw i64 %150, 2
-  %159 = icmp eq i64 %158, 9999
-  br i1 %159, label %160, label %149
-
-160:                                              ; preds = %149
-  %161 = add nuw nsw i32 %10, 4
-  %162 = icmp eq i32 %161, 100
-  br i1 %162, label %48, label %9
+139:
+  %140 = add nuw nsw i32 %8, 4
+  %141 = icmp eq i32 %140, 100
+  br i1 %141, label %42, label %7
 }
 
-declare  ptr @polybench_alloc_data(i64, i32) local_unnamed_addr
+declare ptr @polybench_alloc_data(i64, i32) local_unnamed_addr
 
-declare  i32 @init_array(...) local_unnamed_addr
-
+declare i32 @init_array(...) local_unnamed_addr

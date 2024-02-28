@@ -17,7 +17,7 @@ define void @xundef1024(ptr %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca ptr 
+  %2 = alloca ptr
   store ptr %0, ptr %2
   %3 = load ptr, ptr %2
   store <1024 x i1> undef, ptr %3
@@ -35,7 +35,7 @@ define void @xundef2048(ptr %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca ptr 
+  %2 = alloca ptr
   store ptr %0, ptr %2
   %3 = load ptr, ptr %2
   store <2048 x i1> undef, ptr %3
@@ -53,7 +53,7 @@ define void @xundef256(ptr %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca ptr 
+  %2 = alloca ptr
   store ptr %0, ptr %2
   %3 = load ptr, ptr %2
   store <256 x i1> undef, ptr %3
@@ -71,7 +71,7 @@ define void @xundef4096(ptr %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca ptr 
+  %2 = alloca ptr
   store ptr %0, ptr %2
   %3 = load ptr, ptr %2
   store <4096 x i1> undef, ptr %3
@@ -89,7 +89,7 @@ define void @xundef512(ptr %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca ptr 
+  %2 = alloca ptr
   store ptr %0, ptr %2
   %3 = load ptr, ptr %2
   store <512 x i1> undef, ptr %3
