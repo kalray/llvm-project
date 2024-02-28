@@ -7,25 +7,11 @@
 	FAIL: Clang :: ClangScanDeps/modules-full-output-tu-order.c
 	FAIL: Clang :: ClangScanDeps/modules-priv-fw-from-pub.m
 	FAIL: Clang :: ClangScanDeps/pr61006.cppm
-	FAIL: Clang :: CodeGen/KVX/builtins/invalid_fence.c
-	FAIL: Clang :: CodeGen/KVX/builtins/kv3v2_invalid_mods.c
-	FAIL: Clang :: CodeGen/KVX/builtins/notConstStringMod.c
-	FAIL: Clang :: CodeGen/KVX/builtins/wrong-matrix-transpose-mod.c
 	FAIL: Clang :: CodeGen/KVX/loadc-kv3-2.c
 	FAIL: Clang :: CodeGen/KVX/loadc.c
-	FAIL: Clang :: CodeGen/KVX/rna-modifier.c
-	FAIL: Clang :: CodeGen/KVX/rnz-modifier.c
-	FAIL: Clang :: CodeGen/KVX/ro-modifier.c
 	FAIL: Clang :: CodeGen/KVX/store.c
 	FAIL: Clang :: CodeGen/KVX/storec-kv3-2.c
 	FAIL: Clang :: CodeGen/KVX/storec.c
-	FAIL: Clang :: CodeGen/KVX/wrong-average-mod.c
-	FAIL: Clang :: CodeGen/KVX/wrong-bitcount-mod.c
-	FAIL: Clang :: CodeGen/KVX/wrong-loadc-kv3-2.c
-	FAIL: Clang :: CodeGen/KVX/wrong-loadc.c
-	FAIL: Clang :: CodeGen/KVX/wrong-speculate-mod.c
-	FAIL: Clang :: CodeGen/KVX/wrong-storec-kv3-2.c
-	FAIL: Clang :: CodeGen/KVX/wrong-storec.c
 	FAIL: Clang :: CodeGen/thinlto_backend.ll
 	FAIL: Clang :: CodeGenObjC/debug-info-property.m
 	FAIL: Clang :: CodeGenObjC/debug-info-property2.m
@@ -50,6 +36,5 @@
 	FAIL: LLVM :: CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
-	FAIL: LLVM :: CodeGen/KVX/PIC/jumptable.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  54
+Failures:  39

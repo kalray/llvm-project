@@ -11,6 +11,6 @@ void dflushsw(unsigned long w, unsigned long s, __kvx_x256 *v, __kvx_x512 *x, __
 }
 
 // ; CHECK-COUNT-4: {{.*}} error: This builtin accepts a modifier string composed by: ['.l1', '.l2']
-// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['.b', '.f']
+// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['.f', '.b']
 // ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.td']
-// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.zw', '.tq', '.ud', '.tw', '.uw', '.zd']
+// ; CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.uw', '.', '.zd', '.ud', '.tq', '.zw', '.tw']

@@ -6,8 +6,8 @@ void fence(const char *p) {
    __builtin_kvx_fence(".allr");
 }
 
-// CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.r', '.w', '.wa', '.all']
+// CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.all', '.r', '.w', '.wa']
 // CHECK: {{.*}} error: cannot compile this builtin function yet
 // CHECK: {{.*}} error: Incorrect number of arguments to builtin.
-// CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.r', '.w', '.wa', '.all']
+// CHECK: {{.*}} error: This builtin accepts a modifier string composed by: ['', '.', '.all', '.r', '.w', '.wa']
 // CHECK: {{.*}} error: cannot compile this builtin function yet
