@@ -7,9 +7,9 @@
 
 // TCA 4096
 // typedef
-typedef __kvx_x4096 tca4096_t;
-void test4096Typedef(tca4096_t *inp, int *outp) {
-  tca4096_t *Matout = (tca4096_t *)outp;
+typedef __kvx_x4096 __kvx_v4096;
+void test4096Typedef(__kvx_v4096 *inp, int *outp) {
+  __kvx_v4096 *Matout = (__kvx_v4096 *)outp;
   *Matout = *inp;
 }
 
@@ -39,12 +39,12 @@ void test4096Arg5(__kvx_x4096 Mata[], int *ptr) {
   *Matp = Mata[0];
 }
 
-void test4096Arg6(const tca4096_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+void test4096Arg6(const __kvx_v4096 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
   *Matp = Mat;
 }
 
-void test4096Arg7(const tca4096_t *Mat, int *ptr) {
+void test4096Arg7(const __kvx_v4096 *Mat, int *ptr) {
   __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
   *Matp = *Mat;
 }
@@ -55,7 +55,7 @@ __kvx_x4096 test4096Ret1(int *ptr) { // expected-error {{invalid use of KVX TCA 
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
 
-const tca4096_t test4096Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+const __kvx_v4096 test4096Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x4096 *Matp = (__kvx_x4096 *)ptr;
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
@@ -65,7 +65,7 @@ __kvx_x4096 globalBuff16;        // expected-error {{invalid use of KVX TCA type
 const __kvx_x4096 globalBuff162; // expected-error {{invalid use of KVX TCA type}}
 __kvx_x4096 *globalBuff16p;
 const __kvx_x4096 *const globalBuff16p2;
-tca4096_t globaltca4096_t; // expected-error {{invalid use of KVX TCA type}}
+__kvx_v4096 global__kvx_v4096; // expected-error {{invalid use of KVX TCA type}}
 
 // sizeof / alignof
 int test4096SizeofAlignof(int *ptr) {
@@ -126,9 +126,9 @@ void test4096Operators4(int v, void *ptr) {
 
 // TCA 2048
 // typedef
-typedef __kvx_x2048 tca2048_t;
-void test2048Typedef(tca2048_t *inp, int *outp) {
-  tca2048_t *Matout = (tca2048_t *)outp;
+typedef __kvx_x2048 __kvx_v2048;
+void test2048Typedef(__kvx_v2048 *inp, int *outp) {
+  __kvx_v2048 *Matout = (__kvx_v2048 *)outp;
   *Matout = *inp;
 }
 
@@ -158,12 +158,12 @@ void test2048Arg5(__kvx_x2048 Mata[], int *ptr) {
   *Matp = Mata[0];
 }
 
-void test2048Arg6(const tca2048_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+void test2048Arg6(const __kvx_v2048 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
   *Matp = Mat;
 }
 
-void test2048Arg7(const tca2048_t *Mat, int *ptr) {
+void test2048Arg7(const __kvx_v2048 *Mat, int *ptr) {
   __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
   *Matp = *Mat;
 }
@@ -174,7 +174,7 @@ __kvx_x2048 test2048Ret1(int *ptr) { // expected-error {{invalid use of KVX TCA 
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
 
-const tca2048_t test2048Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+const __kvx_v2048 test2048Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x2048 *Matp = (__kvx_x2048 *)ptr;
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
@@ -184,7 +184,7 @@ __kvx_x2048 globalBuff8;        // expected-error {{invalid use of KVX TCA type}
 const __kvx_x2048 globalBuff82; // expected-error {{invalid use of KVX TCA type}}
 __kvx_x2048 *globalBuff8p;
 const __kvx_x2048 *const globalBuff8p2;
-tca2048_t globaltca2048_t; // expected-error {{invalid use of KVX TCA type}}
+__kvx_v2048 global__kvx_v2048; // expected-error {{invalid use of KVX TCA type}}
 
 // sizeof / alignof
 int test2048SizeofAlignof(int *ptr) {
@@ -245,9 +245,9 @@ void test2048Operators4(int v, void *ptr) {
 
 // TCA 1024
 // typedef
-typedef __kvx_x1024 tca1024_t;
-void test1024Typedef(tca1024_t *inp, int *outp) {
-  tca1024_t *Matout = (tca1024_t *)outp;
+typedef __kvx_x1024 __kvx_v1024;
+void test1024Typedef(__kvx_v1024 *inp, int *outp) {
+  __kvx_v1024 *Matout = (__kvx_v1024 *)outp;
   *Matout = *inp;
 }
 
@@ -277,12 +277,12 @@ void test1024Arg5(__kvx_x1024 Mata[], int *ptr) {
   *Matp = Mata[0];
 }
 
-void test1024Arg6(const tca1024_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+void test1024Arg6(const __kvx_v1024 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
   *Matp = Mat;
 }
 
-void test1024Arg7(const tca1024_t *Mat, int *ptr) {
+void test1024Arg7(const __kvx_v1024 *Mat, int *ptr) {
   __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
   *Matp = *Mat;
 }
@@ -293,7 +293,7 @@ __kvx_x1024 test1024Ret1(int *ptr) { // expected-error {{invalid use of KVX TCA 
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
 
-const tca1024_t test1024Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+const __kvx_v1024 test1024Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
   return *Matp; // expected-error {{invalid use of KVX TCA type}}
 }
@@ -303,7 +303,7 @@ __kvx_x1024 globalMat;        // expected-error {{invalid use of KVX TCA type}}
 const __kvx_x1024 globalMat2; // expected-error {{invalid use of KVX TCA type}}
 __kvx_x1024 *globalMatp;
 const __kvx_x1024 *const globalMatp2;
-tca1024_t globaltca1024_t; // expected-error {{invalid use of KVX TCA type}}
+__kvx_v1024 global__kvx_v1024; // expected-error {{invalid use of KVX TCA type}}
 
 // sizeof / alignof
 int test1024SizeofAlignof(int *ptr) {
@@ -364,10 +364,10 @@ void test1024Operators4(int v, void *ptr) {
 
 // TCA 512
 // typedef
-typedef __kvx_x512 tca512_t;
+typedef __kvx_x512 __kvx_x512;
 void test512Typedef(int *inp, int *outp) {
-  tca512_t *Widein = (tca512_t *)inp;
-  tca512_t *Wideout = (tca512_t *)outp;
+  __kvx_x512 *Widein = (__kvx_x512 *)inp;
+  __kvx_x512 *Wideout = (__kvx_x512 *)outp;
   *Wideout = *Widein;
 }
 
@@ -397,12 +397,12 @@ void test512Arg5(__kvx_x512 Widea[], int *ptr) {
   *Widep = Widea[0];
 }
 
-void test512Arg6(const tca512_t Wide, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+void test512Arg6(const __kvx_x512 Wide, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x512 *Widep = (__kvx_x512 *)ptr;
   *Widep = Wide;
 }
 
-void test512Arg7(const tca512_t *Wide, int *ptr) {
+void test512Arg7(const __kvx_x512 *Wide, int *ptr) {
   __kvx_x512 *Widep = (__kvx_x512 *)ptr;
   *Widep = *Wide;
 }
@@ -423,12 +423,12 @@ const __kvx_x512 *test512Ret3(int *ptr) {
   return Widep + 2;
 }
 
-const tca512_t test512Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+const __kvx_x512 test512Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x512 *Widep = (__kvx_x512 *)ptr;
   return *Widep; // expected-error {{invalid use of KVX TCA type}}
 }
 
-const tca512_t *test512Ret5(int *ptr) {
+const __kvx_x512 *test512Ret5(int *ptr) {
   __kvx_x512 *Widep = (__kvx_x512 *)ptr;
   return Widep + 2;
 }
@@ -438,7 +438,7 @@ __kvx_x512 globalWide;        // expected-error {{invalid use of KVX TCA type}}
 const __kvx_x512 globalWide2; // expected-error {{invalid use of KVX TCA type}}
 __kvx_x512 *globalWidep;
 const __kvx_x512 *const globalWidep2;
-tca512_t globaltca512_t; // expected-error {{invalid use of KVX TCA type}}
+__kvx_x512 globaltca512_t; // expected-error {{invalid use of KVX TCA type}}
 
 // sizeof / alignof
 int test512SizeofAlignof(int *ptr) {
@@ -500,10 +500,10 @@ void test512Operators4(int v, void *ptr) {
 
 // TCA 256
 // typedef
-typedef __kvx_x256 tca256_t;
+typedef __kvx_x256 __kvx_x256;
 void test256Typedef(int *inp, int *outp) {
-  tca256_t *Vecin = (tca256_t *)inp;
-  tca256_t *Vecout = (tca256_t *)outp;
+  __kvx_x256 *Vecin = (__kvx_x256 *)inp;
+  __kvx_x256 *Vecout = (__kvx_x256 *)outp;
   *Vecout = *Vecin;
 }
 
@@ -533,12 +533,12 @@ void test256Arg5(__kvx_x256 Veca[], int *ptr) {
   *Vecp = Veca[0];
 }
 
-void test256Arg6(const tca256_t Vec, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+void test256Arg6(const __kvx_x256 Vec, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
   *Vecp = Vec;
 }
 
-void test256Arg7(const tca256_t *Vec, int *ptr) {
+void test256Arg7(const __kvx_x256 *Vec, int *ptr) {
   __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
   *Vecp = *Vec;
 }
@@ -559,12 +559,12 @@ const __kvx_x256 *test256Ret3(int *ptr) {
   return Vecp + 2;
 }
 
-const tca256_t test256Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+const __kvx_x256 test256Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
   return *Vecp; // expected-error {{invalid use of KVX TCA type}}
 }
 
-const tca256_t *test256Ret5(int *ptr) {
+const __kvx_x256 *test256Ret5(int *ptr) {
   __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
   return Vecp + 2;
 }
@@ -574,7 +574,7 @@ __kvx_x256 globalVec;        // expected-error {{invalid use of KVX TCA type}}
 const __kvx_x256 globalVec2; // expected-error {{invalid use of KVX TCA type}}
 __kvx_x256 *globalVecp;
 const __kvx_x256 *const globalVecp2;
-tca256_t globaltca256_t; // expected-error {{invalid use of KVX TCA type}}
+__kvx_x256 globaltca256_t; // expected-error {{invalid use of KVX TCA type}}
 
 // local
 void test256Local(int *ptr, unsigned char vc) {

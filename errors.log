@@ -23,9 +23,7 @@
 	FAIL: Clang :: Driver/flang/flang_ucase.F90
 	FAIL: Clang :: Driver/modules.mm
 	FAIL: Clang :: Frontend/rewrite-includes-macros.cpp
-	FAIL: Clang :: Misc/pragma-attribute-supported-attributes-list.test
 	FAIL: Clang :: PCH/gch-probe.c
-	FAIL: Clang :: SemaCXX/kvx-tca-types.cpp
 	FAIL: Clang Tools :: clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c
 	FAIL: LLVM :: CodeGen/Generic/APIntParam.ll
 	FAIL: LLVM :: CodeGen/Generic/APIntSextParam.ll
@@ -37,4 +35,4 @@
 	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
 	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  39
+Failures:  37

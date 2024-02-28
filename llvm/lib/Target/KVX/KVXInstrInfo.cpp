@@ -2063,13 +2063,10 @@ bool KVXInstrInfo::isBranchOffsetInRange(unsigned BranchOpc,
                                          int64_t BrOffset) const {
   switch (BranchOpc) {
   case KVX::GOTO:
-  case KVX::TAIL:
     return isInt<27>(BrOffset);
   case KVX::IGOTO:
-  case KVX::ITAIL:
     return true;
   case KVX::CB:
-  case KVX::CTAIL:
     return isInt<17>(BrOffset);
   default: {
     errs() << "Opcode: " << BranchOpc << '\n';
@@ -2126,11 +2123,41 @@ bool KVXInstrInfo::canMakeTailCallConditional(
   if ((!KVXCondTailCall) || (TailCall.getOpcode() != KVX::TAIL))
     return false;
 
-  auto *Symb = TailCall.getOperand(0).getMCSymbol();
-  if (Symb->isExternal() || Symb->isUndefined() || Symb->isVariable() ||
-      Symb->isUnset() || Symb->isTemporary())
+  auto Symb = TailCall.getOperand(0);
+  if (Symb.isSymbol())
     return false;
   // CB has a 17 bit offset. If the function is over 2^15 bytes, it's rather
   // unsafe using CB for calling another function.
   return isUInt<15>(getFuncSizeInBytes(*TailCall.getParent()->getParent()));
+}
+
+void KVXInstrInfo::replaceBranchWithTailCall(MachineBasicBlock &MBB,
+                                        SmallVectorImpl<MachineOperand> &Cond,
+                                        const MachineInstr &TailCall) const {
+  MachineBasicBlock::iterator I = MBB.end();
+  for (--I; I != MBB.begin(); --I) {
+    if (I->isDebugInstr() || !I->isConditionalBranch() || I->getNumOperands() != 3)
+      continue;
+
+    if (!I->isBranch())
+      return;
+
+    auto Predicate = I->getOperand(0);
+    if (!Predicate.isReg() || Predicate.getReg() != Cond[1].getReg())
+      continue;
+
+    auto Condition = I->getOperand(2);
+    if (Condition.isImm() && Condition.getImm() == Cond[2].getImm())
+      break;
+  }
+
+  if (!I->isConditionalBranch())
+    return;
+
+  auto MIB = BuildMI(MBB, I, MBB.findDebugLoc(I), get(KVX::CTAIL));
+  MIB.addUse(Cond[1].getReg(), getKillRegState(Cond[1].isKill())); // Predicate.
+  MIB->addOperand(TailCall.getOperand(0)); // Destination.
+  MIB->addOperand(Cond[2]);                // Condition.
+
+  I->eraseFromParent();
 }
