@@ -22375,7 +22375,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
     SmallVector<Value *, 4> Ops = {StoreVal, Ptr, SizeInfo, Ready};
     Function *StoreI =
-        CGF.CGM.getIntrinsic(IID, {StoreVal->getType(), Ready->getType()});
+        CGF.CGM.getIntrinsic(IID, {StoreVal->getType(), Ptr->getType(), Ready->getType()});
     return CGF.Builder.CreateCall(StoreI, Ops);
   }
 
@@ -22545,7 +22545,7 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                  Cond,     LsucondModVal, LsumaskModVal};
   if (Ready)
     Ops.push_back(Ready);
-  Function *StoreCI = CGF.CGM.getIntrinsic(IID, {StoreVal->getType()});
+  Function *StoreCI = CGF.CGM.getIntrinsic(IID, {StoreVal->getType(), Ptr->getType()});
 
   return CGF.Builder.CreateCall(StoreCI, Ops);
 }
@@ -22618,7 +22618,7 @@ static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   SmallVector<Value *, 8> Ops = {PreloadVal,   Ptr,           SizeInfo,
                                  Cond,         VariantModVal, LsucondModVal,
                                  LsumaskModVal};
-  Function *LoadCI = CGF.CGM.getIntrinsic(IID, {PreloadVal->getType()});
+  Function *LoadCI = CGF.CGM.getIntrinsic(IID, {PreloadVal->getType(), Ptr->getType()});
 
   Value *Call = CGF.Builder.CreateCall(LoadCI, Ops);
 

@@ -6,20 +6,21 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @storebc(i8 %a, ptr %ptr) {
+define void @storebc(i8 noundef zeroext %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storebc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sb 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i8 %a, ptr %ptr, align 1
+  store i8 %a, ptr %ptr
   ret void
 }
 
-define i32 @storebc_r(i8 %a, ptr %ptr, ptr %load) {
+define i32 @storebc_r(i8 noundef zeroext %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storebc_r:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sb 0[$r1] = $r0
@@ -29,7 +30,7 @@ define i32 @storebc_r(i8 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %conv1 = zext i8 %a to i64
@@ -39,7 +40,9 @@ entry:
 
 declare i64 @llvm.kvx.ready(...)
 
-define void @storebl(i64 %a, ptr %ptr) {
+declare void @llvm.kvx.store.i64.p0.i32(i64, ptr, i32, i32)
+
+define void @storebl(i64 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storebl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sb 0[$r1] = $r0
@@ -47,11 +50,11 @@ define void @storebl(i64 %a, ptr %ptr) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i8
-  store i8 %0, ptr %ptr, align 1
+  store i8 %0, ptr %ptr
   ret void
 }
 
-define i32 @storebl_r(i64 %a, ptr %ptr, ptr %load) {
+define i32 @storebl_r(i64 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storebl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -63,27 +66,28 @@ define i32 @storebl_r(i64 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.i64.p0.i32(i64 %a, ptr %ptr, i32 8, i32 %conv)
   ret i32 %conv
 }
 
-define void @storehs(i16 %a, ptr %ptr) {
+define void @storehs(i16 noundef zeroext %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storehs:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i16 %a, ptr %ptr, align 2
+  store i16 %a, ptr %ptr
   ret void
 }
 
-define i32 @storehs_r(i16 %a, ptr %ptr, ptr %load) {
+define i32 @storehs_r(i16 noundef zeroext %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storehs_r:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sh 0[$r1] = $r0
@@ -93,7 +97,7 @@ define i32 @storehs_r(i16 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %conv1 = zext i16 %a to i64
@@ -101,7 +105,7 @@ entry:
   ret i32 %conv
 }
 
-define void @storehl(i64 %a, ptr %ptr) {
+define void @storehl(i64 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storehl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
@@ -109,11 +113,11 @@ define void @storehl(i64 %a, ptr %ptr) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i16
-  store i16 %0, ptr %ptr, align 2
+  store i16 %0, ptr %ptr
   ret void
 }
 
-define i32 @storehl_r(i64 %a, ptr %ptr, ptr %load) {
+define i32 @storehl_r(i64 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storehl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -125,25 +129,25 @@ define i32 @storehl_r(i64 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.i64.p0.i32(i64 %a, ptr %ptr, i32 16, i32 %conv)
   ret i32 %conv
 }
 
-define void @storewi(i32 %a, ptr %ptr) {
+define void @storewi(i32 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storewi:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i32 %a, ptr %ptr, align 4
+  store i32 %a, ptr %ptr
   ret void
 }
 
-define i32 @storewi_r(i32 %a, ptr %ptr, ptr %load) {
+define i32 @storewi_r(i32 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storewi_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -155,7 +159,7 @@ define i32 @storewi_r(i32 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %conv1 = zext i32 %a to i64
@@ -163,7 +167,7 @@ entry:
   ret i32 %conv
 }
 
-define void @storewl(i64 %a, ptr %ptr) {
+define void @storewl(i64 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storewl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
@@ -171,11 +175,11 @@ define void @storewl(i64 %a, ptr %ptr) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = trunc i64 %a to i32
-  store i32 %0, ptr %ptr, align 4
+  store i32 %0, ptr %ptr
   ret void
 }
 
-define i32 @storewl_r(i64 %a, ptr %ptr, ptr %load) {
+define i32 @storewl_r(i64 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storewl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -187,25 +191,25 @@ define i32 @storewl_r(i64 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.i64.p0.i32(i64 %a, ptr %ptr, i32 32, i32 %conv)
   ret i32 %conv
 }
 
-define void @storedl(i64 %a, ptr %ptr) {
+define void @storedl(i64 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storedl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i64 %a, ptr %ptr, align 8
+  store i64 %a, ptr %ptr
   ret void
 }
 
-define i32 @storedl_r(i64 %a, ptr %ptr, ptr %load) {
+define i32 @storedl_r(i64 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storedl_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -217,25 +221,25 @@ define i32 @storedl_r(i64 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.i64.p0.i32(i64 %a, ptr %ptr, i32 64, i32 %conv)
   ret i32 %conv
 }
 
-define void @storeq(i128 %a, ptr %ptr) {
+define void @storeq(i128 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storeq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i128 %a, ptr %ptr, align 8
+  store i128 %a, ptr %ptr
   ret void
 }
 
-define i32 @storeq_r(i128 %a, ptr %ptr, ptr %load) {
+define i32 @storeq_r(i128 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storeq_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
@@ -247,7 +251,7 @@ define i32 @storeq_r(i128 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast i128 %a to <2 x i64>
@@ -255,18 +259,20 @@ entry:
   ret i32 %conv
 }
 
-define void @storehf(half %a, ptr %ptr) {
+declare void @llvm.kvx.store.v2i64.p0.i32(<2 x i64>, ptr, i32, i32)
+
+define void @storehf(half noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storehf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store half %a, ptr %ptr, align 2
+  store half %a, ptr %ptr
   ret void
 }
 
-define i32 @storehf_r(half %a, ptr %ptr, ptr %load) {
+define i32 @storehf_r(half noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storehf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -278,25 +284,27 @@ define i32 @storehf_r(half %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.f16.p0.i32(half %a, ptr %ptr, i32 16, i32 %conv)
   ret i32 %conv
 }
 
-define void @storewf(float %a, ptr %ptr) {
+declare void @llvm.kvx.store.f16.p0.i32(half, ptr, i32, i32)
+
+define void @storewf(float noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storewf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store float %a, ptr %ptr, align 4
+  store float %a, ptr %ptr
   ret void
 }
 
-define i32 @storewf_r(float %a, ptr %ptr, ptr %load) {
+define i32 @storewf_r(float noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storewf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -308,25 +316,27 @@ define i32 @storewf_r(float %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.f32.p0.i32(float %a, ptr %ptr, i32 32, i32 %conv)
   ret i32 %conv
 }
 
-define void @storedf(double %a, ptr %ptr) {
+declare void @llvm.kvx.store.f32.p0.i32(float, ptr, i32, i32)
+
+define void @storedf(double noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: storedf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store double %a, ptr %ptr, align 8
+  store double %a, ptr %ptr
   ret void
 }
 
-define i32 @storedf_r(double %a, ptr %ptr, ptr %load) {
+define i32 @storedf_r(double noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: storedf_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -338,25 +348,27 @@ define i32 @storedf_r(double %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   tail call void @llvm.kvx.store.f64.p0.i32(double %a, ptr %ptr, i32 64, i32 %conv)
   ret i32 %conv
 }
 
-define void @store64(<2 x i32> %a, ptr %ptr) {
+declare void @llvm.kvx.store.f64.p0.i32(double, ptr, i32, i32)
+
+define void @store64(<2 x i32> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <2 x i32> %a, ptr %ptr, align 8
+  store <2 x i32> %a, ptr %ptr
   ret void
 }
 
-define i32 @store64_r(<2 x i32> %a, ptr %ptr, ptr %load) {
+define i32 @store64_r(<2 x i32> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store64_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -368,7 +380,7 @@ define i32 @store64_r(<2 x i32> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <2 x i32> %a to i64
@@ -376,18 +388,18 @@ entry:
   ret i32 %conv
 }
 
-define void @store64h(<4 x i16> %a, ptr %ptr) {
+define void @store64h(<4 x i16> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store64h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <4 x i16> %a, ptr %ptr, align 8
+  store <4 x i16> %a, ptr %ptr
   ret void
 }
 
-define i32 @store64h_r(<4 x i16> %a, ptr %ptr, ptr %load) {
+define i32 @store64h_r(<4 x i16> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store64h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -399,7 +411,7 @@ define i32 @store64h_r(<4 x i16> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <4 x i16> %a to i64
@@ -407,18 +419,18 @@ entry:
   ret i32 %conv
 }
 
-define void @store128(<4 x i32> %a, ptr %ptr) {
+define void @store128(<4 x i32> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store128:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <4 x i32> %a, ptr %ptr, align 16
+  store <4 x i32> %a, ptr %ptr
   ret void
 }
 
-define i32 @store128_r(<4 x i32> %a, ptr %ptr, ptr %load) {
+define i32 @store128_r(<4 x i32> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store128_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
@@ -430,7 +442,7 @@ define i32 @store128_r(<4 x i32> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <4 x i32> %a to <2 x i64>
@@ -438,18 +450,18 @@ entry:
   ret i32 %conv
 }
 
-define void @store128h(<8 x i16> %a, ptr %ptr) {
+define void @store128h(<8 x i16> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store128h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <8 x i16> %a, ptr %ptr, align 16
+  store <8 x i16> %a, ptr %ptr
   ret void
 }
 
-define i32 @store128h_r(<8 x i16> %a, ptr %ptr, ptr %load) {
+define i32 @store128h_r(<8 x i16> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store128h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r3 = 0[$r3]
@@ -461,7 +473,7 @@ define i32 @store128h_r(<8 x i16> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <8 x i16> %a to <2 x i64>
@@ -469,18 +481,18 @@ entry:
   ret i32 %conv
 }
 
-define void @store256(<8 x i32> %a, ptr %ptr) {
+define void @store256(<8 x i32> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store256:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <8 x i32> %a, ptr %ptr, align 32
+  store <8 x i32> %a, ptr %ptr
   ret void
 }
 
-define i32 @store256_r(<8 x i32> %a, ptr %ptr, ptr %load) {
+define i32 @store256_r(<8 x i32> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store256_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r5 = 0[$r5]
@@ -492,7 +504,7 @@ define i32 @store256_r(<8 x i32> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <8 x i32> %a to <4 x i64>
@@ -500,18 +512,20 @@ entry:
   ret i32 %conv
 }
 
-define void @store256h(<16 x i16> %a, ptr %ptr) {
+declare void @llvm.kvx.store.v4i64.p0.i32(<4 x i64>, ptr, i32, i32)
+
+define void @store256h(<16 x i16> noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store256h:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so 0[$r4] = $r0r1r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store <16 x i16> %a, ptr %ptr, align 32
+  store <16 x i16> %a, ptr %ptr
   ret void
 }
 
-define i32 @store256h_r(<16 x i16> %a, ptr %ptr, ptr %load) {
+define i32 @store256h_r(<16 x i16> noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store256h_r:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r5 = 0[$r5]
@@ -523,7 +537,7 @@ define i32 @store256h_r(<16 x i16> %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %2 = bitcast <16 x i16> %a to <4 x i64>
@@ -531,7 +545,7 @@ entry:
   ret i32 %conv
 }
 
-define void @store_vol(i32 %a, ptr %ptr) {
+define void @store_vol(i32 noundef %a, ptr noundef %ptr) {
 ; CHECK-LABEL: store_vol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
@@ -540,23 +554,23 @@ define void @store_vol(i32 %a, ptr %ptr) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  store volatile i32 %a, ptr %ptr, align 4
-  store volatile i32 %a, ptr %ptr, align 4
+  store volatile i32 %a, ptr %ptr
+  store volatile i32 %a, ptr %ptr
   ret void
 }
 
-define void @store_novol(i32 %a, ptr %ptr) {
+define void @store_novol(i32 noundef %a, ptr nocapture noundef writeonly %ptr) {
 ; CHECK-LABEL: store_novol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  store i32 %a, ptr %ptr, align 4
+  store i32 %a, ptr %ptr
   ret void
 }
 
-define i32 @store_r_vol(i32 %a, ptr %ptr, ptr %load) {
+define i32 @store_r_vol(i32 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store_r_vol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -569,7 +583,7 @@ define i32 @store_r_vol(i32 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %conv1 = sext i32 %a to i64
@@ -578,7 +592,9 @@ entry:
   ret i32 %conv
 }
 
-define i32 @store_r_novol(i32 %a, ptr %ptr, ptr %load) {
+declare void @llvm.kvx.store.vol.i64.p0.i32(i64, ptr, i32, i32)
+
+define i32 @store_r_novol(i32 noundef %a, ptr noundef %ptr, ptr nocapture noundef readonly %load) {
 ; CHECK-LABEL: store_r_novol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r2 = 0[$r2]
@@ -591,7 +607,7 @@ define i32 @store_r_novol(i32 %a, ptr %ptr, ptr %load) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, ptr %load, align 4
+  %0 = load i32, ptr %load
   %1 = tail call i64 (...) @llvm.kvx.ready(i32 %0)
   %conv = trunc i64 %1 to i32
   %conv1 = sext i32 %a to i64
@@ -600,7 +616,7 @@ entry:
   ret i32 %conv
 }
 
-define void @ready_then_store(ptr %addr0, ptr %addr1, ptr %addr2, ptr %to0, ptr %to1, ptr %to2) {
+define void @ready_then_store(ptr nocapture noundef readonly %addr0, ptr nocapture noundef readonly %addr1, ptr nocapture noundef readonly %addr2, ptr noundef %to0, ptr noundef %to1, ptr noundef %to2) {
 ; CHECK-LABEL: ready_then_store:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
@@ -619,9 +635,9 @@ define void @ready_then_store(ptr %addr0, ptr %addr1, ptr %addr2, ptr %to0, ptr 
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
 entry:
-  %0 = load i32, ptr %addr0, align 4
-  %1 = load i32, ptr %addr1, align 4
-  %2 = load i32, ptr %addr2, align 4
+  %0 = load i32, ptr %addr0
+  %1 = load i32, ptr %addr1
+  %2 = load i32, ptr %addr2
   %3 = tail call i64 (...) @llvm.kvx.ready(i32 %0, i32 %1, i32 %2)
   %conv = trunc i64 %3 to i32
   %conv1 = sext i32 %0 to i64
@@ -633,7 +649,7 @@ entry:
   ret void
 }
 
-define void @load_then_store(ptr %addr0, ptr %addr1, ptr %addr2, ptr %to0, ptr %to1, ptr %to2) {
+define void @load_then_store(ptr nocapture noundef readonly %addr0, ptr nocapture noundef readonly %addr1, ptr nocapture noundef readonly %addr2, ptr nocapture noundef writeonly %to0, ptr nocapture noundef writeonly %to1, ptr nocapture noundef writeonly %to2) {
 ; CHECK-LABEL: load_then_store:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -650,16 +666,16 @@ define void @load_then_store(ptr %addr0, ptr %addr1, ptr %addr2, ptr %to0, ptr %
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i32, ptr %addr0, align 4
-  %1 = load i32, ptr %addr1, align 4
-  %2 = load i32, ptr %addr2, align 4
-  store i32 %0, ptr %to0, align 4
-  store i32 %1, ptr %to1, align 4
-  store i32 %2, ptr %to2, align 4
+  %0 = load i32, ptr %addr0
+  %1 = load i32, ptr %addr1
+  %2 = load i32, ptr %addr2
+  store i32 %0, ptr %to0
+  store i32 %1, ptr %to1
+  store i32 %2, ptr %to2
   ret void
 }
 
-define void @store_imm(ptr %addr, i32 %sv, i32 %ready) {
+define void @store_imm(ptr noundef %addr, i32 noundef %sv, i32 noundef %ready) {
 ; CHECK-LABEL: store_imm:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r0 = $r0, 4
@@ -674,18 +690,4 @@ entry:
   tail call void @llvm.kvx.store.i64.p0.i32(i64 %conv, ptr nonnull %arrayidx, i32 32, i32 %ready)
   ret void
 }
-
-declare void @llvm.kvx.store.i64.p0.i32(i64, ptr, i32, i32)
-
-declare void @llvm.kvx.store.v2i64.p0.i32(<2 x i64>, ptr, i32, i32)
-
-declare void @llvm.kvx.store.f16.p0.i32(half, ptr, i32, i32)
-
-declare void @llvm.kvx.store.f32.p0.i32(float, ptr, i32, i32)
-
-declare void @llvm.kvx.store.f64.p0.i32(double, ptr, i32, i32)
-
-declare void @llvm.kvx.store.v4i64.p0.i32(<4 x i64>, ptr, i32, i32)
-
-declare void @llvm.kvx.store.vol.i64.p0.i32(i64, ptr, i32, i32)
 

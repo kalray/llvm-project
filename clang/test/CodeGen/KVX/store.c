@@ -23,7 +23,7 @@ void storebc(unsigned char a, void *ptr) { __builtin_kvx_storeb(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = zext i8 [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 8, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 8, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storebc_r(unsigned char a, void *ptr, int *load) {
@@ -45,7 +45,7 @@ void storebl(unsigned long a, void *ptr) { __builtin_kvx_storeb(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 8, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 8, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storebl_r(unsigned long a, void *ptr, int *load) {
@@ -67,7 +67,7 @@ void storehs(unsigned short a, void *ptr) { __builtin_kvx_storeh(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = zext i16 [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storehs_r(unsigned short a, void *ptr, int *load) {
@@ -89,7 +89,7 @@ void storehl(unsigned long a, void *ptr) { __builtin_kvx_storeh(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storehl_r(unsigned long a, void *ptr, int *load) {
@@ -111,7 +111,7 @@ void storewi(unsigned int a, void *ptr) { __builtin_kvx_storew(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = zext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storewi_r(unsigned int a, void *ptr, int *load) {
@@ -133,7 +133,7 @@ void storewl(unsigned long a, void *ptr) { __builtin_kvx_storew(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storewl_r(unsigned long a, void *ptr, int *load) {
@@ -154,7 +154,7 @@ void storedl(unsigned long a, void *ptr) { __builtin_kvx_stored(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storedl_r(unsigned long a, void *ptr, int *load) {
@@ -176,7 +176,7 @@ void storeq(unsigned __int128 a, void *ptr) { __builtin_kvx_storeq(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast i128 [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.p0.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storeq_r(unsigned __int128 a, void *ptr, int *load) {
@@ -197,7 +197,7 @@ void storehf(_Float16 a, void *ptr) { __builtin_kvx_storehf(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.f16.i32(half [[A:%.*]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.f16.p0.i32(half [[A:%.*]], ptr [[PTR:%.*]], i32 16, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storehf_r(_Float16 a, void *ptr, int *load) {
@@ -218,7 +218,7 @@ void storewf(float a, void *ptr) { __builtin_kvx_storewf(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.f32.i32(float [[A:%.*]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.f32.p0.i32(float [[A:%.*]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storewf_r(float a, void *ptr, int *load) {
@@ -239,7 +239,7 @@ void storedf(double a, void *ptr) { __builtin_kvx_storedf(a, ptr); }
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[LOAD:%.*]], align 4, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
-// CHECK-NEXT:    tail call void @llvm.kvx.store.f64.i32(double [[A:%.*]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.f64.p0.i32(double [[A:%.*]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int storedf_r(double a, void *ptr, int *load) {
@@ -261,7 +261,7 @@ void store64(v2i32 a, void *ptr) { __builtin_kvx_store64(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <2 x i32> [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[TMP2]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[TMP2]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store64_r(v2i32 a, void *ptr, int *load) {
@@ -283,7 +283,7 @@ void store64h(v4i16 a, void *ptr) { __builtin_kvx_store64(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i16> [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[TMP2]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[TMP2]], ptr [[PTR:%.*]], i32 64, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store64h_r(v4i16 a, void *ptr, int *load) {
@@ -305,7 +305,7 @@ void store128(v4i32 a, void *ptr) { __builtin_kvx_store128(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.p0.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store128_r(v4i32 a, void *ptr, int *load) {
@@ -327,7 +327,7 @@ void store128h(v8i16 a, void *ptr) { __builtin_kvx_store128(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <8 x i16> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.v2i64.p0.i32(<2 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 128, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store128h_r(v8i16 a, void *ptr, int *load) {
@@ -349,7 +349,7 @@ void store256(v8i32 a, void *ptr) { __builtin_kvx_store256(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    tail call void @llvm.kvx.store.v4i64.i32(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.v4i64.p0.i32(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store256_r(v8i32 a, void *ptr, int *load) {
@@ -371,7 +371,7 @@ void store256h(v16i16 a, void *ptr) { __builtin_kvx_store256(a, ptr); }
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <16 x i16> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    tail call void @llvm.kvx.store.v4i64.i32(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.v4i64.p0.i32(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store256h_r(v16i16 a, void *ptr, int *load) {
@@ -407,8 +407,8 @@ void store_novol(int a, void *ptr) {
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = sext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.vol.i64.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
-// CHECK-NEXT:    tail call void @llvm.kvx.store.vol.i64.i32(i64 [[CONV1]], ptr [[PTR]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.vol.i64.p0.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.vol.i64.p0.i32(i64 [[CONV1]], ptr [[PTR]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store_r_vol(int a, void *ptr, int *load) {
@@ -424,8 +424,8 @@ int store_r_vol(int a, void *ptr, int *load) {
 // CHECK-NEXT:    [[TMP1:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP1]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = sext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[PTR]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[PTR:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[PTR]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int store_r_novol(int a, void *ptr, int *load) {
@@ -443,11 +443,11 @@ int store_r_novol(int a, void *ptr, int *load) {
 // CHECK-NEXT:    [[TMP3:%.*]] = tail call i64 (...) @llvm.kvx.ready(i32 [[TMP0]], i32 [[TMP1]], i32 [[TMP2]])
 // CHECK-NEXT:    [[CONV:%.*]] = trunc i64 [[TMP3]] to i32
 // CHECK-NEXT:    [[CONV1:%.*]] = sext i32 [[TMP0]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV1]], ptr [[TO0:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV1]], ptr [[TO0:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    [[CONV2:%.*]] = sext i32 [[TMP1]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV2]], ptr [[TO1:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV2]], ptr [[TO1:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    [[CONV3:%.*]] = sext i32 [[TMP2]] to i64
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV3]], ptr [[TO2:%.*]], i32 32, i32 [[CONV]])
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV3]], ptr [[TO2:%.*]], i32 32, i32 [[CONV]])
 // CHECK-NEXT:    ret void
 //
 void ready_then_store(int *addr0, int *addr1, int *addr2,
@@ -484,8 +484,8 @@ void load_then_store(int *addr0, int *addr1, int *addr2,
 // CHECK-LABEL: @store_imm(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = sext i32 [[SV:%.*]] to i64
-// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i32, ptr [[ADDR:%.*]], i64 1
-// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.i32(i64 [[CONV]], ptr nonnull [[ARRAYIDX]], i32 32, i32 [[READY:%.*]])
+// CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i8, ptr [[ADDR:%.*]], i64 4
+// CHECK-NEXT:    tail call void @llvm.kvx.store.i64.p0.i32(i64 [[CONV]], ptr nonnull [[ARRAYIDX]], i32 32, i32 [[READY:%.*]])
 // CHECK-NEXT:    ret void
 //
 void store_imm(int *addr, int sv, int ready) {
