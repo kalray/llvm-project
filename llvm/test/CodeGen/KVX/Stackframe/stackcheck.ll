@@ -80,25 +80,25 @@ for.body.preheader:                               ; preds = %entry
 for.cond.cleanup:                                 ; preds = %for.body, %entry
   %sub = add nsw i32 %n, -2
   %idxprom2 = sext i32 %sub to i64
-  %arrayidx3 = getelementptr inbounds i32, i32* %0, i64 %idxprom2
-  %1 = load i32, i32* %arrayidx3, align 4
+  %arrayidx3 = getelementptr inbounds i32, ptr %0, i64 %idxprom2
+  %1 = load i32, ptr %arrayidx3, align 4
   ret i32 %1
 
 for.body:                                         ; preds = %for.body, %for.body.preheader
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
   %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, i32* %arrayidx, align 4
+  store i32 %2, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
 ; Function Attrs: argmemonly nounwind willreturn
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
 
 ; Function Attrs: argmemonly nounwind willreturn
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
 
 ; Function Attrs: nounwind
 define dso_local i32 @testrealign() local_unnamed_addr  {
@@ -154,16 +154,16 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 entry:
   %c = alloca i32, align 4
   %i = alloca i32, align 128
-  %0 = bitcast i32* %c to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %0)
-  store i32 7, i32* %c, align 4
-  %1 = bitcast i32* %i to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %1)
-  store i32 1234, i32* %i, align 128
-  %call = call i32 @other(i32* nonnull %c, i32* nonnull %i)
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %1)
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %0)
+  %0 = bitcast ptr %c to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %0)
+  store i32 7, ptr %c, align 4
+  %1 = bitcast ptr %i to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1)
+  store i32 1234, ptr %i, align 128
+  %call = call i32 @other(ptr nonnull %c, ptr nonnull %i)
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1)
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %0)
   ret i32 %call
 }
 
-declare dso_local i32 @other(i32*, i32*) local_unnamed_addr
+declare dso_local i32 @other(ptr, ptr ) local_unnamed_addr

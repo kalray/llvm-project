@@ -219,7 +219,7 @@ entry:
   ret <8 x i32> %vecinit7
 }
 
-define void @blong8(<8 x i64>* noalias nocapture sret(<8 x i64>) %agg.result, i64 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g, i64 %h) {
+define void @blong8(ptr noalias nocapture sret(<8 x i64>) %agg.result, i64 %a, i64 %b, i64 %c, i64 %d, i64 %e, i64 %f, i64 %g, i64 %h) {
 ; CHECK-LABEL: blong8:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
@@ -247,7 +247,7 @@ entry:
   %vecinit5 = insertelement <8 x i64> %vecinit4, i64 %f, i32 5
   %vecinit6 = insertelement <8 x i64> %vecinit5, i64 %g, i32 6
   %vecinit7 = insertelement <8 x i64> %vecinit6, i64 %h, i32 7
-  store <8 x i64> %vecinit7, <8 x i64>* %agg.result, align 32
+  store <8 x i64> %vecinit7, ptr %agg.result, align 32
   ret void
 }
 
@@ -430,7 +430,7 @@ entry:
   ret <8 x float> %vecinit7
 }
 
-define void @bdouble8(<8 x double>* noalias nocapture sret(<8 x double>) %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h) {
+define void @bdouble8(ptr noalias nocapture sret(<8 x double>) %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h) {
 ; CHECK-LABEL: bdouble8:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    # kill: def $r3 killed $r3 killed $q0 def $q0
@@ -458,6 +458,6 @@ entry:
   %vecinit5 = insertelement <8 x double> %vecinit4, double %f, i32 5
   %vecinit6 = insertelement <8 x double> %vecinit5, double %g, i32 6
   %vecinit7 = insertelement <8 x double> %vecinit6, double %h, i32 7
-  store <8 x double> %vecinit7, <8 x double>* %agg.result, align 32
+  store <8 x double> %vecinit7, ptr %agg.result, align 32
   ret void
 }

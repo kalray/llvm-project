@@ -65,7 +65,7 @@ define <4 x i64> @stsudq(<4 x i64> %0, <4 x i64> %1) {
   ret <4 x i64> %18
 }
 
-define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i64>* nocapture readonly %1, <8 x i64>* nocapture readonly %2) {
+define void @stsudo(ptr noalias nocapture sret(<8 x i64>) align 32 %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
 ; CV1-LABEL: stsudo:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 32[$r0]
@@ -120,8 +120,8 @@ define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8
 ; CV2-NEXT:    copyd $r0 = $r15
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
-  %4 = load <8 x i64>, <8 x i64>* %1
-  %5 = load <8 x i64>, <8 x i64>* %2
+  %4 = load <8 x i64>, ptr %1
+  %5 = load <8 x i64>, ptr %2
   %6 = extractelement <8 x i64> %4, i64 0
   %7 = extractelement <8 x i64> %5, i64 0
   %8 = tail call i64 @llvm.kvx.stsu.i64(i64 %6, i64 %7)
@@ -154,7 +154,7 @@ define void @stsudo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8
   %35 = insertelement <8 x i64> %34, i64 %23, i32 5
   %36 = insertelement <8 x i64> %35, i64 %26, i32 6
   %37 = insertelement <8 x i64> %36, i64 %29, i32 7
-  store <8 x i64> %37, <8 x i64>* %0
+  store <8 x i64> %37, ptr %0
   ret void
 }
 

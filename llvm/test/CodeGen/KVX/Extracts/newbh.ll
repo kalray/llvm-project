@@ -28,19 +28,19 @@ target triple = "kvx-kalray-cos"
 @arg1 = common global i32 0
 @str = private unnamed_addr constant [16 x i8] c"bodies created \00"
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
 
 declare i32 @dealwithargs(...)
 
-declare noundef i32 @printf(i8* nocapture noundef readonly, ...)
+declare noundef i32 @printf(ptr nocapture noundef readonly, ...)
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
 
 declare void @srand(i32)
 
-declare noalias noundef i8* @malloc(i64)
+declare noalias noundef ptr @malloc(i64)
 
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg)
+declare void @llvm.memcpy.p0i8.p0i8.i64(ptr noalias nocapture writeonly, ptr noalias nocapture readonly, i64, i1 immarg)
 
 declare void @abort()
 
@@ -776,15 +776,15 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 ; KV3_2-NEXT:    call abort
 ; KV3_2-NEXT:    ;;
   %5 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 0
-  %6 = load double, double* %5
+  %6 = load double, ptr %5
   %7 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 1
-  %8 = load double, double* %7
+  %8 = load double, ptr %7
   %9 = getelementptr inbounds %struct.bnode, %struct.bnode* %0, i64 0, i32 2, i64 2
-  %10 = load double, double* %9
+  %10 = load double, ptr %9
   %11 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 1
-  %12 = load double, double* %11
+  %12 = load double, ptr %11
   %13 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 0
-  %14 = load double, double* %13
+  %14 = load double, ptr %13
   %15 = fsub double %6, %14
   %16 = fdiv double %15, %12
   %17 = fcmp oge double %16, 0.000000e+00
@@ -794,8 +794,8 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
   %titi = and i1 %19, %toto
   %20 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 1
   %21 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 0, i64 2
-  %22 = bitcast double* %20 to <2 x double>*
-  %23 = load <2 x double>, <2 x double>* %22
+  %22 = bitcast ptr %20 to ptr 
+  %23 = load <2 x double>, ptr %22
   %24 = extractelement <2 x double> %23, i32 0
   %25 = fsub double %8, %24
   %26 = fdiv double %25, %12
@@ -815,7 +815,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 38:
   %39 = getelementptr inbounds %struct.tree, %struct.tree* %1, i64 0, i32 2
   %40 = bitcast %struct.node** %39 to %struct.cnode**
-  %41 = bitcast double* %20 to <2 x double>*
+  %41 = bitcast ptr %20 to ptr 
   br label %42
 
 42:
@@ -831,23 +831,23 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
   %50 = insertelement <2 x double> poison, double %48, i32 0
   %51 = shufflevector <2 x double> %50, <2 x double> undef, <2 x i32> zeroinitializer
   %52 = fadd <2 x double> %51, %45
-  %53 = load double, double* %5
+  %53 = load double, ptr %5
   %54 = fcmp olt double %53, %49
   br i1 %54, label %57, label %59
 
 55:
-  %56 = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], [22 x i8]* @.str.3, i64 0, i64 0), i32 999)
+  %56 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], ptr @.str.3, i64 0, i64 0), i32 999)
   tail call void @abort()
   unreachable
 
 57:
   %58 = fsub double %43, %44
-  store double %58, double* %13
+  store double %58, ptr %13
   br label %59
 
 59:
   %60 = phi double [ %43, %47 ], [ %58, %57 ]
-  %61 = load double, double* %7
+  %61 = load double, ptr %7
   %62 = extractelement <2 x double> %52, i32 0
   %63 = fcmp olt double %61, %62
   %64 = extractelement <2 x double> %45, i32 0
@@ -867,27 +867,27 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
   br label %76
 
 73:
-  %74 = tail call noalias dereferenceable_or_null(120) i8* @malloc(i64 120)
-  %75 = bitcast i8* %74 to %struct.cnode*
+  %74 = tail call noalias dereferenceable_or_null(120) ptr @malloc(i64 120)
+  %75 = bitcast ptr %74 to %struct.cnode*
   br label %76
 
 76:
   %77 = phi %struct.cnode* [ %69, %68 ], [ %75, %73 ]
   %78 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 0
-  store i16 2, i16* %78
+  store i16 2, ptr %78
   %79 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 3
-  store i32 0, i32* %79
+  store i32 0, ptr %79
   %80 = getelementptr %struct.cnode, %struct.cnode* %77, i64 0, i32 5, i64 0
-  %81 = bitcast %struct.node** %80 to i8*
-  tail call void @llvm.memset.p0i8.i64(i8* nonnull align 8 dereferenceable(64) %81, i8 0, i64 64, i1 false)
-  %82 = load double, double* %13
+  %81 = bitcast %struct.node** %80 to ptr 
+  tail call void @llvm.memset.p0i8.i64(ptr nonnull align 8 dereferenceable(64) %81, i8 0, i64 64, i1 false)
+  %82 = load double, ptr %13
   %83 = fsub double %49, %82
-  %84 = load double, double* %11
+  %84 = load double, ptr %11
   %85 = fdiv double %83, %84
   %86 = fcmp oge double %85, 0.000000e+00
   %87 = fcmp olt double %85, 1.000000e+00
   %88 = and i1 %86, %87
-  %89 = load <2 x double>, <2 x double>* %41
+  %89 = load <2 x double>, ptr %41
   %90 = fsub <2 x double> %52, %89
   %91 = insertelement <2 x double> poison, double %84, i32 0
   %92 = shufflevector <2 x double> %91, <2 x double> undef, <2 x i32> zeroinitializer
@@ -902,7 +902,7 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
   br i1 %100, label %103, label %101
 
 101:
-  %102 = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], [22 x i8]* @.str.3, i64 0, i64 0), i32 1)
+  %102 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([22 x i8], ptr @.str.3, i64 0, i64 0), i32 1)
   tail call void @abort()
   unreachable
 
@@ -931,9 +931,9 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
   %125 = getelementptr inbounds %struct.cnode, %struct.cnode* %77, i64 0, i32 5, i64 %124
   store %struct.node* %123, %struct.node** %125
   store %struct.cnode* %77, %struct.cnode** %40
-  %126 = load double, double* %5
-  %127 = load double, double* %7
-  %128 = load double, double* %9
+  %126 = load double, ptr %5
+  %127 = load double, ptr %7
+  %128 = load double, ptr %9
   %129 = fsub double %126, %82
   %130 = fdiv double %129, %84
   %131 = fcmp oge double %130, 0.000000e+00
@@ -969,12 +969,12 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 
 156:
   %157 = fsub double %64, %44
-  store double %157, double* %20
+  store double %157, ptr %20
   br label %158
 
 158:
   %159 = phi double [ %157, %156 ], [ %64, %59 ]
-  %160 = load double, double* %9
+  %160 = load double, ptr %9
   %161 = extractelement <2 x double> %52, i32 1
   %162 = fcmp olt double %160, %161
   %163 = extractelement <2 x double> %45, i32 1
@@ -982,13 +982,13 @@ define void @expandbox(%struct.bnode* nocapture readonly %0, %struct.tree* nocap
 
 164:
   %165 = fsub double %163, %44
-  store double %165, double* %21
+  store double %165, ptr %21
   br label %166
 
 166:
   %167 = phi double [ %165, %164 ], [ %163, %158 ]
   %168 = fmul double %44, 2.000000e+00
-  store double %168, double* %11
+  store double %168, ptr %11
   %169 = load %struct.node*, %struct.node** %39
   %170 = icmp eq %struct.node* %169, null
   %171 = insertelement <2 x double> poison, double %159, i32 0
@@ -1000,9 +1000,9 @@ declare double @llvm.floor.f64(double)
 
 declare double @llvm.ceil.f64(double)
 
-declare noundef i32 @puts(i8* nocapture noundef readonly)
+declare noundef i32 @puts(ptr nocapture noundef readonly)
 
-declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i1 immarg)
+declare void @llvm.memset.p0i8.i64(ptr nocapture writeonly, i8, i64, i1 immarg)
 
 declare <2 x double> @llvm.floor.v2f64(<2 x double>)
 

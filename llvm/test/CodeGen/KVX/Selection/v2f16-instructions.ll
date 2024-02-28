@@ -282,7 +282,7 @@ define <2 x half> @test_frem(<2 x half> %a, <2 x half> %b) #0 {
   ret <2 x half> %r
 }
 
-define void @test_ldst_v2f16(<2 x half>* %a, <2 x half>* %b) {
+define void @test_ldst_v2f16(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v2f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -290,8 +290,8 @@ define void @test_ldst_v2f16(<2 x half>* %a, <2 x half>* %b) {
 ; CHECK-NEXT:    sw 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <2 x half>, <2 x half>* %a
-  store <2 x half> %t1, <2 x half>* %b, align 16
+  %t1 = load <2 x half>, ptr %a
+  store <2 x half> %t1, ptr %b, align 16
   ret void
 }
 

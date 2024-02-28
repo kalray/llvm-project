@@ -136,7 +136,7 @@ define <4 x i16> @widenbhq_q(<4 x i8> %0) {
   ret <4 x i16> %2
 }
 
-define void @widenbhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
+define void @widenbhv(ptr noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
 ; CV1-LABEL: widenbhv:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r4 = $r2
@@ -199,11 +199,11 @@ define void @widenbhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0
   %23 = shufflevector <8 x i16> %19, <8 x i16> %20, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %24 = shufflevector <8 x i16> %21, <8 x i16> %22, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %25 = shufflevector <16 x i16> %23, <16 x i16> %24, <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-  store <32 x i16> %25, <32 x i16>* %0
+  store <32 x i16> %25, ptr %0
   ret void
 }
 
-define void @widenbhv_z(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
+define void @widenbhv_z(ptr noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
 ; CV1-LABEL: widenbhv_z:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r2, 0x8000400020001
@@ -266,11 +266,11 @@ define void @widenbhv_z(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 
   %23 = shufflevector <8 x i16> %19, <8 x i16> %20, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %24 = shufflevector <8 x i16> %21, <8 x i16> %22, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %25 = shufflevector <16 x i16> %23, <16 x i16> %24, <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-  store <32 x i16> %25, <32 x i16>* %0
+  store <32 x i16> %25, ptr %0
   ret void
 }
 
-define void @widenbhv_q(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
+define void @widenbhv_q(ptr noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i8> %1) {
 ; CHECK-LABEL: widenbhv_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sbmm8 $r4 = $r2, 0x800040002000100
@@ -314,7 +314,7 @@ define void @widenbhv_q(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 
   %23 = shufflevector <8 x i16> %19, <8 x i16> %20, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %24 = shufflevector <8 x i16> %21, <8 x i16> %22, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %25 = shufflevector <16 x i16> %23, <16 x i16> %24, <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-  store <32 x i16> %25, <32 x i16>* %0
+  store <32 x i16> %25, ptr %0
   ret void
 }
 
@@ -646,7 +646,7 @@ define <4 x i32> @widenhwq_q(<4 x i16> %0) {
   ret <4 x i32> %6
 }
 
-define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
+define void @widenhwx(ptr noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
 ; CV1-LABEL: widenhwx:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlhwp $r4 = $r2
@@ -709,11 +709,11 @@ define void @widenhwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0
   %23 = shufflevector <4 x i32> %19, <4 x i32> %20, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %24 = shufflevector <4 x i32> %21, <4 x i32> %22, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %25 = shufflevector <8 x i32> %23, <8 x i32> %24, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-  store <16 x i32> %25, <16 x i32>* %0
+  store <16 x i32> %25, ptr %0
   ret void
 }
 
-define void @widenhwx_z(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
+define void @widenhwx_z(ptr noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
 ; CV1-LABEL: widenhwx_z:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sbmm8 $r4 = $r2, 0x80400000201
@@ -776,11 +776,11 @@ define void @widenhwx_z(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
   %23 = shufflevector <4 x i32> %19, <4 x i32> %20, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %24 = shufflevector <4 x i32> %21, <4 x i32> %22, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %25 = shufflevector <8 x i32> %23, <8 x i32> %24, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-  store <16 x i32> %25, <16 x i32>* %0
+  store <16 x i32> %25, ptr %0
   ret void
 }
 
-define void @widenhwx_q(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
+define void @widenhwx_q(ptr noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i16> %1) {
 ; CV1-LABEL: widenhwx_q:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r4 = 0x804000002010000
@@ -849,11 +849,11 @@ define void @widenhwx_q(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 
   %23 = shufflevector <4 x i32> %19, <4 x i32> %20, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %24 = shufflevector <4 x i32> %21, <4 x i32> %22, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %25 = shufflevector <8 x i32> %23, <8 x i32> %24, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-  store <16 x i32> %25, <16 x i32>* %0
+  store <16 x i32> %25, ptr %0
   ret void
 }
 
-define void @widenwdo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
+define void @widenwdo(ptr noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
 ; CHECK-LABEL: widenwdo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r4 = $r2
@@ -896,13 +896,13 @@ define void @widenwdo(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, 
   %24 = insertelement <8 x i64> %23, i64 %14, i32 5
   %25 = insertelement <8 x i64> %24, i64 %16, i32 6
   %26 = insertelement <8 x i64> %25, i64 %18, i32 7
-  store <8 x i64> %26, <8 x i64>* %0
+  store <8 x i64> %26, ptr %0
   ret void
 }
 
 declare i64 @llvm.kvx.widenint.i64(i32, i32)
 
-define void @widenwdo_z(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
+define void @widenwdo_z(ptr noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
 ; CHECK-LABEL: widenwdo_z:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r4 = $r2
@@ -945,11 +945,11 @@ define void @widenwdo_z(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0
   %24 = insertelement <8 x i64> %23, i64 %14, i32 5
   %25 = insertelement <8 x i64> %24, i64 %16, i32 6
   %26 = insertelement <8 x i64> %25, i64 %18, i32 7
-  store <8 x i64> %26, <8 x i64>* %0
+  store <8 x i64> %26, ptr %0
   ret void
 }
 
-define void @widenwdo_q(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
+define void @widenwdo_q(ptr noalias nocapture sret(<8 x i64>) align 32 %0, <8 x i32> %1) {
 ; CHECK-LABEL: widenwdo_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    slld $r4 = $r2, 32
@@ -992,7 +992,7 @@ define void @widenwdo_q(<8 x i64>* noalias nocapture sret(<8 x i64>) align 32 %0
   %24 = insertelement <8 x i64> %23, i64 %14, i32 5
   %25 = insertelement <8 x i64> %24, i64 %16, i32 6
   %26 = insertelement <8 x i64> %25, i64 %18, i32 7
-  store <8 x i64> %26, <8 x i64>* %0
+  store <8 x i64> %26, ptr %0
   ret void
 }
 

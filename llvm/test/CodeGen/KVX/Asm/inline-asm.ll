@@ -22,8 +22,8 @@ define void @f() {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %1 = alloca i32, align 4
-  store i32 1234, i32* %1, align 4
-  %2 = load i32, i32* %1, align 4
+  store i32 1234, ptr %1, align 4
+  %2 = load i32, ptr %1, align 4
   call void asm sideeffect "addd $$tp = $0, 0\0A\09;;", "r,~{$r13}"(i32 %2)
   ret void
 }

@@ -8,7 +8,7 @@ target triple = "kvx-kalray-cos"
 
 ; This checks that debug informations (.cfi_*, .Ltmp*) are correctly moved out from bundles.
 
-define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg !7 {
+define i32 @debug_sanity(ptr nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg !7 {
 ; CHECK-LABEL: debug_sanity:
 ; CHECK:       .Lfunc_begin0:
 ; CHECK-NEXT:    .file 1 "/dir" "source.c"
@@ -66,7 +66,7 @@ define i32 @debug_sanity(i32* nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:
 entry:
-  call void @llvm.dbg.value(metadata i32* %p, metadata !13, metadata !DIExpression()), !dbg !19
+  call void @llvm.dbg.value(metadata ptr %p, metadata !13, metadata !DIExpression()), !dbg !19
   call void @llvm.dbg.value(metadata i32 %a, metadata !14, metadata !DIExpression()), !dbg !19
   call void @llvm.dbg.value(metadata i32 %b, metadata !15, metadata !DIExpression()), !dbg !19
   call void @llvm.dbg.value(metadata i32 %c, metadata !16, metadata !DIExpression()), !dbg !19
@@ -78,8 +78,8 @@ entry:
   %call = tail call i32 @debug_sanity_extfn(i32 %b), !dbg !22
   %add3 = add nsw i32 %call, %add2, !dbg !23
   %idxprom = sext i32 %a to i64, !dbg !24
-  %arrayidx = getelementptr inbounds i32, i32* %p, i64 %idxprom, !dbg !24
-  store i32 %add3, i32* %arrayidx, align 4, !dbg !25, !tbaa !26
+  %arrayidx = getelementptr inbounds i32, ptr %p, i64 %idxprom, !dbg !24
+  store i32 %add3, ptr %arrayidx, align 4, !dbg !25, !tbaa !26
   ret i32 %add2, !dbg !30
 }
 

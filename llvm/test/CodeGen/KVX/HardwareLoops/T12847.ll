@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 ; The test ensures no regressions after T12847 bugfix:
 ;   from llvm-test-suite/SingleSource/UnitTests/2008-04-20-LoopBug2.c
 
-define void @foo(i32 %i, i32* nocapture %p){
+define void @foo(i32 %i, ptr nocapture %p){
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
@@ -38,10 +38,10 @@ entry:
 do.body:
   %indvars.iv = phi i64 [ %indvars.iv.next, %do.body ], [ 3, %entry ]
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
-  %arrayidx = getelementptr inbounds i32, i32* %p, i64 %indvars.iv.next
-  %1 = load i32, i32* %arrayidx, align 4
-  %arrayidx2 = getelementptr inbounds i32, i32* %p, i64 %indvars.iv
-  store i32 %1, i32* %arrayidx2, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %p, i64 %indvars.iv.next
+  %1 = load i32, ptr %arrayidx, align 4
+  %arrayidx2 = getelementptr inbounds i32, ptr %p, i64 %indvars.iv
+  store i32 %1, ptr %arrayidx2, align 4
   %cmp = icmp sgt i64 %indvars.iv.next, %0
   br i1 %cmp, label %do.body, label %do.end
 

@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @use_2k_buff(<2048 x i1>* nocapture readonly %0, i32 %1) {
+define void @use_2k_buff(ptr nocapture readonly %0, i32 %1) {
 ; CHECK-LABEL: use_2k_buff:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
@@ -30,12 +30,12 @@ define void @use_2k_buff(<2048 x i1>* nocapture readonly %0, i32 %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <2048 x i1>, <2048 x i1>* %0
+  %3 = load <2048 x i1>, ptr %0
   %4 = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<2048 x i1> %3, i32 %1, <256 x i1> undef)
   ret void
 }
 
-define void @use_4k_buff(<4096 x i1>* nocapture readonly %0, i32 %1) {
+define void @use_4k_buff(ptr nocapture readonly %0, i32 %1) {
 ; CHECK-LABEL: use_4k_buff:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a0 = 0[$r0]
@@ -77,12 +77,12 @@ define void @use_4k_buff(<4096 x i1>* nocapture readonly %0, i32 %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4096 x i1>, <4096 x i1>* %0
+  %3 = load <4096 x i1>, ptr %0
   %4 = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0"(<4096 x i1> %3, i32 %1, <256 x i1> undef)
   ret void
 }
 
-define void @use_2k_buff_clobber(<4096 x i1>* nocapture readonly %0, i32 %1) {
+define void @use_2k_buff_clobber(ptr nocapture readonly %0, i32 %1) {
 ; CHECK-LABEL: use_2k_buff_clobber:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a31 = 480[$r0]
@@ -124,12 +124,12 @@ define void @use_2k_buff_clobber(<4096 x i1>* nocapture readonly %0, i32 %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4096 x i1>, <4096 x i1>* %0
+  %3 = load <4096 x i1>, ptr %0
   %4 = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a7}"(<4096 x i1> %3, i32 %1, <256 x i1> undef)
   ret void
 }
 
-define void @use_4k_buff_clobber(<4096 x i1>* nocapture readonly %0, i32 %1) {
+define void @use_4k_buff_clobber(ptr nocapture readonly %0, i32 %1) {
 ; CHECK-LABEL: use_4k_buff_clobber:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    xlo $a16 = 0[$r0]
@@ -171,7 +171,7 @@ define void @use_4k_buff_clobber(<4096 x i1>* nocapture readonly %0, i32 %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4096 x i1>, <4096 x i1>* %0
+  %3 = load <4096 x i1>, ptr %0
   %4 = tail call <256 x i1> asm sideeffect "xaligno $0 = $1, $2", "=x,x,r,0,~{$a0..a15}"(<4096 x i1> %3, i32 %1, <256 x i1> undef)
   ret void
 }

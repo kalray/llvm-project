@@ -20,7 +20,7 @@ define void @f1(i64 %b, i16 %c){
 entry:
   %0 = trunc i64 %b to i16
   %conv1 = add i16 %0, %c
-  store i16 %conv1, i16* @a, align 2
+  store i16 %conv1, ptr @a, align 2
   ret void
 }
 

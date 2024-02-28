@@ -509,66 +509,66 @@ define void @_Z1av() {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
 entry:
-  %b = alloca i32*, align 8
-  %0 = bitcast i32** %b to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %0)
-  %1 = bitcast i32** %b to i64*
-  %2 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %b = alloca ptr, align 8
+  %0 = bitcast ptr %b to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 8, ptr nonnull %0)
+  %1 = bitcast ptr %b to ptr 
+  %2 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %3 = extractvalue { i64, i1 } %2, 1
   br i1 %3, label %while.end, label %while.body
 
 while.body:                                       ; preds = %entry, %while.body.7
-  %4 = load volatile i64, i64* null, align 536870912
-  %5 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %4 = load volatile i64, ptr null, align 536870912
+  %5 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %6 = extractvalue { i64, i1 } %5, 1
   br i1 %6, label %while.end, label %while.body.1
 
 while.end:                                        ; preds = %while.body, %while.body.1, %while.body.2, %while.body.3, %while.body.4, %while.body.5, %while.body.6, %while.body.7, %entry
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %0)
+  call void @llvm.lifetime.end.p0i8(i64 8, ptr nonnull %0)
   ret void
 
 while.body.1:                                     ; preds = %while.body
-  %7 = load volatile i64, i64* null, align 536870912
-  %8 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %7 = load volatile i64, ptr null, align 536870912
+  %8 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %9 = extractvalue { i64, i1 } %8, 1
   br i1 %9, label %while.end, label %while.body.2
 
 while.body.2:                                     ; preds = %while.body.1
-  %10 = load volatile i64, i64* null, align 536870912
-  %11 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %10 = load volatile i64, ptr null, align 536870912
+  %11 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %12 = extractvalue { i64, i1 } %11, 1
   br i1 %12, label %while.end, label %while.body.3
 
 while.body.3:                                     ; preds = %while.body.2
-  %13 = load volatile i64, i64* null, align 536870912
-  %14 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %13 = load volatile i64, ptr null, align 536870912
+  %14 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %15 = extractvalue { i64, i1 } %14, 1
   br i1 %15, label %while.end, label %while.body.4
 
 while.body.4:                                     ; preds = %while.body.3
-  %16 = load volatile i64, i64* null, align 536870912
-  %17 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %16 = load volatile i64, ptr null, align 536870912
+  %17 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %18 = extractvalue { i64, i1 } %17, 1
   br i1 %18, label %while.end, label %while.body.5
 
 while.body.5:                                     ; preds = %while.body.4
-  %19 = load volatile i64, i64* null, align 536870912
-  %20 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %19 = load volatile i64, ptr null, align 536870912
+  %20 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %21 = extractvalue { i64, i1 } %20, 1
   br i1 %21, label %while.end, label %while.body.6
 
 while.body.6:                                     ; preds = %while.body.5
-  %22 = load volatile i64, i64* null, align 536870912
-  %23 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %22 = load volatile i64, ptr null, align 536870912
+  %23 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %24 = extractvalue { i64, i1 } %23, 1
   br i1 %24, label %while.end, label %while.body.7
 
 while.body.7:                                     ; preds = %while.body.6
-  %25 = load volatile i64, i64* null, align 536870912
-  %26 = cmpxchg i64* %1, i64 0, i64 0 seq_cst seq_cst
+  %25 = load volatile i64, ptr null, align 536870912
+  %26 = cmpxchg ptr %1, i64 0, i64 0 seq_cst seq_cst
   %27 = extractvalue { i64, i1 } %26, 1
   br i1 %27, label %while.end, label %while.body
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture)
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)

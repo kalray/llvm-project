@@ -3,7 +3,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i8 @loadcbc(i8 %a, i8* %ptr, i64 %cond) {
+define i8 @loadcbc(i8 %a, ptr %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcbc
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -15,15 +15,15 @@ define i8 @loadcbc(i8 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %conv = zext i8 %a to i64
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, i64* %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, ptr %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
   %conv1 = trunc i64 %1 to i8
   ret i8 %conv1
 }
 
-declare i64 @llvm.kvx.loadc.u.i64(i64, i64*, i32, i64, i32, i32, i32)
+declare i64 @llvm.kvx.loadc.u.i64(i64, ptr, i32, i64, i32, i32, i32)
 
-define i64 @loadcbl(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcbl(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcbl
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -34,12 +34,12 @@ define i64 @loadcbl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i16 @loadchs(i16 %a, i8* %ptr, i64 %cond) {
+define i16 @loadchs(i16 %a, ptr %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchs
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -51,13 +51,13 @@ define i16 @loadchs(i16 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %conv = zext i16 %a to i64
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, i64* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, ptr %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
   %conv1 = trunc i64 %1 to i16
   ret i16 %conv1
 }
 
-define i64 @loadchl(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadchl(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchl
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -68,12 +68,12 @@ define i64 @loadchl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i32 @loadcwi(i32 %a, i8* %ptr, i64 %cond) {
+define i32 @loadcwi(i32 %a, ptr %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwi
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -85,13 +85,13 @@ define i32 @loadcwi(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %conv = zext i32 %a to i64
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, i64* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, ptr %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
   %conv1 = trunc i64 %1 to i32
   ret i32 %conv1
 }
 
-define i64 @loadcwl(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcwl(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwl
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -102,12 +102,12 @@ define i64 @loadcwl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i64 @loadcdl(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcdl(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcdl
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -118,12 +118,12 @@ define i64 @loadcdl(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i128 @loadcq(i128 %a, i8* readonly %ptr, i64 %cond) {
+define i128 @loadcq(i128 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcq
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
@@ -135,15 +135,15 @@ define i128 @loadcq(i128 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast i128 %a to <2 x i64>
-  %1 = bitcast i8* %ptr to <2 x i64>*
-  %2 = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> %0, <2 x i64>* %1, i32 128, i64 %cond, i32 0, i32 2, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> %0, ptr %1, i32 128, i64 %cond, i32 0, i32 2, i32 -1)
   %3 = bitcast <2 x i64> %2 to i128
   ret i128 %3
 }
 
-declare <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64>, <2 x i64>*, i32, i64, i32, i32, i32)
+declare <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64>, ptr, i32, i64, i32, i32, i32)
 
-define half @loadchf(half %a, i8* readonly %ptr, i64 %cond) {
+define half @loadchf(half %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadchf
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -154,14 +154,14 @@ define half @loadchf(half %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to half*
-  %1 = tail call half @llvm.kvx.loadc.u.f16(half %a, half* %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call half @llvm.kvx.loadc.u.f16(half %a, ptr %0, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
   ret half %1
 }
 
-declare half @llvm.kvx.loadc.u.f16(half, half*, i32, i64, i32, i32, i32)
+declare half @llvm.kvx.loadc.u.f16(half, ptr, i32, i64, i32, i32, i32)
 
-define float @loadcwf(float %a, i8* readonly %ptr, i64 %cond) {
+define float @loadcwf(float %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwf
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -172,14 +172,14 @@ define float @loadcwf(float %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to float*
-  %1 = tail call float @llvm.kvx.loadc.u.f32(float %a, float* %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call float @llvm.kvx.loadc.u.f32(float %a, ptr %0, i32 32, i64 %cond, i32 0, i32 2, i32 -1)
   ret float %1
 }
 
-declare float @llvm.kvx.loadc.u.f32(float, float*, i32, i64, i32, i32, i32)
+declare float @llvm.kvx.loadc.u.f32(float, ptr, i32, i64, i32, i32, i32)
 
-define double @loadcdf(double %a, i8* readonly %ptr, i64 %cond) {
+define double @loadcdf(double %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcdf
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -190,14 +190,14 @@ define double @loadcdf(double %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to double*
-  %1 = tail call double @llvm.kvx.loadc.u.f64(double %a, double* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call double @llvm.kvx.loadc.u.f64(double %a, ptr %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
   ret double %1
 }
 
-declare double @llvm.kvx.loadc.u.f64(double, double*, i32, i64, i32, i32, i32)
+declare double @llvm.kvx.loadc.u.f64(double, ptr, i32, i64, i32, i32, i32)
 
-define <2 x i32> @loadc64(<2 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <2 x i32> @loadc64(<2 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc64
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -208,14 +208,14 @@ define <2 x i32> @loadc64(<2 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to <2 x i32>*
-  %1 = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32> %a, <2 x i32>* %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32> %a, ptr %0, i32 64, i64 %cond, i32 0, i32 2, i32 -1)
   ret <2 x i32> %1
 }
 
-declare <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32>, <2 x i32>*, i32, i64, i32, i32, i32)
+declare <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32>, ptr, i32, i64, i32, i32, i32)
 
-define <4 x i32> @loadc128(<4 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <4 x i32> @loadc128(<4 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc128
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3
@@ -227,13 +227,13 @@ define <4 x i32> @loadc128(<4 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
-  %1 = bitcast i8* %ptr to <2 x i64>*
-  %2 = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> %0, <2 x i64>* %1, i32 128, i64 %cond, i32 0, i32 2, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> %0, ptr %1, i32 128, i64 %cond, i32 0, i32 2, i32 -1)
   %3 = bitcast <2 x i64> %2 to <4 x i32>
   ret <4 x i32> %3
 }
 
-define i64 @loadcwls(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcwls(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwls
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -244,12 +244,12 @@ define i64 @loadcwls(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 1, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 32, i64 %cond, i32 1, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i64 @loadcwlu(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcwlu(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwlu
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -260,12 +260,12 @@ define i64 @loadcwlu(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 2, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 32, i64 %cond, i32 2, i32 2, i32 -1)
   ret i64 %1
 }
 
-define i64 @loadcwlus(i64 %a, i8* readonly %ptr, i64 %cond) {
+define i64 @loadcwlus(i64 %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadcwlus
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -276,12 +276,12 @@ define i64 @loadcwlus(i64 %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:     RET implicit $ra, implicit internal $r0
   ; CHECK-NEXT:   }
 entry:
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, i64* %0, i32 32, i64 %cond, i32 3, i32 2, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %a, ptr %0, i32 32, i64 %cond, i32 3, i32 2, i32 -1)
   ret i64 %1
 }
 
-define <8 x i32> @loadc256_dltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dltz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dltz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -293,15 +293,15 @@ define <8 x i32> @loadc256_dltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 2, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 2, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-declare <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64>, <4 x i64>*, i32, i64, i32, i32, i32)
+declare <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64>, ptr, i32, i64, i32, i32, i32)
 
-define <8 x i32> @loadc256_dnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dnez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dnez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -313,13 +313,13 @@ define <8 x i32> @loadc256_dnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 0, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 0, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_deqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_deqz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_deqz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -331,13 +331,13 @@ define <8 x i32> @loadc256_deqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 1, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 1, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_dgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dgez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dgez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -349,13 +349,13 @@ define <8 x i32> @loadc256_dgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 3, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 3, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_dlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dlez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dlez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -367,13 +367,13 @@ define <8 x i32> @loadc256_dlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 4, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 4, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_dgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dgtz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_dgtz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -385,13 +385,13 @@ define <8 x i32> @loadc256_dgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 5, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 5, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_odd(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_odd(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_odd
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -403,13 +403,13 @@ define <8 x i32> @loadc256_odd(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 6, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 6, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_even(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_even(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_even
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -421,13 +421,13 @@ define <8 x i32> @loadc256_even(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 7, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 7, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_wnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wnez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wnez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -439,13 +439,13 @@ define <8 x i32> @loadc256_wnez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 8, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 8, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_weqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_weqz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_weqz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -457,13 +457,13 @@ define <8 x i32> @loadc256_weqz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 9, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 9, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_wltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wltz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wltz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -475,13 +475,13 @@ define <8 x i32> @loadc256_wltz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 10, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 10, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_wgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wgez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wgez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -493,13 +493,13 @@ define <8 x i32> @loadc256_wgez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 11, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 11, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_wlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wlez(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wlez
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -511,13 +511,13 @@ define <8 x i32> @loadc256_wlez(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 12, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 12, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define <8 x i32> @loadc256_wgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wgtz(<8 x i32> %a, ptr readonly %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc256_wgtz
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2, $r3, $r4, $r5
@@ -529,13 +529,13 @@ define <8 x i32> @loadc256_wgtz(<8 x i32> %a, i8* readonly %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 0, i32 13, i32 -1)
+  %1 = bitcast ptr %ptr to ptr 
+  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 0, i32 13, i32 -1)
   %3 = bitcast <4 x i64> %2 to <8 x i32>
   ret <8 x i32> %3
 }
 
-define i32 @loadc_vol(i32 %a, i8* %ptr, i64 %cond) {
+define i32 @loadc_vol(i32 %a, ptr %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_vol
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -551,15 +551,15 @@ define i32 @loadc_vol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %conv = sext i32 %a to i64
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.vol.i64(i64 %conv, i64* %0, i32 32, i64 %cond, i32 0, i32 11, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.vol.i64(i64 %conv, ptr %0, i32 32, i64 %cond, i32 0, i32 11, i32 -1)
   %conv3 = trunc i64 %1 to i32
   ret i32 %conv3
 }
 
-declare i64 @llvm.kvx.loadc.u.vol.i64(i64, i64*, i32, i64, i32, i32, i32)
+declare i64 @llvm.kvx.loadc.u.vol.i64(i64, ptr, i32, i64, i32, i32, i32)
 
-define i32 @loadc_novol(i32 %a, i8* %ptr, i64 %cond) {
+define i32 @loadc_novol(i32 %a, ptr %ptr, i64 %cond) {
   ; CHECK-LABEL: name: loadc_novol
   ; CHECK: bb.0.entry:
   ; CHECK-NEXT:   liveins: $r0, $r1, $r2
@@ -575,8 +575,8 @@ define i32 @loadc_novol(i32 %a, i8* %ptr, i64 %cond) {
   ; CHECK-NEXT:   }
 entry:
   %conv = sext i32 %a to i64
-  %0 = bitcast i8* %ptr to i64*
-  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, i64* %0, i32 32, i64 %cond, i32 0, i32 11, i32 -1)
+  %0 = bitcast ptr %ptr to ptr 
+  %1 = tail call i64 @llvm.kvx.loadc.u.i64(i64 %conv, ptr %0, i32 32, i64 %cond, i32 0, i32 11, i32 -1)
   %conv3 = trunc i64 %1 to i32
   ret i32 %conv3
 }

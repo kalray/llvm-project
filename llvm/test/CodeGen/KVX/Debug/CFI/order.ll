@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture readonly %B, <4 x i32>* nocapture %R) local_unnamed_addr #0 !dbg !7 {
+define void @testuvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr nocapture %R) local_unnamed_addr #0 !dbg !7 {
 ; CHECK-LABEL: testuvec:
 ; CHECK:       .Lfunc_begin0:
 ; CHECK-NEXT:    .file 1 "d" "cfi-order.c"
@@ -100,17 +100,17 @@ define void @testuvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp4:
 entry:
-  call void @llvm.dbg.value(metadata <4 x i32>* %A, metadata !18, metadata !DIExpression()), !dbg !21
-  call void @llvm.dbg.value(metadata <4 x i32>* %B, metadata !19, metadata !DIExpression()), !dbg !21
-  call void @llvm.dbg.value(metadata <4 x i32>* %R, metadata !20, metadata !DIExpression()), !dbg !21
-  %0 = load <4 x i32>, <4 x i32>* %A, align 16, !dbg !22, !tbaa !23
-  %1 = load <4 x i32>, <4 x i32>* %B, align 16, !dbg !26, !tbaa !23
+  call void @llvm.dbg.value(metadata ptr %A, metadata !18, metadata !DIExpression()), !dbg !21
+  call void @llvm.dbg.value(metadata ptr %B, metadata !19, metadata !DIExpression()), !dbg !21
+  call void @llvm.dbg.value(metadata ptr %R, metadata !20, metadata !DIExpression()), !dbg !21
+  %0 = load <4 x i32>, ptr %A, align 16, !dbg !22, !tbaa !23
+  %1 = load <4 x i32>, ptr %B, align 16, !dbg !26, !tbaa !23
   %div = udiv <4 x i32> %0, %1, !dbg !27
-  store <4 x i32> %div, <4 x i32>* %R, align 16, !dbg !28, !tbaa !23
+  store <4 x i32> %div, ptr %R, align 16, !dbg !28, !tbaa !23
   ret void, !dbg !29
 }
 
-define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture readonly %B, <4 x i32>* nocapture %R) local_unnamed_addr #0 !dbg !30 {
+define void @testsvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr nocapture %R) local_unnamed_addr #0 !dbg !30 {
 ; CHECK-LABEL: testsvec:
 ; CHECK:       .Lfunc_begin1:
 ; CHECK-NEXT:    .loc 1 6 0 is_stmt 1 # cfi-order.c:6:0
@@ -204,13 +204,13 @@ define void @testsvec(<4 x i32>* nocapture readonly %A, <4 x i32>* nocapture rea
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp9:
 entry:
-  call void @llvm.dbg.value(metadata <4 x i32>* %A, metadata !38, metadata !DIExpression()), !dbg !41
-  call void @llvm.dbg.value(metadata <4 x i32>* %B, metadata !39, metadata !DIExpression()), !dbg !41
-  call void @llvm.dbg.value(metadata <4 x i32>* %R, metadata !40, metadata !DIExpression()), !dbg !41
-  %0 = load <4 x i32>, <4 x i32>* %A, align 16, !dbg !42, !tbaa !23
-  %1 = load <4 x i32>, <4 x i32>* %B, align 16, !dbg !43, !tbaa !23
+  call void @llvm.dbg.value(metadata ptr %A, metadata !38, metadata !DIExpression()), !dbg !41
+  call void @llvm.dbg.value(metadata ptr %B, metadata !39, metadata !DIExpression()), !dbg !41
+  call void @llvm.dbg.value(metadata ptr %R, metadata !40, metadata !DIExpression()), !dbg !41
+  %0 = load <4 x i32>, ptr %A, align 16, !dbg !42, !tbaa !23
+  %1 = load <4 x i32>, ptr %B, align 16, !dbg !43, !tbaa !23
   %div = sdiv <4 x i32> %0, %1, !dbg !44
-  store <4 x i32> %div, <4 x i32>* %R, align 16, !dbg !45, !tbaa !23
+  store <4 x i32> %div, ptr %R, align 16, !dbg !45, !tbaa !23
   ret void, !dbg !46
 }
 

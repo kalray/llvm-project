@@ -1,7 +1,7 @@
 ; RUN: llc -o - %s -mtriple=kvx -exception-model sjlj | FileCheck --check-prefixes=CHECK,ALL %s
 ; RUN: llc -o - %s -mtriple=kvx -relocation-model=pic -exception-model sjlj | FileCheck --check-prefixes=PIC,ALL %s
 
-define i8* @test_lsda() {
+define ptr @test_lsda() {
 ; ALL-LABEL: test_lsda:
 ; ALL:       # %bb.0:
 
@@ -13,8 +13,8 @@ define i8* @test_lsda() {
 
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %ret = call i8* @llvm.eh.sjlj.lsda()
-  ret i8* %ret
+  %ret = call ptr @llvm.eh.sjlj.lsda()
+  ret ptr %ret
 }
 
-declare i8* @llvm.eh.sjlj.lsda()
+declare ptr @llvm.eh.sjlj.lsda()

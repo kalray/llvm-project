@@ -4,7 +4,7 @@
 target triple = "kvx-kalray-cos"
 
 ; CHECK: loopdo
-define void @matrix_add_const(i32 %N, i32* nocapture %A, i32 %val) {
+define void @matrix_add_const(i32 %N, ptr nocapture %A, i32 %val) {
 entry:
   %cmp6 = icmp sgt i32 %N, 0
   br i1 %cmp6, label %for.body.preheader, label %for.end
@@ -18,10 +18,10 @@ for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   call void @llvm.dbg.value(metadata i64 %indvars.iv, metadata !17, metadata !DIExpression()), !dbg !18
   %1 = add nuw nsw i64 %indvars.iv, %0
-  %arrayidx = getelementptr inbounds i32, i32* %A, i64 %1
-  %2 = load i32, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %A, i64 %1
+  %2 = load i32, ptr %arrayidx, align 4
   %add1 = add nsw i32 %2, %val
-  store i32 %add1, i32* %arrayidx, align 4
+  store i32 %add1, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.end, label %for.body

@@ -7,7 +7,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
+define i32 @main(i32 %0, ptr nocapture readnone %1) local_unnamed_addr {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r0 = 0x2710
@@ -293,12 +293,12 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call i8* @polybench_alloc_data(i64 10000, i32 8)
-  %4 = tail call i8* @polybench_alloc_data(i64 10000, i32 8)
-  %5 = tail call i8* @polybench_alloc_data(i64 10000, i32 8)
-  %6 = bitcast i8* %3 to double*
-  %7 = bitcast i8* %5 to double*
-  %8 = tail call i32 bitcast (i32 (...)* @init_array to i32 (i32, double*, double*)*)(i32 10000, double* %6, double* %7)
+  %3 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
+  %4 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
+  %5 = tail call ptr @polybench_alloc_data(i64 10000, i32 8)
+  %6 = bitcast ptr %3 to ptr 
+  %7 = bitcast ptr %5 to ptr 
+  %8 = tail call i32 bitcast (i32 (...)* @init_array to i32 (i32, ptr, ptr )*)(i32 10000, ptr %6, ptr %7)
   br label %9
 
 9:                                                ; preds = %160, %2
@@ -308,44 +308,44 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 11:                                               ; preds = %11, %9
   %12 = phi i64 [ 1, %9 ], [ %30, %11 ]
   %13 = add nsw i64 %12, -1
-  %14 = getelementptr inbounds double, double* %6, i64 %13
-  %15 = load double, double* %14, align 8
-  %16 = getelementptr inbounds double, double* %6, i64 %12
-  %17 = load double, double* %16, align 8
+  %14 = getelementptr inbounds double, ptr %6, i64 %13
+  %15 = load double, ptr %14, align 8
+  %16 = getelementptr inbounds double, ptr %6, i64 %12
+  %17 = load double, ptr %16, align 8
   %18 = fadd double %15, %17
   %19 = add nuw nsw i64 %12, 1
-  %20 = getelementptr inbounds double, double* %6, i64 %19
-  %21 = load double, double* %20, align 8
+  %20 = getelementptr inbounds double, ptr %6, i64 %19
+  %21 = load double, ptr %20, align 8
   %22 = fadd double %18, %21
   %23 = fmul double %22, 3.333300e-01
-  %24 = getelementptr inbounds double, double* %7, i64 %12
-  store double %23, double* %24, align 8
-  %25 = getelementptr inbounds double, double* %6, i64 %12
-  %26 = load double, double* %25, align 8
-  %27 = getelementptr inbounds double, double* %6, i64 %19
-  %28 = load double, double* %27, align 8
+  %24 = getelementptr inbounds double, ptr %7, i64 %12
+  store double %23, ptr %24, align 8
+  %25 = getelementptr inbounds double, ptr %6, i64 %12
+  %26 = load double, ptr %25, align 8
+  %27 = getelementptr inbounds double, ptr %6, i64 %19
+  %28 = load double, ptr %27, align 8
   %29 = fadd double %26, %28
   %30 = add nuw nsw i64 %12, 2
-  %31 = getelementptr inbounds double, double* %6, i64 %30
-  %32 = load double, double* %31, align 8
+  %31 = getelementptr inbounds double, ptr %6, i64 %30
+  %32 = load double, ptr %31, align 8
   %33 = fadd double %29, %32
   %34 = fmul double %33, 3.333300e-01
-  %35 = getelementptr inbounds double, double* %7, i64 %19
-  store double %34, double* %35, align 8
+  %35 = getelementptr inbounds double, ptr %7, i64 %19
+  store double %34, ptr %35, align 8
   %36 = icmp eq i64 %30, 9999
   br i1 %36, label %37, label %11
 
 37:                                               ; preds = %11, %37
   %38 = phi i64 [ %46, %37 ], [ 1, %11 ]
-  %39 = getelementptr inbounds double, double* %7, i64 %38
-  %40 = load double, double* %39, align 8
-  %41 = getelementptr inbounds double, double* %6, i64 %38
-  store double %40, double* %41, align 8
+  %39 = getelementptr inbounds double, ptr %7, i64 %38
+  %40 = load double, ptr %39, align 8
+  %41 = getelementptr inbounds double, ptr %6, i64 %38
+  store double %40, ptr %41, align 8
   %42 = add nuw nsw i64 %38, 1
-  %43 = getelementptr inbounds double, double* %7, i64 %42
-  %44 = load double, double* %43, align 8
-  %45 = getelementptr inbounds double, double* %6, i64 %42
-  store double %44, double* %45, align 8
+  %43 = getelementptr inbounds double, ptr %7, i64 %42
+  %44 = load double, ptr %43, align 8
+  %45 = getelementptr inbounds double, ptr %6, i64 %42
+  store double %44, ptr %45, align 8
   %46 = add nuw nsw i64 %38, 2
   %47 = icmp eq i64 %46, 9999
   br i1 %47, label %49, label %37
@@ -356,44 +356,44 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 49:                                               ; preds = %37, %49
   %50 = phi i64 [ %68, %49 ], [ 1, %37 ]
   %51 = add nsw i64 %50, -1
-  %52 = getelementptr inbounds double, double* %6, i64 %51
-  %53 = load double, double* %52, align 8
-  %54 = getelementptr inbounds double, double* %6, i64 %50
-  %55 = load double, double* %54, align 8
+  %52 = getelementptr inbounds double, ptr %6, i64 %51
+  %53 = load double, ptr %52, align 8
+  %54 = getelementptr inbounds double, ptr %6, i64 %50
+  %55 = load double, ptr %54, align 8
   %56 = fadd double %53, %55
   %57 = add nuw nsw i64 %50, 1
-  %58 = getelementptr inbounds double, double* %6, i64 %57
-  %59 = load double, double* %58, align 8
+  %58 = getelementptr inbounds double, ptr %6, i64 %57
+  %59 = load double, ptr %58, align 8
   %60 = fadd double %56, %59
   %61 = fmul double %60, 3.333300e-01
-  %62 = getelementptr inbounds double, double* %7, i64 %50
-  store double %61, double* %62, align 8
-  %63 = getelementptr inbounds double, double* %6, i64 %50
-  %64 = load double, double* %63, align 8
-  %65 = getelementptr inbounds double, double* %6, i64 %57
-  %66 = load double, double* %65, align 8
+  %62 = getelementptr inbounds double, ptr %7, i64 %50
+  store double %61, ptr %62, align 8
+  %63 = getelementptr inbounds double, ptr %6, i64 %50
+  %64 = load double, ptr %63, align 8
+  %65 = getelementptr inbounds double, ptr %6, i64 %57
+  %66 = load double, ptr %65, align 8
   %67 = fadd double %64, %66
   %68 = add nuw nsw i64 %50, 2
-  %69 = getelementptr inbounds double, double* %6, i64 %68
-  %70 = load double, double* %69, align 8
+  %69 = getelementptr inbounds double, ptr %6, i64 %68
+  %70 = load double, ptr %69, align 8
   %71 = fadd double %67, %70
   %72 = fmul double %71, 3.333300e-01
-  %73 = getelementptr inbounds double, double* %7, i64 %57
-  store double %72, double* %73, align 8
+  %73 = getelementptr inbounds double, ptr %7, i64 %57
+  store double %72, ptr %73, align 8
   %74 = icmp eq i64 %68, 9999
   br i1 %74, label %75, label %49
 
 75:                                               ; preds = %49, %75
   %76 = phi i64 [ %84, %75 ], [ 1, %49 ]
-  %77 = getelementptr inbounds double, double* %7, i64 %76
-  %78 = load double, double* %77, align 8
-  %79 = getelementptr inbounds double, double* %6, i64 %76
-  store double %78, double* %79, align 8
+  %77 = getelementptr inbounds double, ptr %7, i64 %76
+  %78 = load double, ptr %77, align 8
+  %79 = getelementptr inbounds double, ptr %6, i64 %76
+  store double %78, ptr %79, align 8
   %80 = add nuw nsw i64 %76, 1
-  %81 = getelementptr inbounds double, double* %7, i64 %80
-  %82 = load double, double* %81, align 8
-  %83 = getelementptr inbounds double, double* %6, i64 %80
-  store double %82, double* %83, align 8
+  %81 = getelementptr inbounds double, ptr %7, i64 %80
+  %82 = load double, ptr %81, align 8
+  %83 = getelementptr inbounds double, ptr %6, i64 %80
+  store double %82, ptr %83, align 8
   %84 = add nuw nsw i64 %76, 2
   %85 = icmp eq i64 %84, 9999
   br i1 %85, label %86, label %75
@@ -401,44 +401,44 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 86:                                               ; preds = %75, %86
   %87 = phi i64 [ %105, %86 ], [ 1, %75 ]
   %88 = add nsw i64 %87, -1
-  %89 = getelementptr inbounds double, double* %6, i64 %88
-  %90 = load double, double* %89, align 8
-  %91 = getelementptr inbounds double, double* %6, i64 %87
-  %92 = load double, double* %91, align 8
+  %89 = getelementptr inbounds double, ptr %6, i64 %88
+  %90 = load double, ptr %89, align 8
+  %91 = getelementptr inbounds double, ptr %6, i64 %87
+  %92 = load double, ptr %91, align 8
   %93 = fadd double %90, %92
   %94 = add nuw nsw i64 %87, 1
-  %95 = getelementptr inbounds double, double* %6, i64 %94
-  %96 = load double, double* %95, align 8
+  %95 = getelementptr inbounds double, ptr %6, i64 %94
+  %96 = load double, ptr %95, align 8
   %97 = fadd double %93, %96
   %98 = fmul double %97, 3.333300e-01
-  %99 = getelementptr inbounds double, double* %7, i64 %87
-  store double %98, double* %99, align 8
-  %100 = getelementptr inbounds double, double* %6, i64 %87
-  %101 = load double, double* %100, align 8
-  %102 = getelementptr inbounds double, double* %6, i64 %94
-  %103 = load double, double* %102, align 8
+  %99 = getelementptr inbounds double, ptr %7, i64 %87
+  store double %98, ptr %99, align 8
+  %100 = getelementptr inbounds double, ptr %6, i64 %87
+  %101 = load double, ptr %100, align 8
+  %102 = getelementptr inbounds double, ptr %6, i64 %94
+  %103 = load double, ptr %102, align 8
   %104 = fadd double %101, %103
   %105 = add nuw nsw i64 %87, 2
-  %106 = getelementptr inbounds double, double* %6, i64 %105
-  %107 = load double, double* %106, align 8
+  %106 = getelementptr inbounds double, ptr %6, i64 %105
+  %107 = load double, ptr %106, align 8
   %108 = fadd double %104, %107
   %109 = fmul double %108, 3.333300e-01
-  %110 = getelementptr inbounds double, double* %7, i64 %94
-  store double %109, double* %110, align 8
+  %110 = getelementptr inbounds double, ptr %7, i64 %94
+  store double %109, ptr %110, align 8
   %111 = icmp eq i64 %105, 9999
   br i1 %111, label %112, label %86
 
 112:                                              ; preds = %86, %112
   %113 = phi i64 [ %121, %112 ], [ 1, %86 ]
-  %114 = getelementptr inbounds double, double* %7, i64 %113
-  %115 = load double, double* %114, align 8
-  %116 = getelementptr inbounds double, double* %6, i64 %113
-  store double %115, double* %116, align 8
+  %114 = getelementptr inbounds double, ptr %7, i64 %113
+  %115 = load double, ptr %114, align 8
+  %116 = getelementptr inbounds double, ptr %6, i64 %113
+  store double %115, ptr %116, align 8
   %117 = add nuw nsw i64 %113, 1
-  %118 = getelementptr inbounds double, double* %7, i64 %117
-  %119 = load double, double* %118, align 8
-  %120 = getelementptr inbounds double, double* %6, i64 %117
-  store double %119, double* %120, align 8
+  %118 = getelementptr inbounds double, ptr %7, i64 %117
+  %119 = load double, ptr %118, align 8
+  %120 = getelementptr inbounds double, ptr %6, i64 %117
+  store double %119, ptr %120, align 8
   %121 = add nuw nsw i64 %113, 2
   %122 = icmp eq i64 %121, 9999
   br i1 %122, label %123, label %112
@@ -446,44 +446,44 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
 123:                                              ; preds = %112, %123
   %124 = phi i64 [ %142, %123 ], [ 1, %112 ]
   %125 = add nsw i64 %124, -1
-  %126 = getelementptr inbounds double, double* %6, i64 %125
-  %127 = load double, double* %126, align 8
-  %128 = getelementptr inbounds double, double* %6, i64 %124
-  %129 = load double, double* %128, align 8
+  %126 = getelementptr inbounds double, ptr %6, i64 %125
+  %127 = load double, ptr %126, align 8
+  %128 = getelementptr inbounds double, ptr %6, i64 %124
+  %129 = load double, ptr %128, align 8
   %130 = fadd double %127, %129
   %131 = add nuw nsw i64 %124, 1
-  %132 = getelementptr inbounds double, double* %6, i64 %131
-  %133 = load double, double* %132, align 8
+  %132 = getelementptr inbounds double, ptr %6, i64 %131
+  %133 = load double, ptr %132, align 8
   %134 = fadd double %130, %133
   %135 = fmul double %134, 3.333300e-01
-  %136 = getelementptr inbounds double, double* %7, i64 %124
-  store double %135, double* %136, align 8
-  %137 = getelementptr inbounds double, double* %6, i64 %124
-  %138 = load double, double* %137, align 8
-  %139 = getelementptr inbounds double, double* %6, i64 %131
-  %140 = load double, double* %139, align 8
+  %136 = getelementptr inbounds double, ptr %7, i64 %124
+  store double %135, ptr %136, align 8
+  %137 = getelementptr inbounds double, ptr %6, i64 %124
+  %138 = load double, ptr %137, align 8
+  %139 = getelementptr inbounds double, ptr %6, i64 %131
+  %140 = load double, ptr %139, align 8
   %141 = fadd double %138, %140
   %142 = add nuw nsw i64 %124, 2
-  %143 = getelementptr inbounds double, double* %6, i64 %142
-  %144 = load double, double* %143, align 8
+  %143 = getelementptr inbounds double, ptr %6, i64 %142
+  %144 = load double, ptr %143, align 8
   %145 = fadd double %141, %144
   %146 = fmul double %145, 3.333300e-01
-  %147 = getelementptr inbounds double, double* %7, i64 %131
-  store double %146, double* %147, align 8
+  %147 = getelementptr inbounds double, ptr %7, i64 %131
+  store double %146, ptr %147, align 8
   %148 = icmp eq i64 %142, 9999
   br i1 %148, label %149, label %123
 
 149:                                              ; preds = %123, %149
   %150 = phi i64 [ %158, %149 ], [ 1, %123 ]
-  %151 = getelementptr inbounds double, double* %7, i64 %150
-  %152 = load double, double* %151, align 8
-  %153 = getelementptr inbounds double, double* %6, i64 %150
-  store double %152, double* %153, align 8
+  %151 = getelementptr inbounds double, ptr %7, i64 %150
+  %152 = load double, ptr %151, align 8
+  %153 = getelementptr inbounds double, ptr %6, i64 %150
+  store double %152, ptr %153, align 8
   %154 = add nuw nsw i64 %150, 1
-  %155 = getelementptr inbounds double, double* %7, i64 %154
-  %156 = load double, double* %155, align 8
-  %157 = getelementptr inbounds double, double* %6, i64 %154
-  store double %156, double* %157, align 8
+  %155 = getelementptr inbounds double, ptr %7, i64 %154
+  %156 = load double, ptr %155, align 8
+  %157 = getelementptr inbounds double, ptr %6, i64 %154
+  store double %156, ptr %157, align 8
   %158 = add nuw nsw i64 %150, 2
   %159 = icmp eq i64 %158, 9999
   br i1 %159, label %160, label %149
@@ -494,7 +494,7 @@ define i32 @main(i32 %0, i8** nocapture readnone %1) local_unnamed_addr {
   br i1 %162, label %48, label %9
 }
 
-declare  i8* @polybench_alloc_data(i64, i32) local_unnamed_addr
+declare  ptr @polybench_alloc_data(i64, i32) local_unnamed_addr
 
 declare  i32 @init_array(...) local_unnamed_addr
 

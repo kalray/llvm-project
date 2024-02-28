@@ -52,17 +52,17 @@ define i64 @f_1_nopack() local_unnamed_addr #0 !dbg !16 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp0:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !21, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !21, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !20, metadata !DIExpression()), !dbg !26
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !27
   ret i64 %0, !dbg !28
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture) #1
 
 declare void @foo(...) local_unnamed_addr #2
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture) #1
 
 define i64 @f_2_pairpack() local_unnamed_addr #0 !dbg !29 {
 ; CHECK-LABEL: f_2_pairpack:
@@ -117,9 +117,9 @@ define i64 @f_2_pairpack() local_unnamed_addr #0 !dbg !29 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp3:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !33, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !33, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !31, metadata !DIExpression()), !dbg !34
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !35, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !35, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !32, metadata !DIExpression()), !dbg !34
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !36
   %add = add nsw i64 %1, %0, !dbg !37
@@ -192,11 +192,11 @@ define i64 @f_3_pairpack() local_unnamed_addr #0 !dbg !39 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp7:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !44, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !44, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !41, metadata !DIExpression()), !dbg !45
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !46, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !46, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !42, metadata !DIExpression()), !dbg !45
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !47, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !47, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !43, metadata !DIExpression()), !dbg !45
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !48
   %add = add nsw i64 %1, %0, !dbg !49
@@ -280,13 +280,13 @@ define i64 @f_4_quadpack() local_unnamed_addr #0 !dbg !52 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp13:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !58, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !58, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !54, metadata !DIExpression()), !dbg !59
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !60, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !60, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !55, metadata !DIExpression()), !dbg !59
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !61, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !61, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !56, metadata !DIExpression()), !dbg !59
-  %3 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8, !dbg !62, !tbaa !22
+  %3 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8, !dbg !62, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %3, metadata !57, metadata !DIExpression()), !dbg !59
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !63
   %add = add nsw i64 %1, %0, !dbg !64
@@ -384,15 +384,15 @@ define i64 @f_5_quadpack() local_unnamed_addr #0 !dbg !68 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp20:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !75, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !75, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !70, metadata !DIExpression()), !dbg !76
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !77, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !77, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !71, metadata !DIExpression()), !dbg !76
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !78, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !78, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !72, metadata !DIExpression()), !dbg !76
-  %3 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8, !dbg !79, !tbaa !22
+  %3 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8, !dbg !79, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %3, metadata !73, metadata !DIExpression()), !dbg !76
-  %4 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8, !dbg !80, !tbaa !22
+  %4 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8, !dbg !80, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %4, metadata !74, metadata !DIExpression()), !dbg !76
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !81
   %add = add nsw i64 %1, %0, !dbg !82
@@ -496,17 +496,17 @@ define i64 @f_6_1quad1pairpack() local_unnamed_addr #0 !dbg !87 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp28:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !95, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !95, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !89, metadata !DIExpression()), !dbg !96
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !97, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !97, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !90, metadata !DIExpression()), !dbg !96
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !98, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !98, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !91, metadata !DIExpression()), !dbg !96
-  %3 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8, !dbg !99, !tbaa !22
+  %3 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8, !dbg !99, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %3, metadata !92, metadata !DIExpression()), !dbg !96
-  %4 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8, !dbg !100, !tbaa !22
+  %4 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8, !dbg !100, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %4, metadata !93, metadata !DIExpression()), !dbg !96
-  %5 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8, !dbg !101, !tbaa !22
+  %5 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8, !dbg !101, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %5, metadata !94, metadata !DIExpression()), !dbg !96
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !102
   %add = add nsw i64 %1, %0, !dbg !103
@@ -693,33 +693,33 @@ define i64 @f_14_3quad1pairpack() local_unnamed_addr #0 !dbg !109 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp46:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !125, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !125, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !111, metadata !DIExpression()), !dbg !126
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !127, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !127, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !112, metadata !DIExpression()), !dbg !126
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !128, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !128, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !113, metadata !DIExpression()), !dbg !126
-  %3 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8, !dbg !129, !tbaa !22
+  %3 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8, !dbg !129, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %3, metadata !114, metadata !DIExpression()), !dbg !126
-  %4 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8, !dbg !130, !tbaa !22
+  %4 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8, !dbg !130, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %4, metadata !115, metadata !DIExpression()), !dbg !126
-  %5 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8, !dbg !131, !tbaa !22
+  %5 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8, !dbg !131, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %5, metadata !116, metadata !DIExpression()), !dbg !126
-  %6 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 6), align 8, !dbg !132, !tbaa !22
+  %6 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 6), align 8, !dbg !132, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %6, metadata !117, metadata !DIExpression()), !dbg !126
-  %7 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 7), align 8, !dbg !133, !tbaa !22
+  %7 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 7), align 8, !dbg !133, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %7, metadata !118, metadata !DIExpression()), !dbg !126
-  %8 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 8), align 8, !dbg !134, !tbaa !22
+  %8 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 8), align 8, !dbg !134, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %8, metadata !119, metadata !DIExpression()), !dbg !126
-  %9 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 9), align 8, !dbg !135, !tbaa !22
+  %9 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 9), align 8, !dbg !135, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %9, metadata !120, metadata !DIExpression()), !dbg !126
-  %10 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 10), align 8, !dbg !136, !tbaa !22
+  %10 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 10), align 8, !dbg !136, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %10, metadata !121, metadata !DIExpression()), !dbg !126
-  %11 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 11), align 8, !dbg !137, !tbaa !22
+  %11 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 11), align 8, !dbg !137, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %11, metadata !122, metadata !DIExpression()), !dbg !126
-  %12 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 12), align 8, !dbg !138, !tbaa !22
+  %12 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 12), align 8, !dbg !138, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %12, metadata !123, metadata !DIExpression()), !dbg !126
-  %13 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 13), align 8, !dbg !139, !tbaa !22
+  %13 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 13), align 8, !dbg !139, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %13, metadata !124, metadata !DIExpression()), !dbg !126
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !140
   %add = add nsw i64 %1, %0, !dbg !141
@@ -931,35 +931,35 @@ define i64 @f_15_3quad1pairpack() local_unnamed_addr #0 !dbg !155 {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp68:
 entry:
-  %0 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8, !dbg !172, !tbaa !22
+  %0 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8, !dbg !172, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %0, metadata !157, metadata !DIExpression()), !dbg !173
-  %1 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8, !dbg !174, !tbaa !22
+  %1 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8, !dbg !174, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %1, metadata !158, metadata !DIExpression()), !dbg !173
-  %2 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8, !dbg !175, !tbaa !22
+  %2 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8, !dbg !175, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %2, metadata !159, metadata !DIExpression()), !dbg !173
-  %3 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8, !dbg !176, !tbaa !22
+  %3 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8, !dbg !176, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %3, metadata !160, metadata !DIExpression()), !dbg !173
-  %4 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8, !dbg !177, !tbaa !22
+  %4 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8, !dbg !177, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %4, metadata !161, metadata !DIExpression()), !dbg !173
-  %5 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8, !dbg !178, !tbaa !22
+  %5 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8, !dbg !178, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %5, metadata !162, metadata !DIExpression()), !dbg !173
-  %6 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 6), align 8, !dbg !179, !tbaa !22
+  %6 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 6), align 8, !dbg !179, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %6, metadata !163, metadata !DIExpression()), !dbg !173
-  %7 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 7), align 8, !dbg !180, !tbaa !22
+  %7 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 7), align 8, !dbg !180, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %7, metadata !164, metadata !DIExpression()), !dbg !173
-  %8 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 8), align 8, !dbg !181, !tbaa !22
+  %8 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 8), align 8, !dbg !181, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %8, metadata !165, metadata !DIExpression()), !dbg !173
-  %9 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 9), align 8, !dbg !182, !tbaa !22
+  %9 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 9), align 8, !dbg !182, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %9, metadata !166, metadata !DIExpression()), !dbg !173
-  %10 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 10), align 8, !dbg !183, !tbaa !22
+  %10 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 10), align 8, !dbg !183, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %10, metadata !167, metadata !DIExpression()), !dbg !173
-  %11 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 11), align 8, !dbg !184, !tbaa !22
+  %11 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 11), align 8, !dbg !184, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %11, metadata !168, metadata !DIExpression()), !dbg !173
-  %12 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 12), align 8, !dbg !185, !tbaa !22
+  %12 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 12), align 8, !dbg !185, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %12, metadata !169, metadata !DIExpression()), !dbg !173
-  %13 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 13), align 8, !dbg !186, !tbaa !22
+  %13 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 13), align 8, !dbg !186, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %13, metadata !170, metadata !DIExpression()), !dbg !173
-  %14 = load volatile i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 14), align 8, !dbg !187, !tbaa !22
+  %14 = load volatile i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 14), align 8, !dbg !187, !tbaa !22
   call void @llvm.dbg.value(metadata i64 %14, metadata !171, metadata !DIExpression()), !dbg !173
   tail call void bitcast (void (...)* @foo to void ()*)() #3, !dbg !188
   %add = add nsw i64 %1, %0, !dbg !189
@@ -1131,29 +1131,29 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp83:
 entry:
-  %args = alloca i8*, align 8
-  %args2 = alloca i8*, align 8
+  %args = alloca ptr, align 8
+  %args2 = alloca ptr, align 8
   call void @llvm.dbg.value(metadata i32 %first, metadata !209, metadata !DIExpression()), !dbg !218
   call void @llvm.dbg.value(metadata i32 %second, metadata !210, metadata !DIExpression()), !dbg !218
   %add = add nsw i32 %second, %first, !dbg !219
   call void @llvm.dbg.value(metadata i32 %add, metadata !211, metadata !DIExpression()), !dbg !218
-  %0 = bitcast i8** %args to i8*, !dbg !220
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %0) #3, !dbg !220
-  %1 = bitcast i8** %args2 to i8*, !dbg !220
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %1) #3, !dbg !220
-  call void @llvm.dbg.value(metadata i8** %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
-  call void @llvm.va_start(i8* nonnull %0), !dbg !221
-  call void @llvm.dbg.value(metadata i8** %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
-  call void @llvm.dbg.value(metadata i8** %args2, metadata !216, metadata !DIExpression(DW_OP_deref)), !dbg !218
-  call void @llvm.va_copy(i8* nonnull %1, i8* nonnull %0), !dbg !222
+  %0 = bitcast ptr %args to ptr, !dbg !220
+  call void @llvm.lifetime.start.p0i8(i64 8, ptr nonnull %0) #3, !dbg !220
+  %1 = bitcast ptr %args2 to ptr, !dbg !220
+  call void @llvm.lifetime.start.p0i8(i64 8, ptr nonnull %1) #3, !dbg !220
+  call void @llvm.dbg.value(metadata ptr %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
+  call void @llvm.va_start(ptr nonnull %0), !dbg !221
+  call void @llvm.dbg.value(metadata ptr %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
+  call void @llvm.dbg.value(metadata ptr %args2, metadata !216, metadata !DIExpression(DW_OP_deref)), !dbg !218
+  call void @llvm.va_copy(ptr nonnull %1, ptr nonnull %0), !dbg !222
   call void @llvm.dbg.value(metadata i32 %add, metadata !211, metadata !DIExpression()), !dbg !218
-  %ap.cur17 = load i8*, i8** %args, align 8, !dbg !223
-  call void @llvm.dbg.value(metadata i8* %ap.cur17, metadata !212, metadata !DIExpression()), !dbg !218
-  %ap.next18 = getelementptr inbounds i8, i8* %ap.cur17, i64 8, !dbg !223
-  call void @llvm.dbg.value(metadata i8* %ap.next18, metadata !212, metadata !DIExpression()), !dbg !218
-  store i8* %ap.next18, i8** %args, align 8, !dbg !223
-  %arg.addr19 = bitcast i8* %ap.cur17 to i32*, !dbg !223
-  %2 = load i32, i32* %arg.addr19, align 8, !dbg !223
+  %ap.cur17 = load ptr, ptr %args, align 8, !dbg !223
+  call void @llvm.dbg.value(metadata ptr %ap.cur17, metadata !212, metadata !DIExpression()), !dbg !218
+  %ap.next18 = getelementptr inbounds i8, ptr %ap.cur17, i64 8, !dbg !223
+  call void @llvm.dbg.value(metadata ptr %ap.next18, metadata !212, metadata !DIExpression()), !dbg !218
+  store ptr %ap.next18, ptr %args, align 8, !dbg !223
+  %arg.addr19 = bitcast ptr %ap.cur17 to ptr, !dbg !223
+  %2 = load i32, ptr %arg.addr19, align 8, !dbg !223
   call void @llvm.dbg.value(metadata i32 %2, metadata !217, metadata !DIExpression()), !dbg !218
   %cmp20 = icmp sgt i32 %2, 0, !dbg !224
   br i1 %cmp20, label %while.body, label %while.end, !dbg !225
@@ -1165,13 +1165,13 @@ while.body:
   %call = call i32 @other(i32 %3) #3, !dbg !226
   %add2 = add nsw i32 %call, %result.021, !dbg !228
   call void @llvm.dbg.value(metadata i32 %add2, metadata !211, metadata !DIExpression()), !dbg !218
-  %ap.cur = load i8*, i8** %args, align 8, !dbg !223
-  call void @llvm.dbg.value(metadata i8* %ap.cur, metadata !212, metadata !DIExpression()), !dbg !218
-  %ap.next = getelementptr inbounds i8, i8* %ap.cur, i64 8, !dbg !223
-  call void @llvm.dbg.value(metadata i8* %ap.next, metadata !212, metadata !DIExpression()), !dbg !218
-  store i8* %ap.next, i8** %args, align 8, !dbg !223
-  %arg.addr = bitcast i8* %ap.cur to i32*, !dbg !223
-  %4 = load i32, i32* %arg.addr, align 8, !dbg !223
+  %ap.cur = load ptr, ptr %args, align 8, !dbg !223
+  call void @llvm.dbg.value(metadata ptr %ap.cur, metadata !212, metadata !DIExpression()), !dbg !218
+  %ap.next = getelementptr inbounds i8, ptr %ap.cur, i64 8, !dbg !223
+  call void @llvm.dbg.value(metadata ptr %ap.next, metadata !212, metadata !DIExpression()), !dbg !218
+  store ptr %ap.next, ptr %args, align 8, !dbg !223
+  %arg.addr = bitcast ptr %ap.cur to ptr, !dbg !223
+  %4 = load i32, ptr %arg.addr, align 8, !dbg !223
   call void @llvm.dbg.value(metadata i32 %4, metadata !217, metadata !DIExpression()), !dbg !218
   %cmp = icmp sgt i32 %4, 0, !dbg !224
   br i1 %cmp, label %while.body, label %while.end, !dbg !225, !llvm.loop !229
@@ -1179,21 +1179,21 @@ while.body:
 while.end:
   %result.0.lcssa = phi i32 [ %add, %entry ], [ %add2, %while.body ], !dbg !218
   call void @llvm.dbg.value(metadata i32 %result.0.lcssa, metadata !211, metadata !DIExpression()), !dbg !218
-  call void @llvm.dbg.value(metadata i8** %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
-  call void @llvm.va_end(i8* nonnull %0), !dbg !231
-  %ap.cur5.pre = load i8*, i8** %args2, align 8, !dbg !232
+  call void @llvm.dbg.value(metadata ptr %args, metadata !212, metadata !DIExpression(DW_OP_deref)), !dbg !218
+  call void @llvm.va_end(ptr nonnull %0), !dbg !231
+  %ap.cur5.pre = load ptr, ptr %args2, align 8, !dbg !232
   br label %while.cond4, !dbg !233
 
 while.cond4:
-  %ap.cur5 = phi i8* [ %ap.cur5.pre, %while.end ], [ %ap.next6, %while.cond4 ], !dbg !232
+  %ap.cur5 = phi ptr [ %ap.cur5.pre, %while.end ], [ %ap.next6, %while.cond4 ], !dbg !232
   %result.1 = phi i32 [ %result.0.lcssa, %while.end ], [ %add10, %while.cond4 ], !dbg !218
   call void @llvm.dbg.value(metadata i32 %result.1, metadata !211, metadata !DIExpression()), !dbg !218
-  call void @llvm.dbg.value(metadata i8* %ap.cur5, metadata !216, metadata !DIExpression()), !dbg !218
-  %ap.next6 = getelementptr inbounds i8, i8* %ap.cur5, i64 8, !dbg !232
-  call void @llvm.dbg.value(metadata i8* %ap.next6, metadata !216, metadata !DIExpression()), !dbg !218
-  store i8* %ap.next6, i8** %args2, align 8, !dbg !232
-  %arg.addr7 = bitcast i8* %ap.cur5 to i32*, !dbg !232
-  %5 = load i32, i32* %arg.addr7, align 8, !dbg !232
+  call void @llvm.dbg.value(metadata ptr %ap.cur5, metadata !216, metadata !DIExpression()), !dbg !218
+  %ap.next6 = getelementptr inbounds i8, ptr %ap.cur5, i64 8, !dbg !232
+  call void @llvm.dbg.value(metadata ptr %ap.next6, metadata !216, metadata !DIExpression()), !dbg !218
+  store ptr %ap.next6, ptr %args2, align 8, !dbg !232
+  %arg.addr7 = bitcast ptr %ap.cur5 to ptr, !dbg !232
+  %5 = load i32, ptr %arg.addr7, align 8, !dbg !232
   call void @llvm.dbg.value(metadata i32 %5, metadata !217, metadata !DIExpression()), !dbg !218
   %cmp8 = icmp sgt i32 %5, 0, !dbg !234
   %add10 = add nsw i32 %result.1, 1, !dbg !235
@@ -1207,20 +1207,20 @@ while.end11:
   call void @llvm.dbg.value(metadata i32 %result.1, metadata !211, metadata !DIExpression()), !dbg !218
   call void @llvm.dbg.value(metadata i32 %result.1, metadata !211, metadata !DIExpression()), !dbg !218
   call void @llvm.dbg.value(metadata i32 %result.1, metadata !211, metadata !DIExpression()), !dbg !218
-  call void @llvm.dbg.value(metadata i8** %args2, metadata !216, metadata !DIExpression(DW_OP_deref)), !dbg !218
-  call void @llvm.va_end(i8* nonnull %1), !dbg !238
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %1) #3, !dbg !239
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %0) #3, !dbg !239
+  call void @llvm.dbg.value(metadata ptr %args2, metadata !216, metadata !DIExpression(DW_OP_deref)), !dbg !218
+  call void @llvm.va_end(ptr nonnull %1), !dbg !238
+  call void @llvm.lifetime.end.p0i8(i64 8, ptr nonnull %1) #3, !dbg !239
+  call void @llvm.lifetime.end.p0i8(i64 8, ptr nonnull %0) #3, !dbg !239
   ret i32 %result.1, !dbg !240
 }
 
-declare void @llvm.va_start(i8*) #3
+declare void @llvm.va_start(ptr ) #3
 
-declare void @llvm.va_copy(i8*, i8*) #3
+declare void @llvm.va_copy(ptr, ptr ) #3
 
 declare i32 @other(i32) local_unnamed_addr #2
 
-declare void @llvm.va_end(i8*) #3
+declare void @llvm.va_end(ptr ) #3
 
 declare void @llvm.dbg.value(metadata, metadata, metadata) #4
 

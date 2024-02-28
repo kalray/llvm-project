@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @xsplat256rr(<256 x i1>* nocapture %0, i64 %1) {
+define void @xsplat256rr(ptr nocapture %0, i64 %1) {
 ; ALL-LABEL: xsplat256rr:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmovetq $a0.lo = $r1, $r1
@@ -16,13 +16,13 @@ define void @xsplat256rr(<256 x i1>* nocapture %0, i64 %1) {
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 4)
   %3 = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 %1)
-  store <256 x i1> %3, <256 x i1>* %0
+  store <256 x i1> %3, ptr %0
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.xsplat.v256i1(i64)
 
-define void @xsplat256ri16(<256 x i1>* nocapture %0, i64 %1) {
+define void @xsplat256ri16(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat256ri16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x7fff
@@ -42,11 +42,11 @@ define void @xsplat256ri16(<256 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
   %3 = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 32767)
-  store <256 x i1> %3, <256 x i1>* %0
+  store <256 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat256ri37(<256 x i1>* nocapture %0, i64 %1) {
+define void @xsplat256ri37(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat256ri37:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000
@@ -66,11 +66,11 @@ define void @xsplat256ri37(<256 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
   %3 = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 32768)
-  store <256 x i1> %3, <256 x i1>* %0
+  store <256 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat256ri64(<256 x i1>* nocapture %0, i64 %1) {
+define void @xsplat256ri64(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat256ri64:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x80000000000
@@ -90,11 +90,11 @@ define void @xsplat256ri64(<256 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
   %3 = tail call <256 x i1> @llvm.kvx.xsplat.v256i1(i64 8796093022208)
-  store <256 x i1> %3, <256 x i1>* %0
+  store <256 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat512rr(<512 x i1>* nocapture %0, i64 %1) {
+define void @xsplat512rr(ptr nocapture %0, i64 %1) {
 ; ALL-LABEL: xsplat512rr:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmovetq $a0.lo = $r1, $r1
@@ -108,13 +108,13 @@ define void @xsplat512rr(<512 x i1>* nocapture %0, i64 %1) {
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 8)
   %3 = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 %1)
-  store <512 x i1> %3, <512 x i1>* %0
+  store <512 x i1> %3, ptr %0
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.xsplat.v512i1(i64)
 
-define void @xsplat512ri16(<512 x i1>* nocapture %0, i64 %1) {
+define void @xsplat512ri16(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat512ri16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x7fff
@@ -142,11 +142,11 @@ define void @xsplat512ri16(<512 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
   %3 = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 32767)
-  store <512 x i1> %3, <512 x i1>* %0
+  store <512 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat512ri37(<512 x i1>* nocapture %0, i64 %1) {
+define void @xsplat512ri37(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat512ri37:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000
@@ -174,11 +174,11 @@ define void @xsplat512ri37(<512 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
   %3 = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 32768)
-  store <512 x i1> %3, <512 x i1>* %0
+  store <512 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat512ri64(<512 x i1>* nocapture %0, i64 %1) {
+define void @xsplat512ri64(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat512ri64:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x80000000000
@@ -206,11 +206,11 @@ define void @xsplat512ri64(<512 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
   %3 = tail call <512 x i1> @llvm.kvx.xsplat.v512i1(i64 8796093022208)
-  store <512 x i1> %3, <512 x i1>* %0
+  store <512 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat1024rr(<1024 x i1>* nocapture %0, i64 %1) {
+define void @xsplat1024rr(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat1024rr:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmovetq $a0.lo = $r1, $r1
@@ -249,13 +249,13 @@ define void @xsplat1024rr(<1024 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 %1)
-  store <1024 x i1> %3, <1024 x i1>* %0
+  store <1024 x i1> %3, ptr %0
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64)
 
-define void @xsplat1024ri16(<1024 x i1>* nocapture %0, i64 %1) {
+define void @xsplat1024ri16(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat1024ri16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x7fff
@@ -295,11 +295,11 @@ define void @xsplat1024ri16(<1024 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 32767)
-  store <1024 x i1> %3, <1024 x i1>* %0
+  store <1024 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat1024ri37(<1024 x i1>* nocapture %0, i64 %1) {
+define void @xsplat1024ri37(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat1024ri37:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000
@@ -339,11 +339,11 @@ define void @xsplat1024ri37(<1024 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 32768)
-  store <1024 x i1> %3, <1024 x i1>* %0
+  store <1024 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat1024ri64(<1024 x i1>* nocapture %0, i64 %1) {
+define void @xsplat1024ri64(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat1024ri64:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x80000000000
@@ -383,11 +383,11 @@ define void @xsplat1024ri64(<1024 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %3 = tail call <1024 x i1> @llvm.kvx.xsplat.v1024i1(i64 8796093022208)
-  store <1024 x i1> %3, <1024 x i1>* %0
+  store <1024 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat2048rr(<2048 x i1>* nocapture %0, i64 %1) {
+define void @xsplat2048rr(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat2048rr:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmovetq $a0.lo = $r1, $r1
@@ -444,13 +444,13 @@ define void @xsplat2048rr(<2048 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %3 = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 %1)
-  store <2048 x i1> %3, <2048 x i1>* %0
+  store <2048 x i1> %3, ptr %0
   ret void
 }
 
 declare <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64)
 
-define void @xsplat2048ri16(<2048 x i1>* nocapture %0, i64 %1) {
+define void @xsplat2048ri16(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat2048ri16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x7fff
@@ -508,11 +508,11 @@ define void @xsplat2048ri16(<2048 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %3 = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 32767)
-  store <2048 x i1> %3, <2048 x i1>* %0
+  store <2048 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat2048ri37(<2048 x i1>* nocapture %0, i64 %1) {
+define void @xsplat2048ri37(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat2048ri37:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000
@@ -570,11 +570,11 @@ define void @xsplat2048ri37(<2048 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %3 = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 32768)
-  store <2048 x i1> %3, <2048 x i1>* %0
+  store <2048 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat2048ri64(<2048 x i1>* nocapture %0, i64 %1) {
+define void @xsplat2048ri64(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat2048ri64:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x80000000000
@@ -632,11 +632,11 @@ define void @xsplat2048ri64(<2048 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %3 = tail call <2048 x i1> @llvm.kvx.xsplat.v2048i1(i64 8796093022208)
-  store <2048 x i1> %3, <2048 x i1>* %0
+  store <2048 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat4096rr(<4096 x i1>* nocapture %0, i64 %1) {
+define void @xsplat4096rr(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat4096rr:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmovetq $a0.lo = $r1, $r1
@@ -731,13 +731,13 @@ define void @xsplat4096rr(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 23)
   %3 = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 %1)
-  store <4096 x i1> %3, <4096 x i1>* %0
+  store <4096 x i1> %3, ptr %0
   ret void
 }
 
 declare <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64)
 
-define void @xsplat4096ri16(<4096 x i1>* nocapture %0, i64 %1) {
+define void @xsplat4096ri16(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat4096ri16:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x7fff
@@ -833,11 +833,11 @@ define void @xsplat4096ri16(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 23)
   %3 = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 32767)
-  store <4096 x i1> %3, <4096 x i1>* %0
+  store <4096 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat4096ri37(<4096 x i1>* nocapture %0, i64 %1) {
+define void @xsplat4096ri37(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat4096ri37:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x8000
@@ -933,11 +933,11 @@ define void @xsplat4096ri37(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 23)
   %3 = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 32768)
-  store <4096 x i1> %3, <4096 x i1>* %0
+  store <4096 x i1> %3, ptr %0
   ret void
 }
 
-define void @xsplat4096ri64(<4096 x i1>* nocapture %0, i64 %1) {
+define void @xsplat4096ri64(ptr nocapture %0, i64 %1) {
 ; CV1-LABEL: xsplat4096ri64:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    make $r1 = 0x80000000000
@@ -1033,7 +1033,7 @@ define void @xsplat4096ri64(<4096 x i1>* nocapture %0, i64 %1) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 23)
   %3 = tail call <4096 x i1> @llvm.kvx.xsplat.v4096i1(i64 8796093022208)
-  store <4096 x i1> %3, <4096 x i1>* %0
+  store <4096 x i1> %3, ptr %0
   ret void
 }
 

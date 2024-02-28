@@ -22,7 +22,7 @@ entry:
   %conv13 = zext i16 %c to i32
   %shl = shl i32 %conv, %conv13
   %conv2 = trunc i32 %shl to i16
-  store i16 %conv2, i16* @a, align 2
+  store i16 %conv2, ptr @a, align 2
   ret void
 }
 

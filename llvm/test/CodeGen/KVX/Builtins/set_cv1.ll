@@ -17,8 +17,8 @@ define void @set_1(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !2, i64 %3)
   ret void
 }
@@ -37,8 +37,8 @@ define void @set_2(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !3, i64 %3)
   ret void
 }
@@ -62,8 +62,8 @@ define void @set_3(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !4, i64 %3)
   ret void
 }
@@ -80,8 +80,8 @@ define void @set_4(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !5, i64 %3)
   ret void
 }
@@ -98,8 +98,8 @@ define void @set_5(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !6, i64 %3)
   ret void
 }
@@ -116,8 +116,8 @@ define void @set_6(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !7, i64 %3)
   ret void
 }
@@ -134,8 +134,8 @@ define void @set_7(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !8, i64 %3)
   ret void
 }
@@ -152,8 +152,8 @@ define void @set_8(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !9, i64 %3)
   ret void
 }
@@ -170,8 +170,8 @@ define void @set_9(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !10, i64 %3)
   ret void
 }
@@ -188,8 +188,8 @@ define void @set_10(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !11, i64 %3)
   ret void
 }
@@ -206,8 +206,8 @@ define void @set_11(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !12, i64 %3)
   ret void
 }
@@ -224,8 +224,8 @@ define void @set_12(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !13, i64 %3)
   ret void
 }
@@ -242,8 +242,8 @@ define void @set_13(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !14, i64 %3)
   ret void
 }
@@ -260,8 +260,8 @@ define void @set_14(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !15, i64 %3)
   ret void
 }
@@ -278,8 +278,8 @@ define void @set_15(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !16, i64 %3)
   ret void
 }
@@ -296,8 +296,8 @@ define void @set_16(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !17, i64 %3)
   ret void
 }
@@ -314,8 +314,8 @@ define void @set_17(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !18, i64 %3)
   ret void
 }
@@ -332,8 +332,8 @@ define void @set_18(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !19, i64 %3)
   ret void
 }
@@ -350,8 +350,8 @@ define void @set_19(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !20, i64 %3)
   ret void
 }
@@ -368,8 +368,8 @@ define void @set_20(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !21, i64 %3)
   ret void
 }
@@ -386,8 +386,8 @@ define void @set_21(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !22, i64 %3)
   ret void
 }
@@ -404,8 +404,8 @@ define void @set_22(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !23, i64 %3)
   ret void
 }
@@ -422,8 +422,8 @@ define void @set_23(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !24, i64 %3)
   ret void
 }
@@ -440,8 +440,8 @@ define void @set_24(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !25, i64 %3)
   ret void
 }
@@ -458,8 +458,8 @@ define void @set_25(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !26, i64 %3)
   ret void
 }
@@ -476,8 +476,8 @@ define void @set_26(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !27, i64 %3)
   ret void
 }
@@ -494,8 +494,8 @@ define void @set_27(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !28, i64 %3)
   ret void
 }
@@ -513,8 +513,8 @@ define void @set_28(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !29, i64 %3)
   ret void
 }
@@ -531,8 +531,8 @@ define void @set_29(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !30, i64 %3)
   ret void
 }
@@ -549,8 +549,8 @@ define void @set_30(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !31, i64 %3)
   ret void
 }
@@ -567,8 +567,8 @@ define void @set_40(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !32, i64 %3)
   ret void
 }
@@ -585,8 +585,8 @@ define void @set_41(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !33, i64 %3)
   ret void
 }
@@ -603,8 +603,8 @@ define void @set_42(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !34, i64 %3)
   ret void
 }
@@ -621,8 +621,8 @@ define void @set_43(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !35, i64 %3)
   ret void
 }
@@ -639,8 +639,8 @@ define void @set_44(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !36, i64 %3)
   ret void
 }
@@ -657,8 +657,8 @@ define void @set_45(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !37, i64 %3)
   ret void
 }
@@ -675,8 +675,8 @@ define void @set_46(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !38, i64 %3)
   ret void
 }
@@ -693,8 +693,8 @@ define void @set_64(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !39, i64 %3)
   ret void
 }
@@ -711,8 +711,8 @@ define void @set_65(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !40, i64 %3)
   ret void
 }
@@ -729,8 +729,8 @@ define void @set_66(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !41, i64 %3)
   ret void
 }
@@ -747,8 +747,8 @@ define void @set_67(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !42, i64 %3)
   ret void
 }
@@ -765,8 +765,8 @@ define void @set_72(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !43, i64 %3)
   ret void
 }
@@ -783,8 +783,8 @@ define void @set_73(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !44, i64 %3)
   ret void
 }
@@ -801,8 +801,8 @@ define void @set_74(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !45, i64 %3)
   ret void
 }
@@ -819,8 +819,8 @@ define void @set_75(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !46, i64 %3)
   ret void
 }
@@ -837,8 +837,8 @@ define void @set_76(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !47, i64 %3)
   ret void
 }
@@ -855,8 +855,8 @@ define void @set_77(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !48, i64 %3)
   ret void
 }
@@ -873,8 +873,8 @@ define void @set_78(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !49, i64 %3)
   ret void
 }
@@ -891,8 +891,8 @@ define void @set_79(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !50, i64 %3)
   ret void
 }
@@ -909,8 +909,8 @@ define void @set_80(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !51, i64 %3)
   ret void
 }
@@ -927,8 +927,8 @@ define void @set_81(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !52, i64 %3)
   ret void
 }
@@ -945,8 +945,8 @@ define void @set_82(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !53, i64 %3)
   ret void
 }
@@ -963,8 +963,8 @@ define void @set_83(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !54, i64 %3)
   ret void
 }
@@ -981,8 +981,8 @@ define void @set_84(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !55, i64 %3)
   ret void
 }
@@ -999,8 +999,8 @@ define void @set_85(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !56, i64 %3)
   ret void
 }
@@ -1017,8 +1017,8 @@ define void @set_86(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !57, i64 %3)
   ret void
 }
@@ -1035,8 +1035,8 @@ define void @set_87(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !58, i64 %3)
   ret void
 }
@@ -1054,8 +1054,8 @@ define void @set_96(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !59, i64 %3)
   ret void
 }
@@ -1073,8 +1073,8 @@ define void @set_97(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !60, i64 %3)
   ret void
 }
@@ -1092,8 +1092,8 @@ define void @set_98(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !61, i64 %3)
   ret void
 }
@@ -1111,8 +1111,8 @@ define void @set_99(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !62, i64 %3)
   ret void
 }
@@ -1130,8 +1130,8 @@ define void @set_100(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !63, i64 %3)
   ret void
 }
@@ -1149,8 +1149,8 @@ define void @set_101(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !64, i64 %3)
   ret void
 }
@@ -1167,8 +1167,8 @@ define void @set_128(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !65, i64 %3)
   ret void
 }
@@ -1186,8 +1186,8 @@ define void @set_132(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !66, i64 %3)
   ret void
 }
@@ -1204,8 +1204,8 @@ define void @set_136(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !67, i64 %3)
   ret void
 }
@@ -1222,8 +1222,8 @@ define void @set_140(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !68, i64 %3)
   ret void
 }
@@ -1240,8 +1240,8 @@ define void @set_144(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !69, i64 %3)
   ret void
 }
@@ -1258,8 +1258,8 @@ define void @set_148(i64 %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = alloca i64, align 8
-  store i64 %0, i64* %2, align 8
-  %3 = load i64, i64* %2, align 8
+  store i64 %0, ptr %2, align 8
+  %3 = load i64, ptr %2, align 8
   call void @llvm.write_register.i64(metadata !70, i64 %3)
   ret void
 }

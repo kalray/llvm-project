@@ -102,12 +102,12 @@ define i32 @f(i32 %sz) {
 entry:
   %conv = sext i32 %sz to i64
   %0 = alloca i8, i64 %conv, align 128
-  %1 = bitcast i8* %0 to i32*
+  %1 = bitcast ptr %0 to ptr 
   %2 = alloca [2 x i32], align 64
-  %.sub = getelementptr inbounds [2 x i32], [2 x i32]* %2, i64 0, i64 0
-  %call = call i32 @g(i32* nonnull %1, i32* nonnull %.sub)
-  %3 = load i32, i32* %1, align 128
+  %.sub = getelementptr inbounds [2 x i32], ptr %2, i64 0, i64 0
+  %call = call i32 @g(ptr nonnull %1, ptr nonnull %.sub)
+  %3 = load i32, ptr %1, align 128
   ret i32 %3
 }
 
-declare i32 @g(i32*, i32*)
+declare i32 @g(ptr, ptr )

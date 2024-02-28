@@ -8,7 +8,7 @@ target triple = "kvx-kalray-cos"
 
 define dso_local void @foo() #0 !dbg !7 {
   %1 = alloca [128 x i32], align 4
-  call void @llvm.dbg.declare(metadata [128 x i32]* %1, metadata !11, metadata !DIExpression()), !dbg !16
+  call void @llvm.dbg.declare(metadata ptr %1, metadata !11, metadata !DIExpression()), !dbg !16
   ret void, !dbg !17
 }
 

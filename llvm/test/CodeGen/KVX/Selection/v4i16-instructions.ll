@@ -252,7 +252,7 @@ define <4 x i16> @test_rem(<4 x i16> %a, <4 x i16> %b) #0 {
   ret <4 x i16> %r
 }
 
-define void @test_ldst_v4i16(<4 x i16>* %a, <4 x i16>* %b) {
+define void @test_ldst_v4i16(ptr %a, ptr %b) {
 ; ALL-LABEL: test_ldst_v4i16:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ld $r0 = 0[$r0]
@@ -260,8 +260,8 @@ define void @test_ldst_v4i16(<4 x i16>* %a, <4 x i16>* %b) {
 ; ALL-NEXT:    sd 0[$r1] = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
-  %t1 = load <4 x i16>, <4 x i16>* %a
-  store <4 x i16> %t1, <4 x i16>* %b, align 16
+  %t1 = load <4 x i16>, ptr %a
+  store <4 x i16> %t1, ptr %b, align 16
   ret void
 }
 

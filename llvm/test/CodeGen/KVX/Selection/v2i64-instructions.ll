@@ -267,7 +267,7 @@ define <2 x i64> @test_rem(<2 x i64> %a, <2 x i64> %b) #0 {
   ret <2 x i64> %r
 }
 
-define void @test_ldst_v2i64(<2 x i64>* %a, <2 x i64>* %b) {
+define void @test_ldst_v2i64(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v2i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
@@ -275,8 +275,8 @@ define void @test_ldst_v2i64(<2 x i64>* %a, <2 x i64>* %b) {
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <2 x i64>, <2 x i64>* %a
-  store <2 x i64> %t1, <2 x i64>* %b, align 16
+  %t1 = load <2 x i64>, ptr %a
+  store <2 x i64> %t1, ptr %b, align 16
   ret void
 }
 

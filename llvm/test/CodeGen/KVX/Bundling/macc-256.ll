@@ -133,7 +133,7 @@ entry:
   ret { i64, i64 } %.fca.1.insert
 }
 
-define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, <4 x i64>* nocapture readonly %b) {
+define i32 @macc_256(ptr nocapture %r, ptr nocapture readonly %a, ptr nocapture readonly %b) {
 ; NEWBUND-LABEL: macc_256:
 ; NEWBUND:       # %bb.0: # %entry
 ; NEWBUND-NEXT:    lo $r32r33r34r35 = 0[$r2]
@@ -313,9 +313,9 @@ define i32 @macc_256(<8 x i64>* nocapture %r, <4 x i64>* nocapture readonly %a, 
 ; OLDBUND-NEXT:    ret
 ; OLDBUND-NEXT:    ;;
 entry:
-  %0 = load <8 x i64>, <8 x i64>* %r
-  %1 = load <4 x i64>, <4 x i64>* %b
-  %2 = load <4 x i64>, <4 x i64>* %a
+  %0 = load <8 x i64>, ptr %r
+  %1 = load <4 x i64>, ptr %b
+  %2 = load <4 x i64>, ptr %a
   %vecext = extractelement <4 x i64> %2, i32 0
   %vecext1 = extractelement <4 x i64> %1, i32 0
   %conv.i = zext i64 %vecext to i128
@@ -353,7 +353,7 @@ entry:
   %6 = tail call i64 @llvm.kvx.addcd(i64 %retval.sroa.0.0.extract.trunc.i557, i64 %vecext37, i32 0)
   %cmp = icmp ult i64 %6, %retval.sroa.0.0.extract.trunc.i557
   %conv43 = zext i1 %cmp to i64
-  %7 = load <4 x i64>, <4 x i64>* %a
+  %7 = load <4 x i64>, ptr %a
   %vecext47 = extractelement <4 x i64> %7, i32 1
   %c.sroa.0.0.vec.insert.i548 = insertelement <2 x i64> undef, i64 %retval.sroa.0.0.extract.trunc.i, i32 0
   %c.sroa.0.8.vec.insert.i549 = insertelement <2 x i64> %c.sroa.0.0.vec.insert.i548, i64 %retval.sroa.2.0.extract.trunc.i, i32 1
@@ -378,7 +378,7 @@ entry:
   %15 = tail call i64 @llvm.kvx.addcd(i64 %retval.sroa.0.0.vec.extract.i532, i64 %conv43, i32 0)
   %cmp97 = icmp ult i64 %15, %retval.sroa.0.0.vec.extract.i532
   %conv99 = zext i1 %cmp97 to i64
-  %16 = load <4 x i64>, <4 x i64>* %a
+  %16 = load <4 x i64>, ptr %a
   %vecext103 = extractelement <4 x i64> %16, i32 2
   %17 = tail call <2 x i64> @llvm.kvx.madduzdt(<2 x i64> %8, i64 %vecext103, i64 %vecext1)
   %retval.sroa.0.0.vec.extract.i526 = extractelement <2 x i64> %17, i32 0
@@ -395,7 +395,7 @@ entry:
   %24 = tail call i64 @llvm.kvx.addcd(i64 %retval.sroa.0.0.vec.extract.i508, i64 %conv99, i32 0)
   %cmp153 = icmp ult i64 %24, %retval.sroa.0.0.vec.extract.i508
   %conv155 = zext i1 %cmp153 to i64
-  %25 = load <4 x i64>, <4 x i64>* %a
+  %25 = load <4 x i64>, ptr %a
   %vecext159 = extractelement <4 x i64> %25, i32 3
   %26 = tail call <2 x i64> @llvm.kvx.madduzdt(<2 x i64> %17, i64 %vecext159, i64 %vecext1)
   %retval.sroa.0.0.vec.extract.i502 = extractelement <2 x i64> %26, i32 0
@@ -424,7 +424,7 @@ entry:
   %vecins227 = insertelement <8 x i64> %vecins222, i64 %36, i32 6
   %37 = tail call i64 @llvm.kvx.addcd(i64 %retval.sroa.0.8.vec.extract.i, i64 %conv211, i32 0)
   %vecins232 = insertelement <8 x i64> %vecins227, i64 %37, i32 7
-  store <8 x i64> %vecins232, <8 x i64>* %r
+  store <8 x i64> %vecins232, ptr %r
   %cmp237 = icmp ult i64 %37, %retval.sroa.0.8.vec.extract.i
   %conv238 = zext i1 %cmp237 to i32
   ret i32 %conv238

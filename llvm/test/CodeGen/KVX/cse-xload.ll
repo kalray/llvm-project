@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* nocapture %2, <1024 x i1>* nocapture readnone %3) {
+define void @test_lvc(ptr nocapture readonly %0, ptr %1, ptr nocapture %2, ptr nocapture readnone %3) {
 ; CV1-LABEL: test_lvc:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xlo.u $a3 = 96[$r0]
@@ -26,14 +26,14 @@ define void @test_lvc(<1024 x i1>* nocapture readonly %0, i8* %1, <1024 x i1>* n
 ; CV1-NEXT:    xso 64[$r2] = $a2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 12)
-  %5 = load <1024 x i1>, <1024 x i1>* %0, align 32
-  %6 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %5, i8* %1, i32 2, i32 1)
-  %7 = load <1024 x i1>, <1024 x i1>* %0, align 32
-  %8 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %7, i8* %1, i32 2, i32 1)
-  store <1024 x i1> %6, <1024 x i1>* %2, align 32
-  store <1024 x i1> %8, <1024 x i1>* %2, align 32
+  %5 = load <1024 x i1>, ptr %0, align 32
+  %6 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %5, ptr %1, i32 2, i32 1)
+  %7 = load <1024 x i1>, ptr %0, align 32
+  %8 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %7, ptr %1, i32 2, i32 1)
+  store <1024 x i1> %6, ptr %2, align 32
+  store <1024 x i1> %8, ptr %2, align 32
   ret void
 }
 
-declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, i8*, i32, i32)
+declare <1024 x i1> @llvm.kvx.lvc(<1024 x i1>, ptr, i32, i32)
 

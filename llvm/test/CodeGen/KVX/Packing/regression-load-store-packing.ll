@@ -4,9 +4,9 @@
 
 target triple = "kvx-kalray-cos"
 
-@x = common global i64* null, align 8
+@x = common global ptr null, align 8
 
-define void @f(i64* %v) #0 {
+define void @f(ptr %v) #0 {
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -60,41 +60,41 @@ define void @f(i64* %v) #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* %v, align 8
-  %arrayidx2 = getelementptr inbounds i64, i64* %v, i64 1
-  %1 = load i64, i64* %arrayidx2, align 8
-  %arrayidx4 = getelementptr inbounds i64, i64* %v, i64 2
-  %2 = load i64, i64* %arrayidx4, align 8
-  %arrayidx6 = getelementptr inbounds i64, i64* %v, i64 3
-  %3 = load i64, i64* %arrayidx6, align 8
-  tail call void @g(i64* nonnull %v)
-  %arrayidx8 = getelementptr inbounds i64, i64* %v, i64 4
-  %4 = load i64, i64* %arrayidx8, align 8
-  %arrayidx10 = getelementptr inbounds i64, i64* %v, i64 5
-  %5 = load i64, i64* %arrayidx10, align 8
-  %arrayidx12 = getelementptr inbounds i64, i64* %v, i64 6
-  %6 = load i64, i64* %arrayidx12, align 8
-  %arrayidx14 = getelementptr inbounds i64, i64* %v, i64 7
-  %7 = load i64, i64* %arrayidx14, align 8
-  tail call void @g(i64* nonnull %v)
-  %8 = load i64*, i64** @x, align 8
-  store i64 %0, i64* %8, align 8
-  %arrayidx19 = getelementptr inbounds i64, i64* %8, i64 1
-  store i64 %1, i64* %arrayidx19, align 8
-  %arrayidx21 = getelementptr inbounds i64, i64* %8, i64 2
-  store i64 %2, i64* %arrayidx21, align 8
-  %arrayidx23 = getelementptr inbounds i64, i64* %8, i64 3
-  store i64 %3, i64* %arrayidx23, align 8
-  %arrayidx25 = getelementptr inbounds i64, i64* %8, i64 4
-  store i64 %4, i64* %arrayidx25, align 8
-  %arrayidx27 = getelementptr inbounds i64, i64* %8, i64 5
-  store i64 %5, i64* %arrayidx27, align 8
-  %arrayidx29 = getelementptr inbounds i64, i64* %8, i64 6
-  store i64 %6, i64* %arrayidx29, align 8
-  %arrayidx31 = getelementptr inbounds i64, i64* %8, i64 7
-  store i64 %7, i64* %arrayidx31, align 8
+  %0 = load i64, ptr %v, align 8
+  %arrayidx2 = getelementptr inbounds i64, ptr %v, i64 1
+  %1 = load i64, ptr %arrayidx2, align 8
+  %arrayidx4 = getelementptr inbounds i64, ptr %v, i64 2
+  %2 = load i64, ptr %arrayidx4, align 8
+  %arrayidx6 = getelementptr inbounds i64, ptr %v, i64 3
+  %3 = load i64, ptr %arrayidx6, align 8
+  tail call void @g(ptr nonnull %v)
+  %arrayidx8 = getelementptr inbounds i64, ptr %v, i64 4
+  %4 = load i64, ptr %arrayidx8, align 8
+  %arrayidx10 = getelementptr inbounds i64, ptr %v, i64 5
+  %5 = load i64, ptr %arrayidx10, align 8
+  %arrayidx12 = getelementptr inbounds i64, ptr %v, i64 6
+  %6 = load i64, ptr %arrayidx12, align 8
+  %arrayidx14 = getelementptr inbounds i64, ptr %v, i64 7
+  %7 = load i64, ptr %arrayidx14, align 8
+  tail call void @g(ptr nonnull %v)
+  %8 = load ptr, ptr @x, align 8
+  store i64 %0, ptr %8, align 8
+  %arrayidx19 = getelementptr inbounds i64, ptr %8, i64 1
+  store i64 %1, ptr %arrayidx19, align 8
+  %arrayidx21 = getelementptr inbounds i64, ptr %8, i64 2
+  store i64 %2, ptr %arrayidx21, align 8
+  %arrayidx23 = getelementptr inbounds i64, ptr %8, i64 3
+  store i64 %3, ptr %arrayidx23, align 8
+  %arrayidx25 = getelementptr inbounds i64, ptr %8, i64 4
+  store i64 %4, ptr %arrayidx25, align 8
+  %arrayidx27 = getelementptr inbounds i64, ptr %8, i64 5
+  store i64 %5, ptr %arrayidx27, align 8
+  %arrayidx29 = getelementptr inbounds i64, ptr %8, i64 6
+  store i64 %6, ptr %arrayidx29, align 8
+  %arrayidx31 = getelementptr inbounds i64, ptr %8, i64 7
+  store i64 %7, ptr %arrayidx31, align 8
   ret void
 }
 
-declare void @g(i64*)
+declare void @g(ptr )
 attributes #0 = { nounwind }

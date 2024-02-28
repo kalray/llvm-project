@@ -111,8 +111,8 @@ define i64 @Int64TernaryGlobalGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
-  %0 = load i64, i64* @g1, align 8
-  %1 = load i64, i64* @g2, align 8
+  %0 = load i64, ptr @g1, align 8
+  %1 = load i64, ptr @g2, align 8
   %cond = select i1 %value, i64 %0, i64 %1
   ret i64 %cond
 }
@@ -132,7 +132,7 @@ define i64 @Int64TernaryGlobalImm(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i64, i64* @g1, align 8
+  %0 = load i64, ptr @g1, align 8
   %cond = select i1 %value, i64 %0, i64 3
   ret i64 %cond
 }
@@ -151,7 +151,7 @@ define i64 @Int64TernaryImmGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i64, i64* @g1, align 8
+  %0 = load i64, ptr @g1, align 8
   %cond = select i1 %value, i64 3, i64 %0
   ret i64 %cond
 }
@@ -170,7 +170,7 @@ define i64 @Int64TernaryRegGlobal(i1 %value, i64 %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i64, i64* @g1, align 8
+  %0 = load i64, ptr @g1, align 8
   %cond = select i1 %value, i64 %v1, i64 %0
   ret i64 %cond
 }
@@ -189,7 +189,7 @@ define i64 @Int64TernaryGlobalReg(i1 %value, i64 %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i64, i64* @g1, align 8
+  %0 = load i64, ptr @g1, align 8
   %cond = select i1 %value, i64 %0, i64 %v1
   ret i64 %cond
 }
@@ -266,8 +266,8 @@ define double @FloatTernaryGlobalGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
-  %0 = load double, double* @gf1, align 8
-  %1 = load double, double* @gf2, align 8
+  %0 = load double, ptr @gf1, align 8
+  %1 = load double, ptr @gf2, align 8
   %cond = select i1 %value, double %0, double %1
   ret double %cond
 }
@@ -286,7 +286,7 @@ define double @FloatTernaryGlobalImm(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load double, double* @gf1, align 8
+  %0 = load double, ptr @gf1, align 8
   %cond = select i1 %value, double %0, double 3.000000e+00
   ret double %cond
 }
@@ -305,7 +305,7 @@ define double @FloatTernaryImmGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load double, double* @gf1, align 8
+  %0 = load double, ptr @gf1, align 8
   %cond = select i1 %value, double 3.000000e+00, double %0
   ret double %cond
 }
@@ -324,7 +324,7 @@ define double @FloatTernaryRegGlobal(i1 %value, double %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load double, double* @gf1, align 8
+  %0 = load double, ptr @gf1, align 8
   %cond = select i1 %value, double %v1, double %0
   ret double %cond
 }
@@ -343,7 +343,7 @@ define double @FloatTernaryGlobalReg(i1 %value, double %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load double, double* @gf1, align 8
+  %0 = load double, ptr @gf1, align 8
   %cond = select i1 %value, double %0, double %v1
   ret double %cond
 }
@@ -420,8 +420,8 @@ define i32 @Int32TernaryGlobalGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
-  %0 = load i32, i32* @gi32_1, align 4
-  %1 = load i32, i32* @gi32_2, align 4
+  %0 = load i32, ptr @gi32_1, align 4
+  %1 = load i32, ptr @gi32_2, align 4
   %cond = select i1 %value, i32 %0, i32 %1
   ret i32 %cond
 }
@@ -440,7 +440,7 @@ define i32 @Int32TernaryGlobalImm(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i32, i32* @gi32_1, align 4
+  %0 = load i32, ptr @gi32_1, align 4
   %cond = select i1 %value, i32 %0, i32 3
   ret i32 %cond
 }
@@ -459,7 +459,7 @@ define i32 @Int32TernaryImmGlobal(i1 %value){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i32, i32* @gi32_1, align 4
+  %0 = load i32, ptr @gi32_1, align 4
   %cond = select i1 %value, i32 3, i32 %0
   ret i32 %cond
 }
@@ -478,7 +478,7 @@ define i32 @Int32TernaryRegGlobal(i1 %value, i32 %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i32, i32* @gi32_1, align 4
+  %0 = load i32, ptr @gi32_1, align 4
   %cond = select i1 %value, i32 %v1, i32 %0
   ret i32 %cond
 }
@@ -497,7 +497,7 @@ define i32 @Int32TernaryGlobalReg(i1 %value, i32 %v1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i32, i32* @gi32_1, align 4
+  %0 = load i32, ptr @gi32_1, align 4
   %cond = select i1 %value, i32 %0, i32 %v1
   ret i32 %cond
 }

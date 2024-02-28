@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @st(i32* nocapture %0, i32 %1, i32 %2) {
+define void @st(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: st:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
@@ -16,14 +16,14 @@ define void @st(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_weven(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_weven(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_weven:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.even $r2 ? [$r0] = $r1
@@ -34,14 +34,14 @@ define void @sw_weven(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %5, label %6, label %7
 
 6:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_wodd(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wodd(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wodd:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.odd $r2 ? [$r0] = $r1
@@ -52,14 +52,14 @@ define void @sw_wodd(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %5, label %7, label %6
 
 6:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_wgtz(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wgtz(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wgtz:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wgtz $r2 ? [$r0] = $r1
@@ -69,14 +69,14 @@ define void @sw_wgtz(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_wltz(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wltz(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wltz:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wltz $r2 ? [$r0] = $r1
@@ -86,14 +86,14 @@ define void @sw_wltz(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_wlez(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wlez(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wlez:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wlez $r2 ? [$r0] = $r1
@@ -103,14 +103,14 @@ define void @sw_wlez(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_wgez(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wgez(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wgez:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wgez $r2 ? [$r0] = $r1
@@ -120,14 +120,14 @@ define void @sw_wgez(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_weqz(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_weqz(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_weqz:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.weqz $r2 ? [$r0] = $r1
@@ -137,14 +137,14 @@ define void @sw_weqz(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_wnez(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_wnez(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_wnez:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
@@ -154,14 +154,14 @@ define void @sw_wnez(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_wnez2(i32* nocapture %0, i32 %1, i32 %2, i32 %3) {
+define void @sw_wnez2(ptr nocapture %0, i32 %1, i32 %2, i32 %3) {
 ; CHECK-LABEL: sw_wnez2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? 4[$r0] = $r1
@@ -171,15 +171,15 @@ define void @sw_wnez2(i32* nocapture %0, i32 %1, i32 %2, i32 %3) {
   br i1 %5, label %8, label %6
 
 6:
-  %7 = getelementptr inbounds i32, i32* %0, i64 1
-  store i32 %1, i32* %7, align 4
+  %7 = getelementptr inbounds i32, ptr %0, i64 1
+  store i32 %1, ptr %7, align 4
   br label %8
 
 8:
   ret void
 }
 
-define void @sw_and_cond1(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_and_cond1(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_and_cond1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andw $r2 = $r2, 0xf34d
@@ -192,14 +192,14 @@ define void @sw_and_cond1(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %5, label %7, label %6
 
 6:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_compw_cond1(i32* nocapture %0, i32 %1, i32 %2) {
+define void @sw_compw_cond1(ptr nocapture %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: sw_compw_cond1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    compw.lt $r2 = $r2, 0xf34e
@@ -211,14 +211,14 @@ define void @sw_compw_cond1(i32* nocapture %0, i32 %1, i32 %2) {
   br i1 %4, label %5, label %6
 
 5:
-  store i32 %1, i32* %0, align 4
+  store i32 %1, ptr %0, align 4
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_ri27(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri27(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri27:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x3ffffff[$r0] = $r1
@@ -228,15 +228,15 @@ define void @sw_ri27(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 67108863
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 67108863
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_ri54(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri54(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri54:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x4000000[$r0] = $r1
@@ -246,15 +246,15 @@ define void @sw_ri54(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 67108864
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 67108864
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_ri54_max(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri54_max(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri54_max:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0x1fffffffffffff[$r0] = $r1
@@ -264,15 +264,15 @@ define void @sw_ri54_max(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 9007199254740991
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 9007199254740991
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_ri54_over_max(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri54_over_max(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri54_over_max:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB15_2
@@ -287,15 +287,15 @@ define void @sw_ri54_over_max(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 9007199254740992
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 9007199254740992
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_ri54_min(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri54_min(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri54_min:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.wnez $r2 ? 0xffe0000000000000[$r0] = $r1
@@ -305,15 +305,15 @@ define void @sw_ri54_min(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 -9007199254740992
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 -9007199254740992
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_ri54_sub_min(i8* nocapture %0, i8 %1, i32 %2) {
+define void @sw_ri54_sub_min(ptr nocapture %0, i8 %1, i32 %2) {
 ; CHECK-LABEL: sw_ri54_sub_min:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB17_2
@@ -328,15 +328,15 @@ define void @sw_ri54_sub_min(i8* nocapture %0, i8 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 -9007199254740993
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 -9007199254740993
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_rr(i8* nocapture %0, i8 %1, i64 %2) {
+define void @sw_rr(ptr nocapture %0, i8 %1, i64 %2) {
 ; CHECK-LABEL: sw_rr:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sb.dnez $r2 ? [$r0] = $r1
@@ -346,14 +346,14 @@ define void @sw_rr(i8* nocapture %0, i8 %1, i64 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store i8 %1, i8* %0, align 1
+  store i8 %1, ptr %0, align 1
   br label %6
 
 6:
   ret void
 }
 
-define void @sw_rr_scale(i32* nocapture %0, i32 %1, i64 %2) {
+define void @sw_rr_scale(ptr nocapture %0, i32 %1, i64 %2) {
 ; CHECK-LABEL: sw_rr_scale:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB19_2
@@ -368,15 +368,15 @@ define void @sw_rr_scale(i32* nocapture %0, i32 %1, i64 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i32, i32* %0, i64 %2
-  store i32 %1, i32* %6, align 4
+  %6 = getelementptr inbounds i32, ptr %0, i64 %2
+  store i32 %1, ptr %6, align 4
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_rr_scale_offset(i32* nocapture %0, i32 %1, i64 %2) {
+define void @sw_rr_scale_offset(ptr nocapture %0, i32 %1, i64 %2) {
 ; CHECK-LABEL: sw_rr_scale_offset:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB20_2
@@ -391,15 +391,15 @@ define void @sw_rr_scale_offset(i32* nocapture %0, i32 %1, i64 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i32, i32* %0, i64 %2
-  store i32 %1, i32* %6, align 4
+  %6 = getelementptr inbounds i32, ptr %0, i64 %2
+  store i32 %1, ptr %6, align 4
   br label %7
 
 7:
   ret void
 }
 
-define void @sw_rr_offset(i8* nocapture %0, i8 %1, i64 %2) {
+define void @sw_rr_offset(ptr nocapture %0, i8 %1, i64 %2) {
 ; CHECK-LABEL: sw_rr_offset:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.deqz $r2 ? .LBB21_2
@@ -414,15 +414,15 @@ define void @sw_rr_offset(i8* nocapture %0, i8 %1, i64 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  %6 = getelementptr inbounds i8, i8* %0, i64 %2
-  store i8 %1, i8* %6, align 1
+  %6 = getelementptr inbounds i8, ptr %0, i64 %2
+  store i8 %1, ptr %6, align 1
   br label %7
 
 7:
   ret void
 }
 
-define void @multiple_st(i32* %0, i32 %1, i32 %2) {
+define void @multiple_st(ptr %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: multiple_st:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sw.wnez $r2 ? [$r0] = $r1
@@ -434,9 +434,9 @@ define void @multiple_st(i32* %0, i32 %1, i32 %2) {
   br i1 %4, label %7, label %5
 
 5:
-  store volatile i32 %1, i32* %0, align 4
-  %6 = getelementptr inbounds i32, i32* %0, i64 2
-  store volatile i32 %2, i32* %6, align 4
+  store volatile i32 %1, ptr %0, align 4
+  %6 = getelementptr inbounds i32, ptr %0, i64 2
+  store volatile i32 %2, ptr %6, align 4
   br label %7
 
 7:
@@ -445,7 +445,7 @@ define void @multiple_st(i32* %0, i32 %1, i32 %2) {
 
 ; TODO: Refine cost model, as this could be
 ; 2 bundles and should be profitable to if-cvt.
-define i32 @select_make(i32* %0, i32 %1, i32 %2) {
+define i32 @select_make(ptr %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: select_make:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB23_2
@@ -465,7 +465,7 @@ define i32 @select_make(i32* %0, i32 %1, i32 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store volatile i32 %1, i32* %0, align 4
+  store volatile i32 %1, ptr %0, align 4
   br label %6
 
 6:
@@ -473,7 +473,7 @@ define i32 @select_make(i32* %0, i32 %1, i32 %2) {
   ret i32 %7
 }
 
-define i32 @select_make_inverted(i32* %0, i32 %1, i32 %2) {
+define i32 @select_make_inverted(ptr %0, i32 %1, i32 %2) {
 ; CHECK-LABEL: select_make_inverted:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB24_2
@@ -490,7 +490,7 @@ define i32 @select_make_inverted(i32* %0, i32 %1, i32 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store volatile i32 %1, i32* %0, align 4
+  store volatile i32 %1, ptr %0, align 4
   br label %6
 
 6:
@@ -498,7 +498,7 @@ define i32 @select_make_inverted(i32* %0, i32 %1, i32 %2) {
   ret i32 %7
 }
 
-define i32 @select_inputs(i32* %0, i32 %1, i32 %2, i32 %a) {
+define i32 @select_inputs(ptr %0, i32 %1, i32 %2, i32 %a) {
 ; CHECK-LABEL: select_inputs:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB25_2
@@ -515,7 +515,7 @@ define i32 @select_inputs(i32* %0, i32 %1, i32 %2, i32 %a) {
   br i1 %4, label %6, label %5
 
 5:
-  store volatile i32 %1, i32* %0, align 4
+  store volatile i32 %1, ptr %0, align 4
   br label %6
 
 6:
@@ -524,7 +524,7 @@ define i32 @select_inputs(i32* %0, i32 %1, i32 %2, i32 %a) {
 }
 
 
-define void @stq_cc(<2 x i64> %0, <2 x i64>* nocapture %1, i64 %2) {
+define void @stq_cc(<2 x i64> %0, ptr nocapture %1, i64 %2) {
 ; CHECK-LABEL: stq_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sq.dnez $r3 ? [$r2] = $r0r1
@@ -534,7 +534,7 @@ define void @stq_cc(<2 x i64> %0, <2 x i64>* nocapture %1, i64 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store <2 x i64> %0, <2 x i64>* %1, align 16
+  store <2 x i64> %0, ptr %1, align 16
   br label %6
 
 6:
@@ -542,7 +542,7 @@ define void @stq_cc(<2 x i64> %0, <2 x i64>* nocapture %1, i64 %2) {
 }
 
 
-define void @sto_cc(<4 x i64> %0, <4 x i64>* nocapture %1, i64 %2) {
+define void @sto_cc(<4 x i64> %0, ptr nocapture %1, i64 %2) {
 ; CHECK-LABEL: sto_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    so.dnez $r5 ? [$r4] = $r0r1r2r3
@@ -552,7 +552,7 @@ define void @sto_cc(<4 x i64> %0, <4 x i64>* nocapture %1, i64 %2) {
   br i1 %4, label %6, label %5
 
 5:
-  store <4 x i64> %0, <4 x i64>* %1, align 32
+  store <4 x i64> %0, ptr %1, align 32
   br label %6
 
 6:
@@ -560,7 +560,7 @@ define void @sto_cc(<4 x i64> %0, <4 x i64>* nocapture %1, i64 %2) {
 }
 
 ; TODO: Debug why these are not if-converted.
-define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a, i32 %2) {
+define <2 x i64> @select_inputs_paired(ptr %0, <2 x i64> %1, <2 x i64> %a, i32 %2) {
 ; CHECK-LABEL: select_inputs_paired:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r5 ? .LBB28_2
@@ -582,7 +582,7 @@ define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a
   br i1 %4, label %6, label %5
 
 5:
-  store volatile <2 x i64> %1, <2 x i64>* %0, align 4
+  store volatile <2 x i64> %1, ptr %0, align 4
   br label %6
 
 6:
@@ -591,7 +591,7 @@ define <2 x i64> @select_inputs_paired(<2 x i64>* %0, <2 x i64> %1, <2 x i64> %a
 }
 
 ; TODO: 4 x copyd would be better than a single so performance wise
-define <4 x i64> @select_inputs_quad(<4 x i64>* %0, <4 x i64> %1, <4 x i64> %a, i32 %2) {
+define <4 x i64> @select_inputs_quad(ptr %0, <4 x i64> %1, <4 x i64> %a, i32 %2) {
 ; CHECK-LABEL: select_inputs_quad:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r34 = $r7
@@ -621,7 +621,7 @@ define <4 x i64> @select_inputs_quad(<4 x i64>* %0, <4 x i64> %1, <4 x i64> %a, 
   br i1 %4, label %6, label %5
 
 5:
-  store volatile <4 x i64> %1, <4 x i64>* %0, align 4
+  store volatile <4 x i64> %1, ptr %0, align 4
   br label %6
 
 6:

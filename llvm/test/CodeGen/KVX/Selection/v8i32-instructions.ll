@@ -349,7 +349,7 @@ define <8 x i32> @test_rem(<8 x i32> %a, <8 x i32> %b) #0 {
   ret <8 x i32> %r
 }
 
-define void @test_ldst_v4i32(<8 x i32>* %a, <8 x i32>* %b) {
+define void @test_ldst_v4i32(ptr %a, ptr %b) {
 ; ALL-LABEL: test_ldst_v4i32:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -357,8 +357,8 @@ define void @test_ldst_v4i32(<8 x i32>* %a, <8 x i32>* %b) {
 ; ALL-NEXT:    so 0[$r1] = $r4r5r6r7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
-  %t1 = load <8 x i32>, <8 x i32>* %a
-  store <8 x i32> %t1, <8 x i32>* %b, align 16
+  %t1 = load <8 x i32>, ptr %a
+  store <8 x i32> %t1, ptr %b, align 16
   ret void
 }
 

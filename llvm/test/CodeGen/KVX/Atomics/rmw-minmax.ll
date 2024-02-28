@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i32 @f32min(i32 *%src, i32 %b) {
+define i32 @f32min(ptr %src, i32 %b) {
 ; CV1-LABEL: f32min:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -44,11 +44,11 @@ define i32 @f32min(i32 *%src, i32 %b) {
 ; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw min i32 *%src, i32 %b seq_cst
+  %res = atomicrmw min ptr %src, i32 %b seq_cst
   ret i32 %res
 }
 
-define i32 @f32max(i32 *%src, i32 %b) {
+define i32 @f32max(ptr %src, i32 %b) {
 ; CV1-LABEL: f32max:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -86,11 +86,11 @@ define i32 @f32max(i32 *%src, i32 %b) {
 ; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw max i32 *%src, i32 %b seq_cst
+  %res = atomicrmw max ptr %src, i32 %b seq_cst
   ret i32 %res
 }
 
-define i32 @f32umin(i32 *%src, i32 %b) {
+define i32 @f32umin(ptr %src, i32 %b) {
 ; CV1-LABEL: f32umin:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -128,11 +128,11 @@ define i32 @f32umin(i32 *%src, i32 %b) {
 ; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw umin i32 *%src, i32 %b seq_cst
+  %res = atomicrmw umin ptr %src, i32 %b seq_cst
   ret i32 %res
 }
 
-define i32 @f32umax(i32 *%src, i32 %b) {
+define i32 @f32umax(ptr %src, i32 %b) {
 ; CV1-LABEL: f32umax:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -170,11 +170,11 @@ define i32 @f32umax(i32 *%src, i32 %b) {
 ; CV2-NEXT:    copyw $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw umax i32 *%src, i32 %b seq_cst
+  %res = atomicrmw umax ptr %src, i32 %b seq_cst
   ret i32 %res
 }
 
-define i64 @f64min(i64 *%src, i64 %b) {
+define i64 @f64min(ptr %src, i64 %b) {
 ; CV1-LABEL: f64min:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -212,11 +212,11 @@ define i64 @f64min(i64 *%src, i64 %b) {
 ; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw min i64 *%src, i64 %b seq_cst
+  %res = atomicrmw min ptr %src, i64 %b seq_cst
   ret i64 %res
 }
 
-define i64 @f64max(i64 *%src, i64 %b) {
+define i64 @f64max(ptr %src, i64 %b) {
 ; CV1-LABEL: f64max:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -254,11 +254,11 @@ define i64 @f64max(i64 *%src, i64 %b) {
 ; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw max i64 *%src, i64 %b seq_cst
+  %res = atomicrmw max ptr %src, i64 %b seq_cst
   ret i64 %res
 }
 
-define i64 @f64umin(i64 *%src, i64 %b) {
+define i64 @f64umin(ptr %src, i64 %b) {
 ; CV1-LABEL: f64umin:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -296,11 +296,11 @@ define i64 @f64umin(i64 *%src, i64 %b) {
 ; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw umin i64 *%src, i64 %b seq_cst
+  %res = atomicrmw umin ptr %src, i64 %b seq_cst
   ret i64 %res
 }
 
-define i64 @f64umax(i64 *%src, i64 %b) {
+define i64 @f64umax(ptr %src, i64 %b) {
 ; CV1-LABEL: f64umax:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    fence
@@ -338,6 +338,6 @@ define i64 @f64umax(i64 *%src, i64 %b) {
 ; CV2-NEXT:    copyd $r0 = $r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
-  %res = atomicrmw umax i64 *%src, i64 %b seq_cst
+  %res = atomicrmw umax ptr %src, i64 %b seq_cst
   ret i64 %res
 }

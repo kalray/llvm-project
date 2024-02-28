@@ -426,7 +426,7 @@ define <4 x half> @test_frem(<4 x half> %a, <4 x half> %b) #0 {
   ret <4 x half> %r
 }
 
-define void @test_ldst_v4f16(<4 x half>* %a, <4 x half>* %b) {
+define void @test_ldst_v4f16(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v4f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -434,8 +434,8 @@ define void @test_ldst_v4f16(<4 x half>* %a, <4 x half>* %b) {
 ; CHECK-NEXT:    sd 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <4 x half>, <4 x half>* %a
-  store <4 x half> %t1, <4 x half>* %b, align 16
+  %t1 = load <4 x half>, ptr %a
+  store <4 x half> %t1, ptr %b, align 16
   ret void
 }
 

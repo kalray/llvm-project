@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @high256(<256 x i1>* nocapture %0) {
+define void @high256(ptr nocapture %0) {
 ; CV1-LABEL: high256:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xcopyo $a1 = $a48
@@ -24,13 +24,13 @@ define void @high256(<256 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
   %2 = tail call <256 x i1> @llvm.kvx.high.v256i1(<512 x i1> zeroinitializer)
-  store <256 x i1> %2, <256 x i1>* %0
+  store <256 x i1> %2, ptr %0
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.high.v256i1(<512 x i1>)
 
-define void @high512(<512 x i1>* nocapture %0) {
+define void @high512(ptr nocapture %0) {
 ; CV1-LABEL: high512:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
@@ -53,13 +53,13 @@ define void @high512(<512 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %2 = tail call <512 x i1> @llvm.kvx.high.v512i1(<1024 x i1> zeroinitializer)
-  store <512 x i1> %2, <512 x i1>* %0
+  store <512 x i1> %2, ptr %0
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.high.v512i1(<1024 x i1>)
 
-define void @high1024(<1024 x i1>* nocapture %0) {
+define void @high1024(ptr nocapture %0) {
 ; CV1-LABEL: high1024:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a4a5a6a7 = $a60a61a62a63
@@ -92,13 +92,13 @@ define void @high1024(<1024 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %2 = tail call <1024 x i1> @llvm.kvx.high.v1024i1(<2048 x i1> zeroinitializer)
-  store <1024 x i1> %2, <1024 x i1>* %0
+  store <1024 x i1> %2, ptr %0
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.high.v1024i1(<2048 x i1>)
 
-define void @xhigh2048(<2048 x i1>* nocapture %0) {
+define void @xhigh2048(ptr nocapture %0) {
 ; CV1-LABEL: xhigh2048:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a12a13a14a15 = $a48a49a50a51
@@ -152,7 +152,7 @@ define void @xhigh2048(<2048 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %2 = tail call <2048 x i1> @llvm.kvx.high.v2048i1(<4096 x i1> zeroinitializer)
-  store <2048 x i1> %2, <2048 x i1>* %0
+  store <2048 x i1> %2, ptr %0
   ret void
 }
 

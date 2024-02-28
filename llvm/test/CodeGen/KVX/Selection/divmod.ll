@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @divmodsi4(i32 %x, i32 %y, i32* nocapture %P) nounwind ssp {
+define void @divmodsi4(i32 %x, i32 %y, ptr nocapture %P) nounwind ssp {
 ; CHECK-LABEL: divmodsi4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -36,14 +36,14 @@ define void @divmodsi4(i32 %x, i32 %y, i32* nocapture %P) nounwind ssp {
 ; CHECK-NEXT:    ;;
 entry:
   %div = sdiv i32 %x, %y
-  store i32 %div, i32* %P, align 4
+  store i32 %div, ptr %P, align 4
   %rem = srem i32 %x, %y
-  %arrayidx6 = getelementptr inbounds i32, i32* %P, i32 1
-  store i32 %rem, i32* %arrayidx6, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %P, i32 1
+  store i32 %rem, ptr %arrayidx6, align 4
   ret void
 }
 
-define void @udivmodsi4(i32 %x, i32 %y, i32* nocapture %P) nounwind ssp {
+define void @udivmodsi4(i32 %x, i32 %y, ptr nocapture %P) nounwind ssp {
 ; CHECK-LABEL: udivmodsi4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -73,14 +73,14 @@ define void @udivmodsi4(i32 %x, i32 %y, i32* nocapture %P) nounwind ssp {
 ; CHECK-NEXT:    ;;
 entry:
   %div = udiv i32 %x, %y
-  store i32 %div, i32* %P, align 4
+  store i32 %div, ptr %P, align 4
   %rem = urem i32 %x, %y
-  %arrayidx6 = getelementptr inbounds i32, i32* %P, i32 1
-  store i32 %rem, i32* %arrayidx6, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %P, i32 1
+  store i32 %rem, ptr %arrayidx6, align 4
   ret void
 }
 
-define void @divmoddi4(i64 %x, i64 %y, i64* nocapture %P) nounwind ssp {
+define void @divmoddi4(i64 %x, i64 %y, ptr nocapture %P) nounwind ssp {
 ; CHECK-LABEL: divmoddi4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -110,14 +110,14 @@ define void @divmoddi4(i64 %x, i64 %y, i64* nocapture %P) nounwind ssp {
 ; CHECK-NEXT:    ;;
 entry:
   %div = sdiv i64 %x, %y
-  store i64 %div, i64* %P, align 4
+  store i64 %div, ptr %P, align 4
   %rem = srem i64 %x, %y
-  %arrayidx6 = getelementptr inbounds i64, i64* %P, i64 1
-  store i64 %rem, i64* %arrayidx6, align 4
+  %arrayidx6 = getelementptr inbounds i64, ptr %P, i64 1
+  store i64 %rem, ptr %arrayidx6, align 4
   ret void
 }
 
-define void @udivmoddi4(i64 %x, i64 %y, i64* nocapture %P) nounwind ssp {
+define void @udivmoddi4(i64 %x, i64 %y, ptr nocapture %P) nounwind ssp {
 ; CHECK-LABEL: udivmoddi4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -153,9 +153,9 @@ define void @udivmoddi4(i64 %x, i64 %y, i64* nocapture %P) nounwind ssp {
 ; CHECK-NEXT:    ;;
 entry:
   %div = udiv i64 %x, %y
-  store i64 %div, i64* %P, align 4
+  store i64 %div, ptr %P, align 4
   %rem = urem i64 %x, %y
-  %arrayidx6 = getelementptr inbounds i64, i64* %P, i64 1
-  store i64 %rem, i64* %arrayidx6, align 4
+  %arrayidx6 = getelementptr inbounds i64, ptr %P, i64 1
+  store i64 %rem, ptr %arrayidx6, align 4
   ret void
 }

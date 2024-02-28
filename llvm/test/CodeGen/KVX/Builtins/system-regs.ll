@@ -21,10 +21,10 @@ define i32 @add_pm0() {
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
   %0 = tail call i64 @llvm.read_register.i64(metadata !0)
-  %1 = load i32, i32* @a, align 4
+  %1 = load i32, ptr @a, align 4
   %2 = trunc i64 %0 to i32
   %conv1 = add i32 %1, %2
-  store i32 %conv1, i32* @a, align 4
+  store i32 %conv1, ptr @a, align 4
   ret i32 undef
 }
 

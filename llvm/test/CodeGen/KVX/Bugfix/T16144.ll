@@ -19,7 +19,7 @@ define dso_local i32 @a() {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %1 = alloca i32, align 4
-  %2 = load i32, i32* %1, align 4
+  %2 = load i32, ptr %1, align 4
   ret i32 %2
 }
 
@@ -318,11 +318,11 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
   %5 = alloca i8, align 1
   %6 = alloca i8, align 1
   store %struct.atomic_flag* %0, %struct.atomic_flag** %3, align 8
-  store i32 %1, i32* %4, align 4
+  store i32 %1, ptr %4, align 4
   %7 = load %struct.atomic_flag*, %struct.atomic_flag** %3, align 8
   %8 = getelementptr inbounds %struct.atomic_flag, %struct.atomic_flag* %7, i32 0, i32 0
-  %9 = load i32, i32* %4, align 4
-  store i8 1, i8* %5, align 1
+  %9 = load i32, ptr %4, align 4
+  store i8 1, ptr %5, align 1
   switch i32 %9, label %10 [
     i32 1, label %13
     i32 2, label %13
@@ -332,37 +332,37 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
   ]
 
 10:                                               ; preds = %2
-  %11 = load i8, i8* %5, align 1
-  %12 = atomicrmw volatile xchg i8* %8, i8 %11 monotonic
-  store i8 %12, i8* %6, align 1
+  %11 = load i8, ptr %5, align 1
+  %12 = atomicrmw volatile xchg ptr %8, i8 %11 monotonic
+  store i8 %12, ptr %6, align 1
   br label %25
 
 13:                                               ; preds = %2, %2
-  %14 = load i8, i8* %5, align 1
-  %15 = atomicrmw volatile xchg i8* %8, i8 %14 acquire
-  store i8 %15, i8* %6, align 1
+  %14 = load i8, ptr %5, align 1
+  %15 = atomicrmw volatile xchg ptr %8, i8 %14 acquire
+  store i8 %15, ptr %6, align 1
   br label %25
 
 16:                                               ; preds = %2
-  %17 = load i8, i8* %5, align 1
-  %18 = atomicrmw volatile xchg i8* %8, i8 %17 release
-  store i8 %18, i8* %6, align 1
+  %17 = load i8, ptr %5, align 1
+  %18 = atomicrmw volatile xchg ptr %8, i8 %17 release
+  store i8 %18, ptr %6, align 1
   br label %25
 
 19:                                               ; preds = %2
-  %20 = load i8, i8* %5, align 1
-  %21 = atomicrmw volatile xchg i8* %8, i8 %20 acq_rel
-  store i8 %21, i8* %6, align 1
+  %20 = load i8, ptr %5, align 1
+  %21 = atomicrmw volatile xchg ptr %8, i8 %20 acq_rel
+  store i8 %21, ptr %6, align 1
   br label %25
 
 22:                                               ; preds = %2
-  %23 = load i8, i8* %5, align 1
-  %24 = atomicrmw volatile xchg i8* %8, i8 %23 seq_cst
-  store i8 %24, i8* %6, align 1
+  %23 = load i8, ptr %5, align 1
+  %24 = atomicrmw volatile xchg ptr %8, i8 %23 seq_cst
+  store i8 %24, ptr %6, align 1
   br label %25
 
 25:                                               ; preds = %22, %19, %16, %13, %10
-  %26 = load i8, i8* %6, align 1
+  %26 = load i8, ptr %6, align 1
   %27 = trunc i8 %26 to i1
   ret i1 %27
 }

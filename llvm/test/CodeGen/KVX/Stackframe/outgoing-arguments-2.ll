@@ -12,7 +12,7 @@ target triple = "kvx-kalray-cos"
 ;              p[20], p[21], p[22], p[23], p[24]);
 ; }
 
-define i32 @fn(i32* nocapture readonly %p) {
+define i32 @fn(ptr nocapture readonly %p) {
 ; FP-NONE-LABEL: fn:
 ; FP-NONE:       # %bb.0: # %entry
 ; FP-NONE-NEXT:    addd $r12 = $r12, -32
@@ -129,35 +129,35 @@ define i32 @fn(i32* nocapture readonly %p) {
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:
-  %0 = load i32, i32* %p, align 4
-  %arrayidx1 = getelementptr inbounds i32, i32* %p, i64 1
-  %1 = load i32, i32* %arrayidx1, align 4
-  %arrayidx2 = getelementptr inbounds i32, i32* %p, i64 2
-  %2 = load i32, i32* %arrayidx2, align 4
-  %arrayidx3 = getelementptr inbounds i32, i32* %p, i64 3
-  %3 = load i32, i32* %arrayidx3, align 4
-  %arrayidx4 = getelementptr inbounds i32, i32* %p, i64 4
-  %4 = load i32, i32* %arrayidx4, align 4
-  %arrayidx5 = getelementptr inbounds i32, i32* %p, i64 10
-  %5 = load i32, i32* %arrayidx5, align 4
-  %arrayidx6 = getelementptr inbounds i32, i32* %p, i64 11
-  %6 = load i32, i32* %arrayidx6, align 4
-  %arrayidx7 = getelementptr inbounds i32, i32* %p, i64 12
-  %7 = load i32, i32* %arrayidx7, align 4
-  %arrayidx8 = getelementptr inbounds i32, i32* %p, i64 13
-  %8 = load i32, i32* %arrayidx8, align 4
-  %arrayidx9 = getelementptr inbounds i32, i32* %p, i64 14
-  %9 = load i32, i32* %arrayidx9, align 4
-  %arrayidx10 = getelementptr inbounds i32, i32* %p, i64 20
-  %10 = load i32, i32* %arrayidx10, align 4
-  %arrayidx11 = getelementptr inbounds i32, i32* %p, i64 21
-  %11 = load i32, i32* %arrayidx11, align 4
-  %arrayidx12 = getelementptr inbounds i32, i32* %p, i64 22
-  %12 = load i32, i32* %arrayidx12, align 4
-  %arrayidx13 = getelementptr inbounds i32, i32* %p, i64 23
-  %13 = load i32, i32* %arrayidx13, align 4
-  %arrayidx14 = getelementptr inbounds i32, i32* %p, i64 24
-  %14 = load i32, i32* %arrayidx14, align 4
+  %0 = load i32, ptr %p, align 4
+  %arrayidx1 = getelementptr inbounds i32, ptr %p, i64 1
+  %1 = load i32, ptr %arrayidx1, align 4
+  %arrayidx2 = getelementptr inbounds i32, ptr %p, i64 2
+  %2 = load i32, ptr %arrayidx2, align 4
+  %arrayidx3 = getelementptr inbounds i32, ptr %p, i64 3
+  %3 = load i32, ptr %arrayidx3, align 4
+  %arrayidx4 = getelementptr inbounds i32, ptr %p, i64 4
+  %4 = load i32, ptr %arrayidx4, align 4
+  %arrayidx5 = getelementptr inbounds i32, ptr %p, i64 10
+  %5 = load i32, ptr %arrayidx5, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %p, i64 11
+  %6 = load i32, ptr %arrayidx6, align 4
+  %arrayidx7 = getelementptr inbounds i32, ptr %p, i64 12
+  %7 = load i32, ptr %arrayidx7, align 4
+  %arrayidx8 = getelementptr inbounds i32, ptr %p, i64 13
+  %8 = load i32, ptr %arrayidx8, align 4
+  %arrayidx9 = getelementptr inbounds i32, ptr %p, i64 14
+  %9 = load i32, ptr %arrayidx9, align 4
+  %arrayidx10 = getelementptr inbounds i32, ptr %p, i64 20
+  %10 = load i32, ptr %arrayidx10, align 4
+  %arrayidx11 = getelementptr inbounds i32, ptr %p, i64 21
+  %11 = load i32, ptr %arrayidx11, align 4
+  %arrayidx12 = getelementptr inbounds i32, ptr %p, i64 22
+  %12 = load i32, ptr %arrayidx12, align 4
+  %arrayidx13 = getelementptr inbounds i32, ptr %p, i64 23
+  %13 = load i32, ptr %arrayidx13, align 4
+  %arrayidx14 = getelementptr inbounds i32, ptr %p, i64 24
+  %14 = load i32, ptr %arrayidx14, align 4
   %call = tail call i32 bitcast (i32 (...)* @g to i32 (i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32)*)(i32 %0, i32 %1, i32 %2, i32 %3, i32 %4, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14) #2
   ret i32 %call
 }

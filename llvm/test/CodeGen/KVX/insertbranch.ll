@@ -40,10 +40,10 @@ define i32 @foo(i32 %a){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i32, i32* @global, align 4
+  %0 = load i32, ptr @global, align 4
   %mul = shl nsw i32 %a, 1
   %add = add nsw i32 %0, %mul
-  store i32 %add, i32* @global, align 4
+  store i32 %add, ptr @global, align 4
   %cmp = icmp eq i32 %a, 0
   br i1 %cmp, label %return, label %if.else
 

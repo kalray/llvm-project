@@ -58,7 +58,7 @@ define i32 @c() #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %0 = load i32, i32* @b, align 4
+  %0 = load i32, ptr @b, align 4
   %cmp4 = icmp sgt i32 %0, 0
   br i1 %cmp4, label %for.body, label %for.end
 
@@ -76,6 +76,6 @@ for.end.loopexit:
 
 for.end:
   %e.0.lcssa = phi i16 [ undef, %entry ], [ %phitmp, %for.end.loopexit ]
-  store i16 %e.0.lcssa, i16* @a, align 2
+  store i16 %e.0.lcssa, ptr @a, align 2
   ret i32 undef
 }

@@ -120,16 +120,16 @@ entry:
   %vecext1 = extractelement <4 x i64> %3, i32 1
   %vecext2 = extractelement <4 x i64> %3, i32 2
   %vecext3 = extractelement <4 x i64> %3, i32 3
-  %call = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], [44 x i8]* @.str, i64 0, i64 0), i64 %vecext, i64 %vecext1, i64 %vecext2, i64 %vecext3)
+  %call = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], ptr @.str, i64 0, i64 0), i64 %vecext, i64 %vecext1, i64 %vecext2, i64 %vecext3)
   %4 = tail call <4 x i64> @llvm.kvx.xmovefo256(<256 x i1> %2)
   %vecext4 = extractelement <4 x i64> %4, i32 0
   %vecext5 = extractelement <4 x i64> %4, i32 1
   %vecext6 = extractelement <4 x i64> %4, i32 2
   %vecext7 = extractelement <4 x i64> %4, i32 3
-  %call8 = tail call i32 (i8*, ...) @printf(i8* nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], [44 x i8]* @.str.1, i64 0, i64 0), i64 %vecext4, i64 %vecext5, i64 %vecext6, i64 %vecext7)
+  %call8 = tail call i32 (ptr, ...) @printf(ptr nonnull dereferenceable(1) getelementptr inbounds ([44 x i8], ptr @.str.1, i64 0, i64 0), i64 %vecext4, i64 %vecext5, i64 %vecext6, i64 %vecext7)
   ret i32 0
 }
 declare <256 x i1> @llvm.kvx.xmoveto256(<4 x i64>)
 declare { <4 x i64>, <256 x i1> } @llvm.kvx.xswapo256(<4 x i64>, <256 x i1>)
 declare <4 x i64> @llvm.kvx.xmovefo256(<256 x i1>)
-declare i32 @printf(i8* nocapture readonly, ...)
+declare i32 @printf(ptr nocapture readonly, ...)

@@ -7,7 +7,7 @@ declare i64 @get_x()
 declare i64 @get_y()
 declare i64 @get_z()
 
-define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }*, i64, i64, i64) {
+define i64 @foo(ptr, ptr, ptr, { i32, [3 x i64], [3 x i64], [3 x i64], ptr, ptr, i32 }*, i64, i64, i64) {
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -44,10 +44,10 @@ define i64 @foo(double*, double*, double*, { i32, [3 x i64], [3 x i64], [3 x i64
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %8 = getelementptr { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }, { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }* %3, i64 0, i32 3, i64 0
-  %9 = load i64, i64* %8, align 8
-  %10 = getelementptr { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }, { i32, [3 x i64], [3 x i64], [3 x i64], i8*, i32*, i32 }* %3, i64 0, i32 2, i64 0
-  %11 = load i64, i64* %10, align 8
+  %8 = getelementptr { i32, [3 x i64], [3 x i64], [3 x i64], ptr, ptr, i32 }, { i32, [3 x i64], [3 x i64], [3 x i64], ptr, ptr, i32 }* %3, i64 0, i32 3, i64 0
+  %9 = load i64, ptr %8, align 8
+  %10 = getelementptr { i32, [3 x i64], [3 x i64], [3 x i64], ptr, ptr, i32 }, { i32, [3 x i64], [3 x i64], [3 x i64], ptr, ptr, i32 }* %3, i64 0, i32 2, i64 0
+  %11 = load i64, ptr %10, align 8
   %12 = tail call i64 @get_x()
   %13 = tail call i64 @get_y()
   %14 = tail call i64 @get_z()

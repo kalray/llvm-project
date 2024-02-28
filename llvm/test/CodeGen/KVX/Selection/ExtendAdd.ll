@@ -28,7 +28,7 @@ define i64 @ADDWDri(i64 %0) {
   ret i64 %2
 }
 
-define i64 @ADDWDrr_ld(i32* nocapture readonly %0, i64 %1) {
+define i64 @ADDWDrr_ld(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ADDWDrr_ld:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lws $r0 = 0[$r0]
@@ -36,7 +36,7 @@ define i64 @ADDWDrr_ld(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    addwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %3 = load i32, i32* %0, align 4
+  %3 = load i32, ptr %0, align 4
   %4 = sext i32 %3 to i64
   %5 = add nsw i64 %4, %1
   ret i64 %5
@@ -64,7 +64,7 @@ define i64 @ADDUWDri(i64 %0) {
   ret i64 %2
 }
 
-define i64 @ADDUWDrr_ld(i32* nocapture readonly %0, i64 %1) {
+define i64 @ADDUWDrr_ld(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ADDUWDrr_ld:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -72,7 +72,7 @@ define i64 @ADDUWDrr_ld(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    adduwd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %3 = load i32, i32* %0, align 4
+  %3 = load i32, ptr %0, align 4
   %4 = zext i32 %3 to i64
   %5 = add nsw i64 %4, %1
   ret i64 %5

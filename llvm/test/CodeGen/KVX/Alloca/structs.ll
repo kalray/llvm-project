@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-%struct.X = type { i32, i32, i32, float* }
+%struct.X = type { i32, i32, i32, ptr }
 
 define void @f() {
 ; CHECK-LABEL: f:

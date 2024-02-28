@@ -33,7 +33,7 @@ define i64 @f_1_nopack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   ret i64 %0
 }
@@ -65,8 +65,8 @@ define i64 @f_2_pairpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   ret i64 %add
@@ -104,9 +104,9 @@ define i64 @f_3_pairpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2
@@ -142,10 +142,10 @@ define i64 @f_4_quadpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
-  %3 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
+  %3 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2
@@ -190,11 +190,11 @@ define i64 @f_5_quadpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
-  %3 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8
-  %4 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
+  %3 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8
+  %4 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2
@@ -242,12 +242,12 @@ define i64 @f_6_1quad1pairpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
-  %3 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8
-  %4 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8
-  %5 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
+  %3 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8
+  %4 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8
+  %5 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2
@@ -324,20 +324,20 @@ define i64 @f_14_3quad1pairpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
-  %3 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8
-  %4 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8
-  %5 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8
-  %6 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 6), align 8
-  %7 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 7), align 8
-  %8 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 8), align 8
-  %9 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 9), align 8
-  %10 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 10), align 8
-  %11 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 11), align 8
-  %12 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 12), align 8
-  %13 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 13), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
+  %3 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8
+  %4 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8
+  %5 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8
+  %6 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 6), align 8
+  %7 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 7), align 8
+  %8 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 8), align 8
+  %9 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 9), align 8
+  %10 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 10), align 8
+  %11 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 11), align 8
+  %12 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 12), align 8
+  %13 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 13), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2
@@ -428,21 +428,21 @@ define i64 @f_15_3quad1pairpack(){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 0), align 8
-  %1 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 1), align 8
-  %2 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 2), align 8
-  %3 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 3), align 8
-  %4 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 4), align 8
-  %5 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 5), align 8
-  %6 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 6), align 8
-  %7 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 7), align 8
-  %8 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 8), align 8
-  %9 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 9), align 8
-  %10 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 10), align 8
-  %11 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 11), align 8
-  %12 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 12), align 8
-  %13 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 13), align 8
-  %14 = load i64, i64* getelementptr inbounds ([50 x i64], [50 x i64]* @v, i64 0, i64 14), align 8
+  %0 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 0), align 8
+  %1 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 1), align 8
+  %2 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 2), align 8
+  %3 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 3), align 8
+  %4 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 4), align 8
+  %5 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 5), align 8
+  %6 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 6), align 8
+  %7 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 7), align 8
+  %8 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 8), align 8
+  %9 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 9), align 8
+  %10 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 10), align 8
+  %11 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 11), align 8
+  %12 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 12), align 8
+  %13 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 13), align 8
+  %14 = load i64, ptr getelementptr inbounds ([50 x i64], ptr @v, i64 0, i64 14), align 8
   tail call void bitcast (void (...)* @foo to void ()*)() #2
   %add = add nsw i64 %1, %0
   %add1 = add nsw i64 %add, %2

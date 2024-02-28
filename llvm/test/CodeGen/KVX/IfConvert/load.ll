@@ -4,103 +4,103 @@
 
 target triple = "kvx-kalray-cos"
 
-define i8 @ld_ri10(i8* nocapture readonly %p) {
+define i8 @ld_ri10(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri10:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 511[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 511
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 511
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri10_neg(i8* nocapture readonly %p) {
+define i8 @ld_ri10_neg(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri10_neg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = -512[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -512
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -512
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri37_pos_min(i8* nocapture readonly %p) {
+define i8 @ld_ri37_pos_min(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri37_pos_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 512[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 512
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 512
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri37_neg_max(i8* nocapture readonly %p) {
+define i8 @ld_ri37_neg_max(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri37_neg_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = -513[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -513
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -513
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri37_pos_max(i8* nocapture readonly %p) {
+define i8 @ld_ri37_pos_max(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri37_pos_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0x1fffffffff[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 137438953471
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 137438953471
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri37_neg_min(i8* nocapture readonly %p) {
+define i8 @ld_ri37_neg_min(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri37_neg_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0xffffffe000000000[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -137438953472
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -137438953472
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri64_pos_min(i8* nocapture readonly %p) {
+define i8 @ld_ri64_pos_min(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri64_pos_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0x2000000000[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 137438953472
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 137438953472
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i8 @ld_ri64_neg_max(i8* nocapture readonly %p) {
+define i8 @ld_ri64_neg_max(ptr nocapture readonly %p) {
 ; CHECK-LABEL: ld_ri64_neg_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz $r0 = 0xffffffdfffffffff[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -137438953473
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -137438953473
+  %0 = load i8, ptr %arrayidx, align 1
   ret i8 %0
 }
 
-define i32 @cc_weqz_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_weqz_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_weqz_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.weqz $r0 ? $r0 = [$r1]
@@ -111,7 +111,7 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -119,7 +119,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_deqz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_deqz_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_deqz_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.deqz $r2 ? $r0 = [$r1]
@@ -130,7 +130,7 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -138,7 +138,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wnez_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wnez_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wnez_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB10_2
@@ -156,7 +156,7 @@ entry:
   br i1 %tobool.not, label %return, label %if.then
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -164,7 +164,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dnez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dnez_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dnez_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dnez $r2 ? $r0 = [$r1]
@@ -175,7 +175,7 @@ entry:
   br i1 %tobool.not, label %return, label %if.then
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -183,7 +183,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wgez_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wgez_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wgez_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgez $r0 ? $r0 = [$r1]
@@ -194,7 +194,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -202,7 +202,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dgez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dgez_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dgez_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgez $r2 ? $r0 = [$r1]
@@ -213,7 +213,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -221,7 +221,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wgtz_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wgtz_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wgtz_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgtz $r0 ? $r0 = [$r1]
@@ -232,7 +232,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -240,7 +240,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dgtz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dgtz_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dgtz_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgtz $r2 ? $r0 = [$r1]
@@ -251,7 +251,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -259,7 +259,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wgtz_ld_rr_2(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wgtz_ld_rr_2(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wgtz_ld_rr_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wgtz $r0 ? $r0 = [$r1]
@@ -270,7 +270,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -278,7 +278,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dgtz_rr_2(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dgtz_rr_2(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dgtz_rr_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dgtz $r2 ? $r0 = [$r1]
@@ -289,7 +289,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -297,7 +297,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wlez_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wlez_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wlez_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wlez $r0 ? $r0 = [$r1]
@@ -308,7 +308,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -316,7 +316,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dlez_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dlez_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dlez_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dlez $r2 ? $r0 = [$r1]
@@ -327,7 +327,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -335,7 +335,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wltz_ld_rr(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wltz_ld_rr(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wltz_ld_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wltz $r0 ? $r0 = [$r1]
@@ -346,7 +346,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -354,7 +354,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dltz_rr(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dltz_rr(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dltz_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
@@ -365,7 +365,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -373,7 +373,7 @@ return:
   ret i64 %retval.0
 }
 
-define i32 @cc_wltz_ld_rr_2(i32 %c, i32* nocapture readonly %p) {
+define i32 @cc_wltz_ld_rr_2(i32 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: cc_wltz_ld_rr_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.wltz $r0 ? $r0 = [$r1]
@@ -384,7 +384,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   br label %return
 
 return:
@@ -392,7 +392,7 @@ return:
   ret i32 %retval.0
 }
 
-define i64 @cc_dltz_rr_2(i64 %v, i64* nocapture readonly %p, i64 %c) {
+define i64 @cc_dltz_rr_2(i64 %v, ptr nocapture readonly %p, i64 %c) {
 ; CHECK-LABEL: cc_dltz_rr_2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
@@ -403,7 +403,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i64, i64* %p, align 8
+  %0 = load i64, ptr %p, align 8
   br label %return
 
 return:
@@ -411,7 +411,7 @@ return:
   ret i64 %retval.0
 }
 
-define i8 @cc_rr(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_rr(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = [$r1]
@@ -422,7 +422,7 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %0 = load i8, i8* %p, align 1
+  %0 = load i8, ptr %p, align 1
   br label %return
 
 return:
@@ -430,7 +430,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri27_pos_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri27_pos_min(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri27_pos_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 1[$r1]
@@ -441,8 +441,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 1
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 1
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -450,7 +450,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri27_neg_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri27_neg_max(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri27_neg_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = -1[$r1]
@@ -461,8 +461,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -1
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -1
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -470,7 +470,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri27_pos_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri27_pos_max(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri27_pos_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0x3ffffff[$r1]
@@ -481,8 +481,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 67108863
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 67108863
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -490,7 +490,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri27_neg_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri27_neg_min(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri27_neg_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0xfffffffffc000000[$r1]
@@ -501,8 +501,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -67108864
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -67108864
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -510,7 +510,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri54_pos_max(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri54_pos_max(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri54_pos_max:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0x1fffffffffffff[$r1]
@@ -521,8 +521,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 9007199254740991
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 9007199254740991
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -530,7 +530,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_ri54_neg_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_ri54_neg_min(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_ri54_neg_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.weqz $r2 ? $r0 = 0xffe0000000000000[$r1]
@@ -541,8 +541,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -9007199254740992
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -9007199254740992
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -550,7 +550,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_rr_make_offset_min(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_rr_make_offset_min(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_rr_make_offset_min:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB31_2
@@ -567,8 +567,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 9007199254740992
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 9007199254740992
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -576,7 +576,7 @@ return:
   ret i8 %retval.0
 }
 
-define i8 @cc_rr_make_offset_max_neg(i8 %v, i8* nocapture readonly %p, i32 %c) {
+define i8 @cc_rr_make_offset_max_neg(i8 %v, ptr nocapture readonly %p, i32 %c) {
 ; CHECK-LABEL: cc_rr_make_offset_max_neg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r2 ? .LBB32_2
@@ -593,8 +593,8 @@ entry:
   br i1 %tobool.not, label %if.then, label %return
 
 if.then:
-  %arrayidx = getelementptr inbounds i8, i8* %p, i64 -9007199254740993
-  %0 = load i8, i8* %arrayidx, align 1
+  %arrayidx = getelementptr inbounds i8, ptr %p, i64 -9007199254740993
+  %0 = load i8, ptr %arrayidx, align 1
   br label %return
 
 return:
@@ -602,7 +602,7 @@ return:
   ret i8 %retval.0
 }
 
-define i64 @sext_32_rr(i64 %c, i32* nocapture readonly %p) {
+define i64 @sext_32_rr(i64 %c, ptr nocapture readonly %p) {
 ; CHECK-LABEL: sext_32_rr:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws.dgez $r0 ? $r0 = [$r1]
@@ -613,7 +613,7 @@ entry:
   br i1 %cmp, label %if.then, label %return
 
 if.then:
-  %0 = load i32, i32* %p, align 4
+  %0 = load i32, ptr %p, align 4
   %1 = sext i32 %0 to i64
   br label %return
 
@@ -622,7 +622,7 @@ return:
   ret i64 %retval.0
 }
 
-define <2 x i64> @ldq_cc(<2 x i64> %0, <2 x i64>* nocapture readonly %1, i64 %2) {
+define <2 x i64> @ldq_cc(<2 x i64> %0, ptr nocapture readonly %1, i64 %2) {
 ; CHECK-LABEL: ldq_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq.dnez $r3 ? $r0r1 = [$r2]
@@ -632,7 +632,7 @@ define <2 x i64> @ldq_cc(<2 x i64> %0, <2 x i64>* nocapture readonly %1, i64 %2)
   br i1 %4, label %7, label %5
 
 5:
-  %6 = load <2 x i64>, <2 x i64>* %1, align 16
+  %6 = load <2 x i64>, ptr %1, align 16
   br label %7
 
 7:
@@ -640,7 +640,7 @@ define <2 x i64> @ldq_cc(<2 x i64> %0, <2 x i64>* nocapture readonly %1, i64 %2)
   ret <2 x i64> %8
 }
 
-define <4 x i64> @ldo_cc(<4 x i64> %0, <4 x i64>* nocapture readonly %1, i64 %2) {
+define <4 x i64> @ldo_cc(<4 x i64> %0, ptr nocapture readonly %1, i64 %2) {
 ; CHECK-LABEL: ldo_cc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo.dnez $r5 ? $r0r1r2r3 = [$r4]
@@ -650,7 +650,7 @@ define <4 x i64> @ldo_cc(<4 x i64> %0, <4 x i64>* nocapture readonly %1, i64 %2)
   br i1 %4, label %7, label %5
 
 5:
-  %6 = load <4 x i64>, <4 x i64>* %1, align 32
+  %6 = load <4 x i64>, ptr %1, align 32
   br label %7
 
 7:
@@ -658,7 +658,7 @@ define <4 x i64> @ldo_cc(<4 x i64> %0, <4 x i64>* nocapture readonly %1, i64 %2)
   ret <4 x i64> %8
 }
 
-define <4 x i64> @select_v4(<4 x i64> %0, <4 x i64> %1, i32 %2, i32 %3, <4 x i64>* nocapture readonly %4) {
+define <4 x i64> @select_v4(<4 x i64> %0, <4 x i64> %1, i32 %2, i32 %3, ptr nocapture readonly %4) {
 ; CHECK-LABEL: select_v4:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r8 ? .LBB36_4
@@ -688,7 +688,7 @@ define <4 x i64> @select_v4(<4 x i64> %0, <4 x i64> %1, i32 %2, i32 %3, <4 x i64
   br i1 %8, label %11, label %9
 
 9:
-  %10 = load <4 x i64>, <4 x i64>* %4, align 32
+  %10 = load <4 x i64>, ptr %4, align 32
   br label %11
 
 11:

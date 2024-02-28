@@ -24,13 +24,13 @@ define <4 x i32> @low128(<8 x i32> %0) {
   ret <4 x i32> %2
 }
 
-define <8 x i32> @low256(<16 x i32>* nocapture readonly %0) {
+define <8 x i32> @low256(ptr nocapture readonly %0) {
 ; CHECK-LABEL: low256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <8 x i32> %3
 }

@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @matrix_add_const(i32 %N, i16* nocapture %A, i16 %val){
+define void @matrix_add_const(i32 %N, ptr nocapture %A, i16 %val){
 ; CHECK-LABEL: matrix_add_const:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_5
@@ -64,10 +64,10 @@ for.body3:                                        ; preds = %for.body3, %for.bod
   %0 = trunc i64 %indvars.iv to i32
   %add = add i32 %mul, %0
   %idxprom = zext i32 %add to i64
-  %arrayidx = getelementptr inbounds i16, i16* %A, i64 %idxprom
-  %1 = load i16, i16* %arrayidx, align 2
+  %arrayidx = getelementptr inbounds i16, ptr %A, i64 %idxprom
+  %1 = load i16, ptr %arrayidx, align 2
   %add5 = add i16 %1, %val
-  store i16 %add5, i16* %arrayidx, align 2
+  store i16 %add5, ptr %arrayidx, align 2
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.inc7, label %for.body3

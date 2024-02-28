@@ -111,23 +111,23 @@ define i32 @stackrealign1(){
 entry:
   %c = alloca i32, align 4
   %i = alloca i32, align 128
-  %0 = bitcast i32* %c to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %0) #3
-  store i32 7, i32* %c, align 4
-  %1 = bitcast i32* %i to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %1) #3
-  store i32 1234, i32* %i, align 128
-  %call = call i32 @other(i32* nonnull %c, i32* nonnull %i) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %1) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %0) #3
+  %0 = bitcast ptr %c to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %0) #3
+  store i32 7, ptr %c, align 4
+  %1 = bitcast ptr %i to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1) #3
+  store i32 1234, ptr %i, align 128
+  %call = call i32 @other(ptr nonnull %c, ptr nonnull %i) #3
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1) #3
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %0) #3
   ret i32 %call
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture) #1
 
-declare i32 @other(i32*, i32*) #2
+declare i32 @other(ptr, ptr ) #2
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture) #1
 
 define i32 @stackrealign2(i32 %n){
 ; CHECK-LABEL: stackrealign2:
@@ -324,18 +324,18 @@ for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body
 for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa
   %3 = trunc i64 %indvars.iv.unr to i32
   %sub.epil = sub nsw i32 %n, %3
-  %arrayidx.epil = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.unr
-  store i32 %sub.epil, i32* %arrayidx.epil, align 4
+  %arrayidx.epil = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.unr
+  store i32 %sub.epil, ptr %arrayidx.epil, align 4
   %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
   %epil.iter.cmp = icmp eq i64 %xtraiter, 1
   br i1 %epil.iter.cmp, label %for.cond.cleanup, label %for.body.epil.1
 
 for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil.5, %for.body.epil.4, %for.body.epil.3, %for.body.epil.2, %for.body.epil.1, %for.body.epil, %for.body.epil.6, %entry
-  %4 = bitcast i32* %i to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %4) #3
-  store i32 1234, i32* %i, align 128
-  %call = call i32 @other2(i32* nonnull %0, i32 %n, i32* nonnull %i) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %4) #3
+  %4 = bitcast ptr %i to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %4) #3
+  store i32 1234, ptr %i, align 128
+  %call = call i32 @other2(ptr nonnull %0, i32 %n, ptr nonnull %i) #3
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %4) #3
   ret i32 %call
 
 for.body:                                         ; preds = %for.body, %for.body.preheader.new
@@ -343,43 +343,43 @@ for.body:                                         ; preds = %for.body, %for.body
   %niter = phi i64 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
   %5 = trunc i64 %indvars.iv to i32
   %sub = sub nsw i32 %n, %5
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
-  store i32 %sub, i32* %arrayidx, align 8
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
+  store i32 %sub, ptr %arrayidx, align 8
   %indvars.iv.next = or i64 %indvars.iv, 1
   %6 = trunc i64 %indvars.iv.next to i32
   %sub.1 = sub nsw i32 %n, %6
-  %arrayidx.1 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next
-  store i32 %sub.1, i32* %arrayidx.1, align 4
+  %arrayidx.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next
+  store i32 %sub.1, ptr %arrayidx.1, align 4
   %indvars.iv.next.1 = or i64 %indvars.iv, 2
   %7 = trunc i64 %indvars.iv.next.1 to i32
   %sub.2 = sub nsw i32 %n, %7
-  %arrayidx.2 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.1
-  store i32 %sub.2, i32* %arrayidx.2, align 8
+  %arrayidx.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.1
+  store i32 %sub.2, ptr %arrayidx.2, align 8
   %indvars.iv.next.2 = or i64 %indvars.iv, 3
   %8 = trunc i64 %indvars.iv.next.2 to i32
   %sub.3 = sub nsw i32 %n, %8
-  %arrayidx.3 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.2
-  store i32 %sub.3, i32* %arrayidx.3, align 4
+  %arrayidx.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.2
+  store i32 %sub.3, ptr %arrayidx.3, align 4
   %indvars.iv.next.3 = or i64 %indvars.iv, 4
   %9 = trunc i64 %indvars.iv.next.3 to i32
   %sub.4 = sub nsw i32 %n, %9
-  %arrayidx.4 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.3
-  store i32 %sub.4, i32* %arrayidx.4, align 8
+  %arrayidx.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.3
+  store i32 %sub.4, ptr %arrayidx.4, align 8
   %indvars.iv.next.4 = or i64 %indvars.iv, 5
   %10 = trunc i64 %indvars.iv.next.4 to i32
   %sub.5 = sub nsw i32 %n, %10
-  %arrayidx.5 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.4
-  store i32 %sub.5, i32* %arrayidx.5, align 4
+  %arrayidx.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.4
+  store i32 %sub.5, ptr %arrayidx.5, align 4
   %indvars.iv.next.5 = or i64 %indvars.iv, 6
   %11 = trunc i64 %indvars.iv.next.5 to i32
   %sub.6 = sub nsw i32 %n, %11
-  %arrayidx.6 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.5
-  store i32 %sub.6, i32* %arrayidx.6, align 8
+  %arrayidx.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.5
+  store i32 %sub.6, ptr %arrayidx.6, align 8
   %indvars.iv.next.6 = or i64 %indvars.iv, 7
   %12 = trunc i64 %indvars.iv.next.6 to i32
   %sub.7 = sub nsw i32 %n, %12
-  %arrayidx.7 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.6
-  store i32 %sub.7, i32* %arrayidx.7, align 4
+  %arrayidx.7 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.6
+  store i32 %sub.7, ptr %arrayidx.7, align 4
   %indvars.iv.next.7 = add nuw nsw i64 %indvars.iv, 8
   %niter.nsub.7 = add i64 %niter, -8
   %niter.ncmp.7 = icmp eq i64 %niter.nsub.7, 0
@@ -388,8 +388,8 @@ for.body:                                         ; preds = %for.body, %for.body
 for.body.epil.1:                                  ; preds = %for.body.epil
   %13 = trunc i64 %indvars.iv.next.epil to i32
   %sub.epil.1 = sub nsw i32 %n, %13
-  %arrayidx.epil.1 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil
-  store i32 %sub.epil.1, i32* %arrayidx.epil.1, align 4
+  %arrayidx.epil.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil
+  store i32 %sub.epil.1, ptr %arrayidx.epil.1, align 4
   %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
   %epil.iter.cmp.1 = icmp eq i64 %xtraiter, 2
   br i1 %epil.iter.cmp.1, label %for.cond.cleanup, label %for.body.epil.2
@@ -397,8 +397,8 @@ for.body.epil.1:                                  ; preds = %for.body.epil
 for.body.epil.2:                                  ; preds = %for.body.epil.1
   %14 = trunc i64 %indvars.iv.next.epil.1 to i32
   %sub.epil.2 = sub nsw i32 %n, %14
-  %arrayidx.epil.2 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.1
-  store i32 %sub.epil.2, i32* %arrayidx.epil.2, align 4
+  %arrayidx.epil.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.1
+  store i32 %sub.epil.2, ptr %arrayidx.epil.2, align 4
   %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
   %epil.iter.cmp.2 = icmp eq i64 %xtraiter, 3
   br i1 %epil.iter.cmp.2, label %for.cond.cleanup, label %for.body.epil.3
@@ -406,8 +406,8 @@ for.body.epil.2:                                  ; preds = %for.body.epil.1
 for.body.epil.3:                                  ; preds = %for.body.epil.2
   %15 = trunc i64 %indvars.iv.next.epil.2 to i32
   %sub.epil.3 = sub nsw i32 %n, %15
-  %arrayidx.epil.3 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.2
-  store i32 %sub.epil.3, i32* %arrayidx.epil.3, align 4
+  %arrayidx.epil.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.2
+  store i32 %sub.epil.3, ptr %arrayidx.epil.3, align 4
   %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
   %epil.iter.cmp.3 = icmp eq i64 %xtraiter, 4
   br i1 %epil.iter.cmp.3, label %for.cond.cleanup, label %for.body.epil.4
@@ -415,8 +415,8 @@ for.body.epil.3:                                  ; preds = %for.body.epil.2
 for.body.epil.4:                                  ; preds = %for.body.epil.3
   %16 = trunc i64 %indvars.iv.next.epil.3 to i32
   %sub.epil.4 = sub nsw i32 %n, %16
-  %arrayidx.epil.4 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.3
-  store i32 %sub.epil.4, i32* %arrayidx.epil.4, align 4
+  %arrayidx.epil.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.3
+  store i32 %sub.epil.4, ptr %arrayidx.epil.4, align 4
   %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
   %epil.iter.cmp.4 = icmp eq i64 %xtraiter, 5
   br i1 %epil.iter.cmp.4, label %for.cond.cleanup, label %for.body.epil.5
@@ -424,8 +424,8 @@ for.body.epil.4:                                  ; preds = %for.body.epil.3
 for.body.epil.5:                                  ; preds = %for.body.epil.4
   %17 = trunc i64 %indvars.iv.next.epil.4 to i32
   %sub.epil.5 = sub nsw i32 %n, %17
-  %arrayidx.epil.5 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.4
-  store i32 %sub.epil.5, i32* %arrayidx.epil.5, align 4
+  %arrayidx.epil.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.4
+  store i32 %sub.epil.5, ptr %arrayidx.epil.5, align 4
   %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
   %epil.iter.cmp.5 = icmp eq i64 %xtraiter, 6
   br i1 %epil.iter.cmp.5, label %for.cond.cleanup, label %for.body.epil.6
@@ -433,12 +433,12 @@ for.body.epil.5:                                  ; preds = %for.body.epil.4
 for.body.epil.6:                                  ; preds = %for.body.epil.5
   %18 = trunc i64 %indvars.iv.next.epil.5 to i32
   %sub.epil.6 = sub nsw i32 %n, %18
-  %arrayidx.epil.6 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.5
-  store i32 %sub.epil.6, i32* %arrayidx.epil.6, align 4
+  %arrayidx.epil.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.5
+  store i32 %sub.epil.6, ptr %arrayidx.epil.6, align 4
   br label %for.cond.cleanup
 }
 
-declare i32 @other2(i32*, i32, i32*) #2
+declare i32 @other2(ptr, i32, ptr ) #2
 
 define i64 @stackrealign3(i32 %x){
 ; CHECK-LABEL: stackrealign3:
@@ -510,23 +510,23 @@ entry:
   %i = alloca <16 x i64>, align 128
   %a = alloca i32, align 4
   %tmp = alloca <16 x i64>, align 128
-  %0 = bitcast <16 x i64>* %i to i8*
-  call void @llvm.lifetime.start.p0i8(i64 128, i8* nonnull %0) #3
-  store <16 x i64> <i64 16, i64 15, i64 14, i64 13, i64 12, i64 11, i64 10, i64 9, i64 8, i64 7, i64 6, i64 5, i64 4, i64 3, i64 2, i64 1>, <16 x i64>* %i, align 128
-  %1 = bitcast i32* %a to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %1) #3
-  store i32 %x, i32* %a, align 4
-  call void @otherv(<16 x i64>* nonnull sret(<16 x i64>) %tmp, i32* nonnull %a, <16 x i64>* nonnull %i) #3
-  %2 = load <16 x i64>, <16 x i64>* %tmp, align 128
+  %0 = bitcast ptr %i to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 128, ptr nonnull %0) #3
+  store <16 x i64> <i64 16, i64 15, i64 14, i64 13, i64 12, i64 11, i64 10, i64 9, i64 8, i64 7, i64 6, i64 5, i64 4, i64 3, i64 2, i64 1>, ptr %i, align 128
+  %1 = bitcast ptr %a to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1) #3
+  store i32 %x, ptr %a, align 4
+  call void @otherv(ptr nonnull sret(<16 x i64>) %tmp, ptr nonnull %a, ptr nonnull %i) #3
+  %2 = load <16 x i64>, ptr %tmp, align 128
   %vecext = extractelement <16 x i64> %2, i32 0
   %conv = sext i32 %x to i64
   %add = add nsw i64 %vecext, %conv
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %1) #3
-  call void @llvm.lifetime.end.p0i8(i64 128, i8* nonnull %0) #3
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1) #3
+  call void @llvm.lifetime.end.p0i8(i64 128, ptr nonnull %0) #3
   ret i64 %add
 }
 
-declare void @otherv(<16 x i64>* sret(<16 x i64>), i32*, <16 x i64>*) #2
+declare void @otherv(ptr sret(<16 x i64>), ptr, ptr ) #2
 
 define i32 @stackrealign4(i32 %n){
 ; CHECK-LABEL: stackrealign4:
@@ -1079,83 +1079,83 @@ for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body
 for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa
   %3 = trunc i64 %indvars.iv.unr to i32
   %sub.epil = sub nsw i32 %n, %3
-  %arrayidx.epil = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.unr
-  store i32 %sub.epil, i32* %arrayidx.epil, align 4
+  %arrayidx.epil = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.unr
+  store i32 %sub.epil, ptr %arrayidx.epil, align 4
   %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
   %epil.iter.cmp = icmp eq i64 %xtraiter, 1
   br i1 %epil.iter.cmp, label %for.cond.cleanup, label %for.body.epil.1
 
 for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil.5, %for.body.epil.4, %for.body.epil.3, %for.body.epil.2, %for.body.epil.1, %for.body.epil, %for.body.epil.6, %entry
-  %4 = bitcast i32* %i to i8*
-  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %4) #3
-  store i32 1234, i32* %i, align 128
-  %5 = load i32, i32* @g1, align 4
-  %6 = load i32, i32* @g2, align 4
-  %7 = load i32, i32* @g3, align 4
-  %8 = load i32, i32* @g4, align 4
-  %9 = load i32, i32* @g5, align 4
-  %10 = load i32, i32* @g6, align 4
-  %11 = load i32, i32* @g7, align 4
-  %12 = load i32, i32* @g8, align 4
-  %13 = load i32, i32* @g9, align 4
-  %14 = load i32, i32* @g10, align 4
-  %15 = load i32, i32* @g11, align 4
-  %16 = load i32, i32* @g12, align 4
-  %17 = load i32, i32* @g13, align 4
-  %18 = load i32, i32* @g14, align 4
-  %19 = load i32, i32* @g15, align 4
-  %20 = load i32, i32* @g16, align 4
-  %21 = load i32, i32* @g17, align 4
-  %22 = load i32, i32* @g18, align 4
-  %23 = load i32, i32* @g19, align 4
-  %24 = load i32, i32* @g20, align 4
-  %25 = load i32, i32* @g21, align 4
-  %26 = load i32, i32* @g22, align 4
-  %27 = load i32, i32* @g23, align 4
-  %28 = load i32, i32* @g24, align 4
-  %29 = load i32, i32* @g25, align 4
-  %30 = load i32, i32* @g26, align 4
-  %31 = load i32, i32* @g27, align 4
-  %32 = load i32, i32* @g28, align 4
-  %33 = load i32, i32* @g29, align 4
-  %34 = load i32, i32* @g30, align 4
-  %35 = load i32, i32* @g31, align 4
-  %36 = load i32, i32* @g32, align 4
-  %37 = load i32, i32* @g33, align 4
-  %38 = load i32, i32* @g34, align 4
-  %39 = load i32, i32* @g35, align 4
-  %40 = load i32, i32* @g36, align 4
-  %41 = load i32, i32* @g37, align 4
-  %42 = load i32, i32* @g38, align 4
-  %43 = load i32, i32* @g39, align 4
-  %44 = load i32, i32* @g40, align 4
-  %45 = load i32, i32* @g41, align 4
-  %46 = load i32, i32* @g42, align 4
-  %47 = load i32, i32* @g43, align 4
-  %48 = load i32, i32* @g44, align 4
-  %49 = load i32, i32* @g45, align 4
-  %50 = load i32, i32* @g46, align 4
-  %51 = load i32, i32* @g47, align 4
-  %52 = load i32, i32* @g48, align 4
-  %53 = load i32, i32* @g49, align 4
-  %54 = load i32, i32* @g50, align 4
-  %55 = load i32, i32* @g51, align 4
-  %56 = load i32, i32* @g52, align 4
-  %57 = load i32, i32* @g53, align 4
-  %58 = load i32, i32* @g54, align 4
-  %59 = load i32, i32* @g55, align 4
-  %60 = load i32, i32* @g56, align 4
-  %61 = load i32, i32* @g57, align 4
-  %62 = load i32, i32* @g58, align 4
-  %63 = load i32, i32* @g59, align 4
-  %64 = load i32, i32* @g60, align 4
-  %65 = load i32, i32* @g61, align 4
-  %66 = load i32, i32* @g62, align 4
-  %67 = load i32, i32* @g63, align 4
-  %68 = load i32, i32* @g64, align 4
-  %69 = load i32, i32* @g65, align 4
-  %call = call i32 @other4(i32* nonnull %0, i32 %n, i32* nonnull %i, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14, i32 %15, i32 %16, i32 %17, i32 %18, i32 %19, i32 %20, i32 %21, i32 %22, i32 %23, i32 %24, i32 %25, i32 %26, i32 %27, i32 %28, i32 %29, i32 %30, i32 %31, i32 %32, i32 %33, i32 %34, i32 %35, i32 %36, i32 %37, i32 %38, i32 %39, i32 %40, i32 %41, i32 %42, i32 %43, i32 %44, i32 %45, i32 %46, i32 %47, i32 %48, i32 %49, i32 %50, i32 %51, i32 %52, i32 %53, i32 %54, i32 %55, i32 %56, i32 %57, i32 %58, i32 %59, i32 %60, i32 %61, i32 %62, i32 %63, i32 %64, i32 %65, i32 %66, i32 %67, i32 %68, i32 %69) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, i8* nonnull %4) #3
+  %4 = bitcast ptr %i to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %4) #3
+  store i32 1234, ptr %i, align 128
+  %5 = load i32, ptr @g1, align 4
+  %6 = load i32, ptr @g2, align 4
+  %7 = load i32, ptr @g3, align 4
+  %8 = load i32, ptr @g4, align 4
+  %9 = load i32, ptr @g5, align 4
+  %10 = load i32, ptr @g6, align 4
+  %11 = load i32, ptr @g7, align 4
+  %12 = load i32, ptr @g8, align 4
+  %13 = load i32, ptr @g9, align 4
+  %14 = load i32, ptr @g10, align 4
+  %15 = load i32, ptr @g11, align 4
+  %16 = load i32, ptr @g12, align 4
+  %17 = load i32, ptr @g13, align 4
+  %18 = load i32, ptr @g14, align 4
+  %19 = load i32, ptr @g15, align 4
+  %20 = load i32, ptr @g16, align 4
+  %21 = load i32, ptr @g17, align 4
+  %22 = load i32, ptr @g18, align 4
+  %23 = load i32, ptr @g19, align 4
+  %24 = load i32, ptr @g20, align 4
+  %25 = load i32, ptr @g21, align 4
+  %26 = load i32, ptr @g22, align 4
+  %27 = load i32, ptr @g23, align 4
+  %28 = load i32, ptr @g24, align 4
+  %29 = load i32, ptr @g25, align 4
+  %30 = load i32, ptr @g26, align 4
+  %31 = load i32, ptr @g27, align 4
+  %32 = load i32, ptr @g28, align 4
+  %33 = load i32, ptr @g29, align 4
+  %34 = load i32, ptr @g30, align 4
+  %35 = load i32, ptr @g31, align 4
+  %36 = load i32, ptr @g32, align 4
+  %37 = load i32, ptr @g33, align 4
+  %38 = load i32, ptr @g34, align 4
+  %39 = load i32, ptr @g35, align 4
+  %40 = load i32, ptr @g36, align 4
+  %41 = load i32, ptr @g37, align 4
+  %42 = load i32, ptr @g38, align 4
+  %43 = load i32, ptr @g39, align 4
+  %44 = load i32, ptr @g40, align 4
+  %45 = load i32, ptr @g41, align 4
+  %46 = load i32, ptr @g42, align 4
+  %47 = load i32, ptr @g43, align 4
+  %48 = load i32, ptr @g44, align 4
+  %49 = load i32, ptr @g45, align 4
+  %50 = load i32, ptr @g46, align 4
+  %51 = load i32, ptr @g47, align 4
+  %52 = load i32, ptr @g48, align 4
+  %53 = load i32, ptr @g49, align 4
+  %54 = load i32, ptr @g50, align 4
+  %55 = load i32, ptr @g51, align 4
+  %56 = load i32, ptr @g52, align 4
+  %57 = load i32, ptr @g53, align 4
+  %58 = load i32, ptr @g54, align 4
+  %59 = load i32, ptr @g55, align 4
+  %60 = load i32, ptr @g56, align 4
+  %61 = load i32, ptr @g57, align 4
+  %62 = load i32, ptr @g58, align 4
+  %63 = load i32, ptr @g59, align 4
+  %64 = load i32, ptr @g60, align 4
+  %65 = load i32, ptr @g61, align 4
+  %66 = load i32, ptr @g62, align 4
+  %67 = load i32, ptr @g63, align 4
+  %68 = load i32, ptr @g64, align 4
+  %69 = load i32, ptr @g65, align 4
+  %call = call i32 @other4(ptr nonnull %0, i32 %n, ptr nonnull %i, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14, i32 %15, i32 %16, i32 %17, i32 %18, i32 %19, i32 %20, i32 %21, i32 %22, i32 %23, i32 %24, i32 %25, i32 %26, i32 %27, i32 %28, i32 %29, i32 %30, i32 %31, i32 %32, i32 %33, i32 %34, i32 %35, i32 %36, i32 %37, i32 %38, i32 %39, i32 %40, i32 %41, i32 %42, i32 %43, i32 %44, i32 %45, i32 %46, i32 %47, i32 %48, i32 %49, i32 %50, i32 %51, i32 %52, i32 %53, i32 %54, i32 %55, i32 %56, i32 %57, i32 %58, i32 %59, i32 %60, i32 %61, i32 %62, i32 %63, i32 %64, i32 %65, i32 %66, i32 %67, i32 %68, i32 %69) #3
+  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %4) #3
   ret i32 %call
 
 for.body:                                         ; preds = %for.body, %for.body.preheader.new
@@ -1163,43 +1163,43 @@ for.body:                                         ; preds = %for.body, %for.body
   %niter = phi i64 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
   %70 = trunc i64 %indvars.iv to i32
   %sub = sub nsw i32 %n, %70
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
-  store i32 %sub, i32* %arrayidx, align 8
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
+  store i32 %sub, ptr %arrayidx, align 8
   %indvars.iv.next = or i64 %indvars.iv, 1
   %71 = trunc i64 %indvars.iv.next to i32
   %sub.1 = sub nsw i32 %n, %71
-  %arrayidx.1 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next
-  store i32 %sub.1, i32* %arrayidx.1, align 4
+  %arrayidx.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next
+  store i32 %sub.1, ptr %arrayidx.1, align 4
   %indvars.iv.next.1 = or i64 %indvars.iv, 2
   %72 = trunc i64 %indvars.iv.next.1 to i32
   %sub.2 = sub nsw i32 %n, %72
-  %arrayidx.2 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.1
-  store i32 %sub.2, i32* %arrayidx.2, align 8
+  %arrayidx.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.1
+  store i32 %sub.2, ptr %arrayidx.2, align 8
   %indvars.iv.next.2 = or i64 %indvars.iv, 3
   %73 = trunc i64 %indvars.iv.next.2 to i32
   %sub.3 = sub nsw i32 %n, %73
-  %arrayidx.3 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.2
-  store i32 %sub.3, i32* %arrayidx.3, align 4
+  %arrayidx.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.2
+  store i32 %sub.3, ptr %arrayidx.3, align 4
   %indvars.iv.next.3 = or i64 %indvars.iv, 4
   %74 = trunc i64 %indvars.iv.next.3 to i32
   %sub.4 = sub nsw i32 %n, %74
-  %arrayidx.4 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.3
-  store i32 %sub.4, i32* %arrayidx.4, align 8
+  %arrayidx.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.3
+  store i32 %sub.4, ptr %arrayidx.4, align 8
   %indvars.iv.next.4 = or i64 %indvars.iv, 5
   %75 = trunc i64 %indvars.iv.next.4 to i32
   %sub.5 = sub nsw i32 %n, %75
-  %arrayidx.5 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.4
-  store i32 %sub.5, i32* %arrayidx.5, align 4
+  %arrayidx.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.4
+  store i32 %sub.5, ptr %arrayidx.5, align 4
   %indvars.iv.next.5 = or i64 %indvars.iv, 6
   %76 = trunc i64 %indvars.iv.next.5 to i32
   %sub.6 = sub nsw i32 %n, %76
-  %arrayidx.6 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.5
-  store i32 %sub.6, i32* %arrayidx.6, align 8
+  %arrayidx.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.5
+  store i32 %sub.6, ptr %arrayidx.6, align 8
   %indvars.iv.next.6 = or i64 %indvars.iv, 7
   %77 = trunc i64 %indvars.iv.next.6 to i32
   %sub.7 = sub nsw i32 %n, %77
-  %arrayidx.7 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.6
-  store i32 %sub.7, i32* %arrayidx.7, align 4
+  %arrayidx.7 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.6
+  store i32 %sub.7, ptr %arrayidx.7, align 4
   %indvars.iv.next.7 = add nuw nsw i64 %indvars.iv, 8
   %niter.nsub.7 = add i64 %niter, -8
   %niter.ncmp.7 = icmp eq i64 %niter.nsub.7, 0
@@ -1208,8 +1208,8 @@ for.body:                                         ; preds = %for.body, %for.body
 for.body.epil.1:                                  ; preds = %for.body.epil
   %78 = trunc i64 %indvars.iv.next.epil to i32
   %sub.epil.1 = sub nsw i32 %n, %78
-  %arrayidx.epil.1 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil
-  store i32 %sub.epil.1, i32* %arrayidx.epil.1, align 4
+  %arrayidx.epil.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil
+  store i32 %sub.epil.1, ptr %arrayidx.epil.1, align 4
   %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
   %epil.iter.cmp.1 = icmp eq i64 %xtraiter, 2
   br i1 %epil.iter.cmp.1, label %for.cond.cleanup, label %for.body.epil.2
@@ -1217,8 +1217,8 @@ for.body.epil.1:                                  ; preds = %for.body.epil
 for.body.epil.2:                                  ; preds = %for.body.epil.1
   %79 = trunc i64 %indvars.iv.next.epil.1 to i32
   %sub.epil.2 = sub nsw i32 %n, %79
-  %arrayidx.epil.2 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.1
-  store i32 %sub.epil.2, i32* %arrayidx.epil.2, align 4
+  %arrayidx.epil.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.1
+  store i32 %sub.epil.2, ptr %arrayidx.epil.2, align 4
   %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
   %epil.iter.cmp.2 = icmp eq i64 %xtraiter, 3
   br i1 %epil.iter.cmp.2, label %for.cond.cleanup, label %for.body.epil.3
@@ -1226,8 +1226,8 @@ for.body.epil.2:                                  ; preds = %for.body.epil.1
 for.body.epil.3:                                  ; preds = %for.body.epil.2
   %80 = trunc i64 %indvars.iv.next.epil.2 to i32
   %sub.epil.3 = sub nsw i32 %n, %80
-  %arrayidx.epil.3 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.2
-  store i32 %sub.epil.3, i32* %arrayidx.epil.3, align 4
+  %arrayidx.epil.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.2
+  store i32 %sub.epil.3, ptr %arrayidx.epil.3, align 4
   %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
   %epil.iter.cmp.3 = icmp eq i64 %xtraiter, 4
   br i1 %epil.iter.cmp.3, label %for.cond.cleanup, label %for.body.epil.4
@@ -1235,8 +1235,8 @@ for.body.epil.3:                                  ; preds = %for.body.epil.2
 for.body.epil.4:                                  ; preds = %for.body.epil.3
   %81 = trunc i64 %indvars.iv.next.epil.3 to i32
   %sub.epil.4 = sub nsw i32 %n, %81
-  %arrayidx.epil.4 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.3
-  store i32 %sub.epil.4, i32* %arrayidx.epil.4, align 4
+  %arrayidx.epil.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.3
+  store i32 %sub.epil.4, ptr %arrayidx.epil.4, align 4
   %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
   %epil.iter.cmp.4 = icmp eq i64 %xtraiter, 5
   br i1 %epil.iter.cmp.4, label %for.cond.cleanup, label %for.body.epil.5
@@ -1244,8 +1244,8 @@ for.body.epil.4:                                  ; preds = %for.body.epil.3
 for.body.epil.5:                                  ; preds = %for.body.epil.4
   %82 = trunc i64 %indvars.iv.next.epil.4 to i32
   %sub.epil.5 = sub nsw i32 %n, %82
-  %arrayidx.epil.5 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.4
-  store i32 %sub.epil.5, i32* %arrayidx.epil.5, align 4
+  %arrayidx.epil.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.4
+  store i32 %sub.epil.5, ptr %arrayidx.epil.5, align 4
   %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
   %epil.iter.cmp.5 = icmp eq i64 %xtraiter, 6
   br i1 %epil.iter.cmp.5, label %for.cond.cleanup, label %for.body.epil.6
@@ -1253,10 +1253,10 @@ for.body.epil.5:                                  ; preds = %for.body.epil.4
 for.body.epil.6:                                  ; preds = %for.body.epil.5
   %83 = trunc i64 %indvars.iv.next.epil.5 to i32
   %sub.epil.6 = sub nsw i32 %n, %83
-  %arrayidx.epil.6 = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next.epil.5
-  store i32 %sub.epil.6, i32* %arrayidx.epil.6, align 4
+  %arrayidx.epil.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.5
+  store i32 %sub.epil.6, ptr %arrayidx.epil.6, align 4
   br label %for.cond.cleanup
 }
 
-declare i32 @other4(i32*, i32, i32*, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) #2
+declare i32 @other4(ptr, i32, ptr, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) #2
 

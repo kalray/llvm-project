@@ -21,7 +21,7 @@ define i32 @foo(){
 ; CHECK-NEXT:    goto bar
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i32, i32* getelementptr inbounds ([5 x i32], [5 x i32]* @v, i64 0, i64 4), align 4
+  %0 = load i32, ptr getelementptr inbounds ([5 x i32], ptr @v, i64 0, i64 4), align 4
   %mul = mul nsw i32 %0, %0
   %call = tail call i32 @bar(i32 %mul)
   ret i32 %call

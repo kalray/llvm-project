@@ -85,17 +85,17 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 entry:
   %conv = sext i32 %sz to i64
   %0 = alloca i8, i64 %conv, align 8
-  %1 = bitcast i8* %0 to i32*
-  %call = call i32 @g1(i32 %x, i32* nonnull %1)
+  %1 = bitcast ptr %0 to ptr 
+  %call = call i32 @g1(i32 %x, ptr nonnull %1)
   %add = add nsw i32 %x, %sz
   %conv1 = sext i32 %add to i64
   %2 = alloca i8, i64 %conv1, align 8
-  %3 = bitcast i8* %2 to i32*
-  %call2 = call i32 @g1(i32 %x, i32* nonnull %3)
-  %4 = load i32, i32* %1, align 8
-  %5 = load i32, i32* %3, align 8
+  %3 = bitcast ptr %2 to ptr 
+  %call2 = call i32 @g1(i32 %x, ptr nonnull %3)
+  %4 = load i32, ptr %1, align 8
+  %5 = load i32, ptr %3, align 8
   %add4 = add nsw i32 %5, %4
   ret i32 %add4
 }
 
-declare dso_local i32 @g1(i32, i32*)
+declare dso_local i32 @g1(i32, ptr )

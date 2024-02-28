@@ -3,7 +3,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @f(i32* nocapture %x, i32 %state) {
+define void @f(ptr nocapture %x, i32 %state) {
 ; ALL-LABEL: f:
 ; ALL:       # %bb.0: # %entry
 ; ALL-NEXT:    compw.gtu $r2 = $r1, 8
@@ -70,43 +70,43 @@ entry:
   ]
 
 sw.bb1:
-  %arrayidx2 = getelementptr inbounds i32, i32* %x, i64 1
+  %arrayidx2 = getelementptr inbounds i32, ptr %x, i64 1
   br label %sw.epilog.sink.split
 
 sw.bb3:
-  %arrayidx4 = getelementptr inbounds i32, i32* %x, i64 2
+  %arrayidx4 = getelementptr inbounds i32, ptr %x, i64 2
   br label %sw.epilog.sink.split
 
 sw.bb6:
-  %arrayidx7 = getelementptr inbounds i32, i32* %x, i64 3
+  %arrayidx7 = getelementptr inbounds i32, ptr %x, i64 3
   br label %sw.epilog.sink.split
 
 sw.bb9:
-  %arrayidx10 = getelementptr inbounds i32, i32* %x, i64 4
+  %arrayidx10 = getelementptr inbounds i32, ptr %x, i64 4
   br label %sw.epilog.sink.split
 
 sw.bb12:
-  %arrayidx13 = getelementptr inbounds i32, i32* %x, i64 5
+  %arrayidx13 = getelementptr inbounds i32, ptr %x, i64 5
   br label %sw.epilog.sink.split
 
 sw.bb15:
-  %arrayidx16 = getelementptr inbounds i32, i32* %x, i64 6
+  %arrayidx16 = getelementptr inbounds i32, ptr %x, i64 6
   br label %sw.epilog.sink.split
 
 sw.bb18:
-  %arrayidx19 = getelementptr inbounds i32, i32* %x, i64 7
+  %arrayidx19 = getelementptr inbounds i32, ptr %x, i64 7
   br label %sw.epilog.sink.split
 
 sw.bb21:
-  %arrayidx22 = getelementptr inbounds i32, i32* %x, i64 8
+  %arrayidx22 = getelementptr inbounds i32, ptr %x, i64 8
   br label %sw.epilog.sink.split
 
 sw.epilog.sink.split:
-  %arrayidx22.sink33 = phi i32* [ %arrayidx22, %sw.bb21 ], [ %arrayidx19, %sw.bb18 ], [ %arrayidx16, %sw.bb15 ], [ %arrayidx13, %sw.bb12 ], [ %arrayidx10, %sw.bb9 ], [ %arrayidx7, %sw.bb6 ], [ %arrayidx4, %sw.bb3 ], [ %arrayidx2, %sw.bb1 ], [ %x, %entry ]
+  %arrayidx22.sink33 = phi ptr [ %arrayidx22, %sw.bb21 ], [ %arrayidx19, %sw.bb18 ], [ %arrayidx16, %sw.bb15 ], [ %arrayidx13, %sw.bb12 ], [ %arrayidx10, %sw.bb9 ], [ %arrayidx7, %sw.bb6 ], [ %arrayidx4, %sw.bb3 ], [ %arrayidx2, %sw.bb1 ], [ %x, %entry ]
   %.sink32 = phi i32 [ 9, %sw.bb21 ], [ 8, %sw.bb18 ], [ 7, %sw.bb15 ], [ 6, %sw.bb12 ], [ 5, %sw.bb9 ], [ 4, %sw.bb6 ], [ 3, %sw.bb3 ], [ 2, %sw.bb1 ], [ 1, %entry ]
-  %0 = load i32, i32* %arrayidx22.sink33, align 4
+  %0 = load i32, ptr %arrayidx22.sink33, align 4
   %add23 = add nsw i32 %0, %.sink32
-  store i32 %add23, i32* %arrayidx22.sink33, align 4
+  store i32 %add23, ptr %arrayidx22.sink33, align 4
   br label %sw.epilog
 
 sw.epilog:

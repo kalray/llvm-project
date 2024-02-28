@@ -27,13 +27,13 @@ define <4 x i32> @high128(<8 x i32> %0) {
   ret <4 x i32> %2
 }
 
-define <8 x i32> @high256(<16 x i32>* nocapture readonly %0) {
+define <8 x i32> @high256(ptr nocapture readonly %0) {
 ; CHECK-LABEL: high256:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 32[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> poison, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   ret <8 x i32> %3
 }

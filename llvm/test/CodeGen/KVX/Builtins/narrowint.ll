@@ -196,7 +196,7 @@ define <16 x i8> @narrowhbx(<16 x i16> %0) {
   ret <16 x i8> %12
 }
 
-define <16 x i16> @narrowwhx_q(<16 x i32>* nocapture readonly %0) {
+define <16 x i16> @narrowwhx_q(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_q:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -245,7 +245,7 @@ define <16 x i16> @narrowwhx_q(<16 x i32>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 1)
   %5 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -274,7 +274,7 @@ define <16 x i16> @narrowwhx_q(<16 x i32>* nocapture readonly %0) {
 
 declare <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32>, i32)
 
-define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
+define <16 x i16> @narrowwhx_s(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -346,7 +346,7 @@ define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 2)
   %5 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -373,7 +373,7 @@ define <16 x i16> @narrowwhx_s(<16 x i32>* nocapture readonly %0) {
   ret <16 x i16> %25
 }
 
-define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
+define <16 x i16> @narrowwhx_us(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -461,7 +461,7 @@ define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 3)
   %5 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -488,7 +488,7 @@ define <16 x i16> @narrowwhx_us(<16 x i32>* nocapture readonly %0) {
   ret <16 x i16> %25
 }
 
-define <16 x i16> @narrowwhx(<16 x i32>* nocapture readonly %0) {
+define <16 x i16> @narrowwhx(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowwhx:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -537,7 +537,7 @@ define <16 x i16> @narrowwhx(<16 x i32>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
-  %2 = load <16 x i32>, <16 x i32>* %0
+  %2 = load <16 x i32>, ptr %0
   %3 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %4 = tail call <2 x i16> @llvm.kvx.narrowint.v2i16(<2 x i32> %3, i32 0)
   %5 = shufflevector <16 x i32> %2, <16 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -735,7 +735,7 @@ define <2 x i16> @narrowwhp(<2 x i32> %0) {
   ret <2 x i16> %2
 }
 
-define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
+define <32 x i8> @narrowhbv_q(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_q:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -784,7 +784,7 @@ define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
-  %2 = load <32 x i16>, <32 x i16>* %0
+  %2 = load <32 x i16>, ptr %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 1)
   %5 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -811,7 +811,7 @@ define <32 x i8> @narrowhbv_q(<32 x i16>* nocapture readonly %0) {
   ret <32 x i8> %25
 }
 
-define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
+define <32 x i8> @narrowhbv_s(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -883,7 +883,7 @@ define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 8)
-  %2 = load <32 x i16>, <32 x i16>* %0
+  %2 = load <32 x i16>, ptr %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 2)
   %5 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -910,7 +910,7 @@ define <32 x i8> @narrowhbv_s(<32 x i16>* nocapture readonly %0) {
   ret <32 x i8> %25
 }
 
-define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
+define <32 x i8> @narrowhbv_us(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -998,7 +998,7 @@ define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
-  %2 = load <32 x i16>, <32 x i16>* %0
+  %2 = load <32 x i16>, ptr %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 3)
   %5 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1025,7 +1025,7 @@ define <32 x i8> @narrowhbv_us(<32 x i16>* nocapture readonly %0) {
   ret <32 x i8> %25
 }
 
-define <32 x i8> @narrowhbv(<32 x i16>* nocapture readonly %0) {
+define <32 x i8> @narrowhbv(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowhbv:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -1074,7 +1074,7 @@ define <32 x i8> @narrowhbv(<32 x i16>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
-  %2 = load <32 x i16>, <32 x i16>* %0
+  %2 = load <32 x i16>, ptr %0
   %3 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %4 = tail call <4 x i8> @llvm.kvx.narrowint.v4i8(<4 x i16> %3, i32 0)
   %5 = shufflevector <32 x i16> %2, <32 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -1415,7 +1415,7 @@ define <8 x i8> @narrowhbo(<8 x i16> %0) {
   ret <8 x i8> %6
 }
 
-define <8 x i32> @narrowdwo_q(<8 x i64>* nocapture readonly %0) {
+define <8 x i32> @narrowdwo_q(ptr nocapture readonly %0) {
 ; CHECK-LABEL: narrowdwo_q:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
@@ -1439,7 +1439,7 @@ define <8 x i32> @narrowdwo_q(<8 x i64>* nocapture readonly %0) {
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %2 = load <8 x i64>, <8 x i64>* %0
+  %2 = load <8 x i64>, ptr %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 1)
   %5 = extractelement <8 x i64> %2, i64 1
@@ -1467,7 +1467,7 @@ define <8 x i32> @narrowdwo_q(<8 x i64>* nocapture readonly %0) {
   ret <8 x i32> %26
 }
 
-define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
+define <8 x i32> @narrowdwo_s(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_s:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -1526,7 +1526,7 @@ define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r5, 31, 0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %2 = load <8 x i64>, <8 x i64>* %0
+  %2 = load <8 x i64>, ptr %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 2)
   %5 = extractelement <8 x i64> %2, i64 1
@@ -1554,7 +1554,7 @@ define <8 x i32> @narrowdwo_s(<8 x i64>* nocapture readonly %0) {
   ret <8 x i32> %26
 }
 
-define <8 x i32> @narrowdwo_us(<8 x i64>* nocapture readonly %0) {
+define <8 x i32> @narrowdwo_us(ptr nocapture readonly %0) {
 ; CV1-LABEL: narrowdwo_us:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -1621,7 +1621,7 @@ define <8 x i32> @narrowdwo_us(<8 x i64>* nocapture readonly %0) {
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %2 = load <8 x i64>, <8 x i64>* %0
+  %2 = load <8 x i64>, ptr %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 3)
   %5 = extractelement <8 x i64> %2, i64 1
@@ -1649,7 +1649,7 @@ define <8 x i32> @narrowdwo_us(<8 x i64>* nocapture readonly %0) {
   ret <8 x i32> %26
 }
 
-define <8 x i32> @narrowdwo(<8 x i64>* nocapture readonly %0) {
+define <8 x i32> @narrowdwo(ptr nocapture readonly %0) {
 ; CHECK-LABEL: narrowdwo:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
@@ -1667,7 +1667,7 @@ define <8 x i32> @narrowdwo(<8 x i64>* nocapture readonly %0) {
 ; CHECK-NEXT:    copyd $r3 = $r6
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %2 = load <8 x i64>, <8 x i64>* %0
+  %2 = load <8 x i64>, ptr %0
   %3 = extractelement <8 x i64> %2, i64 0
   %4 = tail call i32 @llvm.kvx.narrowint.i32(i64 %3, i32 0)
   %5 = extractelement <8 x i64> %2, i64 1

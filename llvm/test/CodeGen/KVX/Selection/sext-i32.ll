@@ -19,7 +19,7 @@ define void @test3(i32 %b, i32 %c){
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl i32 %b, %c
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 
@@ -34,7 +34,7 @@ define void @test6(i32 %b, i32 %c){
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
   %shl = shl i32 %b, %c
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 
@@ -50,7 +50,7 @@ define void @test6b(i32 %b, i16 %c){
 entry:
   %conv1 = zext i16 %c to i32
   %shl = shl i32 %b, %conv1
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 
@@ -66,7 +66,7 @@ define void @test6c(i32 %b, i16 %c){
 entry:
   %conv = zext i16 %c to i32
   %shl = shl i32 %b, %conv
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 
@@ -82,7 +82,7 @@ define void @test6d(i32 %b, i8 %c){
 entry:
   %conv1 = zext i8 %c to i32
   %shl = shl i32 %b, %conv1
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 
@@ -98,7 +98,7 @@ define void @test6e(i32 %b, i8 %c){
 entry:
   %conv = zext i8 %c to i32
   %shl = shl i32 %b, %conv
-  store i32 %shl, i32* @a, align 4
+  store i32 %shl, ptr @a, align 4
   ret void
 }
 

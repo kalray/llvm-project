@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 
 
 ; Function Attrs: nofree norecurse nounwind uwtable
-define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly %2, i16 %3) local_unnamed_addr #0 {
+define dso_local void @matrix_mul_const(i32 %0, ptr nocapture %1, ptr nocapture readonly %2, i16 %3) local_unnamed_addr #0 {
 ; CHECK-LABEL: matrix_mul_const:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_17
@@ -211,14 +211,14 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
   %29 = trunc i64 %28 to i32
   %30 = add i32 %13, %29
   %31 = zext i32 %30 to i64
-  %32 = getelementptr inbounds i16, i16* %2, i64 %31
-  %33 = bitcast i16* %32 to <2 x i16>*
-  %34 = load <2 x i16>, <2 x i16>* %33, align 2, !tbaa !2
+  %32 = getelementptr inbounds i16, ptr %2, i64 %31
+  %33 = bitcast ptr %32 to ptr 
+  %34 = load <2 x i16>, ptr %33, align 2, !tbaa !2
   %35 = sext <2 x i16> %34 to <2 x i32>
   %36 = mul nsw <2 x i32> %26, %35
-  %37 = getelementptr inbounds i32, i32* %1, i64 %31
-  %38 = bitcast i32* %37 to <2 x i32>*
-  store <2 x i32> %36, <2 x i32>* %38, align 4, !tbaa !6
+  %37 = getelementptr inbounds i32, ptr %1, i64 %31
+  %38 = bitcast ptr %37 to ptr 
+  store <2 x i32> %36, ptr %38, align 4, !tbaa !6
   %39 = add i64 %28, 2
   %40 = icmp eq i64 %39, %24
   br i1 %40, label %41, label %27, !llvm.loop !8
@@ -236,12 +236,12 @@ define dso_local void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocaptur
   %47 = trunc i64 %46 to i32
   %48 = add i32 %13, %47
   %49 = zext i32 %48 to i64
-  %50 = getelementptr inbounds i16, i16* %2, i64 %49
-  %51 = load i16, i16* %50, align 2, !tbaa !2
+  %50 = getelementptr inbounds i16, ptr %2, i64 %49
+  %51 = load i16, ptr %50, align 2, !tbaa !2
   %52 = sext i16 %51 to i32
   %53 = mul nsw i32 %52, %7
-  %54 = getelementptr inbounds i32, i32* %1, i64 %49
-  store i32 %53, i32* %54, align 4, !tbaa !6
+  %54 = getelementptr inbounds i32, ptr %1, i64 %49
+  store i32 %53, ptr %54, align 4, !tbaa !6
   %55 = add nuw nsw i64 %46, 1
   %56 = icmp eq i64 %55, %14
   br i1 %56, label %57, label %45, !llvm.loop !12

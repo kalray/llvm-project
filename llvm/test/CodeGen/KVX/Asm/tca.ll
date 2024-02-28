@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @asm_tca(i8* %v, i64 %A) {
+define void @asm_tca(ptr %v, i64 %A) {
 ; CHECK-LABEL: asm_tca:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -29,10 +29,10 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    ;;
 entry:
   %add = add nsw i64 %A, 1
-  %0 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xlo.u $0 = $3[$2]\0A\09;;\0A\09xlo.us $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(i8* %v, i64 %A, i64 %add)
+  %0 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xlo.u $0 = $3[$2]\0A\09;;\0A\09xlo.us $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(ptr %v, i64 %A, i64 %add)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %0, 0
   %asmresult1 = extractvalue { <256 x i1>, <256 x i1> } %0, 1
-  %1 = tail call <256 x i1> asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xso 0[$3] = $2", "=x,x,x,r"(<256 x i1> %asmresult, <256 x i1> %asmresult1, i8* %v)
+  %1 = tail call <256 x i1> asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xso 0[$3] = $2", "=x,x,x,r"(<256 x i1> %asmresult, <256 x i1> %asmresult1, ptr %v)
   ret void
 }
 
@@ -66,7 +66,7 @@ entry:
   ret void
 }
 
-define void @asm_clobber_wide_vec(<256 x i1>* nocapture readonly %a) {
+define void @asm_clobber_wide_vec(ptr nocapture readonly %a) {
 ; CHECK-LABEL: asm_clobber_wide_vec:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
@@ -79,12 +79,12 @@ define void @asm_clobber_wide_vec(<256 x i1>* nocapture readonly %a) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load <256 x i1>, <256 x i1>* %a, align 32
+  %0 = load <256 x i1>, ptr %a, align 32
   tail call void asm sideeffect "xcopyo $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %0)
   ret void
 }
 
-define void @asm_clobber_multiple_quad(<256 x i1>* nocapture %c, <256 x i1>* nocapture %b) {
+define void @asm_clobber_multiple_quad(ptr nocapture %c, ptr nocapture %b) {
 ; CHECK-LABEL: asm_clobber_multiple_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r0
@@ -105,16 +105,16 @@ define void @asm_clobber_multiple_quad(<256 x i1>* nocapture %c, <256 x i1>* noc
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load <256 x i1>, <256 x i1>* %c, align 32
+  %0 = load <256 x i1>, ptr %c, align 32
   %1 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xcopyo $1 = $0", "=x,=x,x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %1, 0
   %asmresult3 = extractvalue { <256 x i1>, <256 x i1> } %1, 1
-  store <256 x i1> %asmresult, <256 x i1>* %c, align 32
-  store <256 x i1> %asmresult3, <256 x i1>* %b, align 32
+  store <256 x i1> %asmresult, ptr %c, align 32
+  store <256 x i1> %asmresult3, ptr %b, align 32
   ret void
 }
 
-define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* readonly returned %a) {
+define ptr @asm_clobber_quad_matrix(ptr readonly returned %a) {
 ; CHECK-LABEL: asm_clobber_quad_matrix:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r0
@@ -130,12 +130,12 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* readonly returned %a) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load <256 x i1>, <256 x i1>* %a, align 32
+  %0 = load <256 x i1>, ptr %a, align 32
   tail call void asm sideeffect "xso 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
-  ret <256 x i1>* %a
+  ret ptr %a
 }
 
-define void @use_wide_reg(<512 x i1>* nocapture %x, <256 x i1>* nocapture readonly %v) #1 {
+define void @use_wide_reg(ptr nocapture %x, ptr nocapture readonly %v) #1 {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xlo.u $a6 = 0[$r1]
@@ -156,14 +156,14 @@ define void @use_wide_reg(<512 x i1>* nocapture %x, <256 x i1>* nocapture readon
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load <512 x i1>, <512 x i1>* %x, align 32
-  %1 = load <256 x i1>, <256 x i1>* %v, align 32
+  %0 = load <512 x i1>, ptr %x, align 32
+  %1 = load <256 x i1>, ptr %v, align 32
   %2 = tail call <512 x i1> asm sideeffect "xmma484bw $0 = $0, $1, $1", "=x,x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1, <512 x i1> %0)
-  store <512 x i1> %2, <512 x i1>* %x, align 32
+  store <512 x i1> %2, ptr %x, align 32
   ret void
 }
 
-define void @use_matrix_reg(<1024 x i1>* nocapture %x) #2 {
+define void @use_matrix_reg(ptr nocapture %x) #2 {
 ; CHECK-LABEL: use_matrix_reg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r0
@@ -191,8 +191,8 @@ define void @use_matrix_reg(<1024 x i1>* nocapture %x) #2 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
 entry:
-  %0 = load <1024 x i1>, <1024 x i1>* %x, align 128
+  %0 = load <1024 x i1>, ptr %x, align 128
   %1 = tail call <1024 x i1> asm sideeffect "xmt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %0)
-  store <1024 x i1> %1, <1024 x i1>* %x, align 128
+  store <1024 x i1> %1, ptr %x, align 128
   ret void
 }

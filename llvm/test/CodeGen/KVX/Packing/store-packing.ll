@@ -6,7 +6,7 @@ target triple = "kvx-kalray-cos"
 
 ; FIXME: Here we could have sq, but kvx-load-store-packing
 ; alias check is too conservative.
-define void @f2(i64* nocapture readonly %a, i64* nocapture %b) {
+define void @f2(ptr nocapture readonly %a, ptr nocapture %b) {
 ; CHECK-LABEL: f2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
@@ -17,18 +17,18 @@ define void @f2(i64* nocapture readonly %a, i64* nocapture %b) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i64, i64* %a, align 8
-  %arrayidx1 = getelementptr inbounds i64, i64* %a, i64 1
-  %1 = load i64, i64* %arrayidx1, align 8
-  store i64 %0, i64* %b, align 8
-  %arrayidx3 = getelementptr inbounds i64, i64* %b, i64 1
-  store i64 %1, i64* %arrayidx3, align 8
+  %0 = load i64, ptr %a, align 8
+  %arrayidx1 = getelementptr inbounds i64, ptr %a, i64 1
+  %1 = load i64, ptr %arrayidx1, align 8
+  store i64 %0, ptr %b, align 8
+  %arrayidx3 = getelementptr inbounds i64, ptr %b, i64 1
+  store i64 %1, ptr %arrayidx3, align 8
   ret void
 
 }
 
 ; Function Attrs: norecurse nounwind
-define void @f4(i64* nocapture readonly %a, i64* nocapture %b) {
+define void @f4(ptr nocapture readonly %a, ptr nocapture %b) {
 ; CHECK-LABEL: f4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -44,20 +44,20 @@ define void @f4(i64* nocapture readonly %a, i64* nocapture %b) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %0 = load i64, i64* %a, align 8
-  %arrayidx1 = getelementptr inbounds i64, i64* %a, i64 1
-  %1 = load i64, i64* %arrayidx1, align 8
-  %arrayidx2 = getelementptr inbounds i64, i64* %a, i64 2
-  %2 = load i64, i64* %arrayidx2, align 8
-  %arrayidx3 = getelementptr inbounds i64, i64* %a, i64 3
-  %3 = load i64, i64* %arrayidx3, align 8
-  store i64 %0, i64* %b, align 8
-  %arrayidx5 = getelementptr inbounds i64, i64* %b, i64 1
-  store i64 %1, i64* %arrayidx5, align 8
-  %arrayidx6 = getelementptr inbounds i64, i64* %b, i64 2
-  store i64 %2, i64* %arrayidx6, align 8
-  %arrayidx7 = getelementptr inbounds i64, i64* %b, i64 3
-  store i64 %3, i64* %arrayidx7, align 8
+  %0 = load i64, ptr %a, align 8
+  %arrayidx1 = getelementptr inbounds i64, ptr %a, i64 1
+  %1 = load i64, ptr %arrayidx1, align 8
+  %arrayidx2 = getelementptr inbounds i64, ptr %a, i64 2
+  %2 = load i64, ptr %arrayidx2, align 8
+  %arrayidx3 = getelementptr inbounds i64, ptr %a, i64 3
+  %3 = load i64, ptr %arrayidx3, align 8
+  store i64 %0, ptr %b, align 8
+  %arrayidx5 = getelementptr inbounds i64, ptr %b, i64 1
+  store i64 %1, ptr %arrayidx5, align 8
+  %arrayidx6 = getelementptr inbounds i64, ptr %b, i64 2
+  store i64 %2, ptr %arrayidx6, align 8
+  %arrayidx7 = getelementptr inbounds i64, ptr %b, i64 3
+  store i64 %3, ptr %arrayidx7, align 8
   ret void
 
 }

@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i8 @int_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @int_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
@@ -16,12 +16,12 @@ define i8 @int_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
-  %5 = getelementptr inbounds i8, i8* %0, i64 %4
-  %6 = load i8, i8* %5, align 1
+  %5 = getelementptr inbounds i8, ptr %0, i64 %4
+  %6 = load i8, ptr %5, align 1
   ret i8 %6
 }
 
-define i16 @int_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @int_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
@@ -31,12 +31,12 @@ define i16 @int_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
-  %5 = getelementptr inbounds i16, i16* %0, i64 %4
-  %6 = load i16, i16* %5, align 2
+  %5 = getelementptr inbounds i16, ptr %0, i64 %4
+  %6 = load i16, ptr %5, align 2
   ret i16 %6
 }
 
-define i32 @int_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @int_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
@@ -46,12 +46,12 @@ define i32 @int_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
-  %5 = getelementptr inbounds i32, i32* %0, i64 %4
-  %6 = load i32, i32* %5, align 4
+  %5 = getelementptr inbounds i32, ptr %0, i64 %4
+  %6 = load i32, ptr %5, align 4
   ret i32 %6
 }
 
-define i64 @int_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @int_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: int_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxwd $r1 = $r1
@@ -61,12 +61,12 @@ define i64 @int_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 32
   %4 = ashr exact i64 %3, 32
-  %5 = getelementptr inbounds i64, i64* %0, i64 %4
-  %6 = load i64, i64* %5, align 8
+  %5 = getelementptr inbounds i64, ptr %0, i64 %4
+  %6 = load i64, ptr %5, align 8
   ret i64 %6
 }
 
-define i8 @uint_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @uint_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
@@ -75,12 +75,12 @@ define i8 @uint_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
-  %4 = getelementptr inbounds i8, i8* %0, i64 %3
-  %5 = load i8, i8* %4, align 1
+  %4 = getelementptr inbounds i8, ptr %0, i64 %3
+  %5 = load i8, ptr %4, align 1
   ret i8 %5
 }
 
-define i16 @uint_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @uint_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
@@ -89,12 +89,12 @@ define i16 @uint_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
-  %4 = getelementptr inbounds i16, i16* %0, i64 %3
-  %5 = load i16, i16* %4, align 2
+  %4 = getelementptr inbounds i16, ptr %0, i64 %3
+  %5 = load i16, ptr %4, align 2
   ret i16 %5
 }
 
-define i32 @uint_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @uint_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
@@ -103,12 +103,12 @@ define i32 @uint_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
-  %4 = getelementptr inbounds i32, i32* %0, i64 %3
-  %5 = load i32, i32* %4, align 4
+  %4 = getelementptr inbounds i32, ptr %0, i64 %3
+  %5 = load i32, ptr %4, align 4
   ret i32 %5
 }
 
-define i64 @uint_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @uint_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uint_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    zxwd $r1 = $r1
@@ -117,12 +117,12 @@ define i64 @uint_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 4294967295
-  %4 = getelementptr inbounds i64, i64* %0, i64 %3
-  %5 = load i64, i64* %4, align 8
+  %4 = getelementptr inbounds i64, ptr %0, i64 %3
+  %5 = load i64, ptr %4, align 8
   ret i64 %5
 }
 
-define i8 @short_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @short_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
@@ -132,12 +132,12 @@ define i8 @short_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
-  %5 = getelementptr inbounds i8, i8* %0, i64 %4
-  %6 = load i8, i8* %5, align 1
+  %5 = getelementptr inbounds i8, ptr %0, i64 %4
+  %6 = load i8, ptr %5, align 1
   ret i8 %6
 }
 
-define i16 @short_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @short_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
@@ -147,12 +147,12 @@ define i16 @short_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
-  %5 = getelementptr inbounds i16, i16* %0, i64 %4
-  %6 = load i16, i16* %5, align 2
+  %5 = getelementptr inbounds i16, ptr %0, i64 %4
+  %6 = load i16, ptr %5, align 2
   ret i16 %6
 }
 
-define i32 @short_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @short_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
@@ -162,12 +162,12 @@ define i32 @short_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
-  %5 = getelementptr inbounds i32, i32* %0, i64 %4
-  %6 = load i32, i32* %5, align 4
+  %5 = getelementptr inbounds i32, ptr %0, i64 %4
+  %6 = load i32, ptr %5, align 4
   ret i32 %6
 }
 
-define i64 @short_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @short_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: short_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxhd $r1 = $r1
@@ -177,12 +177,12 @@ define i64 @short_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 48
   %4 = ashr exact i64 %3, 48
-  %5 = getelementptr inbounds i64, i64* %0, i64 %4
-  %6 = load i64, i64* %5, align 8
+  %5 = getelementptr inbounds i64, ptr %0, i64 %4
+  %6 = load i64, ptr %5, align 8
   ret i64 %6
 }
 
-define i8 @ushort_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @ushort_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
@@ -191,12 +191,12 @@ define i8 @ushort_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
-  %4 = getelementptr inbounds i8, i8* %0, i64 %3
-  %5 = load i8, i8* %4, align 1
+  %4 = getelementptr inbounds i8, ptr %0, i64 %3
+  %5 = load i8, ptr %4, align 1
   ret i8 %5
 }
 
-define i16 @ushort_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @ushort_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
@@ -205,12 +205,12 @@ define i16 @ushort_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
-  %4 = getelementptr inbounds i16, i16* %0, i64 %3
-  %5 = load i16, i16* %4, align 2
+  %4 = getelementptr inbounds i16, ptr %0, i64 %3
+  %5 = load i16, ptr %4, align 2
   ret i16 %5
 }
 
-define i32 @ushort_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @ushort_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
@@ -219,12 +219,12 @@ define i32 @ushort_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
-  %4 = getelementptr inbounds i32, i32* %0, i64 %3
-  %5 = load i32, i32* %4, align 4
+  %4 = getelementptr inbounds i32, ptr %0, i64 %3
+  %5 = load i32, ptr %4, align 4
   ret i32 %5
 }
 
-define i64 @ushort_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @ushort_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: ushort_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    clrf $r1 = $r1, 63, 16
@@ -233,12 +233,12 @@ define i64 @ushort_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 65535
-  %4 = getelementptr inbounds i64, i64* %0, i64 %3
-  %5 = load i64, i64* %4, align 8
+  %4 = getelementptr inbounds i64, ptr %0, i64 %3
+  %5 = load i64, ptr %4, align 8
   ret i64 %5
 }
 
-define i8 @char_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @char_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
@@ -248,12 +248,12 @@ define i8 @char_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
-  %5 = getelementptr inbounds i8, i8* %0, i64 %4
-  %6 = load i8, i8* %5, align 1
+  %5 = getelementptr inbounds i8, ptr %0, i64 %4
+  %6 = load i8, ptr %5, align 1
   ret i8 %6
 }
 
-define i16 @char_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @char_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
@@ -263,12 +263,12 @@ define i16 @char_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
-  %5 = getelementptr inbounds i16, i16* %0, i64 %4
-  %6 = load i16, i16* %5, align 2
+  %5 = getelementptr inbounds i16, ptr %0, i64 %4
+  %6 = load i16, ptr %5, align 2
   ret i16 %6
 }
 
-define i32 @char_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @char_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
@@ -278,12 +278,12 @@ define i32 @char_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
-  %5 = getelementptr inbounds i32, i32* %0, i64 %4
-  %6 = load i32, i32* %5, align 4
+  %5 = getelementptr inbounds i32, ptr %0, i64 %4
+  %6 = load i32, ptr %5, align 4
   ret i32 %6
 }
 
-define i64 @char_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @char_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: char_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sxbd $r1 = $r1
@@ -293,12 +293,12 @@ define i64 @char_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = shl i64 %1, 56
   %4 = ashr exact i64 %3, 56
-  %5 = getelementptr inbounds i64, i64* %0, i64 %4
-  %6 = load i64, i64* %5, align 8
+  %5 = getelementptr inbounds i64, ptr %0, i64 %4
+  %6 = load i64, ptr %5, align 8
   ret i64 %6
 }
 
-define i8 @uchar_char(i8* nocapture readonly %0, i64 %1) {
+define i8 @uchar_char(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
@@ -307,12 +307,12 @@ define i8 @uchar_char(i8* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
-  %4 = getelementptr inbounds i8, i8* %0, i64 %3
-  %5 = load i8, i8* %4, align 1
+  %4 = getelementptr inbounds i8, ptr %0, i64 %3
+  %5 = load i8, ptr %4, align 1
   ret i8 %5
 }
 
-define i16 @uchar_short(i16* nocapture readonly %0, i64 %1) {
+define i16 @uchar_short(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_short:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
@@ -321,12 +321,12 @@ define i16 @uchar_short(i16* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
-  %4 = getelementptr inbounds i16, i16* %0, i64 %3
-  %5 = load i16, i16* %4, align 2
+  %4 = getelementptr inbounds i16, ptr %0, i64 %3
+  %5 = load i16, ptr %4, align 2
   ret i16 %5
 }
 
-define i32 @uchar_word(i32* nocapture readonly %0, i64 %1) {
+define i32 @uchar_word(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_word:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
@@ -335,12 +335,12 @@ define i32 @uchar_word(i32* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
-  %4 = getelementptr inbounds i32, i32* %0, i64 %3
-  %5 = load i32, i32* %4, align 4
+  %4 = getelementptr inbounds i32, ptr %0, i64 %3
+  %5 = load i32, ptr %4, align 4
   ret i32 %5
 }
 
-define i64 @uchar_double(i64* nocapture readonly %0, i64 %1) {
+define i64 @uchar_double(ptr nocapture readonly %0, i64 %1) {
 ; CHECK-LABEL: uchar_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    andd $r1 = $r1, 255
@@ -349,7 +349,7 @@ define i64 @uchar_double(i64* nocapture readonly %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %3 = and i64 %1, 255
-  %4 = getelementptr inbounds i64, i64* %0, i64 %3
-  %5 = load i64, i64* %4, align 8
+  %4 = getelementptr inbounds i64, ptr %0, i64 %3
+  %5 = load i64, ptr %4, align 8
   ret i64 %5
 }

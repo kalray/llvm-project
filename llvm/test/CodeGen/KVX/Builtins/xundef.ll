@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @xundef1024(<1024 x i1>* %0) {
+define void @xundef1024(ptr %0) {
 ; ALL-LABEL: xundef1024:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
@@ -17,14 +17,14 @@ define void @xundef1024(<1024 x i1>* %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca <1024 x i1>*
-  store <1024 x i1>* %0, <1024 x i1>** %2
-  %3 = load <1024 x i1>*, <1024 x i1>** %2
-  store <1024 x i1> undef, <1024 x i1>* %3
+  %2 = alloca ptr 
+  store ptr %0, ptr %2
+  %3 = load ptr, ptr %2
+  store <1024 x i1> undef, ptr %3
   ret void
 }
 
-define void @xundef2048(<2048 x i1>* %0) {
+define void @xundef2048(ptr %0) {
 ; ALL-LABEL: xundef2048:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
@@ -35,14 +35,14 @@ define void @xundef2048(<2048 x i1>* %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca <2048 x i1>*
-  store <2048 x i1>* %0, <2048 x i1>** %2
-  %3 = load <2048 x i1>*, <2048 x i1>** %2
-  store <2048 x i1> undef, <2048 x i1>* %3
+  %2 = alloca ptr 
+  store ptr %0, ptr %2
+  %3 = load ptr, ptr %2
+  store <2048 x i1> undef, ptr %3
   ret void
 }
 
-define void @xundef256(<256 x i1>* %0) {
+define void @xundef256(ptr %0) {
 ; ALL-LABEL: xundef256:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
@@ -53,14 +53,14 @@ define void @xundef256(<256 x i1>* %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca <256 x i1>*
-  store <256 x i1>* %0, <256 x i1>** %2
-  %3 = load <256 x i1>*, <256 x i1>** %2
-  store <256 x i1> undef, <256 x i1>* %3
+  %2 = alloca ptr 
+  store ptr %0, ptr %2
+  %3 = load ptr, ptr %2
+  store <256 x i1> undef, ptr %3
   ret void
 }
 
-define void @xundef4096(<4096 x i1>* %0) {
+define void @xundef4096(ptr %0) {
 ; ALL-LABEL: xundef4096:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
@@ -71,14 +71,14 @@ define void @xundef4096(<4096 x i1>* %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca <4096 x i1>*
-  store <4096 x i1>* %0, <4096 x i1>** %2
-  %3 = load <4096 x i1>*, <4096 x i1>** %2
-  store <4096 x i1> undef, <4096 x i1>* %3
+  %2 = alloca ptr 
+  store ptr %0, ptr %2
+  %3 = load ptr, ptr %2
+  store <4096 x i1> undef, ptr %3
   ret void
 }
 
-define void @xundef512(<512 x i1>* %0) {
+define void @xundef512(ptr %0) {
 ; ALL-LABEL: xundef512:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    addd $r12 = $r12, -32
@@ -89,10 +89,10 @@ define void @xundef512(<512 x i1>* %0) {
 ; ALL-NEXT:    ;;
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
-  %2 = alloca <512 x i1>*
-  store <512 x i1>* %0, <512 x i1>** %2
-  %3 = load <512 x i1>*, <512 x i1>** %2
-  store <512 x i1> undef, <512 x i1>* %3
+  %2 = alloca ptr 
+  store ptr %0, ptr %2
+  %3 = load ptr, ptr %2
+  store <512 x i1> undef, ptr %3
   ret void
 }
 

@@ -17,6 +17,6 @@ define i32 @test() {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %0 = load i32, i32* @tls, align 4
+  %0 = load i32, ptr @tls, align 4
   ret i32 %0
 }

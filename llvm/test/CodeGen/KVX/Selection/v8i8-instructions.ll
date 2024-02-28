@@ -867,7 +867,7 @@ define <8 x i8> @test_rem(<8 x i8> %a, <8 x i8> %b) #0 {
   ret <8 x i8> %r
 }
 
-define void @test_ldst_v8i8(<8 x i8>* %a, <8 x i8>* %b) {
+define void @test_ldst_v8i8(ptr %a, ptr %b) {
 ; ALL-LABEL: test_ldst_v8i8:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ld $r0 = 0[$r0]
@@ -875,8 +875,8 @@ define void @test_ldst_v8i8(<8 x i8>* %a, <8 x i8>* %b) {
 ; ALL-NEXT:    sd 0[$r1] = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
-  %t1 = load <8 x i8>, <8 x i8>* %a
-  store <8 x i8> %t1, <8 x i8>* %b, align 16
+  %t1 = load <8 x i8>, ptr %a
+  store <8 x i8> %t1, ptr %b, align 16
   ret void
 }
 

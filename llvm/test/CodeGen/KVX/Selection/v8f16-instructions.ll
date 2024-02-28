@@ -832,7 +832,7 @@ define <8 x half> @test_frem(<8 x half> %a, <8 x half> %b) #0 {
   ret <8 x half> %r
 }
 
-define void @test_ldst_v8f16(<8 x half>* %a, <8 x half>* %b) {
+define void @test_ldst_v8f16(ptr %a, ptr %b) {
 ; CHECK-LABEL: test_ldst_v8f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r2r3 = 0[$r0]
@@ -840,8 +840,8 @@ define void @test_ldst_v8f16(<8 x half>* %a, <8 x half>* %b) {
 ; CHECK-NEXT:    sq 0[$r1] = $r2r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %t1 = load <8 x half>, <8 x half>* %a
-  store <8 x half> %t1, <8 x half>* %b, align 16
+  %t1 = load <8 x half>, ptr %a
+  store <8 x half> %t1, ptr %b, align 16
   ret void
 }
 

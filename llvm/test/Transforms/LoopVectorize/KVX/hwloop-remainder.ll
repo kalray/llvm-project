@@ -3,7 +3,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly %2, i16 %3) local_unnamed_addr #0 {
+define void @matrix_mul_const(i32 %0, ptr nocapture %1, ptr nocapture readonly %2, i16 %3) local_unnamed_addr #0 {
 ; CHECK-LABEL: @matrix_mul_const(
 ; CHECK-NEXT:    [[TMP5:%.*]] = icmp sgt i32 [[TMP0:%.*]], 0
 ; CHECK-NEXT:    br i1 [[TMP5]], label [[TMP6:%.*]], label [[TMP56:%.*]]
@@ -138,12 +138,12 @@ define void @matrix_mul_const(i32 %0, i32* nocapture %1, i16* nocapture readonly
 14:                                               ; preds = %10, %14
   %15 = phi i64 [ 0, %10 ], [ %22, %14 ]
   %16 = add nsw i64 %15, %12
-  %17 = getelementptr inbounds i16, i16* %2, i64 %16
-  %18 = load i16, i16* %17, align 2
+  %17 = getelementptr inbounds i16, ptr %2, i64 %16
+  %18 = load i16, ptr %17, align 2
   %19 = sext i16 %18 to i32
   %20 = mul nsw i32 %19, %7
-  %21 = getelementptr inbounds i32, i32* %1, i64 %16
-  store i32 %20, i32* %21, align 4
+  %21 = getelementptr inbounds i32, ptr %1, i64 %16
+  store i32 %20, ptr %21, align 4
   %22 = add nuw nsw i64 %15, 1
   %23 = icmp eq i64 %22, %13
   br i1 %23, label %24, label %14

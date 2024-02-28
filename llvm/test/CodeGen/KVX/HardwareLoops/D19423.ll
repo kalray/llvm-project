@@ -5,7 +5,7 @@
 target triple = "kvx-kalray-cos"
 
 
-define dso_local void @no_hwloop(i32* nocapture %0, i32* nocapture readonly %1) local_unnamed_addr #0 {
+define dso_local void @no_hwloop(ptr nocapture %0, ptr nocapture readonly %1) local_unnamed_addr #0 {
 ; CHECK-LABEL: no_hwloop:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r2 = 0
@@ -34,18 +34,18 @@ define dso_local void @no_hwloop(i32* nocapture %0, i32* nocapture readonly %1) 
 
 4:                                                ; preds = %2, %4
   %5 = phi i64 [ 0, %2 ], [ %11, %4 ]
-  %6 = getelementptr inbounds i32, i32* %1, i64 %5
-  %7 = load i32, i32* %6, align 4
-  %8 = getelementptr inbounds i32, i32* %0, i64 %5
-  %9 = load i32, i32* %8, align 4
+  %6 = getelementptr inbounds i32, ptr %1, i64 %5
+  %7 = load i32, ptr %6, align 4
+  %8 = getelementptr inbounds i32, ptr %0, i64 %5
+  %9 = load i32, ptr %8, align 4
   %10 = add nsw i32 %9, %7
-  store i32 %10, i32* %8, align 4
+  store i32 %10, ptr %8, align 4
   %11 = add nuw nsw i64 %5, 1
   %12 = icmp eq i64 %11, 4
   br i1 %12, label %3, label %4
 }
 
-define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) local_unnamed_addr #0 {
+define dso_local void @hwloop(ptr nocapture %0, ptr nocapture readonly %1) local_unnamed_addr #0 {
 ; CHECK-LABEL: hwloop:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    make $r2 = 0
@@ -74,12 +74,12 @@ define dso_local void @hwloop(i32* nocapture %0, i32* nocapture readonly %1) loc
 
 4:                                                ; preds = %2, %4
   %5 = phi i64 [ 0, %2 ], [ %11, %4 ]
-  %6 = getelementptr inbounds i32, i32* %1, i64 %5
-  %7 = load i32, i32* %6, align 4
-  %8 = getelementptr inbounds i32, i32* %0, i64 %5
-  %9 = load i32, i32* %8, align 4
+  %6 = getelementptr inbounds i32, ptr %1, i64 %5
+  %7 = load i32, ptr %6, align 4
+  %8 = getelementptr inbounds i32, ptr %0, i64 %5
+  %9 = load i32, ptr %8, align 4
   %10 = add nsw i32 %9, %7
-  store i32 %10, i32* %8, align 4
+  store i32 %10, ptr %8, align 4
   %11 = add nuw nsw i64 %5, 1
   %12 = icmp eq i64 %11, 5
   br i1 %12, label %3, label %4

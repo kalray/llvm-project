@@ -8,7 +8,7 @@ target triple = "kvx-kalray-cos"
 @extfunc = global i64 (...)* null, align 8
 
 ; Function Attrs: noinline nounwind uwtable
-define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
+define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, ptr nocapture %4, i32 %5) {
 ; CHECK-LABEL: badfunc:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, 0xffffffffffffeae0
@@ -209,8 +209,8 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
 ; CHECK-NEXT:    goto .LBB0_16
 ; CHECK-NEXT:    ;; # (end cycle 1)
   %7 = alloca [5348 x i8], align 1
-  %8 = getelementptr inbounds [5348 x i8], [5348 x i8]* %7, i64 0, i64 0
-  call void @llvm.lifetime.start.p0i8(i64 5348, i8* nonnull %8) #4
+  %8 = getelementptr inbounds [5348 x i8], ptr %7, i64 0, i64 0
+  call void @llvm.lifetime.start.p0i8(i64 5348, ptr nonnull %8) #4
   %9 = load i64 ()*, i64 ()** bitcast (i64 (...)** @extfunc to i64 ()**), align 8, !tbaa !2
   %10 = tail call i64 %9() #4
   %11 = icmp eq i64 %10, 0
@@ -223,101 +223,101 @@ define i32 @badfunc(i32 %0, i32 %1, i32 %2, i32 %3, i16* nocapture %4, i32 %5) {
   br i1 %15, label %16, label %36
 
 16:                                               ; preds = %12
-  %17 = load i64 (i8*)*, i64 (i8*)** bitcast (i64 (...)** @extfunc to i64 (i8*)**), align 8, !tbaa !2
-  %18 = call i64 %17(i8* nonnull %8) #4
+  %17 = load i64 (ptr )*, i64 (ptr )** bitcast (i64 (...)** @extfunc to i64 (ptr )**), align 8, !tbaa !2
+  %18 = call i64 %17(ptr nonnull %8) #4
   %19 = icmp ugt i32 %5, 1
   br i1 %19, label %20, label %30
 
 20:                                               ; preds = %16, %66
   %21 = phi i32 [ %67, %66 ], [ %5, %16 ]
-  %22 = phi i16* [ %69, %66 ], [ %4, %16 ]
-  %23 = phi i16* [ %68, %66 ], [ getelementptr inbounds ([5 x i16], [5 x i16]* @badfunc.ntfsW, i64 0, i64 0), %16 ]
-  %24 = load i16, i16* %23, align 2, !tbaa !6
+  %22 = phi ptr [ %69, %66 ], [ %4, %16 ]
+  %23 = phi ptr [ %68, %66 ], [ getelementptr inbounds ([5 x i16], ptr @badfunc.ntfsW, i64 0, i64 0), %16 ]
+  %24 = load i16, ptr %23, align 2, !tbaa !6
   %25 = icmp eq i16 %24, 0
   br i1 %25, label %34, label %26
 
 26:                                               ; preds = %20
   %27 = add i32 %21, -1
-  %28 = getelementptr inbounds i16, i16* %22, i64 1
-  store i16 %24, i16* %22, align 2, !tbaa !6
+  %28 = getelementptr inbounds i16, ptr %22, i64 1
+  store i16 %24, ptr %22, align 2, !tbaa !6
   %29 = icmp ugt i32 %27, 1
   br i1 %29, label %38, label %30, !llvm.loop !8
 
 30:                                               ; preds = %26, %42, %50, %58, %66, %16
-  %31 = phi i16* [ %4, %16 ], [ %28, %26 ], [ %44, %42 ], [ %52, %50 ], [ %60, %58 ], [ %69, %66 ]
+  %31 = phi ptr [ %4, %16 ], [ %28, %26 ], [ %44, %42 ], [ %52, %50 ], [ %60, %58 ], [ %69, %66 ]
   %32 = phi i32 [ %5, %16 ], [ %27, %26 ], [ %43, %42 ], [ %51, %50 ], [ %59, %58 ], [ %67, %66 ]
   %33 = icmp eq i32 %32, 0
   br i1 %33, label %36, label %34
 
 34:                                               ; preds = %20, %38, %46, %54, %62, %30
-  %35 = phi i16* [ %31, %30 ], [ %22, %20 ], [ %28, %38 ], [ %44, %46 ], [ %52, %54 ], [ %60, %62 ]
-  store i16 0, i16* %35, align 2, !tbaa !6
+  %35 = phi ptr [ %31, %30 ], [ %22, %20 ], [ %28, %38 ], [ %44, %46 ], [ %52, %54 ], [ %60, %62 ]
+  store i16 0, ptr %35, align 2, !tbaa !6
   br label %36
 
 36:                                               ; preds = %34, %30, %12, %6
   %37 = phi i32 [ 0, %6 ], [ 0, %12 ], [ 1, %30 ], [ 1, %34 ]
-  call void @llvm.lifetime.end.p0i8(i64 5348, i8* nonnull %8) #4
+  call void @llvm.lifetime.end.p0i8(i64 5348, ptr nonnull %8) #4
   ret i32 %37
 
 38:                                               ; preds = %26
-  %39 = getelementptr inbounds i16, i16* %23, i64 1
-  %40 = load i16, i16* %39, align 2, !tbaa !6
+  %39 = getelementptr inbounds i16, ptr %23, i64 1
+  %40 = load i16, ptr %39, align 2, !tbaa !6
   %41 = icmp eq i16 %40, 0
   br i1 %41, label %34, label %42
 
 42:                                               ; preds = %38
   %43 = add i32 %21, -2
-  %44 = getelementptr inbounds i16, i16* %22, i64 2
-  store i16 %40, i16* %28, align 2, !tbaa !6
+  %44 = getelementptr inbounds i16, ptr %22, i64 2
+  store i16 %40, ptr %28, align 2, !tbaa !6
   %45 = icmp ugt i32 %43, 1
   br i1 %45, label %46, label %30, !llvm.loop !8
 
 46:                                               ; preds = %42
-  %47 = getelementptr inbounds i16, i16* %23, i64 2
-  %48 = load i16, i16* %47, align 2, !tbaa !6
+  %47 = getelementptr inbounds i16, ptr %23, i64 2
+  %48 = load i16, ptr %47, align 2, !tbaa !6
   %49 = icmp eq i16 %48, 0
   br i1 %49, label %34, label %50
 
 50:                                               ; preds = %46
   %51 = add i32 %21, -3
-  %52 = getelementptr inbounds i16, i16* %22, i64 3
-  store i16 %48, i16* %44, align 2, !tbaa !6
+  %52 = getelementptr inbounds i16, ptr %22, i64 3
+  store i16 %48, ptr %44, align 2, !tbaa !6
   %53 = icmp ugt i32 %51, 1
   br i1 %53, label %54, label %30, !llvm.loop !8
 
 54:                                               ; preds = %50
-  %55 = getelementptr inbounds i16, i16* %23, i64 3
-  %56 = load i16, i16* %55, align 2, !tbaa !6
+  %55 = getelementptr inbounds i16, ptr %23, i64 3
+  %56 = load i16, ptr %55, align 2, !tbaa !6
   %57 = icmp eq i16 %56, 0
   br i1 %57, label %34, label %58
 
 58:                                               ; preds = %54
   %59 = add i32 %21, -4
-  %60 = getelementptr inbounds i16, i16* %22, i64 4
-  store i16 %56, i16* %52, align 2, !tbaa !6
+  %60 = getelementptr inbounds i16, ptr %22, i64 4
+  store i16 %56, ptr %52, align 2, !tbaa !6
   %61 = icmp ugt i32 %59, 1
   br i1 %61, label %62, label %30, !llvm.loop !8
 
 62:                                               ; preds = %58
-  %63 = getelementptr inbounds i16, i16* %23, i64 4
-  %64 = load i16, i16* %63, align 2, !tbaa !6
+  %63 = getelementptr inbounds i16, ptr %23, i64 4
+  %64 = load i16, ptr %63, align 2, !tbaa !6
   %65 = icmp eq i16 %64, 0
   br i1 %65, label %34, label %66
 
 66:                                               ; preds = %62
   %67 = add i32 %21, -5
-  %68 = getelementptr inbounds i16, i16* %23, i64 5
-  %69 = getelementptr inbounds i16, i16* %22, i64 5
-  store i16 %64, i16* %60, align 2, !tbaa !6
+  %68 = getelementptr inbounds i16, ptr %23, i64 5
+  %69 = getelementptr inbounds i16, ptr %22, i64 5
+  store i16 %64, ptr %60, align 2, !tbaa !6
   %70 = icmp ugt i32 %67, 1
   br i1 %70, label %20, label %30, !llvm.loop !8
 }
 
 ; Function Attrs: argmemonly nofree nosync nounwind willreturn
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture) #1
 
 ; Function Attrs: argmemonly nofree nosync nounwind willreturn
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture) #1
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture) #1
 
 attributes #1 = { argmemonly nofree nosync nounwind willreturn }
 attributes #2 = { nounwind uwtable "disable-tail-calls"="false" "frame-pointer"="none" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }

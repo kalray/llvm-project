@@ -266,27 +266,27 @@ define half @test_frem(half %a, half %b) #0 {
   ret half %r
 }
 
-define void @test_store(half %a, half* %b) #0 {
+define void @test_store(half %a, ptr %b) #0 {
 ; CHECK-LABEL: test_store:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  store half %a, half* %b
+  store half %a, ptr %b
   ret void
 }
 
-define half @test_load(half* %a) #0 {
+define half @test_load(ptr %a) #0 {
 ; CHECK-LABEL: test_load:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  %r = load half, half* %a
+  %r = load half, ptr %a
   ret half %r
 }
 
-define void @test_halfp0a1(half * noalias readonly %from, half * %to) {
+define void @test_halfp0a1(ptr noalias readonly %from, ptr %to) {
 ; CHECK-LABEL: test_halfp0a1:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
@@ -294,8 +294,8 @@ define void @test_halfp0a1(half * noalias readonly %from, half * %to) {
 ; CHECK-NEXT:    sh 0[$r1] = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
-  %1 = load half, half * %from , align 1
-  store half %1, half * %to , align 1
+  %1 = load half, ptr %from, align 1
+  store half %1, ptr %to, align 1
   ret void
 }
 
@@ -592,7 +592,7 @@ define i1 @test_fcmp_ord(half %a, half %b) #0 {
   ret i1 %r
 }
 
-define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
+define void @test_br_cc(half %a, half %b, ptr %p1, ptr %p2) #0 {
 ; CHECK-LABEL: test_br_cc:
 ; CHECK:       # %bb.0: # %common.ret
 ; CHECK-NEXT:    fcompnhq.uge $r0 = $r0, $r1
@@ -608,14 +608,14 @@ define void @test_br_cc(half %a, half %b, i32* %p1, i32* %p2) #0 {
   %c = fcmp uge half %a, %b
   br i1 %c, label %then, label %else
 then:
-  store i32 0, i32* %p1
+  store i32 0, ptr %p1
   ret void
 else:
-  store i32 0, i32* %p2
+  store i32 0, ptr %p2
   ret void
 }
 
-define half @test_phi(half* %p1) #0 {
+define half @test_phi(ptr %p1) #0 {
 ; CHECK-LABEL: test_phi:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -655,17 +655,17 @@ define half @test_phi(half* %p1) #0 {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %a = load half, half* %p1
+  %a = load half, ptr %p1
   br label %loop
 loop:
   %r = phi half [%a, %entry], [%b, %loop]
-  %b = load half, half* %p1
-  %c = call i1 @test_dummy(half* %p1)
+  %b = load half, ptr %p1
+  %c = call i1 @test_dummy(ptr %p1)
   br i1 %c, label %loop, label %return
 return:
   ret half %r
 }
-declare i1 @test_dummy(half* %p1) #0
+declare i1 @test_dummy(ptr %p1) #0
 
 define i32 @test_fptosi_i32(half %a) #0 {
 ; CHECK-LABEL: test_fptosi_i32:

@@ -29,15 +29,15 @@ entry:
   %v.addr = alloca <2 x i64>, align 16
   %A.addr = alloca i64, align 8
   %out = alloca <2 x i64>, align 16
-  store <2 x i64> %v, <2 x i64>* %v.addr, align 16
-  store i64 %A, i64* %A.addr, align 8
-  %0 = load <2 x i64>, <2 x i64>* %v.addr, align 16
+  store <2 x i64> %v, ptr %v.addr, align 16
+  store i64 %A, ptr %A.addr, align 8
+  %0 = load <2 x i64>, ptr %v.addr, align 16
   %vecext = extractelement <2 x i64> %0, i32 0
-  %1 = load <2 x i64>, <2 x i64>* %v.addr, align 16
+  %1 = load <2 x i64>, ptr %v.addr, align 16
   %vecext1 = extractelement <2 x i64> %1, i32 1
   %2 = call <2 x i64> asm sideeffect "copyq $0 = $1, $2", "=r,r,r,~{$r2}"(i64 %vecext, i64 %vecext1)
-  store <2 x i64> %2, <2 x i64>* %out, align 16
-  %3 = load i64, i64* %A.addr, align 8
+  store <2 x i64> %2, ptr %out, align 16
+  %3 = load i64, ptr %A.addr, align 8
   ret i64 %3
 }
 
@@ -63,15 +63,15 @@ define i64 @asm_clobber_single_single(i64 %A) {
 entry:
   %A.addr = alloca i64, align 8
   %v2i64 = alloca <2 x i64>, align 16
-  store i64 %A, i64* %A.addr, align 8
-  %0 = load i64, i64* %A.addr, align 8
+  store i64 %A, ptr %A.addr, align 8
+  %0 = load i64, ptr %A.addr, align 8
   %1 = call <2 x i64> asm sideeffect "copyq $0 = $1, $1", "=r,r,~{$r0}"(i64 %0)
-  store <2 x i64> %1, <2 x i64>* %v2i64, align 16
-  %2 = load i64, i64* %A.addr, align 8
+  store <2 x i64> %1, ptr %v2i64, align 16
+  %2 = load i64, ptr %A.addr, align 8
   ret i64 %2
 }
 
-define i8* @asm_clobber_single_pair(i8* %A) {
+define ptr @asm_clobber_single_pair(ptr %A) {
 ; CHECK-LABEL: asm_clobber_single_pair:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -87,15 +87,15 @@ define i8* @asm_clobber_single_pair(i8* %A) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
-  %A.addr = alloca i8*, align 8
-  store i8* %A, i8** %A.addr, align 8
-  %0 = load i8*, i8** %A.addr, align 8
-  call void asm sideeffect "", "r,~{$r0r1}"(i8* %0)
-  %1 = load i8*, i8** %A.addr, align 8
-  ret i8* %1
+  %A.addr = alloca ptr, align 8
+  store ptr %A, ptr %A.addr, align 8
+  %0 = load ptr, ptr %A.addr, align 8
+  call void asm sideeffect "", "r,~{$r0r1}"(ptr %0)
+  %1 = load ptr, ptr %A.addr, align 8
+  ret ptr %1
 }
 
-define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
+define ptr @asm_clobber_single_quad(ptr %A, ptr %B, ptr %C) {
 ; CHECK-LABEL: asm_clobber_single_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -117,16 +117,16 @@ define i8* @asm_clobber_single_quad(i8* %A, i8* %B, i8* %C) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
 entry:
-  %A.addr = alloca i8*, align 8
-  %B.addr = alloca i8*, align 8
-  %C.addr = alloca i8*, align 8
-  store i8* %A, i8** %A.addr, align 8
-  store i8* %B, i8** %B.addr, align 8
-  store i8* %C, i8** %C.addr, align 8
-  %0 = load i8*, i8** %B.addr, align 8
-  call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(i8* %0)
-  %1 = load i8*, i8** %C.addr, align 8
-  ret i8* %1
+  %A.addr = alloca ptr, align 8
+  %B.addr = alloca ptr, align 8
+  %C.addr = alloca ptr, align 8
+  store ptr %A, ptr %A.addr, align 8
+  store ptr %B, ptr %B.addr, align 8
+  store ptr %C, ptr %C.addr, align 8
+  %0 = load ptr, ptr %B.addr, align 8
+  call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(ptr %0)
+  %1 = load ptr, ptr %C.addr, align 8
+  ret ptr %1
 }
 
 define <2 x i64> @asm_clobber_double_single(<2 x i64> %a) {
@@ -147,10 +147,10 @@ define <2 x i64> @asm_clobber_double_single(<2 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %a.addr = alloca <2 x i64>, align 16
-  store <2 x i64> %a, <2 x i64>* %a.addr, align 16
-  %0 = load <2 x i64>, <2 x i64>* %a.addr, align 16
+  store <2 x i64> %a, ptr %a.addr, align 16
+  %0 = load <2 x i64>, ptr %a.addr, align 16
   call void asm sideeffect "", "r,~{$r1}"(<2 x i64> %0)
-  %1 = load <2 x i64>, <2 x i64>* %a.addr, align 16
+  %1 = load <2 x i64>, ptr %a.addr, align 16
   ret <2 x i64> %1
 }
 
@@ -170,9 +170,9 @@ define <2 x i64> @asm_clobber_double_double(<2 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <2 x i64>, align 16
-  store <2 x i64> %a, <2 x i64>* %a.addr, align 16
+  store <2 x i64> %a, ptr %a.addr, align 16
   call void asm sideeffect "", "~{$r0r1}"()
-  %0 = load <2 x i64>, <2 x i64>* %a.addr, align 16
+  %0 = load <2 x i64>, ptr %a.addr, align 16
   ret <2 x i64> %0
 }
 
@@ -192,9 +192,9 @@ define <2 x i64> @asm_clobber_double_quad(<2 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <2 x i64>, align 16
-  store <2 x i64> %a, <2 x i64>* %a.addr, align 16
+  store <2 x i64> %a, ptr %a.addr, align 16
   call void asm sideeffect "", "~{$r0r1r2r3}"()
-  %0 = load <2 x i64>, <2 x i64>* %a.addr, align 16
+  %0 = load <2 x i64>, ptr %a.addr, align 16
   ret <2 x i64> %0
 }
 
@@ -247,23 +247,23 @@ entry:
   %a.addr = alloca float, align 4
   %b.addr = alloca <2 x i64>, align 16
   %c.addr = alloca <4 x i64>, align 32
-  store float %a, float* %a.addr, align 4
-  store <2 x i64> %b, <2 x i64>* %b.addr, align 16
-  store <4 x i64> %c, <4 x i64>* %c.addr, align 32
+  store float %a, ptr %a.addr, align 4
+  store <2 x i64> %b, ptr %b.addr, align 16
+  store <4 x i64> %c, ptr %c.addr, align 32
   call void asm sideeffect "", "~{$r0r1r2r3}"()
-  %0 = load <2 x i64>, <2 x i64>* %b.addr, align 16
+  %0 = load <2 x i64>, ptr %b.addr, align 16
   %vecext = extractelement <2 x i64> %0, i32 0
-  %1 = load <2 x i64>, <2 x i64>* %b.addr, align 16
+  %1 = load <2 x i64>, ptr %b.addr, align 16
   %vecext1 = extractelement <2 x i64> %1, i32 1
   %add = add nsw i64 %vecext, %vecext1
-  %2 = load <4 x i64>, <4 x i64>* %c.addr, align 32
+  %2 = load <4 x i64>, ptr %c.addr, align 32
   %vecext2 = extractelement <4 x i64> %2, i32 0
   %add3 = add nsw i64 %add, %vecext2
   %conv = sitofp i64 %add3 to float
-  %3 = load float, float* %a.addr, align 4
+  %3 = load float, ptr %a.addr, align 4
   %add4 = fadd float %3, %conv
-  store float %add4, float* %a.addr, align 4
-  %4 = load float, float* %a.addr, align 4
+  store float %add4, ptr %a.addr, align 4
+  %4 = load float, ptr %a.addr, align 4
   ret float %4
 }
 
@@ -282,7 +282,7 @@ define void @asm_clobber_quad_single(<4 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
-  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
+  store <4 x i64> %a, ptr %a.addr, align 32
   call void asm sideeffect "", "~{$r0}"()
   ret void
 }
@@ -303,10 +303,10 @@ define <4 x i64> @asm_clobber_quad_double(<4 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
-  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
-  %0 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  store <4 x i64> %a, ptr %a.addr, align 32
+  %0 = load <4 x i64>, ptr %a.addr, align 32
   call void asm sideeffect "", "r"(<4 x i64> %0)
-  %1 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  %1 = load <4 x i64>, ptr %a.addr, align 32
   ret <4 x i64> %1
 }
 
@@ -326,9 +326,9 @@ define <4 x i64> @asm_clobber_quad_quad(<4 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
-  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
+  store <4 x i64> %a, ptr %a.addr, align 32
   call void asm sideeffect "", "~{$r0r1r2r3}"()
-  %0 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  %0 = load <4 x i64>, ptr %a.addr, align 32
   ret <4 x i64> %0
 }
 
@@ -348,9 +348,9 @@ define <4 x i64> @asm_clobber_quad_quad_use(<4 x i64> %a) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
   %a.addr = alloca <4 x i64>, align 32
-  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
+  store <4 x i64> %a, ptr %a.addr, align 32
   call void asm sideeffect "", "~{$r0},~{$r2r3}"()
-  %0 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  %0 = load <4 x i64>, ptr %a.addr, align 32
   ret <4 x i64> %0
 }
 
@@ -418,34 +418,34 @@ entry:
   %arg3 = alloca i64, align 8
   %arg4 = alloca i64, align 8
   %arg5 = alloca i64, align 8
-  store i32 %a, i32* %a.addr, align 4
-  store i64 %b, i64* %b.addr, align 8
-  store i64 %c, i64* %c.addr, align 8
-  store i64 %d, i64* %d.addr, align 8
-  store i64 %e, i64* %e.addr, align 8
-  store i64 %f, i64* %f.addr, align 8
-  store i64 %g, i64* %g.addr, align 8
-  %0 = load i64, i64* %b.addr, align 8
-  store i64 %0, i64* %arg0, align 8
-  %1 = load i64, i64* %c.addr, align 8
-  store i64 %1, i64* %arg1, align 8
-  %2 = load i64, i64* %d.addr, align 8
-  store i64 %2, i64* %arg2, align 8
-  %3 = load i64, i64* %e.addr, align 8
-  store i64 %3, i64* %arg3, align 8
-  %4 = load i64, i64* %f.addr, align 8
-  store i64 %4, i64* %arg4, align 8
-  %5 = load i64, i64* %g.addr, align 8
-  store i64 %5, i64* %arg5, align 8
-  %6 = load i64, i64* %arg0, align 8
-  %7 = load i64, i64* %arg1, align 8
-  %8 = load i64, i64* %arg2, align 8
-  %9 = load i64, i64* %arg3, align 8
-  %10 = load i64, i64* %arg4, align 8
-  %11 = load i64, i64* %arg5, align 8
-  %12 = load i32, i32* %a.addr, align 4
+  store i32 %a, ptr %a.addr, align 4
+  store i64 %b, ptr %b.addr, align 8
+  store i64 %c, ptr %c.addr, align 8
+  store i64 %d, ptr %d.addr, align 8
+  store i64 %e, ptr %e.addr, align 8
+  store i64 %f, ptr %f.addr, align 8
+  store i64 %g, ptr %g.addr, align 8
+  %0 = load i64, ptr %b.addr, align 8
+  store i64 %0, ptr %arg0, align 8
+  %1 = load i64, ptr %c.addr, align 8
+  store i64 %1, ptr %arg1, align 8
+  %2 = load i64, ptr %d.addr, align 8
+  store i64 %2, ptr %arg2, align 8
+  %3 = load i64, ptr %e.addr, align 8
+  store i64 %3, ptr %arg3, align 8
+  %4 = load i64, ptr %f.addr, align 8
+  store i64 %4, ptr %arg4, align 8
+  %5 = load i64, ptr %g.addr, align 8
+  store i64 %5, ptr %arg5, align 8
+  %6 = load i64, ptr %arg0, align 8
+  %7 = load i64, ptr %arg1, align 8
+  %8 = load i64, ptr %arg2, align 8
+  %9 = load i64, ptr %arg3, align 8
+  %10 = load i64, ptr %arg4, align 8
+  %11 = load i64, ptr %arg5, align 8
+  %12 = load i32, ptr %a.addr, align 4
   %13 = call i64 asm sideeffect "scall $6\0A\09;;", "={$r0},{$r1},{$r2},{$r3},{$r4},{$r5},ir,0,~{memory}"(i64 %7, i64 %8, i64 %9, i64 %10, i64 %11, i32 %12, i64 %6)
-  store i64 %13, i64* %arg0, align 8
-  %14 = load i64, i64* %arg0, align 8
+  store i64 %13, ptr %arg0, align 8
+  %14 = load i64, ptr %arg0, align 8
   ret i64 %14
 }

@@ -12,7 +12,7 @@ target triple = "kvx-kalray-cos"
 @h = common global [16 x i16] zeroinitializer, align 2
 
 ; FIXME: Loop invariants, such as make $r5 = 0xbeefbeef should be moved outise loops.
-define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h) {
+define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h) {
 ; CHECK-LABEL: InitDataSet:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
@@ -219,9 +219,9 @@ vector.ph:
 vector.body:
   %index = phi i64 [ 0, %vector.ph ], [ %index.next, %vector.body ]
   %offset.idx = add i64 %index, %0
-  %4 = getelementptr inbounds i16, i16* %x, i64 %offset.idx
-  %5 = bitcast i16* %4 to <2 x i16>*
-  store <2 x i16> <i16 -8531, i16 -8531>, <2 x i16>* %5, align 2
+  %4 = getelementptr inbounds i16, ptr %x, i64 %offset.idx
+  %5 = bitcast ptr %4 to ptr 
+  store <2 x i16> <i16 -8531, i16 -8531>, ptr %5, align 2
   %index.next = add i64 %index, 2
   %6 = icmp eq i64 %index.next, %n.vec
   br i1 %6, label %middle.block, label %vector.body
@@ -233,8 +233,8 @@ middle.block:
 for.body:
   %indvars.iv59 = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next60, %for.body ]
   %conv = trunc i64 %indvars.iv59 to i16
-  %arrayidx = getelementptr inbounds i16, i16* %x, i64 %indvars.iv59
-  store i16 %conv, i16* %arrayidx, align 2
+  %arrayidx = getelementptr inbounds i16, ptr %x, i64 %indvars.iv59
+  store i16 %conv, ptr %arrayidx, align 2
   %indvars.iv.next60 = add nuw nsw i64 %indvars.iv59, 1
   %exitcond62 = icmp eq i64 %indvars.iv.next60, %wide.trip.count61
   br i1 %exitcond62, label %for.cond1.preheader, label %for.body
@@ -249,8 +249,8 @@ for.body13.preheader:
 
 for.body4:
   %indvars.iv57 = phi i64 [ %indvars.iv.next58, %for.body4 ], [ %indvars.iv57.ph, %for.body4.preheader87 ]
-  %arrayidx6 = getelementptr inbounds i16, i16* %x, i64 %indvars.iv57
-  store i16 -8531, i16* %arrayidx6, align 2
+  %arrayidx6 = getelementptr inbounds i16, ptr %x, i64 %indvars.iv57
+  store i16 -8531, ptr %arrayidx6, align 2
   %indvars.iv.next58 = add nuw nsw i64 %indvars.iv57, 1
   %cmp2 = icmp ult i64 %indvars.iv57, 255
   br i1 %cmp2, label %for.body4, label %for.cond10.preheader
@@ -281,9 +281,9 @@ vector.ph74:
 vector.body71:
   %index77 = phi i64 [ 0, %vector.ph74 ], [ %index.next78, %vector.body71 ]
   %offset.idx82 = add i64 %index77, %7
-  %11 = getelementptr inbounds i16, i16* %h, i64 %offset.idx82
-  %12 = bitcast i16* %11 to <2 x i16>*
-  store <2 x i16> <i16 -16657, i16 -16657>, <2 x i16>* %12, align 2
+  %11 = getelementptr inbounds i16, ptr %h, i64 %offset.idx82
+  %12 = bitcast ptr %11 to ptr 
+  store <2 x i16> <i16 -16657, i16 -16657>, ptr %12, align 2
   %index.next78 = add i64 %index77, 2
   %13 = icmp eq i64 %index.next78, %n.vec76
   br i1 %13, label %middle.block69, label %vector.body71
@@ -297,16 +297,16 @@ for.body13:
   %14 = trunc i64 %indvars.iv55 to i32
   %mul = mul nsw i32 %14, %14
   %conv14 = trunc i32 %mul to i16
-  %arrayidx16 = getelementptr inbounds i16, i16* %h, i64 %indvars.iv55
-  store i16 %conv14, i16* %arrayidx16, align 2
+  %arrayidx16 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv55
+  store i16 %conv14, ptr %arrayidx16, align 2
   %indvars.iv.next56 = add nuw nsw i64 %indvars.iv55, 1
   %exitcond = icmp eq i64 %indvars.iv.next56, %wide.trip.count
   br i1 %exitcond, label %for.cond20.preheader, label %for.body13
 
 for.body23:
   %indvars.iv = phi i64 [ %indvars.iv.next, %for.body23 ], [ %indvars.iv.ph, %for.body23.preheader86 ]
-  %arrayidx25 = getelementptr inbounds i16, i16* %h, i64 %indvars.iv
-  store i16 -16657, i16* %arrayidx25, align 2
+  %arrayidx25 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv
+  store i16 -16657, ptr %arrayidx25, align 2
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %cmp21 = icmp ult i64 %indvars.iv, 15
   br i1 %cmp21, label %for.body23, label %for.end28
@@ -403,8 +403,8 @@ entry:
   %call = tail call i32 bitcast (i32 (...)* @e to i32 ()*)()
   %call1 = tail call i32 bitcast (i32 (...)* @g to i32 ()*)()
   %conv = sext i32 %call1 to i64
-  %0 = inttoptr i64 %conv to i32*
-  store i32 0, i32* @a, align 4
+  %0 = inttoptr i64 %conv to ptr 
+  store i32 0, ptr @a, align 4
   %cmp9 = icmp sgt i32 %call, 0
   br i1 %cmp9, label %for.cond3.preheader.preheader, label %for.end5
 
@@ -414,21 +414,21 @@ for.cond3.preheader.preheader:
 
 for.cond.loopexit:
   %1 = trunc i64 %indvars.iv.next to i32
-  store i32 %1, i32* @a, align 4
+  store i32 %1, ptr @a, align 4
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.end5, label %for.cond3.preheader
 
 for.cond3.preheader:
   %indvars.iv = phi i64 [ 0, %for.cond3.preheader.preheader ], [ %indvars.iv.next, %for.cond.loopexit ]
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv.next
-  %2 = load i32, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next
+  %2 = load i32, ptr %arrayidx, align 4
   %tobool8 = icmp eq i32 %2, 0
   br i1 %tobool8, label %for.cond.loopexit, label %for.body4
 
 for.body4:
-  store i32 ptrtoint (i32 (...)* @g to i32), i32* @b, align 4
-  %3 = load i32, i32* %arrayidx, align 4
+  store i32 ptrtoint (i32 (...)* @g to i32), ptr @b, align 4
+  %3 = load i32, ptr %arrayidx, align 4
   %tobool = icmp eq i32 %3, 0
   br i1 %tobool, label %for.cond.loopexit, label %for.body4
 
