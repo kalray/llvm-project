@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c, float addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_frem:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -53,9 +53,9 @@ define void @_pocl_kernel_math_kernel_nohwloop_frem( float %a, float %b, i64 %c,
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds float, float addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds float, ptr addrspace(1) %d, i64 %c
   %1 = frem float %a, %b
-  store float %1, float addrspace(1)* %arrayidx.i.i.us, align 4
+  store float %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -65,7 +65,7 @@ math_kernel.exit:
 }
 
 
-define void @_pocl_kernel_math_kernel_nohwloop_fdiv( float %a, float %b, i64 %c, float addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_nohwloop_fdiv( float %a, float %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_fdiv:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -114,9 +114,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds float, float addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds float, ptr addrspace(1) %d, i64 %c
   %1 = fdiv float %a, %b
-  store float %1, float addrspace(1)* %arrayidx.i.i.us, align 4
+  store float %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -125,7 +125,7 @@ math_kernel.exit:
   ret void
 }
 
-define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double( double %a, double %b, i64 %c, double addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double( double %a, double %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_fdiv_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -174,9 +174,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds double, double addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds double, ptr addrspace(1) %d, i64 %c
   %1 = fdiv double %a, %b
-  store double %1, double addrspace(1)* %arrayidx.i.i.us, align 4
+  store double %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -185,7 +185,7 @@ math_kernel.exit:
   ret void
 }
 
-define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 %c, half addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_fdiv_half:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -236,9 +236,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds half, half addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds half, ptr addrspace(1) %d, i64 %c
   %1 = fdiv half %a, %b
-  store half %1, half addrspace(1)* %arrayidx.i.i.us, align 4
+  store half %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -247,7 +247,7 @@ math_kernel.exit:
   ret void
 }
 
-define void @_pocl_kernel_math_kernel_hwloop_fdiv_half_fast( half %a, half %b, i64 %c, half addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_hwloop_fdiv_half_fast( half %a, half %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_hwloop_fdiv_half_fast:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
@@ -273,9 +273,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds half, half addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds half, ptr addrspace(1) %d, i64 %c
   %1 = fdiv fast half %a, %b
-  store half %1, half addrspace(1)* %arrayidx.i.i.us, align 4
+  store half %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -284,7 +284,7 @@ math_kernel.exit:
   ret void
 }
 
-define void @_pocl_kernel_math_kernel_hwloop_fdiv_fast( float %a, float %b, i64 %c, float addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_hwloop_fdiv_fast( float %a, float %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_hwloop_fdiv_fast:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    frecw $r1 = $r1
@@ -305,9 +305,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds float, float addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds float, ptr addrspace(1) %d, i64 %c
   %1 = fdiv fast float %a, %b
-  store float %1, float addrspace(1)* %arrayidx.i.i.us, align 4
+  store float %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i
@@ -316,7 +316,7 @@ math_kernel.exit:
   ret void
 }
 
-define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double_fast( double %a, double %b, i64 %c, double addrspace(1)* %d) {
+define void @_pocl_kernel_math_kernel_nohwloop_fdiv_double_fast( double %a, double %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_fdiv_double_fast:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -365,9 +365,9 @@ br label %pregion_for_entry.pregion_for_init4.i
 
 pregion_for_entry.pregion_for_init4.i:
   %_local_id_z.0 = phi i64 [ 0, %0 ], [ %2, %pregion_for_entry.pregion_for_init4.i ]
-  %arrayidx.i.i.us = getelementptr inbounds double, double addrspace(1)* %d, i64 %c
+  %arrayidx.i.i.us = getelementptr inbounds double, ptr addrspace(1) %d, i64 %c
   %1 = fdiv fast double %a, %b
-  store double %1, double addrspace(1)* %arrayidx.i.i.us, align 4
+  store double %1, ptr addrspace(1) %arrayidx.i.i.us, align 4
   %2 = add nuw i64 %_local_id_z.0, 1
   %exitcond4.not = icmp eq i64 %2, undef
   br i1 %exitcond4.not, label %math_kernel.exit, label %pregion_for_entry.pregion_for_init4.i

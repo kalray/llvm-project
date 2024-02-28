@@ -81,9 +81,9 @@ define i32 @h() {
 ; FP-ALL-NEXT:    ;;
 entry:
   %indirect-arg-temp = alloca <8 x i64>, align 32
-  store <8 x i64> <i64 9, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0>, <8 x i64>* %indirect-arg-temp, align 32
-  %call = call i32 @i(<8 x i64>* nonnull %indirect-arg-temp)
+  store <8 x i64> <i64 9, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0>, ptr %indirect-arg-temp, align 32
+  %call = call i32 @i(ptr nonnull %indirect-arg-temp)
   ret i32 %call
 }
 
-declare dso_local i32 @i(<8 x i64>*)
+declare dso_local i32 @i(ptr )

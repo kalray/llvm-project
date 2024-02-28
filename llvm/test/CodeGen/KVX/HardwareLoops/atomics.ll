@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @set(i32* nocapture %x, i32 %num){
+define void @set(ptr nocapture %x, i32 %num){
 ; CV1-LABEL: set:
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    cb.weqz $r1 ? .LBB0_5
@@ -94,7 +94,7 @@ entry:
   br i1 %cmp8, label %for.cond.cleanup, label %for.body.lr.ph
 
 for.body.lr.ph:                                   ; preds = %entry
-  %0 = bitcast i32* %a to i8*
+  %0 = bitcast ptr %a to ptr 
   %1 = zext i32 %num to i64
   br label %for.body
 
@@ -104,10 +104,10 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 for.body:                                         ; preds = %for.body.lr.ph, %for.body
   %indvars.iv = phi i64 [ 0, %for.body.lr.ph ], [ %indvars.iv.next, %for.body ]
   %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, i32* %a, align 4
-  %3 = atomicrmw sub i32* %a, i32 4 monotonic
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
-  store i32 16, i32* %arrayidx, align 4
+  store i32 %2, ptr %a, align 4
+  %3 = atomicrmw sub ptr %a, i32 4 monotonic
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
+  store i32 16, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %cmp = icmp eq i64 %indvars.iv.next, %1
   br i1 %cmp, label %for.cond.cleanup, label %for.body

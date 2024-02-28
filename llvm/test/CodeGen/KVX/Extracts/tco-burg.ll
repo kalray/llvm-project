@@ -5,9 +5,9 @@
 target triple = "kvx-kalray-cos"
 ; Derived from llvm-test-suite's MultiSource/Applications/Burg.
 
-%struct.list = type { i8*, %struct.list* }
+%struct.list = type { ptr, %struct.list* }
 
-define void @reveachList(i8* (i8*)* nocapture %f, %struct.list* readonly %l){
+define void @reveachList(ptr (ptr )* nocapture %f, %struct.list* readonly %l){
 ; CHECK-LABEL: reveachList:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -55,10 +55,10 @@ entry:
 if.end:                                           ; preds = %entry
   %next = getelementptr inbounds %struct.list, %struct.list* %l, i64 0, i32 1
   %0 = load %struct.list*, %struct.list** %next, align 8
-  tail call void @reveachList(i8* (i8*)* %f, %struct.list* %0)
+  tail call void @reveachList(ptr (ptr )* %f, %struct.list* %0)
   %x = getelementptr inbounds %struct.list, %struct.list* %l, i64 0, i32 0
-  %1 = load i8*, i8** %x, align 8
-  %call = tail call i8* %f(i8* %1) #1
+  %1 = load ptr, ptr %x, align 8
+  %call = tail call ptr %f(ptr %1) #1
   ret void
 
 return:                                           ; preds = %entry

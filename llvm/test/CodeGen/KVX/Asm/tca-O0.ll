@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @asm_tca(i8* %v, i64 %A) {
+define void @asm_tca(ptr %v, i64 %A) {
 ; CHECK-LABEL: asm_tca:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -128
@@ -55,30 +55,30 @@ define void @asm_tca(i8* %v, i64 %A) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %v.addr = alloca i8*, align 8
+  %v.addr = alloca ptr, align 8
   %A.addr = alloca i64, align 8
   %B = alloca i64, align 8
   %out1 = alloca <256 x i1>, align 32
   %out2 = alloca <256 x i1>, align 32
   %out3 = alloca <256 x i1>, align 32
-  store i8* %v, i8** %v.addr, align 8
-  store i64 %A, i64* %A.addr, align 8
-  %0 = load i64, i64* %A.addr, align 8
+  store ptr %v, ptr %v.addr, align 8
+  store i64 %A, ptr %A.addr, align 8
+  %0 = load i64, ptr %A.addr, align 8
   %add = add nsw i64 %0, 1
-  store i64 %add, i64* %B, align 8
-  %1 = load i8*, i8** %v.addr, align 8
-  %2 = load i64, i64* %A.addr, align 8
-  %3 = load i64, i64* %B, align 8
-  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "xlo.u $0 = $3[$2]\0A\09;;\0A\09xlo.us $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(i8* %1, i64 %2, i64 %3)
+  store i64 %add, ptr %B, align 8
+  %1 = load ptr, ptr %v.addr, align 8
+  %2 = load i64, ptr %A.addr, align 8
+  %3 = load i64, ptr %B, align 8
+  %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "xlo.u $0 = $3[$2]\0A\09;;\0A\09xlo.us $1 = $4[$2]\0A\09;;", "=x,=x,r,r,r,~{$r0}"(ptr %1, i64 %2, i64 %3)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %4, 0
   %asmresult1 = extractvalue { <256 x i1>, <256 x i1> } %4, 1
-  store <256 x i1> %asmresult, <256 x i1>* %out1, align 32
-  store <256 x i1> %asmresult1, <256 x i1>* %out2, align 32
-  %5 = load <256 x i1>, <256 x i1>* %out1, align 32
-  %6 = load <256 x i1>, <256 x i1>* %out2, align 32
-  %7 = load i8*, i8** %v.addr, align 8
-  %8 = call <256 x i1> asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xso 0[$3] = $2", "=x,x,x,r"(<256 x i1> %5, <256 x i1> %6, i8* %7)
-  store <256 x i1> %8, <256 x i1>* %out3, align 32
+  store <256 x i1> %asmresult, ptr %out1, align 32
+  store <256 x i1> %asmresult1, ptr %out2, align 32
+  %5 = load <256 x i1>, ptr %out1, align 32
+  %6 = load <256 x i1>, ptr %out2, align 32
+  %7 = load ptr, ptr %v.addr, align 8
+  %8 = call <256 x i1> asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xso 0[$3] = $2", "=x,x,x,r"(<256 x i1> %5, <256 x i1> %6, ptr %7)
+  store <256 x i1> %8, ptr %out3, align 32
   ret void
 }
 
@@ -109,10 +109,10 @@ entry:
   %A.addr = alloca i64, align 8
   %v4i64 = alloca <256 x i1>, align 32
   %tcav4i64 = alloca <256 x i1>, align 32
-  store i64 %A, i64* %A.addr, align 8
-  %0 = load <256 x i1>, <256 x i1>* %tcav4i64, align 32
+  store i64 %A, ptr %A.addr, align 8
+  %0 = load <256 x i1>, ptr %tcav4i64, align 32
   %1 = call <256 x i1> asm sideeffect "xcopyo $0 = $1", "=x,x,~{$a0}"(<256 x i1> %0)
-  store <256 x i1> %1, <256 x i1>* %v4i64, align 32
+  store <256 x i1> %1, ptr %v4i64, align 32
   ret void
 }
 
@@ -143,14 +143,14 @@ entry:
   %A.addr = alloca i64, align 8
   %v4i64 = alloca <256 x i1>, align 32
   %tcav4i64 = alloca <256 x i1>, align 32
-  store i64 %A, i64* %A.addr, align 8
-  %0 = load <256 x i1>, <256 x i1>* %tcav4i64, align 32
+  store i64 %A, ptr %A.addr, align 8
+  %0 = load <256 x i1>, ptr %tcav4i64, align 32
   %1 = call <256 x i1> asm sideeffect "xcopyo $0 = $1", "=x,x,~{$a0.hi}"(<256 x i1> %0)
-  store <256 x i1> %1, <256 x i1>* %v4i64, align 32
+  store <256 x i1> %1, ptr %v4i64, align 32
   ret void
 }
 
-define void @asm_clobber_wide_vec(<256 x i1>* %a) {
+define void @asm_clobber_wide_vec(ptr %a) {
 ; CHECK-LABEL: asm_clobber_wide_vec:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -170,16 +170,16 @@ define void @asm_clobber_wide_vec(<256 x i1>* %a) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %a.addr = alloca <256 x i1>*, align 8
-  store <256 x i1>* %a, <256 x i1>** %a.addr, align 8
-  %0 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
-  %arrayidx = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 0
-  %1 = load <256 x i1>, <256 x i1>* %arrayidx, align 32
+  %a.addr = alloca ptr, align 8
+  store ptr %a, ptr %a.addr, align 8
+  %0 = load ptr, ptr %a.addr, align 8
+  %arrayidx = getelementptr inbounds <256 x i1>, ptr %0, i64 0
+  %1 = load <256 x i1>, ptr %arrayidx, align 32
   call void asm sideeffect "xcopyo $0 = $0", "x,~{$r0r1r2r3},~{$a0a1}"(<256 x i1> %1)
   ret void
 }
 
-define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
+define void @asm_clobber_multiple_quad(ptr %c, ptr %b) {
 ; CHECK-LABEL: asm_clobber_multiple_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -225,26 +225,26 @@ define void @asm_clobber_multiple_quad(<256 x i1>* %c, <256 x i1>* %b) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %c.addr = alloca <256 x i1>*, align 8
-  %b.addr = alloca <256 x i1>*, align 8
-  store <256 x i1>* %c, <256 x i1>** %c.addr, align 8
-  store <256 x i1>* %b, <256 x i1>** %b.addr, align 8
-  %0 = load <256 x i1>*, <256 x i1>** %c.addr, align 8
-  %arrayidx = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 0
-  %1 = load <256 x i1>*, <256 x i1>** %b.addr, align 8
-  %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %1, i64 0
-  %2 = load <256 x i1>*, <256 x i1>** %c.addr, align 8
-  %arrayidx2 = getelementptr inbounds <256 x i1>, <256 x i1>* %2, i64 0
-  %3 = load <256 x i1>, <256 x i1>* %arrayidx2, align 32
+  %c.addr = alloca ptr, align 8
+  %b.addr = alloca ptr, align 8
+  store ptr %c, ptr %c.addr, align 8
+  store ptr %b, ptr %b.addr, align 8
+  %0 = load ptr, ptr %c.addr, align 8
+  %arrayidx = getelementptr inbounds <256 x i1>, ptr %0, i64 0
+  %1 = load ptr, ptr %b.addr, align 8
+  %arrayidx1 = getelementptr inbounds <256 x i1>, ptr %1, i64 0
+  %2 = load ptr, ptr %c.addr, align 8
+  %arrayidx2 = getelementptr inbounds <256 x i1>, ptr %2, i64 0
+  %3 = load <256 x i1>, ptr %arrayidx2, align 32
   %4 = call { <256 x i1>, <256 x i1> } asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xcopyo $1 = $0", "=x,=x,x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3)
   %asmresult = extractvalue { <256 x i1>, <256 x i1> } %4, 0
   %asmresult3 = extractvalue { <256 x i1>, <256 x i1> } %4, 1
-  store <256 x i1> %asmresult, <256 x i1>* %arrayidx, align 32
-  store <256 x i1> %asmresult3, <256 x i1>* %arrayidx1, align 32
+  store <256 x i1> %asmresult, ptr %arrayidx, align 32
+  store <256 x i1> %asmresult3, ptr %arrayidx1, align 32
   ret void
 }
 
-define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
+define ptr @asm_clobber_quad_matrix(ptr %a) {
 ; CHECK-LABEL: asm_clobber_quad_matrix:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -266,17 +266,17 @@ define <256 x i1>* @asm_clobber_quad_matrix(<256 x i1>* %a) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %a.addr = alloca <256 x i1>*, align 8
-  store <256 x i1>* %a, <256 x i1>** %a.addr, align 8
-  %0 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
-  %arrayidx = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 0
-  %1 = load <256 x i1>, <256 x i1>* %arrayidx, align 32
+  %a.addr = alloca ptr, align 8
+  store ptr %a, ptr %a.addr, align 8
+  %0 = load ptr, ptr %a.addr, align 8
+  %arrayidx = getelementptr inbounds <256 x i1>, ptr %0, i64 0
+  %1 = load <256 x i1>, ptr %arrayidx, align 32
   call void asm sideeffect "xso 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %1)
-  %2 = load <256 x i1>*, <256 x i1>** %a.addr, align 8
-  ret <256 x i1>* %2
+  %2 = load ptr, ptr %a.addr, align 8
+  ret ptr %2
 }
 
-define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
+define void @use_wide_reg(ptr %w, ptr %v) {
 ; CHECK-LABEL: use_wide_reg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -192
@@ -348,22 +348,22 @@ define void @use_wide_reg(<512 x i1>* %w, <256 x i1>* %v) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %w.addr = alloca <512 x i1>*, align 8
-  %v.addr = alloca <256 x i1>*, align 8
-  store <512 x i1>* %w, <512 x i1>** %w.addr, align 8
-  store <256 x i1>* %v, <256 x i1>** %v.addr, align 8
-  %0 = load <512 x i1>*, <512 x i1>** %w.addr, align 8
-  %arrayidx = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 0
-  %1 = load <512 x i1>, <512 x i1>* %arrayidx, align 32
-  %2 = load <256 x i1>*, <256 x i1>** %v.addr, align 8
-  %arrayidx1 = getelementptr inbounds <256 x i1>, <256 x i1>* %2, i64 0
-  %3 = load <256 x i1>, <256 x i1>* %arrayidx1, align 32
+  %w.addr = alloca ptr, align 8
+  %v.addr = alloca ptr, align 8
+  store ptr %w, ptr %w.addr, align 8
+  store ptr %v, ptr %v.addr, align 8
+  %0 = load ptr, ptr %w.addr, align 8
+  %arrayidx = getelementptr inbounds <512 x i1>, ptr %0, i64 0
+  %1 = load <512 x i1>, ptr %arrayidx, align 32
+  %2 = load ptr, ptr %v.addr, align 8
+  %arrayidx1 = getelementptr inbounds <256 x i1>, ptr %2, i64 0
+  %3 = load <256 x i1>, ptr %arrayidx1, align 32
   %4 = call <512 x i1> asm sideeffect "xmma484bw $0 = $0, $1, $1", "=x,x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %3, <512 x i1> %1)
-  store <512 x i1> %4, <512 x i1>* %arrayidx, align 32
+  store <512 x i1> %4, ptr %arrayidx, align 32
   ret void
 }
 
-define void @use_matrix_reg(<1024 x i1>* %x) {
+define void @use_matrix_reg(ptr %x) {
 ; CHECK-LABEL: use_matrix_reg:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -384
@@ -461,12 +461,12 @@ define void @use_matrix_reg(<1024 x i1>* %x) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %x.addr = alloca <1024 x i1>*, align 8
-  store <1024 x i1>* %x, <1024 x i1>** %x.addr, align 8
-  %0 = load <1024 x i1>*, <1024 x i1>** %x.addr, align 8
-  %arrayidx = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 0
-  %1 = load <1024 x i1>, <1024 x i1>* %arrayidx, align 128
+  %x.addr = alloca ptr, align 8
+  store ptr %x, ptr %x.addr, align 8
+  %0 = load ptr, ptr %x.addr, align 8
+  %arrayidx = getelementptr inbounds <1024 x i1>, ptr %0, i64 0
+  %1 = load <1024 x i1>, ptr %arrayidx, align 128
   %2 = call <1024 x i1> asm sideeffect "xmt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %1)
-  store <1024 x i1> %2, <1024 x i1>* %arrayidx, align 128
+  store <1024 x i1> %2, ptr %arrayidx, align 128
   ret void
 }

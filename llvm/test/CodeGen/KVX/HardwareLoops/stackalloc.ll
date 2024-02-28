@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @set(i32* nocapture %x, i32 %num){
+define void @set(ptr nocapture %x, i32 %num){
 ; CHECK-LABEL: set:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_3
@@ -43,8 +43,8 @@ for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %1 = trunc i64 %indvars.iv to i32
   %mul = mul nsw i32 %1, %1
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
-  store i32 %mul, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
+  store i32 %mul, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %cmp = icmp eq i64 %indvars.iv.next, %0
   br i1 %cmp, label %for.cond.cleanup, label %for.body
@@ -151,7 +151,7 @@ entry:
   %mul = shl nsw i32 %num, 2
   %conv = sext i32 %mul to i64
   %0 = alloca i8, i64 %conv, align 8
-  %1 = bitcast i8* %0 to i32*
+  %1 = bitcast ptr %0 to ptr 
   %cmp6.i = icmp eq i32 %num, 0
   br i1 %cmp6.i, label %for.cond.cleanup, label %for.body.preheader.i
 
@@ -163,8 +163,8 @@ for.body.i:
   %indvars.iv.i = phi i64 [ 0, %for.body.preheader.i ], [ %indvars.iv.next.i, %for.body.i ]
   %3 = trunc i64 %indvars.iv.i to i32
   %mul.i = mul nsw i32 %3, %3
-  %arrayidx.i = getelementptr inbounds i32, i32* %1, i64 %indvars.iv.i
-  store i32 %mul.i, i32* %arrayidx.i, align 4
+  %arrayidx.i = getelementptr inbounds i32, ptr %1, i64 %indvars.iv.i
+  store i32 %mul.i, ptr %arrayidx.i, align 4
   %indvars.iv.next.i = add nuw nsw i64 %indvars.iv.i, 1
   %cmp.i = icmp eq i64 %indvars.iv.next.i, %2
   br i1 %cmp.i, label %set.exit, label %for.body.i
@@ -173,7 +173,7 @@ set.exit:
   %mul1 = shl nsw i32 %num, 3
   %conv2 = sext i32 %mul1 to i64
   %4 = alloca i8, i64 %conv2, align 8
-  %5 = bitcast i8* %4 to i32*
+  %5 = bitcast ptr %4 to ptr 
   %mul3 = shl nsw i32 %num, 1
   %6 = zext i32 %mul3 to i64
   br label %for.body.i36
@@ -182,8 +182,8 @@ for.body.i36:
   %indvars.iv.i31 = phi i64 [ 0, %set.exit ], [ %indvars.iv.next.i34, %for.body.i36 ]
   %7 = trunc i64 %indvars.iv.i31 to i32
   %mul.i32 = mul nsw i32 %7, %7
-  %arrayidx.i33 = getelementptr inbounds i32, i32* %5, i64 %indvars.iv.i31
-  store i32 %mul.i32, i32* %arrayidx.i33, align 4
+  %arrayidx.i33 = getelementptr inbounds i32, ptr %5, i64 %indvars.iv.i31
+  store i32 %mul.i32, ptr %arrayidx.i33, align 4
   %indvars.iv.next.i34 = add nuw nsw i64 %indvars.iv.i31, 1
   %cmp.i35 = icmp eq i64 %indvars.iv.next.i34, %6
   br i1 %cmp.i35, label %set.exit37, label %for.body.i36
@@ -203,13 +203,13 @@ for.cond.cleanup:
 for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %sum.043 = phi i32 [ 0, %for.body.preheader ], [ %add11, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %1, i64 %indvars.iv
-  %10 = load i32, i32* %arrayidx, align 4
-  %arrayidx6 = getelementptr inbounds i32, i32* %5, i64 %indvars.iv
-  %11 = load i32, i32* %arrayidx6, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %1, i64 %indvars.iv
+  %10 = load i32, ptr %arrayidx, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %5, i64 %indvars.iv
+  %11 = load i32, ptr %arrayidx6, align 4
   %12 = add nsw i64 %indvars.iv, %8
-  %arrayidx9 = getelementptr inbounds i32, i32* %5, i64 %12
-  %13 = load i32, i32* %arrayidx9, align 4
+  %arrayidx9 = getelementptr inbounds i32, ptr %5, i64 %12
+  %13 = load i32, ptr %arrayidx9, align 4
   %add = add i32 %10, %sum.043
   %add10 = add i32 %add, %11
   %add11 = add i32 %add10, %13

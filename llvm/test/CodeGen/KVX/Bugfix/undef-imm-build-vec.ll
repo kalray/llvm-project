@@ -19,14 +19,14 @@ pregion_for_end101.i.i:
   br label %pregion_for_entry.for.cond.cleanup.postbarrier.i.i
 
 pregion_for_entry.for.cond.cleanup.postbarrier.i.i:
-  %0 = load <2 x i8>, <2 x i8> addrspace(1)* undef, align 2
+  %0 = load <2 x i8>, ptr addrspace(1) undef, align 2
   %1 = zext <2 x i8> %0 to <2 x i32>
   %2 = shl nuw nsw <2 x i32> %1, <i32 1, i32 1>
   %3 = or <2 x i32> %2, <i32 0, i32 1>
   %4 = extractelement <2 x i32> %3, i64 1
   %idxprom34.i.i = zext i32 %4 to i64
   %arrayidx35.i.i = getelementptr inbounds [512 x i8], [512 x i8] addrspace(3)* null, i64 0, i64 %idxprom34.i.i
-  %5 = load i8, i8 addrspace(3)* %arrayidx35.i.i, align 1
-  store i8 %5, i8 addrspace(1)* undef, align 1
+  %5 = load i8, ptr addrspace(3) %arrayidx35.i.i, align 1
+  store i8 %5, ptr addrspace(1) undef, align 1
   br label %pregion_for_entry.for.cond.cleanup.postbarrier.i.i
 }

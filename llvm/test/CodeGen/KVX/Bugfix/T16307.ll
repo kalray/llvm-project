@@ -18,9 +18,9 @@ define i32 @dzerol() {
 entry:
   %retval = alloca i32, align 4
   %b = alloca [1 x i8], align 1
-  %arraydecay = getelementptr inbounds [1 x i8], [1 x i8]* %b, i64 0, i64 0
-  call void @llvm.kvx.dzerol(i8* %arraydecay)
-  %0 = load i32, i32* %retval, align 4
+  %arraydecay = getelementptr inbounds [1 x i8], ptr %b, i64 0, i64 0
+  call void @llvm.kvx.dzerol(ptr %arraydecay)
+  %0 = load i32, ptr %retval, align 4
   ret i32 %0
 }
 
@@ -38,9 +38,9 @@ define i32 @dinvall() {
 entry:
 %retval = alloca i32, align 4
 %b = alloca [1 x i8], align 1
-%arraydecay = getelementptr inbounds [1 x i8], [1 x i8]* %b, i64 0, i64 0
-call void @llvm.kvx.dinvall(i8* %arraydecay)
-%0 = load i32, i32* %retval, align 4
+%arraydecay = getelementptr inbounds [1 x i8], ptr %b, i64 0, i64 0
+call void @llvm.kvx.dinvall(ptr %arraydecay)
+%0 = load i32, ptr %retval, align 4
 ret i32 %0
 }
 
@@ -58,9 +58,9 @@ define i32 @dtouchl() {
 entry:
 %retval = alloca i32, align 4
 %b = alloca [1 x i8], align 1
-%arraydecay = getelementptr inbounds [1 x i8], [1 x i8]* %b, i64 0, i64 0
-call void @llvm.kvx.dtouchl(i8* %arraydecay)
-%0 = load i32, i32* %retval, align 4
+%arraydecay = getelementptr inbounds [1 x i8], ptr %b, i64 0, i64 0
+call void @llvm.kvx.dtouchl(ptr %arraydecay)
+%0 = load i32, ptr %retval, align 4
 ret i32 %0
 }
 
@@ -78,13 +78,13 @@ define i32 @i1invals() {
 entry:
 %retval = alloca i32, align 4
 %b = alloca [1 x i8], align 1
-%arraydecay = getelementptr inbounds [1 x i8], [1 x i8]* %b, i64 0, i64 0
-call void @llvm.kvx.i1invals(i8* %arraydecay)
-%0 = load i32, i32* %retval, align 4
+%arraydecay = getelementptr inbounds [1 x i8], ptr %b, i64 0, i64 0
+call void @llvm.kvx.i1invals(ptr %arraydecay)
+%0 = load i32, ptr %retval, align 4
 ret i32 %0
 }
 
-declare void @llvm.kvx.dzerol(i8*)
-declare void @llvm.kvx.dinvall(i8*)
-declare void @llvm.kvx.dtouchl(i8*)
-declare void @llvm.kvx.i1invals(i8*)
+declare void @llvm.kvx.dzerol(ptr )
+declare void @llvm.kvx.dinvall(ptr )
+declare void @llvm.kvx.dtouchl(ptr )
+declare void @llvm.kvx.i1invals(ptr )

@@ -5,7 +5,7 @@
 target triple = "kvx-kalray-cos"
 
 @a = common global i32 0, align 4
-@b = common global i8* null, align 8
+@b = common global ptr null, align 8
 
 define i32 @c()  {
 ; CHECK-LABEL: c:
@@ -1184,13 +1184,13 @@ define i32 @c()  {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i32, i32* @a, align 4
+  %0 = load i32, ptr @a, align 4
   %tobool5 = icmp eq i32 %0, 0
   br i1 %tobool5, label %while.end, label %for.cond.preheader
 
 while.cond.loopexit.loopexit:
   %inc.lcssa = phi i32 [ %inc.lcssa.unr, %for.body.prol.loopexit ], [ %inc.7, %for.body ]
-  %.pre = load i32, i32* @a, align 4
+  %.pre = load i32, ptr @a, align 4
   br label %while.cond.loopexit
 
 while.cond.loopexit:
@@ -1212,8 +1212,8 @@ for.body.preheader:
   br i1 %lcmp.mod, label %for.body.prol.loopexit, label %for.body.prol
 
 for.body.prol:
-  %4 = load i8*, i8** @b, align 8
-  store i8 4, i8* %4, align 1
+  %4 = load ptr, ptr @b, align 8
+  store i8 4, ptr %4, align 1
   %inc.prol = add nsw i32 %d.06, 1
   %prol.iter.cmp = icmp eq i32 %xtraiter, 1
   br i1 %prol.iter.cmp, label %for.body.prol.loopexit, label %for.body.prol.1
@@ -1226,22 +1226,22 @@ for.body.prol.loopexit:
 
 for.body:
   %d.14 = phi i32 [ %inc.7, %for.body ], [ %d.14.unr, %for.body.prol.loopexit ]
-  %6 = load i8*, i8** @b, align 8
-  store i8 4, i8* %6, align 1
-  %7 = load i8*, i8** @b, align 8
-  store i8 4, i8* %7, align 1
-  %8 = load i8*, i8** @b, align 8
-  store i8 4, i8* %8, align 1
-  %9 = load i8*, i8** @b, align 8
-  store i8 4, i8* %9, align 1
-  %10 = load i8*, i8** @b, align 8
-  store i8 4, i8* %10, align 1
-  %11 = load i8*, i8** @b, align 8
-  store i8 4, i8* %11, align 1
-  %12 = load i8*, i8** @b, align 8
-  store i8 4, i8* %12, align 1
-  %13 = load i8*, i8** @b, align 8
-  store i8 4, i8* %13, align 1
+  %6 = load ptr, ptr @b, align 8
+  store i8 4, ptr %6, align 1
+  %7 = load ptr, ptr @b, align 8
+  store i8 4, ptr %7, align 1
+  %8 = load ptr, ptr @b, align 8
+  store i8 4, ptr %8, align 1
+  %9 = load ptr, ptr @b, align 8
+  store i8 4, ptr %9, align 1
+  %10 = load ptr, ptr @b, align 8
+  store i8 4, ptr %10, align 1
+  %11 = load ptr, ptr @b, align 8
+  store i8 4, ptr %11, align 1
+  %12 = load ptr, ptr @b, align 8
+  store i8 4, ptr %12, align 1
+  %13 = load ptr, ptr @b, align 8
+  store i8 4, ptr %13, align 1
   %inc.7 = add nsw i32 %d.14, 8
   %cmp.7 = icmp slt i32 %d.14, -8
   br i1 %cmp.7, label %for.body, label %while.cond.loopexit.loopexit
@@ -1250,43 +1250,43 @@ while.end:
   ret i32 undef
 
 for.body.prol.1:
-  %14 = load i8*, i8** @b, align 8
-  store i8 4, i8* %14, align 1
+  %14 = load ptr, ptr @b, align 8
+  store i8 4, ptr %14, align 1
   %inc.prol.1 = add nsw i32 %d.06, 2
   %prol.iter.cmp.1 = icmp eq i32 %xtraiter, 2
   br i1 %prol.iter.cmp.1, label %for.body.prol.loopexit, label %for.body.prol.2
 
 for.body.prol.2:
-  %15 = load i8*, i8** @b, align 8
-  store i8 4, i8* %15, align 1
+  %15 = load ptr, ptr @b, align 8
+  store i8 4, ptr %15, align 1
   %inc.prol.2 = add nsw i32 %d.06, 3
   %prol.iter.cmp.2 = icmp eq i32 %xtraiter, 3
   br i1 %prol.iter.cmp.2, label %for.body.prol.loopexit, label %for.body.prol.3
 
 for.body.prol.3:
-  %16 = load i8*, i8** @b, align 8
-  store i8 4, i8* %16, align 1
+  %16 = load ptr, ptr @b, align 8
+  store i8 4, ptr %16, align 1
   %inc.prol.3 = add nsw i32 %d.06, 4
   %prol.iter.cmp.3 = icmp eq i32 %xtraiter, 4
   br i1 %prol.iter.cmp.3, label %for.body.prol.loopexit, label %for.body.prol.4
 
 for.body.prol.4:
-  %17 = load i8*, i8** @b, align 8
-  store i8 4, i8* %17, align 1
+  %17 = load ptr, ptr @b, align 8
+  store i8 4, ptr %17, align 1
   %inc.prol.4 = add nsw i32 %d.06, 5
   %prol.iter.cmp.4 = icmp eq i32 %xtraiter, 5
   br i1 %prol.iter.cmp.4, label %for.body.prol.loopexit, label %for.body.prol.5
 
 for.body.prol.5:
-  %18 = load i8*, i8** @b, align 8
-  store i8 4, i8* %18, align 1
+  %18 = load ptr, ptr @b, align 8
+  store i8 4, ptr %18, align 1
   %inc.prol.5 = add nsw i32 %d.06, 6
   %prol.iter.cmp.5 = icmp eq i32 %xtraiter, 6
   br i1 %prol.iter.cmp.5, label %for.body.prol.loopexit, label %for.body.prol.6
 
 for.body.prol.6:
-  %19 = load i8*, i8** @b, align 8
-  store i8 4, i8* %19, align 1
+  %19 = load ptr, ptr @b, align 8
+  store i8 4, ptr %19, align 1
   %inc.prol.6 = add nsw i32 %d.06, 7
   br label %for.body.prol.loopexit
 
@@ -1301,50 +1301,50 @@ for.body.preheader.1:
   br i1 %lcmp.mod.1, label %for.body.prol.loopexit.1, label %for.body.prol.110
 
 for.body.prol.110:
-  %21 = load i8*, i8** @b, align 8
-  store i8 4, i8* %21, align 1
+  %21 = load ptr, ptr @b, align 8
+  store i8 4, ptr %21, align 1
   %inc.prol.17 = add nsw i32 %d.1.lcssa, 1
   %prol.iter.cmp.19 = icmp eq i32 %xtraiter.1, 1
   br i1 %prol.iter.cmp.19, label %for.body.prol.loopexit.1, label %for.body.prol.1.1
 
 for.body.prol.1.1:
-  %22 = load i8*, i8** @b, align 8
-  store i8 4, i8* %22, align 1
+  %22 = load ptr, ptr @b, align 8
+  store i8 4, ptr %22, align 1
   %inc.prol.1.1 = add nsw i32 %d.1.lcssa, 2
   %prol.iter.cmp.1.1 = icmp eq i32 %xtraiter.1, 2
   br i1 %prol.iter.cmp.1.1, label %for.body.prol.loopexit.1, label %for.body.prol.2.1
 
 for.body.prol.2.1:
-  %23 = load i8*, i8** @b, align 8
-  store i8 4, i8* %23, align 1
+  %23 = load ptr, ptr @b, align 8
+  store i8 4, ptr %23, align 1
   %inc.prol.2.1 = add nsw i32 %d.1.lcssa, 3
   %prol.iter.cmp.2.1 = icmp eq i32 %xtraiter.1, 3
   br i1 %prol.iter.cmp.2.1, label %for.body.prol.loopexit.1, label %for.body.prol.3.1
 
 for.body.prol.3.1:
-  %24 = load i8*, i8** @b, align 8
-  store i8 4, i8* %24, align 1
+  %24 = load ptr, ptr @b, align 8
+  store i8 4, ptr %24, align 1
   %inc.prol.3.1 = add nsw i32 %d.1.lcssa, 4
   %prol.iter.cmp.3.1 = icmp eq i32 %xtraiter.1, 4
   br i1 %prol.iter.cmp.3.1, label %for.body.prol.loopexit.1, label %for.body.prol.4.1
 
 for.body.prol.4.1:
-  %25 = load i8*, i8** @b, align 8
-  store i8 4, i8* %25, align 1
+  %25 = load ptr, ptr @b, align 8
+  store i8 4, ptr %25, align 1
   %inc.prol.4.1 = add nsw i32 %d.1.lcssa, 5
   %prol.iter.cmp.4.1 = icmp eq i32 %xtraiter.1, 5
   br i1 %prol.iter.cmp.4.1, label %for.body.prol.loopexit.1, label %for.body.prol.5.1
 
 for.body.prol.5.1:
-  %26 = load i8*, i8** @b, align 8
-  store i8 4, i8* %26, align 1
+  %26 = load ptr, ptr @b, align 8
+  store i8 4, ptr %26, align 1
   %inc.prol.5.1 = add nsw i32 %d.1.lcssa, 6
   %prol.iter.cmp.5.1 = icmp eq i32 %xtraiter.1, 6
   br i1 %prol.iter.cmp.5.1, label %for.body.prol.loopexit.1, label %for.body.prol.6.1
 
 for.body.prol.6.1:
-  %27 = load i8*, i8** @b, align 8
-  store i8 4, i8* %27, align 1
+  %27 = load ptr, ptr @b, align 8
+  store i8 4, ptr %27, align 1
   %inc.prol.6.1 = add nsw i32 %d.1.lcssa, 7
   br label %for.body.prol.loopexit.1
 
@@ -1356,29 +1356,29 @@ for.body.prol.loopexit.1:
 
 for.body.1:
   %d.14.1 = phi i32 [ %inc.7.1, %for.body.1 ], [ %d.14.unr.1, %for.body.prol.loopexit.1 ]
-  %29 = load i8*, i8** @b, align 8
-  store i8 4, i8* %29, align 1
-  %30 = load i8*, i8** @b, align 8
-  store i8 4, i8* %30, align 1
-  %31 = load i8*, i8** @b, align 8
-  store i8 4, i8* %31, align 1
-  %32 = load i8*, i8** @b, align 8
-  store i8 4, i8* %32, align 1
-  %33 = load i8*, i8** @b, align 8
-  store i8 4, i8* %33, align 1
-  %34 = load i8*, i8** @b, align 8
-  store i8 4, i8* %34, align 1
-  %35 = load i8*, i8** @b, align 8
-  store i8 4, i8* %35, align 1
-  %36 = load i8*, i8** @b, align 8
-  store i8 4, i8* %36, align 1
+  %29 = load ptr, ptr @b, align 8
+  store i8 4, ptr %29, align 1
+  %30 = load ptr, ptr @b, align 8
+  store i8 4, ptr %30, align 1
+  %31 = load ptr, ptr @b, align 8
+  store i8 4, ptr %31, align 1
+  %32 = load ptr, ptr @b, align 8
+  store i8 4, ptr %32, align 1
+  %33 = load ptr, ptr @b, align 8
+  store i8 4, ptr %33, align 1
+  %34 = load ptr, ptr @b, align 8
+  store i8 4, ptr %34, align 1
+  %35 = load ptr, ptr @b, align 8
+  store i8 4, ptr %35, align 1
+  %36 = load ptr, ptr @b, align 8
+  store i8 4, ptr %36, align 1
   %inc.7.1 = add nsw i32 %d.14.1, 8
   %cmp.7.1 = icmp slt i32 %d.14.1, -8
   br i1 %cmp.7.1, label %for.body.1, label %while.cond.loopexit.loopexit.1
 
 while.cond.loopexit.loopexit.1:
   %inc.lcssa.1 = phi i32 [ %inc.lcssa.unr.1, %for.body.prol.loopexit.1 ], [ %inc.7.1, %for.body.1 ]
-  %.pre.1 = load i32, i32* @a, align 4
+  %.pre.1 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.1
 
 while.cond.loopexit.1:
@@ -1398,50 +1398,50 @@ for.body.preheader.2:
   br i1 %lcmp.mod.2, label %for.body.prol.loopexit.2, label %for.body.prol.215
 
 for.body.prol.215:
-  %39 = load i8*, i8** @b, align 8
-  store i8 4, i8* %39, align 1
+  %39 = load ptr, ptr @b, align 8
+  store i8 4, ptr %39, align 1
   %inc.prol.212 = add nsw i32 %d.1.lcssa.1, 1
   %prol.iter.cmp.214 = icmp eq i32 %xtraiter.2, 1
   br i1 %prol.iter.cmp.214, label %for.body.prol.loopexit.2, label %for.body.prol.1.2
 
 for.body.prol.1.2:
-  %40 = load i8*, i8** @b, align 8
-  store i8 4, i8* %40, align 1
+  %40 = load ptr, ptr @b, align 8
+  store i8 4, ptr %40, align 1
   %inc.prol.1.2 = add nsw i32 %d.1.lcssa.1, 2
   %prol.iter.cmp.1.2 = icmp eq i32 %xtraiter.2, 2
   br i1 %prol.iter.cmp.1.2, label %for.body.prol.loopexit.2, label %for.body.prol.2.2
 
 for.body.prol.2.2:
-  %41 = load i8*, i8** @b, align 8
-  store i8 4, i8* %41, align 1
+  %41 = load ptr, ptr @b, align 8
+  store i8 4, ptr %41, align 1
   %inc.prol.2.2 = add nsw i32 %d.1.lcssa.1, 3
   %prol.iter.cmp.2.2 = icmp eq i32 %xtraiter.2, 3
   br i1 %prol.iter.cmp.2.2, label %for.body.prol.loopexit.2, label %for.body.prol.3.2
 
 for.body.prol.3.2:
-  %42 = load i8*, i8** @b, align 8
-  store i8 4, i8* %42, align 1
+  %42 = load ptr, ptr @b, align 8
+  store i8 4, ptr %42, align 1
   %inc.prol.3.2 = add nsw i32 %d.1.lcssa.1, 4
   %prol.iter.cmp.3.2 = icmp eq i32 %xtraiter.2, 4
   br i1 %prol.iter.cmp.3.2, label %for.body.prol.loopexit.2, label %for.body.prol.4.2
 
 for.body.prol.4.2:
-  %43 = load i8*, i8** @b, align 8
-  store i8 4, i8* %43, align 1
+  %43 = load ptr, ptr @b, align 8
+  store i8 4, ptr %43, align 1
   %inc.prol.4.2 = add nsw i32 %d.1.lcssa.1, 5
   %prol.iter.cmp.4.2 = icmp eq i32 %xtraiter.2, 5
   br i1 %prol.iter.cmp.4.2, label %for.body.prol.loopexit.2, label %for.body.prol.5.2
 
 for.body.prol.5.2:
-  %44 = load i8*, i8** @b, align 8
-  store i8 4, i8* %44, align 1
+  %44 = load ptr, ptr @b, align 8
+  store i8 4, ptr %44, align 1
   %inc.prol.5.2 = add nsw i32 %d.1.lcssa.1, 6
   %prol.iter.cmp.5.2 = icmp eq i32 %xtraiter.2, 6
   br i1 %prol.iter.cmp.5.2, label %for.body.prol.loopexit.2, label %for.body.prol.6.2
 
 for.body.prol.6.2:
-  %45 = load i8*, i8** @b, align 8
-  store i8 4, i8* %45, align 1
+  %45 = load ptr, ptr @b, align 8
+  store i8 4, ptr %45, align 1
   %inc.prol.6.2 = add nsw i32 %d.1.lcssa.1, 7
   br label %for.body.prol.loopexit.2
 
@@ -1453,29 +1453,29 @@ for.body.prol.loopexit.2:
 
 for.body.2:
   %d.14.2 = phi i32 [ %inc.7.2, %for.body.2 ], [ %d.14.unr.2, %for.body.prol.loopexit.2 ]
-  %47 = load i8*, i8** @b, align 8
-  store i8 4, i8* %47, align 1
-  %48 = load i8*, i8** @b, align 8
-  store i8 4, i8* %48, align 1
-  %49 = load i8*, i8** @b, align 8
-  store i8 4, i8* %49, align 1
-  %50 = load i8*, i8** @b, align 8
-  store i8 4, i8* %50, align 1
-  %51 = load i8*, i8** @b, align 8
-  store i8 4, i8* %51, align 1
-  %52 = load i8*, i8** @b, align 8
-  store i8 4, i8* %52, align 1
-  %53 = load i8*, i8** @b, align 8
-  store i8 4, i8* %53, align 1
-  %54 = load i8*, i8** @b, align 8
-  store i8 4, i8* %54, align 1
+  %47 = load ptr, ptr @b, align 8
+  store i8 4, ptr %47, align 1
+  %48 = load ptr, ptr @b, align 8
+  store i8 4, ptr %48, align 1
+  %49 = load ptr, ptr @b, align 8
+  store i8 4, ptr %49, align 1
+  %50 = load ptr, ptr @b, align 8
+  store i8 4, ptr %50, align 1
+  %51 = load ptr, ptr @b, align 8
+  store i8 4, ptr %51, align 1
+  %52 = load ptr, ptr @b, align 8
+  store i8 4, ptr %52, align 1
+  %53 = load ptr, ptr @b, align 8
+  store i8 4, ptr %53, align 1
+  %54 = load ptr, ptr @b, align 8
+  store i8 4, ptr %54, align 1
   %inc.7.2 = add nsw i32 %d.14.2, 8
   %cmp.7.2 = icmp slt i32 %d.14.2, -8
   br i1 %cmp.7.2, label %for.body.2, label %while.cond.loopexit.loopexit.2
 
 while.cond.loopexit.loopexit.2:
   %inc.lcssa.2 = phi i32 [ %inc.lcssa.unr.2, %for.body.prol.loopexit.2 ], [ %inc.7.2, %for.body.2 ]
-  %.pre.2 = load i32, i32* @a, align 4
+  %.pre.2 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.2
 
 while.cond.loopexit.2:
@@ -1495,50 +1495,50 @@ for.body.preheader.3:
   br i1 %lcmp.mod.3, label %for.body.prol.loopexit.3, label %for.body.prol.320
 
 for.body.prol.320:
-  %57 = load i8*, i8** @b, align 8
-  store i8 4, i8* %57, align 1
+  %57 = load ptr, ptr @b, align 8
+  store i8 4, ptr %57, align 1
   %inc.prol.317 = add nsw i32 %d.1.lcssa.2, 1
   %prol.iter.cmp.319 = icmp eq i32 %xtraiter.3, 1
   br i1 %prol.iter.cmp.319, label %for.body.prol.loopexit.3, label %for.body.prol.1.3
 
 for.body.prol.1.3:
-  %58 = load i8*, i8** @b, align 8
-  store i8 4, i8* %58, align 1
+  %58 = load ptr, ptr @b, align 8
+  store i8 4, ptr %58, align 1
   %inc.prol.1.3 = add nsw i32 %d.1.lcssa.2, 2
   %prol.iter.cmp.1.3 = icmp eq i32 %xtraiter.3, 2
   br i1 %prol.iter.cmp.1.3, label %for.body.prol.loopexit.3, label %for.body.prol.2.3
 
 for.body.prol.2.3:
-  %59 = load i8*, i8** @b, align 8
-  store i8 4, i8* %59, align 1
+  %59 = load ptr, ptr @b, align 8
+  store i8 4, ptr %59, align 1
   %inc.prol.2.3 = add nsw i32 %d.1.lcssa.2, 3
   %prol.iter.cmp.2.3 = icmp eq i32 %xtraiter.3, 3
   br i1 %prol.iter.cmp.2.3, label %for.body.prol.loopexit.3, label %for.body.prol.3.3
 
 for.body.prol.3.3:
-  %60 = load i8*, i8** @b, align 8
-  store i8 4, i8* %60, align 1
+  %60 = load ptr, ptr @b, align 8
+  store i8 4, ptr %60, align 1
   %inc.prol.3.3 = add nsw i32 %d.1.lcssa.2, 4
   %prol.iter.cmp.3.3 = icmp eq i32 %xtraiter.3, 4
   br i1 %prol.iter.cmp.3.3, label %for.body.prol.loopexit.3, label %for.body.prol.4.3
 
 for.body.prol.4.3:
-  %61 = load i8*, i8** @b, align 8
-  store i8 4, i8* %61, align 1
+  %61 = load ptr, ptr @b, align 8
+  store i8 4, ptr %61, align 1
   %inc.prol.4.3 = add nsw i32 %d.1.lcssa.2, 5
   %prol.iter.cmp.4.3 = icmp eq i32 %xtraiter.3, 5
   br i1 %prol.iter.cmp.4.3, label %for.body.prol.loopexit.3, label %for.body.prol.5.3
 
 for.body.prol.5.3:
-  %62 = load i8*, i8** @b, align 8
-  store i8 4, i8* %62, align 1
+  %62 = load ptr, ptr @b, align 8
+  store i8 4, ptr %62, align 1
   %inc.prol.5.3 = add nsw i32 %d.1.lcssa.2, 6
   %prol.iter.cmp.5.3 = icmp eq i32 %xtraiter.3, 6
   br i1 %prol.iter.cmp.5.3, label %for.body.prol.loopexit.3, label %for.body.prol.6.3
 
 for.body.prol.6.3:
-  %63 = load i8*, i8** @b, align 8
-  store i8 4, i8* %63, align 1
+  %63 = load ptr, ptr @b, align 8
+  store i8 4, ptr %63, align 1
   %inc.prol.6.3 = add nsw i32 %d.1.lcssa.2, 7
   br label %for.body.prol.loopexit.3
 
@@ -1550,29 +1550,29 @@ for.body.prol.loopexit.3:
 
 for.body.3:
   %d.14.3 = phi i32 [ %inc.7.3, %for.body.3 ], [ %d.14.unr.3, %for.body.prol.loopexit.3 ]
-  %65 = load i8*, i8** @b, align 8
-  store i8 4, i8* %65, align 1
-  %66 = load i8*, i8** @b, align 8
-  store i8 4, i8* %66, align 1
-  %67 = load i8*, i8** @b, align 8
-  store i8 4, i8* %67, align 1
-  %68 = load i8*, i8** @b, align 8
-  store i8 4, i8* %68, align 1
-  %69 = load i8*, i8** @b, align 8
-  store i8 4, i8* %69, align 1
-  %70 = load i8*, i8** @b, align 8
-  store i8 4, i8* %70, align 1
-  %71 = load i8*, i8** @b, align 8
-  store i8 4, i8* %71, align 1
-  %72 = load i8*, i8** @b, align 8
-  store i8 4, i8* %72, align 1
+  %65 = load ptr, ptr @b, align 8
+  store i8 4, ptr %65, align 1
+  %66 = load ptr, ptr @b, align 8
+  store i8 4, ptr %66, align 1
+  %67 = load ptr, ptr @b, align 8
+  store i8 4, ptr %67, align 1
+  %68 = load ptr, ptr @b, align 8
+  store i8 4, ptr %68, align 1
+  %69 = load ptr, ptr @b, align 8
+  store i8 4, ptr %69, align 1
+  %70 = load ptr, ptr @b, align 8
+  store i8 4, ptr %70, align 1
+  %71 = load ptr, ptr @b, align 8
+  store i8 4, ptr %71, align 1
+  %72 = load ptr, ptr @b, align 8
+  store i8 4, ptr %72, align 1
   %inc.7.3 = add nsw i32 %d.14.3, 8
   %cmp.7.3 = icmp slt i32 %d.14.3, -8
   br i1 %cmp.7.3, label %for.body.3, label %while.cond.loopexit.loopexit.3
 
 while.cond.loopexit.loopexit.3:
   %inc.lcssa.3 = phi i32 [ %inc.lcssa.unr.3, %for.body.prol.loopexit.3 ], [ %inc.7.3, %for.body.3 ]
-  %.pre.3 = load i32, i32* @a, align 4
+  %.pre.3 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.3
 
 while.cond.loopexit.3:
@@ -1592,50 +1592,50 @@ for.body.preheader.4:
   br i1 %lcmp.mod.4, label %for.body.prol.loopexit.4, label %for.body.prol.425
 
 for.body.prol.425:
-  %75 = load i8*, i8** @b, align 8
-  store i8 4, i8* %75, align 1
+  %75 = load ptr, ptr @b, align 8
+  store i8 4, ptr %75, align 1
   %inc.prol.422 = add nsw i32 %d.1.lcssa.3, 1
   %prol.iter.cmp.424 = icmp eq i32 %xtraiter.4, 1
   br i1 %prol.iter.cmp.424, label %for.body.prol.loopexit.4, label %for.body.prol.1.4
 
 for.body.prol.1.4:
-  %76 = load i8*, i8** @b, align 8
-  store i8 4, i8* %76, align 1
+  %76 = load ptr, ptr @b, align 8
+  store i8 4, ptr %76, align 1
   %inc.prol.1.4 = add nsw i32 %d.1.lcssa.3, 2
   %prol.iter.cmp.1.4 = icmp eq i32 %xtraiter.4, 2
   br i1 %prol.iter.cmp.1.4, label %for.body.prol.loopexit.4, label %for.body.prol.2.4
 
 for.body.prol.2.4:
-  %77 = load i8*, i8** @b, align 8
-  store i8 4, i8* %77, align 1
+  %77 = load ptr, ptr @b, align 8
+  store i8 4, ptr %77, align 1
   %inc.prol.2.4 = add nsw i32 %d.1.lcssa.3, 3
   %prol.iter.cmp.2.4 = icmp eq i32 %xtraiter.4, 3
   br i1 %prol.iter.cmp.2.4, label %for.body.prol.loopexit.4, label %for.body.prol.3.4
 
 for.body.prol.3.4:
-  %78 = load i8*, i8** @b, align 8
-  store i8 4, i8* %78, align 1
+  %78 = load ptr, ptr @b, align 8
+  store i8 4, ptr %78, align 1
   %inc.prol.3.4 = add nsw i32 %d.1.lcssa.3, 4
   %prol.iter.cmp.3.4 = icmp eq i32 %xtraiter.4, 4
   br i1 %prol.iter.cmp.3.4, label %for.body.prol.loopexit.4, label %for.body.prol.4.4
 
 for.body.prol.4.4:
-  %79 = load i8*, i8** @b, align 8
-  store i8 4, i8* %79, align 1
+  %79 = load ptr, ptr @b, align 8
+  store i8 4, ptr %79, align 1
   %inc.prol.4.4 = add nsw i32 %d.1.lcssa.3, 5
   %prol.iter.cmp.4.4 = icmp eq i32 %xtraiter.4, 5
   br i1 %prol.iter.cmp.4.4, label %for.body.prol.loopexit.4, label %for.body.prol.5.4
 
 for.body.prol.5.4:
-  %80 = load i8*, i8** @b, align 8
-  store i8 4, i8* %80, align 1
+  %80 = load ptr, ptr @b, align 8
+  store i8 4, ptr %80, align 1
   %inc.prol.5.4 = add nsw i32 %d.1.lcssa.3, 6
   %prol.iter.cmp.5.4 = icmp eq i32 %xtraiter.4, 6
   br i1 %prol.iter.cmp.5.4, label %for.body.prol.loopexit.4, label %for.body.prol.6.4
 
 for.body.prol.6.4:
-  %81 = load i8*, i8** @b, align 8
-  store i8 4, i8* %81, align 1
+  %81 = load ptr, ptr @b, align 8
+  store i8 4, ptr %81, align 1
   %inc.prol.6.4 = add nsw i32 %d.1.lcssa.3, 7
   br label %for.body.prol.loopexit.4
 
@@ -1647,29 +1647,29 @@ for.body.prol.loopexit.4:
 
 for.body.4:
   %d.14.4 = phi i32 [ %inc.7.4, %for.body.4 ], [ %d.14.unr.4, %for.body.prol.loopexit.4 ]
-  %83 = load i8*, i8** @b, align 8
-  store i8 4, i8* %83, align 1
-  %84 = load i8*, i8** @b, align 8
-  store i8 4, i8* %84, align 1
-  %85 = load i8*, i8** @b, align 8
-  store i8 4, i8* %85, align 1
-  %86 = load i8*, i8** @b, align 8
-  store i8 4, i8* %86, align 1
-  %87 = load i8*, i8** @b, align 8
-  store i8 4, i8* %87, align 1
-  %88 = load i8*, i8** @b, align 8
-  store i8 4, i8* %88, align 1
-  %89 = load i8*, i8** @b, align 8
-  store i8 4, i8* %89, align 1
-  %90 = load i8*, i8** @b, align 8
-  store i8 4, i8* %90, align 1
+  %83 = load ptr, ptr @b, align 8
+  store i8 4, ptr %83, align 1
+  %84 = load ptr, ptr @b, align 8
+  store i8 4, ptr %84, align 1
+  %85 = load ptr, ptr @b, align 8
+  store i8 4, ptr %85, align 1
+  %86 = load ptr, ptr @b, align 8
+  store i8 4, ptr %86, align 1
+  %87 = load ptr, ptr @b, align 8
+  store i8 4, ptr %87, align 1
+  %88 = load ptr, ptr @b, align 8
+  store i8 4, ptr %88, align 1
+  %89 = load ptr, ptr @b, align 8
+  store i8 4, ptr %89, align 1
+  %90 = load ptr, ptr @b, align 8
+  store i8 4, ptr %90, align 1
   %inc.7.4 = add nsw i32 %d.14.4, 8
   %cmp.7.4 = icmp slt i32 %d.14.4, -8
   br i1 %cmp.7.4, label %for.body.4, label %while.cond.loopexit.loopexit.4
 
 while.cond.loopexit.loopexit.4:
   %inc.lcssa.4 = phi i32 [ %inc.lcssa.unr.4, %for.body.prol.loopexit.4 ], [ %inc.7.4, %for.body.4 ]
-  %.pre.4 = load i32, i32* @a, align 4
+  %.pre.4 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.4
 
 while.cond.loopexit.4:
@@ -1689,50 +1689,50 @@ for.body.preheader.5:
   br i1 %lcmp.mod.5, label %for.body.prol.loopexit.5, label %for.body.prol.530
 
 for.body.prol.530:
-  %93 = load i8*, i8** @b, align 8
-  store i8 4, i8* %93, align 1
+  %93 = load ptr, ptr @b, align 8
+  store i8 4, ptr %93, align 1
   %inc.prol.527 = add nsw i32 %d.1.lcssa.4, 1
   %prol.iter.cmp.529 = icmp eq i32 %xtraiter.5, 1
   br i1 %prol.iter.cmp.529, label %for.body.prol.loopexit.5, label %for.body.prol.1.5
 
 for.body.prol.1.5:
-  %94 = load i8*, i8** @b, align 8
-  store i8 4, i8* %94, align 1
+  %94 = load ptr, ptr @b, align 8
+  store i8 4, ptr %94, align 1
   %inc.prol.1.5 = add nsw i32 %d.1.lcssa.4, 2
   %prol.iter.cmp.1.5 = icmp eq i32 %xtraiter.5, 2
   br i1 %prol.iter.cmp.1.5, label %for.body.prol.loopexit.5, label %for.body.prol.2.5
 
 for.body.prol.2.5:
-  %95 = load i8*, i8** @b, align 8
-  store i8 4, i8* %95, align 1
+  %95 = load ptr, ptr @b, align 8
+  store i8 4, ptr %95, align 1
   %inc.prol.2.5 = add nsw i32 %d.1.lcssa.4, 3
   %prol.iter.cmp.2.5 = icmp eq i32 %xtraiter.5, 3
   br i1 %prol.iter.cmp.2.5, label %for.body.prol.loopexit.5, label %for.body.prol.3.5
 
 for.body.prol.3.5:
-  %96 = load i8*, i8** @b, align 8
-  store i8 4, i8* %96, align 1
+  %96 = load ptr, ptr @b, align 8
+  store i8 4, ptr %96, align 1
   %inc.prol.3.5 = add nsw i32 %d.1.lcssa.4, 4
   %prol.iter.cmp.3.5 = icmp eq i32 %xtraiter.5, 4
   br i1 %prol.iter.cmp.3.5, label %for.body.prol.loopexit.5, label %for.body.prol.4.5
 
 for.body.prol.4.5:
-  %97 = load i8*, i8** @b, align 8
-  store i8 4, i8* %97, align 1
+  %97 = load ptr, ptr @b, align 8
+  store i8 4, ptr %97, align 1
   %inc.prol.4.5 = add nsw i32 %d.1.lcssa.4, 5
   %prol.iter.cmp.4.5 = icmp eq i32 %xtraiter.5, 5
   br i1 %prol.iter.cmp.4.5, label %for.body.prol.loopexit.5, label %for.body.prol.5.5
 
 for.body.prol.5.5:
-  %98 = load i8*, i8** @b, align 8
-  store i8 4, i8* %98, align 1
+  %98 = load ptr, ptr @b, align 8
+  store i8 4, ptr %98, align 1
   %inc.prol.5.5 = add nsw i32 %d.1.lcssa.4, 6
   %prol.iter.cmp.5.5 = icmp eq i32 %xtraiter.5, 6
   br i1 %prol.iter.cmp.5.5, label %for.body.prol.loopexit.5, label %for.body.prol.6.5
 
 for.body.prol.6.5:
-  %99 = load i8*, i8** @b, align 8
-  store i8 4, i8* %99, align 1
+  %99 = load ptr, ptr @b, align 8
+  store i8 4, ptr %99, align 1
   %inc.prol.6.5 = add nsw i32 %d.1.lcssa.4, 7
   br label %for.body.prol.loopexit.5
 
@@ -1744,29 +1744,29 @@ for.body.prol.loopexit.5:
 
 for.body.5:
   %d.14.5 = phi i32 [ %inc.7.5, %for.body.5 ], [ %d.14.unr.5, %for.body.prol.loopexit.5 ]
-  %101 = load i8*, i8** @b, align 8
-  store i8 4, i8* %101, align 1
-  %102 = load i8*, i8** @b, align 8
-  store i8 4, i8* %102, align 1
-  %103 = load i8*, i8** @b, align 8
-  store i8 4, i8* %103, align 1
-  %104 = load i8*, i8** @b, align 8
-  store i8 4, i8* %104, align 1
-  %105 = load i8*, i8** @b, align 8
-  store i8 4, i8* %105, align 1
-  %106 = load i8*, i8** @b, align 8
-  store i8 4, i8* %106, align 1
-  %107 = load i8*, i8** @b, align 8
-  store i8 4, i8* %107, align 1
-  %108 = load i8*, i8** @b, align 8
-  store i8 4, i8* %108, align 1
+  %101 = load ptr, ptr @b, align 8
+  store i8 4, ptr %101, align 1
+  %102 = load ptr, ptr @b, align 8
+  store i8 4, ptr %102, align 1
+  %103 = load ptr, ptr @b, align 8
+  store i8 4, ptr %103, align 1
+  %104 = load ptr, ptr @b, align 8
+  store i8 4, ptr %104, align 1
+  %105 = load ptr, ptr @b, align 8
+  store i8 4, ptr %105, align 1
+  %106 = load ptr, ptr @b, align 8
+  store i8 4, ptr %106, align 1
+  %107 = load ptr, ptr @b, align 8
+  store i8 4, ptr %107, align 1
+  %108 = load ptr, ptr @b, align 8
+  store i8 4, ptr %108, align 1
   %inc.7.5 = add nsw i32 %d.14.5, 8
   %cmp.7.5 = icmp slt i32 %d.14.5, -8
   br i1 %cmp.7.5, label %for.body.5, label %while.cond.loopexit.loopexit.5
 
 while.cond.loopexit.loopexit.5:
   %inc.lcssa.5 = phi i32 [ %inc.lcssa.unr.5, %for.body.prol.loopexit.5 ], [ %inc.7.5, %for.body.5 ]
-  %.pre.5 = load i32, i32* @a, align 4
+  %.pre.5 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.5
 
 while.cond.loopexit.5:
@@ -1786,50 +1786,50 @@ for.body.preheader.6:
   br i1 %lcmp.mod.6, label %for.body.prol.loopexit.6, label %for.body.prol.634
 
 for.body.prol.634:
-  %111 = load i8*, i8** @b, align 8
-  store i8 4, i8* %111, align 1
+  %111 = load ptr, ptr @b, align 8
+  store i8 4, ptr %111, align 1
   %inc.prol.632 = add nsw i32 %d.1.lcssa.5, 1
   %prol.iter.cmp.6 = icmp eq i32 %xtraiter.6, 1
   br i1 %prol.iter.cmp.6, label %for.body.prol.loopexit.6, label %for.body.prol.1.6
 
 for.body.prol.1.6:
-  %112 = load i8*, i8** @b, align 8
-  store i8 4, i8* %112, align 1
+  %112 = load ptr, ptr @b, align 8
+  store i8 4, ptr %112, align 1
   %inc.prol.1.6 = add nsw i32 %d.1.lcssa.5, 2
   %prol.iter.cmp.1.6 = icmp eq i32 %xtraiter.6, 2
   br i1 %prol.iter.cmp.1.6, label %for.body.prol.loopexit.6, label %for.body.prol.2.6
 
 for.body.prol.2.6:
-  %113 = load i8*, i8** @b, align 8
-  store i8 4, i8* %113, align 1
+  %113 = load ptr, ptr @b, align 8
+  store i8 4, ptr %113, align 1
   %inc.prol.2.6 = add nsw i32 %d.1.lcssa.5, 3
   %prol.iter.cmp.2.6 = icmp eq i32 %xtraiter.6, 3
   br i1 %prol.iter.cmp.2.6, label %for.body.prol.loopexit.6, label %for.body.prol.3.6
 
 for.body.prol.3.6:
-  %114 = load i8*, i8** @b, align 8
-  store i8 4, i8* %114, align 1
+  %114 = load ptr, ptr @b, align 8
+  store i8 4, ptr %114, align 1
   %inc.prol.3.6 = add nsw i32 %d.1.lcssa.5, 4
   %prol.iter.cmp.3.6 = icmp eq i32 %xtraiter.6, 4
   br i1 %prol.iter.cmp.3.6, label %for.body.prol.loopexit.6, label %for.body.prol.4.6
 
 for.body.prol.4.6:
-  %115 = load i8*, i8** @b, align 8
-  store i8 4, i8* %115, align 1
+  %115 = load ptr, ptr @b, align 8
+  store i8 4, ptr %115, align 1
   %inc.prol.4.6 = add nsw i32 %d.1.lcssa.5, 5
   %prol.iter.cmp.4.6 = icmp eq i32 %xtraiter.6, 5
   br i1 %prol.iter.cmp.4.6, label %for.body.prol.loopexit.6, label %for.body.prol.5.6
 
 for.body.prol.5.6:
-  %116 = load i8*, i8** @b, align 8
-  store i8 4, i8* %116, align 1
+  %116 = load ptr, ptr @b, align 8
+  store i8 4, ptr %116, align 1
   %inc.prol.5.6 = add nsw i32 %d.1.lcssa.5, 6
   %prol.iter.cmp.5.6 = icmp eq i32 %xtraiter.6, 6
   br i1 %prol.iter.cmp.5.6, label %for.body.prol.loopexit.6, label %for.body.prol.6.6
 
 for.body.prol.6.6:
-  %117 = load i8*, i8** @b, align 8
-  store i8 4, i8* %117, align 1
+  %117 = load ptr, ptr @b, align 8
+  store i8 4, ptr %117, align 1
   %inc.prol.6.6 = add nsw i32 %d.1.lcssa.5, 7
   br label %for.body.prol.loopexit.6
 
@@ -1841,29 +1841,29 @@ for.body.prol.loopexit.6:
 
 for.body.6:
   %d.14.6 = phi i32 [ %inc.7.6, %for.body.6 ], [ %d.14.unr.6, %for.body.prol.loopexit.6 ]
-  %119 = load i8*, i8** @b, align 8
-  store i8 4, i8* %119, align 1
-  %120 = load i8*, i8** @b, align 8
-  store i8 4, i8* %120, align 1
-  %121 = load i8*, i8** @b, align 8
-  store i8 4, i8* %121, align 1
-  %122 = load i8*, i8** @b, align 8
-  store i8 4, i8* %122, align 1
-  %123 = load i8*, i8** @b, align 8
-  store i8 4, i8* %123, align 1
-  %124 = load i8*, i8** @b, align 8
-  store i8 4, i8* %124, align 1
-  %125 = load i8*, i8** @b, align 8
-  store i8 4, i8* %125, align 1
-  %126 = load i8*, i8** @b, align 8
-  store i8 4, i8* %126, align 1
+  %119 = load ptr, ptr @b, align 8
+  store i8 4, ptr %119, align 1
+  %120 = load ptr, ptr @b, align 8
+  store i8 4, ptr %120, align 1
+  %121 = load ptr, ptr @b, align 8
+  store i8 4, ptr %121, align 1
+  %122 = load ptr, ptr @b, align 8
+  store i8 4, ptr %122, align 1
+  %123 = load ptr, ptr @b, align 8
+  store i8 4, ptr %123, align 1
+  %124 = load ptr, ptr @b, align 8
+  store i8 4, ptr %124, align 1
+  %125 = load ptr, ptr @b, align 8
+  store i8 4, ptr %125, align 1
+  %126 = load ptr, ptr @b, align 8
+  store i8 4, ptr %126, align 1
   %inc.7.6 = add nsw i32 %d.14.6, 8
   %cmp.7.6 = icmp slt i32 %d.14.6, -8
   br i1 %cmp.7.6, label %for.body.6, label %while.cond.loopexit.loopexit.6
 
 while.cond.loopexit.loopexit.6:
   %inc.lcssa.6 = phi i32 [ %inc.lcssa.unr.6, %for.body.prol.loopexit.6 ], [ %inc.7.6, %for.body.6 ]
-  %.pre.6 = load i32, i32* @a, align 4
+  %.pre.6 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.6
 
 while.cond.loopexit.6:
@@ -1883,50 +1883,50 @@ for.body.preheader.7:
   br i1 %lcmp.mod.7, label %for.body.prol.loopexit.7, label %for.body.prol.7
 
 for.body.prol.7:
-  %129 = load i8*, i8** @b, align 8
-  store i8 4, i8* %129, align 1
+  %129 = load ptr, ptr @b, align 8
+  store i8 4, ptr %129, align 1
   %inc.prol.7 = add nsw i32 %d.1.lcssa.6, 1
   %prol.iter.cmp.7 = icmp eq i32 %xtraiter.7, 1
   br i1 %prol.iter.cmp.7, label %for.body.prol.loopexit.7, label %for.body.prol.1.7
 
 for.body.prol.1.7:
-  %130 = load i8*, i8** @b, align 8
-  store i8 4, i8* %130, align 1
+  %130 = load ptr, ptr @b, align 8
+  store i8 4, ptr %130, align 1
   %inc.prol.1.7 = add nsw i32 %d.1.lcssa.6, 2
   %prol.iter.cmp.1.7 = icmp eq i32 %xtraiter.7, 2
   br i1 %prol.iter.cmp.1.7, label %for.body.prol.loopexit.7, label %for.body.prol.2.7
 
 for.body.prol.2.7:
-  %131 = load i8*, i8** @b, align 8
-  store i8 4, i8* %131, align 1
+  %131 = load ptr, ptr @b, align 8
+  store i8 4, ptr %131, align 1
   %inc.prol.2.7 = add nsw i32 %d.1.lcssa.6, 3
   %prol.iter.cmp.2.7 = icmp eq i32 %xtraiter.7, 3
   br i1 %prol.iter.cmp.2.7, label %for.body.prol.loopexit.7, label %for.body.prol.3.7
 
 for.body.prol.3.7:
-  %132 = load i8*, i8** @b, align 8
-  store i8 4, i8* %132, align 1
+  %132 = load ptr, ptr @b, align 8
+  store i8 4, ptr %132, align 1
   %inc.prol.3.7 = add nsw i32 %d.1.lcssa.6, 4
   %prol.iter.cmp.3.7 = icmp eq i32 %xtraiter.7, 4
   br i1 %prol.iter.cmp.3.7, label %for.body.prol.loopexit.7, label %for.body.prol.4.7
 
 for.body.prol.4.7:
-  %133 = load i8*, i8** @b, align 8
-  store i8 4, i8* %133, align 1
+  %133 = load ptr, ptr @b, align 8
+  store i8 4, ptr %133, align 1
   %inc.prol.4.7 = add nsw i32 %d.1.lcssa.6, 5
   %prol.iter.cmp.4.7 = icmp eq i32 %xtraiter.7, 5
   br i1 %prol.iter.cmp.4.7, label %for.body.prol.loopexit.7, label %for.body.prol.5.7
 
 for.body.prol.5.7:
-  %134 = load i8*, i8** @b, align 8
-  store i8 4, i8* %134, align 1
+  %134 = load ptr, ptr @b, align 8
+  store i8 4, ptr %134, align 1
   %inc.prol.5.7 = add nsw i32 %d.1.lcssa.6, 6
   %prol.iter.cmp.5.7 = icmp eq i32 %xtraiter.7, 6
   br i1 %prol.iter.cmp.5.7, label %for.body.prol.loopexit.7, label %for.body.prol.6.7
 
 for.body.prol.6.7:
-  %135 = load i8*, i8** @b, align 8
-  store i8 4, i8* %135, align 1
+  %135 = load ptr, ptr @b, align 8
+  store i8 4, ptr %135, align 1
   %inc.prol.6.7 = add nsw i32 %d.1.lcssa.6, 7
   br label %for.body.prol.loopexit.7
 
@@ -1938,29 +1938,29 @@ for.body.prol.loopexit.7:
 
 for.body.7:
   %d.14.7 = phi i32 [ %inc.7.7, %for.body.7 ], [ %d.14.unr.7, %for.body.prol.loopexit.7 ]
-  %137 = load i8*, i8** @b, align 8
-  store i8 4, i8* %137, align 1
-  %138 = load i8*, i8** @b, align 8
-  store i8 4, i8* %138, align 1
-  %139 = load i8*, i8** @b, align 8
-  store i8 4, i8* %139, align 1
-  %140 = load i8*, i8** @b, align 8
-  store i8 4, i8* %140, align 1
-  %141 = load i8*, i8** @b, align 8
-  store i8 4, i8* %141, align 1
-  %142 = load i8*, i8** @b, align 8
-  store i8 4, i8* %142, align 1
-  %143 = load i8*, i8** @b, align 8
-  store i8 4, i8* %143, align 1
-  %144 = load i8*, i8** @b, align 8
-  store i8 4, i8* %144, align 1
+  %137 = load ptr, ptr @b, align 8
+  store i8 4, ptr %137, align 1
+  %138 = load ptr, ptr @b, align 8
+  store i8 4, ptr %138, align 1
+  %139 = load ptr, ptr @b, align 8
+  store i8 4, ptr %139, align 1
+  %140 = load ptr, ptr @b, align 8
+  store i8 4, ptr %140, align 1
+  %141 = load ptr, ptr @b, align 8
+  store i8 4, ptr %141, align 1
+  %142 = load ptr, ptr @b, align 8
+  store i8 4, ptr %142, align 1
+  %143 = load ptr, ptr @b, align 8
+  store i8 4, ptr %143, align 1
+  %144 = load ptr, ptr @b, align 8
+  store i8 4, ptr %144, align 1
   %inc.7.7 = add nsw i32 %d.14.7, 8
   %cmp.7.7 = icmp slt i32 %d.14.7, -8
   br i1 %cmp.7.7, label %for.body.7, label %while.cond.loopexit.loopexit.7
 
 while.cond.loopexit.loopexit.7:
   %inc.lcssa.7 = phi i32 [ %inc.lcssa.unr.7, %for.body.prol.loopexit.7 ], [ %inc.7.7, %for.body.7 ]
-  %.pre.7 = load i32, i32* @a, align 4
+  %.pre.7 = load i32, ptr @a, align 4
   br label %while.cond.loopexit.7
 
 while.cond.loopexit.7:

@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @xlori10_0(<256 x i1> addrspace(258)* %0) {
+define void @xlori10_0(ptr addrspace(258) %0) {
   ; CHECK-LABEL: name: xlori10_0
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -12,11 +12,11 @@ define void @xlori10_0(<256 x i1> addrspace(258)* %0) {
   ; CHECK-NEXT:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOri10_:%[0-9]+]]:vectorreg = XLOri10 0, [[COPY]], 1 :: (volatile load (s256) from %ir.0, addrspace 258)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = load volatile <256 x i1>, <256 x i1> addrspace(258)* %0
+  %2 = load volatile <256 x i1>, ptr addrspace(258) %0
   ret void
 }
 
-define void @xlori10(<256 x i1> addrspace(256)* %0) {
+define void @xlori10(ptr addrspace(256) %0) {
   ; CHECK-LABEL: name: xlori10
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -24,12 +24,12 @@ define void @xlori10(<256 x i1> addrspace(256)* %0) {
   ; CHECK-NEXT:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOri10_:%[0-9]+]]:vectorreg = XLOri10 480, [[COPY]], 2 :: (volatile load (s256) from %ir.2, addrspace 256)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(256)* %0, i64 15
-  %3 = load volatile <256 x i1>, <256 x i1> addrspace(256)* %2
+  %2 = getelementptr inbounds <256 x i1>, ptr addrspace(256) %0, i64 15
+  %3 = load volatile <256 x i1>, ptr addrspace(256) %2
   ret void
 }
 
-define void @xlori37(<256 x i1> addrspace(257)* %0) {
+define void @xlori37(ptr addrspace(257) %0) {
   ; CHECK-LABEL: name: xlori37
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -37,12 +37,12 @@ define void @xlori37(<256 x i1> addrspace(257)* %0) {
   ; CHECK-NEXT:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOri37_:%[0-9]+]]:vectorreg = XLOri37 512, [[COPY]], 3 :: (volatile load (s256) from %ir.2, addrspace 257)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <256 x i1>, <256 x i1> addrspace(257)* %0, i64 16
-  %3 = load volatile <256 x i1>, <256 x i1> addrspace(257)* %2
+  %2 = getelementptr inbounds <256 x i1>, ptr addrspace(257) %0, i64 16
+  %3 = load volatile <256 x i1>, ptr addrspace(257) %2
   ret void
 }
 
-define void @xlori64(<256 x i1>* %0) {
+define void @xlori64(ptr %0) {
   ; CHECK-LABEL: name: xlori64
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -50,12 +50,12 @@ define void @xlori64(<256 x i1>* %0) {
   ; CHECK-NEXT:   [[COPY:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOri64_:%[0-9]+]]:vectorreg = XLOri64 68719476736, [[COPY]], 0 :: (volatile load (s256) from %ir.2)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2147483648
-  %3 = load volatile <256 x i1>, <256 x i1>* %2
+  %2 = getelementptr inbounds <256 x i1>, ptr %0, i64 2147483648
+  %3 = load volatile <256 x i1>, ptr %2
   ret void
 }
 
-define void @xlorr_s(<256 x i1>* %0, i64 %1) {
+define void @xlorr_s(ptr %0, i64 %1) {
   ; CHECK-LABEL: name: xlorr_s
   ; CHECK: bb.0 (%ir-block.2):
   ; CHECK-NEXT:   liveins: $r0, $r1
@@ -64,12 +64,12 @@ define void @xlorr_s(<256 x i1>* %0, i64 %1) {
   ; CHECK-NEXT:   [[COPY1:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOrr:%[0-9]+]]:vectorreg = XLOrr [[COPY]], [[COPY1]], 0, 1 :: (volatile load (s256) from %ir.3)
   ; CHECK-NEXT:   RET implicit $ra
-  %3 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 %1
-  %4 = load volatile <256 x i1>, <256 x i1>* %3
+  %3 = getelementptr inbounds <256 x i1>, ptr %0, i64 %1
+  %4 = load volatile <256 x i1>, ptr %3
   ret void
 }
 
-define void @xlorr(i8* %0, i64 %1) {
+define void @xlorr(ptr %0, i64 %1) {
   ; CHECK-LABEL: name: xlorr
   ; CHECK: bb.0 (%ir-block.2):
   ; CHECK-NEXT:   liveins: $r0, $r1
@@ -78,13 +78,13 @@ define void @xlorr(i8* %0, i64 %1) {
   ; CHECK-NEXT:   [[COPY1:%[0-9]+]]:singlereg = COPY $r0
   ; CHECK-NEXT:   dead [[XLOrr:%[0-9]+]]:vectorreg = XLOrr [[COPY]], [[COPY1]], 0, 0 :: (volatile load (s256) from %ir.4)
   ; CHECK-NEXT:   RET implicit $ra
-  %3 = getelementptr inbounds i8, i8* %0, i64 %1
-  %4 = bitcast i8* %3 to <256 x i1>*
-  %5 = load volatile <256 x i1>, <256 x i1>* %4
+  %3 = getelementptr inbounds i8, ptr %0, i64 %1
+  %4 = bitcast ptr %3 to ptr 
+  %5 = load volatile <256 x i1>, ptr %4
   ret void
 }
 
-define void @xlori10_0x2(<512 x i1> addrspace(258)* %0) {
+define void @xlori10_0x2(ptr addrspace(258) %0) {
   ; CHECK-LABEL: name: xlori10_0x2
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -93,11 +93,11 @@ define void @xlori10_0x2(<512 x i1> addrspace(258)* %0) {
   ; CHECK-NEXT:   dead [[XLOri10_:%[0-9]+]]:vectorreg = XLOri10 32, [[COPY]], 1 :: (volatile load (s256) from %ir.0 + 32, addrspace 258)
   ; CHECK-NEXT:   dead [[XLOri10_1:%[0-9]+]]:vectorreg = XLOri10 0, [[COPY]], 1 :: (volatile load (s256) from %ir.0, addrspace 258)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = load volatile <512 x i1>, <512 x i1> addrspace(258)* %0
+  %2 = load volatile <512 x i1>, ptr addrspace(258) %0
   ret void
 }
 
-define void @xlori10x2(<512 x i1> addrspace(256)* %0) {
+define void @xlori10x2(ptr addrspace(256) %0) {
   ; CHECK-LABEL: name: xlori10x2
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -106,12 +106,12 @@ define void @xlori10x2(<512 x i1> addrspace(256)* %0) {
   ; CHECK-NEXT:   dead [[XLOri10_:%[0-9]+]]:vectorreg = XLOri10 480, [[COPY]], 2 :: (volatile load (s256) from %ir.2 + 32, addrspace 256)
   ; CHECK-NEXT:   dead [[XLOri10_1:%[0-9]+]]:vectorreg = XLOri10 448, [[COPY]], 2 :: (volatile load (s256) from %ir.2, addrspace 256)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(256)* %0, i64 7
-  %3 = load volatile <512 x i1>, <512 x i1> addrspace(256)* %2
+  %2 = getelementptr inbounds <512 x i1>, ptr addrspace(256) %0, i64 7
+  %3 = load volatile <512 x i1>, ptr addrspace(256) %2
   ret void
 }
 
-define void @xlori37x2(<512 x i1> addrspace(257)* %0) {
+define void @xlori37x2(ptr addrspace(257) %0) {
   ; CHECK-LABEL: name: xlori37x2
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -120,12 +120,12 @@ define void @xlori37x2(<512 x i1> addrspace(257)* %0) {
   ; CHECK-NEXT:   dead [[XLOri37_:%[0-9]+]]:vectorreg = XLOri37 544, [[COPY]], 3 :: (volatile load (s256) from %ir.2 + 32, addrspace 257)
   ; CHECK-NEXT:   dead [[XLOri37_1:%[0-9]+]]:vectorreg = XLOri37 512, [[COPY]], 3 :: (volatile load (s256) from %ir.2, addrspace 257)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <512 x i1>, <512 x i1> addrspace(257)* %0, i64 8
-  %3 = load volatile <512 x i1>, <512 x i1> addrspace(257)* %2
+  %2 = getelementptr inbounds <512 x i1>, ptr addrspace(257) %0, i64 8
+  %3 = load volatile <512 x i1>, ptr addrspace(257) %2
   ret void
 }
 
-define void @xlori64x2(<512 x i1>* %0) {
+define void @xlori64x2(ptr %0) {
   ; CHECK-LABEL: name: xlori64x2
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -134,12 +134,12 @@ define void @xlori64x2(<512 x i1>* %0) {
   ; CHECK-NEXT:   dead [[XLOri64_:%[0-9]+]]:vectorreg = XLOri64 68719476768, [[COPY]], 0 :: (volatile load (s256) from %ir.2 + 32)
   ; CHECK-NEXT:   dead [[XLOri64_1:%[0-9]+]]:vectorreg = XLOri64 68719476736, [[COPY]], 0 :: (volatile load (s256) from %ir.2)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1073741824
-  %3 = load volatile <512 x i1>, <512 x i1>* %2
+  %2 = getelementptr inbounds <512 x i1>, ptr %0, i64 1073741824
+  %3 = load volatile <512 x i1>, ptr %2
   ret void
 }
 
-define void @xlori10_0x4(<1024 x i1> addrspace(258)* %0) {
+define void @xlori10_0x4(ptr addrspace(258) %0) {
   ; CHECK-LABEL: name: xlori10_0x4
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -150,11 +150,11 @@ define void @xlori10_0x4(<1024 x i1> addrspace(258)* %0) {
   ; CHECK-NEXT:   dead [[XLOri10_2:%[0-9]+]]:vectorreg = XLOri10 32, [[COPY]], 1 :: (volatile load (s256) from %ir.0 + 32, addrspace 258)
   ; CHECK-NEXT:   dead [[XLOri10_3:%[0-9]+]]:vectorreg = XLOri10 0, [[COPY]], 1 :: (volatile load (s256) from %ir.0, addrspace 258)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = load volatile <1024 x i1>, <1024 x i1> addrspace(258)* %0
+  %2 = load volatile <1024 x i1>, ptr addrspace(258) %0
   ret void
 }
 
-define void @xlori10x4(<1024 x i1> addrspace(256)* %0) {
+define void @xlori10x4(ptr addrspace(256) %0) {
   ; CHECK-LABEL: name: xlori10x4
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -165,12 +165,12 @@ define void @xlori10x4(<1024 x i1> addrspace(256)* %0) {
   ; CHECK-NEXT:   dead [[XLOri10_2:%[0-9]+]]:vectorreg = XLOri10 416, [[COPY]], 2 :: (volatile load (s256) from %ir.2 + 32, addrspace 256)
   ; CHECK-NEXT:   dead [[XLOri10_3:%[0-9]+]]:vectorreg = XLOri10 384, [[COPY]], 2 :: (volatile load (s256) from %ir.2, addrspace 256)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(256)* %0, i64 3
-  %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(256)* %2
+  %2 = getelementptr inbounds <1024 x i1>, ptr addrspace(256) %0, i64 3
+  %3 = load volatile <1024 x i1>, ptr addrspace(256) %2
   ret void
 }
 
-define void @xlori37x4(<1024 x i1> addrspace(257)* %0) {
+define void @xlori37x4(ptr addrspace(257) %0) {
   ; CHECK-LABEL: name: xlori37x4
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -181,12 +181,12 @@ define void @xlori37x4(<1024 x i1> addrspace(257)* %0) {
   ; CHECK-NEXT:   dead [[XLOri37_2:%[0-9]+]]:vectorreg = XLOri37 544, [[COPY]], 3 :: (volatile load (s256) from %ir.2 + 32, addrspace 257)
   ; CHECK-NEXT:   dead [[XLOri37_3:%[0-9]+]]:vectorreg = XLOri37 512, [[COPY]], 3 :: (volatile load (s256) from %ir.2, addrspace 257)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1> addrspace(257)* %0, i64 4
-  %3 = load volatile <1024 x i1>, <1024 x i1> addrspace(257)* %2
+  %2 = getelementptr inbounds <1024 x i1>, ptr addrspace(257) %0, i64 4
+  %3 = load volatile <1024 x i1>, ptr addrspace(257) %2
   ret void
 }
 
-define void @xlori64x4(<1024 x i1>* %0) {
+define void @xlori64x4(ptr %0) {
   ; CHECK-LABEL: name: xlori64x4
   ; CHECK: bb.0 (%ir-block.1):
   ; CHECK-NEXT:   liveins: $r0
@@ -197,7 +197,7 @@ define void @xlori64x4(<1024 x i1>* %0) {
   ; CHECK-NEXT:   dead [[XLOri64_2:%[0-9]+]]:vectorreg = XLOri64 68719476768, [[COPY]], 0 :: (volatile load (s256) from %ir.2 + 32)
   ; CHECK-NEXT:   dead [[XLOri64_3:%[0-9]+]]:vectorreg = XLOri64 68719476736, [[COPY]], 0 :: (volatile load (s256) from %ir.2)
   ; CHECK-NEXT:   RET implicit $ra
-  %2 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %0, i64 536870912
-  %3 = load volatile <1024 x i1>, <1024 x i1>* %2
+  %2 = getelementptr inbounds <1024 x i1>, ptr %0, i64 536870912
+  %3 = load volatile <1024 x i1>, ptr %2
   ret void
 }

@@ -6,9 +6,9 @@
 
 target triple = "kvx-kalray-cos"
 
-@x = common global i32* null, align 8
+@x = common global ptr null, align 8
 
-define i32* @f(i32 %s, i32 %c){
+define ptr @f(i32 %s, i32 %c){
 ; CHECK-LABEL: f:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
@@ -32,23 +32,23 @@ define i32* @f(i32 %s, i32 %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i32*, i32** @x, align 8
+  %0 = load ptr, ptr @x, align 8
   br label %for.body
 
 for.cond.cleanup:                                 ; preds = %for.body
-  ret i32* %0
+  ret ptr %0
 
 for.body:                                         ; preds = %entry, %for.body
   %indvars.iv = phi i64 [ -1000, %entry ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 4
   %cmp = icmp slt i64 %indvars.iv, -503
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define i32* @g(i32 %s, i32 %c){
+define ptr @g(i32 %s, i32 %c){
 ; CHECK-LABEL: g:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = x
@@ -72,17 +72,17 @@ define i32* @g(i32 %s, i32 %c){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %0 = load i32*, i32** @x, align 8
+  %0 = load ptr, ptr @x, align 8
   br label %for.body
 
 for.cond.cleanup:                                 ; preds = %for.body
-  ret i32* %0
+  ret ptr %0
 
 for.body:                                         ; preds = %entry, %for.body
   %indvars.iv = phi i64 [ -1000, %entry ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 4
   %cmp = icmp slt i64 %indvars.iv, -504
   br i1 %cmp, label %for.body, label %for.cond.cleanup

@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @imm_imm_positive_bump(i32* nocapture %x){
+define void @imm_imm_positive_bump(ptr nocapture %x){
 ; CHECK-LABEL: imm_imm_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 0
@@ -31,15 +31,15 @@ for.cond.cleanup:                                 ; preds = %for.body
 
 for.body:                                         ; preds = %for.body, %entry
   %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %0 = trunc i64 %indvars.iv to i32
-  store i32 %0, i32* %arrayidx, align 4
+  store i32 %0, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, 100
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
-define void @imm_imm_negative_bump(i32* nocapture %x){
+define void @imm_imm_negative_bump(ptr nocapture %x){
 ; CHECK-LABEL: imm_imm_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 99
@@ -64,15 +64,15 @@ for.cond.cleanup:                                 ; preds = %for.body
 
 for.body:                                         ; preds = %for.body, %entry
   %indvars.iv = phi i64 [ 99, %entry ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %0 = trunc i64 %indvars.iv to i32
-  store i32 %0, i32* %arrayidx, align 4
+  store i32 %0, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   %cmp = icmp eq i64 %indvars.iv, 0
   br i1 %cmp, label %for.cond.cleanup, label %for.body
 }
 
-define void @imm_nonzero_reg_positive_bump(i32* nocapture %x, i32 %n){
+define void @imm_nonzero_reg_positive_bump(ptr nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_nonzero_reg_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r2 = $r1, 4
@@ -109,15 +109,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body, %for.body.preheader
   %indvars.iv = phi i64 [ 3, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %0 = trunc i64 %indvars.iv to i32
-  store i32 %0, i32* %arrayidx, align 4
+  store i32 %0, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
-define void @imm_nonzero_reg_negative_bump(i32* nocapture %x, i32 %n){
+define void @imm_nonzero_reg_negative_bump(ptr nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_nonzero_reg_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r2 = $r1, 99
@@ -152,15 +152,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ 99, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   %cmp = icmp sgt i64 %indvars.iv, %0
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @imm_zero_reg_positive_bump(i32* nocapture %x, i32 %n){
+define void @imm_zero_reg_positive_bump(ptr nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_zero_reg_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r1 ? .LBB4_3
@@ -193,15 +193,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body, %for.body.preheader
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %0 = trunc i64 %indvars.iv to i32
-  store i32 %0, i32* %arrayidx, align 4
+  store i32 %0, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
-define void @imm_zero_reg_negative_bump(i32* nocapture %x, i32 %n){
+define void @imm_zero_reg_negative_bump(ptr nocapture %x, i32 %n){
 ; CHECK-LABEL: imm_zero_reg_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wgtz $r1 ? .LBB5_3
@@ -237,15 +237,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %1 = sub nsw i64 0, %indvars.iv
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %1
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %1
   %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, i32* %arrayidx, align 4
+  store i32 %2, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   %cmp = icmp sgt i64 %indvars.iv, %0
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @reg_imm_nonzero_negative_bump(i32* nocapture %x, i32 %start){
+define void @reg_imm_nonzero_negative_bump(ptr nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_nonzero_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r2 = $r1, 3
@@ -281,15 +281,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %cmp = icmp sgt i64 %indvars.iv, 3
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @reg_imm_nonzero_positive_bump(i32* nocapture %x, i32 %start){
+define void @reg_imm_nonzero_positive_bump(ptr nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_nonzero_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.gt $r2 = $r1, 99
@@ -324,15 +324,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, 1
   %cmp = icmp slt i64 %indvars.iv, 99
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @reg_imm_zero_positive_bump(i32* nocapture %x, i32 %start){
+define void @reg_imm_zero_positive_bump(ptr nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_zero_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wgtz $r1 ? .LBB8_3
@@ -367,15 +367,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %1 = sub nsw i64 0, %indvars.iv
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %1
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %1
   %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, i32* %arrayidx, align 4
+  store i32 %2, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, 1
   %cmp = icmp slt i64 %indvars.iv, 0
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @reg_imm_zero_negative_bump(i32* nocapture %x, i32 %start){
+define void @reg_imm_zero_negative_bump(ptr nocapture %x, i32 %start){
 ; CHECK-LABEL: reg_imm_zero_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wltz $r1 ? .LBB9_3
@@ -409,15 +409,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %cmp = icmp sgt i64 %indvars.iv, 0
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   br i1 %cmp, label %for.body, label %for.cond.cleanup
 }
 
-define void @reg_reg_positive_bump(i32* nocapture %x, i32 %start, i32 %end){
+define void @reg_reg_positive_bump(ptr nocapture %x, i32 %start, i32 %end){
 ; CHECK-LABEL: reg_reg_positive_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.ge $r3 = $r1, $r2
@@ -456,15 +456,15 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body, %for.body.preheader
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %1 = trunc i64 %indvars.iv to i32
-  store i32 %1, i32* %arrayidx, align 4
+  store i32 %1, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
-define void @reg_reg_negative_bump(i32* nocapture %x, i32 %start, i32 %end){
+define void @reg_reg_negative_bump(ptr nocapture %x, i32 %start, i32 %end){
 ; CHECK-LABEL: reg_reg_negative_bump:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    compw.lt $r3 = $r1, $r2
@@ -503,9 +503,9 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body.preheader, %for.body
   %indvars.iv = phi i64 [ %0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %x, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %x, i64 %indvars.iv
   %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, i32* %arrayidx, align 4
+  store i32 %2, ptr %arrayidx, align 4
   %indvars.iv.next = add nsw i64 %indvars.iv, -1
   %cmp = icmp sgt i64 %indvars.iv, %1
   br i1 %cmp, label %for.body, label %for.cond.cleanup

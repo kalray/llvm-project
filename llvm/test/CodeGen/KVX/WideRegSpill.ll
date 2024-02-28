@@ -228,8 +228,8 @@ define i32 @a() {
   %26 = phi <512 x i1> [ %14, %2 ], [ %1, %21 ]
   %27 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %26, <512 x i1> undef)
   %28 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %27)
-  %29 = inttoptr i64 %3 to <1024 x i1>*
-  store <1024 x i1> %28, <1024 x i1>* %29, align 128
+  %29 = inttoptr i64 %3 to ptr 
+  store <1024 x i1> %28, ptr %29, align 128
   %30 = add i64 %3, 2
   br label %2
 }

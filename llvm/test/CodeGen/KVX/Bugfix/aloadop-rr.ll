@@ -7,9 +7,9 @@
 
 target triple = "kvx-kalray-cos"
 
-@b = common global i32* null, align 8
+@b = common global ptr null, align 8
 @a = common global i64 0, align 8
-@c = common global i64* null, align 8
+@c = common global ptr null, align 8
 
 define void @foo32() {
 ; CV1-LABEL: foo32:
@@ -74,10 +74,10 @@ define void @foo32() {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = load i32*, i32** @b, align 8
-  %1 = load i64, i64* @a, align 8
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %1
-  %2 = atomicrmw or i32* %arrayidx, i32 0 seq_cst
+  %0 = load ptr, ptr @b, align 8
+  %1 = load i64, ptr @a, align 8
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %1
+  %2 = atomicrmw or ptr %arrayidx, i32 0 seq_cst
   ret void
 }
 
@@ -144,9 +144,9 @@ define void @foo64() {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = load i64*, i64** @c, align 8
-  %1 = load i64, i64* @a, align 8
-  %arrayidx = getelementptr inbounds i64, i64* %0, i64 %1
-  %2 = atomicrmw or i64* %arrayidx, i64 0 seq_cst
+  %0 = load ptr, ptr @c, align 8
+  %1 = load i64, ptr @a, align 8
+  %arrayidx = getelementptr inbounds i64, ptr %0, i64 %1
+  %2 = atomicrmw or ptr %arrayidx, i64 0 seq_cst
   ret void
 }

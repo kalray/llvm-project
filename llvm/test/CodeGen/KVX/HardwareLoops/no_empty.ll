@@ -5,7 +5,7 @@
 target triple = "kvx-kalray-cos"
 
 
-%struct.Image = type { i8*, i16, i16, i16, i16, i16 }
+%struct.Image = type { ptr, i16, i16, i16, i16, i16 }
 
 define void @has_no_empty_hwloops(%struct.Image* nocapture readonly %0, %struct.Image* nocapture %1) {
 ; CHECK-LABEL: has_no_empty_hwloops:
@@ -36,7 +36,7 @@ define void @has_no_empty_hwloops(%struct.Image* nocapture readonly %0, %struct.
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds %struct.Image, %struct.Image* %0, i64 0, i32 2
-  %4 = load i16, i16* %3, align 2
+  %4 = load i16, ptr %3, align 2
   %5 = zext i16 %4 to i32
   %6 = icmp eq i16 %4, 0
   %7 = add nsw i32 %5, -1
@@ -50,7 +50,7 @@ define void @has_no_empty_hwloops(%struct.Image* nocapture readonly %0, %struct.
 
 12:                                               ; preds = %14, %2
   %13 = getelementptr inbounds %struct.Image, %struct.Image* %1, i64 0, i32 2
-  store i16 %4, i16* %13, align 2
+  store i16 %4, ptr %13, align 2
   ret void
 
 14:                                               ; preds = %14, %10

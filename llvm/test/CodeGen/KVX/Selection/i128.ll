@@ -492,23 +492,23 @@ define i128 @MSBFUDT(i128 %0, i64 %1, i64 %2) {
   ret i128 %7
 }
 
-define i128 @ld(i128* nocapture readonly %0) {
+define i128 @ld(ptr nocapture readonly %0) {
 ; CHECK-LABEL: ld:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  %2 = load i128, i128* %0
+  %2 = load i128, ptr %0
   ret i128 %2
 }
 
-define void @st(i128 %0, i128* nocapture %1) {
+define void @st(i128 %0, ptr nocapture %1) {
 ; CHECK-LABEL: st:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    sq 0[$r2] = $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
-  store i128 %0, i128* %1
+  store i128 %0, ptr %1
   ret void
 }
 

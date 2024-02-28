@@ -31,8 +31,8 @@ entry:
   br label %for.body
 for.body:
   %i.01 = phi i32 [ 0, %entry ], [ %inc, %for.body ]
-  %arrayidx = getelementptr inbounds [10 x i32], [10 x i32]* @a, i32 0, i32 %i.01
-  store i32 %i.01, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds [10 x i32], ptr @a, i32 0, i32 %i.01
+  store i32 %i.01, ptr %arrayidx, align 4
   %inc = add nsw i32 %i.01, 1
   %exitcond = icmp eq i32 %inc, 10
   br i1 %exitcond, label %for.end, label %for.body
@@ -43,7 +43,7 @@ for.end:
 ; Case 2 : Loop with a run-time number of iterations.
 ; TODO: Something on the vector handling change made the
 ; two make $r0 = 0 not merge anymore. Why?
-define i32 @hwloop2(i32 %n, i32* nocapture %b) nounwind {
+define i32 @hwloop2(i32 %n, ptr nocapture %b) nounwind {
 ; CHECK-LABEL: hwloop2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB1_4
@@ -81,8 +81,8 @@ for.body.preheader:
 for.body:
   %a.03 = phi i32 [ %add, %for.body ], [ 0, %for.body.preheader ]
   %i.02 = phi i32 [ %inc, %for.body ], [ 0, %for.body.preheader ]
-  %arrayidx = getelementptr inbounds i32, i32* %b, i32 %i.02
-  %0 = load i32, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %b, i32 %i.02
+  %0 = load i32, ptr %arrayidx, align 4
   %add = add nsw i32 %0, %a.03
   %inc = add nsw i32 %i.02, 1
   %exitcond = icmp eq i32 %inc, %n
@@ -98,7 +98,7 @@ for.end:
 
 ; Case 3 : Induction variable increment more than 1.
 
-define i32 @hwloop3(i32 %n, i32* nocapture %b) nounwind {
+define i32 @hwloop3(i32 %n, ptr nocapture %b) nounwind {
 ; CHECK-LABEL: hwloop3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -134,8 +134,8 @@ for.body.preheader:
 for.body:
   %a.03 = phi i32 [ %add, %for.body ], [ 0, %for.body.preheader ]
   %i.02 = phi i32 [ %inc, %for.body ], [ 0, %for.body.preheader ]
-  %arrayidx = getelementptr inbounds i32, i32* %b, i32 %i.02
-  %0 = load i32, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %b, i32 %i.02
+  %0 = load i32, ptr %arrayidx, align 4
   %add = add nsw i32 %0, %a.03
   %inc = add nsw i32 %i.02, 4
   %exitcond = icmp eq i32 %inc, %n
@@ -151,7 +151,7 @@ for.end:
 
 ; Case 4 : Loop exit compare uses register instead of immediate value.
 
-define i32 @hwloop4(i32 %n, i32* nocapture %b) nounwind {
+define i32 @hwloop4(i32 %n, ptr nocapture %b) nounwind {
 ; CHECK-LABEL: hwloop4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB3_3
@@ -183,8 +183,8 @@ for.body.preheader:
 
 for.body:
   %i.02 = phi i32 [ %inc, %for.body ], [ 0, %for.body.preheader ]
-  %arrayidx = getelementptr inbounds i32, i32* %b, i32 %i.02
-  store i32 %i.02, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %b, i32 %i.02
+  store i32 %i.02, ptr %arrayidx, align 4
   %inc = add nsw i32 %i.02, 1
   %exitcond = icmp eq i32 %inc, %n
   br i1 %exitcond, label %for.end.loopexit, label %for.body
@@ -198,7 +198,7 @@ for.end:
 
 ; Case 5: After LSR, the initial value is 100 and the iv decrements to 0.
 
-define void @hwloop5(i32* nocapture %a, i32* nocapture %res) nounwind {
+define void @hwloop5(ptr nocapture %a, ptr nocapture %res) nounwind {
 ; CHECK-LABEL: hwloop5:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r2 = 0
@@ -224,11 +224,11 @@ entry:
 
 for.body:
   %i.03 = phi i32 [ 0, %entry ], [ %inc, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %a, i32 %i.03
-  %0 = load i32, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %a, i32 %i.03
+  %0 = load i32, ptr %arrayidx, align 4
   %mul = mul nsw i32 %0, %0
-  %arrayidx2 = getelementptr inbounds i32, i32* %res, i32 %i.03
-  store i32 %mul, i32* %arrayidx2, align 4
+  %arrayidx2 = getelementptr inbounds i32, ptr %res, i32 %i.03
+  store i32 %mul, ptr %arrayidx2, align 4
   %inc = add nsw i32 %i.03, 1
   %exitcond = icmp eq i32 %inc, 100
   br i1 %exitcond, label %for.end, label %for.body

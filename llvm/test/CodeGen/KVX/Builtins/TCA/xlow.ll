@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @low256(<256 x i1>* nocapture %0) {
+define void @low256(ptr nocapture %0) {
 ; CV1-LABEL: low256:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xcopyo $a0 = $a48
@@ -24,13 +24,13 @@ define void @low256(<256 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
   %2 = tail call <256 x i1> @llvm.kvx.low.v256i1(<512 x i1> zeroinitializer)
-  store <256 x i1> %2, <256 x i1>* %0
+  store <256 x i1> %2, ptr %0
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.low.v256i1(<512 x i1>)
 
-define void @low512(<512 x i1>* nocapture %0) {
+define void @low512(ptr nocapture %0) {
 ; CV1-LABEL: low512:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
@@ -53,13 +53,13 @@ define void @low512(<512 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
   %2 = tail call <512 x i1> @llvm.kvx.low.v512i1(<1024 x i1> zeroinitializer)
-  store <512 x i1> %2, <512 x i1>* %0
+  store <512 x i1> %2, ptr %0
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.low.v512i1(<1024 x i1>)
 
-define void @low1024(<1024 x i1>* nocapture %0) {
+define void @low1024(ptr nocapture %0) {
 ; CV1-LABEL: low1024:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
@@ -92,13 +92,13 @@ define void @low1024(<1024 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
   %2 = tail call <1024 x i1> @llvm.kvx.low.v1024i1(<2048 x i1> zeroinitializer)
-  store <1024 x i1> %2, <1024 x i1>* %0
+  store <1024 x i1> %2, ptr %0
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.low.v1024i1(<2048 x i1>)
 
-define void @xlow2048(<2048 x i1>* nocapture %0) {
+define void @xlow2048(ptr nocapture %0) {
 ; CV1-LABEL: xlow2048:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a0a1a2a3 = $a48a49a50a51
@@ -152,7 +152,7 @@ define void @xlow2048(<2048 x i1>* nocapture %0) {
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
   %2 = tail call <2048 x i1> @llvm.kvx.low.v2048i1(<4096 x i1> zeroinitializer)
-  store <2048 x i1> %2, <2048 x i1>* %0
+  store <2048 x i1> %2, ptr %0
   ret void
 }
 

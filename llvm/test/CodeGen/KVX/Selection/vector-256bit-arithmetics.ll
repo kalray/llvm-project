@@ -3631,7 +3631,7 @@ define <32 x i8> @mul_add_v32i8_v32i8(<32 x i8> %0, <32 x i8> %1, <32 x i8> %2) 
   ret <32 x i8> %5
 }
 
-define <4 x double> @p_mul_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x double>* nocapture readonly %1) {
+define <4 x double> @p_mul_v4f64_v4f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v4f64_v4f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -3647,13 +3647,13 @@ define <4 x double> @p_mul_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x
 ; CHECK-NEXT:    fmuld $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load <4 x double>, <4 x double>* %1, align 32
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load <4 x double>, ptr %1, align 32
   %5 = fmul <4 x double> %3, %4
   ret <4 x double> %5
 }
 
-define <4 x double> @p_mul_v4f64_f64(<4 x double>* nocapture readonly %0, double* nocapture readonly %1) {
+define <4 x double> @p_mul_v4f64_f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v4f64_f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r8 = 0[$r1]
@@ -3671,15 +3671,15 @@ define <4 x double> @p_mul_v4f64_f64(<4 x double>* nocapture readonly %0, double
 ; CHECK-NEXT:    fmuld $r1 = $r5, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load double, double* %1, align 8
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load double, ptr %1, align 8
   %5 = insertelement <4 x double> undef, double %4, i32 0
   %6 = shufflevector <4 x double> %5, <4 x double> undef, <4 x i32> zeroinitializer
   %7 = fmul <4 x double> %3, %6
   ret <4 x double> %7
 }
 
-define <4 x double> @p_div_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x double>* nocapture readonly %1) {
+define <4 x double> @p_div_v4f64_v4f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v4f64_v4f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -3731,13 +3731,13 @@ define <4 x double> @p_div_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load <4 x double>, <4 x double>* %1, align 32
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load <4 x double>, ptr %1, align 32
   %5 = fdiv <4 x double> %3, %4
   ret <4 x double> %5
 }
 
-define <4 x double> @p_div_v4f64_f64(<4 x double>* nocapture readonly %0, double* nocapture readonly %1) {
+define <4 x double> @p_div_v4f64_f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v4f64_f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -3789,15 +3789,15 @@ define <4 x double> @p_div_v4f64_f64(<4 x double>* nocapture readonly %0, double
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load double, double* %1, align 8
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load double, ptr %1, align 8
   %5 = insertelement <4 x double> undef, double %4, i32 0
   %6 = shufflevector <4 x double> %5, <4 x double> undef, <4 x i32> zeroinitializer
   %7 = fdiv <4 x double> %3, %6
   ret <4 x double> %7
 }
 
-define <4 x double> @p_add_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x double>* nocapture readonly %1) {
+define <4 x double> @p_add_v4f64_v4f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v4f64_v4f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -3809,13 +3809,13 @@ define <4 x double> @p_add_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x
 ; CHECK-NEXT:    fadddp $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load <4 x double>, <4 x double>* %1, align 32
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load <4 x double>, ptr %1, align 32
   %5 = fadd <4 x double> %3, %4
   ret <4 x double> %5
 }
 
-define <4 x double> @p_add_v4f64_f64(<4 x double>* nocapture readonly %0, double* nocapture readonly %1) {
+define <4 x double> @p_add_v4f64_f64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v4f64_f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r4 = 0[$r1]
@@ -3831,15 +3831,15 @@ define <4 x double> @p_add_v4f64_f64(<4 x double>* nocapture readonly %0, double
 ; CHECK-NEXT:    fadddp $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <4 x double>, <4 x double>* %0, align 32
-  %4 = load double, double* %1, align 8
+  %3 = load <4 x double>, ptr %0, align 32
+  %4 = load double, ptr %1, align 8
   %5 = insertelement <4 x double> undef, double %4, i32 0
   %6 = shufflevector <4 x double> %5, <4 x double> undef, <4 x i32> zeroinitializer
   %7 = fadd <4 x double> %3, %6
   ret <4 x double> %7
 }
 
-define <4 x double> @p_mul_add_v4f64_v4f64(<4 x double>* nocapture readonly %0, <4 x double>* nocapture readonly %1, <4 x double>* nocapture %2) {
+define <4 x double> @p_mul_add_v4f64_v4f64(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; CHECK-LABEL: p_mul_add_v4f64_v4f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -3867,16 +3867,16 @@ define <4 x double> @p_mul_add_v4f64_v4f64(<4 x double>* nocapture readonly %0, 
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 15)
-  %4 = load <4 x double>, <4 x double>* %0, align 32
-  %5 = load <4 x double>, <4 x double>* %1, align 32
+  %4 = load <4 x double>, ptr %0, align 32
+  %5 = load <4 x double>, ptr %1, align 32
   %6 = fmul <4 x double> %4, %5
-  %7 = load <4 x double>, <4 x double>* %2, align 32
+  %7 = load <4 x double>, ptr %2, align 32
   %8 = fadd <4 x double> %7, %6
-  store <4 x double> %8, <4 x double>* %2, align 32
+  store <4 x double> %8, ptr %2, align 32
   ret <4 x double> %8
 }
 
-define <4 x i64> @p_mul_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>* nocapture readonly %1) {
+define <4 x i64> @p_mul_v4i64_v4i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v4i64_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -3892,13 +3892,13 @@ define <4 x i64> @p_mul_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>*
 ; CHECK-NEXT:    muld $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load <4 x i64>, <4 x i64>* %1, align 32
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load <4 x i64>, ptr %1, align 32
   %5 = mul <4 x i64> %4, %3
   ret <4 x i64> %5
 }
 
-define <4 x i64> @p_mul_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocapture readonly %1) {
+define <4 x i64> @p_mul_v4i64_i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v4i64_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -3914,15 +3914,15 @@ define <4 x i64> @p_mul_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocaptu
 ; CHECK-NEXT:    muld $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load i64, i64* %1, align 8
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load i64, ptr %1, align 8
   %5 = insertelement <4 x i64> undef, i64 %4, i32 0
   %6 = shufflevector <4 x i64> %5, <4 x i64> undef, <4 x i32> zeroinitializer
   %7 = mul <4 x i64> %6, %3
   ret <4 x i64> %7
 }
 
-define <4 x i64> @p_div_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>* nocapture readonly %1) {
+define <4 x i64> @p_div_v4i64_v4i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v4i64_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -3974,13 +3974,13 @@ define <4 x i64> @p_div_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>*
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load <4 x i64>, <4 x i64>* %1, align 32
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load <4 x i64>, ptr %1, align 32
   %5 = sdiv <4 x i64> %3, %4
   ret <4 x i64> %5
 }
 
-define <4 x i64> @p_div_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocapture readonly %1) {
+define <4 x i64> @p_div_v4i64_i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v4i64_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -64
@@ -4032,15 +4032,15 @@ define <4 x i64> @p_div_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocaptu
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load i64, i64* %1, align 8
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load i64, ptr %1, align 8
   %5 = insertelement <4 x i64> undef, i64 %4, i32 0
   %6 = shufflevector <4 x i64> %5, <4 x i64> undef, <4 x i32> zeroinitializer
   %7 = sdiv <4 x i64> %3, %6
   ret <4 x i64> %7
 }
 
-define <4 x i64> @p_add_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>* nocapture readonly %1) {
+define <4 x i64> @p_add_v4i64_v4i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v4i64_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4053,13 +4053,13 @@ define <4 x i64> @p_add_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>*
 ; CHECK-NEXT:    addd $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load <4 x i64>, <4 x i64>* %1, align 32
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load <4 x i64>, ptr %1, align 32
   %5 = add <4 x i64> %4, %3
   ret <4 x i64> %5
 }
 
-define <4 x i64> @p_add_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocapture readonly %1) {
+define <4 x i64> @p_add_v4i64_i64(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v4i64_i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4072,15 +4072,15 @@ define <4 x i64> @p_add_v4i64_i64(<4 x i64>* nocapture readonly %0, i64* nocaptu
 ; CHECK-NEXT:    addd $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load <4 x i64>, <4 x i64>* %0, align 32
-  %4 = load i64, i64* %1, align 8
+  %3 = load <4 x i64>, ptr %0, align 32
+  %4 = load i64, ptr %1, align 8
   %5 = insertelement <4 x i64> undef, i64 %4, i32 0
   %6 = shufflevector <4 x i64> %5, <4 x i64> undef, <4 x i32> zeroinitializer
   %7 = add <4 x i64> %6, %3
   ret <4 x i64> %7
 }
 
-define <4 x i64> @p_mul_add_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i64>* nocapture readonly %1, <4 x i64>* nocapture %2) {
+define <4 x i64> @p_mul_add_v4i64_v4i64(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; CHECK-LABEL: p_mul_add_v4i64_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
@@ -4105,16 +4105,16 @@ define <4 x i64> @p_mul_add_v4i64_v4i64(<4 x i64>* nocapture readonly %0, <4 x i
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
-  %4 = load <4 x i64>, <4 x i64>* %0, align 32
-  %5 = load <4 x i64>, <4 x i64>* %1, align 32
+  %4 = load <4 x i64>, ptr %0, align 32
+  %5 = load <4 x i64>, ptr %1, align 32
   %6 = mul <4 x i64> %5, %4
-  %7 = load <4 x i64>, <4 x i64>* %2, align 32
+  %7 = load <4 x i64>, ptr %2, align 32
   %8 = add <4 x i64> %7, %6
-  store <4 x i64> %8, <4 x i64>* %2, align 32
+  store <4 x i64> %8, ptr %2, align 32
   ret <4 x i64> %8
 }
 
-define <8 x float> @p_mul_vv8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x float>* nocapture readonly %1) {
+define <8 x float> @p_mul_vv8f32_v8f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_vv8f32_v8f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4126,13 +4126,13 @@ define <8 x float> @p_mul_vv8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x 
 ; CHECK-NEXT:    fmulwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load <8 x float>, <8 x float>* %1, align 32
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load <8 x float>, ptr %1, align 32
   %5 = fmul <8 x float> %3, %4
   ret <8 x float> %5
 }
 
-define <8 x float> @p_mul_v8f32_f32(<8 x float>* nocapture readonly %0, float* nocapture readonly %1) {
+define <8 x float> @p_mul_v8f32_f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v8f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
@@ -4148,15 +4148,15 @@ define <8 x float> @p_mul_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    fmulwq $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load float, float* %1, align 4
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load float, ptr %1, align 4
   %5 = insertelement <8 x float> undef, float %4, i32 0
   %6 = shufflevector <8 x float> %5, <8 x float> undef, <8 x i32> zeroinitializer
   %7 = fmul <8 x float> %3, %6
   ret <8 x float> %7
 }
 
-define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x float>* nocapture readonly %1) {
+define <8 x float> @p_div_v8f32_v8f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_div_v8f32_v8f32:
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -96
@@ -4315,13 +4315,13 @@ define <8 x float> @p_div_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; V2-NEXT:    ;; # (end cycle 9)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load <8 x float>, <8 x float>* %1, align 32
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load <8 x float>, ptr %1, align 32
   %5 = fdiv <8 x float> %3, %4
   ret <8 x float> %5
 }
 
-define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* nocapture readonly %1) {
+define <8 x float> @p_div_v8f32_f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_div_v8f32_f32:
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -96
@@ -4488,15 +4488,15 @@ define <8 x float> @p_div_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; V2-NEXT:    ;; # (end cycle 10)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load float, float* %1, align 4
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load float, ptr %1, align 4
   %5 = insertelement <8 x float> undef, float %4, i32 0
   %6 = shufflevector <8 x float> %5, <8 x float> undef, <8 x i32> zeroinitializer
   %7 = fdiv <8 x float> %3, %6
   ret <8 x float> %7
 }
 
-define <8 x float> @p_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x float>* nocapture readonly %1) {
+define <8 x float> @p_add_v8f32_v8f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8f32_v8f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4508,13 +4508,13 @@ define <8 x float> @p_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x f
 ; CHECK-NEXT:    faddwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load <8 x float>, <8 x float>* %1, align 32
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load <8 x float>, ptr %1, align 32
   %5 = fadd <8 x float> %3, %4
   ret <8 x float> %5
 }
 
-define <8 x float> @p_add_v8f32_f32(<8 x float>* nocapture readonly %0, float* nocapture readonly %1) {
+define <8 x float> @p_add_v8f32_f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8f32_f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
@@ -4530,15 +4530,15 @@ define <8 x float> @p_add_v8f32_f32(<8 x float>* nocapture readonly %0, float* n
 ; CHECK-NEXT:    faddwq $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %3 = load <8 x float>, <8 x float>* %0, align 32
-  %4 = load float, float* %1, align 4
+  %3 = load <8 x float>, ptr %0, align 32
+  %4 = load float, ptr %1, align 4
   %5 = insertelement <8 x float> undef, float %4, i32 0
   %6 = shufflevector <8 x float> %5, <8 x float> undef, <8 x i32> zeroinitializer
   %7 = fadd <8 x float> %3, %6
   ret <8 x float> %7
 }
 
-define <8 x float> @p_mul_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8 x float>* nocapture readonly %1, <8 x float>* nocapture %2) {
+define <8 x float> @p_mul_add_v8f32_v8f32(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; CHECK-LABEL: p_mul_add_v8f32_v8f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4562,16 +4562,16 @@ define <8 x float> @p_mul_add_v8f32_v8f32(<8 x float>* nocapture readonly %0, <8
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 13)
-  %4 = load <8 x float>, <8 x float>* %0, align 32
-  %5 = load <8 x float>, <8 x float>* %1, align 32
+  %4 = load <8 x float>, ptr %0, align 32
+  %5 = load <8 x float>, ptr %1, align 32
   %6 = fmul <8 x float> %4, %5
-  %7 = load <8 x float>, <8 x float>* %2, align 32
+  %7 = load <8 x float>, ptr %2, align 32
   %8 = fadd <8 x float> %7, %6
-  store <8 x float> %8, <8 x float>* %2, align 32
+  store <8 x float> %8, ptr %2, align 32
   ret <8 x float> %8
 }
 
-define <8 x i32> @p_mul_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>* nocapture readonly %1) {
+define <8 x i32> @p_mul_v8i32_v8i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v8i32_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4583,13 +4583,13 @@ define <8 x i32> @p_mul_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 ; CHECK-NEXT:    mulwq $r0r1 = $r0r1, $r4r5
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load <8 x i32>, <8 x i32>* %1, align 32
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load <8 x i32>, ptr %1, align 32
   %5 = mul <8 x i32> %4, %3
   ret <8 x i32> %5
 }
 
-define <8 x i32> @p_mul_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocapture readonly %1) {
+define <8 x i32> @p_mul_v8i32_i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v8i32_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
@@ -4605,15 +4605,15 @@ define <8 x i32> @p_mul_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    mulwq $r0r1 = $r4r5, $r0r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load i32, i32* %1, align 4
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load i32, ptr %1, align 4
   %5 = insertelement <8 x i32> undef, i32 %4, i32 0
   %6 = shufflevector <8 x i32> %5, <8 x i32> undef, <8 x i32> zeroinitializer
   %7 = mul <8 x i32> %6, %3
   ret <8 x i32> %7
 }
 
-define <8 x i32> @p_div_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>* nocapture readonly %1) {
+define <8 x i32> @p_div_v8i32_v8i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v8i32_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -4638,13 +4638,13 @@ define <8 x i32> @p_div_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load <8 x i32>, <8 x i32>* %1, align 32
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load <8 x i32>, ptr %1, align 32
   %5 = sdiv <8 x i32> %3, %4
   ret <8 x i32> %5
 }
 
-define <8 x i32> @p_div_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocapture readonly %1) {
+define <8 x i32> @p_div_v8i32_i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v8i32_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -4675,15 +4675,15 @@ define <8 x i32> @p_div_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load i32, i32* %1, align 4
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load i32, ptr %1, align 4
   %5 = insertelement <8 x i32> undef, i32 %4, i32 0
   %6 = shufflevector <8 x i32> %5, <8 x i32> undef, <8 x i32> zeroinitializer
   %7 = sdiv <8 x i32> %3, %6
   ret <8 x i32> %7
 }
 
-define <8 x i32> @p_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>* nocapture readonly %1) {
+define <8 x i32> @p_add_v8i32_v8i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8i32_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4696,13 +4696,13 @@ define <8 x i32> @p_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>*
 ; CHECK-NEXT:    addwp $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load <8 x i32>, <8 x i32>* %1, align 32
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load <8 x i32>, ptr %1, align 32
   %5 = add <8 x i32> %4, %3
   ret <8 x i32> %5
 }
 
-define <8 x i32> @p_add_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocapture readonly %1) {
+define <8 x i32> @p_add_v8i32_i32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v8i32_i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r4 = 0[$r1]
@@ -4719,15 +4719,15 @@ define <8 x i32> @p_add_v8i32_i32(<8 x i32>* nocapture readonly %0, i32* nocaptu
 ; CHECK-NEXT:    addwp $r3 = $r5, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %3 = load <8 x i32>, <8 x i32>* %0, align 32
-  %4 = load i32, i32* %1, align 4
+  %3 = load <8 x i32>, ptr %0, align 32
+  %4 = load i32, ptr %1, align 4
   %5 = insertelement <8 x i32> undef, i32 %4, i32 0
   %6 = shufflevector <8 x i32> %5, <8 x i32> undef, <8 x i32> zeroinitializer
   %7 = add <8 x i32> %6, %3
   ret <8 x i32> %7
 }
 
-define <8 x i32> @p_mul_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i32>* nocapture readonly %1, <8 x i32>* nocapture %2) {
+define <8 x i32> @p_mul_add_v8i32_v8i32(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; V1-LABEL: p_mul_add_v8i32_v8i32:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r8r9r10r11 = 0[$r0]
@@ -4769,16 +4769,16 @@ define <8 x i32> @p_mul_add_v8i32_v8i32(<8 x i32>* nocapture readonly %0, <8 x i
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 7)
-  %4 = load <8 x i32>, <8 x i32>* %0, align 32
-  %5 = load <8 x i32>, <8 x i32>* %1, align 32
+  %4 = load <8 x i32>, ptr %0, align 32
+  %5 = load <8 x i32>, ptr %1, align 32
   %6 = mul <8 x i32> %5, %4
-  %7 = load <8 x i32>, <8 x i32>* %2, align 32
+  %7 = load <8 x i32>, ptr %2, align 32
   %8 = add <8 x i32> %7, %6
-  store <8 x i32> %8, <8 x i32>* %2, align 32
+  store <8 x i32> %8, ptr %2, align 32
   ret <8 x i32> %8
 }
 
-define <16 x half> @p_mul_vv16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
+define <16 x half> @p_mul_vv16f16_v16f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_mul_vv16f16_v16f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -4806,13 +4806,13 @@ define <16 x half> @p_mul_vv16f16_v16f16(<16 x half>* nocapture readonly %0, <16
 ; V2-NEXT:    fmulho $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load <16 x half>, <16 x half>* %1, align 32
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load <16 x half>, ptr %1, align 32
   %5 = fmul <16 x half> %3, %4
   ret <16 x half> %5
 }
 
-define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
+define <16 x half> @p_mul_v16f16_f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_mul_v16f16_f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lhz $r1 = 0[$r1]
@@ -4846,15 +4846,15 @@ define <16 x half> @p_mul_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    fmulho $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 6)
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load half, half* %1, align 2
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load half, ptr %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0
   %6 = shufflevector <16 x half> %5, <16 x half> undef, <16 x i32> zeroinitializer
   %7 = fmul <16 x half> %3, %6
   ret <16 x half> %7
 }
 
-define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
+define <16 x half> @p_div_v16f16_v16f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_div_v16f16_v16f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -160
@@ -5234,13 +5234,13 @@ define <16 x half> @p_div_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    ;; # (end cycle 20)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load <16 x half>, <16 x half>* %1, align 32
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load <16 x half>, ptr %1, align 32
   %5 = fdiv <16 x half> %3, %4
   ret <16 x half> %5
 }
 
-define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
+define <16 x half> @p_div_v16f16_f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_div_v16f16_f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -160
@@ -5576,15 +5576,15 @@ define <16 x half> @p_div_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    ;; # (end cycle 17)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load half, half* %1, align 2
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load half, ptr %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0
   %6 = shufflevector <16 x half> %5, <16 x half> undef, <16 x i32> zeroinitializer
   %7 = fdiv <16 x half> %3, %6
   ret <16 x half> %7
 }
 
-define <16 x half> @p_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1) {
+define <16 x half> @p_add_v16f16_v16f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_add_v16f16_v16f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -5612,13 +5612,13 @@ define <16 x half> @p_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 
 ; V2-NEXT:    faddho $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 5)
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load <16 x half>, <16 x half>* %1, align 32
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load <16 x half>, ptr %1, align 32
   %5 = fadd <16 x half> %3, %4
   ret <16 x half> %5
 }
 
-define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* nocapture readonly %1) {
+define <16 x half> @p_add_v16f16_f16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_add_v16f16_f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lhz $r1 = 0[$r1]
@@ -5652,15 +5652,15 @@ define <16 x half> @p_add_v16f16_f16(<16 x half>* nocapture readonly %0, half* n
 ; V2-NEXT:    faddho $r0r1 = $r4r5, $r0r1
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 6)
-  %3 = load <16 x half>, <16 x half>* %0, align 32
-  %4 = load half, half* %1, align 2
+  %3 = load <16 x half>, ptr %0, align 32
+  %4 = load half, ptr %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0
   %6 = shufflevector <16 x half> %5, <16 x half> undef, <16 x i32> zeroinitializer
   %7 = fadd <16 x half> %3, %6
   ret <16 x half> %7
 }
 
-define <16 x half> @p_mul_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, <16 x half>* nocapture readonly %1, <16 x half>* nocapture %2) {
+define <16 x half> @p_mul_add_v16f16_v16f16(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; V1-LABEL: p_mul_add_v16f16_v16f16:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -5717,16 +5717,16 @@ define <16 x half> @p_mul_add_v16f16_v16f16(<16 x half>* nocapture readonly %0, 
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 13)
-  %4 = load <16 x half>, <16 x half>* %0, align 32
-  %5 = load <16 x half>, <16 x half>* %1, align 32
+  %4 = load <16 x half>, ptr %0, align 32
+  %5 = load <16 x half>, ptr %1, align 32
   %6 = fmul <16 x half> %4, %5
-  %7 = load <16 x half>, <16 x half>* %2, align 32
+  %7 = load <16 x half>, ptr %2, align 32
   %8 = fadd <16 x half> %7, %6
-  store <16 x half> %8, <16 x half>* %2, align 32
+  store <16 x half> %8, ptr %2, align 32
   ret <16 x half> %8
 }
 
-define <16 x i16> @p_mul_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x i16>* nocapture readonly %1) {
+define <16 x i16> @p_mul_v16i16_v16i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v16i16_v16i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -5742,13 +5742,13 @@ define <16 x i16> @p_mul_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 ; CHECK-NEXT:    mulhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load <16 x i16>, <16 x i16>* %1, align 32
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load <16 x i16>, ptr %1, align 32
   %5 = mul <16 x i16> %4, %3
   ret <16 x i16> %5
 }
 
-define <16 x i16> @p_mul_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
+define <16 x i16> @p_mul_v16i16_i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v16i16_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
@@ -5766,15 +5766,15 @@ define <16 x i16> @p_mul_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    mulhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load i16, i16* %1, align 2
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load i16, ptr %1, align 2
   %5 = insertelement <16 x i16> undef, i16 %4, i32 0
   %6 = shufflevector <16 x i16> %5, <16 x i16> undef, <16 x i32> zeroinitializer
   %7 = mul <16 x i16> %6, %3
   ret <16 x i16> %7
 }
 
-define <16 x i16> @p_div_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x i16>* nocapture readonly %1) {
+define <16 x i16> @p_div_v16i16_v16i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v16i16_v16i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -5799,13 +5799,13 @@ define <16 x i16> @p_div_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load <16 x i16>, <16 x i16>* %1, align 32
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load <16 x i16>, ptr %1, align 32
   %5 = sdiv <16 x i16> %3, %4
   ret <16 x i16> %5
 }
 
-define <16 x i16> @p_div_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
+define <16 x i16> @p_div_v16i16_i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v16i16_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -5835,15 +5835,15 @@ define <16 x i16> @p_div_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load i16, i16* %1, align 2
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load i16, ptr %1, align 2
   %5 = insertelement <16 x i16> undef, i16 %4, i32 0
   %6 = shufflevector <16 x i16> %5, <16 x i16> undef, <16 x i32> zeroinitializer
   %7 = sdiv <16 x i16> %3, %6
   ret <16 x i16> %7
 }
 
-define <16 x i16> @p_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x i16>* nocapture readonly %1) {
+define <16 x i16> @p_add_v16i16_v16i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v16i16_v16i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -5856,13 +5856,13 @@ define <16 x i16> @p_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x 
 ; CHECK-NEXT:    addhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load <16 x i16>, <16 x i16>* %1, align 32
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load <16 x i16>, ptr %1, align 32
   %5 = add <16 x i16> %4, %3
   ret <16 x i16> %5
 }
 
-define <16 x i16> @p_add_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* nocapture readonly %1) {
+define <16 x i16> @p_add_v16i16_i16(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_add_v16i16_i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r1 = 0[$r1]
@@ -5877,15 +5877,15 @@ define <16 x i16> @p_add_v16i16_i16(<16 x i16>* nocapture readonly %0, i16* noca
 ; CHECK-NEXT:    addhq $r3 = $r3, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load <16 x i16>, <16 x i16>* %0, align 32
-  %4 = load i16, i16* %1, align 2
+  %3 = load <16 x i16>, ptr %0, align 32
+  %4 = load i16, ptr %1, align 2
   %5 = insertelement <16 x i16> undef, i16 %4, i32 0
   %6 = shufflevector <16 x i16> %5, <16 x i16> undef, <16 x i32> zeroinitializer
   %7 = add <16 x i16> %6, %3
   ret <16 x i16> %7
 }
 
-define <16 x i16> @p_mul_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <16 x i16>* nocapture readonly %1, <16 x i16>* nocapture %2) {
+define <16 x i16> @p_mul_add_v16i16_v16i16(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; CHECK-LABEL: p_mul_add_v16i16_v16i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r8r9r10r11 = 0[$r0]
@@ -5910,16 +5910,16 @@ define <16 x i16> @p_mul_add_v16i16_v16i16(<16 x i16>* nocapture readonly %0, <1
 ; CHECK-NEXT:    copyd $r3 = $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)
-  %4 = load <16 x i16>, <16 x i16>* %0, align 32
-  %5 = load <16 x i16>, <16 x i16>* %1, align 32
+  %4 = load <16 x i16>, ptr %0, align 32
+  %5 = load <16 x i16>, ptr %1, align 32
   %6 = mul <16 x i16> %5, %4
-  %7 = load <16 x i16>, <16 x i16>* %2, align 32
+  %7 = load <16 x i16>, ptr %2, align 32
   %8 = add <16 x i16> %7, %6
-  store <16 x i16> %8, <16 x i16>* %2, align 32
+  store <16 x i16> %8, ptr %2, align 32
   ret <16 x i16> %8
 }
 
-define <32 x i8> @p_mul_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>* nocapture readonly %1) {
+define <32 x i8> @p_mul_v32i8_v32i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v32i8_v32i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -5961,13 +5961,13 @@ define <32 x i8> @p_mul_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; CHECK-NEXT:    iord $r3 = $r5, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 13)
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load <32 x i8>, <32 x i8>* %1, align 32
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load <32 x i8>, ptr %1, align 32
   %5 = mul <32 x i8> %4, %3
   ret <32 x i8> %5
 }
 
-define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture readonly %1) {
+define <32 x i8> @p_mul_v32i8_i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_mul_v32i8_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbz $r1 = 0[$r1]
@@ -6008,15 +6008,15 @@ define <32 x i8> @p_mul_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    iord $r3 = $r8, $r7
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 13)
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load i8, i8* %1, align 1
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load i8, ptr %1, align 1
   %5 = insertelement <32 x i8> undef, i8 %4, i32 0
   %6 = shufflevector <32 x i8> %5, <32 x i8> undef, <32 x i32> zeroinitializer
   %7 = mul <32 x i8> %6, %3
   ret <32 x i8> %7
 }
 
-define <32 x i8> @p_div_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>* nocapture readonly %1) {
+define <32 x i8> @p_div_v32i8_v32i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_div_v32i8_v32i8:
 ; V1:       # %bb.0:
 ; V1-NEXT:    addd $r12 = $r12, -128
@@ -6698,13 +6698,13 @@ define <32 x i8> @p_div_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; V2-NEXT:    ;; # (end cycle 11)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load <32 x i8>, <32 x i8>* %1, align 32
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load <32 x i8>, ptr %1, align 32
   %5 = sdiv <32 x i8> %3, %4
   ret <32 x i8> %5
 }
 
-define <32 x i8> @p_div_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture readonly %1) {
+define <32 x i8> @p_div_v32i8_i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; CHECK-LABEL: p_div_v32i8_i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r12 = $r12, -96
@@ -7002,15 +7002,15 @@ define <32 x i8> @p_div_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load i8, i8* %1, align 1
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load i8, ptr %1, align 1
   %5 = insertelement <32 x i8> undef, i8 %4, i32 0
   %6 = shufflevector <32 x i8> %5, <32 x i8> undef, <32 x i32> zeroinitializer
   %7 = sdiv <32 x i8> %3, %6
   ret <32 x i8> %7
 }
 
-define <32 x i8> @p_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>* nocapture readonly %1) {
+define <32 x i8> @p_add_v32i8_v32i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_add_v32i8_v32i8:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -7061,13 +7061,13 @@ define <32 x i8> @p_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>*
 ; V2-NEXT:    addbo $r3 = $r3, $r7
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load <32 x i8>, <32 x i8>* %1, align 32
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load <32 x i8>, ptr %1, align 32
   %5 = add <32 x i8> %4, %3
   ret <32 x i8> %5
 }
 
-define <32 x i8> @p_add_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture readonly %1) {
+define <32 x i8> @p_add_v32i8_i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
 ; V1-LABEL: p_add_v32i8_i8:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -7119,15 +7119,15 @@ define <32 x i8> @p_add_v32i8_i8(<32 x i8>* nocapture readonly %0, i8* nocapture
 ; V2-NEXT:    addbo $r3 = $r3, $r7
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
-  %3 = load <32 x i8>, <32 x i8>* %0, align 32
-  %4 = load i8, i8* %1, align 1
+  %3 = load <32 x i8>, ptr %0, align 32
+  %4 = load i8, ptr %1, align 1
   %5 = insertelement <32 x i8> undef, i8 %4, i32 0
   %6 = shufflevector <32 x i8> %5, <32 x i8> undef, <32 x i32> zeroinitializer
   %7 = add <32 x i8> %6, %3
   ret <32 x i8> %7
 }
 
-define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x i8>* nocapture readonly %1, <32 x i8>* nocapture %2) {
+define <32 x i8> @p_mul_add_v32i8_v32i8(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture %2) {
 ; V1-LABEL: p_mul_add_v32i8_v32i8:
 ; V1:       # %bb.0:
 ; V1-NEXT:    lo $r8r9r10r11 = 0[$r0]
@@ -7264,12 +7264,12 @@ define <32 x i8> @p_mul_add_v32i8_v32i8(<32 x i8>* nocapture readonly %0, <32 x 
 ; V2-NEXT:    copyd $r3 = $r7
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 16)
-  %4 = load <32 x i8>, <32 x i8>* %0, align 32
-  %5 = load <32 x i8>, <32 x i8>* %1, align 32
+  %4 = load <32 x i8>, ptr %0, align 32
+  %5 = load <32 x i8>, ptr %1, align 32
   %6 = mul <32 x i8> %5, %4
-  %7 = load <32 x i8>, <32 x i8>* %2, align 32
+  %7 = load <32 x i8>, ptr %2, align 32
   %8 = add <32 x i8> %7, %6
-  store <32 x i8> %8, <32 x i8>* %2, align 32
+  store <32 x i8> %8, ptr %2, align 32
   ret <32 x i8> %8
 }
 
@@ -7344,10 +7344,10 @@ define <4 x i64> @fbnsigned_long_4__division_imm(<4 x i64> %a) {
 entry:
   %a.addr = alloca <4 x i64>, align 32
   %s = alloca <4 x i64>, align 32
-  store <4 x i64> %a, <4 x i64>* %a.addr, align 32
-  %0 = load <4 x i64>, <4 x i64>* %a.addr, align 32
+  store <4 x i64> %a, ptr %a.addr, align 32
+  %0 = load <4 x i64>, ptr %a.addr, align 32
   %div = sdiv <4 x i64> %0, <i64 3, i64 3, i64 3, i64 3>
-  store <4 x i64> %div, <4 x i64>* %s, align 32
-  %1 = load <4 x i64>, <4 x i64>* %s, align 32
+  store <4 x i64> %div, ptr %s, align 32
+  %1 = load <4 x i64>, ptr %s, align 32
   ret <4 x i64> %1
 }

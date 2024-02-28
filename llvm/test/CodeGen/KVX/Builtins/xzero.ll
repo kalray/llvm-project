@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @xzero1024(<1024 x i1>* nocapture %0) {
+define void @xzero1024(ptr nocapture %0) {
 ; CV1-LABEL: xzero1024:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
@@ -36,11 +36,11 @@ define void @xzero1024(<1024 x i1>* nocapture %0) {
 ; CV2-NEXT:    xso 64[$r0] = $a2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 11)
-  store <1024 x i1> zeroinitializer, <1024 x i1>* %0
+  store <1024 x i1> zeroinitializer, ptr %0
   ret void
 }
 
-define void @xzero2048(<2048 x i1>* nocapture %0) {
+define void @xzero2048(ptr nocapture %0) {
 ; CV1-LABEL: xzero2048:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a4a5a6a7 = $a60a61a62a63
@@ -89,11 +89,11 @@ define void @xzero2048(<2048 x i1>* nocapture %0) {
 ; CV2-NEXT:    xso 192[$r0] = $a6
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 15)
-  store <2048 x i1> zeroinitializer, <2048 x i1>* %0
+  store <2048 x i1> zeroinitializer, ptr %0
   ret void
 }
 
-define void @xzero256(<256 x i1>* nocapture %0) {
+define void @xzero256(ptr nocapture %0) {
 ; CV1-LABEL: xzero256:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xso 0[$r0] = $a48
@@ -107,11 +107,11 @@ define void @xzero256(<256 x i1>* nocapture %0) {
 ; CV2-NEXT:    xso 0[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 4)
-  store <256 x i1> zeroinitializer, <256 x i1>* %0
+  store <256 x i1> zeroinitializer, ptr %0
   ret void
 }
 
-define void @xzero4096(<4096 x i1>* nocapture %0) {
+define void @xzero4096(ptr nocapture %0) {
 ; CV1-LABEL: xzero4096:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xmt44d $a12a13a14a15 = $a48a49a50a51
@@ -198,11 +198,11 @@ define void @xzero4096(<4096 x i1>* nocapture %0) {
 ; CV2-NEXT:    xso 448[$r0] = $a14
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 23)
-  store <4096 x i1> zeroinitializer, <4096 x i1>* %0
+  store <4096 x i1> zeroinitializer, ptr %0
   ret void
 }
 
-define void @xzero512(<512 x i1>* nocapture %0) {
+define void @xzero512(ptr nocapture %0) {
 ; CV1-LABEL: xzero512:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    xcopyo $a0 = $a48
@@ -225,6 +225,6 @@ define void @xzero512(<512 x i1>* nocapture %0) {
 ; CV2-NEXT:    xso 0[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 5)
-  store <512 x i1> zeroinitializer, <512 x i1>* %0
+  store <512 x i1> zeroinitializer, ptr %0
   ret void
 }

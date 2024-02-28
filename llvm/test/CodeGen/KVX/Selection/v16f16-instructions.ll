@@ -1227,7 +1227,7 @@ define <16 x half> @test_frem(<16 x half> %a, <16 x half> %b) #0 {
   ret <16 x half> %r
 }
 
-define void @test_ldst_v8f16(<16 x half>* %a, <16 x half>* %b) {
+define void @test_ldst_v8f16(ptr %a, ptr %b) {
 ; ALL-LABEL: test_ldst_v8f16:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -1235,8 +1235,8 @@ define void @test_ldst_v8f16(<16 x half>* %a, <16 x half>* %b) {
 ; ALL-NEXT:    so 0[$r1] = $r4r5r6r7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
-  %t1 = load <16 x half>, <16 x half>* %a
-  store <16 x half> %t1, <16 x half>* %b, align 16
+  %t1 = load <16 x half>, ptr %a
+  store <16 x half> %t1, ptr %b, align 16
   ret void
 }
 

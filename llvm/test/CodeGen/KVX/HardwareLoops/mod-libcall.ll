@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-@I = external global i32*, align 8
+@I = external global ptr, align 8
 
 define i32 @ia(i32 %x, i32 %y)  {
 ; CHECK-LABEL: ia:
@@ -62,15 +62,15 @@ entry:
   br i1 %cmp8, label %for.end, label %for.body.lr.ph
 
 for.body.lr.ph:
-  %0 = load i32*, i32** @I, align 8
+  %0 = load ptr, ptr @I, align 8
   br label %for.body
 
 for.body:
   %indvars.iv = phi i64 [ 0, %for.body.lr.ph ], [ %indvars.iv.next, %for.body ]
   %rem12 = phi i32 [ %rem9, %for.body.lr.ph ], [ %rem, %for.body ]
   %x.addr.010 = phi i32 [ %x, %for.body.lr.ph ], [ %inc, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %0, i64 %indvars.iv
-  store i32 %rem12, i32* %arrayidx, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
+  store i32 %rem12, ptr %arrayidx, align 4
   %inc = add nsw i32 %x.addr.010, 1
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %cmp = icmp eq i32 %inc, %y

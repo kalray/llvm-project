@@ -17,7 +17,7 @@ target triple = "kvx-kalray-cos"
 ;              a[12], a[13], a[14]);
 ; }
 
-define i32 @fn(i32* nocapture readonly %a) {
+define i32 @fn(ptr nocapture readonly %a) {
 ; FP-NONE-LABEL: fn:
 ; FP-NONE:       # %bb.0: # %entry
 ; FP-NONE-NEXT:    addd $r12 = $r12, -64
@@ -215,50 +215,50 @@ define i32 @fn(i32* nocapture readonly %a) {
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:
-  %0 = load i32, i32* %a, align 4
-  %arrayidx1 = getelementptr inbounds i32, i32* %a, i64 1
-  %1 = load i32, i32* %arrayidx1, align 4
-  %arrayidx2 = getelementptr inbounds i32, i32* %a, i64 2
-  %2 = load i32, i32* %arrayidx2, align 4
-  %arrayidx3 = getelementptr inbounds i32, i32* %a, i64 3
-  %3 = load i32, i32* %arrayidx3, align 4
-  %arrayidx4 = getelementptr inbounds i32, i32* %a, i64 4
-  %4 = load i32, i32* %arrayidx4, align 4
-  %arrayidx5 = getelementptr inbounds i32, i32* %a, i64 5
-  %5 = load i32, i32* %arrayidx5, align 4
-  %arrayidx6 = getelementptr inbounds i32, i32* %a, i64 6
-  %6 = load i32, i32* %arrayidx6, align 4
-  %arrayidx7 = getelementptr inbounds i32, i32* %a, i64 7
-  %7 = load i32, i32* %arrayidx7, align 4
-  %arrayidx8 = getelementptr inbounds i32, i32* %a, i64 8
-  %8 = load i32, i32* %arrayidx8, align 4
-  %arrayidx9 = getelementptr inbounds i32, i32* %a, i64 9
-  %9 = load i32, i32* %arrayidx9, align 4
-  %arrayidx10 = getelementptr inbounds i32, i32* %a, i64 10
-  %10 = load i32, i32* %arrayidx10, align 4
-  %arrayidx11 = getelementptr inbounds i32, i32* %a, i64 11
-  %11 = load i32, i32* %arrayidx11, align 4
-  %arrayidx12 = getelementptr inbounds i32, i32* %a, i64 12
-  %12 = load i32, i32* %arrayidx12, align 4
-  %arrayidx13 = getelementptr inbounds i32, i32* %a, i64 13
-  %13 = load i32, i32* %arrayidx13, align 4
-  %arrayidx14 = getelementptr inbounds i32, i32* %a, i64 14
-  %14 = load i32, i32* %arrayidx14, align 4
+  %0 = load i32, ptr %a, align 4
+  %arrayidx1 = getelementptr inbounds i32, ptr %a, i64 1
+  %1 = load i32, ptr %arrayidx1, align 4
+  %arrayidx2 = getelementptr inbounds i32, ptr %a, i64 2
+  %2 = load i32, ptr %arrayidx2, align 4
+  %arrayidx3 = getelementptr inbounds i32, ptr %a, i64 3
+  %3 = load i32, ptr %arrayidx3, align 4
+  %arrayidx4 = getelementptr inbounds i32, ptr %a, i64 4
+  %4 = load i32, ptr %arrayidx4, align 4
+  %arrayidx5 = getelementptr inbounds i32, ptr %a, i64 5
+  %5 = load i32, ptr %arrayidx5, align 4
+  %arrayidx6 = getelementptr inbounds i32, ptr %a, i64 6
+  %6 = load i32, ptr %arrayidx6, align 4
+  %arrayidx7 = getelementptr inbounds i32, ptr %a, i64 7
+  %7 = load i32, ptr %arrayidx7, align 4
+  %arrayidx8 = getelementptr inbounds i32, ptr %a, i64 8
+  %8 = load i32, ptr %arrayidx8, align 4
+  %arrayidx9 = getelementptr inbounds i32, ptr %a, i64 9
+  %9 = load i32, ptr %arrayidx9, align 4
+  %arrayidx10 = getelementptr inbounds i32, ptr %a, i64 10
+  %10 = load i32, ptr %arrayidx10, align 4
+  %arrayidx11 = getelementptr inbounds i32, ptr %a, i64 11
+  %11 = load i32, ptr %arrayidx11, align 4
+  %arrayidx12 = getelementptr inbounds i32, ptr %a, i64 12
+  %12 = load i32, ptr %arrayidx12, align 4
+  %arrayidx13 = getelementptr inbounds i32, ptr %a, i64 13
+  %13 = load i32, ptr %arrayidx13, align 4
+  %arrayidx14 = getelementptr inbounds i32, ptr %a, i64 14
+  %14 = load i32, ptr %arrayidx14, align 4
   %call = tail call i32 (i32, ...) @add(i32 %0, i32 %1, i32 %2, i32 %3, i32 %4, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14)
-  %15 = load i32, i32* %a, align 4
-  %16 = load i32, i32* %arrayidx2, align 4
-  %17 = load i32, i32* %arrayidx3, align 4
-  %18 = load i32, i32* %arrayidx4, align 4
-  %19 = load i32, i32* %arrayidx5, align 4
-  %20 = load i32, i32* %arrayidx6, align 4
-  %21 = load i32, i32* %arrayidx7, align 4
-  %22 = load i32, i32* %arrayidx8, align 4
-  %23 = load i32, i32* %arrayidx9, align 4
-  %24 = load i32, i32* %arrayidx10, align 4
-  %25 = load i32, i32* %arrayidx11, align 4
-  %26 = load i32, i32* %arrayidx12, align 4
-  %27 = load i32, i32* %arrayidx13, align 4
-  %28 = load i32, i32* %arrayidx14, align 4
+  %15 = load i32, ptr %a, align 4
+  %16 = load i32, ptr %arrayidx2, align 4
+  %17 = load i32, ptr %arrayidx3, align 4
+  %18 = load i32, ptr %arrayidx4, align 4
+  %19 = load i32, ptr %arrayidx5, align 4
+  %20 = load i32, ptr %arrayidx6, align 4
+  %21 = load i32, ptr %arrayidx7, align 4
+  %22 = load i32, ptr %arrayidx8, align 4
+  %23 = load i32, ptr %arrayidx9, align 4
+  %24 = load i32, ptr %arrayidx10, align 4
+  %25 = load i32, ptr %arrayidx11, align 4
+  %26 = load i32, ptr %arrayidx12, align 4
+  %27 = load i32, ptr %arrayidx13, align 4
+  %28 = load i32, ptr %arrayidx14, align 4
   %call29 = tail call i32 (i32, ...) @add(i32 %15, i32 %16, i32 %17, i32 %18, i32 %19, i32 %20, i32 %21, i32 %22, i32 %23, i32 %24, i32 %25, i32 %26, i32 %27, i32 %28)
   %add = add nsw i32 %call29, %call
   ret i32 %add

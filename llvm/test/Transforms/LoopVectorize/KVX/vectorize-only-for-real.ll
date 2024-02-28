@@ -94,42 +94,42 @@ define zeroext i32 @test() {
 entry:
   %a = alloca [1600 x i32], align 4
   %c = alloca [1600 x i32], align 4
-  %0 = bitcast [1600 x i32]* %a to i8*
-  call void @llvm.lifetime.start(i64 6400, i8* %0)
+  %0 = bitcast [1600 x i32]* %a to ptr 
+  call void @llvm.lifetime.start(i64 6400, ptr %0)
   br label %for.body
 
 for.cond.cleanup:
-  %1 = bitcast [1600 x i32]* %c to i8*
-  call void @llvm.lifetime.start(i64 6400, i8* %1)
+  %1 = bitcast [1600 x i32]* %c to ptr 
+  call void @llvm.lifetime.start(i64 6400, ptr %1)
   %arraydecay = getelementptr inbounds [1600 x i32], [1600 x i32]* %a, i64 0, i64 0
   %arraydecay1 = getelementptr inbounds [1600 x i32], [1600 x i32]* %c, i64 0, i64 0
-  %call = call signext i32 @bar(i32* %arraydecay, i32* %arraydecay1)
+  %call = call signext i32 @bar(ptr %arraydecay, ptr %arraydecay1)
   br label %for.body6
 
 for.body:
   %indvars.iv25 = phi i64 [ 0, %entry ], [ %indvars.iv.next26, %for.body ]
   %arrayidx = getelementptr inbounds [1600 x i32], [1600 x i32]* %a, i64 0, i64 %indvars.iv25
   %2 = trunc i64 %indvars.iv25 to i32
-  store i32 %2, i32* %arrayidx, align 4
+  store i32 %2, ptr %arrayidx, align 4
   %indvars.iv.next26 = add nuw nsw i64 %indvars.iv25, 1
   %exitcond27 = icmp eq i64 %indvars.iv.next26, 1600
   br i1 %exitcond27, label %for.cond.cleanup, label %for.body
 
 for.cond.cleanup5:
-  call void @llvm.lifetime.end(i64 6400, i8* nonnull %1)
-  call void @llvm.lifetime.end(i64 6400, i8* %0)
+  call void @llvm.lifetime.end(i64 6400, ptr nonnull %1)
+  call void @llvm.lifetime.end(i64 6400, ptr %0)
   ret i32 %add
 
 for.body6:
   %indvars.iv = phi i64 [ 0, %for.cond.cleanup ], [ %indvars.iv.next, %for.body6 ]
   %s.022 = phi i32 [ 0, %for.cond.cleanup ], [ %add, %for.body6 ]
   %arrayidx8 = getelementptr inbounds [1600 x i32], [1600 x i32]* %c, i64 0, i64 %indvars.iv
-  %3 = load i32, i32* %arrayidx8, align 4
+  %3 = load i32, ptr %arrayidx8, align 4
   %add = add i32 %3, %s.022
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, 1600
   br i1 %exitcond, label %for.cond.cleanup5, label %for.body6
 }
-declare void @llvm.lifetime.start(i64, i8* nocapture)
-declare void @llvm.lifetime.end(i64, i8* nocapture)
-declare signext i32 @bar(i32*, i32*)
+declare void @llvm.lifetime.start(i64, ptr nocapture)
+declare void @llvm.lifetime.end(i64, ptr nocapture)
+declare signext i32 @bar(ptr , ptr )

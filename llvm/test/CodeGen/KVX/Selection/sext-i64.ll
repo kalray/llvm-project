@@ -19,7 +19,7 @@ entry:
   %conv = sext i8 %c to i64
   %sh_prom = and i64 %conv, 4294967295
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 
@@ -35,7 +35,7 @@ define void @test7b(i64 %b, i8 %c){
 entry:
   %sh_prom = zext i8 %c to i64
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 
@@ -52,7 +52,7 @@ entry:
   %conv = sext i16 %c to i64
   %sh_prom = and i64 %conv, 4294967295
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 
@@ -68,7 +68,7 @@ define void @test7d(i64 %b, i16 %c){
 entry:
   %sh_prom = zext i16 %c to i64
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 
@@ -84,7 +84,7 @@ define void @test7e(i64 %b, i32 %c){
 entry:
   %sh_prom = zext i32 %c to i64
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 
@@ -100,7 +100,7 @@ define void @test7f(i64 %b, i32 %c){
 entry:
   %sh_prom = zext i32 %c to i64
   %shl = shl i64 %b, %sh_prom
-  store i64 %shl, i64* @a, align 8
+  store i64 %shl, ptr @a, align 8
   ret void
 }
 

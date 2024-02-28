@@ -189,7 +189,7 @@ define i32 @f(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32
 entry:
   %0 = zext i32 %a16 to i64
   %vla = alloca i32, i64 %0, align 4
-  %1 = load volatile i32, i32* getelementptr inbounds ([5 x i32], [5 x i32]* @z, i64 0, i64 0), align 4
+  %1 = load volatile i32, ptr getelementptr inbounds ([5 x i32], ptr @z, i64 0, i64 0), align 4
   %add = add nsw i32 %a2, %a1
   %add1 = add nsw i32 %add, %a3
   %add2 = add nsw i32 %add1, %a4
@@ -214,8 +214,8 @@ for.body.preheader:                               ; preds = %entry
   br label %for.body
 
 for.cond.cleanup:                                 ; preds = %for.body, %entry
-  %arrayidx16 = getelementptr inbounds i32, i32* %vla, i64 10
-  %2 = load volatile i32, i32* %arrayidx16, align 4
+  %arrayidx16 = getelementptr inbounds i32, ptr %vla, i64 10
+  %2 = load volatile i32, ptr %arrayidx16, align 4
   %call = tail call i32 @h(i32 %a1, i32 %a2, i32 %a3, i32 %a4, i32 %a5, i32 %a6, i32 %a7, i32 %a8, i32 %a9, i32 %a10, i32 %a11, i32 %a12, i32 %a13, i32 %a14, i32 %a15, i32 %a16, i32 %2, i32 %add15, i32 %1)
   %add17 = add nsw i32 %call, %add15
   %call18 = tail call i32 @g(i32 %a1, i32 %a2, i32 %a3, i32 %a6, i32 %a7, i32 %a8, i32 %a11, i32 %add17, i32 %1)
@@ -223,9 +223,9 @@ for.cond.cleanup:                                 ; preds = %for.body, %entry
 
 for.body:                                         ; preds = %for.body, %for.body.preheader
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %vla, i64 %indvars.iv
+  %arrayidx = getelementptr inbounds i32, ptr %vla, i64 %indvars.iv
   %3 = trunc i64 %indvars.iv to i32
-  store volatile i32 %3, i32* %arrayidx, align 4
+  store volatile i32 %3, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body

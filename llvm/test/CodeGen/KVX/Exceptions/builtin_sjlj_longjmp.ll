@@ -43,8 +43,8 @@ define void @f_longjump() noreturn {
 
 
 
-   tail call void @llvm.eh.sjlj.longjmp(i8* bitcast ([1 x %struct.__jmp_buf_tag]* @buf to i8*)) noreturn
+   tail call void @llvm.eh.sjlj.longjmp(ptr bitcast ([1 x %struct.__jmp_buf_tag]* @buf to ptr )) noreturn
    unreachable
 }
 
-declare void @llvm.eh.sjlj.longjmp(i8*) noreturn
+declare void @llvm.eh.sjlj.longjmp(ptr ) noreturn

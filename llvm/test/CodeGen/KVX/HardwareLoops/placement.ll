@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define internal fastcc void @init_array(double* nocapture %alpha, double* nocapture %beta, [4 x double]* nocapture %A, [4 x double]* nocapture %B, [4 x double]* nocapture %C, [4 x double]* nocapture %D, [4 x double]* nocapture %D_StrictFP) {
+define internal fastcc void @init_array(ptr nocapture %alpha, ptr nocapture %beta, [4 x double]* nocapture %A, [4 x double]* nocapture %B, [4 x double]* nocapture %C, [4 x double]* nocapture %D, [4 x double]* nocapture %D_StrictFP) {
 ; CHECK-LABEL: init_array:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r4 = 0x40dfa70000000000
@@ -96,8 +96,8 @@ define internal fastcc void @init_array(double* nocapture %alpha, double* nocapt
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  store double 3.241200e+04, double* %alpha, align 8
-  store double 2.123000e+03, double* %beta, align 8
+  store double 3.241200e+04, ptr %alpha, align 8
+  store double 2.123000e+03, ptr %beta, align 8
   br label %for.cond1.preheader
 
 for.cond1.preheader:
@@ -113,7 +113,7 @@ for.body3:
   %mul = fmul double %conv, %conv4
   %div = fmul double %mul, 2.500000e-01
   %arrayidx7 = getelementptr inbounds [4 x double], [4 x double]* %A, i64 %indvars.iv29, i64 %indvars.iv26
-  store double %div, double* %arrayidx7, align 8
+  store double %div, ptr %arrayidx7, align 8
   %indvars.iv.next27 = add nuw nsw i64 %indvars.iv26, 1
   %exitcond28 = icmp eq i64 %indvars.iv.next27, 4
   br i1 %exitcond28, label %for.inc8, label %for.body3
@@ -137,7 +137,7 @@ for.body18:
   %mul21 = fmul double %conv19, %conv20
   %div23 = fmul double %mul21, 2.500000e-01
   %arrayidx27 = getelementptr inbounds [4 x double], [4 x double]* %B, i64 %indvars.iv23, i64 %indvars.iv20
-  store double %div23, double* %arrayidx27, align 8
+  store double %div23, ptr %arrayidx27, align 8
   %exitcond22 = icmp eq i64 %indvars.iv.next21, 4
   br i1 %exitcond22, label %for.inc31, label %for.body18
 

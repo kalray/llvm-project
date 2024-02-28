@@ -154,7 +154,7 @@ define <16 x i16> @stsuhx(<16 x i16> %0, <16 x i16> %1) {
   ret <16 x i16> %17
 }
 
-define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, <32 x i16>* nocapture readonly %1, <32 x i16>* nocapture readonly %2) {
+define void @stsuhv(ptr noalias nocapture sret(<32 x i16>) align 32 %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
 ; CHECK-LABEL: stsuhv:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
@@ -181,8 +181,8 @@ define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, 
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
-  %4 = load <32 x i16>, <32 x i16>* %1
-  %5 = load <32 x i16>, <32 x i16>* %2
+  %4 = load <32 x i16>, ptr %1
+  %5 = load <32 x i16>, ptr %2
   %6 = shufflevector <32 x i16> %4, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %7 = shufflevector <32 x i16> %5, <32 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %8 = tail call <4 x i16> @llvm.kvx.stsu.v4i16(<4 x i16> %6, <4 x i16> %7)
@@ -214,7 +214,7 @@ define void @stsuhv(<32 x i16>* noalias nocapture sret(<32 x i16>) align 32 %0, 
   %34 = shufflevector <8 x i16> %30, <8 x i16> %31, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %35 = shufflevector <8 x i16> %32, <8 x i16> %33, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
   %36 = shufflevector <16 x i16> %34, <16 x i16> %35, <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-  store <32 x i16> %36, <32 x i16>* %0
+  store <32 x i16> %36, ptr %0
   ret void
 }
 
@@ -274,7 +274,7 @@ define <8 x i32> @stsuwo(<8 x i32> %0, <8 x i32> %1) {
   ret <8 x i32> %17
 }
 
-define void @stsuwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, <16 x i32>* nocapture readonly %1, <16 x i32>* nocapture readonly %2) {
+define void @stsuwx(ptr noalias nocapture sret(<16 x i32>) align 32 %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
 ; CHECK-LABEL: stsuwx:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 32[$r0]
@@ -301,8 +301,8 @@ define void @stsuwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, 
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
-  %4 = load <16 x i32>, <16 x i32>* %1
-  %5 = load <16 x i32>, <16 x i32>* %2
+  %4 = load <16 x i32>, ptr %1
+  %5 = load <16 x i32>, ptr %2
   %6 = shufflevector <16 x i32> %4, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %7 = shufflevector <16 x i32> %5, <16 x i32> undef, <2 x i32> <i32 0, i32 1>
   %8 = tail call <2 x i32> @llvm.kvx.stsu.v2i32(<2 x i32> %6, <2 x i32> %7)
@@ -334,7 +334,7 @@ define void @stsuwx(<16 x i32>* noalias nocapture sret(<16 x i32>) align 32 %0, 
   %34 = shufflevector <4 x i32> %30, <4 x i32> %31, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %35 = shufflevector <4 x i32> %32, <4 x i32> %33, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %36 = shufflevector <8 x i32> %34, <8 x i32> %35, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-  store <16 x i32> %36, <16 x i32>* %0
+  store <16 x i32> %36, ptr %0
   ret void
 }
 

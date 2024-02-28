@@ -275,7 +275,7 @@ define <2 x i32> @test_rem(<2 x i32> %a, <2 x i32> %b) #0 {
   ret <2 x i32> %r
 }
 
-define void @test_ldst_v2i32(<2 x i32>* %a, <2 x i32>* %b) {
+define void @test_ldst_v2i32(ptr %a, ptr %b) {
 ; ALL-LABEL: test_ldst_v2i32:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    ld $r0 = 0[$r0]
@@ -283,8 +283,8 @@ define void @test_ldst_v2i32(<2 x i32>* %a, <2 x i32>* %b) {
 ; ALL-NEXT:    sd 0[$r1] = $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 2)
-  %t1 = load <2 x i32>, <2 x i32>* %a
-  store <2 x i32> %t1, <2 x i32>* %b, align 16
+  %t1 = load <2 x i32>, ptr %a
+  store <2 x i32> %t1, ptr %b, align 16
   ret void
 }
 

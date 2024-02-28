@@ -1,0 +1,1678 @@
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/P1689.cppm
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 6: rm -fr /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ rm -fr /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+RUN: at line 7: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+RUN: at line 8: split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/P1689.cppm /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/P1689.cppm /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+RUN: at line 10: sed "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp|g" /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json.in > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json
++ sed 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp|g' /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json.in
+RUN: at line 11: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json -format=p1689 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/Checks.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json -format=p1689
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/Checks.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+RUN: at line 12: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps --mode=preprocess-dependency-directives -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json -format=p1689 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/Checks.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps --mode=preprocess-dependency-directives -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/P1689.json -format=p1689
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/Checks.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+RUN: at line 18: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689    -- /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.o    | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689 -- /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.o
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+The command line should provide exactly one output file in P1689 per file mode.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689 -- /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.o
+#0 0x00007fb8e2820057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+#1 0x00007fb8e281ddfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+#2 0x00007fb8e282072a SignalHandler(int) Signals.cpp:0:0
+#3 0x00007fb8e1b1b520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+#4 0x000056314aac679c clang_scan_deps_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x879c)
+#5 0x000056314aae45c7 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x265c7)
+#6 0x00007fb8e1b02d90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#7 0x00007fb8e1b02e40 call_init ./csu/../csu/libc-start.c:128:20
+#8 0x00007fb8e1b02e40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#9 0x000056314aac4995 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x6995)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp/M.cppm -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/P1689.cppm.tmp
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/Generic/APIntParam.ll
+
+
+Exit Code: 134
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntParam.ll.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+LLVM ERROR: unable to allocate function argument #0
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+1.	Running pass 'Function Pass Manager' on module '<stdin>'.
+2.	Running pass 'KVX DAG->DAG Pattern Instruction Selection' on function '@i2_ls'
+ #0 0x00007f21fc7fa057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f21fc7f7dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f21fc7fa72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f21fbaf7520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f21fbb4b9fc __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007f21fbb4b9fc __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007f21fbb4b9fc pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007f21fbaf7476 gsignal ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007f21fbadd7f3 abort ./stdlib/abort.c:81:7
+ #9 0x00007f21fc75212c llvm::report_fatal_error(llvm::Twine const&, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x71b12c)
+#10 0x00007f21fca85403 (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xa4e403)
+#11 0x00007f21fedff682 llvm::KVXTargetLowering::LowerFormalArguments(llvm::SDValue, unsigned int, bool, llvm::SmallVectorImpl<llvm::ISD::InputArg> const&, llvm::SDLoc const&, llvm::SelectionDAG&, llvm::SmallVectorImpl<llvm::SDValue>&) const (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x2dc8682)
+#12 0x00007f21fd0b3590 llvm::SelectionDAGISel::LowerArguments(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x107c590)
+#13 0x00007f21fd1106ed llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d96ed)
+#14 0x00007f21fd10f4c2 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d84c2)
+#15 0x00007f21fcc150b6 llvm::MachineFunctionPass::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xbde0b6)
+#16 0x00007f21fc953f32 llvm::FPPassManager::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91cf32)
+#17 0x00007f21fc95b273 llvm::FPPassManager::runOnModule(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x924273)
+#18 0x00007f21fc954b30 llvm::legacy::PassManagerImpl::run(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91db30)
+#19 0x000055b6f9fe8653 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0x10653)
+#20 0x00007f21fbaded90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#21 0x00007f21fbadee40 call_init ./csu/../csu/libc-start.c:128:20
+#22 0x00007f21fbadee40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#23 0x000055b6f9fe2c85 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0xac85)
+/nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntParam.ll.script: line 1: 3225353 Aborted                 (core dumped) /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntParam.ll.tmp
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/KVX/loadc-kv3-2.c
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c
+Call parameter type does not match function signature!
+  %3 = load ptr, ptr %ptr.addr, align 8, !tbaa !5
+ half  %4 = call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %0, i32 0, i32 -1, i32 4)
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c
+1.	<eof> parser at end of file
+2.	Optimizer
+ #0 0x00007f4a9bff0057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f4a9bfeddfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f4a9bff072a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f4a9b2eb520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f4a9c13cb50 llvm::LLVMContext::shouldDiscardValueNames() const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x90fb50)
+ #5 0x00007f4a9c1a44e3 llvm::Value::setNameImpl(llvm::Twine const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x9774e3)
+ #6 0x00007f4a9c1a48d9 llvm::Value::setName(llvm::Twine const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x9778d9)
+ #7 0x00007f4a9c105746 llvm::Function::BuildLazyArguments() const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x8d8746)
+ #8 0x00007f4a9c1abeb5 (anonymous namespace)::Verifier::verify(llvm::Function const&) Verifier.cpp:0:0
+ #9 0x00007f4a9c1b1ab3 llvm::VerifierAnalysis::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984ab3)
+#10 0x00007f4a9e78dd15 llvm::detail::AnalysisPassModel<llvm::Module, llvm::VerifierAnalysis, llvm::AnalysisManager<llvm::Module>::Invalidator>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x2f60d15)
+#11 0x00007f4a9c184285 llvm::AnalysisManager<llvm::Module>::getResultImpl(llvm::AnalysisKey*, llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x957285)
+#12 0x00007f4a9c1b1b89 llvm::VerifierPass::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984b89)
+#13 0x00007f4aa52b834d llvm::detail::PassModel<llvm::Module, llvm::VerifierPass, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bc834d)
+#14 0x00007f4a9c181934 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x954934)
+#15 0x00007f4aa52b54a8 (anonymous namespace)::EmitAssemblyHelper::RunOptimizationPipeline(clang::BackendAction, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>&, std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>&, clang::BackendConsumer*) BackendUtil.cpp:0:0
+#16 0x00007f4aa52ad012 clang::EmitBackendOutput(clang::DiagnosticsEngine&, clang::HeaderSearchOptions const&, clang::CodeGenOptions const&, clang::TargetOptions const&, clang::LangOptions const&, llvm::StringRef, llvm::Module*, clang::BackendAction, llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem>, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>, clang::BackendConsumer*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bbd012)
+#17 0x00007f4aa56802c3 clang::BackendConsumer::HandleTranslationUnit(clang::ASTContext&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f902c3)
+#18 0x00007f4aa41df2e4 clang::ParseAST(clang::Sema&, bool, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0xaef2e4)
+#19 0x00007f4aa61e10a7 clang::FrontendAction::Execute() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2af10a7)
+#20 0x00007f4aa61529c6 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2a629c6)
+#21 0x00007f4aa62660ee clang::ExecuteCompilerInvocation(clang::CompilerInstance*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2b760ee)
+#22 0x0000555e2f6f252e cc1_main(llvm::ArrayRef<char const*>, char const*, void*) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1152e)
+#23 0x0000555e2f6ef565 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&, llvm::ToolContext const&) driver.cpp:0:0
+#24 0x0000555e2f6ee5e7 clang_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xd5e7)
+#25 0x0000555e2f6fd497 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1c497)
+#26 0x00007f4a9b2d2d90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#27 0x00007f4a9b2d2e40 call_init ./csu/../csu/libc-start.c:128:20
+#28 0x00007f4a9b2d2e40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#29 0x0000555e2f6ebbc5 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xabc5)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc-kv3-2.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/Generic/APIntZextParam.ll
+
+
+Exit Code: 134
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntZextParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntZextParam.ll.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+LLVM ERROR: unable to allocate function argument #0
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+1.	Running pass 'Function Pass Manager' on module '<stdin>'.
+2.	Running pass 'KVX DAG->DAG Pattern Instruction Selection' on function '@i2_ls'
+ #0 0x00007fa28140f057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007fa28140cdfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007fa28140f72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007fa28070c520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007fa2807609fc __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007fa2807609fc __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007fa2807609fc pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007fa28070c476 gsignal ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007fa2806f27f3 abort ./stdlib/abort.c:81:7
+ #9 0x00007fa28136712c llvm::report_fatal_error(llvm::Twine const&, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x71b12c)
+#10 0x00007fa28169a403 (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xa4e403)
+#11 0x00007fa283a14682 llvm::KVXTargetLowering::LowerFormalArguments(llvm::SDValue, unsigned int, bool, llvm::SmallVectorImpl<llvm::ISD::InputArg> const&, llvm::SDLoc const&, llvm::SelectionDAG&, llvm::SmallVectorImpl<llvm::SDValue>&) const (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x2dc8682)
+#12 0x00007fa281cc8590 llvm::SelectionDAGISel::LowerArguments(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x107c590)
+#13 0x00007fa281d256ed llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d96ed)
+#14 0x00007fa281d244c2 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d84c2)
+#15 0x00007fa28182a0b6 llvm::MachineFunctionPass::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xbde0b6)
+#16 0x00007fa281568f32 llvm::FPPassManager::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91cf32)
+#17 0x00007fa281570273 llvm::FPPassManager::runOnModule(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x924273)
+#18 0x00007fa281569b30 llvm::legacy::PassManagerImpl::run(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91db30)
+#19 0x0000564db5ab2653 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0x10653)
+#20 0x00007fa2806f3d90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#21 0x00007fa2806f3e40 call_init ./csu/../csu/libc-start.c:128:20
+#22 0x00007fa2806f3e40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#23 0x0000564db5aacc85 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0xac85)
+/nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntZextParam.ll.script: line 1: 3225370 Aborted                 (core dumped) /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntZextParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntZextParam.ll.tmp
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/KVX/storec.c
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c -O3 -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c -O3 -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c
+Call parameter type does not match function signature!
+  %2 = load ptr, ptr %ptr.addr, align 8, !tbaa !5
+ PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c -O3 -o -
+1.	<eof> parser at end of file
+2.	Optimizer
+ #0 0x00007fea9324d057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007fea9324adfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007fea9324d72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007fea92548520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007fea93257354 (anonymous namespace)::TypePrinting::print(llvm::Type*, llvm::raw_ostream&) AsmWriter.cpp:0:0
+ #5 0x00007fea93257227 llvm::Type::print(llvm::raw_ostream&, bool, bool) const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7cd227)
+ #6 0x00007fea9342b8d9 void llvm::VerifierSupport::WriteTs<llvm::Type*, llvm::CallBase>(llvm::Type* const&, llvm::CallBase const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x9a18d9)
+ #7 0x00007fea934273a6 (anonymous namespace)::Verifier::visitCallBase(llvm::CallBase&) Verifier.cpp:0:0
+ #8 0x00007fea9341f9f0 (anonymous namespace)::Verifier::visit(llvm::Instruction&) Verifier.cpp:0:0
+ #9 0x00007fea93407587 (anonymous namespace)::Verifier::verify(llvm::Function const&) Verifier.cpp:0:0
+#10 0x00007fea9340eab3 llvm::VerifierAnalysis::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984ab3)
+#11 0x00007fea959ead15 llvm::detail::AnalysisPassModel<llvm::Module, llvm::VerifierAnalysis, llvm::AnalysisManager<llvm::Module>::Invalidator>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x2f60d15)
+#12 0x00007fea933e1285 llvm::AnalysisManager<llvm::Module>::getResultImpl(llvm::AnalysisKey*, llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x957285)
+#13 0x00007fea9340eb89 llvm::VerifierPass::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984b89)
+#14 0x00007fea9c51534d llvm::detail::PassModel<llvm::Module, llvm::VerifierPass, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bc834d)
+#15 0x00007fea933de934 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x954934)
+#16 0x00007fea9c5124a8 (anonymous namespace)::EmitAssemblyHelper::RunOptimizationPipeline(clang::BackendAction, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>&, std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>&, clang::BackendConsumer*) BackendUtil.cpp:0:0
+#17 0x00007fea9c50a012 clang::EmitBackendOutput(clang::DiagnosticsEngine&, clang::HeaderSearchOptions const&, clang::CodeGenOptions const&, clang::TargetOptions const&, clang::LangOptions const&, llvm::StringRef, llvm::Module*, clang::BackendAction, llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem>, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>, clang::BackendConsumer*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bbd012)
+#18 0x00007fea9c8dd2c3 clang::BackendConsumer::HandleTranslationUnit(clang::ASTContext&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f902c3)
+#19 0x00007fea9b43c2e4 clang::ParseAST(clang::Sema&, bool, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0xaef2e4)
+#20 0x00007fea9d43e0a7 clang::FrontendAction::Execute() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2af10a7)
+#21 0x00007fea9d3af9c6 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2a629c6)
+#22 0x00007fea9d4c30ee clang::ExecuteCompilerInvocation(clang::CompilerInstance*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2b760ee)
+#23 0x000055bb7778352e cc1_main(llvm::ArrayRef<char const*>, char const*, void*) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1152e)
+#24 0x000055bb77780565 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&, llvm::ToolContext const&) driver.cpp:0:0
+#25 0x000055bb7777f5e7 clang_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xd5e7)
+#26 0x000055bb7778e497 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1c497)
+#27 0x00007fea9252fd90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#28 0x00007fea9252fe40 call_init ./csu/../csu/libc-start.c:128:20
+#29 0x00007fea9252fe40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#30 0x000055bb7777cbc5 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xabc5)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/KVX/store.c
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c -O3 -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c -O3 -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c -O3 -o -
+1.	<eof> parser at end of file
+2.	/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c:491:6: LLVM IR generation of declaration 'store_imm'
+3.	/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c:491:6: Generating code for declaration 'store_imm'
+ #0 0x00007f9bd0794057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f9bd0791dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f9bd079472a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f9bcfa8f520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f9bd08ab811 llvm::Intrinsic::getType(llvm::LLVMContext&, unsigned int, llvm::ArrayRef<llvm::Type*>) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x8da811)
+ #5 0x00007f9bd08ad57f llvm::Intrinsic::getDeclaration(llvm::Module*, unsigned int, llvm::ArrayRef<llvm::Type*>) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x8dc57f)
+ #6 0x00007f9bd9ba0849 KVX_emitStoreBuiltin(clang::CodeGen::CodeGenFunction&, clang::CallExpr const*, llvm::Type*, llvm::Type*) CGBuiltin.cpp:0:0
+ #7 0x00007f9bd9b9557c clang::CodeGen::CodeGenFunction::EmitKVXBuiltinExpr(unsigned int, clang::CallExpr const*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1d0157c)
+ #8 0x00007f9bd9a94f8d clang::CodeGen::CodeGenFunction::EmitBuiltinExpr(clang::GlobalDecl, unsigned int, clang::CallExpr const*, clang::CodeGen::ReturnValueSlot) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1c00f8d)
+ #9 0x00007f9bd9c814e4 clang::CodeGen::CodeGenFunction::EmitCallExpr(clang::CallExpr const*, clang::CodeGen::ReturnValueSlot) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1ded4e4)
+#10 0x00007f9bd9cc7266 (anonymous namespace)::ScalarExprEmitter::VisitCallExpr(clang::CallExpr const*) CGExprScalar.cpp:0:0
+#11 0x00007f9bd9cb6fd2 clang::CodeGen::CodeGenFunction::EmitScalarExpr(clang::Expr const*, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1e22fd2)
+#12 0x00007f9bd9c636d0 clang::CodeGen::CodeGenFunction::EmitIgnoredExpr(clang::Expr const*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1dcf6d0)
+#13 0x00007f9bd9dc929c clang::CodeGen::CodeGenFunction::EmitStmt(clang::Stmt const*, llvm::ArrayRef<clang::Attr const*>) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f3529c)
+#14 0x00007f9bd9dd5ad1 clang::CodeGen::CodeGenFunction::EmitCompoundStmtWithoutScope(clang::CompoundStmt const&, bool, clang::CodeGen::AggValueSlot) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f41ad1)
+#15 0x00007f9bd9e32a06 clang::CodeGen::CodeGenFunction::EmitFunctionBody(clang::Stmt const*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f9ea06)
+#16 0x00007f9bd9e335b0 clang::CodeGen::CodeGenFunction::GenerateCode(clang::GlobalDecl, llvm::Function*, clang::CodeGen::CGFunctionInfo const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f9f5b0)
+#17 0x00007f9bd9e54fb2 clang::CodeGen::CodeGenModule::EmitGlobalFunctionDefinition(clang::GlobalDecl, llvm::GlobalValue*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1fc0fb2)
+#18 0x00007f9bd9e4e463 clang::CodeGen::CodeGenModule::EmitGlobalDefinition(clang::GlobalDecl, llvm::GlobalValue*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1fba463)
+#19 0x00007f9bd9e51ff5 clang::CodeGen::CodeGenModule::EmitGlobal(clang::GlobalDecl) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1fbdff5)
+#20 0x00007f9bd9e4d37f clang::CodeGen::CodeGenModule::EmitTopLevelDecl(clang::Decl*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1fb937f)
+#21 0x00007f9bd9ef7b1c (anonymous namespace)::CodeGeneratorImpl::HandleTopLevelDecl(clang::DeclGroupRef) ModuleBuilder.cpp:0:0
+#22 0x00007f9bd9e2316f clang::BackendConsumer::HandleTopLevelDecl(clang::DeclGroupRef) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f8f16f)
+#23 0x00007f9bd89833a9 clang::ParseAST(clang::Sema&, bool, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0xaef3a9)
+#24 0x00007f9bda9850a7 clang::FrontendAction::Execute() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2af10a7)
+#25 0x00007f9bda8f69c6 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2a629c6)
+#26 0x00007f9bdaa0a0ee clang::ExecuteCompilerInvocation(clang::CompilerInstance*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2b760ee)
+#27 0x0000559f1393652e cc1_main(llvm::ArrayRef<char const*>, char const*, void*) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1152e)
+#28 0x0000559f13933565 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&, llvm::ToolContext const&) driver.cpp:0:0
+#29 0x0000559f139325e7 clang_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xd5e7)
+#30 0x0000559f13941497 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1c497)
+#31 0x00007f9bcfa76d90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#32 0x00007f9bcfa76e40 call_init ./csu/../csu/libc-start.c:128:20
+#33 0x00007f9bcfa76e40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#34 0x0000559f1392fbc5 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xabc5)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/store.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/Atomics/operations.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 --asm-verbose=false -verify-machineinstrs -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll --check-prefixes=CHECK,CV1
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 --asm-verbose=false -verify-machineinstrs -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll --check-prefixes=CHECK,CV1
+LLVM ERROR: Cannot select: 0x55d163f7ea70: ch = AtomicStore<(store monotonic (s32) into %ir.ptr)> 0x55d163f7ea00, 0x55d163f7f020, 0x55d163f7edf0
+  0x55d163f7f020: i32,ch = CopyFromReg 0x55d163f28f90, Register:i32 %1
+    0x55d163f7f2c0: i32 = Register %1
+  0x55d163f7edf0: i64,ch = CopyFromReg 0x55d163f28f90, Register:i64 %0
+    0x55d163f7f3a0: i64 = Register %0
+In function: atomic_store_i32
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 --asm-verbose=false -verify-machineinstrs -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll
+1.	Running pass 'Function Pass Manager' on module '/nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll'.
+2.	Running pass 'KVX DAG->DAG Pattern Instruction Selection' on function '@atomic_store_i32'
+ #0 0x00007febdf9aa057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007febdf9a7dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007febdf9aa72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007febdeca7520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007febdecfb9fc __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007febdecfb9fc __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007febdecfb9fc pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007febdeca7476 gsignal ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007febdec8d7f3 abort ./stdlib/abort.c:81:7
+ #9 0x00007febdf90212c llvm::report_fatal_error(llvm::Twine const&, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x71b12c)
+#10 0x00007febe02ccf70 llvm::SelectionDAGISel::isOrEquivalentToAdd(llvm::SDNode const*) const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10e5f70)
+#11 0x00007febe02cc3e5 (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10e53e5)
+#12 0x00007febe02c33af llvm::SelectionDAGISel::DoInstructionSelection() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dc3af)
+#13 0x00007febe02c2a50 llvm::SelectionDAGISel::CodeGenAndEmitDAG() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dba50)
+#14 0x00007febe02c1c6e llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dac6e)
+#15 0x00007febe02bf4c2 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10d84c2)
+#16 0x00007febdfdc50b6 llvm::MachineFunctionPass::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0xbde0b6)
+#17 0x00007febdfb03f32 llvm::FPPassManager::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x91cf32)
+#18 0x00007febdfb0b273 llvm::FPPassManager::runOnModule(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x924273)
+#19 0x00007febdfb04b30 llvm::legacy::PassManagerImpl::run(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x91db30)
+#20 0x000055d1635b0653 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0x10653)
+#21 0x00007febdec8ed90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#22 0x00007febdec8ee40 call_init ./csu/../csu/libc-start.c:128:20
+#23 0x00007febdec8ee40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#24 0x000055d1635aac85 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0xac85)
+/nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll:351:16: error: CHECK-LABEL: expected string not found in input
+; CHECK-LABEL: atomic_store_i32:
+               ^
+<stdin>:193:17: note: scanning from here
+atomic_load_i32:
+                ^
+<stdin>:202:13: note: possible intended match here
+ call __kvx_atomic_global_in
+            ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/operations.ll
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+             .
+             .
+             .
+           188:  .size atomic_load_i16, .Lfunc_end8-atomic_load_i16 
+           189:  
+           190:  .globl atomic_load_i32 
+           191:  .p2align 6 
+           192:  .type atomic_load_i32,@function 
+           193: atomic_load_i32: 
+label:351'0                     X error: no match found
+           194:  addd $r12 = $r12, -32 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~~~~
+           195:  get $r16 = $ra 
+label:351'0     ~~~~~~~~~~~~~~~~
+           196:  ;; # (end cycle 0) 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~
+           197:  sd 24[$r12] = $r16 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~
+           198:  ;; # (end cycle 1) 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~
+           199:  sd 16[$r12] = $r18 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~
+           200:  make $r0 = 5 
+label:351'0     ~~~~~~~~~~~~~~
+           201:  copyd $r18 = $r0 
+label:351'0     ~~~~~~~~~~~~~~~~~~
+           202:  call __kvx_atomic_global_in 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+label:351'1                 ?                 possible intended match
+           203:  ;; # (end cycle 2) 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~
+           204:  make $r0 = 5 
+label:351'0     ~~~~~~~~~~~~~~
+           205:  lwz.u $r18 = 0[$r18] 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~~~
+           206:  call __kvx_atomic_global_out 
+label:351'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           207:  ;; # (end cycle 
+label:351'0     ~~~~~~~~~~~~~~~~~
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/pr61006.cppm
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 5: rm -fr /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
++ rm -fr /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+RUN: at line 6: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+RUN: at line 7: split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/pr61006.cppm /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
++ split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/pr61006.cppm /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+RUN: at line 9: EXPECTED_RESOURCE_DIR=`/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -print-resource-dir` &&  ln -s /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang++ /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/clang++ &&  sed "s|EXPECTED_RESOURCE_DIR|$EXPECTED_RESOURCE_DIR|g; s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp|g" /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/P1689.json.in > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/P1689.json &&  /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/P1689.json -format=p1689 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp &&  /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689    -- /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.o       -resource-dir $EXPECTED_RESOURCE_DIR | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -print-resource-dir
++ EXPECTED_RESOURCE_DIR=/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19
++ ln -s /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang++ /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/clang++
++ sed 's|EXPECTED_RESOURCE_DIR|/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19|g; s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp|g' /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/P1689.json.in
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/P1689.json -format=p1689
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689 -- /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.o -resource-dir /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+The command line should provide exactly one output file in P1689 per file mode.
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -format=p1689 -- /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/clang++ -std=c++20 -c -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.o -resource-dir /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19
+#0 0x00007f694d6eb057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+#1 0x00007f694d6e8dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+#2 0x00007f694d6eb72a SignalHandler(int) Signals.cpp:0:0
+#3 0x00007f694c9e6520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+#4 0x0000557676ea279c clang_scan_deps_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x879c)
+#5 0x0000557676ec05c7 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x265c7)
+#6 0x00007f694c9cdd90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#7 0x00007f694c9cde40 call_init ./csu/../csu/libc-start.c:128:20
+#8 0x00007f694c9cde40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#9 0x0000557676ea0995 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps+0x6995)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp/a.cpp -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/pr61006.cppm.tmp
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/KVX/storec-kv3-2.c
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c
+Call parameter type does not match function signature!
+  %3 = load ptr, ptr %ptr.addr, align 8, !tbaa !5
+ PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O3 -triple kvx-kalray-cos -S -emit-llvm -target-cpu kv3-2 -o - /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c
+1.	<eof> parser at end of file
+2.	Optimizer
+ #0 0x00007f7ef4cb8057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f7ef4cb5dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f7ef4cb872a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f7ef3fb3520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f7ef4cc2354 (anonymous namespace)::TypePrinting::print(llvm::Type*, llvm::raw_ostream&) AsmWriter.cpp:0:0
+ #5 0x00007f7ef4cc2227 llvm::Type::print(llvm::raw_ostream&, bool, bool) const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7cd227)
+ #6 0x00007f7ef4e968d9 void llvm::VerifierSupport::WriteTs<llvm::Type*, llvm::CallBase>(llvm::Type* const&, llvm::CallBase const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x9a18d9)
+ #7 0x00007f7ef4e923a6 (anonymous namespace)::Verifier::visitCallBase(llvm::CallBase&) Verifier.cpp:0:0
+ #8 0x00007f7ef4e8a9f0 (anonymous namespace)::Verifier::visit(llvm::Instruction&) Verifier.cpp:0:0
+ #9 0x00007f7ef4e72587 (anonymous namespace)::Verifier::verify(llvm::Function const&) Verifier.cpp:0:0
+#10 0x00007f7ef4e79ab3 llvm::VerifierAnalysis::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984ab3)
+#11 0x00007f7ef7455d15 llvm::detail::AnalysisPassModel<llvm::Module, llvm::VerifierAnalysis, llvm::AnalysisManager<llvm::Module>::Invalidator>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x2f60d15)
+#12 0x00007f7ef4e4c285 llvm::AnalysisManager<llvm::Module>::getResultImpl(llvm::AnalysisKey*, llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x957285)
+#13 0x00007f7ef4e79b89 llvm::VerifierPass::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984b89)
+#14 0x00007f7efdf8034d llvm::detail::PassModel<llvm::Module, llvm::VerifierPass, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bc834d)
+#15 0x00007f7ef4e49934 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x954934)
+#16 0x00007f7efdf7d4a8 (anonymous namespace)::EmitAssemblyHelper::RunOptimizationPipeline(clang::BackendAction, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>&, std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>&, clang::BackendConsumer*) BackendUtil.cpp:0:0
+#17 0x00007f7efdf75012 clang::EmitBackendOutput(clang::DiagnosticsEngine&, clang::HeaderSearchOptions const&, clang::CodeGenOptions const&, clang::TargetOptions const&, clang::LangOptions const&, llvm::StringRef, llvm::Module*, clang::BackendAction, llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem>, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>, clang::BackendConsumer*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bbd012)
+#18 0x00007f7efe3482c3 clang::BackendConsumer::HandleTranslationUnit(clang::ASTContext&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f902c3)
+#19 0x00007f7efcea72e4 clang::ParseAST(clang::Sema&, bool, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0xaef2e4)
+#20 0x00007f7efeea90a7 clang::FrontendAction::Execute() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2af10a7)
+#21 0x00007f7efee1a9c6 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2a629c6)
+#22 0x00007f7efef2e0ee clang::ExecuteCompilerInvocation(clang::CompilerInstance*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2b760ee)
+#23 0x00005651d5da852e cc1_main(llvm::ArrayRef<char const*>, char const*, void*) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1152e)
+#24 0x00005651d5da5565 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&, llvm::ToolContext const&) driver.cpp:0:0
+#25 0x00005651d5da45e7 clang_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xd5e7)
+#26 0x00005651d5db3497 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1c497)
+#27 0x00007f7ef3f9ad90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#28 0x00007f7ef3f9ae40 call_init ./csu/../csu/libc-start.c:128:20
+#29 0x00007f7ef3f9ae40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#30 0x00005651d5da1bc5 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xabc5)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/storec-kv3-2.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/Atomics/ld-st.ll
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll -O2 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll --check-prefixes=CHECK
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll -O2
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll --check-prefixes=CHECK
+LLVM ERROR: Cannot select: 0x564c45974a50: ch = AtomicStore<(store monotonic (s8) into %ir.p)> 0x564c4592d910, 0x564c45974c80, 0x564c45974b30
+  0x564c45974c80: i32,ch = CopyFromReg 0x564c4592d910, Register:i32 %1
+    0x564c45974cf0: i32 = Register %1
+  0x564c45974b30: i64,ch = CopyFromReg 0x564c4592d910, Register:i64 %0
+    0x564c45974ba0: i64 = Register %0
+In function: atomic_store_signed_char__ATOMIC_RELAXED
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-1 -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll -O2
+1.	Running pass 'Function Pass Manager' on module '/nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll'.
+2.	Running pass 'KVX DAG->DAG Pattern Instruction Selection' on function '@atomic_store_signed_char__ATOMIC_RELAXED'
+ #0 0x00007f53c8a67057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f53c8a64dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f53c8a6772a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f53c7d64520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f53c7db89fc __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007f53c7db89fc __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007f53c7db89fc pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007f53c7d64476 gsignal ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007f53c7d4a7f3 abort ./stdlib/abort.c:81:7
+ #9 0x00007f53c89bf12c llvm::report_fatal_error(llvm::Twine const&, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x71b12c)
+#10 0x00007f53c9389f70 llvm::SelectionDAGISel::isOrEquivalentToAdd(llvm::SDNode const*) const (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10e5f70)
+#11 0x00007f53c93893e5 (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10e53e5)
+#12 0x00007f53c93803af llvm::SelectionDAGISel::DoInstructionSelection() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dc3af)
+#13 0x00007f53c937fa50 llvm::SelectionDAGISel::CodeGenAndEmitDAG() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dba50)
+#14 0x00007f53c937ec6e llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10dac6e)
+#15 0x00007f53c937c4c2 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x10d84c2)
+#16 0x00007f53c8e820b6 llvm::MachineFunctionPass::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0xbde0b6)
+#17 0x00007f53c8bc0f32 llvm::FPPassManager::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x91cf32)
+#18 0x00007f53c8bc8273 llvm::FPPassManager::runOnModule(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x924273)
+#19 0x00007f53c8bc1b30 llvm::legacy::PassManagerImpl::run(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x91db30)
+#20 0x0000564c44527653 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0x10653)
+#21 0x00007f53c7d4bd90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#22 0x00007f53c7d4be40 call_init ./csu/../csu/libc-start.c:128:20
+#23 0x00007f53c7d4be40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#24 0x0000564c44521c85 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0xac85)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Atomics/ld-st.ll --check-prefixes=CHECK
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/KVX/loadc.c
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c -O3 -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c -O3 -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c
+Call parameter type does not match function signature!
+  %2 = load ptr, ptr %ptr.addr, align 8, !tbaa !5
+  %3 = call i64 @llvm.kvx.loadc.u.i64(i64 %conv, ptr %2, i32 8, i64 %0, i32 0, i32 2, i32 -1)
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c -O3 -o -
+1.	<eof> parser at end of file
+2.	Optimizer
+ #0 0x00007fbadf57d057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007fbadf57adfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007fbadf57d72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007fbade878520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007fbadf73fb35 (anonymous namespace)::Verifier::verifyFunctionAttrs(llvm::FunctionType*, llvm::AttributeList, llvm::Value const*, bool, bool) Verifier.cpp:0:0
+ #5 0x00007fbadf738d22 (anonymous namespace)::Verifier::verify(llvm::Function const&) Verifier.cpp:0:0
+ #6 0x00007fbadf73eab3 llvm::VerifierAnalysis::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984ab3)
+ #7 0x00007fbae1d1ad15 llvm::detail::AnalysisPassModel<llvm::Module, llvm::VerifierAnalysis, llvm::AnalysisManager<llvm::Module>::Invalidator>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x2f60d15)
+ #8 0x00007fbadf711285 llvm::AnalysisManager<llvm::Module>::getResultImpl(llvm::AnalysisKey*, llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x957285)
+ #9 0x00007fbadf73eb89 llvm::VerifierPass::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x984b89)
+#10 0x00007fbae884534d llvm::detail::PassModel<llvm::Module, llvm::VerifierPass, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bc834d)
+#11 0x00007fbadf70e934 llvm::PassManager<llvm::Module, llvm::AnalysisManager<llvm::Module>>::run(llvm::Module&, llvm::AnalysisManager<llvm::Module>&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libLLVM.so.19.0acb-5.2.0+0x954934)
+#12 0x00007fbae88424a8 (anonymous namespace)::EmitAssemblyHelper::RunOptimizationPipeline(clang::BackendAction, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>&, std::unique_ptr<llvm::ToolOutputFile, std::default_delete<llvm::ToolOutputFile>>&, clang::BackendConsumer*) BackendUtil.cpp:0:0
+#13 0x00007fbae883a012 clang::EmitBackendOutput(clang::DiagnosticsEngine&, clang::HeaderSearchOptions const&, clang::CodeGenOptions const&, clang::TargetOptions const&, clang::LangOptions const&, llvm::StringRef, llvm::Module*, clang::BackendAction, llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem>, std::unique_ptr<llvm::raw_pwrite_stream, std::default_delete<llvm::raw_pwrite_stream>>, clang::BackendConsumer*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1bbd012)
+#14 0x00007fbae8c0d2c3 clang::BackendConsumer::HandleTranslationUnit(clang::ASTContext&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x1f902c3)
+#15 0x00007fbae776c2e4 clang::ParseAST(clang::Sema&, bool, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0xaef2e4)
+#16 0x00007fbae976e0a7 clang::FrontendAction::Execute() (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2af10a7)
+#17 0x00007fbae96df9c6 clang::CompilerInstance::ExecuteAction(clang::FrontendAction&) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2a629c6)
+#18 0x00007fbae97f30ee clang::ExecuteCompilerInvocation(clang::CompilerInstance*) (/nfs/home/dsampaio/csw/build_llvm_Release/lib/libclang-cpp.so.19.0acb-5.2.0+0x2b760ee)
+#19 0x0000555c23ca352e cc1_main(llvm::ArrayRef<char const*>, char const*, void*) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1152e)
+#20 0x0000555c23ca0565 ExecuteCC1Tool(llvm::SmallVectorImpl<char const*>&, llvm::ToolContext const&) driver.cpp:0:0
+#21 0x0000555c23c9f5e7 clang_main(int, char**, llvm::ToolContext const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xd5e7)
+#22 0x0000555c23cae497 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0x1c497)
+#23 0x00007fbade85fd90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#24 0x00007fbade85fe40 call_init ./csu/../csu/libc-start.c:128:20
+#25 0x00007fbade85fe40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#26 0x0000555c23c9cbc5 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang+0xabc5)
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/KVX/loadc.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/Generic/APIntSextParam.ll
+
+
+Exit Code: 134
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntSextParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntSextParam.ll.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+LLVM ERROR: unable to allocate function argument #0
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc
+1.	Running pass 'Function Pass Manager' on module '<stdin>'.
+2.	Running pass 'KVX DAG->DAG Pattern Instruction Selection' on function '@i2_ls'
+ #0 0x00007f89311ca057 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c3057)
+ #1 0x00007f89311c7dfe llvm::sys::RunSignalHandlers() (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x7c0dfe)
+ #2 0x00007f89311ca72a SignalHandler(int) Signals.cpp:0:0
+ #3 0x00007f89304c7520 (/lib/x86_64-linux-gnu/libc.so.6+0x42520)
+ #4 0x00007f893051b9fc __pthread_kill_implementation ./nptl/pthread_kill.c:44:76
+ #5 0x00007f893051b9fc __pthread_kill_internal ./nptl/pthread_kill.c:78:10
+ #6 0x00007f893051b9fc pthread_kill ./nptl/pthread_kill.c:89:10
+ #7 0x00007f89304c7476 gsignal ./signal/../sysdeps/posix/raise.c:27:6
+ #8 0x00007f89304ad7f3 abort ./stdlib/abort.c:81:7
+ #9 0x00007f893112212c llvm::report_fatal_error(llvm::Twine const&, bool) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x71b12c)
+#10 0x00007f8931455403 (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xa4e403)
+#11 0x00007f89337cf682 llvm::KVXTargetLowering::LowerFormalArguments(llvm::SDValue, unsigned int, bool, llvm::SmallVectorImpl<llvm::ISD::InputArg> const&, llvm::SDLoc const&, llvm::SelectionDAG&, llvm::SmallVectorImpl<llvm::SDValue>&) const (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x2dc8682)
+#12 0x00007f8931a83590 llvm::SelectionDAGISel::LowerArguments(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x107c590)
+#13 0x00007f8931ae06ed llvm::SelectionDAGISel::SelectAllBasicBlocks(llvm::Function const&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d96ed)
+#14 0x00007f8931adf4c2 llvm::SelectionDAGISel::runOnMachineFunction(llvm::MachineFunction&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x10d84c2)
+#15 0x00007f89315e50b6 llvm::MachineFunctionPass::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0xbde0b6)
+#16 0x00007f8931323f32 llvm::FPPassManager::runOnFunction(llvm::Function&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91cf32)
+#17 0x00007f893132b273 llvm::FPPassManager::runOnModule(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x924273)
+#18 0x00007f8931324b30 llvm::legacy::PassManagerImpl::run(llvm::Module&) (/nfs/home/dsampaio/csw/build_llvm_Release/bin/../lib/libLLVM.so.19.0acb-5.2.0+0x91db30)
+#19 0x0000559d8ea55653 main (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0x10653)
+#20 0x00007f89304aed90 __libc_start_call_main ./csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+#21 0x00007f89304aee40 call_init ./csu/../csu/libc-start.c:128:20
+#22 0x00007f89304aee40 __libc_start_main ./csu/../csu/libc-start.c:379:5
+#23 0x0000559d8ea4fc85 _start (/nfs/home/dsampaio/csw/build_llvm_Release/bin/llc+0xac85)
+/nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntSextParam.ll.script: line 1: 3225424 Aborted                 (core dumped) /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc < /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/Generic/APIntSextParam.ll > /nfs/home/dsampaio/csw/build_llvm_Release/test/CodeGen/Generic/Output/APIntSextParam.ll.tmp
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/module-format.c
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 11: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp && mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp
++ mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp
+RUN: at line 12: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/* /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/cdb_pch.json /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/cdb_tu.json /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/cdb_tu_with_common.json /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/mod_common_1.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/mod_common_2.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/mod_pch.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/mod_tu.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/mod_tu_with_common.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/module.modulemap /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/pch.h /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/tu.c /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/tu_with_common.c /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp
+RUN: at line 16: rm -f /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/cdb_pch.json
++ rm -f /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/cdb_pch.json
+RUN: at line 17: sed "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp|g" /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/cdb_pch.json > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/cdb_pch.json
++ sed 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp|g' /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/modules-pch/cdb_pch.json
+RUN: at line 18: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/cdb_pch.json -format experimental-full    -module-files-dir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/build > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/cdb_pch.json -format experimental-full -module-files-dir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/build
+RUN: at line 23: "/work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10" /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModCommon1 > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/mod_common_1.cc1.rsp
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModCommon1
+RUN: at line 24: "/work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10" /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModCommon2 > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/mod_common_2.cc1.rsp
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModCommon2
+RUN: at line 25: "/work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10" /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModPCH > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/mod_pch.cc1.rsp
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --module-name=ModPCH
+RUN: at line 26: "/work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10" /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --tu-index=0 > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/pch.rsp
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang/utils/module-deps-to-rsp.py /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/result_pch.json --tu-index=0
+RUN: at line 28: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang @/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/mod_common_1.cc1.rsp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang @/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/module-format.c.tmp/mod_common_1.cc1.rsp
+error: unable to interface with target machine
+1 error generated.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/Bugfix/T15272.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll --check-prefixes=CHECK
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll --check-prefixes=CHECK
+RUN: at line 3: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-2 -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll -mtriple=kvx-kalray-cos | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll --check-prefixes=CHECK
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -mcpu=kv3-2 -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll -mtriple=kvx-kalray-cos
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll --check-prefixes=CHECK
+RUN: at line 4: clang -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll -mllvm -relocation-model=pic
++ clang -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/Bugfix/T15272.ll -mllvm -relocation-model=pic
+clang (LLVM option parsing): Unknown command line argument '-relocation-model=pic'.  Try: 'clang (LLVM option parsing) --help'
+clang (LLVM option parsing): Did you mean '--hexagon-mux=pic'?
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGen/thinlto_backend.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 4: /nfs/home/dsampaio/csw/build_llvm_Release/bin/opt -module-summary -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/opt -module-summary -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll
+RUN: at line 5: /nfs/home/dsampaio/csw/build_llvm_Release/bin/opt -module-summary -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp2.o /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/Inputs/thinlto_backend.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/opt -module-summary -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp2.o /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/Inputs/thinlto_backend.ll
+RUN: at line 6: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llvm-lto -thinlto -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp2.o
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llvm-lto -thinlto -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp2.o
+RUN: at line 9: not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O2 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o -x c /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -c -fthinlto-index=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp.thinlto.bc 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -check-prefix=CHECK-WARNING
++ not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -O2 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o -x c /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -c -fthinlto-index=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp.thinlto.bc
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -check-prefix=CHECK-WARNING
+RUN: at line 13: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp4.o -x ir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o -c -fthinlto-index=bad.thinlto.bc 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -check-prefix=CHECK-ERROR1
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp4.o -x ir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CodeGen/Output/thinlto_backend.ll.tmp1.o -c -fthinlto-index=bad.thinlto.bc
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/thinlto_backend.ll -check-prefix=CHECK-ERROR1
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Driver/flang/flang.f90
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 20: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -E                  /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+RUN: at line 25: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -fsyntax-only       /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-SYNTAX-ONLY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -fsyntax-only /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-SYNTAX-ONLY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+RUN: at line 29: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm -S       /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-IR /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm -S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-IR /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+RUN: at line 33: not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm          /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-BC /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-BC /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+RUN: at line 37: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -S                  /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+RUN: at line 41: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -###                     /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90:42:23: error: CHECK-EMIT-OBJ-DAG: expected string not found in input
+! CHECK-EMIT-OBJ-DAG: "-emit-obj"
+                      ^
+<stdin>:5:20: note: scanning from here
+ "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang-22f86e.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90"
+                   ^
+<stdin>:5:21: note: possible intended match here
+ "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang-22f86e.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90"
+                    ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+          1: Kalray flang-new version 19.0.0acb-5.2.0 
+          2: Target: kvx-kalray-cos 
+          3: Thread model: posix 
+          4: InstalledDir: /nfs/home/dsampaio/csw/build_llvm_Release/bin 
+          5:  "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang-22f86e.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang.f90" 
+dag:42'0                        X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found
+dag:42'1                         ?                                                                                                                                                                                                                             possible intended match
+          6:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-as" "-march=kv3-1" "-o" "/tmp/lit-tmp-2vca072p/flang-148aa7.o" "/tmp/lit-tmp-2vca072p/flang-22f86e.s" 
+dag:42'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          7:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-ld" "/tmp/lit-tmp-2vca072p/flang-148aa7.o" "-o" "a.out" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/gcc/kvx-cos/13.2.1/crtcxa.o" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-llvm/cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/llvm/cos" "-melf64kvx" "-lclang_rt.builtins-kvx" "-lm" "--start-group" "-lc" "-lmppacos" "-lmppa_rsrc" "-lgloss" "-lmppa_fdt" "--end-group" "-lclang_rt.builtins-kvx" "-Tmppacos.ld" 
+dag:42'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Driver/flang/flang_ucase.F90
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 21: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -E                  /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-E /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+RUN: at line 26: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -fsyntax-only       /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-SYNTAX-ONLY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -fsyntax-only /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-SYNTAX-ONLY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+RUN: at line 30: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm -S       /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-IR /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm -S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-IR /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+RUN: at line 34: not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm          /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-BC /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ not /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -emit-llvm /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-LLVM-BC /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+RUN: at line 38: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -S                  /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### -S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-S /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+RUN: at line 42: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -###                     /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=flang -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefixes=ALL,CHECK-EMIT-OBJ /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90:43:23: error: CHECK-EMIT-OBJ-DAG: expected string not found in input
+! CHECK-EMIT-OBJ-DAG: "-emit-obj"
+                      ^
+<stdin>:5:20: note: scanning from here
+ "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang_ucase-0b6fa3.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90"
+                   ^
+<stdin>:5:21: note: possible intended match here
+ "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang_ucase-0b6fa3.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90"
+                    ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+          1: Kalray flang-new version 19.0.0acb-5.2.0 
+          2: Target: kvx-kalray-cos 
+          3: Thread model: posix 
+          4: InstalledDir: /nfs/home/dsampaio/csw/build_llvm_Release/bin 
+          5:  "flang-new" "-fc1" "-triple" "kvx-kalray-cos" "-S" "-mrelocation-model" "static" "-mframe-pointer=all" "-o" "/tmp/lit-tmp-2vca072p/flang_ucase-0b6fa3.s" "-x" "f95-cpp-input" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/flang/flang_ucase.F90" 
+dag:43'0                        X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found
+dag:43'1                         ?                                                                                                                                                                                                                                         possible intended match
+          6:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-as" "-march=kv3-1" "-o" "/tmp/lit-tmp-2vca072p/flang_ucase-3519e3.o" "/tmp/lit-tmp-2vca072p/flang_ucase-0b6fa3.s" 
+dag:43'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          7:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-ld" "/tmp/lit-tmp-2vca072p/flang_ucase-3519e3.o" "-o" "a.out" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/gcc/kvx-cos/13.2.1/crtcxa.o" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-llvm/cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/llvm/cos" "-melf64kvx" "-lclang_rt.builtins-kvx" "-lm" "--start-group" "-lc" "-lmppacos" "-lmppa_rsrc" "-lgloss" "-lmppa_fdt" "--end-group" "-lclang_rt.builtins-kvx" "-Tmppacos.ld" 
+dag:43'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=g++ -S -ftime-trace -ftime-trace-granularity=0 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver/Output/check-time-trace-ParseDeclarationOrFunctionDefinition /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=g++ -S -ftime-trace -ftime-trace-granularity=0 -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver/Output/check-time-trace-ParseDeclarationOrFunctionDefinition /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
+RUN: at line 2: cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver/Output/check-time-trace-ParseDeclarationOrFunctionDefinition.json    | "/work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10" -c 'import json, sys; json.dump(json.loads(sys.stdin.read()), sys.stdout, sort_keys=True, indent=2)'    | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
++ cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver/Output/check-time-trace-ParseDeclarationOrFunctionDefinition.json
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 -c 'import json, sys; json.dump(json.loads(sys.stdin.read()), sys.stdout, sort_keys=True, indent=2)'
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
+/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp:6:15: error: CHECK-DAG: expected string not found in input
+// CHECK-DAG: "name": "ParseDeclarationOrFunctionDefinition"
+              ^
+<stdin>:1:1: note: scanning from here
+{
+^
+<stdin>:97:2: note: possible intended match here
+ "name": "ModuleToFunctionPassAdaptor",
+ ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+         1: { 
+dag:6'0     X~ error: no match found
+         2:  "beginningOfTime": 1709142616728861, 
+dag:6'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         3:  "traceEvents": [ 
+dag:6'0     ~~~~~~~~~~~~~~~~~~
+         4:  { 
+dag:6'0     ~~~
+         5:  "args": { 
+dag:6'0     ~~~~~~~~~~~
+         6:  "detail": "[module]" 
+dag:6'0     ~~~~~~~~~~~~~~~~~~~~~~
+         .
+         .
+         .
+        92:  { 
+dag:6'0     ~~~
+        93:  "args": { 
+dag:6'0     ~~~~~~~~~~~
+        94:  "detail": "[module]" 
+dag:6'0     ~~~~~~~~~~~~~~~~~~~~~~
+        95:  }, 
+dag:6'0     ~~~~
+        96:  "dur": 10, 
+dag:6'0     ~~~~~~~~~~~~
+        97:  "name": "ModuleToFunctionPassAdaptor", 
+dag:6'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dag:6'1      ?                                       possible intended match
+        98:  "ph": "X", 
+dag:6'0     ~~~~~~~~~~~~
+        99:  "pid": 3225506, 
+dag:6'0     ~~~~~~~~~~~~~~~~~
+       100:  "tid": 3225506, 
+dag:6'0     ~~~~~~~~~~~~~~~~~
+       101:  "ts": 527 
+dag:6'0     ~~~~~~~~~~~
+       102:  }, 
+dag:6'0     ~~~~
+         .
+         .
+         .
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Driver/disable-llvm.c
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 4: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang -disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c 2>&1      | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang -disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+RUN: at line 8: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang=-disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c 2>&1      | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang=-disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+RUN: at line 15: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang -disable-llvm-optzns -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c 2>&1      | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED-LEGACY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -Xclang -disable-llvm-optzns -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED-LEGACY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+RUN: at line 17: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -mllvm -disable-llvm-optzns -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c 2>&1      | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED-LEGACY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -mllvm -disable-llvm-optzns -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=DISABLED-LEGACY /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+RUN: at line 24: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -mllvm -disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=MLLVM /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -O2 -mllvm -disable-llvm-passes -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck --check-prefix=MLLVM /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c:28:15: error: MLLVM-NOT: excluded string found in input
+// MLLVM-NOT: -disable-llvm-passes
+              ^
+<stdin>:6:895: note: found here
+ "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-S" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "disable-llvm.c" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-O2" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fskip-odr-check-in-gmf" "-exception-model=sjlj" "-vectorize-loops" "-vectorize-slp" "-mllvm" "-disable-llvm-passes" "-o" "/tmp/lit-tmp-2vca072p/disable-llvm-6ee16e.s" "-x" "ir" "/tmp/lit-tmp-2vca072p/disable-llvm-c35b30.bc"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ^~~~~~~~~~~~~~~~~~~~
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+        1: Kalray clang version 19.0.0acb-5.2.0 
+        2: Target: kvx-kalray-cos 
+        3: Thread model: posix 
+        4: InstalledDir: /nfs/home/dsampaio/csw/build_llvm_Release/bin 
+        5:  "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-emit-llvm-bc" "-emit-llvm-uselists" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "disable-llvm.c" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include/../../kvx-llvm/cos/include" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include" "-O2" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fskip-odr-check-in-gmf" "-exception-model=sjlj" "-vectorize-loops" "-vectorize-slp" "-mllvm" "-disable-llvm-passes" "-o" "/tmp/lit-tmp-2vca072p/disable-llvm-c35b30.bc" "-x" "c" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/disable-llvm.c" 
+        6:  "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-S" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "disable-llvm.c" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-O2" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fskip-odr-check-in-gmf" "-exception-model=sjlj" "-vectorize-loops" "-vectorize-slp" "-mllvm" "-disable-llvm-passes" "-o" "/tmp/lit-tmp-2vca072p/disable-llvm-6ee16e.s" "-x" "ir" "/tmp/lit-tmp-2vca072p/disable-llvm-c35b30.bc" 
+not:28                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   !~~~~~~~~~~~~~~~~~~~                                                                                                               error: no match expected
+        7:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-as" "-march=kv3-1" "-o" "/tmp/lit-tmp-2vca072p/disable-llvm-90c543.o" "/tmp/lit-tmp-2vca072p/disable-llvm-6ee16e.s" 
+        8:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-ld" "/tmp/lit-tmp-2vca072p/disable-llvm-90c543.o" "-o" "a.out" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/gcc/kvx-cos/13.2.1/crtcxa.o" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-llvm/cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/llvm/cos" "-melf64kvx" "-lclang_rt.builtins-kvx" "-lm" "--start-group" "-lc" "-lmppacos" "-lmppa_rsrc" "-lgloss" "-lmppa_fdt" "--end-group" "-lclang_rt.builtins-kvx" "-Tmppacos.ld" 
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -o - -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -o - -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll
+RUN: at line 3: clang -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll -mllvm -relocation-model=pic
++ clang -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/external-weak-linkage.ll -mllvm -relocation-model=pic
+clang (LLVM option parsing): Unknown command line argument '-relocation-model=pic'.  Try: 'clang (LLVM option parsing) --help'
+clang (LLVM option parsing): Did you mean '--hexagon-mux=pic'?
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -O2 -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -O2 -relocation-model=pic -o - /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
+RUN: at line 3: clang -O2 -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll -mllvm -relocation-model=pic
++ clang -O2 -c -o /dev/null /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/AvailableExternallyLinkage.ll -mllvm -relocation-model=pic
+clang (LLVM option parsing): Unknown command line argument '-relocation-model=pic'.  Try: 'clang (LLVM option parsing) --help'
+clang (LLVM option parsing): Did you mean '--hexagon-mux=pic'?
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Driver/modules.mm
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 4: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
+RUN: at line 5: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fcxx-modules -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fcxx-modules -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
+RUN: at line 6: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fmodules -fno-cxx-modules -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm 2>&1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fmodules -fno-cxx-modules -### /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -check-prefix=CHECK-NO-MODULES /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
+/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm:7:26: error: CHECK-NO-MODULES-NOT: excluded string found in input
+// CHECK-NO-MODULES-NOT: -fmodules
+                         ^
+<stdin>:6:790: note: found here
+ "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-S" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "modules.mm" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fmodules" "-fimplicit-module-maps" "-fmodules-cache-path=/nfs/home/dsampaio/.cache/clang/ModuleCache" "-fmodules-validate-system-headers" "-fskip-odr-check-in-gmf" "-exception-model=sjlj" "-o" "/tmp/lit-tmp-2vca072p/modules-87c1ed.s" "-x" "ir" "/tmp/lit-tmp-2vca072p/modules-9af5d8.bc"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^~~~~~~~~
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+       1: Kalray clang version 19.0.0acb-5.2.0 
+       2: Target: kvx-kalray-cos 
+       3: Thread model: posix 
+       4: InstalledDir: /nfs/home/dsampaio/csw/build_llvm_Release/bin 
+       5:  "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-emit-llvm-bc" "-emit-llvm-uselists" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "modules.mm" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include/c++/13.2.1" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include/c++/13.2.1/kvx-cos" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include/c++/13.2.1/backward" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include/../../kvx-llvm/cos/include" "-internal-isystem" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/kvx-cos/include" "-fdeprecated-macro" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fskip-odr-check-in-gmf" "-fobjc-runtime=gcc" "-fobjc-encode-cxx-class-template-spec" "-fobjc-exceptions" "-fcxx-exceptions" "-fexceptions" "-exception-model=sjlj" "-D__GCC_HAVE_DWARF2_CFI_ASM=1" "-o" "/tmp/lit-tmp-2vca072p/modules-9af5d8.bc" "-x" "objective-c++" "/nfs/home/dsampaio/csw/llvm-project/clang/test/Driver/modules.mm" 
+       6:  "/nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-19" "-cc1" "-triple" "kvx-kalray-cos" "-S" "-dumpdir" "a-" "-disable-free" "-clear-ast-before-backend" "-disable-llvm-verifier" "-discard-value-names" "-main-file-name" "modules.mm" "-mrelocation-model" "static" "-mframe-pointer=all" "-ffp-contract=on" "-fno-rounding-math" "-fno-verbose-asm" "-no-integrated-as" "-mconstructor-aliases" "-nostdsysteminc" "-ftls-model=local-exec" "-debugger-tuning=gdb" "-fno-dwarf-directory-asm" "-fdebug-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-fcoverage-compilation-dir=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/Driver" "-resource-dir" "/nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19" "-ferror-limit" "19" "-fgnuc-version=4.2.1" "-fmodules" "-fimplicit-module-maps" "-fmodules-cache-path=/nfs/home/dsampaio/.cache/clang/ModuleCache" "-fmodules-validate-system-headers" "-fskip-odr-check-in-gmf" "-exception-model=sjlj" "-o" "/tmp/lit-tmp-2vca072p/modules-87c1ed.s" "-x" "ir" "/tmp/lit-tmp-2vca072p/modules-9af5d8.bc" 
+not:7                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          !~~~~~~~~                                                                                                                                                                                                                                                                                       error: no match expected
+       7:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-as" "-march=kv3-1" "-o" "/tmp/lit-tmp-2vca072p/modules-ebef15.o" "/tmp/lit-tmp-2vca072p/modules-87c1ed.s" 
+       8:  "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/kvx-cos-ld" "/tmp/lit-tmp-2vca072p/modules-ebef15.o" "-o" "a.out" "/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/gcc/kvx-cos/13.2.1/crtcxa.o" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-llvm/cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../kvx-cos/lib" "-L/nfs/home/dsampaio/csw/devimage/toolchain_default/toolroot/opt/kalray/accesscore/bin/../lib/llvm/cos" "-melf64kvx" "-lclang_rt.builtins-kvx" "-lm" "--start-group" "-lc" "-lmppacos" "-lmppa_rsrc" "-lgloss" "-lmppa_fdt" "--end-group" "-lclang_rt.builtins-kvx" "-Tmppacos.ld" 
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ASTMerge/codegen-body/test.c
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-pch -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.1.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/Inputs/body1.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-pch -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.1.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/Inputs/body1.c
+RUN: at line 3: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-pch -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.2.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/Inputs/body2.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-pch -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.2.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/Inputs/body2.c
+RUN: at line 4: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-obj -o /dev/null -ast-merge /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.1.ast -ast-merge /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.2.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/test.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -emit-obj -o /dev/null -ast-merge /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.1.ast -ast-merge /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ASTMerge/codegen-body/Output/test.c.tmp.2.ast /nfs/home/dsampaio/csw/llvm-project/clang/test/ASTMerge/codegen-body/test.c
+error: unable to interface with target machine
+1 error generated.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -O3 -o - -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/llc -O3 -o - -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll
+RUN: at line 3: clang -O3 -c -o /dev/null -mllvm -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll
++ clang -O3 -c -o /dev/null -mllvm -relocation-model=pic /nfs/home/dsampaio/csw/llvm-project/llvm/test/CodeGen/KVX/PIC/fPIC.ll
+clang (LLVM option parsing): Unknown command line argument '-relocation-model=pic'.  Try: 'clang (LLVM option parsing) --help'
+clang (LLVM option parsing): Did you mean '--hexagon-mux=pic'?
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CXX/module/module.import/p7.cpp
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 1: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
+RUN: at line 2: split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/CXX/module/module.import/p7.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
++ split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/CXX/module/module.import/p7.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
+RUN: at line 6: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/a.cpp  -emit-module-interface -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/a.pcm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/a.cpp -emit-module-interface -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/a.pcm
+RUN: at line 9: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b.cpp  -emit-module-interface -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b.pcm  -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b.cpp -emit-module-interface -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b.pcm -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
+RUN: at line 13: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b-impl.cpp -emit-obj -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b-impl.o  -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -std=c++20 /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b-impl.cpp -emit-obj -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp/b-impl.o -fprebuilt-module-path=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/CXX/module/module.import/Output/p7.cpp.tmp
+error: unable to interface with target machine
+1 error generated.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang Tools :: clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c
+
+
+Exit Code: 1
+
+Command Output (stdout):
+--
+Running ['clang-tidy', '/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c', '-fix', '--checks=-*,bugprone-inc-dec-in-conditions', '--config={}', '--', '-nostdinc++']...
+clang-tidy /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c -fix --checks=-*,bugprone-inc-dec-in-conditions --config={} -- -nostdinc++ failed:
+2 warnings and 2 errors generated.
+Error while processing /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c.
+/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c:3:1: error: _BitInt is not supported on this target [clang-diagnostic-error]
+    3 | _BitInt(8) v_401_0() {
+      | ^
+/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c:5:5: error: _BitInt is not supported on this target [clang-diagnostic-error]
+    5 |     _BitInt(5) y = 0;
+      |     ^
+Suppressed 2 warnings (2 with check filters).
+Found compiler errors, but -fix-errors was not specified.
+Fixes have NOT been applied.
+
+Found compiler error(s).
+
+
+--
+Command Output (stderr):
+--
+RUN: at line 1: /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py /nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c bugprone-inc-dec-in-conditions /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp
++ /work1/dsampaio/.local/virtualenvs/build-4tW73lex/bin/python3.10 /nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py /nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c bugprone-inc-dec-in-conditions /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp
+Traceback (most recent call last):
+  File "/nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py", line 316, in <module>
+    main()
+  File "/nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py", line 312, in main
+    CheckRunner(args, extra_args).run()
+  File "/nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py", line 260, in run
+    clang_tidy_output = self.run_clang_tidy()
+  File "/nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py", line 194, in run_clang_tidy
+    clang_tidy_output = try_run(args)
+  File "/nfs/home/dsampaio/csw/llvm-project/clang-tools-extra/test/../test/clang-tidy/check_clang_tidy.py", line 50, in try_run
+    process_output = subprocess.check_output(args, stderr=subprocess.STDOUT).decode(
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['clang-tidy', '/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/tools/extra/test/clang-tidy/checkers/bugprone/Output/inc-dec-in-conditions-bitint-no-crash.c.tmp.c', '-fix', '--checks=-*,bugprone-inc-dec-in-conditions', '--config={}', '--', '-nostdinc++']' returned non-zero exit status 1.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: PCH/gch-probe.c
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 6: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -x c-header -c /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h.gch
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -x c-header -c /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h.gch
+RUN: at line 7: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fsyntax-only -include /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -fsyntax-only -include /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c
+RUN: at line 10: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -x c-header -c /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c -gmodules -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h.gch
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -x c-header -c /nfs/home/dsampaio/csw/llvm-project/clang/test/PCH/gch-probe.c -gmodules -o /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/PCH/Output/gch-probe.c.tmp.h.gch
+error: unable to interface with target machine
+1 error generated.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/modules-priv-fw-from-pub.m
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 4: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
+RUN: at line 5: split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
++ split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
+RUN: at line 31: sed -e "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp|g" /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/cdb.json.in > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/cdb.json
++ sed -e 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp|g' /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/cdb.json.in
+RUN: at line 32: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/cdb.json -format experimental-full > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/deps.json
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/cdb.json -format experimental-full
+RUN: at line 35: cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/deps.json | sed 's:\\\\\?:/:g' | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
++ cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp/deps.json
++ sed 's:\\\\\?:/:g'
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-priv-fw-from-pub.m.tmp
+/nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m:106:16: error: CHECK-NEXT: is not on the line after the previous match
+// CHECK-NEXT: ]
+               ^
+<stdin>:313:2: note: 'next' match was here
+ ],
+ ^
+<stdin>:305:3: note: previous match ended here
+ },
+  ^
+<stdin>:306:1: note: non-matching line after previous match is here
+ {
+^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-priv-fw-from-pub.m
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+          .
+          .
+          .
+        308:  "clang-module-deps": [ 
+        309:  { 
+        310:  "context-hash": "4N3AVO6L7JY1QKM372UX8D8NG", 
+        311:  "module-name": "FW" 
+        312:  } 
+        313:  ], 
+next:106      !   error: match on wrong line
+        314:  "command-line": [ 
+        315:  "-cc1", 
+        316:  "-ferror-limit", 
+        317:  "19", 
+        318:  "-Wno-framework-include-private-from-public", 
+          .
+          .
+          .
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/headerwithdirname.cpp
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 3: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir
+RUN: at line 4: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/foodir
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/foodir
+RUN: at line 5: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.cdb
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.cdb
+RUN: at line 6: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir
+RUN: at line 7: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/foodir
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/foodir
+RUN: at line 8: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input.cpp
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input.cpp
+RUN: at line 9: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp
+RUN: at line 10: mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs
++ mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs
+RUN: at line 11: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/foodir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs/foodir
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/foodir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs/foodir
+RUN: at line 12: sed -e "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir|g" /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/headerwithdirname.json > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.cdb
++ sed -e 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir|g' /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/headerwithdirname.json
+RUN: at line 14: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.cdb -j 1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.cdb -j 1
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp
+/nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp:18:11: error: CHECK: expected string not found in input
+// CHECK: headerwithdirname_input{{\.o|.*\.s}}
+          ^
+<stdin>:1:1: note: scanning from here
+/tmp/lit-tmp-2vca072p/headerwithdirname_input-c9ddd2.bc: \
+^
+<stdin>:2:112: note: possible intended match here
+ /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input.cpp \
+                                                                                                               ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirname.cpp
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+            1: /tmp/lit-tmp-2vca072p/headerwithdirname_input-c9ddd2.bc: \ 
+check:18'0     X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found
+            2:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input.cpp \ 
+check:18'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+check:18'1                                                                                                                    ?                              possible intended match
+            3:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs/foodir 
+check:18'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            4: headerwithdirname_input_clangcl.obj: \ 
+check:18'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            5:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp \ 
+check:18'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            6:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirname.cpp.tmp.dir/Inputs/foodir 
+check:18'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 3: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir
+RUN: at line 4: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir
+RUN: at line 5: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.cdb
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.cdb
+RUN: at line 7: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir
+RUN: at line 8: mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir
++ mkdir -p /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir
+RUN: at line 10: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/header.h /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir/foodirheader.h
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/header.h /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir/foodirheader.h
+RUN: at line 11: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input.cpp
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input.cpp
+RUN: at line 12: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp
+RUN: at line 13: mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs
++ mkdir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs
+RUN: at line 14: cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/foodir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs/foodir
++ cp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/foodir /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs/foodir
+RUN: at line 15: sed -e "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir|g" /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/headerwithdirnamefollowedbyinclude.json > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.cdb
++ sed -e 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir|g' /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/Inputs/headerwithdirnamefollowedbyinclude.json
+RUN: at line 17: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.cdb -j 1 | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.cdb -j 1
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
+/nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp:22:11: error: CHECK: expected string not found in input
+// CHECK: headerwithdirname_input{{\.o|.*\.s}}
+          ^
+<stdin>:1:1: note: scanning from here
+/tmp/lit-tmp-2vca072p/headerwithdirname_input-508ec4.bc: \
+^
+<stdin>:2:129: note: possible intended match here
+ /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input.cpp \
+                                                                                                                                ^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+            1: /tmp/lit-tmp-2vca072p/headerwithdirname_input-508ec4.bc: \ 
+check:22'0     X~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ error: no match found
+            2:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input.cpp \ 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+check:22'1                                                                                                                                     ?                              possible intended match
+            3:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs/foodir \ 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            4:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir/foodirheader.h 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            5: headerwithdirname_input_clangcl.obj: \ 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            6:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/headerwithdirname_input_clangcl.cpp \ 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            7:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/Inputs/foodir \ 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            8:  /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/headerwithdirnamefollowedbyinclude.cpp.tmp.dir/foodir/foodirheader.h 
+check:22'0     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: ClangScanDeps/modules-full-output-tu-order.c
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 3: rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp
++ rm -rf /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp
+RUN: at line 4: split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp
++ split-file /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp
+RUN: at line 22: sed "s|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp|g" /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/cdb.json.template > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/cdb.json
++ sed 's|DIR|/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp|g' /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/cdb.json.template
+RUN: at line 23: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/cdb.json -format experimental-full > /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/result.json
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang-scan-deps -compilation-database /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/cdb.json -format experimental-full
+RUN: at line 24: cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/result.json | sed 's:\\\\\?:/:g' | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c
++ cat /nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/result.json
++ sed 's:\\\\\?:/:g'
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck -DPREFIX=/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c
+/nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c:47:16: error: CHECK-NEXT: is not on the line after the previous match
+// CHECK-NEXT: "commands": [
+               ^
+<stdin>:133:2: note: 'next' match was here
+ "commands": [
+ ^
+<stdin>:115:3: note: previous match ended here
+ {
+  ^
+<stdin>:116:1: note: non-matching line after previous match is here
+ "clang-context-hash": "3A2KVB492JEHF",
+^
+
+Input file: <stdin>
+Check file: /nfs/home/dsampaio/csw/llvm-project/clang/test/ClangScanDeps/modules-full-output-tu-order.c
+
+-dump-input=help explains the following input dump.
+
+Input was:
+<<<<<<
+         .
+         .
+         .
+       128:  "input-file": "/nfs/home/dsampaio/csw/build_llvm_Release/tools/clang/test/ClangScanDeps/Output/modules-full-output-tu-order.c.tmp/tu.c" 
+       129:  } 
+       130:  ] 
+       131:  }, 
+       132:  { 
+       133:  "commands": [ 
+next:47      !~~~~~~~~~~~~  error: match on wrong line
+       134:  { 
+       135:  "clang-context-hash": "T04Y0Q52K9OG", 
+       136:  "clang-module-deps": [], 
+       137:  "command-line": [ 
+       138:  "-cc1", 
+         .
+         .
+         .
+>>>>>>
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGenObjC/debug-info-property4.m
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:11:12: warning: class 'I1' defined without specifying a base class [-Wobjc-root-class]
+   11 | @interface I1
+      |            ^
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:11:14: note: add a super class to fix this problem
+   11 | @interface I1
+      |              ^
+fatal error: error in backend: Cannot select: 0x55aba22effe0: ch = AtomicStore<(store unordered (s32) into %ir.add.ptr)> 0x55aba22f00c0, 0x55aba22f06e0, 0x55aba22f0210, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+  0x55aba22f06e0: i32,ch = load<(dereferenceable load (s32) from %ir.p1.addr)> 0x55aba22f02f0, FrameIndex:i64<2>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+    0x55aba22f03d0: i64 = FrameIndex<2>
+    0x55aba22f0670: i64 = undef
+  0x55aba22f0210: i64 = add 0x55aba22f0830, 0x55aba22f0050, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+    0x55aba22f0830: i64,ch = load<(dereferenceable load (s64) from %ir.self.addr)> 0x55aba22f02f0, FrameIndex:i64<0>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+      0x55aba22f07c0: i64 = FrameIndex<0>
+      0x55aba22f0670: i64 = undef
+    0x55aba22f0050: i64,ch = load<(dereferenceable invariant load (s64) from @"OBJC_IVAR_$_I1._p1")> 0x55aba22f02f0, 0x55aba22f0360, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+      0x55aba22f0360: i64 = KVXISD::PICExternIndirection TargetGlobalAddress:i64<ptr @"OBJC_IVAR_$_I1._p1"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+        0x55aba22f0750: i64 = TargetGlobalAddress<ptr @"OBJC_IVAR_$_I1._p1"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property4.m:12:15
+      0x55aba22f0670: i64 = undef
+In function: <U+0001>-[I1 setP1:]
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property4.m
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: Frontend/rewrite-includes-macros.cpp
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=cl /E -Xclang -frewrite-includes -- /nfs/home/dsampaio/csw/llvm-project/clang/test/Frontend/rewrite-includes-macros.cpp | /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=cl /c -Xclang -verify /Tp -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=cl /E -Xclang -frewrite-includes -- /nfs/home/dsampaio/csw/llvm-project/clang/test/Frontend/rewrite-includes-macros.cpp
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang --driver-mode=cl /c -Xclang -verify /Tp -
+error: 'expected-error' diagnostics seen but not expected: 
+  (frontend): unable to interface with target machine
+1 error generated.
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGenObjC/property-dbg.m
+
+
+Exit Code: 1
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited -x objective-c < /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/property-dbg.m | grep DW_AT_name
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited -x objective-c
++ grep DW_AT_name
+<stdin>:3:12: warning: class 'Foo' defined without specifying a base class [-Wobjc-root-class]
+    3 | @interface Foo {
+      |            ^
+<stdin>:3:15: note: add a super class to fix this problem
+    3 | @interface Foo {
+      |               ^
+fatal error: error in backend: Cannot select: 0x558b7d6c2f40: ch = AtomicStore<(store unordered (s32) into %ir.add.ptr)> 0x558b7d6c3020, 0x558b7d6c3640, 0x558b7d6c3170, <stdin>:10:1
+  0x558b7d6c3640: i32,ch = load<(dereferenceable load (s32) from %ir.i.addr)> 0x558b7d6c3250, FrameIndex:i64<2>, undef:i64, <stdin>:10:1
+    0x558b7d6c3330: i64 = FrameIndex<2>
+    0x558b7d6c35d0: i64 = undef
+  0x558b7d6c3170: i64 = add 0x558b7d6c3790, 0x558b7d6c2fb0, <stdin>:10:1
+    0x558b7d6c3790: i64,ch = load<(dereferenceable load (s64) from %ir.self.addr)> 0x558b7d6c3250, FrameIndex:i64<0>, undef:i64, <stdin>:10:1
+      0x558b7d6c3720: i64 = FrameIndex<0>
+      0x558b7d6c35d0: i64 = undef
+    0x558b7d6c2fb0: i64,ch = load<(dereferenceable invariant load (s64) from @"OBJC_IVAR_$_Foo.i")> 0x558b7d6c3250, 0x558b7d6c32c0, undef:i64, <stdin>:10:1
+      0x558b7d6c32c0: i64 = KVXISD::PICExternIndirection TargetGlobalAddress:i64<ptr @"OBJC_IVAR_$_Foo.i"> 0, <stdin>:10:1
+        0x558b7d6c36b0: i64 = TargetGlobalAddress<ptr @"OBJC_IVAR_$_Foo.i"> 0, <stdin>:10:1
+      0x558b7d6c35d0: i64 = undef
+In function: <U+0001>-[Foo setI:]
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGenObjC/debug-info-property2.m
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:5:12: warning: class 'C' defined without specifying a base class [-Wobjc-root-class]
+    5 | @interface C {
+      |            ^
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:5:13: note: add a super class to fix this problem
+    5 | @interface C {
+      |             ^
+fatal error: error in backend: Cannot select: 0x5646006cbbc0: ch = AtomicStore<(store unordered (s32) into %ir.add.ptr)> 0x5646006cbca0, 0x5646006cc2c0, 0x5646006cbdf0, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+  0x5646006cc2c0: i32,ch = load<(dereferenceable load (s32) from %ir.base.addr)> 0x5646006cbed0, FrameIndex:i64<2>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+    0x5646006cbfb0: i64 = FrameIndex<2>
+    0x5646006cc250: i64 = undef
+  0x5646006cbdf0: i64 = add 0x5646006cc410, 0x5646006cbc30, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+    0x5646006cc410: i64,ch = load<(dereferenceable load (s64) from %ir.self.addr)> 0x5646006cbed0, FrameIndex:i64<0>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+      0x5646006cc3a0: i64 = FrameIndex<0>
+      0x5646006cc250: i64 = undef
+    0x5646006cbc30: i64,ch = load<(dereferenceable invariant load (s64) from @"OBJC_IVAR_$_C._base")> 0x5646006cbed0, 0x5646006cbf40, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+      0x5646006cbf40: i64 = KVXISD::PICExternIndirection TargetGlobalAddress:i64<ptr @"OBJC_IVAR_$_C._base"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+        0x5646006cc330: i64 = TargetGlobalAddress<ptr @"OBJC_IVAR_$_C._base"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property2.m:12:1
+      0x5646006cc250: i64 = undef
+In function: <U+0001>-[C setBase:]
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property2.m
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+FAIL: Clang :: CodeGenObjC/debug-info-property.m
+
+
+Exit Code: 2
+
+Command Output (stderr):
+--
+RUN: at line 2: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m -o - | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -triple kvx-kalray-cos -S -debug-info-kind=limited /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m -o -
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m:7:12: warning: class 'I1' defined without specifying a base class [-Wobjc-root-class]
+    7 | @interface I1 {
+      |            ^
+/nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m:7:14: note: add a super class to fix this problem
+    7 | @interface I1 {
+      |              ^
+fatal error: error in backend: Cannot select: 0x556a183e7810: ch = AtomicStore<(store unordered (s32) into %ir.add.ptr)> 0x556a183e78f0, 0x556a183e7f10, 0x556a183e7a40, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+  0x556a183e7f10: i32,ch = load<(dereferenceable load (s32) from %ir.p1.addr)> 0x556a183e7b20, FrameIndex:i64<2>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+    0x556a183e7c00: i64 = FrameIndex<2>
+    0x556a183e7ea0: i64 = undef
+  0x556a183e7a40: i64 = add 0x556a183e8060, 0x556a183e7880, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+    0x556a183e8060: i64,ch = load<(dereferenceable load (s64) from %ir.self.addr)> 0x556a183e7b20, FrameIndex:i64<0>, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+      0x556a183e7ff0: i64 = FrameIndex<0>
+      0x556a183e7ea0: i64 = undef
+    0x556a183e7880: i64,ch = load<(dereferenceable invariant load (s64) from @"OBJC_IVAR_$_I1.p1")> 0x556a183e7b20, 0x556a183e7b90, undef:i64, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+      0x556a183e7b90: i64 = KVXISD::PICExternIndirection TargetGlobalAddress:i64<ptr @"OBJC_IVAR_$_I1.p1"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+        0x556a183e7f80: i64 = TargetGlobalAddress<ptr @"OBJC_IVAR_$_I1.p1"> 0, llvm-project/clang/test/CodeGenObjC/debug-info-property.m:14:1
+      0x556a183e7ea0: i64 = undef
+In function: <U+0001>-[I1 setP1:]
+FileCheck error: '<stdin>' is empty.
+FileCheck command line:  /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGenObjC/debug-info-property.m
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
+
+
+Exit Code: 0
+
+Command Output (stderr):
+--
+RUN: at line 1: /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -no-enable-noundef-analysis /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c -o - -emit-llvm | /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/clang -cc1 -internal-isystem /nfs/home/dsampaio/csw/build_llvm_Release/lib/clang/19/include -nostdsysteminc -no-enable-noundef-analysis /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c -o - -emit-llvm
++ /nfs/home/dsampaio/csw/build_llvm_Release/bin/FileCheck /nfs/home/dsampaio/csw/llvm-project/clang/test/CodeGen/2007-06-18-SextAttrAggregate.c
+
+--
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

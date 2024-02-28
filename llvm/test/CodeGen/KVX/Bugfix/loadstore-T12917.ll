@@ -91,45 +91,45 @@ define i32 @f(){
 entry:
   %call = tail call i32 bitcast (i32 (...)* @g to i32 ()*)() #2
   %conv = sext i32 %call to i64
-  %0 = inttoptr i64 %conv to double**
-  %1 = load double*, double** %0, align 8
-  %2 = load double, double* %1, align 8
-  %arrayidx7.1 = getelementptr inbounds double, double* %1, i64 1
-  %3 = load double, double* %arrayidx7.1, align 8
-  %arrayidx7.2 = getelementptr inbounds double, double* %1, i64 2
-  %4 = load double, double* %arrayidx7.2, align 8
-  %arrayidx7.3 = getelementptr inbounds double, double* %1, i64 3
-  %5 = load double, double* %arrayidx7.3, align 8
-  %arrayidx.1 = getelementptr inbounds double*, double** %0, i64 1
-  %6 = load double*, double** %arrayidx.1, align 8
-  %7 = load double, double* %6, align 8
-  %arrayidx7.1.1 = getelementptr inbounds double, double* %6, i64 1
-  %8 = load double, double* %arrayidx7.1.1, align 8
-  %arrayidx7.2.1 = getelementptr inbounds double, double* %6, i64 2
-  %9 = load double, double* %arrayidx7.2.1, align 8
-  %arrayidx7.3.1 = getelementptr inbounds double, double* %6, i64 3
-  %10 = load double, double* %arrayidx7.3.1, align 8
-  %arrayidx.2 = getelementptr inbounds double*, double** %0, i64 2
-  %11 = load double*, double** %arrayidx.2, align 8
-  %12 = load double, double* %11, align 8
-  %arrayidx7.1.2 = getelementptr inbounds double, double* %11, i64 1
-  %13 = load double, double* %arrayidx7.1.2, align 8
-  %arrayidx7.2.2 = getelementptr inbounds double, double* %11, i64 2
-  %14 = load double, double* %arrayidx7.2.2, align 8
-  %arrayidx7.3.2 = getelementptr inbounds double, double* %11, i64 3
-  %15 = load double, double* %arrayidx7.3.2, align 8
-  %arrayidx.3 = getelementptr inbounds double*, double** %0, i64 3
-  %16 = load double*, double** %arrayidx.3, align 8
-  %17 = load double, double* %16, align 8
-  %arrayidx7.1.3 = getelementptr inbounds double, double* %16, i64 1
-  %18 = load double, double* %arrayidx7.1.3, align 8
-  %arrayidx7.2.3 = getelementptr inbounds double, double* %16, i64 2
-  %19 = load double, double* %arrayidx7.2.3, align 8
-  %arrayidx7.3.3 = getelementptr inbounds double, double* %16, i64 3
-  %20 = load double, double* %arrayidx7.3.3, align 8
-  store i32 4, i32* @c, align 4
-  store i32 4, i32* @b, align 4
-  %21 = load i32, i32* @a, align 4
+  %0 = inttoptr i64 %conv to ptr 
+  %1 = load ptr, ptr %0, align 8
+  %2 = load double, ptr %1, align 8
+  %arrayidx7.1 = getelementptr inbounds double, ptr %1, i64 1
+  %3 = load double, ptr %arrayidx7.1, align 8
+  %arrayidx7.2 = getelementptr inbounds double, ptr %1, i64 2
+  %4 = load double, ptr %arrayidx7.2, align 8
+  %arrayidx7.3 = getelementptr inbounds double, ptr %1, i64 3
+  %5 = load double, ptr %arrayidx7.3, align 8
+  %arrayidx.1 = getelementptr inbounds ptr, ptr %0, i64 1
+  %6 = load ptr, ptr %arrayidx.1, align 8
+  %7 = load double, ptr %6, align 8
+  %arrayidx7.1.1 = getelementptr inbounds double, ptr %6, i64 1
+  %8 = load double, ptr %arrayidx7.1.1, align 8
+  %arrayidx7.2.1 = getelementptr inbounds double, ptr %6, i64 2
+  %9 = load double, ptr %arrayidx7.2.1, align 8
+  %arrayidx7.3.1 = getelementptr inbounds double, ptr %6, i64 3
+  %10 = load double, ptr %arrayidx7.3.1, align 8
+  %arrayidx.2 = getelementptr inbounds ptr, ptr %0, i64 2
+  %11 = load ptr, ptr %arrayidx.2, align 8
+  %12 = load double, ptr %11, align 8
+  %arrayidx7.1.2 = getelementptr inbounds double, ptr %11, i64 1
+  %13 = load double, ptr %arrayidx7.1.2, align 8
+  %arrayidx7.2.2 = getelementptr inbounds double, ptr %11, i64 2
+  %14 = load double, ptr %arrayidx7.2.2, align 8
+  %arrayidx7.3.2 = getelementptr inbounds double, ptr %11, i64 3
+  %15 = load double, ptr %arrayidx7.3.2, align 8
+  %arrayidx.3 = getelementptr inbounds ptr, ptr %0, i64 3
+  %16 = load ptr, ptr %arrayidx.3, align 8
+  %17 = load double, ptr %16, align 8
+  %arrayidx7.1.3 = getelementptr inbounds double, ptr %16, i64 1
+  %18 = load double, ptr %arrayidx7.1.3, align 8
+  %arrayidx7.2.3 = getelementptr inbounds double, ptr %16, i64 2
+  %19 = load double, ptr %arrayidx7.2.3, align 8
+  %arrayidx7.3.3 = getelementptr inbounds double, ptr %16, i64 3
+  %20 = load double, ptr %arrayidx7.3.3, align 8
+  store i32 4, ptr @c, align 4
+  store i32 4, ptr @b, align 4
+  %21 = load i32, ptr @a, align 4
   %tobool = icmp eq i32 %21, 0
   br i1 %tobool, label %if.end, label %if.then
 

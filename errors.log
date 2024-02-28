@@ -30,9 +30,5 @@
 	FAIL: LLVM :: CodeGen/Generic/APIntZextParam.ll
 	FAIL: LLVM :: CodeGen/KVX/Atomics/ld-st.ll
 	FAIL: LLVM :: CodeGen/KVX/Atomics/operations.ll
-	FAIL: LLVM :: CodeGen/KVX/Bugfix/T15272.ll
-	FAIL: LLVM :: CodeGen/KVX/PIC/AvailableExternallyLinkage.ll
-	FAIL: LLVM :: CodeGen/KVX/PIC/external-weak-linkage.ll
-	FAIL: LLVM :: CodeGen/KVX/PIC/fPIC.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  37
+Failures:  36

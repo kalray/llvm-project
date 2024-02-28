@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @foo(i8* nocapture %0, float* nocapture %1) {
+define void @foo(ptr nocapture %0, ptr nocapture %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
 ; NORMAL-NEXT:    lwz $r2 = 0[$r1]
@@ -82,15 +82,15 @@ define void @foo(i8* nocapture %0, float* nocapture %1) {
 ; VLIW-NEXT:    xso 32[$r0] = $a1
 ; VLIW-NEXT:    ret
 ; VLIW-NEXT:    ;; # (end cycle 15)
-%3 = bitcast i8* %0 to <1024 x i1>*
-%4 = load <1024 x i1>, <1024 x i1>* %3, align 32
-%5 = load float, float* %1, align 4
+%3 = bitcast ptr %0 to ptr 
+%4 = load <1024 x i1>, ptr %3, align 32
+%5 = load float, ptr %1, align 4
 %6 = fadd float %5, 4.200000e+01
-store float %6, float* %1, align 4
+store float %6, ptr %1, align 4
 tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
 %7 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %4)
 tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
-store <1024 x i1> %7, <1024 x i1>* %3, align 32
+store <1024 x i1> %7, ptr %3, align 32
 ret void
 }
 

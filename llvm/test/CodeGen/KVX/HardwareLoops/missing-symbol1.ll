@@ -9,7 +9,7 @@ target triple = "kvx-kalray-cos"
 @h = common global [16 x i16] zeroinitializer, align 2
 @y = common global [256 x i16] zeroinitializer, align 2
 
-define void @InitDataSet(i32 %m, i16* nocapture %x, i32 %n, i16* nocapture %h)  {
+define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h)  {
 ; CHECK-LABEL: InitDataSet:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
@@ -216,9 +216,9 @@ vector.ph:
 vector.body:
   %index = phi i64 [ 0, %vector.ph ], [ %index.next, %vector.body ]
   %offset.idx = add i64 %index, %0
-  %4 = getelementptr inbounds i16, i16* %x, i64 %offset.idx
-  %5 = bitcast i16* %4 to <2 x i16>*
-  store <2 x i16> <i16 -8531, i16 -8531>, <2 x i16>* %5, align 2
+  %4 = getelementptr inbounds i16, ptr %x, i64 %offset.idx
+  %5 = bitcast ptr %4 to ptr 
+  store <2 x i16> <i16 -8531, i16 -8531>, ptr %5, align 2
   %index.next = add i64 %index, 2
   %6 = icmp eq i64 %index.next, %n.vec
   br i1 %6, label %middle.block, label %vector.body
@@ -230,8 +230,8 @@ middle.block:
 for.body:
   %indvars.iv59 = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next60, %for.body ]
   %conv = trunc i64 %indvars.iv59 to i16
-  %arrayidx = getelementptr inbounds i16, i16* %x, i64 %indvars.iv59
-  store i16 %conv, i16* %arrayidx, align 2
+  %arrayidx = getelementptr inbounds i16, ptr %x, i64 %indvars.iv59
+  store i16 %conv, ptr %arrayidx, align 2
   %indvars.iv.next60 = add nuw nsw i64 %indvars.iv59, 1
   %exitcond62 = icmp eq i64 %indvars.iv.next60, %wide.trip.count61
   br i1 %exitcond62, label %for.cond1.preheader, label %for.body
@@ -246,8 +246,8 @@ for.body13.preheader:
 
 for.body4:
   %indvars.iv57 = phi i64 [ %indvars.iv.next58, %for.body4 ], [ %indvars.iv57.ph, %for.body4.preheader87 ]
-  %arrayidx6 = getelementptr inbounds i16, i16* %x, i64 %indvars.iv57
-  store i16 -8531, i16* %arrayidx6, align 2
+  %arrayidx6 = getelementptr inbounds i16, ptr %x, i64 %indvars.iv57
+  store i16 -8531, ptr %arrayidx6, align 2
   %indvars.iv.next58 = add nuw nsw i64 %indvars.iv57, 1
   %cmp2 = icmp ult i64 %indvars.iv57, 255
   br i1 %cmp2, label %for.body4, label %for.cond10.preheader
@@ -278,9 +278,9 @@ vector.ph74:
 vector.body71:
   %index77 = phi i64 [ 0, %vector.ph74 ], [ %index.next78, %vector.body71 ]
   %offset.idx82 = add i64 %index77, %7
-  %11 = getelementptr inbounds i16, i16* %h, i64 %offset.idx82
-  %12 = bitcast i16* %11 to <2 x i16>*
-  store <2 x i16> <i16 -16657, i16 -16657>, <2 x i16>* %12, align 2
+  %11 = getelementptr inbounds i16, ptr %h, i64 %offset.idx82
+  %12 = bitcast ptr %11 to ptr 
+  store <2 x i16> <i16 -16657, i16 -16657>, ptr %12, align 2
   %index.next78 = add i64 %index77, 2
   %13 = icmp eq i64 %index.next78, %n.vec76
   br i1 %13, label %middle.block69, label %vector.body71
@@ -294,16 +294,16 @@ for.body13:
   %14 = trunc i64 %indvars.iv55 to i32
   %mul = mul nsw i32 %14, %14
   %conv14 = trunc i32 %mul to i16
-  %arrayidx16 = getelementptr inbounds i16, i16* %h, i64 %indvars.iv55
-  store i16 %conv14, i16* %arrayidx16, align 2
+  %arrayidx16 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv55
+  store i16 %conv14, ptr %arrayidx16, align 2
   %indvars.iv.next56 = add nuw nsw i64 %indvars.iv55, 1
   %exitcond = icmp eq i64 %indvars.iv.next56, %wide.trip.count
   br i1 %exitcond, label %for.cond20.preheader, label %for.body13
 
 for.body23:
   %indvars.iv = phi i64 [ %indvars.iv.next, %for.body23 ], [ %indvars.iv.ph, %for.body23.preheader86 ]
-  %arrayidx25 = getelementptr inbounds i16, i16* %h, i64 %indvars.iv
-  store i16 -16657, i16* %arrayidx25, align 2
+  %arrayidx25 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv
+  store i16 -16657, ptr %arrayidx25, align 2
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %cmp21 = icmp ult i64 %indvars.iv, 15
   br i1 %cmp21, label %for.body23, label %for.end28
@@ -312,11 +312,11 @@ for.end28:
   ret void
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
 
-define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
+define i32 @main(i32 %argc, ptr nocapture readnone %argv)  {
 ; CHECK-LABEL: main:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = .L.str
@@ -669,11 +669,11 @@ define i32 @main(i32 %argc, i8** nocapture readnone %argv)  {
 ; CHECK-NEXT:    ;;
 entry:
   %str2 = alloca [3 x i8], align 1
-  %0 = getelementptr inbounds [3 x i8], [3 x i8]* %str2, i64 0, i64 0
-  call void @llvm.lifetime.start.p0i8(i64 3, i8* nonnull %0)
-  tail call void @BENCH_START(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0))
-  %arrayidx9 = getelementptr inbounds [3 x i8], [3 x i8]* %str2, i64 0, i64 1
-  %arrayidx5 = getelementptr inbounds [3 x i8], [3 x i8]* %str2, i64 0, i64 2
+  %0 = getelementptr inbounds [3 x i8], ptr %str2, i64 0, i64 0
+  call void @llvm.lifetime.start.p0i8(i64 3, ptr nonnull %0)
+  tail call void @BENCH_START(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0))
+  %arrayidx9 = getelementptr inbounds [3 x i8], ptr %str2, i64 0, i64 1
+  %arrayidx5 = getelementptr inbounds [3 x i8], ptr %str2, i64 0, i64 2
   br label %if.end
 
 if.end:
@@ -682,9 +682,9 @@ if.end:
   %1 = sub nsw i64 256, %indvars.iv111
   %2 = trunc i32 %j.0105 to i8
   %conv7 = add nuw nsw i8 %2, 48
-  store i8 %conv7, i8* %0, align 1
-  store i8 0, i8* %arrayidx9, align 1
-  call void @BENCH_START_S(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0), i8* nonnull %0)
+  store i8 %conv7, ptr %0, align 1
+  store i8 0, ptr %arrayidx9, align 1
+  call void @BENCH_START_S(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0), ptr nonnull %0)
   %cmp52.i = icmp eq i64 %indvars.iv111, 0
   br i1 %cmp52.i, label %for.body4.preheader.i, label %for.body.i
 
@@ -704,9 +704,9 @@ vector.ph:
 vector.body:
   %index = phi i64 [ 0, %vector.ph ], [ %index.next, %vector.body ]
   %offset.idx = add i64 %indvars.iv111, %index
-  %3 = getelementptr inbounds [256 x i16], [256 x i16]* @x, i64 0, i64 %offset.idx
-  %4 = bitcast i16* %3 to <2 x i16>*
-  store <2 x i16> <i16 -8531, i16 -8531>, <2 x i16>* %4, align 2
+  %3 = getelementptr inbounds [256 x i16], ptr @x, i64 0, i64 %offset.idx
+  %4 = bitcast ptr %3 to ptr 
+  store <2 x i16> <i16 -8531, i16 -8531>, ptr %4, align 2
   %index.next = add i64 %index, 2
   %5 = icmp eq i64 %index.next, %n.vec
   br i1 %5, label %middle.block, label %vector.body
@@ -718,34 +718,34 @@ middle.block:
 for.body.i:
   %indvars.iv59.i = phi i64 [ %indvars.iv.next60.i, %for.body.i ], [ 0, %if.end ]
   %conv.i = trunc i64 %indvars.iv59.i to i16
-  %arrayidx.i = getelementptr inbounds [256 x i16], [256 x i16]* @x, i64 0, i64 %indvars.iv59.i
-  store i16 %conv.i, i16* %arrayidx.i, align 2
+  %arrayidx.i = getelementptr inbounds [256 x i16], ptr @x, i64 0, i64 %indvars.iv59.i
+  store i16 %conv.i, ptr %arrayidx.i, align 2
   %indvars.iv.next60.i = add nuw nsw i64 %indvars.iv59.i, 1
   %exitcond62.i = icmp eq i64 %indvars.iv.next60.i, %indvars.iv111
   br i1 %exitcond62.i, label %for.body4.preheader.i, label %for.body.i
 
 for.cond10.preheader.i:
-  store i16 0, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 0), align 2
-  store i16 1, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 1), align 2
-  store i16 4, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 2), align 2
-  store i16 9, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 3), align 2
-  store i16 16, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 4), align 2
-  store i16 25, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 5), align 2
-  store i16 36, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 6), align 2
-  store i16 49, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 7), align 2
-  store i16 64, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 8), align 2
-  store i16 81, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 9), align 2
-  store i16 100, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 10), align 2
-  store i16 121, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 11), align 2
-  store i16 144, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 12), align 2
-  store i16 169, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 13), align 2
-  store i16 196, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 14), align 2
-  store i16 225, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 15), align 2
+  store i16 0, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 0), align 2
+  store i16 1, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 1), align 2
+  store i16 4, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 2), align 2
+  store i16 9, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 3), align 2
+  store i16 16, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 4), align 2
+  store i16 25, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 5), align 2
+  store i16 36, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 6), align 2
+  store i16 49, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 7), align 2
+  store i16 64, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 8), align 2
+  store i16 81, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 9), align 2
+  store i16 100, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 10), align 2
+  store i16 121, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 11), align 2
+  store i16 144, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 12), align 2
+  store i16 169, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 13), align 2
+  store i16 196, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 14), align 2
+  store i16 225, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 15), align 2
   %cmp10 = icmp ult i64 %indvars.iv111, 4
   %. = select i1 %cmp10, i32 1, i32 2
   %6 = trunc i64 %indvars.iv111 to i32
-  call void @fircirc(i16* getelementptr inbounds ([256 x i16], [256 x i16]* @y, i64 0, i64 0), i16* getelementptr inbounds ([256 x i16], [256 x i16]* @x, i64 0, i64 0), i32 16, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 0), i32 1, i32 %6, i32 %., i32 %6)
-  call void @BENCH_STOP(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0))
+  call void @fircirc(ptr getelementptr inbounds ([256 x i16], ptr @y, i64 0, i64 0), ptr getelementptr inbounds ([256 x i16], ptr @x, i64 0, i64 0), i32 16, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 0), i32 1, i32 %6, i32 %., i32 %6)
+  call void @BENCH_STOP(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0))
   %indvars.iv.next112 = add nuw nsw i64 %indvars.iv111, 1
   %inc = add nuw nsw i32 %j.0105, 1
   %exitcond113 = icmp eq i64 %indvars.iv.next112, 8
@@ -753,8 +753,8 @@ for.cond10.preheader.i:
 
 for.body4.i:
   %indvars.iv57.i = phi i64 [ %indvars.iv.next58.i, %for.body4.i ], [ %indvars.iv57.i.ph, %for.body4.i.preheader ]
-  %arrayidx6.i = getelementptr inbounds [256 x i16], [256 x i16]* @x, i64 0, i64 %indvars.iv57.i
-  store i16 -8531, i16* %arrayidx6.i, align 2
+  %arrayidx6.i = getelementptr inbounds [256 x i16], ptr @x, i64 0, i64 %indvars.iv57.i
+  store i16 -8531, ptr %arrayidx6.i, align 2
   %indvars.iv.next58.i = add nuw nsw i64 %indvars.iv57.i, 1
   %exitcond110 = icmp eq i64 %indvars.iv.next58.i, 256
   br i1 %exitcond110, label %for.cond10.preheader.i, label %for.body4.i
@@ -770,16 +770,16 @@ for.body19:
   %storemerge.in.in = select i1 %cmp20, i32 %div23, i32 %j.1102
   %storemerge.in = trunc i32 %storemerge.in.in to i8
   %storemerge = add i8 %storemerge.in, 48
-  store i8 %storemerge, i8* %0, align 1
-  store i8 0, i8* %arrayidx9, align 1
-  call void @BENCH_START_S(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0), i8* nonnull %0)
+  store i8 %storemerge, ptr %0, align 1
+  store i8 0, ptr %arrayidx9, align 1
+  call void @BENCH_START_S(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0), ptr nonnull %0)
   br label %for.body.i87
 
 for.body.i87:
   %indvars.iv59.i82 = phi i64 [ 0, %for.body19 ], [ %indvars.iv.next60.i85, %for.body.i87 ]
   %conv.i83 = trunc i64 %indvars.iv59.i82 to i16
-  %arrayidx.i84 = getelementptr inbounds [256 x i16], [256 x i16]* @x, i64 0, i64 %indvars.iv59.i82
-  store i16 %conv.i83, i16* %arrayidx.i84, align 2
+  %arrayidx.i84 = getelementptr inbounds [256 x i16], ptr @x, i64 0, i64 %indvars.iv59.i82
+  store i16 %conv.i83, ptr %arrayidx.i84, align 2
   %indvars.iv.next60.i85 = add nuw nsw i64 %indvars.iv59.i82, 1
   %exitcond62.i86 = icmp eq i64 %indvars.iv.next60.i85, %indvars.iv
   br i1 %exitcond62.i86, label %vector.body116.preheader, label %for.body.i87
@@ -791,34 +791,34 @@ vector.body116.preheader:
 vector.body116:
   %index121 = phi i64 [ %index.next122, %vector.body116 ], [ 0, %vector.body116.preheader ]
   %offset.idx126 = add i64 %indvars.iv, %index121
-  %9 = getelementptr inbounds [256 x i16], [256 x i16]* @x, i64 0, i64 %offset.idx126
-  %10 = bitcast i16* %9 to <2 x i16>*
-  store <2 x i16> <i16 -8531, i16 -8531>, <2 x i16>* %10, align 2
+  %9 = getelementptr inbounds [256 x i16], ptr @x, i64 0, i64 %offset.idx126
+  %10 = bitcast ptr %9 to ptr 
+  store <2 x i16> <i16 -8531, i16 -8531>, ptr %10, align 2
   %index.next122 = add i64 %index121, 2
   %11 = icmp eq i64 %index121, %8
   br i1 %11, label %for.cond10.preheader.i88, label %vector.body116
 
 for.cond10.preheader.i88:
-  store i16 0, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 0), align 2
-  store i16 1, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 1), align 2
-  store i16 4, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 2), align 2
-  store i16 9, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 3), align 2
-  store i16 16, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 4), align 2
-  store i16 25, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 5), align 2
-  store i16 36, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 6), align 2
-  store i16 49, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 7), align 2
-  store i16 64, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 8), align 2
-  store i16 81, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 9), align 2
-  store i16 100, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 10), align 2
-  store i16 121, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 11), align 2
-  store i16 144, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 12), align 2
-  store i16 169, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 13), align 2
-  store i16 196, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 14), align 2
-  store i16 225, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 15), align 2
+  store i16 0, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 0), align 2
+  store i16 1, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 1), align 2
+  store i16 4, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 2), align 2
+  store i16 9, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 3), align 2
+  store i16 16, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 4), align 2
+  store i16 25, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 5), align 2
+  store i16 36, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 6), align 2
+  store i16 49, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 7), align 2
+  store i16 64, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 8), align 2
+  store i16 81, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 9), align 2
+  store i16 100, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 10), align 2
+  store i16 121, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 11), align 2
+  store i16 144, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 12), align 2
+  store i16 169, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 13), align 2
+  store i16 196, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 14), align 2
+  store i16 225, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 15), align 2
   %12 = lshr exact i32 %size.1104, 3
   %13 = trunc i64 %indvars.iv to i32
-  call void @fircirc(i16* getelementptr inbounds ([256 x i16], [256 x i16]* @y, i64 0, i64 0), i16* getelementptr inbounds ([256 x i16], [256 x i16]* @x, i64 0, i64 0), i32 16, i16* getelementptr inbounds ([16 x i16], [16 x i16]* @h, i64 0, i64 0), i32 1, i32 %13, i32 %12, i32 %13)
-  call void @BENCH_STOP(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0))
+  call void @fircirc(ptr getelementptr inbounds ([256 x i16], ptr @y, i64 0, i64 0), ptr getelementptr inbounds ([256 x i16], ptr @x, i64 0, i64 0), i32 16, ptr getelementptr inbounds ([16 x i16], ptr @h, i64 0, i64 0), i32 1, i32 %13, i32 %12, i32 %13)
+  call void @BENCH_STOP(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0))
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 16
   %add40 = add nuw nsw i32 %size.1104, 16
   %inc41 = add nuw nsw i32 %j.1102, 1
@@ -827,20 +827,20 @@ for.cond10.preheader.i88:
   br i1 %exitcond109, label %for.end42, label %for.body19
 
 for.end42:
-  store i8 32, i8* %0, align 1
-  store i8 32, i8* %arrayidx9, align 1
-  store i8 0, i8* %arrayidx5, align 1
-  call void @BENCH_STOP_S(i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str, i64 0, i64 0), i8* nonnull %0)
-  call void @llvm.lifetime.end.p0i8(i64 3, i8* nonnull %0)
+  store i8 32, ptr %0, align 1
+  store i8 32, ptr %arrayidx9, align 1
+  store i8 0, ptr %arrayidx5, align 1
+  call void @BENCH_STOP_S(ptr getelementptr inbounds ([25 x i8], ptr @.str, i64 0, i64 0), ptr nonnull %0)
+  call void @llvm.lifetime.end.p0i8(i64 3, ptr nonnull %0)
   ret i32 0
 }
 
-declare void @BENCH_START(i8*)
+declare void @BENCH_START(ptr )
 
-declare void @BENCH_START_S(i8*, i8*)
+declare void @BENCH_START_S(ptr, ptr )
 
-declare void @fircirc(i16*, i16*, i32, i16*, i32, i32, i32, i32)
+declare void @fircirc(ptr, ptr, i32, ptr, i32, i32, i32, i32)
 
-declare void @BENCH_STOP(i8*)
+declare void @BENCH_STOP(ptr )
 
-declare void @BENCH_STOP_S(i8*, i8*)
+declare void @BENCH_STOP_S(ptr, ptr )

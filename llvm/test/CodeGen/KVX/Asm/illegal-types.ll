@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define <8 x i16> @asm_v8i16(i8* %0, <8 x i16> %1) {
+define <8 x i16> @asm_v8i16(ptr %0, <8 x i16> %1) {
 ; CHECK-LABEL: asm_v8i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -23,11 +23,11 @@ define <8 x i16> @asm_v8i16(i8* %0, <8 x i16> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <8 x i16> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <8 x i16> %1) #3
+  %3 = tail call <8 x i16> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <8 x i16> %1) #3
   ret <8 x i16> %3
 }
 
-define <16 x i8> @asm_v16i8(i8* %0, <16 x i8> %1) {
+define <16 x i8> @asm_v16i8(ptr %0, <16 x i8> %1) {
 ; CHECK-LABEL: asm_v16i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -44,11 +44,11 @@ define <16 x i8> @asm_v16i8(i8* %0, <16 x i8> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <16 x i8> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <16 x i8> %1) #3
+  %3 = tail call <16 x i8> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <16 x i8> %1) #3
   ret <16 x i8> %3
 }
 
-define <8 x half> @asm_v8f16(i8* %0, <8 x half> %1) {
+define <8 x half> @asm_v8f16(ptr %0, <8 x half> %1) {
 ; CHECK-LABEL: asm_v8f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -65,11 +65,11 @@ define <8 x half> @asm_v8f16(i8* %0, <8 x half> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <8 x half> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <8 x half> %1) #3
+  %3 = tail call <8 x half> asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <8 x half> %1) #3
   ret <8 x half> %3
 }
 
-define <8 x float> @asm_v8f32(i8* %0, <8 x float> %1) {
+define <8 x float> @asm_v8f32(ptr %0, <8 x float> %1) {
 ; CHECK-LABEL: asm_v8f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -88,11 +88,11 @@ define <8 x float> @asm_v8f32(i8* %0, <8 x float> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <8 x float> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <8 x float> %1) #3
+  %3 = tail call <8 x float> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <8 x float> %1) #3
   ret <8 x float> %3
 }
 
-define <8 x i32> @asm_v8i32(i8* %0, <8 x i32> %1) {
+define <8 x i32> @asm_v8i32(ptr %0, <8 x i32> %1) {
 ; CHECK-LABEL: asm_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -111,11 +111,11 @@ define <8 x i32> @asm_v8i32(i8* %0, <8 x i32> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <8 x i32> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <8 x i32> %1) #3
+  %3 = tail call <8 x i32> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <8 x i32> %1) #3
   ret <8 x i32> %3
 }
 
-define <16 x i16> @asm_v16i16(i8* %0, <16 x i16> %1) {
+define <16 x i16> @asm_v16i16(ptr %0, <16 x i16> %1) {
 ; CHECK-LABEL: asm_v16i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -134,11 +134,11 @@ define <16 x i16> @asm_v16i16(i8* %0, <16 x i16> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <16 x i16> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <16 x i16> %1) #3
+  %3 = tail call <16 x i16> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <16 x i16> %1) #3
   ret <16 x i16> %3
 }
 
-define <16 x half> @asm_v16f16(i8* %0, <16 x half> %1) {
+define <16 x half> @asm_v16f16(ptr %0, <16 x half> %1) {
 ; CHECK-LABEL: asm_v16f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -157,11 +157,11 @@ define <16 x half> @asm_v16f16(i8* %0, <16 x half> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <16 x half> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <16 x half> %1) #3
+  %3 = tail call <16 x half> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <16 x half> %1) #3
   ret <16 x half> %3
 }
 
-define <32 x i8> @asm_v32i8(i8* %0, <32 x i8> %1) {
+define <32 x i8> @asm_v32i8(ptr %0, <32 x i8> %1) {
 ; CHECK-LABEL: asm_v32i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r4 = $r1
@@ -180,11 +180,11 @@ define <32 x i8> @asm_v32i8(i8* %0, <32 x i8> %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call <32 x i8> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, <32 x i8> %1) #3
+  %3 = tail call <32 x i8> asm sideeffect "so 0[$1] = $2\0A\09;;\0A\09lo $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, <32 x i8> %1) #3
   ret <32 x i8> %3
 }
 
-define i128 @asm_int128(i8* %0, i128 %1) {
+define i128 @asm_int128(ptr %0, i128 %1) {
 ; CHECK-LABEL: asm_int128:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    copyd $r2 = $r1
@@ -201,7 +201,7 @@ define i128 @asm_int128(i8* %0, i128 %1) {
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
-  %3 = tail call i128 asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(i8* %0, i128 %1) #3
+  %3 = tail call i128 asm sideeffect "sq 0[$1] = $2\0A\09;;\0A\09lq $0 = 0[$1]\0A\09;;\0A", "=r,r,r"(ptr %0, i128 %1) #3
   ret i128 %3
 }
 
