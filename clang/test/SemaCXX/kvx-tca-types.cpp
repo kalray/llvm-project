@@ -2,10 +2,9 @@
 // RUN:   -fcxx-exceptions %s -verify
 
 // TCA 1024
-using tca1024_t = __kvx_x1024;
 void test1024Alias(int *inp, int *outp) {
-  tca1024_t *Matin = (tca1024_t *)inp;
-  tca1024_t *Matout = (tca1024_t *)outp;
+  __kvx_x1024 *Matin = (__kvx_x1024 *)inp;
+  __kvx_x1024 *Matout = (__kvx_x1024 *)outp;
   *Matout = *Matin;
 }
 
@@ -37,12 +36,12 @@ public:
     *Matp = Mata[0];
     *Matp1 = Mata[1];
   }
-  void test1024Arg6(const tca1024_t Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  void test1024Arg6(const __kvx_x1024 Mat, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
     *Matp = Mat;
     *Matp2 = Mat;
   }
-  void test1024Arg7(const tca1024_t *Mat, int *ptr) {
+  void test1024Arg7(const __kvx_x1024 *Mat, int *ptr) {
     __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
     *Matp = *Mat;
     Matp1 = Matp;
@@ -67,13 +66,13 @@ public:
     return Matp + 2;
   }
 
-  const tca1024_t test1024Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  const __kvx_x1024 test1024Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
     Matp2 = Matp;
     return *Matp; // expected-error {{invalid use of KVX TCA type}}
   }
 
-  const tca1024_t *test1024Ret5(int *ptr) {
+  const __kvx_x1024 *test1024Ret5(int *ptr) {
     __kvx_x1024 *Matp = (__kvx_x1024 *)ptr;
     Mat1 = *Matp;
     return Matp + 2;
@@ -92,8 +91,8 @@ public:
   __kvx_x1024 *Matp1;
 
 private:
-  tca1024_t Mat2;
-  tca1024_t *Matp2;
+  __kvx_x1024 Mat2;
+  __kvx_x1024 *Matp2;
 };
 
 // template
@@ -133,9 +132,9 @@ void test1024Template() {
   __kvx_x1024 Mat;
   __kvx_x1024 *Matp = &Mat;
   tc.test1024Template(&Mat, &Matp);
-  tc.test1024Template<tca1024_t *>(&Mat, &Matp);
+  tc.test1024Template<__kvx_x1024 *>(&Mat, &Matp);
   tc.test1024Template(Mat, Matp);            // expected-error {{no matching member function for call to 'test1024Template'}}
-  tc.test1024Template<tca1024_t>(Mat, Matp); // expected-error {{no matching member function for call to 'test1024Template'}}
+  tc.test1024Template<__kvx_x1024>(Mat, Matp); // expected-error {{no matching member function for call to 'test1024Template'}}
 }
 
 // trailing return type
@@ -147,11 +146,11 @@ auto test1024Trailing2() {
   __kvx_x1024 *Matp;
   return Matp;
 }
-auto test1024Trailing3() -> tca1024_t { // expected-error {{invalid use of KVX TCA type}}
+auto test1024Trailing3() -> __kvx_x1024 { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x1024 Mat;
   return Mat; // expected-error {{invalid use of KVX TCA type}}
 }
-auto test1024Trailing4() -> tca1024_t * {
+auto test1024Trailing4() -> __kvx_x1024 * {
   __kvx_x1024 *Matp;
   return Matp;
 }
@@ -194,10 +193,9 @@ void Test1024Throw() {
 
 // TCA 512
 // alias
-using tca512_t = __kvx_x512;
 void test512Alias(int *inp, int *outp) {
-  tca512_t *Widein = (tca512_t *)inp;
-  tca512_t *Wideout = (tca512_t *)outp;
+  __kvx_x512 *Widein = (__kvx_x512 *)inp;
+  __kvx_x512 *Wideout = (__kvx_x512 *)outp;
   *Wideout = *Widein;
 }
 
@@ -229,12 +227,12 @@ public:
     *Widep = Widea[0];
     *Widep1 = Widea[1];
   }
-  void test512Arg6(const tca512_t Wide, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  void test512Arg6(const __kvx_x512 Wide, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x512 *Widep = (__kvx_x512 *)ptr;
     *Widep = Wide;
     *Widep2 = Wide;
   }
-  void test512Arg7(const tca512_t *Wide, int *ptr) {
+  void test512Arg7(const __kvx_x512 *Wide, int *ptr) {
     __kvx_x512 *Widep = (__kvx_x512 *)ptr;
     *Widep = *Wide;
     Widep1 = Widep;
@@ -259,13 +257,13 @@ public:
     return Widep + 2;
   }
 
-  const tca512_t test512Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  const __kvx_x512 test512Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x512 *Widep = (__kvx_x512 *)ptr;
     Widep2 = Widep;
     return *Widep; // expected-error {{invalid use of KVX TCA type}}
   }
 
-  const tca512_t *test512Ret5(int *ptr) {
+  const __kvx_x512 *test512Ret5(int *ptr) {
     __kvx_x512 *Widep = (__kvx_x512 *)ptr;
     Wide1 = *Widep;
     return Widep + 2;
@@ -284,8 +282,8 @@ public:
   __kvx_x512 *Widep1;
 
 private:
-  tca512_t Wide2;
-  tca512_t *Widep2;
+  __kvx_x512 Wide2;
+  __kvx_x512 *Widep2;
 };
 
 // template
@@ -325,9 +323,9 @@ void test512Template() {
   __kvx_x512 Wide;
   __kvx_x512 *Widep = &Wide;
   tc.test512Template(&Wide, &Widep);
-  tc.test512Template<tca512_t *>(&Wide, &Widep);
+  tc.test512Template<__kvx_x512 *>(&Wide, &Widep);
   tc.test512Template(Wide, Widep);           // expected-error {{no matching member function for call to 'test512Template'}}
-  tc.test512Template<tca512_t>(Wide, Widep); // expected-error {{no matching member function for call to 'test512Template'}}
+  tc.test512Template<__kvx_x512>(Wide, Widep); // expected-error {{no matching member function for call to 'test512Template'}}
 }
 
 // trailing return type
@@ -339,11 +337,11 @@ auto test512Trailing2() {
   __kvx_x512 *Widep;
   return Widep;
 }
-auto test512Trailing3() -> tca512_t { // expected-error {{invalid use of KVX TCA type}}
+auto test512Trailing3() -> __kvx_x512 { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x512 Wide;
   return Wide; // expected-error {{invalid use of KVX TCA type}}
 }
-auto test512Trailing4() -> tca512_t * {
+auto test512Trailing4() -> __kvx_x512 * {
   __kvx_x512 *Widep;
   return Widep;
 }
@@ -384,10 +382,9 @@ void Test512Throw() {
 }
 
 // TCA 256
-using tca256_t = __kvx_x256;
 void test256Alias(int *inp, int *outp) {
-  tca256_t *Vecin = (tca256_t *)inp;
-  tca256_t *Vecout = (tca256_t *)outp;
+  __kvx_x256 *Vecin = (__kvx_x256 *)inp;
+  __kvx_x256 *Vecout = (__kvx_x256 *)outp;
   *Vecout = *Vecin;
 }
 
@@ -419,12 +416,12 @@ public:
     *Vecp = Veca[0];
     *Vecp1 = Veca[1];
   }
-  void test256Arg6(const tca256_t Vec, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  void test256Arg6(const __kvx_x256 Vec, int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
     *Vecp = Vec;
     *Vecp2 = Vec;
   }
-  void test256Arg7(const tca256_t *Vec, int *ptr) {
+  void test256Arg7(const __kvx_x256 *Vec, int *ptr) {
     __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
     *Vecp = *Vec;
     Vecp1 = Vecp;
@@ -449,13 +446,13 @@ public:
     return Vecp + 2;
   }
 
-  const tca256_t test256Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
+  const __kvx_x256 test256Ret4(int *ptr) { // expected-error {{invalid use of KVX TCA type}}
     __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
     Vecp2 = Vecp;
     return *Vecp; // expected-error {{invalid use of KVX TCA type}}
   }
 
-  const tca256_t *test256Ret5(int *ptr) {
+  const __kvx_x256 *test256Ret5(int *ptr) {
     __kvx_x256 *Vecp = (__kvx_x256 *)ptr;
     Vec1 = *Vecp;
     return Vecp + 2;
@@ -474,8 +471,8 @@ public:
   __kvx_x256 *Vecp1;
 
 private:
-  tca256_t Vec2;
-  tca256_t *Vecp2;
+  __kvx_x256 Vec2;
+  __kvx_x256 *Vecp2;
 };
 
 // template
@@ -515,9 +512,9 @@ void test256Template() {
   __kvx_x256 Vec;
   __kvx_x256 *Vecp = &Vec;
   tc.test256Template(&Vec, &Vecp);
-  tc.test256Template<tca256_t *>(&Vec, &Vecp);
+  tc.test256Template<__kvx_x256 *>(&Vec, &Vecp);
   tc.test256Template(Vec, Vecp);           // expected-error {{no matching member function for call to 'test256Template'}}
-  tc.test256Template<tca256_t>(Vec, Vecp); // expected-error {{no matching member function for call to 'test256Template'}}
+  tc.test256Template<__kvx_x256>(Vec, Vecp); // expected-error {{no matching member function for call to 'test256Template'}}
 }
 
 // trailing return type
@@ -529,11 +526,11 @@ auto test256Trailing2() {
   __kvx_x256 *Vecp;
   return Vecp;
 }
-auto test256Trailing3() -> tca256_t { // expected-error {{invalid use of KVX TCA type}}
+auto test256Trailing3() -> __kvx_x256 { // expected-error {{invalid use of KVX TCA type}}
   __kvx_x256 Vec;
   return Vec; // expected-error {{invalid use of KVX TCA type}}
 }
-auto test256Trailing4() -> tca256_t * {
+auto test256Trailing4() -> __kvx_x256 * {
   __kvx_x256 *Vecp;
   return Vecp;
 }

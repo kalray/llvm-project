@@ -185,6 +185,10 @@ public:
   bool isUnconditionalTailCall(const MachineInstr &MI) const override;
   bool canMakeTailCallConditional(SmallVectorImpl<MachineOperand> &Cond,
                                   const MachineInstr &TailCall) const override;
+  void replaceBranchWithTailCall(MachineBasicBlock &MBB,
+                                  SmallVectorImpl<MachineOperand> &Cond,
+                                  const MachineInstr &TailCall) const override;
+
 };
 
 } // namespace llvm

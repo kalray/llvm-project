@@ -9,10 +9,10 @@ define void @foo(i64 %0, i64 %1, i64 %2) {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    cb.dnez $r0 ? A
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.1:
+; CHECK-NEXT:  .LBB0_1:
 ; CHECK-NEXT:    cb.dnez $r1 ? B
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.2:
+; CHECK-NEXT:  .LBB0_2:
 ; CHECK-NEXT:    goto C
 ; CHECK-NEXT:    ;;
   %4 = icmp eq i64 %0, 0
