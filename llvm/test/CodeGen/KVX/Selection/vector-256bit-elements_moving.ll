@@ -6,15 +6,13 @@
 
 target triple = "kvx-kalray-cos"
 
-; EXTRACT ELEMENTS PATTERNS
-; FROM <4 X DOUBLE>
 define double @f64x4_extract_element_0(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_element_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %ext = extractelement <4 x double> %0, i32 0
+  %ext = extractelement <4 x double> %0, i64 0
   ret double %ext
 }
 
@@ -25,7 +23,7 @@ define double @f64x4_extract_element_0_not_aligned(i32 %i, <4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x double> %0, i32 0
+  %ext = extractelement <4 x double> %0, i64 0
   ret double %ext
 }
 
@@ -36,7 +34,7 @@ define double @f64x4_extract_element_1(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x double> %0, i32 1
+  %ext = extractelement <4 x double> %0, i64 1
   ret double %ext
 }
 
@@ -47,7 +45,7 @@ define double @f64x4_extract_element_1_not_aligned(i32 %i, <4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x double> %0, i32 1
+  %ext = extractelement <4 x double> %0, i64 1
   ret double %ext
 }
 
@@ -58,7 +56,7 @@ define double @f64x4_extract_element_2(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x double> %0, i32 2
+  %ext = extractelement <4 x double> %0, i64 2
   ret double %ext
 }
 
@@ -69,7 +67,7 @@ define double @f64x4_extract_element_3(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x double> %0, i32 3
+  %ext = extractelement <4 x double> %0, i64 3
   ret double %ext
 }
 
@@ -79,11 +77,10 @@ define <2 x double> @f64x4_extract_elements_01(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %ext = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %ext = shufflevector <4 x double> %0, <4 x double> poison, <2 x i32> <i32 0, i32 1>
   ret <2 x double> %ext
 }
 
-; TODO: Vector swap can be done in 1 bunddle.
 define <2 x double> @f64x4_extract_elements_10(<4 x double> %0) {
 ; CHECK-LABEL: f64x4_extract_elements_10:
 ; CHECK:       # %bb.0: # %entry
@@ -92,7 +89,7 @@ define <2 x double> @f64x4_extract_elements_10(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 1, i32 0>
+  %ext = shufflevector <4 x double> %0, <4 x double> poison, <2 x i32> <i32 1, i32 0>
   ret <2 x double> %ext
 }
 
@@ -104,7 +101,7 @@ define <2 x double> @f64x4_extract_elements_23(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %ext = shufflevector <4 x double> %0, <4 x double> poison, <2 x i32> <i32 2, i32 3>
   ret <2 x double> %ext
 }
 
@@ -116,18 +113,17 @@ define <2 x double> @f64x4_extract_elements_32(<4 x double> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x double> %0, <4 x double> undef, <2 x i32> <i32 3, i32 2>
+  %ext = shufflevector <4 x double> %0, <4 x double> poison, <2 x i32> <i32 3, i32 2>
   ret <2 x double> %ext
 }
 
-; FROM <4 X i64>
 define i64 @i64x4_extract_element_0(<4 x i64> %0) {
 ; CHECK-LABEL: i64x4_extract_element_0:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %ext = extractelement <4 x i64> %0, i32 0
+  %ext = extractelement <4 x i64> %0, i64 0
   ret i64 %ext
 }
 
@@ -138,7 +134,7 @@ define i64 @i64x4_extract_element_1(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x i64> %0, i32 1
+  %ext = extractelement <4 x i64> %0, i64 1
   ret i64 %ext
 }
 
@@ -149,7 +145,7 @@ define i64 @i64x4_extract_element_2(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x i64> %0, i32 2
+  %ext = extractelement <4 x i64> %0, i64 2
   ret i64 %ext
 }
 
@@ -160,7 +156,7 @@ define i64 @i64x4_extract_element_3(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = extractelement <4 x i64> %0, i32 3
+  %ext = extractelement <4 x i64> %0, i64 3
   ret i64 %ext
 }
 
@@ -170,7 +166,7 @@ define <2 x i64> @i64x4_extract_elements_01(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %ext = shufflevector <4 x i64> %0, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
+  %ext = shufflevector <4 x i64> %0, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
   ret <2 x i64> %ext
 }
 
@@ -182,7 +178,7 @@ define <2 x i64> @i64x4_extract_elements_10(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x i64> %0, <4 x i64> undef, <2 x i32> <i32 1, i32 0>
+  %ext = shufflevector <4 x i64> %0, <4 x i64> poison, <2 x i32> <i32 1, i32 0>
   ret <2 x i64> %ext
 }
 
@@ -194,7 +190,7 @@ define <2 x i64> @i64x4_extract_elements_23(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x i64> %0, <4 x i64> undef, <2 x i32> <i32 2, i32 3>
+  %ext = shufflevector <4 x i64> %0, <4 x i64> poison, <2 x i32> <i32 2, i32 3>
   ret <2 x i64> %ext
 }
 
@@ -206,12 +202,10 @@ define <2 x i64> @i64x4_extract_elements_32(<4 x i64> %0) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ext = shufflevector <4 x i64> %0, <4 x i64> undef, <2 x i32> <i32 3, i32 2>
+  %ext = shufflevector <4 x i64> %0, <4 x i64> poison, <2 x i32> <i32 3, i32 2>
   ret <2 x i64> %ext
 }
 
-; INSERT ELEMENTS PATTERNS
-; TO <4 X DOUBLE>
 define <4 x double> @f64x4_insert_elements_0(<4 x double> %0, double %1) {
 ; CHECK-LABEL: f64x4_insert_elements_0:
 ; CHECK:       # %bb.0: # %entry
@@ -219,7 +213,7 @@ define <4 x double> @f64x4_insert_elements_0(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 0
+  %ins = insertelement <4 x double> %0, double %1, i64 0
   ret <4 x double> %ins
 }
 
@@ -230,7 +224,7 @@ define <4 x double> @f64x4_insert_elements_1(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 1
+  %ins = insertelement <4 x double> %0, double %1, i64 1
   ret <4 x double> %ins
 }
 
@@ -241,7 +235,7 @@ define <4 x double> @f64x4_insert_elements_2(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 2
+  %ins = insertelement <4 x double> %0, double %1, i64 2
   ret <4 x double> %ins
 }
 
@@ -252,11 +246,10 @@ define <4 x double> @f64x4_insert_elements_3(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 3
+  %ins = insertelement <4 x double> %0, double %1, i64 3
   ret <4 x double> %ins
 }
 
-; TODO: could do in a single bundle if the latest was copyd r1 = r4
 define <4 x double> @f64x4_insert_elements_01_1(<4 x double> %0, double %1) {
 ; CHECK-LABEL: f64x4_insert_elements_01_1:
 ; CHECK:       # %bb.0: # %entry
@@ -266,8 +259,8 @@ define <4 x double> @f64x4_insert_elements_01_1(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 0
-  %ins2 = insertelement <4 x double> %ins, double %1, i32 1
+  %ins = insertelement <4 x double> %0, double %1, i64 0
+  %ins2 = insertelement <4 x double> %ins, double %1, i64 1
   ret <4 x double> %ins2
 }
 
@@ -279,8 +272,8 @@ define <4 x double> @f64x4_insert_elements_01(<4 x double> %0, double %1, double
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 0
-  %ins2 = insertelement <4 x double> %ins, double %2, i32 1
+  %ins = insertelement <4 x double> %0, double %1, i64 0
+  %ins2 = insertelement <4 x double> %ins, double %2, i64 1
   ret <4 x double> %ins2
 }
 
@@ -292,8 +285,8 @@ define <4 x double> @f64x4_insert_elements_10(<4 x double> %0, double %1, double
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 1
-  %ins2 = insertelement <4 x double> %ins, double %2, i32 0
+  %3 = insertelement <4 x double> %0, double %2, i64 0
+  %ins2 = insertelement <4 x double> %3, double %1, i64 1
   ret <4 x double> %ins2
 }
 
@@ -306,8 +299,8 @@ define <4 x double> @f64x4_insert_elements_23_1(<4 x double> %0, double %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 2
-  %ins2 = insertelement <4 x double> %ins, double %1, i32 3
+  %ins = insertelement <4 x double> %0, double %1, i64 2
+  %ins2 = insertelement <4 x double> %ins, double %1, i64 3
   ret <4 x double> %ins2
 }
 
@@ -319,8 +312,8 @@ define <4 x double> @f64x4_insert_elements_23(<4 x double> %0, double %1, double
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 2
-  %ins2 = insertelement <4 x double> %ins, double %2, i32 3
+  %ins = insertelement <4 x double> %0, double %1, i64 2
+  %ins2 = insertelement <4 x double> %ins, double %2, i64 3
   ret <4 x double> %ins2
 }
 
@@ -332,8 +325,8 @@ define <4 x double> @f64x4_insert_elements_32(<4 x double> %0, double %1, double
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 3
-  %ins2 = insertelement <4 x double> %ins, double %2, i32 2
+  %3 = insertelement <4 x double> %0, double %2, i64 2
+  %ins2 = insertelement <4 x double> %3, double %1, i64 3
   ret <4 x double> %ins2
 }
 
@@ -345,12 +338,11 @@ define <4 x double> @f64x4_insert_elements_30(<4 x double> %0, double %1, double
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x double> %0, double %1, i32 3
-  %ins2 = insertelement <4 x double> %ins, double %2, i32 0
+  %3 = insertelement <4 x double> %0, double %2, i64 0
+  %ins2 = insertelement <4 x double> %3, double %1, i64 3
   ret <4 x double> %ins2
 }
 
-; TO <4 X i64>
 define <4 x i64> @i64x4_insert_elements_0(<4 x i64> %0, i64 %1) {
 ; CHECK-LABEL: i64x4_insert_elements_0:
 ; CHECK:       # %bb.0: # %entry
@@ -358,7 +350,7 @@ define <4 x i64> @i64x4_insert_elements_0(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 0
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 0
   ret <4 x i64> %ins
 }
 
@@ -369,7 +361,7 @@ define <4 x i64> @i64x4_insert_elements_1(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 1
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 1
   ret <4 x i64> %ins
 }
 
@@ -380,7 +372,7 @@ define <4 x i64> @i64x4_insert_elements_2(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 2
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 2
   ret <4 x i64> %ins
 }
 
@@ -391,7 +383,7 @@ define <4 x i64> @i64x4_insert_elements_3(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 3
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 3
   ret <4 x i64> %ins
 }
 
@@ -404,8 +396,8 @@ define <4 x i64> @i64x4_insert_elements_01_1(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 0
-  %ins2 = insertelement <4 x i64> %ins, i64 %1, i32 1
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 0
+  %ins2 = insertelement <4 x i64> %ins, i64 %1, i64 1
   ret <4 x i64> %ins2
 }
 
@@ -417,8 +409,8 @@ define <4 x i64> @i64x4_insert_elements_01(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 0
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 1
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 0
+  %ins2 = insertelement <4 x i64> %ins, i64 %2, i64 1
   ret <4 x i64> %ins2
 }
 
@@ -430,11 +422,11 @@ define <4 x i64> @i64x4_insert_elements_10(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 1
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 0
+  %3 = insertelement <4 x i64> %0, i64 %2, i64 0
+  %ins2 = insertelement <4 x i64> %3, i64 %1, i64 1
   ret <4 x i64> %ins2
 }
-;
+
 define <4 x i64> @i64x4_insert_elements_23_1(<4 x i64> %0, i64 %1) {
 ; CHECK-LABEL: i64x4_insert_elements_23_1:
 ; CHECK:       # %bb.0: # %entry
@@ -444,8 +436,8 @@ define <4 x i64> @i64x4_insert_elements_23_1(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 2
-  %ins2 = insertelement <4 x i64> %ins, i64 %1, i32 3
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 2
+  %ins2 = insertelement <4 x i64> %ins, i64 %1, i64 3
   ret <4 x i64> %ins2
 }
 
@@ -457,8 +449,8 @@ define <4 x i64> @i64x4_insert_elements_23(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 2
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 3
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 2
+  %ins2 = insertelement <4 x i64> %ins, i64 %2, i64 3
   ret <4 x i64> %ins2
 }
 
@@ -470,8 +462,8 @@ define <4 x i64> @i64x4_insert_elements_32(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 3
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 2
+  %3 = insertelement <4 x i64> %0, i64 %2, i64 2
+  %ins2 = insertelement <4 x i64> %3, i64 %1, i64 3
   ret <4 x i64> %ins2
 }
 
@@ -483,8 +475,8 @@ define <4 x i64> @i64x4_insert_elements_20(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 2
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 0
+  %3 = insertelement <4 x i64> %0, i64 %2, i64 0
+  %ins2 = insertelement <4 x i64> %3, i64 %1, i64 2
   ret <4 x i64> %ins2
 }
 
@@ -496,12 +488,11 @@ define <4 x i64> @i64x4_insert_elements_12(<4 x i64> %0, i64 %1, i64 %2) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 1
-  %ins2 = insertelement <4 x i64> %ins, i64 %2, i32 2
+  %ins = insertelement <4 x i64> %0, i64 %1, i64 1
+  %ins2 = insertelement <4 x i64> %ins, i64 %2, i64 2
   ret <4 x i64> %ins2
 }
 
-; TODO: This can be done in a single bundle
 define <4 x i64> @i64x4_insert_elements_21_1(<4 x i64> %0, i64 %1) {
 ; CHECK-LABEL: i64x4_insert_elements_21_1:
 ; CHECK:       # %bb.0: # %entry
@@ -511,12 +502,12 @@ define <4 x i64> @i64x4_insert_elements_21_1(<4 x i64> %0, i64 %1) {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %ins = insertelement <4 x i64> %0, i64 %1, i32 2
-  %ins2 = insertelement <4 x i64> %ins, i64 %1, i32 1
+  %2 = insertelement <4 x i64> %0, i64 %1, i64 1
+  %ins2 = insertelement <4 x i64> %2, i64 %1, i64 2
   ret <4 x i64> %ins2
 }
 
-define void @v4i64_upper_half_extract(ptr %0,  ptr %1){
+define void @v4i64_upper_half_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4i64_upper_half_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -526,12 +517,12 @@ define void @v4i64_upper_half_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %2 = load <4 x i64>, ptr %0, align 32
-  %3 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 2, i32 3>
+  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 2, i32 3>
   store <2 x i64> %3, ptr %1, align 16
   ret void
 }
 
-define void @v4i64_upper_half_extract_unaligned(i32 %i, <4 x i64> %0,  ptr %1){
+define void @v4i64_upper_half_extract_unaligned(i32 %i, <4 x i64> %0, ptr %1) {
 ; CHECK-LABEL: v4i64_upper_half_extract_unaligned:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r0 = $r3
@@ -541,13 +532,12 @@ define void @v4i64_upper_half_extract_unaligned(i32 %i, <4 x i64> %0,  ptr %1){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 entry:
-  %2 = shufflevector <4 x i64> %0, <4 x i64> undef, <2 x i32> <i32 2, i32 3>
+  %2 = shufflevector <4 x i64> %0, <4 x i64> poison, <2 x i32> <i32 2, i32 3>
   store <2 x i64> %2, ptr %1, align 16
   ret void
 }
 
-
-define void @v4i64_lower_half_extract(ptr %0,  ptr %1){
+define void @v4i64_lower_half_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4i64_lower_half_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -557,12 +547,12 @@ define void @v4i64_lower_half_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %2 = load <4 x i64>, ptr %0, align 32
-  %3 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 0, i32 1>
+  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
   store <2 x i64> %3, ptr %1, align 16
   ret void
 }
 
-define void @v4i64_middle_extract(ptr %0,  ptr %1){
+define void @v4i64_middle_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4i64_middle_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -575,12 +565,12 @@ define void @v4i64_middle_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %2 = load <4 x i64>, ptr %0, align 32
-  %3 = shufflevector <4 x i64> %2, <4 x i64> undef, <2 x i32> <i32 1, i32 2>
+  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 1, i32 2>
   store <2 x i64> %3, ptr %1, align 16
   ret void
 }
 
-define void @v2i64_concat_v4i64(ptr %0, ptr %1, ptr %2){
+define void @v2i64_concat_v4i64(ptr %0, ptr %1, ptr %2) {
 ; CHECK-LABEL: v2i64_concat_v4i64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -598,8 +588,7 @@ entry:
   ret void
 }
 
-
-define void @v4double_upper_half_extract(ptr %0,  ptr %1){
+define void @v4double_upper_half_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4double_upper_half_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -609,12 +598,12 @@ define void @v4double_upper_half_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %2 = load <4 x double>, ptr %0, align 32
-  %3 = shufflevector <4 x double> %2, <4 x double> undef, <2 x i32> <i32 2, i32 3>
+  %3 = shufflevector <4 x double> %2, <4 x double> poison, <2 x i32> <i32 2, i32 3>
   store <2 x double> %3, ptr %1, align 16
   ret void
 }
 
-define void @v4double_lower_half_extract(ptr %0,  ptr %1){
+define void @v4double_lower_half_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4double_lower_half_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -624,12 +613,12 @@ define void @v4double_lower_half_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
   %2 = load <4 x double>, ptr %0, align 32
-  %3 = shufflevector <4 x double> %2, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+  %3 = shufflevector <4 x double> %2, <4 x double> poison, <2 x i32> <i32 0, i32 1>
   store <2 x double> %3, ptr %1, align 16
   ret void
 }
 
-define void @v4double_middle_extract(ptr %0,  ptr %1){
+define void @v4double_middle_extract(ptr %0, ptr %1) {
 ; CHECK-LABEL: v4double_middle_extract:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -642,12 +631,12 @@ define void @v4double_middle_extract(ptr %0,  ptr %1){
 ; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %2 = load <4 x double>, ptr %0, align 32
-  %3 = shufflevector <4 x double> %2, <4 x double> undef, <2 x i32> <i32 1, i32 2>
+  %3 = shufflevector <4 x double> %2, <4 x double> poison, <2 x i32> <i32 1, i32 2>
   store <2 x double> %3, ptr %1, align 16
   ret void
 }
 
-define void @v2double_concat_v4double(ptr %0, ptr %1, ptr %2){
+define void @v2double_concat_v4double(ptr %0, ptr %1, ptr %2) {
 ; CHECK-LABEL: v2double_concat_v4double:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -665,7 +654,7 @@ entry:
   ret void
 }
 
-define void @v2double_concat_v4double_unaligned(ptr align 1 %0, ptr %out){
+define void @v2double_concat_v4double_unaligned(ptr align 1 %0, ptr %out) {
 ; CHECK-LABEL: v2double_concat_v4double_unaligned:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -676,16 +665,15 @@ define void @v2double_concat_v4double_unaligned(ptr align 1 %0, ptr %out){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
-  %1 = bitcast ptr %0 to ptr 
-  %2 = getelementptr <2 x double>, ptr %1, i32 4
-  %3 = load <2 x double>, ptr %1
-  %4 = load <2 x double>, ptr %2
-  %5 = shufflevector <2 x double> %3, <2 x double> %4, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  store <4 x double> %5, ptr %out, align 32
+  %1 = getelementptr i8, ptr %0, i64 64
+  %2 = load <2 x double>, ptr %0, align 16
+  %3 = load <2 x double>, ptr %1, align 16
+  %4 = shufflevector <2 x double> %2, <2 x double> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  store <4 x double> %4, ptr %out, align 32
   ret void
 }
 
-define void @v2i64_concat_v4i64_unaligned(ptr align 1 %0, ptr %out){
+define void @v2i64_concat_v4i64_unaligned(ptr align 1 %0, ptr %out) {
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -696,16 +684,15 @@ define void @v2i64_concat_v4i64_unaligned(ptr align 1 %0, ptr %out){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
 entry:
-  %1 = bitcast ptr %0 to ptr 
-  %2 = getelementptr <2 x i64>, ptr %1, i32 4
-  %3 = load <2 x i64>, ptr %1
-  %4 = load <2 x i64>, ptr %2
-  %5 = shufflevector <2 x i64> %3, <2 x i64> %4, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  store <4 x i64> %5, ptr %out, align 32
+  %1 = getelementptr i8, ptr %0, i64 64
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = load <2 x i64>, ptr %1, align 16
+  %4 = shufflevector <2 x i64> %2, <2 x i64> %3, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  store <4 x i64> %4, ptr %out, align 32
   ret void
 }
 
-define void @v2i64_concat_v4i64_unaligned2(ptr nocapture readonly %0){
+define void @v2i64_concat_v4i64_unaligned2(ptr %0) {
 ; CHECK-LABEL: v2i64_concat_v4i64_unaligned2:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -718,13 +705,11 @@ define void @v2i64_concat_v4i64_unaligned2(ptr nocapture readonly %0){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
   %2 = alloca <4 x i64>, align 32
-  %3 = bitcast ptr %0 to ptr 
-  %4 = load <2 x i64>, ptr %3, align 8
-  %5 = getelementptr inbounds i64, ptr %0, i64 8
-  %6 = bitcast ptr %5 to ptr 
-  %7 = load <2 x i64>, ptr %6, align 8
-  %8 = bitcast ptr %2 to ptr 
-  %9 = shufflevector <2 x i64> %4, <2 x i64> %7, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
-  store volatile <4 x i64> %9, ptr %2, align 32
+  %3 = load <2 x i64>, ptr %0, align 8
+  %4 = getelementptr inbounds i8, ptr %0, i64 64
+  %5 = load <2 x i64>, ptr %4, align 8
+  %6 = shufflevector <2 x i64> %3, <2 x i64> %5, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
+  store volatile <4 x i64> %6, ptr %2, align 32
   ret void
 }
+

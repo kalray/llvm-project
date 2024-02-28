@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i64 @ready_int(ptr nocapture readonly %0) {
+define i64 @ready_int(ptr %0) {
 ; CHECK-LABEL: ready_int:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -14,14 +14,14 @@ define i64 @ready_int(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load i32, ptr %0
+  %2 = load i32, ptr %0, align 4
   %3 = tail call i64 (...) @llvm.kvx.ready(i32 %2)
   ret i64 %3
 }
 
 declare i64 @llvm.kvx.ready(...)
 
-define i64 @ready_long(ptr nocapture readonly %0) {
+define i64 @ready_long(ptr %0) {
 ; CHECK-LABEL: ready_long:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -29,12 +29,12 @@ define i64 @ready_long(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load i64, ptr %0
+  %2 = load i64, ptr %0, align 8
   %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
   ret i64 %3
 }
 
-define i64 @ready_v2i8(ptr nocapture readonly %0) {
+define i64 @ready_v2i8(ptr %0) {
 ; CHECK-LABEL: ready_v2i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
@@ -42,13 +42,12 @@ define i64 @ready_v2i8(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load half, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(half %3)
-  ret i64 %4
+  %2 = load half, ptr %0, align 2
+  %3 = tail call i64 (...) @llvm.kvx.ready(half %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2i16(ptr nocapture readonly %0) {
+define i64 @ready_v2i16(ptr %0) {
 ; CHECK-LABEL: ready_v2i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -56,13 +55,12 @@ define i64 @ready_v2i16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i32, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
-  ret i64 %4
+  %2 = load i32, ptr %0, align 4
+  %3 = tail call i64 (...) @llvm.kvx.ready(i32 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2i32(ptr nocapture readonly %0) {
+define i64 @ready_v2i32(ptr %0) {
 ; CHECK-LABEL: ready_v2i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -70,13 +68,12 @@ define i64 @ready_v2i32(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2i64(ptr nocapture readonly %0) {
+define i64 @ready_v2i64(ptr %0) {
 ; CHECK-LABEL: ready_v2i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -84,12 +81,12 @@ define i64 @ready_v2i64(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load <2 x i64>, ptr %0
+  %2 = load <2 x i64>, ptr %0, align 16
   %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
   ret i64 %3
 }
 
-define i64 @ready_v4i8(ptr nocapture readonly %0) {
+define i64 @ready_v4i8(ptr %0) {
 ; CHECK-LABEL: ready_v4i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -97,13 +94,12 @@ define i64 @ready_v4i8(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i32, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
-  ret i64 %4
+  %2 = load i32, ptr %0, align 4
+  %3 = tail call i64 (...) @llvm.kvx.ready(i32 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4i16(ptr nocapture readonly %0) {
+define i64 @ready_v4i16(ptr %0) {
 ; CHECK-LABEL: ready_v4i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -111,13 +107,12 @@ define i64 @ready_v4i16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4i32(ptr nocapture readonly %0) {
+define i64 @ready_v4i32(ptr %0) {
 ; CHECK-LABEL: ready_v4i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -125,13 +120,12 @@ define i64 @ready_v4i32(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <2 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
-  ret i64 %4
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4i64(ptr nocapture readonly %0) {
+define i64 @ready_v4i64(ptr %0) {
 ; CHECK-LABEL: ready_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
@@ -139,12 +133,12 @@ define i64 @ready_v4i64(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load <4 x i64>, ptr %0
+  %2 = load <4 x i64>, ptr %0, align 32
   %3 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %2)
   ret i64 %3
 }
 
-define i64 @ready_v8i8(ptr nocapture readonly %0) {
+define i64 @ready_v8i8(ptr %0) {
 ; CHECK-LABEL: ready_v8i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -152,13 +146,12 @@ define i64 @ready_v8i8(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready__Float16(ptr nocapture readonly %0) {
+define i64 @ready__Float16(ptr %0) {
 ; CHECK-LABEL: ready__Float16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
@@ -166,12 +159,12 @@ define i64 @ready__Float16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load half, ptr %0
+  %2 = load half, ptr %0, align 2
   %3 = tail call i64 (...) @llvm.kvx.ready(half %2)
   ret i64 %3
 }
 
-define i64 @ready_float(ptr nocapture readonly %0) {
+define i64 @ready_float(ptr %0) {
 ; CHECK-LABEL: ready_float:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -179,14 +172,14 @@ define i64 @ready_float(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load float, ptr %0
+  %2 = load float, ptr %0, align 4
   %3 = fpext float %2 to double
   %4 = bitcast double %3 to i64
   %5 = tail call i64 (...) @llvm.kvx.ready(i64 %4)
   ret i64 %5
 }
 
-define i64 @ready_double(ptr nocapture readonly %0) {
+define i64 @ready_double(ptr %0) {
 ; CHECK-LABEL: ready_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -194,13 +187,12 @@ define i64 @ready_double(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2f16(ptr nocapture readonly %0) {
+define i64 @ready_v2f16(ptr %0) {
 ; CHECK-LABEL: ready_v2f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -208,13 +200,12 @@ define i64 @ready_v2f16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i32, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
-  ret i64 %4
+  %2 = load i32, ptr %0, align 4
+  %3 = tail call i64 (...) @llvm.kvx.ready(i32 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2f32(ptr nocapture readonly %0) {
+define i64 @ready_v2f32(ptr %0) {
 ; CHECK-LABEL: ready_v2f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -222,13 +213,12 @@ define i64 @ready_v2f32(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v2f64(ptr nocapture readonly %0) {
+define i64 @ready_v2f64(ptr %0) {
 ; CHECK-LABEL: ready_v2f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -236,13 +226,12 @@ define i64 @ready_v2f64(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <2 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
-  ret i64 %4
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4f16(ptr nocapture readonly %0) {
+define i64 @ready_v4f16(ptr %0) {
 ; CHECK-LABEL: ready_v4f16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -250,13 +239,12 @@ define i64 @ready_v4f16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load i64, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(i64 %3)
-  ret i64 %4
+  %2 = load i64, ptr %0, align 8
+  %3 = tail call i64 (...) @llvm.kvx.ready(i64 %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4f32(ptr nocapture readonly %0) {
+define i64 @ready_v4f32(ptr %0) {
 ; CHECK-LABEL: ready_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -264,13 +252,12 @@ define i64 @ready_v4f32(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <2 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
-  ret i64 %4
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_v4f64(ptr nocapture readonly %0) {
+define i64 @ready_v4f64(ptr %0) {
 ; CHECK-LABEL: ready_v4f64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
@@ -278,13 +265,12 @@ define i64 @ready_v4f64(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <4 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %3)
-  ret i64 %4
+  %2 = load <4 x i64>, ptr %0, align 32
+  %3 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready___int128(ptr nocapture readonly %0) {
+define i64 @ready___int128(ptr %0) {
 ; CHECK-LABEL: ready___int128:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -292,13 +278,12 @@ define i64 @ready___int128(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <2 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
-  ret i64 %4
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_v8i16(ptr nocapture readonly %0) {
+define i64 @ready_v8i16(ptr %0) {
 ; CHECK-LABEL: ready_v8i16:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r0r1 = 0[$r0]
@@ -306,13 +291,12 @@ define i64 @ready_v8i16(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <2 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %3)
-  ret i64 %4
+  %2 = load <2 x i64>, ptr %0, align 16
+  %3 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_v8i32(ptr nocapture readonly %0) {
+define i64 @ready_v8i32(ptr %0) {
 ; CHECK-LABEL: ready_v8i32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r0r1r2r3 = 0[$r0]
@@ -320,13 +304,12 @@ define i64 @ready_v8i32(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = bitcast ptr %0 to ptr 
-  %3 = load <4 x i64>, ptr %2
-  %4 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %3)
-  ret i64 %4
+  %2 = load <4 x i64>, ptr %0, align 32
+  %3 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %2)
+  ret i64 %3
 }
 
-define i64 @ready_char(ptr nocapture readonly %0) {
+define i64 @ready_char(ptr %0) {
 ; CHECK-LABEL: ready_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbs $r0 = 0[$r0]
@@ -334,13 +317,13 @@ define i64 @ready_char(ptr nocapture readonly %0) {
 ; CHECK-NEXT:    iord $r0 = $r0, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 3)
-  %2 = load i8, ptr %0
+  %2 = load i8, ptr %0, align 1
   %3 = sext i8 %2 to i32
   %4 = tail call i64 (...) @llvm.kvx.ready(i32 %3)
   ret i64 %4
 }
 
-define i64 @ready_int_v4f32(ptr nocapture readonly %0, ptr nocapture readonly %1) {
+define i64 @ready_int_v4f32(ptr %0, ptr %1) {
 ; CHECK-LABEL: ready_int_v4f32:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -350,14 +333,13 @@ define i64 @ready_int_v4f32(ptr nocapture readonly %0, ptr nocapture readonly %1
 ; CHECK-NEXT:    iord $r0 = $r0, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load i32, ptr %0
-  %4 = bitcast ptr %1 to ptr 
-  %5 = load <2 x i64>, ptr %4
-  %6 = tail call i64 (...) @llvm.kvx.ready(i32 %3, <2 x i64> %5)
-  ret i64 %6
+  %3 = load i32, ptr %0, align 4
+  %4 = load <2 x i64>, ptr %1, align 16
+  %5 = tail call i64 (...) @llvm.kvx.ready(i32 %3, <2 x i64> %4)
+  ret i64 %5
 }
 
-define i64 @ready_long_int(ptr nocapture readonly %0, ptr nocapture readonly %1) {
+define i64 @ready_long_int(ptr %0, ptr %1) {
 ; CHECK-LABEL: ready_long_int:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    ld $r0 = 0[$r0]
@@ -367,13 +349,13 @@ define i64 @ready_long_int(ptr nocapture readonly %0, ptr nocapture readonly %1)
 ; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load i64, ptr %0
-  %4 = load i32, ptr %1
+  %3 = load i64, ptr %0, align 8
+  %4 = load i32, ptr %1, align 4
   %5 = tail call i64 (...) @llvm.kvx.ready(i64 %3, i32 %4)
   ret i64 %5
 }
 
-define i64 @ready_float_v8i8(ptr nocapture readonly %0, ptr nocapture readonly %1) {
+define i64 @ready_float_v8i8(ptr %0, ptr %1) {
 ; CHECK-LABEL: ready_float_v8i8:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -383,16 +365,15 @@ define i64 @ready_float_v8i8(ptr nocapture readonly %0, ptr nocapture readonly %
 ; CHECK-NEXT:    iord $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 4)
-  %3 = load float, ptr %0
+  %3 = load float, ptr %0, align 4
   %4 = fpext float %3 to double
   %5 = bitcast double %4 to i64
-  %6 = bitcast ptr %1 to ptr 
-  %7 = load i64, ptr %6
-  %8 = tail call i64 (...) @llvm.kvx.ready(i64 %5, i64 %7)
-  ret i64 %8
+  %6 = load i64, ptr %1, align 8
+  %7 = tail call i64 (...) @llvm.kvx.ready(i64 %5, i64 %6)
+  ret i64 %7
 }
 
-define i64 @ready_int_long_float(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
+define i64 @ready_int_long_float(ptr %0, ptr %1, ptr %2) {
 ; CHECK-LABEL: ready_int_long_float:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lwz $r0 = 0[$r0]
@@ -405,16 +386,16 @@ define i64 @ready_int_long_float(ptr nocapture readonly %0, ptr nocapture readon
 ; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %4 = load i32, ptr %0
-  %5 = load i64, ptr %1
-  %6 = load float, ptr %2
+  %4 = load i32, ptr %0, align 4
+  %5 = load i64, ptr %1, align 8
+  %6 = load float, ptr %2, align 4
   %7 = fpext float %6 to double
   %8 = bitcast double %7 to i64
   %9 = tail call i64 (...) @llvm.kvx.ready(i32 %4, i64 %5, i64 %8)
   ret i64 %9
 }
 
-define i64 @ready___int128_v8i8_v2i64(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
+define i64 @ready___int128_v8i8_v2i64(ptr %0, ptr %1, ptr %2) {
 ; CHECK-LABEL: ready___int128_v8i8_v2i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lq $r4r5 = 0[$r0]
@@ -427,16 +408,14 @@ define i64 @ready___int128_v8i8_v2i64(ptr nocapture readonly %0, ptr nocapture r
 ; CHECK-NEXT:    iord $r0 = $r4, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %4 = bitcast ptr %0 to ptr 
-  %5 = load <2 x i64>, ptr %4
-  %6 = bitcast ptr %1 to ptr 
-  %7 = load i64, ptr %6
-  %8 = load <2 x i64>, ptr %2
-  %9 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %5, i64 %7, <2 x i64> %8)
-  ret i64 %9
+  %4 = load <2 x i64>, ptr %0, align 16
+  %5 = load i64, ptr %1, align 8
+  %6 = load <2 x i64>, ptr %2, align 16
+  %7 = tail call i64 (...) @llvm.kvx.ready(<2 x i64> %4, i64 %5, <2 x i64> %6)
+  ret i64 %7
 }
 
-define i64 @ready_char_short_double(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2) {
+define i64 @ready_char_short_double(ptr %0, ptr %1, ptr %2) {
 ; CHECK-LABEL: ready_char_short_double:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbs $r0 = 0[$r0]
@@ -449,17 +428,16 @@ define i64 @ready_char_short_double(ptr nocapture readonly %0, ptr nocapture rea
 ; CHECK-NEXT:    iord $r0 = $r2, $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  %4 = load i8, ptr %0
+  %4 = load i8, ptr %0, align 1
   %5 = sext i8 %4 to i32
-  %6 = load i16, ptr %1
+  %6 = load i16, ptr %1, align 2
   %7 = sext i16 %6 to i32
-  %8 = bitcast ptr %2 to ptr 
-  %9 = load i64, ptr %8
-  %10 = tail call i64 (...) @llvm.kvx.ready(i32 %5, i32 %7, i64 %9)
-  ret i64 %10
+  %8 = load i64, ptr %2, align 8
+  %9 = tail call i64 (...) @llvm.kvx.ready(i32 %5, i32 %7, i64 %8)
+  ret i64 %9
 }
 
-define i64 @ready_char_short_int_long(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2, ptr nocapture readonly %3) {
+define i64 @ready_char_short_int_long(ptr %0, ptr %1, ptr %2, ptr %3) {
 ; CHECK-LABEL: ready_char_short_int_long:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbs $r0 = 0[$r0]
@@ -474,17 +452,17 @@ define i64 @ready_char_short_int_long(ptr nocapture readonly %0, ptr nocapture r
 ; CHECK-NEXT:    iord $r0 = $r2, $r3
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %5 = load i8, ptr %0
+  %5 = load i8, ptr %0, align 1
   %6 = sext i8 %5 to i32
-  %7 = load i16, ptr %1
+  %7 = load i16, ptr %1, align 2
   %8 = sext i16 %7 to i32
-  %9 = load i32, ptr %2
-  %10 = load i64, ptr %3
+  %9 = load i32, ptr %2, align 4
+  %10 = load i64, ptr %3, align 8
   %11 = tail call i64 (...) @llvm.kvx.ready(i32 %6, i32 %8, i32 %9, i64 %10)
   ret i64 %11
 }
 
-define i64 @ready__Float16_float_double_v4i64(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2, ptr nocapture readonly %3) {
+define i64 @ready__Float16_float_double_v4i64(ptr %0, ptr %1, ptr %2, ptr %3) {
 ; CHECK-LABEL: ready__Float16_float_double_v4i64:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lhz $r0 = 0[$r0]
@@ -499,18 +477,17 @@ define i64 @ready__Float16_float_double_v4i64(ptr nocapture readonly %0, ptr noc
 ; CHECK-NEXT:    iord $r0 = $r2, $r4
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %5 = load half, ptr %0
-  %6 = load float, ptr %1
+  %5 = load half, ptr %0, align 2
+  %6 = load float, ptr %1, align 4
   %7 = fpext float %6 to double
   %8 = bitcast double %7 to i64
-  %9 = bitcast ptr %2 to ptr 
-  %10 = load i64, ptr %9
-  %11 = load <4 x i64>, ptr %3
-  %12 = tail call i64 (...) @llvm.kvx.ready(half %5, i64 %8, i64 %10, <4 x i64> %11)
-  ret i64 %12
+  %9 = load i64, ptr %2, align 8
+  %10 = load <4 x i64>, ptr %3, align 32
+  %11 = tail call i64 (...) @llvm.kvx.ready(half %5, i64 %8, i64 %9, <4 x i64> %10)
+  ret i64 %11
 }
 
-define i64 @ready_v8f32_v4i32___int128_char(ptr nocapture readonly %0, ptr nocapture readonly %1, ptr nocapture readonly %2, ptr nocapture readonly %3) {
+define i64 @ready_v8f32_v4i32___int128_char(ptr %0, ptr %1, ptr %2, ptr %3) {
 ; CHECK-LABEL: ready_v8f32_v4i32___int128_char:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -525,15 +502,12 @@ define i64 @ready_v8f32_v4i32___int128_char(ptr nocapture readonly %0, ptr nocap
 ; CHECK-NEXT:    iord $r0 = $r8, $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
-  %5 = bitcast ptr %0 to ptr 
-  %6 = load <4 x i64>, ptr %5
-  %7 = bitcast ptr %1 to ptr 
-  %8 = load <2 x i64>, ptr %7
-  %9 = bitcast ptr %2 to ptr 
-  %10 = load <2 x i64>, ptr %9
-  %11 = load i8, ptr %3
-  %12 = sext i8 %11 to i32
-  %13 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %6, <2 x i64> %8, <2 x i64> %10, i32 %12)
-  ret i64 %13
+  %5 = load <4 x i64>, ptr %0, align 32
+  %6 = load <2 x i64>, ptr %1, align 16
+  %7 = load <2 x i64>, ptr %2, align 16
+  %8 = load i8, ptr %3, align 1
+  %9 = sext i8 %8 to i32
+  %10 = tail call i64 (...) @llvm.kvx.ready(<4 x i64> %5, <2 x i64> %6, <2 x i64> %7, i32 %9)
+  ret i64 %10
 }
 

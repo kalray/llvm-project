@@ -10,9 +10,10 @@ target triple = "kvx-kalray-cos"
 @x = common global [256 x i16] zeroinitializer, align 2
 @y = common global [256 x i16] zeroinitializer, align 2
 @h = common global [16 x i16] zeroinitializer, align 2
+@a = common global i32 0, align 4
+@b = common global i32 0, align 4
 
-; FIXME: Loop invariants, such as make $r5 = 0xbeefbeef should be moved outise loops.
-define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h) {
+define void @InitDataSet(i32 %m, ptr %x, i32 %n, ptr %h) {
 ; CHECK-LABEL: InitDataSet:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
@@ -40,61 +41,55 @@ define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h) {
 ; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_5: # %for.body4.preheader
-; CHECK-NEXT:    zxwd $r6 = $r0
+; CHECK-NEXT:    zxwd $r4 = $r0
+; CHECK-NEXT:    compw.ne $r5 = $r0, 255
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maxud $r4 = $r6, 255
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sbfuwd $r0 = $r0, $r4
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    addd $r4 = $r0, 1
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    compd.gtu $r0 = $r4, 1
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_7
+; CHECK-NEXT:    cb.even $r5 ? .LBB0_10
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6:
-; CHECK-NEXT:    copyd $r0 = $r6
-; CHECK-NEXT:    goto .LBB0_10
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_7: # %vector.ph
-; CHECK-NEXT:    andd $r5 = $r4, -2
+; CHECK-NEXT:  # %bb.6: # %vector.ph
+; CHECK-NEXT:    sbfuwd $r5 = $r0, 256
 ; CHECK-NEXT:    make $r7 = 0xffffffffdeaddead
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r0 = $r5, -2
+; CHECK-NEXT:    andd $r0 = $r5, 510
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srld $r0 = $r0, 1
+; CHECK-NEXT:    addd $r6 = $r0, -2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    adduwd $r0 = $r6, $r5
-; CHECK-NEXT:    addx2d $r6 = $r6, $r1
-; CHECK-NEXT:    addd $r8 = $r0, 1
+; CHECK-NEXT:    srld $r6 = $r6, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    addx2d $r6 = $r4, $r1
+; CHECK-NEXT:    addd $r8 = $r6, 1
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    loopdo $r8, .__LOOPDO_4_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_8: # %vector.body
+; CHECK-NEXT:  .LBB0_7: # %vector.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 0[$r6] = $r7
 ; CHECK-NEXT:    addd $r6 = $r6, 4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_4_END_:
-; CHECK-NEXT:  # %bb.9: # %middle.block
-; CHECK-NEXT:    compd.eq $r4 = $r4, $r5
+; CHECK-NEXT:  # %bb.8: # %middle.block
+; CHECK-NEXT:    compd.eq $r5 = $r5, $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.odd $r4 ? .LBB0_12
+; CHECK-NEXT:    cb.odd $r5 ? .LBB0_12
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_10: # %for.body4.preheader2
-; CHECK-NEXT:    maxud $r4 = $r0, 255
+; CHECK-NEXT:  # %bb.9:
+; CHECK-NEXT:    adduwd $r4 = $r4, $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfd $r4 = $r0, $r4
+; CHECK-NEXT:  .LBB0_10: # %for.body4.preheader87
+; CHECK-NEXT:    maxud $r0 = $r4, 255
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sbfd $r0 = $r4, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    make $r4 = 0xdead
-; CHECK-NEXT:    addd $r5 = $r4, 1
+; CHECK-NEXT:    addx2d $r0 = $r4, $r1
+; CHECK-NEXT:    make $r1 = 0xdead
+; CHECK-NEXT:    addd $r5 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    loopdo $r5, .__LOOPDO_3_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_11: # %for.body4
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sh.xs $r0[$r1] = $r4
-; CHECK-NEXT:    addd $r0 = $r0, 1
+; CHECK-NEXT:    sh 0[$r0] = $r1
+; CHECK-NEXT:    addd $r0 = $r0, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_3_END_:
 ; CHECK-NEXT:  .LBB0_12: # %for.cond10.preheader
@@ -125,50 +120,44 @@ define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h) {
 ; CHECK-NEXT:    make $r2 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_17: # %for.body23.preheader
-; CHECK-NEXT:    zxwd $r4 = $r2
+; CHECK-NEXT:    zxwd $r0 = $r2
+; CHECK-NEXT:    compw.ne $r1 = $r2, 15
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    maxud $r0 = $r4, 15
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sbfuwd $r0 = $r2, $r0
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    addd $r1 = $r0, 1
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    compd.gtu $r0 = $r1, 1
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.odd $r0 ? .LBB0_19
+; CHECK-NEXT:    cb.even $r1 ? .LBB0_22
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.18:
-; CHECK-NEXT:    copyd $r0 = $r4
-; CHECK-NEXT:    goto .LBB0_22
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_19: # %vector.ph74
-; CHECK-NEXT:    andd $r2 = $r1, -2
+; CHECK-NEXT:  # %bb.18: # %vector.ph74
+; CHECK-NEXT:    sbfuwd $r2 = $r2, 16
 ; CHECK-NEXT:    make $r5 = 0xffffffffbeefbeef
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r0 = $r2, -2
+; CHECK-NEXT:    andd $r1 = $r2, 30
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    srld $r0 = $r0, 1
+; CHECK-NEXT:    addd $r4 = $r1, -2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    adduwd $r0 = $r4, $r2
-; CHECK-NEXT:    addx2d $r4 = $r4, $r3
-; CHECK-NEXT:    addd $r6 = $r0, 1
+; CHECK-NEXT:    srld $r4 = $r4, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    addx2d $r4 = $r0, $r3
+; CHECK-NEXT:    addd $r6 = $r4, 1
+; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_20: # %vector.body71
+; CHECK-NEXT:  .LBB0_19: # %vector.body71
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 0[$r4] = $r5
 ; CHECK-NEXT:    addd $r4 = $r4, 4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  # %bb.21: # %middle.block69
-; CHECK-NEXT:    compd.eq $r1 = $r1, $r2
+; CHECK-NEXT:  # %bb.20: # %middle.block69
+; CHECK-NEXT:    compd.eq $r2 = $r2, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.odd $r1 ? .LBB0_24
+; CHECK-NEXT:    cb.odd $r2 ? .LBB0_24
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_22: # %for.body23.preheader1
+; CHECK-NEXT:  # %bb.21:
+; CHECK-NEXT:    adduwd $r0 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:  .LBB0_22: # %for.body23.preheader86
 ; CHECK-NEXT:    maxud $r1 = $r0, 15
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    addx2d $r0 = $r0, $r3
 ; CHECK-NEXT:    sbfd $r1 = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    make $r1 = 0xbeef
@@ -178,8 +167,8 @@ define void @InitDataSet(i32 %m, ptr nocapture %x, i32 %n, ptr nocapture %h) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_23: # %for.body23
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sh.xs $r0[$r3] = $r1
-; CHECK-NEXT:    addd $r0 = $r0, 1
+; CHECK-NEXT:    sh 0[$r0] = $r1
+; CHECK-NEXT:    addd $r0 = $r0, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_24: # %for.end28
@@ -190,7 +179,7 @@ entry:
   br i1 %cmp52, label %for.body.preheader, label %for.body4.preheader
 
 for.body.preheader:
-  %wide.trip.count61 = zext i32 %m to i64
+  %wide.trip.count61 = zext nneg i32 %m to i64
   br label %for.body
 
 for.cond1.preheader:
@@ -199,35 +188,32 @@ for.cond1.preheader:
 
 for.body4.preheader:
   %i.0.lcssa65 = phi i32 [ %m, %for.cond1.preheader ], [ 0, %entry ]
-  %0 = zext i32 %i.0.lcssa65 to i64
-  %1 = icmp ugt i64 %0, 255
-  %umax = select i1 %1, i64 %0, i64 255
-  %2 = add nuw nsw i64 %umax, 1
-  %3 = sub nsw i64 %2, %0
-  %min.iters.check = icmp ult i64 %3, 2
+  %0 = zext nneg i32 %i.0.lcssa65 to i64
+  %1 = sub nuw nsw i64 256, %0
+  %min.iters.check = icmp eq i32 %i.0.lcssa65, 255
   br i1 %min.iters.check, label %for.body4.preheader87, label %vector.ph
 
 for.body4.preheader87:
   %indvars.iv57.ph = phi i64 [ %0, %for.body4.preheader ], [ %ind.end, %middle.block ]
+  %umax = tail call i64 @llvm.umax.i64(i64 %indvars.iv57.ph, i64 255)
   br label %for.body4
 
 vector.ph:
-  %n.vec = and i64 %3, -2
-  %ind.end = add nsw i64 %n.vec, %0
+  %n.vec = and i64 %1, 510
+  %invariant.gep = getelementptr i16, ptr %x, i64 %0
   br label %vector.body
 
 vector.body:
   %index = phi i64 [ 0, %vector.ph ], [ %index.next, %vector.body ]
-  %offset.idx = add i64 %index, %0
-  %4 = getelementptr inbounds i16, ptr %x, i64 %offset.idx
-  %5 = bitcast ptr %4 to ptr 
-  store <2 x i16> <i16 -8531, i16 -8531>, ptr %5, align 2
+  %gep = getelementptr i16, ptr %invariant.gep, i64 %index
+  store <2 x i16> <i16 -8531, i16 -8531>, ptr %gep, align 2
   %index.next = add i64 %index, 2
-  %6 = icmp eq i64 %index.next, %n.vec
-  br i1 %6, label %middle.block, label %vector.body
+  %2 = icmp eq i64 %index.next, %n.vec
+  br i1 %2, label %middle.block, label %vector.body
 
 middle.block:
-  %cmp.n = icmp eq i64 %3, %n.vec
+  %ind.end = add nuw nsw i64 %n.vec, %0
+  %cmp.n = icmp eq i64 %1, %n.vec
   br i1 %cmp.n, label %for.cond10.preheader, label %for.body4.preheader87
 
 for.body:
@@ -244,7 +230,7 @@ for.cond10.preheader:
   br i1 %cmp1148, label %for.body13.preheader, label %for.body23.preheader
 
 for.body13.preheader:
-  %wide.trip.count = zext i32 %n to i64
+  %wide.trip.count = zext nneg i32 %n to i64
   br label %for.body13
 
 for.body4:
@@ -252,8 +238,8 @@ for.body4:
   %arrayidx6 = getelementptr inbounds i16, ptr %x, i64 %indvars.iv57
   store i16 -8531, ptr %arrayidx6, align 2
   %indvars.iv.next58 = add nuw nsw i64 %indvars.iv57, 1
-  %cmp2 = icmp ult i64 %indvars.iv57, 255
-  br i1 %cmp2, label %for.body4, label %for.cond10.preheader
+  %exitcond4.not = icmp eq i64 %indvars.iv57, %umax
+  br i1 %exitcond4.not, label %for.cond10.preheader, label %for.body4
 
 for.cond20.preheader:
   %cmp2146 = icmp ult i32 %n, 16
@@ -261,41 +247,38 @@ for.cond20.preheader:
 
 for.body23.preheader:
   %i.2.lcssa68 = phi i32 [ %n, %for.cond20.preheader ], [ 0, %for.cond10.preheader ]
-  %7 = zext i32 %i.2.lcssa68 to i64
-  %8 = icmp ugt i64 %7, 15
-  %umax72 = select i1 %8, i64 %7, i64 15
-  %9 = add nuw nsw i64 %umax72, 1
-  %10 = sub nsw i64 %9, %7
-  %min.iters.check73 = icmp ult i64 %10, 2
+  %3 = zext nneg i32 %i.2.lcssa68 to i64
+  %4 = sub nuw nsw i64 16, %3
+  %min.iters.check73 = icmp eq i32 %i.2.lcssa68, 15
   br i1 %min.iters.check73, label %for.body23.preheader86, label %vector.ph74
 
 for.body23.preheader86:
-  %indvars.iv.ph = phi i64 [ %7, %for.body23.preheader ], [ %ind.end80, %middle.block69 ]
+  %indvars.iv.ph = phi i64 [ %3, %for.body23.preheader ], [ %ind.end80, %middle.block69 ]
+  %umax5 = tail call i64 @llvm.umax.i64(i64 %indvars.iv.ph, i64 15)
   br label %for.body23
 
 vector.ph74:
-  %n.vec76 = and i64 %10, -2
-  %ind.end80 = add nsw i64 %n.vec76, %7
+  %n.vec76 = and i64 %4, 30
+  %invariant.gep2 = getelementptr i16, ptr %h, i64 %3
   br label %vector.body71
 
 vector.body71:
   %index77 = phi i64 [ 0, %vector.ph74 ], [ %index.next78, %vector.body71 ]
-  %offset.idx82 = add i64 %index77, %7
-  %11 = getelementptr inbounds i16, ptr %h, i64 %offset.idx82
-  %12 = bitcast ptr %11 to ptr 
-  store <2 x i16> <i16 -16657, i16 -16657>, ptr %12, align 2
+  %gep3 = getelementptr i16, ptr %invariant.gep2, i64 %index77
+  store <2 x i16> <i16 -16657, i16 -16657>, ptr %gep3, align 2
   %index.next78 = add i64 %index77, 2
-  %13 = icmp eq i64 %index.next78, %n.vec76
-  br i1 %13, label %middle.block69, label %vector.body71
+  %5 = icmp eq i64 %index.next78, %n.vec76
+  br i1 %5, label %middle.block69, label %vector.body71
 
 middle.block69:
-  %cmp.n81 = icmp eq i64 %10, %n.vec76
+  %ind.end80 = add nuw nsw i64 %n.vec76, %3
+  %cmp.n81 = icmp eq i64 %4, %n.vec76
   br i1 %cmp.n81, label %for.end28, label %for.body23.preheader86
 
 for.body13:
   %indvars.iv55 = phi i64 [ 0, %for.body13.preheader ], [ %indvars.iv.next56, %for.body13 ]
-  %14 = trunc i64 %indvars.iv55 to i32
-  %mul = mul nsw i32 %14, %14
+  %6 = trunc i64 %indvars.iv55 to i32
+  %mul = mul nsw i32 %6, %6
   %conv14 = trunc i32 %mul to i16
   %arrayidx16 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv55
   store i16 %conv14, ptr %arrayidx16, align 2
@@ -308,31 +291,14 @@ for.body23:
   %arrayidx25 = getelementptr inbounds i16, ptr %h, i64 %indvars.iv
   store i16 -16657, ptr %arrayidx25, align 2
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
-  %cmp21 = icmp ult i64 %indvars.iv, 15
-  br i1 %cmp21, label %for.body23, label %for.end28
+  %exitcond6.not = icmp eq i64 %indvars.iv, %umax5
+  br i1 %exitcond6.not, label %for.end28, label %for.body23
 
 for.end28:
   ret void
 }
 
-
-; This ensures we correctly have the loop latch with the
-; loopdo end position and branching/falling to the loop exit
-; From the C code:
-; a, b;
-; c() {
-;   int d = e();
-;   int *f = g();
-;   a = 0;
-;   for (; a < d; a++)
-;     for (; f[a + 1];)
-;       b = g;
-; }
-
-@a = common global i32 0, align 4
-@b = common global i32 0, align 4
-
-define i32 @c()  {
+define i32 @c() {
 ; CHECK-LABEL: c:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -32
@@ -400,16 +366,16 @@ define i32 @c()  {
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 entry:
-  %call = tail call i32 bitcast (i32 (...)* @e to i32 ()*)()
-  %call1 = tail call i32 bitcast (i32 (...)* @g to i32 ()*)()
+  %call = tail call i32 @e()
+  %call1 = tail call i32 @g()
   %conv = sext i32 %call1 to i64
-  %0 = inttoptr i64 %conv to ptr 
+  %0 = inttoptr i64 %conv to ptr
   store i32 0, ptr @a, align 4
   %cmp9 = icmp sgt i32 %call, 0
   br i1 %cmp9, label %for.cond3.preheader.preheader, label %for.end5
 
 for.cond3.preheader.preheader:
-  %wide.trip.count = zext i32 %call to i64
+  %wide.trip.count = zext nneg i32 %call to i64
   br label %for.cond3.preheader
 
 for.cond.loopexit:
@@ -427,7 +393,7 @@ for.cond3.preheader:
   br i1 %tobool8, label %for.cond.loopexit, label %for.body4
 
 for.body4:
-  store i32 ptrtoint (i32 (...)* @g to i32), ptr @b, align 4
+  store i32 ptrtoint (ptr @g to i32), ptr @b, align 4
   %3 = load i32, ptr %arrayidx, align 4
   %tobool = icmp eq i32 %3, 0
   br i1 %tobool, label %for.cond.loopexit, label %for.body4
@@ -436,6 +402,9 @@ for.end5:
   ret i32 undef
 }
 
-declare i32 @e(...)
+declare i32 @e(...) local_unnamed_addr
+
 declare i32 @g(...)
+
+declare i64 @llvm.umax.i64(i64, i64)
 

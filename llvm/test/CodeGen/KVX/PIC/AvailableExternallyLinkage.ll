@@ -12,7 +12,7 @@ declare void @_ZNSt9exceptionD0Ev(%"class.std::exception"* nonnull dereferenceab
 declare ptr @_ZNKSt9exception4whatEv(%"class.std::exception"* nonnull dereferenceable(8)) unnamed_addr
 
 @_ZTVSt9exception = available_externally unnamed_addr constant { [5 x ptr ] } { [5 x ptr ] [ptr null, ptr bitcast (ptr @_ZTISt9exception to ptr ), ptr bitcast (void (%"class.std::exception"*)* @_ZNSt9exceptionD1Ev to ptr ), ptr bitcast (void (%"class.std::exception"*)* @_ZNSt9exceptionD0Ev to ptr ), ptr bitcast (ptr (%"class.std::exception"*)* @_ZNKSt9exception4whatEv to ptr )] }, align 8
-@_ZTISt9exception = external constant ptr 
+@_ZTISt9exception = external constant ptr
 
 define linkonce_odr void @_ZNSt9exceptionC2ERKS_(i32 (...) *** %addr) unnamed_addr comdat align 2 {
 ; CHECK-LABEL: _ZNSt9exceptionC2ERKS_:

@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @foo(ptr nocapture %0, ptr nocapture %1) {
+define void @foo(ptr %0, ptr %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
 ; NORMAL-NEXT:    lwz $r2 = 0[$r1]
@@ -82,16 +82,16 @@ define void @foo(ptr nocapture %0, ptr nocapture %1) {
 ; VLIW-NEXT:    xso 32[$r0] = $a1
 ; VLIW-NEXT:    ret
 ; VLIW-NEXT:    ;; # (end cycle 15)
-%3 = bitcast ptr %0 to ptr 
-%4 = load <1024 x i1>, ptr %3, align 32
-%5 = load float, ptr %1, align 4
-%6 = fadd float %5, 4.200000e+01
-store float %6, ptr %1, align 4
-tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
-%7 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %4)
-tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
-store <1024 x i1> %7, ptr %3, align 32
-ret void
+  %3 = load <1024 x i1>, ptr %0, align 32
+  %4 = load float, ptr %1, align 4
+  %5 = fadd float %4, 4.200000e+01
+  store float %5, ptr %1, align 4
+  tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
+  %6 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %3)
+  tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
+  store <1024 x i1> %6, ptr %0, align 32
+  ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)
+

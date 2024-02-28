@@ -2,8 +2,7 @@
 ; RUN: llc -o - %s -mtriple=kvx-kalray-cos -fstack-limit-register=sr | FileCheck %s --check-prefixes=CHECK
 ; RUN: llc -mcpu=kv3-2 -o - %s -mtriple=kvx-kalray-cos -fstack-limit-register=sr | FileCheck %s --check-prefixes=CHECK
 
-; Function Attrs: norecurse nounwind readnone
-define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
+define i32 @testalloca(i32 %n) {
 ; CHECK-LABEL: testalloca:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r16 = $r12, -32
@@ -30,24 +29,26 @@ define dso_local i32 @testalloca(i32 %n) local_unnamed_addr  {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    cb.dgtz $r2 ? .LBB0_5
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    sxwd $r2 = $r0
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    copyd $r12 = $r1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    cb.wlez $r0 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader
-; CHECK-NEXT:    make $r2 = 0
+; CHECK-NEXT:    make $r0 = 0
 ; CHECK-NEXT:    zxwd $r3 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    loopdo $r3, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw.xs $r2[$r1] = $r2
-; CHECK-NEXT:    addd $r2 = $r2, 1
+; CHECK-NEXT:    sw.xs $r0[$r1] = $r0
+; CHECK-NEXT:    addd $r0 = $r0, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
 ; CHECK-NEXT:  .LBB0_4: # %for.cond.cleanup
-; CHECK-NEXT:    addx4wd $r0 = $r0, $r1
+; CHECK-NEXT:    addx4d $r0 = $r2, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    lwz $r0 = -8[$r0]
 ; CHECK-NEXT:    addd $r12 = $r14, -16
@@ -73,35 +74,27 @@ entry:
   %cmp12 = icmp sgt i32 %n, 0
   br i1 %cmp12, label %for.body.preheader, label %for.cond.cleanup
 
-for.body.preheader:                               ; preds = %entry
-  %wide.trip.count = zext i32 %n to i64
+for.body.preheader:
+  %wide.trip.count = zext nneg i32 %n to i64
   br label %for.body
 
-for.cond.cleanup:                                 ; preds = %for.body, %entry
-  %sub = add nsw i32 %n, -2
-  %idxprom2 = sext i32 %sub to i64
-  %arrayidx3 = getelementptr inbounds i32, ptr %0, i64 %idxprom2
-  %1 = load i32, ptr %arrayidx3, align 4
-  ret i32 %1
+for.cond.cleanup:
+  %1 = getelementptr i32, ptr %0, i64 %conv
+  %arrayidx3 = getelementptr i8, ptr %1, i64 -8
+  %2 = load i32, ptr %arrayidx3, align 4
+  ret i32 %2
 
-for.body:                                         ; preds = %for.body, %for.body.preheader
+for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next, %for.body ]
   %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
-  %2 = trunc i64 %indvars.iv to i32
-  store i32 %2, ptr %arrayidx, align 4
+  %3 = trunc i64 %indvars.iv to i32
+  store i32 %3, ptr %arrayidx, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count
   br i1 %exitcond, label %for.cond.cleanup, label %for.body
 }
 
-; Function Attrs: argmemonly nounwind willreturn
-declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
-
-; Function Attrs: argmemonly nounwind willreturn
-declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
-
-; Function Attrs: nounwind
-define dso_local i32 @testrealign() local_unnamed_addr  {
+define i32 @testrealign() {
 ; CHECK-LABEL: testrealign:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addd $r16 = $r12, -256
@@ -154,16 +147,19 @@ define dso_local i32 @testrealign() local_unnamed_addr  {
 entry:
   %c = alloca i32, align 4
   %i = alloca i32, align 128
-  %0 = bitcast ptr %c to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %0)
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %c)
   store i32 7, ptr %c, align 4
-  %1 = bitcast ptr %i to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1)
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %i)
   store i32 1234, ptr %i, align 128
   %call = call i32 @other(ptr nonnull %c, ptr nonnull %i)
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1)
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %0)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %i)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %c)
   ret i32 %call
 }
 
-declare dso_local i32 @other(ptr, ptr ) local_unnamed_addr
+declare i32 @other(ptr, ptr) local_unnamed_addr
+
+declare void @llvm.lifetime.start.p0(i64 immarg, ptr nocapture)
+
+declare void @llvm.lifetime.end.p0(i64 immarg, ptr nocapture)
+

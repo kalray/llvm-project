@@ -69,7 +69,7 @@ define i32 @d() {
 entry:
   %0 = load i32, ptr @a, align 4
   %conv = sext i32 %0 to i64
-  %1 = inttoptr i64 %conv to ptr 
+  %1 = inttoptr i64 %conv to ptr
   store ptr %1, ptr @c, align 8
   br label %for.cond
 

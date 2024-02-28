@@ -72,7 +72,7 @@ target triple = "kvx-kalray-cos"
 @g64 = common global i32 0, align 4
 @g65 = common global i32 0, align 4
 
-define i32 @stackrealign1(){
+define i32 @stackrealign1() {
 ; CHECK-LABEL: stackrealign1:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r0 = 7
@@ -111,25 +111,19 @@ define i32 @stackrealign1(){
 entry:
   %c = alloca i32, align 4
   %i = alloca i32, align 128
-  %0 = bitcast ptr %c to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %0) #3
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %c)
   store i32 7, ptr %c, align 4
-  %1 = bitcast ptr %i to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1) #3
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %i)
   store i32 1234, ptr %i, align 128
-  %call = call i32 @other(ptr nonnull %c, ptr nonnull %i) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %0) #3
+  %call = call i32 @other(ptr nonnull %c, ptr nonnull %i)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %i)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %c)
   ret i32 %call
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture) #1
+declare i32 @other(ptr, ptr) local_unnamed_addr
 
-declare i32 @other(ptr, ptr ) #2
-
-declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture) #1
-
-define i32 @stackrealign2(i32 %n){
+define i32 @stackrealign2(i32 %n) {
 ; CHECK-LABEL: stackrealign2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -256
@@ -152,133 +146,127 @@ define i32 @stackrealign2(i32 %n){
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    copyd $r12 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r1 ? .LBB1_12
+; CHECK-NEXT:    cb.wlez $r1 ? .LBB1_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r3 = 0
 ; CHECK-NEXT:    zxwd $r4 = $r1
+; CHECK-NEXT:    compw.ltu $r5 = $r1, 8
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r2 = $r4, -1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r2 = $r4, 7
-; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    cb.odd $r5 ? .LBB1_4
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r3 = $r2, $r4
-; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    clrf $r3 = $r4, 2, 30
+; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r3 = $r3, -8
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r3 = $r3, 3
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    addd $r5 = $r3, 1
+; CHECK-NEXT:    addd $r6 = $r3, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    loopdo $r5, .__LOOPDO_0_END_
+; CHECK-NEXT:    loopdo $r6, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB1_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r4
-; CHECK-NEXT:    addw $r4 = $r4, -8
-; CHECK-NEXT:    iord $r5 = $r3, 1
-; CHECK-NEXT:    iord $r6 = $r3, 2
+; CHECK-NEXT:    addd $r3 = $r3, -8
+; CHECK-NEXT:    adduwd $r6 = $r4, $r3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r7 = $r5, $r1
+; CHECK-NEXT:    sw 0[$r5] = $r6
+; CHECK-NEXT:    addd $r7 = $r6, -1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    iord $r5 = $r3, 3
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r6, $r1
+; CHECK-NEXT:    sw 4[$r5] = $r7
+; CHECK-NEXT:    addd $r7 = $r6, 0xfffffffe
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    iord $r6 = $r3, 4
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r5, $r1
+; CHECK-NEXT:    sw 8[$r5] = $r7
+; CHECK-NEXT:    addd $r7 = $r6, 0xfffffffd
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    iord $r5 = $r3, 5
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r6, $r1
+; CHECK-NEXT:    sw 12[$r5] = $r7
+; CHECK-NEXT:    addd $r7 = $r6, 0xfffffffc
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sbfw $r6 = $r5, $r1
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r7
-; CHECK-NEXT:    iord $r7 = $r3, 6
+; CHECK-NEXT:    sw 16[$r5] = $r7
+; CHECK-NEXT:    addd $r7 = $r6, 0xfffffffb
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sbfw $r5 = $r7, $r1
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r6
+; CHECK-NEXT:    sw 20[$r5] = $r7
+; CHECK-NEXT:    addd $r6 = $r6, 0xfffffff9
+; CHECK-NEXT:    addd $r7 = $r6, 0xfffffffa
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    addd $r3 = $r3, 8
-; CHECK-NEXT:    iord $r5 = $r3, 7
-; CHECK-NEXT:    sw.xs $r7[$r0] = $r5
+; CHECK-NEXT:    sw 24[$r5] = $r7
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    sbfw $r6 = $r5, $r1
+; CHECK-NEXT:    sw 28[$r5] = $r6
+; CHECK-NEXT:    addd $r5 = $r5, 32
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r6
-; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:  .LBB1_4: # %for.cond.cleanup.loopexit.unr-lcssa
-; CHECK-NEXT:    cb.deqz $r2 ? .LBB1_12
+; CHECK-NEXT:  # %bb.4: # %for.cond.cleanup.loopexit.unr-lcssa.loopexit
+; CHECK-NEXT:    negd $r3 = $r3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:  .LBB1_5: # %for.cond.cleanup.loopexit.unr-lcssa
+; CHECK-NEXT:    cb.deqz $r2 ? .LBB1_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.5: # %for.body.epil
+; CHECK-NEXT:  # %bb.6: # %for.body.epil
 ; CHECK-NEXT:    compd.ne $r4 = $r2, 1
 ; CHECK-NEXT:    sbfw $r5 = $r3, $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.xs $r3[$r0] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r4 ? .LBB1_12
+; CHECK-NEXT:    cb.even $r4 ? .LBB1_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6: # %for.body.epil.1
+; CHECK-NEXT:  # %bb.7: # %for.body.epil.1
 ; CHECK-NEXT:    addd $r4 = $r3, 1
 ; CHECK-NEXT:    compd.eq $r5 = $r2, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB1_12
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.7: # %for.body.epil.2
+; CHECK-NEXT:  # %bb.8: # %for.body.epil.2
 ; CHECK-NEXT:    addd $r4 = $r3, 2
 ; CHECK-NEXT:    compd.eq $r5 = $r2, 3
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB1_12
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.8: # %for.body.epil.3
+; CHECK-NEXT:  # %bb.9: # %for.body.epil.3
 ; CHECK-NEXT:    addd $r4 = $r3, 3
 ; CHECK-NEXT:    compd.eq $r5 = $r2, 4
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB1_12
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.9: # %for.body.epil.4
+; CHECK-NEXT:  # %bb.10: # %for.body.epil.4
 ; CHECK-NEXT:    addd $r4 = $r3, 4
 ; CHECK-NEXT:    compd.eq $r5 = $r2, 5
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r6 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB1_12
+; CHECK-NEXT:    cb.odd $r5 ? .LBB1_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.10: # %for.body.epil.5
+; CHECK-NEXT:  # %bb.11: # %for.body.epil.5
 ; CHECK-NEXT:    compd.eq $r2 = $r2, 6
 ; CHECK-NEXT:    addd $r4 = $r3, 5
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r5 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.odd $r2 ? .LBB1_12
+; CHECK-NEXT:    cb.odd $r2 ? .LBB1_13
 ; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.11: # %for.body.epil.6
+; CHECK-NEXT:  # %bb.12: # %for.body.epil.6
 ; CHECK-NEXT:    addd $r2 = $r3, 6
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sbfw $r3 = $r2, $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  .LBB1_12: # %for.cond.cleanup
+; CHECK-NEXT:  .LBB1_13: # %for.cond.cleanup
 ; CHECK-NEXT:    make $r2 = 0x4d2
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw 128[$r31] = $r2
@@ -305,142 +293,140 @@ entry:
   %cmp11 = icmp sgt i32 %n, 0
   br i1 %cmp11, label %for.body.preheader, label %for.cond.cleanup
 
-for.body.preheader:                               ; preds = %entry
-  %wide.trip.count = zext i32 %n to i64
-  %1 = add nsw i64 %wide.trip.count, -1
+for.body.preheader:
+  %wide.trip.count = zext nneg i32 %n to i64
   %xtraiter = and i64 %wide.trip.count, 7
-  %2 = icmp ult i64 %1, 7
-  br i1 %2, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
+  %1 = icmp ult i32 %n, 8
+  br i1 %1, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
 
-for.body.preheader.new:                           ; preds = %for.body.preheader
-  %unroll_iter = sub nsw i64 %wide.trip.count, %xtraiter
+for.body.preheader.new:
+  %unroll_iter = and i64 %wide.trip.count, 2147483640
   br label %for.body
 
-for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body.preheader
+for.cond.cleanup.loopexit.unr-lcssa:
   %indvars.iv.unr = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next.7, %for.body ]
   %lcmp.mod = icmp eq i64 %xtraiter, 0
   br i1 %lcmp.mod, label %for.cond.cleanup, label %for.body.epil
 
-for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa
-  %3 = trunc i64 %indvars.iv.unr to i32
-  %sub.epil = sub nsw i32 %n, %3
+for.body.epil:
+  %2 = trunc i64 %indvars.iv.unr to i32
+  %sub.epil = sub nsw i32 %n, %2
   %arrayidx.epil = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.unr
   store i32 %sub.epil, ptr %arrayidx.epil, align 4
-  %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
   %epil.iter.cmp = icmp eq i64 %xtraiter, 1
   br i1 %epil.iter.cmp, label %for.cond.cleanup, label %for.body.epil.1
 
-for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil.5, %for.body.epil.4, %for.body.epil.3, %for.body.epil.2, %for.body.epil.1, %for.body.epil, %for.body.epil.6, %entry
-  %4 = bitcast ptr %i to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %4) #3
+for.cond.cleanup:
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %i)
   store i32 1234, ptr %i, align 128
-  %call = call i32 @other2(ptr nonnull %0, i32 %n, ptr nonnull %i) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %4) #3
+  %call = call i32 @other2(ptr nonnull %0, i32 %n, ptr nonnull %i)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %i)
   ret i32 %call
 
-for.body:                                         ; preds = %for.body, %for.body.preheader.new
+for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader.new ], [ %indvars.iv.next.7, %for.body ]
   %niter = phi i64 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
-  %5 = trunc i64 %indvars.iv to i32
-  %sub = sub nsw i32 %n, %5
+  %3 = trunc i64 %indvars.iv to i32
+  %sub = sub nsw i32 %n, %3
   %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
   store i32 %sub, ptr %arrayidx, align 8
-  %indvars.iv.next = or i64 %indvars.iv, 1
-  %6 = trunc i64 %indvars.iv.next to i32
-  %sub.1 = sub nsw i32 %n, %6
+  %indvars.iv.next = or disjoint i64 %indvars.iv, 1
+  %4 = trunc i64 %indvars.iv.next to i32
+  %sub.1 = sub nsw i32 %n, %4
   %arrayidx.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next
   store i32 %sub.1, ptr %arrayidx.1, align 4
-  %indvars.iv.next.1 = or i64 %indvars.iv, 2
-  %7 = trunc i64 %indvars.iv.next.1 to i32
-  %sub.2 = sub nsw i32 %n, %7
+  %indvars.iv.next.1 = or disjoint i64 %indvars.iv, 2
+  %5 = trunc i64 %indvars.iv.next.1 to i32
+  %sub.2 = sub nsw i32 %n, %5
   %arrayidx.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.1
   store i32 %sub.2, ptr %arrayidx.2, align 8
-  %indvars.iv.next.2 = or i64 %indvars.iv, 3
-  %8 = trunc i64 %indvars.iv.next.2 to i32
-  %sub.3 = sub nsw i32 %n, %8
+  %indvars.iv.next.2 = or disjoint i64 %indvars.iv, 3
+  %6 = trunc i64 %indvars.iv.next.2 to i32
+  %sub.3 = sub nsw i32 %n, %6
   %arrayidx.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.2
   store i32 %sub.3, ptr %arrayidx.3, align 4
-  %indvars.iv.next.3 = or i64 %indvars.iv, 4
-  %9 = trunc i64 %indvars.iv.next.3 to i32
-  %sub.4 = sub nsw i32 %n, %9
+  %indvars.iv.next.3 = or disjoint i64 %indvars.iv, 4
+  %7 = trunc i64 %indvars.iv.next.3 to i32
+  %sub.4 = sub nsw i32 %n, %7
   %arrayidx.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.3
   store i32 %sub.4, ptr %arrayidx.4, align 8
-  %indvars.iv.next.4 = or i64 %indvars.iv, 5
-  %10 = trunc i64 %indvars.iv.next.4 to i32
-  %sub.5 = sub nsw i32 %n, %10
+  %indvars.iv.next.4 = or disjoint i64 %indvars.iv, 5
+  %8 = trunc i64 %indvars.iv.next.4 to i32
+  %sub.5 = sub nsw i32 %n, %8
   %arrayidx.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.4
   store i32 %sub.5, ptr %arrayidx.5, align 4
-  %indvars.iv.next.5 = or i64 %indvars.iv, 6
-  %11 = trunc i64 %indvars.iv.next.5 to i32
-  %sub.6 = sub nsw i32 %n, %11
+  %indvars.iv.next.5 = or disjoint i64 %indvars.iv, 6
+  %9 = trunc i64 %indvars.iv.next.5 to i32
+  %sub.6 = sub nsw i32 %n, %9
   %arrayidx.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.5
   store i32 %sub.6, ptr %arrayidx.6, align 8
-  %indvars.iv.next.6 = or i64 %indvars.iv, 7
-  %12 = trunc i64 %indvars.iv.next.6 to i32
-  %sub.7 = sub nsw i32 %n, %12
+  %indvars.iv.next.6 = or disjoint i64 %indvars.iv, 7
+  %10 = trunc i64 %indvars.iv.next.6 to i32
+  %sub.7 = sub nsw i32 %n, %10
   %arrayidx.7 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.6
   store i32 %sub.7, ptr %arrayidx.7, align 4
   %indvars.iv.next.7 = add nuw nsw i64 %indvars.iv, 8
-  %niter.nsub.7 = add i64 %niter, -8
+  %niter.nsub.7 = add nsw i64 %niter, -8
   %niter.ncmp.7 = icmp eq i64 %niter.nsub.7, 0
   br i1 %niter.ncmp.7, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body
 
-for.body.epil.1:                                  ; preds = %for.body.epil
-  %13 = trunc i64 %indvars.iv.next.epil to i32
-  %sub.epil.1 = sub nsw i32 %n, %13
+for.body.epil.1:
+  %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
+  %11 = trunc i64 %indvars.iv.next.epil to i32
+  %sub.epil.1 = sub nsw i32 %n, %11
   %arrayidx.epil.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil
   store i32 %sub.epil.1, ptr %arrayidx.epil.1, align 4
-  %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
   %epil.iter.cmp.1 = icmp eq i64 %xtraiter, 2
   br i1 %epil.iter.cmp.1, label %for.cond.cleanup, label %for.body.epil.2
 
-for.body.epil.2:                                  ; preds = %for.body.epil.1
-  %14 = trunc i64 %indvars.iv.next.epil.1 to i32
-  %sub.epil.2 = sub nsw i32 %n, %14
+for.body.epil.2:
+  %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
+  %12 = trunc i64 %indvars.iv.next.epil.1 to i32
+  %sub.epil.2 = sub nsw i32 %n, %12
   %arrayidx.epil.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.1
   store i32 %sub.epil.2, ptr %arrayidx.epil.2, align 4
-  %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
   %epil.iter.cmp.2 = icmp eq i64 %xtraiter, 3
   br i1 %epil.iter.cmp.2, label %for.cond.cleanup, label %for.body.epil.3
 
-for.body.epil.3:                                  ; preds = %for.body.epil.2
-  %15 = trunc i64 %indvars.iv.next.epil.2 to i32
-  %sub.epil.3 = sub nsw i32 %n, %15
+for.body.epil.3:
+  %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
+  %13 = trunc i64 %indvars.iv.next.epil.2 to i32
+  %sub.epil.3 = sub nsw i32 %n, %13
   %arrayidx.epil.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.2
   store i32 %sub.epil.3, ptr %arrayidx.epil.3, align 4
-  %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
   %epil.iter.cmp.3 = icmp eq i64 %xtraiter, 4
   br i1 %epil.iter.cmp.3, label %for.cond.cleanup, label %for.body.epil.4
 
-for.body.epil.4:                                  ; preds = %for.body.epil.3
-  %16 = trunc i64 %indvars.iv.next.epil.3 to i32
-  %sub.epil.4 = sub nsw i32 %n, %16
+for.body.epil.4:
+  %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
+  %14 = trunc i64 %indvars.iv.next.epil.3 to i32
+  %sub.epil.4 = sub nsw i32 %n, %14
   %arrayidx.epil.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.3
   store i32 %sub.epil.4, ptr %arrayidx.epil.4, align 4
-  %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
   %epil.iter.cmp.4 = icmp eq i64 %xtraiter, 5
   br i1 %epil.iter.cmp.4, label %for.cond.cleanup, label %for.body.epil.5
 
-for.body.epil.5:                                  ; preds = %for.body.epil.4
-  %17 = trunc i64 %indvars.iv.next.epil.4 to i32
-  %sub.epil.5 = sub nsw i32 %n, %17
+for.body.epil.5:
+  %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
+  %15 = trunc i64 %indvars.iv.next.epil.4 to i32
+  %sub.epil.5 = sub nsw i32 %n, %15
   %arrayidx.epil.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.4
   store i32 %sub.epil.5, ptr %arrayidx.epil.5, align 4
-  %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
   %epil.iter.cmp.5 = icmp eq i64 %xtraiter, 6
   br i1 %epil.iter.cmp.5, label %for.cond.cleanup, label %for.body.epil.6
 
-for.body.epil.6:                                  ; preds = %for.body.epil.5
-  %18 = trunc i64 %indvars.iv.next.epil.5 to i32
-  %sub.epil.6 = sub nsw i32 %n, %18
+for.body.epil.6:
+  %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
+  %16 = trunc i64 %indvars.iv.next.epil.5 to i32
+  %sub.epil.6 = sub nsw i32 %n, %16
   %arrayidx.epil.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.5
   store i32 %sub.epil.6, ptr %arrayidx.epil.6, align 4
   br label %for.cond.cleanup
 }
 
-declare i32 @other2(ptr, i32, ptr ) #2
+declare i32 @other2(ptr, i32, ptr) local_unnamed_addr
 
-define i64 @stackrealign3(i32 %x){
+define i64 @stackrealign3(i32 %x) {
 ; CHECK-LABEL: stackrealign3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    make $r1 = 3
@@ -510,25 +496,22 @@ entry:
   %i = alloca <16 x i64>, align 128
   %a = alloca i32, align 4
   %tmp = alloca <16 x i64>, align 128
-  %0 = bitcast ptr %i to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 128, ptr nonnull %0) #3
+  call void @llvm.lifetime.start.p0(i64 128, ptr nonnull %i)
   store <16 x i64> <i64 16, i64 15, i64 14, i64 13, i64 12, i64 11, i64 10, i64 9, i64 8, i64 7, i64 6, i64 5, i64 4, i64 3, i64 2, i64 1>, ptr %i, align 128
-  %1 = bitcast ptr %a to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %1) #3
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %a)
   store i32 %x, ptr %a, align 4
-  call void @otherv(ptr nonnull sret(<16 x i64>) %tmp, ptr nonnull %a, ptr nonnull %i) #3
-  %2 = load <16 x i64>, ptr %tmp, align 128
-  %vecext = extractelement <16 x i64> %2, i32 0
+  call void @otherv(ptr nonnull sret(<16 x i64>) %tmp, ptr nonnull %a, ptr nonnull %i)
+  %vecext = load i64, ptr %tmp, align 128
   %conv = sext i32 %x to i64
   %add = add nsw i64 %vecext, %conv
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %1) #3
-  call void @llvm.lifetime.end.p0i8(i64 128, ptr nonnull %0) #3
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %a)
+  call void @llvm.lifetime.end.p0(i64 128, ptr nonnull %i)
   ret i64 %add
 }
 
-declare void @otherv(ptr sret(<16 x i64>), ptr, ptr ) #2
+declare void @otherv(ptr sret(<16 x i64>), ptr, ptr) local_unnamed_addr
 
-define i32 @stackrealign4(i32 %n){
+define i32 @stackrealign4(i32 %n) {
 ; CHECK-LABEL: stackrealign4:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    addd $r12 = $r12, -512
@@ -547,9 +530,9 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    so 400[$r12] = $r20r21r22r23
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    sq 384[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    copyd $r8 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    addx4wd $r0 = $r1, 31
+; CHECK-NEXT:    addx4wd $r0 = $r8, 31
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    andd $r0 = $r0, -32
 ; CHECK-NEXT:    ;; # (end cycle 8)
@@ -557,133 +540,127 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    copyd $r12 = $r0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    cb.wlez $r1 ? .LBB3_12
+; CHECK-NEXT:    cb.wlez $r8 ? .LBB3_13
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    zxwd $r4 = $r1
+; CHECK-NEXT:    zxwd $r4 = $r8
+; CHECK-NEXT:    compw.ltu $r5 = $r8, 8
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addd $r2 = $r4, -1
-; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    andd $r2 = $r4, 7
-; CHECK-NEXT:    compd.ltu $r5 = $r2, 7
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_4
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    cb.odd $r5 ? .LBB3_5
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body.preheader.new
-; CHECK-NEXT:    sbfd $r3 = $r2, $r4
-; CHECK-NEXT:    copyd $r4 = $r1
+; CHECK-NEXT:    clrf $r3 = $r4, 2, 30
+; CHECK-NEXT:    copyd $r5 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    addd $r3 = $r3, -8
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    srld $r3 = $r3, 3
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    make $r3 = 0
-; CHECK-NEXT:    addd $r5 = $r3, 1
+; CHECK-NEXT:    addd $r6 = $r3, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    loopdo $r5, .__LOOPDO_1_END_
+; CHECK-NEXT:    loopdo $r6, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB3_3: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    sw.xs $r3[$r0] = $r4
-; CHECK-NEXT:    addw $r4 = $r4, -8
-; CHECK-NEXT:    iord $r5 = $r3, 1
-; CHECK-NEXT:    iord $r6 = $r3, 2
+; CHECK-NEXT:    adduwd $r1 = $r4, $r3
+; CHECK-NEXT:    addd $r3 = $r3, -8
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r7 = $r5, $r1
+; CHECK-NEXT:    sw 0[$r5] = $r1
+; CHECK-NEXT:    addd $r6 = $r1, -1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    iord $r5 = $r3, 3
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r6, $r1
+; CHECK-NEXT:    sw 4[$r5] = $r6
+; CHECK-NEXT:    addd $r6 = $r1, 0xfffffffe
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    iord $r6 = $r3, 4
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r5, $r1
+; CHECK-NEXT:    sw 8[$r5] = $r6
+; CHECK-NEXT:    addd $r6 = $r1, 0xfffffffd
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    iord $r5 = $r3, 5
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r7
-; CHECK-NEXT:    sbfw $r7 = $r6, $r1
+; CHECK-NEXT:    sw 12[$r5] = $r6
+; CHECK-NEXT:    addd $r6 = $r1, 0xfffffffc
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sbfw $r6 = $r5, $r1
-; CHECK-NEXT:    sw.xs $r6[$r0] = $r7
-; CHECK-NEXT:    iord $r7 = $r3, 6
+; CHECK-NEXT:    sw 16[$r5] = $r6
+; CHECK-NEXT:    addd $r6 = $r1, 0xfffffffb
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sbfw $r5 = $r7, $r1
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r6
+; CHECK-NEXT:    sw 20[$r5] = $r6
+; CHECK-NEXT:    addd $r1 = $r1, 0xfffffff9
+; CHECK-NEXT:    addd $r6 = $r1, 0xfffffffa
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    addd $r3 = $r3, 8
-; CHECK-NEXT:    iord $r5 = $r3, 7
-; CHECK-NEXT:    sw.xs $r7[$r0] = $r5
+; CHECK-NEXT:    sw 24[$r5] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    sbfw $r6 = $r5, $r1
+; CHECK-NEXT:    sw 28[$r5] = $r1
+; CHECK-NEXT:    addd $r5 = $r5, 32
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    sw.xs $r5[$r0] = $r6
-; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:  .__LOOPDO_1_END_:
-; CHECK-NEXT:  .LBB3_4: # %for.cond.cleanup.loopexit.unr-lcssa
-; CHECK-NEXT:    cb.deqz $r2 ? .LBB3_12
+; CHECK-NEXT:  # %bb.4: # %for.cond.cleanup.loopexit.unr-lcssa.loopexit
+; CHECK-NEXT:    negd $r3 = $r3
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:  .LBB3_5: # %for.cond.cleanup.loopexit.unr-lcssa
+; CHECK-NEXT:    cb.deqz $r2 ? .LBB3_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.5: # %for.body.epil
+; CHECK-NEXT:  # %bb.6: # %for.body.epil
 ; CHECK-NEXT:    compd.ne $r4 = $r2, 1
-; CHECK-NEXT:    sbfw $r5 = $r3, $r1
+; CHECK-NEXT:    sbfw $r5 = $r3, $r8
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sw.xs $r3[$r0] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r4 ? .LBB3_12
+; CHECK-NEXT:    cb.even $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.6: # %for.body.epil.1
-; CHECK-NEXT:    addd $r4 = $r3, 1
-; CHECK-NEXT:    compd.eq $r5 = $r2, 2
+; CHECK-NEXT:  # %bb.7: # %for.body.epil.1
+; CHECK-NEXT:    addd $r1 = $r3, 1
+; CHECK-NEXT:    compd.eq $r4 = $r2, 2
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r6 = $r4, $r1
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_12
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.7: # %for.body.epil.2
-; CHECK-NEXT:    addd $r4 = $r3, 2
-; CHECK-NEXT:    compd.eq $r5 = $r2, 3
+; CHECK-NEXT:  # %bb.8: # %for.body.epil.2
+; CHECK-NEXT:    addd $r1 = $r3, 2
+; CHECK-NEXT:    compd.eq $r4 = $r2, 3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r6 = $r4, $r1
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_12
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.8: # %for.body.epil.3
-; CHECK-NEXT:    addd $r4 = $r3, 3
-; CHECK-NEXT:    compd.eq $r5 = $r2, 4
+; CHECK-NEXT:  # %bb.9: # %for.body.epil.3
+; CHECK-NEXT:    addd $r1 = $r3, 3
+; CHECK-NEXT:    compd.eq $r4 = $r2, 4
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r6 = $r4, $r1
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_12
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.9: # %for.body.epil.4
-; CHECK-NEXT:    addd $r4 = $r3, 4
-; CHECK-NEXT:    compd.eq $r5 = $r2, 5
+; CHECK-NEXT:  # %bb.10: # %for.body.epil.4
+; CHECK-NEXT:    addd $r1 = $r3, 4
+; CHECK-NEXT:    compd.eq $r4 = $r2, 5
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r6 = $r4, $r1
+; CHECK-NEXT:    sbfw $r5 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r6
-; CHECK-NEXT:    cb.odd $r5 ? .LBB3_12
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r5
+; CHECK-NEXT:    cb.odd $r4 ? .LBB3_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.10: # %for.body.epil.5
+; CHECK-NEXT:  # %bb.11: # %for.body.epil.5
+; CHECK-NEXT:    addd $r1 = $r3, 5
 ; CHECK-NEXT:    compd.eq $r2 = $r2, 6
-; CHECK-NEXT:    addd $r4 = $r3, 5
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r5 = $r4, $r1
+; CHECK-NEXT:    sbfw $r4 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.odd $r2 ? .LBB3_12
-; CHECK-NEXT:    sw.xs $r4[$r0] = $r5
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r4
+; CHECK-NEXT:    cb.odd $r2 ? .LBB3_13
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  # %bb.11: # %for.body.epil.6
-; CHECK-NEXT:    addd $r2 = $r3, 6
+; CHECK-NEXT:  # %bb.12: # %for.body.epil.6
+; CHECK-NEXT:    addd $r1 = $r3, 6
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sbfw $r3 = $r2, $r1
+; CHECK-NEXT:    sbfw $r2 = $r1, $r8
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw.xs $r2[$r0] = $r3
+; CHECK-NEXT:    sw.xs $r1[$r0] = $r2
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  .LBB3_12: # %for.cond.cleanup
+; CHECK-NEXT:  .LBB3_13: # %for.cond.cleanup
 ; CHECK-NEXT:    make $r2 = 0x4d2
 ; CHECK-NEXT:    make $r3 = g1
 ; CHECK-NEXT:    make $r5 = g3
@@ -692,90 +669,89 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r2 = g2
 ; CHECK-NEXT:    make $r7 = g5
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lwz $r3 = 0[$r3]
-; CHECK-NEXT:    make $r4 = g59
+; CHECK-NEXT:    lwz $r1 = 0[$r3]
 ; CHECK-NEXT:    make $r9 = g7
-; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    make $r11 = g9
+; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    make $r16 = g11
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    sd 248[$r31] = $r3
 ; CHECK-NEXT:    make $r32 = g13
+; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    sd 248[$r31] = $r1
 ; CHECK-NEXT:    make $r34 = g15
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    make $r36 = g17
+; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g4
 ; CHECK-NEXT:    make $r38 = g19
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    make $r40 = g21
 ; CHECK-NEXT:    make $r42 = g23
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    sd 240[$r31] = $r2
-; CHECK-NEXT:    make $r2 = g4
+; CHECK-NEXT:    sd 240[$r31] = $r1
 ; CHECK-NEXT:    make $r44 = g25
-; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    lwz $r3 = 0[$r5]
-; CHECK-NEXT:    make $r5 = g61
 ; CHECK-NEXT:    make $r46 = g27
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    lwz $r1 = 0[$r5]
 ; CHECK-NEXT:    make $r48 = g29
 ; CHECK-NEXT:    make $r50 = g31
-; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    sd 232[$r31] = $r3
+; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    make $r52 = g33
 ; CHECK-NEXT:    make $r54 = g35
-; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    lwz $r2 = 0[$r2]
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    sd 232[$r31] = $r1
 ; CHECK-NEXT:    make $r55 = g37
 ; CHECK-NEXT:    make $r57 = g39
-; CHECK-NEXT:    ;; # (end cycle 11)
-; CHECK-NEXT:    make $r59 = g41
-; CHECK-NEXT:    make $r61 = g43
-; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    sd 224[$r31] = $r2
+; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g6
+; CHECK-NEXT:    make $r59 = g41
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    make $r61 = g43
 ; CHECK-NEXT:    make $r63 = g45
-; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    lwz $r3 = 0[$r7]
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    sd 224[$r31] = $r1
 ; CHECK-NEXT:    make $r19 = g47
 ; CHECK-NEXT:    make $r21 = g49
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    lwz $r1 = 0[$r7]
 ; CHECK-NEXT:    make $r23 = g51
 ; CHECK-NEXT:    make $r25 = g53
-; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    sd 216[$r31] = $r3
+; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    make $r27 = g55
 ; CHECK-NEXT:    make $r29 = g57
+; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    sd 216[$r31] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    lwz $r2 = 0[$r2]
-; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    sd 208[$r31] = $r2
+; CHECK-NEXT:    lwz $r1 = 0[$r2]
 ; CHECK-NEXT:    make $r2 = g8
+; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    sd 208[$r31] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 19)
-; CHECK-NEXT:    lwz $r3 = 0[$r9]
+; CHECK-NEXT:    lwz $r1 = 0[$r9]
 ; CHECK-NEXT:    ;; # (end cycle 20)
-; CHECK-NEXT:    sd 200[$r31] = $r3
+; CHECK-NEXT:    sd 200[$r31] = $r1
+; CHECK-NEXT:    make $r1 = g59
 ; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    make $r2 = g10
 ; CHECK-NEXT:    lwz $r10 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    make $r2 = g12
-; CHECK-NEXT:    lwz $r15 = 0[$r2]
+; CHECK-NEXT:    lwz $r9 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    make $r2 = g14
-; CHECK-NEXT:    lwz $r17 = 0[$r2]
+; CHECK-NEXT:    lwz $r7 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    make $r2 = g16
-; CHECK-NEXT:    lwz $r33 = 0[$r2]
+; CHECK-NEXT:    lwz $r6 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    make $r2 = g18
-; CHECK-NEXT:    lwz $r35 = 0[$r2]
+; CHECK-NEXT:    lwz $r5 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    make $r2 = g20
-; CHECK-NEXT:    lwz $r37 = 0[$r2]
+; CHECK-NEXT:    lwz $r4 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    make $r2 = g22
-; CHECK-NEXT:    lwz $r39 = 0[$r2]
+; CHECK-NEXT:    lwz $r3 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    make $r2 = g24
 ; CHECK-NEXT:    lwz $r41 = 0[$r2]
@@ -828,97 +804,98 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    make $r2 = g56
 ; CHECK-NEXT:    lwz $r28 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 46)
-; CHECK-NEXT:    make $r5 = g62
-; CHECK-NEXT:    lwz $r6 = 0[$r5]
-; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    make $r2 = g58
 ; CHECK-NEXT:    lwz $r30 = 0[$r2]
-; CHECK-NEXT:    ;; # (end cycle 48)
-; CHECK-NEXT:    lwz $r8 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 49)
-; CHECK-NEXT:    lwz $r4 = 0[$r5]
-; CHECK-NEXT:    make $r5 = g63
-; CHECK-NEXT:    ;; # (end cycle 50)
+; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    make $r2 = g60
-; CHECK-NEXT:    lwz $r9 = 0[$r2]
+; CHECK-NEXT:    lwz $r15 = 0[$r2]
+; CHECK-NEXT:    ;; # (end cycle 48)
+; CHECK-NEXT:    make $r2 = g61
+; CHECK-NEXT:    lwz $r17 = 0[$r2]
+; CHECK-NEXT:    ;; # (end cycle 49)
+; CHECK-NEXT:    make $r2 = g62
+; CHECK-NEXT:    lwz $r33 = 0[$r2]
+; CHECK-NEXT:    ;; # (end cycle 50)
+; CHECK-NEXT:    make $r2 = g63
+; CHECK-NEXT:    lwz $r35 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 51)
-; CHECK-NEXT:    lwz $r3 = 0[$r5]
-; CHECK-NEXT:    make $r5 = g64
+; CHECK-NEXT:    make $r2 = g64
+; CHECK-NEXT:    lwz $r37 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 52)
-; CHECK-NEXT:    lwz $r7 = 0[$r2]
+; CHECK-NEXT:    make $r2 = g65
+; CHECK-NEXT:    lwz $r39 = 0[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 53)
-; CHECK-NEXT:    lwz $r2 = 0[$r5]
-; CHECK-NEXT:    make $r5 = g65
-; CHECK-NEXT:    ;; # (end cycle 54)
 ; CHECK-NEXT:    lwz $r11 = 0[$r11]
-; CHECK-NEXT:    ;; # (end cycle 55)
+; CHECK-NEXT:    ;; # (end cycle 54)
 ; CHECK-NEXT:    lwz $r16 = 0[$r16]
-; CHECK-NEXT:    ;; # (end cycle 56)
+; CHECK-NEXT:    ;; # (end cycle 55)
 ; CHECK-NEXT:    lwz $r32 = 0[$r32]
-; CHECK-NEXT:    ;; # (end cycle 57)
+; CHECK-NEXT:    ;; # (end cycle 56)
 ; CHECK-NEXT:    lwz $r34 = 0[$r34]
-; CHECK-NEXT:    ;; # (end cycle 58)
+; CHECK-NEXT:    ;; # (end cycle 57)
 ; CHECK-NEXT:    lwz $r36 = 0[$r36]
-; CHECK-NEXT:    ;; # (end cycle 59)
+; CHECK-NEXT:    ;; # (end cycle 58)
 ; CHECK-NEXT:    lwz $r38 = 0[$r38]
-; CHECK-NEXT:    ;; # (end cycle 60)
+; CHECK-NEXT:    ;; # (end cycle 59)
 ; CHECK-NEXT:    lwz $r40 = 0[$r40]
-; CHECK-NEXT:    ;; # (end cycle 61)
+; CHECK-NEXT:    ;; # (end cycle 60)
 ; CHECK-NEXT:    lwz $r42 = 0[$r42]
-; CHECK-NEXT:    ;; # (end cycle 62)
+; CHECK-NEXT:    ;; # (end cycle 61)
 ; CHECK-NEXT:    lwz $r44 = 0[$r44]
-; CHECK-NEXT:    ;; # (end cycle 63)
+; CHECK-NEXT:    ;; # (end cycle 62)
 ; CHECK-NEXT:    lwz $r46 = 0[$r46]
-; CHECK-NEXT:    ;; # (end cycle 64)
+; CHECK-NEXT:    ;; # (end cycle 63)
 ; CHECK-NEXT:    lwz $r48 = 0[$r48]
-; CHECK-NEXT:    ;; # (end cycle 65)
+; CHECK-NEXT:    ;; # (end cycle 64)
 ; CHECK-NEXT:    lwz $r50 = 0[$r50]
-; CHECK-NEXT:    ;; # (end cycle 66)
+; CHECK-NEXT:    ;; # (end cycle 65)
 ; CHECK-NEXT:    lwz $r52 = 0[$r52]
-; CHECK-NEXT:    ;; # (end cycle 67)
+; CHECK-NEXT:    ;; # (end cycle 66)
 ; CHECK-NEXT:    lwz $r54 = 0[$r54]
-; CHECK-NEXT:    ;; # (end cycle 68)
+; CHECK-NEXT:    ;; # (end cycle 67)
 ; CHECK-NEXT:    lwz $r55 = 0[$r55]
-; CHECK-NEXT:    ;; # (end cycle 69)
+; CHECK-NEXT:    ;; # (end cycle 68)
 ; CHECK-NEXT:    lwz $r57 = 0[$r57]
-; CHECK-NEXT:    ;; # (end cycle 70)
+; CHECK-NEXT:    ;; # (end cycle 69)
 ; CHECK-NEXT:    lwz $r59 = 0[$r59]
-; CHECK-NEXT:    ;; # (end cycle 71)
+; CHECK-NEXT:    ;; # (end cycle 70)
 ; CHECK-NEXT:    lwz $r61 = 0[$r61]
-; CHECK-NEXT:    ;; # (end cycle 72)
+; CHECK-NEXT:    ;; # (end cycle 71)
 ; CHECK-NEXT:    lwz $r63 = 0[$r63]
-; CHECK-NEXT:    ;; # (end cycle 73)
+; CHECK-NEXT:    ;; # (end cycle 72)
 ; CHECK-NEXT:    lwz $r19 = 0[$r19]
-; CHECK-NEXT:    ;; # (end cycle 74)
+; CHECK-NEXT:    ;; # (end cycle 73)
 ; CHECK-NEXT:    lwz $r21 = 0[$r21]
-; CHECK-NEXT:    ;; # (end cycle 75)
+; CHECK-NEXT:    ;; # (end cycle 74)
 ; CHECK-NEXT:    lwz $r23 = 0[$r23]
-; CHECK-NEXT:    ;; # (end cycle 76)
+; CHECK-NEXT:    ;; # (end cycle 75)
 ; CHECK-NEXT:    lwz $r25 = 0[$r25]
-; CHECK-NEXT:    ;; # (end cycle 77)
+; CHECK-NEXT:    ;; # (end cycle 76)
 ; CHECK-NEXT:    lwz $r27 = 0[$r27]
-; CHECK-NEXT:    ;; # (end cycle 78)
+; CHECK-NEXT:    ;; # (end cycle 77)
 ; CHECK-NEXT:    lwz $r29 = 0[$r29]
+; CHECK-NEXT:    ;; # (end cycle 78)
+; CHECK-NEXT:    lwz $r1 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 79)
-; CHECK-NEXT:    lwz $r5 = 0[$r5]
+; CHECK-NEXT:    lwz $r2 = 0[$r2]
 ; CHECK-NEXT:    addd $r12 = $r12, -448
 ; CHECK-NEXT:    ;; # (end cycle 80)
-; CHECK-NEXT:    sw 440[$r12] = $r5
-; CHECK-NEXT:    addd $r5 = $r31, 256
+; CHECK-NEXT:    sw 440[$r12] = $r2
+; CHECK-NEXT:    addd $r2 = $r31, 256
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sw 432[$r12] = $r2
+; CHECK-NEXT:    sw 432[$r12] = $r39
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sw 424[$r12] = $r3
+; CHECK-NEXT:    sw 424[$r12] = $r37
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sw 416[$r12] = $r4
+; CHECK-NEXT:    sw 416[$r12] = $r35
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    sw 408[$r12] = $r6
+; CHECK-NEXT:    sw 408[$r12] = $r33
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sw 400[$r12] = $r7
+; CHECK-NEXT:    sw 400[$r12] = $r17
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    sw 392[$r12] = $r8
+; CHECK-NEXT:    sw 392[$r12] = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    sw 384[$r12] = $r9
+; CHECK-NEXT:    sw 384[$r12] = $r15
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    sw 376[$r12] = $r29
 ; CHECK-NEXT:    ;; # (end cycle 8)
@@ -994,28 +971,28 @@ define i32 @stackrealign4(i32 %n){
 ; CHECK-NEXT:    ;; # (end cycle 43)
 ; CHECK-NEXT:    sw 88[$r12] = $r40
 ; CHECK-NEXT:    ;; # (end cycle 44)
-; CHECK-NEXT:    sw 80[$r12] = $r39
+; CHECK-NEXT:    sw 80[$r12] = $r3
 ; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    sw 72[$r12] = $r38
 ; CHECK-NEXT:    ;; # (end cycle 46)
-; CHECK-NEXT:    sw 64[$r12] = $r37
+; CHECK-NEXT:    sw 64[$r12] = $r4
 ; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    sw 56[$r12] = $r36
 ; CHECK-NEXT:    ;; # (end cycle 48)
-; CHECK-NEXT:    sw 48[$r12] = $r35
+; CHECK-NEXT:    sw 48[$r12] = $r5
 ; CHECK-NEXT:    ;; # (end cycle 49)
 ; CHECK-NEXT:    sw 40[$r12] = $r34
 ; CHECK-NEXT:    ;; # (end cycle 50)
-; CHECK-NEXT:    sw 32[$r12] = $r33
+; CHECK-NEXT:    sw 32[$r12] = $r6
 ; CHECK-NEXT:    ;; # (end cycle 51)
 ; CHECK-NEXT:    sw 24[$r12] = $r32
 ; CHECK-NEXT:    ;; # (end cycle 52)
-; CHECK-NEXT:    sw 16[$r12] = $r17
+; CHECK-NEXT:    sw 16[$r12] = $r7
 ; CHECK-NEXT:    ;; # (end cycle 53)
 ; CHECK-NEXT:    sw 8[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 54)
-; CHECK-NEXT:    sw 0[$r12] = $r15
-; CHECK-NEXT:    copyd $r2 = $r5
+; CHECK-NEXT:    sw 0[$r12] = $r9
+; CHECK-NEXT:    copyd $r1 = $r8
 ; CHECK-NEXT:    ;; # (end cycle 55)
 ; CHECK-NEXT:    ld $r3 = 248[$r31]
 ; CHECK-NEXT:    ;; # (end cycle 56)
@@ -1060,203 +1037,205 @@ entry:
   %cmp11 = icmp sgt i32 %n, 0
   br i1 %cmp11, label %for.body.preheader, label %for.cond.cleanup
 
-for.body.preheader:                               ; preds = %entry
-  %wide.trip.count = zext i32 %n to i64
-  %1 = add nsw i64 %wide.trip.count, -1
+for.body.preheader:
+  %wide.trip.count = zext nneg i32 %n to i64
   %xtraiter = and i64 %wide.trip.count, 7
-  %2 = icmp ult i64 %1, 7
-  br i1 %2, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
+  %1 = icmp ult i32 %n, 8
+  br i1 %1, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body.preheader.new
 
-for.body.preheader.new:                           ; preds = %for.body.preheader
-  %unroll_iter = sub nsw i64 %wide.trip.count, %xtraiter
+for.body.preheader.new:
+  %unroll_iter = and i64 %wide.trip.count, 2147483640
   br label %for.body
 
-for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body.preheader
+for.cond.cleanup.loopexit.unr-lcssa:
   %indvars.iv.unr = phi i64 [ 0, %for.body.preheader ], [ %indvars.iv.next.7, %for.body ]
   %lcmp.mod = icmp eq i64 %xtraiter, 0
   br i1 %lcmp.mod, label %for.cond.cleanup, label %for.body.epil
 
-for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa
-  %3 = trunc i64 %indvars.iv.unr to i32
-  %sub.epil = sub nsw i32 %n, %3
+for.body.epil:
+  %2 = trunc i64 %indvars.iv.unr to i32
+  %sub.epil = sub nsw i32 %n, %2
   %arrayidx.epil = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.unr
   store i32 %sub.epil, ptr %arrayidx.epil, align 4
-  %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
   %epil.iter.cmp = icmp eq i64 %xtraiter, 1
   br i1 %epil.iter.cmp, label %for.cond.cleanup, label %for.body.epil.1
 
-for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil.5, %for.body.epil.4, %for.body.epil.3, %for.body.epil.2, %for.body.epil.1, %for.body.epil, %for.body.epil.6, %entry
-  %4 = bitcast ptr %i to ptr 
-  call void @llvm.lifetime.start.p0i8(i64 4, ptr nonnull %4) #3
+for.cond.cleanup:
+  call void @llvm.lifetime.start.p0(i64 4, ptr nonnull %i)
   store i32 1234, ptr %i, align 128
-  %5 = load i32, ptr @g1, align 4
-  %6 = load i32, ptr @g2, align 4
-  %7 = load i32, ptr @g3, align 4
-  %8 = load i32, ptr @g4, align 4
-  %9 = load i32, ptr @g5, align 4
-  %10 = load i32, ptr @g6, align 4
-  %11 = load i32, ptr @g7, align 4
-  %12 = load i32, ptr @g8, align 4
-  %13 = load i32, ptr @g9, align 4
-  %14 = load i32, ptr @g10, align 4
-  %15 = load i32, ptr @g11, align 4
-  %16 = load i32, ptr @g12, align 4
-  %17 = load i32, ptr @g13, align 4
-  %18 = load i32, ptr @g14, align 4
-  %19 = load i32, ptr @g15, align 4
-  %20 = load i32, ptr @g16, align 4
-  %21 = load i32, ptr @g17, align 4
-  %22 = load i32, ptr @g18, align 4
-  %23 = load i32, ptr @g19, align 4
-  %24 = load i32, ptr @g20, align 4
-  %25 = load i32, ptr @g21, align 4
-  %26 = load i32, ptr @g22, align 4
-  %27 = load i32, ptr @g23, align 4
-  %28 = load i32, ptr @g24, align 4
-  %29 = load i32, ptr @g25, align 4
-  %30 = load i32, ptr @g26, align 4
-  %31 = load i32, ptr @g27, align 4
-  %32 = load i32, ptr @g28, align 4
-  %33 = load i32, ptr @g29, align 4
-  %34 = load i32, ptr @g30, align 4
-  %35 = load i32, ptr @g31, align 4
-  %36 = load i32, ptr @g32, align 4
-  %37 = load i32, ptr @g33, align 4
-  %38 = load i32, ptr @g34, align 4
-  %39 = load i32, ptr @g35, align 4
-  %40 = load i32, ptr @g36, align 4
-  %41 = load i32, ptr @g37, align 4
-  %42 = load i32, ptr @g38, align 4
-  %43 = load i32, ptr @g39, align 4
-  %44 = load i32, ptr @g40, align 4
-  %45 = load i32, ptr @g41, align 4
-  %46 = load i32, ptr @g42, align 4
-  %47 = load i32, ptr @g43, align 4
-  %48 = load i32, ptr @g44, align 4
-  %49 = load i32, ptr @g45, align 4
-  %50 = load i32, ptr @g46, align 4
-  %51 = load i32, ptr @g47, align 4
-  %52 = load i32, ptr @g48, align 4
-  %53 = load i32, ptr @g49, align 4
-  %54 = load i32, ptr @g50, align 4
-  %55 = load i32, ptr @g51, align 4
-  %56 = load i32, ptr @g52, align 4
-  %57 = load i32, ptr @g53, align 4
-  %58 = load i32, ptr @g54, align 4
-  %59 = load i32, ptr @g55, align 4
-  %60 = load i32, ptr @g56, align 4
-  %61 = load i32, ptr @g57, align 4
-  %62 = load i32, ptr @g58, align 4
-  %63 = load i32, ptr @g59, align 4
-  %64 = load i32, ptr @g60, align 4
-  %65 = load i32, ptr @g61, align 4
-  %66 = load i32, ptr @g62, align 4
-  %67 = load i32, ptr @g63, align 4
-  %68 = load i32, ptr @g64, align 4
-  %69 = load i32, ptr @g65, align 4
-  %call = call i32 @other4(ptr nonnull %0, i32 %n, ptr nonnull %i, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14, i32 %15, i32 %16, i32 %17, i32 %18, i32 %19, i32 %20, i32 %21, i32 %22, i32 %23, i32 %24, i32 %25, i32 %26, i32 %27, i32 %28, i32 %29, i32 %30, i32 %31, i32 %32, i32 %33, i32 %34, i32 %35, i32 %36, i32 %37, i32 %38, i32 %39, i32 %40, i32 %41, i32 %42, i32 %43, i32 %44, i32 %45, i32 %46, i32 %47, i32 %48, i32 %49, i32 %50, i32 %51, i32 %52, i32 %53, i32 %54, i32 %55, i32 %56, i32 %57, i32 %58, i32 %59, i32 %60, i32 %61, i32 %62, i32 %63, i32 %64, i32 %65, i32 %66, i32 %67, i32 %68, i32 %69) #3
-  call void @llvm.lifetime.end.p0i8(i64 4, ptr nonnull %4) #3
+  %3 = load i32, ptr @g1, align 4
+  %4 = load i32, ptr @g2, align 4
+  %5 = load i32, ptr @g3, align 4
+  %6 = load i32, ptr @g4, align 4
+  %7 = load i32, ptr @g5, align 4
+  %8 = load i32, ptr @g6, align 4
+  %9 = load i32, ptr @g7, align 4
+  %10 = load i32, ptr @g8, align 4
+  %11 = load i32, ptr @g9, align 4
+  %12 = load i32, ptr @g10, align 4
+  %13 = load i32, ptr @g11, align 4
+  %14 = load i32, ptr @g12, align 4
+  %15 = load i32, ptr @g13, align 4
+  %16 = load i32, ptr @g14, align 4
+  %17 = load i32, ptr @g15, align 4
+  %18 = load i32, ptr @g16, align 4
+  %19 = load i32, ptr @g17, align 4
+  %20 = load i32, ptr @g18, align 4
+  %21 = load i32, ptr @g19, align 4
+  %22 = load i32, ptr @g20, align 4
+  %23 = load i32, ptr @g21, align 4
+  %24 = load i32, ptr @g22, align 4
+  %25 = load i32, ptr @g23, align 4
+  %26 = load i32, ptr @g24, align 4
+  %27 = load i32, ptr @g25, align 4
+  %28 = load i32, ptr @g26, align 4
+  %29 = load i32, ptr @g27, align 4
+  %30 = load i32, ptr @g28, align 4
+  %31 = load i32, ptr @g29, align 4
+  %32 = load i32, ptr @g30, align 4
+  %33 = load i32, ptr @g31, align 4
+  %34 = load i32, ptr @g32, align 4
+  %35 = load i32, ptr @g33, align 4
+  %36 = load i32, ptr @g34, align 4
+  %37 = load i32, ptr @g35, align 4
+  %38 = load i32, ptr @g36, align 4
+  %39 = load i32, ptr @g37, align 4
+  %40 = load i32, ptr @g38, align 4
+  %41 = load i32, ptr @g39, align 4
+  %42 = load i32, ptr @g40, align 4
+  %43 = load i32, ptr @g41, align 4
+  %44 = load i32, ptr @g42, align 4
+  %45 = load i32, ptr @g43, align 4
+  %46 = load i32, ptr @g44, align 4
+  %47 = load i32, ptr @g45, align 4
+  %48 = load i32, ptr @g46, align 4
+  %49 = load i32, ptr @g47, align 4
+  %50 = load i32, ptr @g48, align 4
+  %51 = load i32, ptr @g49, align 4
+  %52 = load i32, ptr @g50, align 4
+  %53 = load i32, ptr @g51, align 4
+  %54 = load i32, ptr @g52, align 4
+  %55 = load i32, ptr @g53, align 4
+  %56 = load i32, ptr @g54, align 4
+  %57 = load i32, ptr @g55, align 4
+  %58 = load i32, ptr @g56, align 4
+  %59 = load i32, ptr @g57, align 4
+  %60 = load i32, ptr @g58, align 4
+  %61 = load i32, ptr @g59, align 4
+  %62 = load i32, ptr @g60, align 4
+  %63 = load i32, ptr @g61, align 4
+  %64 = load i32, ptr @g62, align 4
+  %65 = load i32, ptr @g63, align 4
+  %66 = load i32, ptr @g64, align 4
+  %67 = load i32, ptr @g65, align 4
+  %call = call i32 @other4(ptr nonnull %0, i32 %n, ptr nonnull %i, i32 %3, i32 %4, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32 %12, i32 %13, i32 %14, i32 %15, i32 %16, i32 %17, i32 %18, i32 %19, i32 %20, i32 %21, i32 %22, i32 %23, i32 %24, i32 %25, i32 %26, i32 %27, i32 %28, i32 %29, i32 %30, i32 %31, i32 %32, i32 %33, i32 %34, i32 %35, i32 %36, i32 %37, i32 %38, i32 %39, i32 %40, i32 %41, i32 %42, i32 %43, i32 %44, i32 %45, i32 %46, i32 %47, i32 %48, i32 %49, i32 %50, i32 %51, i32 %52, i32 %53, i32 %54, i32 %55, i32 %56, i32 %57, i32 %58, i32 %59, i32 %60, i32 %61, i32 %62, i32 %63, i32 %64, i32 %65, i32 %66, i32 %67)
+  call void @llvm.lifetime.end.p0(i64 4, ptr nonnull %i)
   ret i32 %call
 
-for.body:                                         ; preds = %for.body, %for.body.preheader.new
+for.body:
   %indvars.iv = phi i64 [ 0, %for.body.preheader.new ], [ %indvars.iv.next.7, %for.body ]
   %niter = phi i64 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
-  %70 = trunc i64 %indvars.iv to i32
-  %sub = sub nsw i32 %n, %70
+  %68 = trunc i64 %indvars.iv to i32
+  %sub = sub nsw i32 %n, %68
   %arrayidx = getelementptr inbounds i32, ptr %0, i64 %indvars.iv
   store i32 %sub, ptr %arrayidx, align 8
-  %indvars.iv.next = or i64 %indvars.iv, 1
-  %71 = trunc i64 %indvars.iv.next to i32
-  %sub.1 = sub nsw i32 %n, %71
+  %indvars.iv.next = or disjoint i64 %indvars.iv, 1
+  %69 = trunc i64 %indvars.iv.next to i32
+  %sub.1 = sub nsw i32 %n, %69
   %arrayidx.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next
   store i32 %sub.1, ptr %arrayidx.1, align 4
-  %indvars.iv.next.1 = or i64 %indvars.iv, 2
-  %72 = trunc i64 %indvars.iv.next.1 to i32
-  %sub.2 = sub nsw i32 %n, %72
+  %indvars.iv.next.1 = or disjoint i64 %indvars.iv, 2
+  %70 = trunc i64 %indvars.iv.next.1 to i32
+  %sub.2 = sub nsw i32 %n, %70
   %arrayidx.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.1
   store i32 %sub.2, ptr %arrayidx.2, align 8
-  %indvars.iv.next.2 = or i64 %indvars.iv, 3
-  %73 = trunc i64 %indvars.iv.next.2 to i32
-  %sub.3 = sub nsw i32 %n, %73
+  %indvars.iv.next.2 = or disjoint i64 %indvars.iv, 3
+  %71 = trunc i64 %indvars.iv.next.2 to i32
+  %sub.3 = sub nsw i32 %n, %71
   %arrayidx.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.2
   store i32 %sub.3, ptr %arrayidx.3, align 4
-  %indvars.iv.next.3 = or i64 %indvars.iv, 4
-  %74 = trunc i64 %indvars.iv.next.3 to i32
-  %sub.4 = sub nsw i32 %n, %74
+  %indvars.iv.next.3 = or disjoint i64 %indvars.iv, 4
+  %72 = trunc i64 %indvars.iv.next.3 to i32
+  %sub.4 = sub nsw i32 %n, %72
   %arrayidx.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.3
   store i32 %sub.4, ptr %arrayidx.4, align 8
-  %indvars.iv.next.4 = or i64 %indvars.iv, 5
-  %75 = trunc i64 %indvars.iv.next.4 to i32
-  %sub.5 = sub nsw i32 %n, %75
+  %indvars.iv.next.4 = or disjoint i64 %indvars.iv, 5
+  %73 = trunc i64 %indvars.iv.next.4 to i32
+  %sub.5 = sub nsw i32 %n, %73
   %arrayidx.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.4
   store i32 %sub.5, ptr %arrayidx.5, align 4
-  %indvars.iv.next.5 = or i64 %indvars.iv, 6
-  %76 = trunc i64 %indvars.iv.next.5 to i32
-  %sub.6 = sub nsw i32 %n, %76
+  %indvars.iv.next.5 = or disjoint i64 %indvars.iv, 6
+  %74 = trunc i64 %indvars.iv.next.5 to i32
+  %sub.6 = sub nsw i32 %n, %74
   %arrayidx.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.5
   store i32 %sub.6, ptr %arrayidx.6, align 8
-  %indvars.iv.next.6 = or i64 %indvars.iv, 7
-  %77 = trunc i64 %indvars.iv.next.6 to i32
-  %sub.7 = sub nsw i32 %n, %77
+  %indvars.iv.next.6 = or disjoint i64 %indvars.iv, 7
+  %75 = trunc i64 %indvars.iv.next.6 to i32
+  %sub.7 = sub nsw i32 %n, %75
   %arrayidx.7 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.6
   store i32 %sub.7, ptr %arrayidx.7, align 4
   %indvars.iv.next.7 = add nuw nsw i64 %indvars.iv, 8
-  %niter.nsub.7 = add i64 %niter, -8
+  %niter.nsub.7 = add nsw i64 %niter, -8
   %niter.ncmp.7 = icmp eq i64 %niter.nsub.7, 0
   br i1 %niter.ncmp.7, label %for.cond.cleanup.loopexit.unr-lcssa, label %for.body
 
-for.body.epil.1:                                  ; preds = %for.body.epil
-  %78 = trunc i64 %indvars.iv.next.epil to i32
-  %sub.epil.1 = sub nsw i32 %n, %78
+for.body.epil.1:
+  %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.unr, 1
+  %76 = trunc i64 %indvars.iv.next.epil to i32
+  %sub.epil.1 = sub nsw i32 %n, %76
   %arrayidx.epil.1 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil
   store i32 %sub.epil.1, ptr %arrayidx.epil.1, align 4
-  %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
   %epil.iter.cmp.1 = icmp eq i64 %xtraiter, 2
   br i1 %epil.iter.cmp.1, label %for.cond.cleanup, label %for.body.epil.2
 
-for.body.epil.2:                                  ; preds = %for.body.epil.1
-  %79 = trunc i64 %indvars.iv.next.epil.1 to i32
-  %sub.epil.2 = sub nsw i32 %n, %79
+for.body.epil.2:
+  %indvars.iv.next.epil.1 = add nuw nsw i64 %indvars.iv.unr, 2
+  %77 = trunc i64 %indvars.iv.next.epil.1 to i32
+  %sub.epil.2 = sub nsw i32 %n, %77
   %arrayidx.epil.2 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.1
   store i32 %sub.epil.2, ptr %arrayidx.epil.2, align 4
-  %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
   %epil.iter.cmp.2 = icmp eq i64 %xtraiter, 3
   br i1 %epil.iter.cmp.2, label %for.cond.cleanup, label %for.body.epil.3
 
-for.body.epil.3:                                  ; preds = %for.body.epil.2
-  %80 = trunc i64 %indvars.iv.next.epil.2 to i32
-  %sub.epil.3 = sub nsw i32 %n, %80
+for.body.epil.3:
+  %indvars.iv.next.epil.2 = add nuw nsw i64 %indvars.iv.unr, 3
+  %78 = trunc i64 %indvars.iv.next.epil.2 to i32
+  %sub.epil.3 = sub nsw i32 %n, %78
   %arrayidx.epil.3 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.2
   store i32 %sub.epil.3, ptr %arrayidx.epil.3, align 4
-  %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
   %epil.iter.cmp.3 = icmp eq i64 %xtraiter, 4
   br i1 %epil.iter.cmp.3, label %for.cond.cleanup, label %for.body.epil.4
 
-for.body.epil.4:                                  ; preds = %for.body.epil.3
-  %81 = trunc i64 %indvars.iv.next.epil.3 to i32
-  %sub.epil.4 = sub nsw i32 %n, %81
+for.body.epil.4:
+  %indvars.iv.next.epil.3 = add nuw nsw i64 %indvars.iv.unr, 4
+  %79 = trunc i64 %indvars.iv.next.epil.3 to i32
+  %sub.epil.4 = sub nsw i32 %n, %79
   %arrayidx.epil.4 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.3
   store i32 %sub.epil.4, ptr %arrayidx.epil.4, align 4
-  %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
   %epil.iter.cmp.4 = icmp eq i64 %xtraiter, 5
   br i1 %epil.iter.cmp.4, label %for.cond.cleanup, label %for.body.epil.5
 
-for.body.epil.5:                                  ; preds = %for.body.epil.4
-  %82 = trunc i64 %indvars.iv.next.epil.4 to i32
-  %sub.epil.5 = sub nsw i32 %n, %82
+for.body.epil.5:
+  %indvars.iv.next.epil.4 = add nuw nsw i64 %indvars.iv.unr, 5
+  %80 = trunc i64 %indvars.iv.next.epil.4 to i32
+  %sub.epil.5 = sub nsw i32 %n, %80
   %arrayidx.epil.5 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.4
   store i32 %sub.epil.5, ptr %arrayidx.epil.5, align 4
-  %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
   %epil.iter.cmp.5 = icmp eq i64 %xtraiter, 6
   br i1 %epil.iter.cmp.5, label %for.cond.cleanup, label %for.body.epil.6
 
-for.body.epil.6:                                  ; preds = %for.body.epil.5
-  %83 = trunc i64 %indvars.iv.next.epil.5 to i32
-  %sub.epil.6 = sub nsw i32 %n, %83
+for.body.epil.6:
+  %indvars.iv.next.epil.5 = add nuw nsw i64 %indvars.iv.unr, 6
+  %81 = trunc i64 %indvars.iv.next.epil.5 to i32
+  %sub.epil.6 = sub nsw i32 %n, %81
   %arrayidx.epil.6 = getelementptr inbounds i32, ptr %0, i64 %indvars.iv.next.epil.5
   store i32 %sub.epil.6, ptr %arrayidx.epil.6, align 4
   br label %for.cond.cleanup
 }
 
-declare i32 @other4(ptr, i32, ptr, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) #2
+declare i32 @other4(ptr, i32, ptr, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32, i32) local_unnamed_addr
+
+declare void @llvm.lifetime.start.p0(i64 immarg, ptr nocapture)
+
+declare void @llvm.lifetime.end.p0(i64 immarg, ptr nocapture)
 

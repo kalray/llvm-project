@@ -35,11 +35,11 @@ define weak i32 @weak() {
 ; CHECK-NEXT:    igoto $r1
 ; CHECK-NEXT:    ;;
 entry:
-  %call = tail call i32 bitcast (i32 (...)* @b to i32 (i32 (...)*)*)(i32 (...)* bitcast (i32 ()* @weak to i32 (...)*))
+  %call = tail call i32 @b(ptr nonnull @weak)
   ret i32 undef
 }
 
-declare i32 @b(...)
+declare i32 @b(...) local_unnamed_addr
 
 define i32 @main() {
 ; CHECK-LABEL: main:
@@ -62,10 +62,9 @@ define i32 @main() {
 ; CHECK-NEXT:    ;;
 entry:
   %x = alloca [10 x i32], align 4
-  %0 = bitcast ptr %x to ptr 
-  %arraydecay = getelementptr inbounds [10 x i32], ptr %x, i64 0, i64 0
-  call void @f(ptr nonnull %arraydecay, i32 5) #4
+  call void @f(ptr nonnull %x, i32 5)
   ret i32 0
 }
 
-declare void @f(ptr, i32)
+declare void @f(ptr, i32) local_unnamed_addr
+

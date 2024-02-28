@@ -91,7 +91,7 @@ define i32 @f(){
 entry:
   %call = tail call i32 bitcast (i32 (...)* @g to i32 ()*)() #2
   %conv = sext i32 %call to i64
-  %0 = inttoptr i64 %conv to ptr 
+  %0 = inttoptr i64 %conv to ptr
   %1 = load ptr, ptr %0, align 8
   %2 = load double, ptr %1, align 8
   %arrayidx7.1 = getelementptr inbounds double, ptr %1, i64 1

@@ -13,7 +13,7 @@ target triple = "kvx-kalray-cos"
 ;   return toto[0];
 ; }
 
-define dso_local i32 @test(i32 %sz, i32 %x) {
+define i32 @test(i32 %sz, i32 %x) {
 ; FP-ALL-LABEL: test:
 ; FP-ALL:       # %bb.0: # %entry
 ; FP-ALL-NEXT:    sxwd $r0 = $r0
@@ -53,10 +53,9 @@ define dso_local i32 @test(i32 %sz, i32 %x) {
 entry:
   %conv = sext i32 %sz to i64
   %0 = alloca i8, i64 %conv, align 8
-  %1 = bitcast ptr %0 to ptr 
-  %call = call i32 @g1(i32 %x, ptr nonnull %1)
-  %2 = load i32, ptr %1, align 8
-  ret i32 %2
+  %call = call i32 @g1(i32 %x, ptr nonnull %0)
+  %1 = load i32, ptr %0, align 8
+  ret i32 %1
 }
 
-declare dso_local i32 @g1(i32, ptr )
+declare i32 @g1(i32, ptr) local_unnamed_addr

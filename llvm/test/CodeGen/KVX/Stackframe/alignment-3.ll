@@ -102,12 +102,10 @@ define i32 @f(i32 %sz) {
 entry:
   %conv = sext i32 %sz to i64
   %0 = alloca i8, i64 %conv, align 128
-  %1 = bitcast ptr %0 to ptr 
-  %2 = alloca [2 x i32], align 64
-  %.sub = getelementptr inbounds [2 x i32], ptr %2, i64 0, i64 0
-  %call = call i32 @g(ptr nonnull %1, ptr nonnull %.sub)
-  %3 = load i32, ptr %1, align 128
-  ret i32 %3
+  %1 = alloca [2 x i32], align 64
+  %call = call i32 @g(ptr nonnull %0, ptr nonnull %1)
+  %2 = load i32, ptr %0, align 128
+  ret i32 %2
 }
 
-declare i32 @g(ptr, ptr )
+declare i32 @g(ptr, ptr) local_unnamed_addr
