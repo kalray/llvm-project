@@ -6,12 +6,16 @@
 
 target triple = "kvx-kalray-cos"
 
-define i8 @loadcbc(i8 %a, ptr %ptr, i64 %cond) {
+define zeroext i8 @loadcbc(i8 noundef zeroext %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcbc:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lbz.dltz $r2 ? $r0 = [$r1]
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lbz.dltz $r2 ? $r0 = [$r1]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %conv = zext i8 %a to i64
   %0 = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 %conv, ptr %ptr, i32 8, i64 %cond, i32 0, i32 2, i32 -1)
@@ -19,7 +23,9 @@ entry:
   ret i8 %conv1
 }
 
-define i64 @loadcbl(i64 %a, ptr %ptr, i64 %cond) {
+declare i64 @llvm.kvx.loadc.u.i64.p0(i64, ptr, i32, i64, i32, i32, i32)
+
+define i64 @loadcbl(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcbl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lbz.dltz $r2 ? $r0 = [$r1]
@@ -30,12 +36,16 @@ entry:
   ret i64 %0
 }
 
-define i16 @loadchs(i16 %a, ptr %ptr, i64 %cond) {
+define zeroext i16 @loadchs(i16 noundef zeroext %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadchs:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
-; CHECK-NEXT:    ret
+; CHECK-NEXT:    zxwd $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 4)
 entry:
   %conv = zext i16 %a to i64
   %0 = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 %conv, ptr %ptr, i32 16, i64 %cond, i32 0, i32 2, i32 -1)
@@ -43,7 +53,7 @@ entry:
   ret i16 %conv1
 }
 
-define i64 @loadchl(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadchl(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadchl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
@@ -54,7 +64,7 @@ entry:
   ret i64 %0
 }
 
-define i32 @loadcwi(i32 %a, ptr %ptr, i64 %cond) {
+define i32 @loadcwi(i32 noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwi:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
@@ -67,7 +77,7 @@ entry:
   ret i32 %conv1
 }
 
-define i64 @loadcwl(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadcwl(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
@@ -78,7 +88,7 @@ entry:
   ret i64 %0
 }
 
-define i64 @loadcdl(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadcdl(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcdl:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
@@ -89,7 +99,7 @@ entry:
   ret i64 %0
 }
 
-define i128 @loadcq(i128 %a, ptr %ptr, i64 %cond) {
+define i128 @loadcq(i128 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcq:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq.dltz $r3 ? $r0r1 = [$r2]
@@ -102,7 +112,9 @@ entry:
   ret i128 %2
 }
 
-define half @loadchf(half %a, ptr %ptr, i64 %cond) {
+declare <2 x i64> @llvm.kvx.loadc.u.v2i64.p0(<2 x i64>, ptr, i32, i64, i32, i32, i32)
+
+define half @loadchf(half noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadchf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lhz.dltz $r2 ? $r0 = [$r1]
@@ -113,7 +125,9 @@ entry:
   ret half %0
 }
 
-define float @loadcwf(float %a, ptr %ptr, i64 %cond) {
+declare half @llvm.kvx.loadc.u.f16.p0(half, ptr, i32, i64, i32, i32, i32)
+
+define float @loadcwf(float noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.dltz $r2 ? $r0 = [$r1]
@@ -124,7 +138,9 @@ entry:
   ret float %0
 }
 
-define double @loadcdf(double %a, ptr %ptr, i64 %cond) {
+declare float @llvm.kvx.loadc.u.f32.p0(float, ptr, i32, i64, i32, i32, i32)
+
+define double @loadcdf(double noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcdf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
@@ -135,7 +151,9 @@ entry:
   ret double %0
 }
 
-define <2 x i32> @loadc64(<2 x i32> %a, ptr %ptr, i64 %cond) {
+declare double @llvm.kvx.loadc.u.f64.p0(double, ptr, i32, i64, i32, i32, i32)
+
+define <2 x i32> @loadc64(<2 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc64:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    ld.dltz $r2 ? $r0 = [$r1]
@@ -146,7 +164,9 @@ entry:
   ret <2 x i32> %0
 }
 
-define <4 x i32> @loadc128(<4 x i32> %a, ptr %ptr, i64 %cond) {
+declare <2 x i32> @llvm.kvx.loadc.u.v2i32.p0(<2 x i32>, ptr, i32, i64, i32, i32, i32)
+
+define <4 x i32> @loadc128(<4 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc128:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lq.dltz $r3 ? $r0r1 = [$r2]
@@ -159,7 +179,7 @@ entry:
   ret <4 x i32> %2
 }
 
-define i64 @loadcwls(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadcwls(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwls:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.s.dltz $r2 ? $r0 = [$r1]
@@ -170,7 +190,7 @@ entry:
   ret i64 %0
 }
 
-define i64 @loadcwlu(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadcwlu(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwlu:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.u.dltz $r2 ? $r0 = [$r1]
@@ -181,7 +201,7 @@ entry:
   ret i64 %0
 }
 
-define i64 @loadcwlus(i64 %a, ptr %ptr, i64 %cond) {
+define i64 @loadcwlus(i64 noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadcwlus:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz.us.dltz $r2 ? $r0 = [$r1]
@@ -192,7 +212,7 @@ entry:
   ret i64 %0
 }
 
-define <8 x i32> @loadc256_dltz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dltz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_dltz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dltz $r5 ? $r0r1r2r3 = [$r4]
@@ -205,7 +225,9 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_dnez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+declare <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64>, ptr, i32, i64, i32, i32, i32)
+
+define <8 x i32> @loadc256_dnez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_dnez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dnez $r5 ? $r0r1r2r3 = [$r4]
@@ -218,7 +240,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_deqz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_deqz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_deqz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.deqz $r5 ? $r0r1r2r3 = [$r4]
@@ -231,7 +253,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_dgez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dgez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_dgez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dgez $r5 ? $r0r1r2r3 = [$r4]
@@ -244,7 +266,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_dlez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dlez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_dlez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dlez $r5 ? $r0r1r2r3 = [$r4]
@@ -257,7 +279,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_dgtz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_dgtz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_dgtz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.dgtz $r5 ? $r0r1r2r3 = [$r4]
@@ -270,7 +292,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_odd(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_odd(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_odd:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.odd $r5 ? $r0r1r2r3 = [$r4]
@@ -283,7 +305,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_even(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_even(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_even:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.even $r5 ? $r0r1r2r3 = [$r4]
@@ -296,7 +318,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_wnez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wnez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_wnez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wnez $r5 ? $r0r1r2r3 = [$r4]
@@ -309,7 +331,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_weqz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_weqz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_weqz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.weqz $r5 ? $r0r1r2r3 = [$r4]
@@ -322,7 +344,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_wltz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wltz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_wltz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wltz $r5 ? $r0r1r2r3 = [$r4]
@@ -335,7 +357,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_wgez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wgez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_wgez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wgez $r5 ? $r0r1r2r3 = [$r4]
@@ -348,7 +370,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_wlez(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wlez(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_wlez:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wlez $r5 ? $r0r1r2r3 = [$r4]
@@ -361,7 +383,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_wgtz(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_wgtz(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_wgtz:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.wgtz $r5 ? $r0r1r2r3 = [$r4]
@@ -374,7 +396,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define i32 @loadc_vol(i32 %a, ptr %ptr, i64 %cond) {
+define i32 @loadc_vol(i32 noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc_vol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
@@ -389,7 +411,9 @@ entry:
   ret i32 %conv3
 }
 
-define i32 @loadc_novol(i32 %a, ptr %ptr, i64 %cond) {
+declare i64 @llvm.kvx.loadc.u.vol.i64.p0(i64, ptr, i32, i64, i32, i32, i32)
+
+define i32 @loadc_novol(i32 noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc_novol:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    sxwd $r0 = $r0
@@ -403,20 +427,4 @@ entry:
   %conv3 = trunc i64 %0 to i32
   ret i32 %conv3
 }
-
-declare i64 @llvm.kvx.loadc.u.i64.p0(i64, ptr, i32, i64, i32, i32, i32)
-
-declare <2 x i64> @llvm.kvx.loadc.u.v2i64.p0(<2 x i64>, ptr, i32, i64, i32, i32, i32)
-
-declare half @llvm.kvx.loadc.u.f16.p0(half, ptr, i32, i64, i32, i32, i32)
-
-declare float @llvm.kvx.loadc.u.f32.p0(float, ptr, i32, i64, i32, i32, i32)
-
-declare double @llvm.kvx.loadc.u.f64.p0(double, ptr, i32, i64, i32, i32, i32)
-
-declare <2 x i32> @llvm.kvx.loadc.u.v2i32.p0(<2 x i32>, ptr, i32, i64, i32, i32, i32)
-
-declare <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64>, ptr, i32, i64, i32, i32, i32)
-
-declare i64 @llvm.kvx.loadc.u.vol.i64.p0(i64, ptr, i32, i64, i32, i32, i32)
 

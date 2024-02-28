@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define <8 x i32> @loadc256_mt(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_mt(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r5 ? $r0r1r2r3 = [$r4]
@@ -17,7 +17,9 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_mf(<8 x i32> %a, ptr %ptr, i64 %cond) {
+declare <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64>, ptr, i32, i64, i32, i32, i32)
+
+define <8 x i32> @loadc256_mf(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r5 ? $r0r1r2r3 = [$r4]
@@ -30,7 +32,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_mtc(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_mtc(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_mtc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r5 ? $r0r1r2r3 = [$r4]
@@ -43,7 +45,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <8 x i32> @loadc256_mfc(<8 x i32> %a, ptr %ptr, i64 %cond) {
+define <8 x i32> @loadc256_mfc(<8 x i32> noundef %a, ptr noundef readonly %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc256_mfc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r5 ? $r0r1r2r3 = [$r4]
@@ -56,7 +58,7 @@ entry:
   ret <8 x i32> %2
 }
 
-define <4 x i32> @loadc128_mt(<4 x i32> %a, ptr %ptr, i64 %cond) {
+define <4 x i32> @loadc128_mt(<4 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc128_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r3 ? $r0r1r2r3 = [$r2]
@@ -65,13 +67,14 @@ define <4 x i32> @loadc128_mt(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 4)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
-  %4 = bitcast <2 x i64> %3 to <4 x i32>
-  ret <4 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 4)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+  %5 = bitcast <2 x i64> %4 to <4 x i32>
+  ret <4 x i32> %5
 }
 
-define <4 x i32> @loadc128_mf(<4 x i32> %a, ptr %ptr, i64 %cond) {
+define <4 x i32> @loadc128_mf(<4 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc128_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r3 ? $r0r1r2r3 = [$r2]
@@ -80,13 +83,14 @@ define <4 x i32> @loadc128_mf(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 5)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
-  %4 = bitcast <2 x i64> %3 to <4 x i32>
-  ret <4 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 5)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+  %5 = bitcast <2 x i64> %4 to <4 x i32>
+  ret <4 x i32> %5
 }
 
-define <4 x i32> @loadc128_mtc(<4 x i32> %a, ptr %ptr, i64 %cond) {
+define <4 x i32> @loadc128_mtc(<4 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc128_mtc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r3 ? $r0r1r2r3 = [$r2]
@@ -95,13 +99,14 @@ define <4 x i32> @loadc128_mtc(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 6)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
-  %4 = bitcast <2 x i64> %3 to <4 x i32>
-  ret <4 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 6)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+  %5 = bitcast <2 x i64> %4 to <4 x i32>
+  ret <4 x i32> %5
 }
 
-define <4 x i32> @loadc128_mfc(<4 x i32> %a, ptr %ptr, i64 %cond) {
+define <4 x i32> @loadc128_mfc(<4 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc128_mfc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r3 ? $r0r1r2r3 = [$r2]
@@ -110,13 +115,14 @@ define <4 x i32> @loadc128_mfc(<4 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = shufflevector <2 x i64> %0, <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 7)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
-  %4 = bitcast <2 x i64> %3 to <4 x i32>
-  ret <4 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 7)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+  %5 = bitcast <2 x i64> %4 to <4 x i32>
+  ret <4 x i32> %5
 }
 
-define <2 x i32> @loadc64_mt(<2 x i32> %a, ptr %ptr, i64 %cond) {
+define <2 x i32> @loadc64_mt(<2 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc64_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mt $r2 ? $r0r1r2r3 = [$r1]
@@ -125,13 +131,14 @@ define <2 x i32> @loadc64_mt(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 4)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <1 x i32> zeroinitializer
-  %4 = bitcast <1 x i64> %3 to <2 x i32>
-  ret <2 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 4)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <1 x i32> zeroinitializer
+  %5 = bitcast <1 x i64> %4 to <2 x i32>
+  ret <2 x i32> %5
 }
 
-define <2 x i32> @loadc64_mf(<2 x i32> %a, ptr %ptr, i64 %cond) {
+define <2 x i32> @loadc64_mf(<2 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc64_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mf $r2 ? $r0r1r2r3 = [$r1]
@@ -140,13 +147,14 @@ define <2 x i32> @loadc64_mf(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 5)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <1 x i32> zeroinitializer
-  %4 = bitcast <1 x i64> %3 to <2 x i32>
-  ret <2 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 5)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <1 x i32> zeroinitializer
+  %5 = bitcast <1 x i64> %4 to <2 x i32>
+  ret <2 x i32> %5
 }
 
-define <2 x i32> @loadc64_mtc(<2 x i32> %a, ptr %ptr, i64 %cond) {
+define <2 x i32> @loadc64_mtc(<2 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc64_mtc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mtc $r2 ? $r0r1r2r3 = [$r1]
@@ -155,13 +163,14 @@ define <2 x i32> @loadc64_mtc(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 6)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <1 x i32> zeroinitializer
-  %4 = bitcast <1 x i64> %3 to <2 x i32>
-  ret <2 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 6)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <1 x i32> zeroinitializer
+  %5 = bitcast <1 x i64> %4 to <2 x i32>
+  ret <2 x i32> %5
 }
 
-define <2 x i32> @loadc64_mfc(<2 x i32> %a, ptr %ptr, i64 %cond) {
+define <2 x i32> @loadc64_mfc(<2 x i32> noundef %a, ptr noundef %ptr, i64 noundef %cond) {
 ; CHECK-LABEL: loadc64_mfc:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo.mfc $r2 ? $r0r1r2r3 = [$r1]
@@ -170,11 +179,10 @@ define <2 x i32> @loadc64_mfc(<2 x i32> %a, ptr %ptr, i64 %cond) {
 entry:
   %0 = bitcast <2 x i32> %a to <1 x i64>
   %1 = shufflevector <1 x i64> %0, <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
-  %2 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %1, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 7)
-  %3 = shufflevector <4 x i64> %2, <4 x i64> poison, <1 x i32> zeroinitializer
-  %4 = bitcast <1 x i64> %3 to <2 x i32>
-  ret <2 x i32> %4
+  %2 = shufflevector <4 x i64> %1, <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+  %3 = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> %2, ptr %ptr, i32 256, i64 %cond, i32 0, i32 -1, i32 7)
+  %4 = shufflevector <4 x i64> %3, <4 x i64> poison, <1 x i32> zeroinitializer
+  %5 = bitcast <1 x i64> %4 to <2 x i32>
+  ret <2 x i32> %5
 }
-
-declare <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64>, ptr, i32, i64, i32, i32, i32)
 

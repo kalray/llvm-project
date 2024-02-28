@@ -10,7 +10,7 @@ typedef int __attribute__((__vector_size__(8 * sizeof(int)))) v8i32;
 // CHECK-LABEL: @loadc256_mt(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -19,7 +19,7 @@ v8i32 loadc256_mt(v8i32 a, void * ptr, unsigned long cond) {return __builtin_kvx
 // CHECK-LABEL: @loadc256_mf(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -28,7 +28,7 @@ v8i32 loadc256_mf(v8i32 a, void * ptr, unsigned long cond) {return __builtin_kvx
 // CHECK-LABEL: @loadc256_mtc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -37,7 +37,7 @@ v8i32 loadc256_mtc(v8i32 a, void * ptr, unsigned long cond) {return __builtin_kv
 // CHECK-LABEL: @loadc256_mfc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -46,88 +46,96 @@ v8i32 loadc256_mfc(v8i32 a, void * ptr, unsigned long cond) {return __builtin_kv
 // CHECK-LABEL: @loadc128_mt(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <2 x i64> [[TMP3]] to <4 x i32>
-// CHECK-NEXT:    ret <4 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <2 x i64> [[TMP4]] to <4 x i32>
+// CHECK-NEXT:    ret <4 x i32> [[TMP5]]
 //
 v4i32 loadc128_mt(v4i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc128(a, ptr, cond, ".mt");}
 
 // CHECK-LABEL: @loadc128_mf(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <2 x i64> [[TMP3]] to <4 x i32>
-// CHECK-NEXT:    ret <4 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <2 x i64> [[TMP4]] to <4 x i32>
+// CHECK-NEXT:    ret <4 x i32> [[TMP5]]
 //
 v4i32 loadc128_mf(v4i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc128(a, ptr, cond, ".mf");}
 
 // CHECK-LABEL: @loadc128_mtc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <2 x i64> [[TMP3]] to <4 x i32>
-// CHECK-NEXT:    ret <4 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <2 x i64> [[TMP4]] to <4 x i32>
+// CHECK-NEXT:    ret <4 x i32> [[TMP5]]
 //
 v4i32 loadc128_mtc(v4i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc128(a, ptr, cond, ".mtc");}
 
 // CHECK-LABEL: @loadc128_mfc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <2 x i32> <i32 0, i32 1>
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <2 x i64> [[TMP3]] to <4 x i32>
-// CHECK-NEXT:    ret <4 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <2 x i64> [[TMP0]], <2 x i64> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 poison, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <2 x i32> <i32 0, i32 1>
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <2 x i64> [[TMP4]] to <4 x i32>
+// CHECK-NEXT:    ret <4 x i32> [[TMP5]]
 //
 v4i32 loadc128_mfc(v4i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc128(a, ptr, cond, ".mfc");}
 
 // CHECK-LABEL: @loadc64_mt(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i32> [[A:%.*]] to <1 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <1 x i32> zeroinitializer
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <1 x i64> [[TMP3]] to <2 x i32>
-// CHECK-NEXT:    ret <2 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 4)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <1 x i32> zeroinitializer
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <1 x i64> [[TMP4]] to <2 x i32>
+// CHECK-NEXT:    ret <2 x i32> [[TMP5]]
 //
 v2i32 loadc64_mt(v2i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc64(a, ptr, cond, ".mt");}
 
 // CHECK-LABEL: @loadc64_mf(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i32> [[A:%.*]] to <1 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <1 x i32> zeroinitializer
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <1 x i64> [[TMP3]] to <2 x i32>
-// CHECK-NEXT:    ret <2 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 5)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <1 x i32> zeroinitializer
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <1 x i64> [[TMP4]] to <2 x i32>
+// CHECK-NEXT:    ret <2 x i32> [[TMP5]]
 //
 v2i32 loadc64_mf(v2i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc64(a, ptr, cond, ".mf");}
 
 // CHECK-LABEL: @loadc64_mtc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i32> [[A:%.*]] to <1 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <1 x i32> zeroinitializer
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <1 x i64> [[TMP3]] to <2 x i32>
-// CHECK-NEXT:    ret <2 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 6)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <1 x i32> zeroinitializer
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <1 x i64> [[TMP4]] to <2 x i32>
+// CHECK-NEXT:    ret <2 x i32> [[TMP5]]
 //
 v2i32 loadc64_mtc(v2i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc64(a, ptr, cond, ".mtc");}
 
 // CHECK-LABEL: @loadc64_mfc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <2 x i32> [[A:%.*]] to <1 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-// CHECK-NEXT:    [[TMP2:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP1]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
-// CHECK-NEXT:    [[TMP3:%.*]] = shufflevector <4 x i64> [[TMP2]], <4 x i64> undef, <1 x i32> zeroinitializer
-// CHECK-NEXT:    [[TMP4:%.*]] = bitcast <1 x i64> [[TMP3]] to <2 x i32>
-// CHECK-NEXT:    ret <2 x i32> [[TMP4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <1 x i64> [[TMP0]], <1 x i64> poison, <4 x i32> <i32 0, i32 poison, i32 poison, i32 poison>
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <4 x i64> [[TMP1]], <4 x i64> <i64 poison, i64 undef, i64 undef, i64 undef>, <4 x i32> <i32 0, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP3:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP2]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 -1, i32 7)
+// CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <4 x i64> [[TMP3]], <4 x i64> poison, <1 x i32> zeroinitializer
+// CHECK-NEXT:    [[TMP5:%.*]] = bitcast <1 x i64> [[TMP4]] to <2 x i32>
+// CHECK-NEXT:    ret <2 x i32> [[TMP5]]
 //
 v2i32 loadc64_mfc(v2i32 a, void * ptr, unsigned long cond) {return __builtin_kvx_loadc64(a, ptr, cond, ".mfc");}
 

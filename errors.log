@@ -1,9 +1,4 @@
 	FAIL: Clang :: CXX/module/module.import/p7.cpp
-	FAIL: Clang :: CodeGen/KVX/loadc-kv3-2.c
-	FAIL: Clang :: CodeGen/KVX/loadc.c
-	FAIL: Clang :: CodeGen/KVX/store.c
-	FAIL: Clang :: CodeGen/KVX/storec-kv3-2.c
-	FAIL: Clang :: CodeGen/KVX/storec.c
 	FAIL: Clang :: Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  8
+Failures:  3

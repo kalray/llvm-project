@@ -10,7 +10,7 @@ typedef int __attribute__((__vector_size__(8 * sizeof(int)))) v8i32;
 // CHECK-LABEL: @loadcbc(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = zext i8 [[A:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[CONV]], ptr [[PTR:%.*]], i32 8, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[CONV]], ptr [[PTR:%.*]], i32 8, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[CONV1:%.*]] = trunc i64 [[TMP0]] to i8
 // CHECK-NEXT:    ret i8 [[CONV1]]
 //
@@ -18,7 +18,7 @@ unsigned char loadcbc(unsigned char a, void *ptr, unsigned long cond) { return _
 
 // CHECK-LABEL: @loadcbl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 8, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 8, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcbl(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcbz(a, ptr, cond, ".dltz"); }
@@ -26,7 +26,7 @@ unsigned long loadcbl(unsigned long a, void *ptr, unsigned long cond) { return _
 // CHECK-LABEL: @loadchs(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = zext i16 [[A:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[CONV]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[CONV]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[CONV1:%.*]] = trunc i64 [[TMP0]] to i16
 // CHECK-NEXT:    ret i16 [[CONV1]]
 //
@@ -34,7 +34,7 @@ unsigned short loadchs(unsigned short a, void *ptr, unsigned long cond) { return
 
 // CHECK-LABEL: @loadchl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadchl(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadchz(a, ptr, cond, ".dltz"); }
@@ -42,7 +42,7 @@ unsigned long loadchl(unsigned long a, void *ptr, unsigned long cond) { return _
 // CHECK-LABEL: @loadcwi(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = zext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[CONV1:%.*]] = trunc i64 [[TMP0]] to i32
 // CHECK-NEXT:    ret i32 [[CONV1]]
 //
@@ -50,14 +50,14 @@ unsigned int loadcwi(unsigned int a, void *ptr, unsigned long cond) { return __b
 
 // CHECK-LABEL: @loadcwl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcwl(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcwz(a, ptr, cond, ".dltz"); }
 
 // CHECK-LABEL: @loadcdl(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcdl(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcd(a, ptr, cond, ".dltz"); }
@@ -65,7 +65,7 @@ unsigned long loadcdl(unsigned long a, void *ptr, unsigned long cond) { return _
 // CHECK-LABEL: @loadcq(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast i128 [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 128, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64.p0(<2 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 128, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <2 x i64> [[TMP1]] to i128
 // CHECK-NEXT:    ret i128 [[TMP2]]
 //
@@ -73,28 +73,28 @@ unsigned __int128 loadcq(unsigned __int128 a, void *ptr, unsigned long cond) { r
 
 // CHECK-LABEL: @loadchf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call half @llvm.kvx.loadc.u.f16(half [[A:%.*]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call half @llvm.kvx.loadc.u.f16.p0(half [[A:%.*]], ptr [[PTR:%.*]], i32 16, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret half [[TMP0]]
 //
 _Float16 loadchf(_Float16 a, void *ptr, unsigned long cond) { return __builtin_kvx_loadchf(a, ptr, cond, ".dltz"); }
 
 // CHECK-LABEL: @loadcwf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.loadc.u.f32(float [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call float @llvm.kvx.loadc.u.f32.p0(float [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret float [[TMP0]]
 //
 float loadcwf(float a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcwf(a, ptr, cond, ".dltz"); }
 
 // CHECK-LABEL: @loadcdf(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.loadc.u.f64(double [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call double @llvm.kvx.loadc.u.f64.p0(double [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret double [[TMP0]]
 //
 double loadcdf(double a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcdf(a, ptr, cond, ".dltz"); }
 
 // CHECK-LABEL: @loadc64(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32(<2 x i32> [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call <2 x i32> @llvm.kvx.loadc.u.v2i32.p0(<2 x i32> [[A:%.*]], ptr [[PTR:%.*]], i32 64, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    ret <2 x i32> [[TMP0]]
 //
 v2i32 loadc64(v2i32 a, void *ptr, unsigned long cond) { return __builtin_kvx_loadc64(a, ptr, cond, ".dltz"); }
@@ -102,7 +102,7 @@ v2i32 loadc64(v2i32 a, void *ptr, unsigned long cond) { return __builtin_kvx_loa
 // CHECK-LABEL: @loadc128(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <4 x i32> [[A:%.*]] to <2 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64(<2 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 128, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <2 x i64> @llvm.kvx.loadc.u.v2i64.p0(<2 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 128, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <2 x i64> [[TMP1]] to <4 x i32>
 // CHECK-NEXT:    ret <4 x i32> [[TMP2]]
 //
@@ -110,21 +110,21 @@ v4i32 loadc128(v4i32 a, void *ptr, unsigned long cond) { return __builtin_kvx_lo
 
 // CHECK-LABEL: @loadcwls(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 1, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 1, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcwls(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcwz(a, ptr, cond, ".s.dltz"); }
 
 // CHECK-LABEL: @loadcwlu(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 2, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 2, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcwlu(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcwz(a, ptr, cond, ".u.dltz"); }
 
 // CHECK-LABEL: @loadcwlus(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 3, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[A:%.*]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 3, i32 2, i32 -1)
 // CHECK-NEXT:    ret i64 [[TMP0]]
 //
 unsigned long loadcwlus(unsigned long a, void *ptr, unsigned long cond) { return __builtin_kvx_loadcwz(a, ptr, cond, ".us.dltz"); }
@@ -132,7 +132,7 @@ unsigned long loadcwlus(unsigned long a, void *ptr, unsigned long cond) { return
 // CHECK-LABEL: @loadc256_dltz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 2, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -141,7 +141,7 @@ v8i32 loadc256_dltz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_dnez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 0, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 0, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -150,7 +150,7 @@ v8i32 loadc256_dnez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_deqz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 1, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 1, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -159,7 +159,7 @@ v8i32 loadc256_deqz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_dgez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 3, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 3, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -168,7 +168,7 @@ v8i32 loadc256_dgez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_dlez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 4, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 4, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -177,7 +177,7 @@ v8i32 loadc256_dlez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_dgtz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 5, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 5, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -186,7 +186,7 @@ v8i32 loadc256_dgtz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_odd(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 6, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 6, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -195,7 +195,7 @@ v8i32 loadc256_odd(v8i32 a, void *ptr, unsigned long cond) { return __builtin_kv
 // CHECK-LABEL: @loadc256_even(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 7, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 7, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -204,7 +204,7 @@ v8i32 loadc256_even(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_wnez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 8, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 8, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -213,7 +213,7 @@ v8i32 loadc256_wnez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_weqz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 9, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 9, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -222,7 +222,7 @@ v8i32 loadc256_weqz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_wltz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 10, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 10, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -231,7 +231,7 @@ v8i32 loadc256_wltz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_wgez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -240,7 +240,7 @@ v8i32 loadc256_wgez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_wlez(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 12, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 12, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -249,7 +249,7 @@ v8i32 loadc256_wlez(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc256_wgtz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[TMP0:%.*]] = bitcast <8 x i32> [[A:%.*]] to <4 x i64>
-// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 13, i32 -1)
+// CHECK-NEXT:    [[TMP1:%.*]] = tail call <4 x i64> @llvm.kvx.loadc.u.v4i64.p0(<4 x i64> [[TMP0]], ptr [[PTR:%.*]], i32 256, i64 [[COND:%.*]], i32 0, i32 13, i32 -1)
 // CHECK-NEXT:    [[TMP2:%.*]] = bitcast <4 x i64> [[TMP1]] to <8 x i32>
 // CHECK-NEXT:    ret <8 x i32> [[TMP2]]
 //
@@ -258,7 +258,7 @@ v8i32 loadc256_wgtz(v8i32 a, void *ptr, unsigned long cond) { return __builtin_k
 // CHECK-LABEL: @loadc_vol(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = sext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.vol.i64(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.vol.i64.p0(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
 // CHECK-NEXT:    [[CONV3:%.*]] = trunc i64 [[TMP0]] to i32
 // CHECK-NEXT:    ret i32 [[CONV3]]
 //
@@ -271,7 +271,7 @@ int loadc_vol(int a, void *ptr, unsigned long cond) {
 // CHECK-LABEL: @loadc_novol(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[CONV:%.*]] = sext i32 [[A:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
+// CHECK-NEXT:    [[TMP0:%.*]] = tail call i64 @llvm.kvx.loadc.u.i64.p0(i64 [[CONV]], ptr [[PTR:%.*]], i32 32, i64 [[COND:%.*]], i32 0, i32 11, i32 -1)
 // CHECK-NEXT:    [[CONV3:%.*]] = trunc i64 [[TMP0]] to i32
 // CHECK-NEXT:    ret i32 [[CONV3]]
 //
