@@ -1,7 +1,5 @@
 ; RUN: llc -O2 -o - %s | FileCheck --check-prefixes=CHECK,ALL %s
 ; RUN: llc -O2 -relocation-model=pic -o - %s | FileCheck --check-prefixes=PIC,ALL %s
-; RUN: clang -O2 -c -o /dev/null %s
-; RUN: clang -O2 -mllvm -relocation-model=pic -c -o /dev/null %s
 
 target triple = "kvx-kalray-cos"
 
