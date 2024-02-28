@@ -20,7 +20,7 @@ target triple = "kvx-kalray-cos"
 ; -----
 
 @a = common global i32 0, align 4
-@c = common global i32* null, align 8
+@c = common global ptr null, align 8
 @b = common global i32 0, align 4
 
 define i32 @d() {
@@ -67,26 +67,26 @@ define i32 @d() {
 ; CHECK-NEXT:    goto .LBB0_1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
-  %0 = load i32, i32* @a, align 4
+  %0 = load i32, ptr @a, align 4
   %conv = sext i32 %0 to i64
-  %1 = inttoptr i64 %conv to i32*
-  store i32* %1, i32** @c, align 8
+  %1 = inttoptr i64 %conv to ptr 
+  store ptr %1, ptr @c, align 8
   br label %for.cond
 
 for.cond:
-  %2 = phi i32* [ %.pre, %for.cond.cleanup ], [ %1, %entry ]
+  %2 = phi ptr [ %.pre, %for.cond.cleanup ], [ %1, %entry ]
   br label %for.body
 
 for.cond.cleanup:
   %call = tail call i32 bitcast (i32 (...)* @f to i32 ()*)()
-  %.pre = load i32*, i32** @c, align 8
+  %.pre = load ptr, ptr @c, align 8
   br label %for.cond
 
 for.body:
   %indvars.iv = phi i64 [ 0, %for.cond ], [ %indvars.iv.next, %for.body ]
-  %arrayidx = getelementptr inbounds i32, i32* %2, i64 %indvars.iv
-  %3 = load i32, i32* %arrayidx, align 4
-  store i32 %3, i32* @b, align 4
+  %arrayidx = getelementptr inbounds i32, ptr %2, i64 %indvars.iv
+  %3 = load i32, ptr %arrayidx, align 4
+  store i32 %3, ptr @b, align 4
   %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
   %exitcond = icmp eq i64 %indvars.iv.next, 2000
   br i1 %exitcond, label %for.cond.cleanup, label %for.body

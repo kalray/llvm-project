@@ -106,8 +106,8 @@ define i32 @f_setjmp() {
 
 
 
-   %1 = call i32 @llvm.eh.sjlj.setjmp(i8* bitcast ([1 x %struct.__jmp_buf_tag]* @buf to i8*))
+   %1 = call i32 @llvm.eh.sjlj.setjmp(ptr bitcast ([1 x %struct.__jmp_buf_tag]* @buf to ptr ))
    ret i32 %1
 }
 
-declare i32 @llvm.eh.sjlj.setjmp(i8*) nounwind
+declare i32 @llvm.eh.sjlj.setjmp(ptr ) nounwind

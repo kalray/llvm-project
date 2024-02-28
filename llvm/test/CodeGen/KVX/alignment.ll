@@ -6,7 +6,7 @@ target triple = "kvx-kalray-cos"
 ; CHECK-NEXT: .p2align        6
 ; CHECK-NOT: .p2align        7
 
-define i32 @foo(i32 %n, i32* nocapture %p) {
+define i32 @foo(i32 %n, ptr nocapture %p) {
 entry:
   %cmp16 = icmp sle i32 %n, 0
   %exitcond.peel = icmp eq i32 %n, 1
@@ -22,10 +22,10 @@ for.cond1.preheader:                              ; preds = %entry, %for.cond1.p
   %2 = mul i33 %0, %1
   %3 = lshr i33 %2, 1
   %4 = trunc i33 %3 to i32
-  %p.promoted = load i32, i32* %p, align 4
+  %p.promoted = load i32, ptr %p, align 4
   %5 = add i32 %p.promoted, %indvars.iv
   %6 = add i32 %5, %4
-  store i32 %6, i32* %p, align 4
+  store i32 %6, ptr %p, align 4
   %inc6 = add nuw nsw i32 %i.017, 1
   %indvars.iv.next = add nuw nsw i32 %indvars.iv, 1
   %indvars.iv.next21 = add nsw i32 %indvars.iv20, 1

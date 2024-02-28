@@ -403,33 +403,33 @@ define void @jfdctint_jpeg_fdct_islow() {
 1:
   %2 = phi i64 [ 0, %0 ], [ %209, %1 ]
   %3 = shl i64 %2, 3
-  %4 = getelementptr [64 x i32], [64 x i32]* @jfdctint_data, i64 0, i64 %3
+  %4 = getelementptr [64 x i32], ptr @jfdctint_data, i64 0, i64 %3
   %5 = shl i64 %2, 3
   %6 = or i64 %5, 8
-  %7 = getelementptr [64 x i32], [64 x i32]* @jfdctint_data, i64 0, i64 %6
+  %7 = getelementptr [64 x i32], ptr @jfdctint_data, i64 0, i64 %6
   %8 = shl i64 %2, 3
   %9 = or i64 %8, 16
-  %10 = getelementptr [64 x i32], [64 x i32]* @jfdctint_data, i64 0, i64 %9
+  %10 = getelementptr [64 x i32], ptr @jfdctint_data, i64 0, i64 %9
   %11 = shl i64 %2, 3
   %12 = or i64 %11, 24
-  %13 = getelementptr [64 x i32], [64 x i32]* @jfdctint_data, i64 0, i64 %12
-  %14 = load i32, i32* %4
-  %15 = load i32, i32* %7
-  %16 = load i32, i32* %10
-  %17 = load i32, i32* %13
+  %13 = getelementptr [64 x i32], ptr @jfdctint_data, i64 0, i64 %12
+  %14 = load i32, ptr %4
+  %15 = load i32, ptr %7
+  %16 = load i32, ptr %10
+  %17 = load i32, ptr %13
   %18 = insertelement <4 x i32> poison, i32 %14, i32 0
   %19 = insertelement <4 x i32> %18, i32 %15, i32 1
   %20 = insertelement <4 x i32> %19, i32 %16, i32 2
   %21 = insertelement <4 x i32> %20, i32 %17, i32 3
-  %22 = insertelement <2 x i32*> poison, i32* %4, i32 0
-  %23 = insertelement <2 x i32*> %22, i32* %7, i32 1
-  %24 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 7, i64 7>
-  %25 = getelementptr inbounds i32, i32* %10, i64 7
-  %26 = getelementptr inbounds i32, i32* %13, i64 7
-  %27 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %24, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %28 = extractelement <2 x i32*> %24, i32 0
-  %29 = load i32, i32* %25
-  %30 = load i32, i32* %26
+  %22 = insertelement <2 x ptr > poison, ptr %4, i32 0
+  %23 = insertelement <2 x ptr > %22, ptr %7, i32 1
+  %24 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 7, i64 7>
+  %25 = getelementptr inbounds i32, ptr %10, i64 7
+  %26 = getelementptr inbounds i32, ptr %13, i64 7
+  %27 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %24, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %28 = extractelement <2 x ptr > %24, i32 0
+  %29 = load i32, ptr %25
+  %30 = load i32, ptr %26
   %31 = extractelement <2 x i32> %27, i32 0
   %32 = insertelement <4 x i32> poison, i32 %31, i32 0
   %33 = extractelement <2 x i32> %27, i32 1
@@ -438,26 +438,26 @@ define void @jfdctint_jpeg_fdct_islow() {
   %36 = insertelement <4 x i32> %35, i32 %30, i32 3
   %37 = add nsw <4 x i32> %36, %21
   %38 = sub nsw <4 x i32> %21, %36
-  %39 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 1, i64 1>
-  %40 = getelementptr inbounds i32, i32* %10, i64 1
-  %41 = getelementptr inbounds i32, i32* %13, i64 1
-  %42 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %39, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %43 = extractelement <2 x i32*> %39, i32 0
-  %44 = load i32, i32* %40
-  %45 = load i32, i32* %41
+  %39 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 1, i64 1>
+  %40 = getelementptr inbounds i32, ptr %10, i64 1
+  %41 = getelementptr inbounds i32, ptr %13, i64 1
+  %42 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %39, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %43 = extractelement <2 x ptr > %39, i32 0
+  %44 = load i32, ptr %40
+  %45 = load i32, ptr %41
   %46 = extractelement <2 x i32> %42, i32 0
   %47 = insertelement <4 x i32> poison, i32 %46, i32 0
   %48 = extractelement <2 x i32> %42, i32 1
   %49 = insertelement <4 x i32> %47, i32 %48, i32 1
   %50 = insertelement <4 x i32> %49, i32 %44, i32 2
   %51 = insertelement <4 x i32> %50, i32 %45, i32 3
-  %52 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 6, i64 6>
-  %53 = getelementptr inbounds i32, i32* %10, i64 6
-  %54 = getelementptr inbounds i32, i32* %13, i64 6
-  %55 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %52, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %56 = extractelement <2 x i32*> %52, i32 0
-  %57 = load i32, i32* %53
-  %58 = load i32, i32* %54
+  %52 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 6, i64 6>
+  %53 = getelementptr inbounds i32, ptr %10, i64 6
+  %54 = getelementptr inbounds i32, ptr %13, i64 6
+  %55 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %52, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %56 = extractelement <2 x ptr > %52, i32 0
+  %57 = load i32, ptr %53
+  %58 = load i32, ptr %54
   %59 = extractelement <2 x i32> %55, i32 0
   %60 = insertelement <4 x i32> poison, i32 %59, i32 0
   %61 = extractelement <2 x i32> %55, i32 1
@@ -466,26 +466,26 @@ define void @jfdctint_jpeg_fdct_islow() {
   %64 = insertelement <4 x i32> %63, i32 %58, i32 3
   %65 = add nsw <4 x i32> %64, %51
   %66 = sub nsw <4 x i32> %51, %64
-  %67 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 2, i64 2>
-  %68 = getelementptr inbounds i32, i32* %10, i64 2
-  %69 = getelementptr inbounds i32, i32* %13, i64 2
-  %70 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %67, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %71 = extractelement <2 x i32*> %67, i32 0
-  %72 = load i32, i32* %68
-  %73 = load i32, i32* %69
+  %67 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 2, i64 2>
+  %68 = getelementptr inbounds i32, ptr %10, i64 2
+  %69 = getelementptr inbounds i32, ptr %13, i64 2
+  %70 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %67, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %71 = extractelement <2 x ptr > %67, i32 0
+  %72 = load i32, ptr %68
+  %73 = load i32, ptr %69
   %74 = extractelement <2 x i32> %70, i32 0
   %75 = insertelement <4 x i32> poison, i32 %74, i32 0
   %76 = extractelement <2 x i32> %70, i32 1
   %77 = insertelement <4 x i32> %75, i32 %76, i32 1
   %78 = insertelement <4 x i32> %77, i32 %72, i32 2
   %79 = insertelement <4 x i32> %78, i32 %73, i32 3
-  %80 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 5, i64 5>
-  %81 = getelementptr inbounds i32, i32* %10, i64 5
-  %82 = getelementptr inbounds i32, i32* %13, i64 5
-  %83 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %80, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %84 = extractelement <2 x i32*> %80, i32 0
-  %85 = load i32, i32* %81
-  %86 = load i32, i32* %82
+  %80 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 5, i64 5>
+  %81 = getelementptr inbounds i32, ptr %10, i64 5
+  %82 = getelementptr inbounds i32, ptr %13, i64 5
+  %83 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %80, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %84 = extractelement <2 x ptr > %80, i32 0
+  %85 = load i32, ptr %81
+  %86 = load i32, ptr %82
   %87 = extractelement <2 x i32> %83, i32 0
   %88 = insertelement <4 x i32> poison, i32 %87, i32 0
   %89 = extractelement <2 x i32> %83, i32 1
@@ -494,26 +494,26 @@ define void @jfdctint_jpeg_fdct_islow() {
   %92 = insertelement <4 x i32> %91, i32 %86, i32 3
   %93 = add nsw <4 x i32> %92, %79
   %94 = sub nsw <4 x i32> %79, %92
-  %95 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 3, i64 3>
-  %96 = getelementptr inbounds i32, i32* %10, i64 3
-  %97 = getelementptr inbounds i32, i32* %13, i64 3
-  %98 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %95, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %99 = extractelement <2 x i32*> %95, i32 0
-  %100 = load i32, i32* %96
-  %101 = load i32, i32* %97
+  %95 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 3, i64 3>
+  %96 = getelementptr inbounds i32, ptr %10, i64 3
+  %97 = getelementptr inbounds i32, ptr %13, i64 3
+  %98 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %95, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %99 = extractelement <2 x ptr > %95, i32 0
+  %100 = load i32, ptr %96
+  %101 = load i32, ptr %97
   %102 = extractelement <2 x i32> %98, i32 0
   %103 = insertelement <4 x i32> poison, i32 %102, i32 0
   %104 = extractelement <2 x i32> %98, i32 1
   %105 = insertelement <4 x i32> %103, i32 %104, i32 1
   %106 = insertelement <4 x i32> %105, i32 %100, i32 2
   %107 = insertelement <4 x i32> %106, i32 %101, i32 3
-  %108 = getelementptr i32, <2 x i32*> %23, <2 x i64> <i64 4, i64 4>
-  %109 = getelementptr inbounds i32, i32* %10, i64 4
-  %110 = getelementptr inbounds i32, i32* %13, i64 4
-  %111 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*> %108, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
-  %112 = extractelement <2 x i32*> %108, i32 0
-  %113 = load i32, i32* %109
-  %114 = load i32, i32* %110
+  %108 = getelementptr i32, <2 x ptr > %23, <2 x i64> <i64 4, i64 4>
+  %109 = getelementptr inbounds i32, ptr %10, i64 4
+  %110 = getelementptr inbounds i32, ptr %13, i64 4
+  %111 = call <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr > %108, i32 4, <2 x i1> <i1 true, i1 true>, <2 x i32> undef)
+  %112 = extractelement <2 x ptr > %108, i32 0
+  %113 = load i32, ptr %109
+  %114 = load i32, ptr %110
   %115 = extractelement <2 x i32> %111, i32 0
   %116 = insertelement <4 x i32> poison, i32 %115, i32 0
   %117 = extractelement <2 x i32> %111, i32 1
@@ -529,24 +529,24 @@ define void @jfdctint_jpeg_fdct_islow() {
   %127 = add nsw <4 x i32> %123, %125
   %128 = shl <4 x i32> %127, <i32 2, i32 2, i32 2, i32 2>
   %129 = extractelement <4 x i32> %128, i32 0
-  store i32 %129, i32* %4
+  store i32 %129, ptr %4
   %130 = extractelement <4 x i32> %128, i32 1
-  store i32 %130, i32* %7
+  store i32 %130, ptr %7
   %131 = extractelement <4 x i32> %128, i32 2
-  store i32 %131, i32* %10
+  store i32 %131, ptr %10
   %132 = extractelement <4 x i32> %128, i32 3
-  store i32 %132, i32* %13
+  store i32 %132, ptr %13
   %133 = sub nsw <4 x i32> %123, %125
   %134 = shl <4 x i32> %133, <i32 2, i32 2, i32 2, i32 2>
   %135 = extractelement <4 x i32> %134, i32 0
-  store i32 %135, i32* %112
+  store i32 %135, ptr %112
   %136 = extractelement <4 x i32> %134, i32 1
-  %137 = extractelement <2 x i32*> %108, i32 1
-  store i32 %136, i32* %137
+  %137 = extractelement <2 x ptr > %108, i32 1
+  store i32 %136, ptr %137
   %138 = extractelement <4 x i32> %134, i32 2
-  store i32 %138, i32* %109
+  store i32 %138, ptr %109
   %139 = extractelement <4 x i32> %134, i32 3
-  store i32 %139, i32* %110
+  store i32 %139, ptr %110
   %140 = add nsw <4 x i32> %124, %126
   %141 = mul nsw <4 x i32> %140, <i32 4433, i32 4433, i32 4433, i32 4433>
   %142 = mul nsw <4 x i32> %124, <i32 6270, i32 6270, i32 6270, i32 6270>
@@ -554,26 +554,26 @@ define void @jfdctint_jpeg_fdct_islow() {
   %144 = add <4 x i32> %143, %142
   %145 = ashr <4 x i32> %144, <i32 11, i32 11, i32 11, i32 11>
   %146 = extractelement <4 x i32> %145, i32 0
-  store i32 %146, i32* %71
+  store i32 %146, ptr %71
   %147 = extractelement <4 x i32> %145, i32 1
-  %148 = extractelement <2 x i32*> %67, i32 1
-  store i32 %147, i32* %148
+  %148 = extractelement <2 x ptr > %67, i32 1
+  store i32 %147, ptr %148
   %149 = extractelement <4 x i32> %145, i32 2
-  store i32 %149, i32* %68
+  store i32 %149, ptr %68
   %150 = extractelement <4 x i32> %145, i32 3
-  store i32 %150, i32* %69
+  store i32 %150, ptr %69
   %151 = mul nsw <4 x i32> %126, <i32 -15137, i32 -15137, i32 -15137, i32 -15137>
   %152 = add <4 x i32> %143, %151
   %153 = ashr <4 x i32> %152, <i32 11, i32 11, i32 11, i32 11>
   %154 = extractelement <4 x i32> %153, i32 0
-  store i32 %154, i32* %56
+  store i32 %154, ptr %56
   %155 = extractelement <4 x i32> %153, i32 1
-  %156 = extractelement <2 x i32*> %52, i32 1
-  store i32 %155, i32* %156
+  %156 = extractelement <2 x ptr > %52, i32 1
+  store i32 %155, ptr %156
   %157 = extractelement <4 x i32> %153, i32 2
-  store i32 %157, i32* %53
+  store i32 %157, ptr %53
   %158 = extractelement <4 x i32> %153, i32 3
-  store i32 %158, i32* %54
+  store i32 %158, ptr %54
   %159 = add nsw <4 x i32> %122, %38
   %160 = add nsw <4 x i32> %94, %66
   %161 = add nsw <4 x i32> %122, %66
@@ -595,51 +595,51 @@ define void @jfdctint_jpeg_fdct_islow() {
   %177 = add <4 x i32> %176, %173
   %178 = ashr <4 x i32> %177, <i32 11, i32 11, i32 11, i32 11>
   %179 = extractelement <4 x i32> %178, i32 0
-  store i32 %179, i32* %28
+  store i32 %179, ptr %28
   %180 = extractelement <4 x i32> %178, i32 1
-  %181 = extractelement <2 x i32*> %24, i32 1
-  store i32 %180, i32* %181
+  %181 = extractelement <2 x ptr > %24, i32 1
+  store i32 %180, ptr %181
   %182 = extractelement <4 x i32> %178, i32 2
-  store i32 %182, i32* %25
+  store i32 %182, ptr %25
   %183 = extractelement <4 x i32> %178, i32 3
-  store i32 %183, i32* %26
+  store i32 %183, ptr %26
   %184 = add <4 x i32> %170, <i32 1024, i32 1024, i32 1024, i32 1024>
   %185 = add <4 x i32> %184, %166
   %186 = add <4 x i32> %185, %174
   %187 = ashr <4 x i32> %186, <i32 11, i32 11, i32 11, i32 11>
   %188 = extractelement <4 x i32> %187, i32 0
-  store i32 %188, i32* %84
+  store i32 %188, ptr %84
   %189 = extractelement <4 x i32> %187, i32 1
-  %190 = extractelement <2 x i32*> %80, i32 1
-  store i32 %189, i32* %190
+  %190 = extractelement <2 x ptr > %80, i32 1
+  store i32 %189, ptr %190
   %191 = extractelement <4 x i32> %187, i32 2
-  store i32 %191, i32* %81
+  store i32 %191, ptr %81
   %192 = extractelement <4 x i32> %187, i32 3
-  store i32 %192, i32* %82
+  store i32 %192, ptr %82
   %193 = add <4 x i32> %184, %167
   %194 = add <4 x i32> %193, %173
   %195 = ashr <4 x i32> %194, <i32 11, i32 11, i32 11, i32 11>
   %196 = extractelement <4 x i32> %195, i32 0
-  store i32 %196, i32* %99
+  store i32 %196, ptr %99
   %197 = extractelement <4 x i32> %195, i32 1
-  %198 = extractelement <2 x i32*> %95, i32 1
-  store i32 %197, i32* %198
+  %198 = extractelement <2 x ptr > %95, i32 1
+  store i32 %197, ptr %198
   %199 = extractelement <4 x i32> %195, i32 2
-  store i32 %199, i32* %96
+  store i32 %199, ptr %96
   %200 = extractelement <4 x i32> %195, i32 3
-  store i32 %200, i32* %97
+  store i32 %200, ptr %97
   %201 = add <4 x i32> %175, %168
   %202 = add <4 x i32> %201, %174
   %203 = ashr <4 x i32> %202, <i32 11, i32 11, i32 11, i32 11>
   %204 = extractelement <4 x i32> %203, i32 0
-  store i32 %204, i32* %43
+  store i32 %204, ptr %43
   %205 = extractelement <4 x i32> %203, i32 1
-  %206 = extractelement <2 x i32*> %39, i32 1
-  store i32 %205, i32* %206
+  %206 = extractelement <2 x ptr > %39, i32 1
+  store i32 %205, ptr %206
   %207 = extractelement <4 x i32> %203, i32 2
-  store i32 %207, i32* %40
+  store i32 %207, ptr %40
   %208 = extractelement <4 x i32> %203, i32 3
-  store i32 %208, i32* %41
+  store i32 %208, ptr %41
   %209 = add i64 %2, 4
   %210 = icmp eq i64 %209, 8
   br i1 %210, label %211, label %1
@@ -648,5 +648,5 @@ define void @jfdctint_jpeg_fdct_islow() {
   ret void
 }
 
-declare <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x i32*>, i32 immarg, <2 x i1>, <2 x i32>)
+declare <2 x i32> @llvm.masked.gather.v2i32.v2p0i32(<2 x ptr >, i32 immarg, <2 x i1>, <2 x i32>)
 

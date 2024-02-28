@@ -44,7 +44,7 @@ entry:
   ret i64 %A
 }
 
-define i8* @asm_clobber_single_pair(i8* returned %A){
+define ptr @asm_clobber_single_pair(ptr returned %A){
 ; CHECK-LABEL: asm_clobber_single_pair:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r2 = $r0
@@ -56,11 +56,11 @@ define i8* @asm_clobber_single_pair(i8* returned %A){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
-  tail call void asm sideeffect "", "r,~{$r0r1}"(i8* %A)
-  ret i8* %A
+  tail call void asm sideeffect "", "r,~{$r0r1}"(ptr %A)
+  ret ptr %A
 }
 
-define i8* @asm_clobber_single_quad(i8* nocapture readnone %A, i8* %B, i8* readnone returned %C){
+define ptr @asm_clobber_single_quad(ptr nocapture readnone %A, ptr %B, ptr readnone returned %C){
 ; CHECK-LABEL: asm_clobber_single_quad:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    copyd $r4 = $r2
@@ -75,8 +75,8 @@ define i8* @asm_clobber_single_quad(i8* nocapture readnone %A, i8* %B, i8* readn
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 2)
 entry:
-  tail call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(i8* %B)
-  ret i8* %C
+  tail call void asm sideeffect "copyd $$r0 = $0", "r,~{$r0r1r2r3}"(ptr %B)
+  ret ptr %C
 }
 
 define <2 x i64> @asm_clobber_double_single(<2 x i64> returned %a) {

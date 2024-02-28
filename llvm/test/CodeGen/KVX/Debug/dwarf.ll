@@ -104,35 +104,35 @@ entry:
   %n3.addr = alloca i32, align 4
   %c = alloca i32, align 4
   %i = alloca i32, align 4
-  store i32 %n, i32* %n.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n.addr, metadata !14, metadata !DIExpression()), !dbg !15
-  store i32 %n2, i32* %n2.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n2.addr, metadata !16, metadata !DIExpression()), !dbg !17
-  store i32 %n3, i32* %n3.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n3.addr, metadata !18, metadata !DIExpression()), !dbg !19
-  call void @llvm.dbg.declare(metadata i32* %c, metadata !20, metadata !DIExpression()), !dbg !21
-  store i32 7, i32* %c, align 4, !dbg !21
-  call void @llvm.dbg.declare(metadata i32* %i, metadata !22, metadata !DIExpression()), !dbg !23
-  store i32 1234, i32* %i, align 4, !dbg !23
-  %0 = load i32, i32* %n.addr, align 4, !dbg !24
-  %1 = load i32, i32* %i, align 4, !dbg !25
+  store i32 %n, ptr %n.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n.addr, metadata !14, metadata !DIExpression()), !dbg !15
+  store i32 %n2, ptr %n2.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n2.addr, metadata !16, metadata !DIExpression()), !dbg !17
+  store i32 %n3, ptr %n3.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n3.addr, metadata !18, metadata !DIExpression()), !dbg !19
+  call void @llvm.dbg.declare(metadata ptr %c, metadata !20, metadata !DIExpression()), !dbg !21
+  store i32 7, ptr %c, align 4, !dbg !21
+  call void @llvm.dbg.declare(metadata ptr %i, metadata !22, metadata !DIExpression()), !dbg !23
+  store i32 1234, ptr %i, align 4, !dbg !23
+  %0 = load i32, ptr %n.addr, align 4, !dbg !24
+  %1 = load i32, ptr %i, align 4, !dbg !25
   %sub = sub nsw i32 %1, %0, !dbg !25
-  store i32 %sub, i32* %i, align 4, !dbg !25
-  %2 = load i32, i32* %n2.addr, align 4, !dbg !26
-  %3 = load i32, i32* %i, align 4, !dbg !27
+  store i32 %sub, ptr %i, align 4, !dbg !25
+  %2 = load i32, ptr %n2.addr, align 4, !dbg !26
+  %3 = load i32, ptr %i, align 4, !dbg !27
   %add = add nsw i32 %3, %2, !dbg !27
-  store i32 %add, i32* %i, align 4, !dbg !27
-  %4 = load i32, i32* %n3.addr, align 4, !dbg !28
-  %5 = load i32, i32* %i, align 4, !dbg !29
+  store i32 %add, ptr %i, align 4, !dbg !27
+  %4 = load i32, ptr %n3.addr, align 4, !dbg !28
+  %5 = load i32, ptr %i, align 4, !dbg !29
   %mul = mul nsw i32 %5, %4, !dbg !29
-  store i32 %mul, i32* %i, align 4, !dbg !29
-  %call = call i32 @other(i32* %c, i32* %i), !dbg !30
+  store i32 %mul, ptr %i, align 4, !dbg !29
+  %call = call i32 @other(ptr %c, ptr %i), !dbg !30
   ret i32 %call, !dbg !31
 }
 
 declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
 
-declare i32 @other(i32*, i32*) #2
+declare i32 @other(ptr, ptr ) #2
 
 define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-LABEL: stackrealign1:
@@ -237,33 +237,33 @@ entry:
   %n3.addr = alloca i32, align 4
   %c = alloca i32, align 4
   %i = alloca i32, align 128
-  store i32 %n, i32* %n.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n.addr, metadata !33, metadata !DIExpression()), !dbg !34
-  store i32 %n2, i32* %n2.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n2.addr, metadata !35, metadata !DIExpression()), !dbg !36
-  store i32 %n3, i32* %n3.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n3.addr, metadata !37, metadata !DIExpression()), !dbg !38
-  call void @llvm.dbg.declare(metadata i32* %c, metadata !39, metadata !DIExpression()), !dbg !40
-  store i32 7, i32* %c, align 4, !dbg !40
-  call void @llvm.dbg.declare(metadata i32* %i, metadata !41, metadata !DIExpression()), !dbg !43
-  store i32 1234, i32* %i, align 128, !dbg !43
-  %0 = load i32, i32* %n.addr, align 4, !dbg !44
-  %1 = load i32, i32* %i, align 128, !dbg !45
+  store i32 %n, ptr %n.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n.addr, metadata !33, metadata !DIExpression()), !dbg !34
+  store i32 %n2, ptr %n2.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n2.addr, metadata !35, metadata !DIExpression()), !dbg !36
+  store i32 %n3, ptr %n3.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n3.addr, metadata !37, metadata !DIExpression()), !dbg !38
+  call void @llvm.dbg.declare(metadata ptr %c, metadata !39, metadata !DIExpression()), !dbg !40
+  store i32 7, ptr %c, align 4, !dbg !40
+  call void @llvm.dbg.declare(metadata ptr %i, metadata !41, metadata !DIExpression()), !dbg !43
+  store i32 1234, ptr %i, align 128, !dbg !43
+  %0 = load i32, ptr %n.addr, align 4, !dbg !44
+  %1 = load i32, ptr %i, align 128, !dbg !45
   %sub = sub nsw i32 %1, %0, !dbg !45
-  store i32 %sub, i32* %i, align 128, !dbg !45
-  %2 = load i32, i32* %n2.addr, align 4, !dbg !46
-  %3 = load i32, i32* %i, align 128, !dbg !47
+  store i32 %sub, ptr %i, align 128, !dbg !45
+  %2 = load i32, ptr %n2.addr, align 4, !dbg !46
+  %3 = load i32, ptr %i, align 128, !dbg !47
   %add = add nsw i32 %3, %2, !dbg !47
-  store i32 %add, i32* %i, align 128, !dbg !47
-  %4 = load i32, i32* %n3.addr, align 4, !dbg !48
-  %5 = load i32, i32* %i, align 128, !dbg !49
+  store i32 %add, ptr %i, align 128, !dbg !47
+  %4 = load i32, ptr %n3.addr, align 4, !dbg !48
+  %5 = load i32, ptr %i, align 128, !dbg !49
   %mul = mul nsw i32 %5, %4, !dbg !49
-  store i32 %mul, i32* %i, align 128, !dbg !49
-  %call = call i32 @other1(i32* %c, i32* %i), !dbg !50
+  store i32 %mul, ptr %i, align 128, !dbg !49
+  %call = call i32 @other1(ptr %c, ptr %i), !dbg !50
   ret i32 %call, !dbg !51
 }
 
-declare i32 @other1(i32*, i32*) #2
+declare i32 @other1(ptr, ptr ) #2
 
 define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-LABEL: stackrealign2:
@@ -402,55 +402,55 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:  .Ltmp10:
 entry:
   %n.addr = alloca i32, align 4
-  %av = alloca i32*, align 8
+  %av = alloca ptr, align 8
   %j = alloca i32, align 4
   %i = alloca i32, align 128
-  store i32 %n, i32* %n.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n.addr, metadata !55, metadata !DIExpression()), !dbg !56
-  call void @llvm.dbg.declare(metadata i32** %av, metadata !57, metadata !DIExpression()), !dbg !58
-  %0 = load i32, i32* %n.addr, align 4, !dbg !59
+  store i32 %n, ptr %n.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n.addr, metadata !55, metadata !DIExpression()), !dbg !56
+  call void @llvm.dbg.declare(metadata ptr %av, metadata !57, metadata !DIExpression()), !dbg !58
+  %0 = load i32, ptr %n.addr, align 4, !dbg !59
   %conv = sext i32 %0 to i64, !dbg !59
   %mul = mul i64 4, %conv, !dbg !60
   %1 = alloca i8, i64 %mul, align 8, !dbg !61
-  %2 = bitcast i8* %1 to i32*, !dbg !62
-  store i32* %2, i32** %av, align 8, !dbg !58
-  call void @llvm.dbg.declare(metadata i32* %j, metadata !63, metadata !DIExpression()), !dbg !65
-  store i32 0, i32* %j, align 4, !dbg !65
+  %2 = bitcast ptr %1 to ptr, !dbg !62
+  store ptr %2, ptr %av, align 8, !dbg !58
+  call void @llvm.dbg.declare(metadata ptr %j, metadata !63, metadata !DIExpression()), !dbg !65
+  store i32 0, ptr %j, align 4, !dbg !65
   br label %for.cond, !dbg !66
 
 for.cond:                                         ; preds = %for.inc, %entry
-  %3 = load i32, i32* %j, align 4, !dbg !67
-  %4 = load i32, i32* %n.addr, align 4, !dbg !69
+  %3 = load i32, ptr %j, align 4, !dbg !67
+  %4 = load i32, ptr %n.addr, align 4, !dbg !69
   %cmp = icmp slt i32 %3, %4, !dbg !70
   br i1 %cmp, label %for.body, label %for.end, !dbg !71
 
 for.body:                                         ; preds = %for.cond
-  %5 = load i32, i32* %n.addr, align 4, !dbg !72
-  %6 = load i32, i32* %j, align 4, !dbg !73
+  %5 = load i32, ptr %n.addr, align 4, !dbg !72
+  %6 = load i32, ptr %j, align 4, !dbg !73
   %sub = sub nsw i32 %5, %6, !dbg !74
-  %7 = load i32*, i32** %av, align 8, !dbg !75
-  %8 = load i32, i32* %j, align 4, !dbg !76
+  %7 = load ptr, ptr %av, align 8, !dbg !75
+  %8 = load i32, ptr %j, align 4, !dbg !76
   %idxprom = sext i32 %8 to i64, !dbg !75
-  %arrayidx = getelementptr inbounds i32, i32* %7, i64 %idxprom, !dbg !75
-  store i32 %sub, i32* %arrayidx, align 4, !dbg !77
+  %arrayidx = getelementptr inbounds i32, ptr %7, i64 %idxprom, !dbg !75
+  store i32 %sub, ptr %arrayidx, align 4, !dbg !77
   br label %for.inc, !dbg !75
 
 for.inc:                                          ; preds = %for.body
-  %9 = load i32, i32* %j, align 4, !dbg !78
+  %9 = load i32, ptr %j, align 4, !dbg !78
   %inc = add nsw i32 %9, 1, !dbg !78
-  store i32 %inc, i32* %j, align 4, !dbg !78
+  store i32 %inc, ptr %j, align 4, !dbg !78
   br label %for.cond, !dbg !79, !llvm.loop !80
 
 for.end:                                          ; preds = %for.cond
-  call void @llvm.dbg.declare(metadata i32* %i, metadata !82, metadata !DIExpression()), !dbg !83
-  store i32 1234, i32* %i, align 128, !dbg !83
-  %10 = load i32*, i32** %av, align 8, !dbg !84
-  %11 = load i32, i32* %n.addr, align 4, !dbg !85
-  %call = call i32 @other2(i32* %10, i32 %11, i32* %i), !dbg !86
+  call void @llvm.dbg.declare(metadata ptr %i, metadata !82, metadata !DIExpression()), !dbg !83
+  store i32 1234, ptr %i, align 128, !dbg !83
+  %10 = load ptr, ptr %av, align 8, !dbg !84
+  %11 = load i32, ptr %n.addr, align 4, !dbg !85
+  %call = call i32 @other2(ptr %10, i32 %11, ptr %i), !dbg !86
   ret i32 %call, !dbg !87
 }
 
-declare i32 @other2(i32*, i32, i32*) #2
+declare i32 @other2(ptr, i32, ptr ) #2
 
 define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-LABEL: teststackalloca:
@@ -582,55 +582,55 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:  .Ltmp17:
 entry:
   %n.addr = alloca i32, align 4
-  %av = alloca i32*, align 8
+  %av = alloca ptr, align 8
   %j = alloca i32, align 4
   %i = alloca i32, align 4
-  store i32 %n, i32* %n.addr, align 4
-  call void @llvm.dbg.declare(metadata i32* %n.addr, metadata !89, metadata !DIExpression()), !dbg !90
-  call void @llvm.dbg.declare(metadata i32** %av, metadata !91, metadata !DIExpression()), !dbg !92
-  %0 = load i32, i32* %n.addr, align 4, !dbg !93
+  store i32 %n, ptr %n.addr, align 4
+  call void @llvm.dbg.declare(metadata ptr %n.addr, metadata !89, metadata !DIExpression()), !dbg !90
+  call void @llvm.dbg.declare(metadata ptr %av, metadata !91, metadata !DIExpression()), !dbg !92
+  %0 = load i32, ptr %n.addr, align 4, !dbg !93
   %conv = sext i32 %0 to i64, !dbg !93
   %mul = mul i64 4, %conv, !dbg !94
   %1 = alloca i8, i64 %mul, align 8, !dbg !95
-  %2 = bitcast i8* %1 to i32*, !dbg !96
-  store i32* %2, i32** %av, align 8, !dbg !92
-  call void @llvm.dbg.declare(metadata i32* %j, metadata !97, metadata !DIExpression()), !dbg !99
-  store i32 0, i32* %j, align 4, !dbg !99
+  %2 = bitcast ptr %1 to ptr, !dbg !96
+  store ptr %2, ptr %av, align 8, !dbg !92
+  call void @llvm.dbg.declare(metadata ptr %j, metadata !97, metadata !DIExpression()), !dbg !99
+  store i32 0, ptr %j, align 4, !dbg !99
   br label %for.cond, !dbg !100
 
 for.cond:                                         ; preds = %for.inc, %entry
-  %3 = load i32, i32* %j, align 4, !dbg !101
-  %4 = load i32, i32* %n.addr, align 4, !dbg !103
+  %3 = load i32, ptr %j, align 4, !dbg !101
+  %4 = load i32, ptr %n.addr, align 4, !dbg !103
   %cmp = icmp slt i32 %3, %4, !dbg !104
   br i1 %cmp, label %for.body, label %for.end, !dbg !105
 
 for.body:                                         ; preds = %for.cond
-  %5 = load i32, i32* %n.addr, align 4, !dbg !106
-  %6 = load i32, i32* %j, align 4, !dbg !107
+  %5 = load i32, ptr %n.addr, align 4, !dbg !106
+  %6 = load i32, ptr %j, align 4, !dbg !107
   %sub = sub nsw i32 %5, %6, !dbg !108
-  %7 = load i32*, i32** %av, align 8, !dbg !109
-  %8 = load i32, i32* %j, align 4, !dbg !110
+  %7 = load ptr, ptr %av, align 8, !dbg !109
+  %8 = load i32, ptr %j, align 4, !dbg !110
   %idxprom = sext i32 %8 to i64, !dbg !109
-  %arrayidx = getelementptr inbounds i32, i32* %7, i64 %idxprom, !dbg !109
-  store i32 %sub, i32* %arrayidx, align 4, !dbg !111
+  %arrayidx = getelementptr inbounds i32, ptr %7, i64 %idxprom, !dbg !109
+  store i32 %sub, ptr %arrayidx, align 4, !dbg !111
   br label %for.inc, !dbg !109
 
 for.inc:                                          ; preds = %for.body
-  %9 = load i32, i32* %j, align 4, !dbg !112
+  %9 = load i32, ptr %j, align 4, !dbg !112
   %inc = add nsw i32 %9, 1, !dbg !112
-  store i32 %inc, i32* %j, align 4, !dbg !112
+  store i32 %inc, ptr %j, align 4, !dbg !112
   br label %for.cond, !dbg !113, !llvm.loop !114
 
 for.end:                                          ; preds = %for.cond
-  call void @llvm.dbg.declare(metadata i32* %i, metadata !116, metadata !DIExpression()), !dbg !117
-  store i32 1234, i32* %i, align 4, !dbg !117
-  %10 = load i32*, i32** %av, align 8, !dbg !118
-  %11 = load i32, i32* %n.addr, align 4, !dbg !119
-  %call = call i32 @other4(i32* %10, i32 %11, i32* %i), !dbg !120
+  call void @llvm.dbg.declare(metadata ptr %i, metadata !116, metadata !DIExpression()), !dbg !117
+  store i32 1234, ptr %i, align 4, !dbg !117
+  %10 = load ptr, ptr %av, align 8, !dbg !118
+  %11 = load i32, ptr %n.addr, align 4, !dbg !119
+  %call = call i32 @other4(ptr %10, i32 %11, ptr %i), !dbg !120
   ret i32 %call, !dbg !121
 }
 
-declare i32 @other4(i32*, i32, i32*) #2
+declare i32 @other4(ptr, i32, ptr ) #2
 
 attributes #0 = { noinline nounwind optnone "correctly-rounded-divide-sqrt-fp-math"="false" "disable-tail-calls"="false" "frame-pointer"="all" "less-precise-fpmad"="false" "min-legal-vector-width"="0" "no-infs-fp-math"="false" "no-jump-tables"="false" "no-nans-fp-math"="false" "no-signed-zeros-fp-math"="false" "no-trapping-math"="false" "stack-protector-buffer-size"="8" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #1 = { nounwind readnone speculatable willreturn }

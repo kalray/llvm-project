@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @test_v1_select(<1 x i8> * %m, <1 x i8> * %n){
+define void @test_v1_select(ptr %m, ptr %n){
 ; CHECK-LABEL: test_v1_select:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lbz $r2 = 0[$r0]
@@ -24,17 +24,17 @@ define void @test_v1_select(<1 x i8> * %m, <1 x i8> * %n){
 ; CHECK-NEXT:    sb 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
-  %v1 = load <1 x i8>, <1 x i8>* %m, align 8
-  %v2 = load <1 x i8>, <1 x i8>* %n, align 8
+  %v1 = load <1 x i8>, ptr %m, align 8
+  %v2 = load <1 x i8>, ptr %n, align 8
   %c1 = icmp eq <1 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <1 x i8> %v2, <i8 -1>
   %c3 = and <1 x i1> %c1, %c2
   %v3 = select <1 x i1> %c3, <1 x i8> %v1, <1 x i8> %v2
-  store <1 x i8> %v3, <1 x i8> * %m, align 8
+  store <1 x i8> %v3, ptr %m, align 8
   ret void
 }
 
-define void @test_v2_select(<2 x i8> * %m, <2 x i8> * %n){
+define void @test_v2_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v2_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lhz $r2 = 0[$r0]
@@ -77,17 +77,17 @@ define void @test_v2_select(<2 x i8> * %m, <2 x i8> * %n){
 ; CV2-NEXT:    sh 0[$r0] = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %v1 = load <2 x i8>, <2 x i8>* %m, align 8
-  %v2 = load <2 x i8>, <2 x i8>* %n, align 8
+  %v1 = load <2 x i8>, ptr %m, align 8
+  %v2 = load <2 x i8>, ptr %n, align 8
   %c1 = icmp eq <2 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <2 x i8> %v2, <i8 -1, i8 -1>
   %c3 = and <2 x i1> %c1, %c2
   %v3 = select <2 x i1> %c3, <2 x i8> %v1, <2 x i8> %v2
-  store <2 x i8> %v3, <2 x i8> * %m, align 8
+  store <2 x i8> %v3, ptr %m, align 8
   ret void
 }
 
-define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
+define void @test_v3_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v3_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lwz $r2 = 0[$r0]
@@ -140,17 +140,17 @@ define void @test_v3_select(<3 x i8> * %m, <3 x i8> * %n){
 ; CV2-NEXT:    sh 0[$r0] = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
-  %v1 = load <3 x i8>, <3 x i8>* %m, align 8
-  %v2 = load <3 x i8>, <3 x i8>* %n, align 8
+  %v1 = load <3 x i8>, ptr %m, align 8
+  %v2 = load <3 x i8>, ptr %n, align 8
   %c1 = icmp eq <3 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <3 x i8> %v2, <i8 -1, i8 -1, i8 -1>
   %c3 = and <3 x i1> %c1, %c2
   %v3 = select <3 x i1> %c3, <3 x i8> %v1, <3 x i8> %v2
-  store <3 x i8> %v3, <3 x i8> * %m, align 8
+  store <3 x i8> %v3, ptr %m, align 8
   ret void
 }
 
-define void @test_v4_select(<4 x i8> * %m, <4 x i8> * %n){
+define void @test_v4_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v4_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lwz $r2 = 0[$r0]
@@ -193,17 +193,17 @@ define void @test_v4_select(<4 x i8> * %m, <4 x i8> * %n){
 ; CV2-NEXT:    sw 0[$r0] = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %v1 = load <4 x i8>, <4 x i8>* %m, align 8
-  %v2 = load <4 x i8>, <4 x i8>* %n, align 8
+  %v1 = load <4 x i8>, ptr %m, align 8
+  %v2 = load <4 x i8>, ptr %n, align 8
   %c1 = icmp eq <4 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <4 x i8> %v2, <i8 -1, i8 -1, i8 -1, i8 -1>
   %c3 = and <4 x i1> %c1, %c2
   %v3 = select <4 x i1> %c3, <4 x i8> %v1, <4 x i8> %v2
-  store <4 x i8> %v3, <4 x i8> * %m, align 8
+  store <4 x i8> %v3, ptr %m, align 8
   ret void
 }
 
-define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
+define void @test_v8_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v8_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    ld $r2 = 0[$r0]
@@ -253,17 +253,17 @@ define void @test_v8_select(<8 x i8> * %m, <8 x i8> * %n){
 ; CV2-NEXT:    sd 0[$r0] = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %v1 = load <8 x i8>, <8 x i8>* %m, align 8
-  %v2 = load <8 x i8>, <8 x i8>* %n, align 8
+  %v1 = load <8 x i8>, ptr %m, align 8
+  %v2 = load <8 x i8>, ptr %n, align 8
   %c1 = icmp eq <8 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <8 x i8> %v2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
   %c3 = and <8 x i1> %c1, %c2
   %v3 = select <8 x i1> %c3, <8 x i8> %v1, <8 x i8> %v2
-  store <8 x i8> %v3, <8 x i8> * %m, align 8
+  store <8 x i8> %v3, ptr %m, align 8
   ret void
 }
 
-define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
+define void @test_v16_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v16_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lq $r2r3 = 0[$r0]
@@ -340,17 +340,17 @@ define void @test_v16_select(<16 x i8> * %m, <16 x i8> * %n){
 ; CV2-NEXT:    sq 0[$r0] = $r2r3
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
-  %v1 = load <16 x i8>, <16 x i8>* %m, align 16
-  %v2 = load <16 x i8>, <16 x i8>* %n, align 16
+  %v1 = load <16 x i8>, ptr %m, align 16
+  %v2 = load <16 x i8>, ptr %n, align 16
   %c1 = icmp eq <16 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <16 x i8> %v2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
   %c3 = and <16 x i1> %c1, %c2
   %v3 = select <16 x i1> %c3, <16 x i8> %v1, <16 x i8> %v2
-  store <16 x i8> %v3, <16 x i8> * %m, align 16
+  store <16 x i8> %v3, ptr %m, align 16
   ret void
 }
 
-define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
+define void @test_v32_select(ptr %m, ptr %n){
 ; CV1-LABEL: test_v32_select:
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
@@ -480,12 +480,12 @@ define void @test_v32_select(<32 x i8> * %m, <32 x i8> * %n){
 ; CV2-NEXT:    so 0[$r0] = $r4r5r6r7
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 9)
-  %v1 = load <32 x i8>, <32 x i8>* %m, align 32
-  %v2 = load <32 x i8>, <32 x i8>* %n, align 32
+  %v1 = load <32 x i8>, ptr %m, align 32
+  %v2 = load <32 x i8>, ptr %n, align 32
   %c1 = icmp eq <32 x i8> %v1, zeroinitializer
   %c2 = icmp sgt <32 x i8> %v2, <i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1, i8 -1>
   %c3 = and <32 x i1> %c1, %c2
   %v3 = select <32 x i1> %c3, <32 x i8> %v1, <32 x i8> %v2
-  store <32 x i8> %v3, <32 x i8> * %m, align 32
+  store <32 x i8> %v3, ptr %m, align 32
   ret void
 }

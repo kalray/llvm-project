@@ -6,7 +6,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define i64 @f_5_quadpack(i64* nocapture readonly %v){
+define i64 @f_5_quadpack(ptr nocapture readonly %v){
 ; CHECK-LABEL: f_5_quadpack:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lo $r4r5r6r7 = 0[$r0]
@@ -23,15 +23,15 @@ define i64 @f_5_quadpack(i64* nocapture readonly %v){
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
 entry:
-  %0 = load i64, i64* %v, align 8
-  %arrayidx1 = getelementptr inbounds i64, i64* %v, i64 1
-  %1 = load i64, i64* %arrayidx1, align 8
-  %arrayidx2 = getelementptr inbounds i64, i64* %v, i64 2
-  %2 = load i64, i64* %arrayidx2, align 8
-  %arrayidx3 = getelementptr inbounds i64, i64* %v, i64 3
-  %3 = load i64, i64* %arrayidx3, align 8
-  %arrayidx4 = getelementptr inbounds i64, i64* %v, i64 4
-  %4 = load i64, i64* %arrayidx4, align 8
+  %0 = load i64, ptr %v, align 8
+  %arrayidx1 = getelementptr inbounds i64, ptr %v, i64 1
+  %1 = load i64, ptr %arrayidx1, align 8
+  %arrayidx2 = getelementptr inbounds i64, ptr %v, i64 2
+  %2 = load i64, ptr %arrayidx2, align 8
+  %arrayidx3 = getelementptr inbounds i64, ptr %v, i64 3
+  %3 = load i64, ptr %arrayidx3, align 8
+  %arrayidx4 = getelementptr inbounds i64, ptr %v, i64 4
+  %4 = load i64, ptr %arrayidx4, align 8
   %add = add nsw i64 %1, %0
   %add5 = add nsw i64 %add, %2
   %add6 = add nsw i64 %add5, %3

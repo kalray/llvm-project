@@ -5,41 +5,41 @@
   target datalayout = "e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-v64:64-v128:128-v256:256-v512:256-v1024:256-f16:16-f32:32-f64:64-a:0:64-m:e-n32:64"
   target triple = "kvx-kalray-cos"
   
-  @v = external dso_local local_unnamed_addr global i32*, align 8
+  @v = external dso_local local_unnamed_addr global ptr, align 8
   
-  define i32 @e(i32 %0, i32 %1, i32 %2, i32 %3, i32 %4, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, i32* nocapture readnone %12) {
+  define i32 @e(i32 %0, i32 %1, i32 %2, i32 %3, i32 %4, i32 %5, i32 %6, i32 %7, i32 %8, i32 %9, i32 %10, i32 %11, ptr nocapture readnone %12) {
     %14 = alloca i32, align 64
-    store volatile i32 0, i32* %14, align 64
-    %15 = load i32*, i32** @v, align 8
-    %16 = icmp ne i32* %15, %12
+    store volatile i32 0, ptr %14, align 64
+    %15 = load ptr, ptr @v, align 8
+    %16 = icmp ne ptr %15, %12
     %17 = zext i1 %16 to i32
     ret i32 %17
   }
   
-  declare void @_Unwind_SjLj_Register({ i8*, i64, [4 x i64], i8*, i8*, [5 x i8*] }*)
+  declare void @_Unwind_SjLj_Register({ ptr, i64, [4 x i64], ptr, ptr, [5 x ptr ] }*)
   
-  declare void @_Unwind_SjLj_Unregister({ i8*, i64, [4 x i64], i8*, i8*, [5 x i8*] }*)
+  declare void @_Unwind_SjLj_Unregister({ ptr, i64, [4 x i64], ptr, ptr, [5 x ptr ] }*)
   
   ; Function Attrs: nofree nosync nounwind readnone willreturn
-  declare i8* @llvm.frameaddress.p0i8(i32 immarg) #0
+  declare ptr @llvm.frameaddress.p0i8(i32 immarg) #0
   
   ; Function Attrs: nofree nosync nounwind willreturn
-  declare i8* @llvm.stacksave() #1
+  declare ptr @llvm.stacksave() #1
   
   ; Function Attrs: nofree nosync nounwind willreturn
-  declare void @llvm.stackrestore(i8*) #1
+  declare void @llvm.stackrestore(ptr ) #1
   
   ; Function Attrs: nounwind
   declare void @llvm.eh.sjlj.setup.dispatch() #2
   
   ; Function Attrs: nounwind readnone
-  declare i8* @llvm.eh.sjlj.lsda() #3
+  declare ptr @llvm.eh.sjlj.lsda() #3
   
   ; Function Attrs: nounwind readnone
   declare void @llvm.eh.sjlj.callsite(i32) #3
   
   ; Function Attrs: nounwind
-  declare void @llvm.eh.sjlj.functioncontext(i8*) #2
+  declare void @llvm.eh.sjlj.functioncontext(ptr ) #2
   
   attributes #0 = { nofree nosync nounwind readnone willreturn }
   attributes #1 = { nofree nosync nounwind willreturn }

@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @storec256_mt(<8 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec256_mt(<8 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec256_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so.mt $r5 ? [$r4] = $r0r1r2r3
@@ -12,14 +12,14 @@ define void @storec256_mt(<8 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 -1, i32 4)
+  %1 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 -1, i32 4)
   ret void
 }
 
-declare void @llvm.kvx.storec.v4i64(<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...)
+declare void @llvm.kvx.storec.v4i64(<4 x i64>, ptr, i32, i64, i32, i32, ...)
 
-define void @storec256_mf(<8 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec256_mf(<8 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec256_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    so.mf $r5 ? [$r4] = $r0r1r2r3
@@ -27,12 +27,12 @@ define void @storec256_mf(<8 x i32> %a, i8* %ptr, i64 %cond) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
   %0 = bitcast <8 x i32> %a to <4 x i64>
-  %1 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, <4 x i64>* %1, i32 256, i64 %cond, i32 -1, i32 5)
+  %1 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %0, ptr %1, i32 256, i64 %cond, i32 -1, i32 5)
   ret void
 }
 
-define void @storec128_mt(<4 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec128_mt(<4 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec128_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    clrf $r3 = $r3, 63, 16
@@ -44,12 +44,12 @@ entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = and i64 %cond, 65535
   %2 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-  %3 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, <4 x i64>* %3, i32 256, i64 %1, i32 -1, i32 4)
+  %3 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %1, i32 -1, i32 4)
   ret void
 }
 
-define void @storec128_mf(<4 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec128_mf(<4 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec128_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    iord $r3 = $r3, 0xffffffffffff0000
@@ -61,12 +61,12 @@ entry:
   %0 = bitcast <4 x i32> %a to <2 x i64>
   %1 = or i64 %cond, -65536
   %2 = shufflevector <2 x i64> %0, <2 x i64> undef, <4 x i32> <i32 0, i32 1, i32 undef, i32 undef>
-  %3 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, <4 x i64>* %3, i32 256, i64 %1, i32 -1, i32 5)
+  %3 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %1, i32 -1, i32 5)
   ret void
 }
 
-define void @storec64_mt(<2 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec64_mt(<2 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec64_mt:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    andd $r2 = $r2, 255
@@ -78,12 +78,12 @@ entry:
   %0 = and i64 %cond, 255
   %1 = bitcast <2 x i32> %a to <1 x i64>
   %2 = shufflevector <1 x i64> %1, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-  %3 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, <4 x i64>* %3, i32 256, i64 %0, i32 -1, i32 4)
+  %3 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %0, i32 -1, i32 4)
   ret void
 }
 
-define void @storec64_mf(<2 x i32> %a, i8* %ptr, i64 %cond) {
+define void @storec64_mf(<2 x i32> %a, ptr %ptr, i64 %cond) {
 ; CHECK-LABEL: storec64_mf:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    iord $r2 = $r2, -256
@@ -95,8 +95,8 @@ entry:
   %0 = or i64 %cond, -256
   %1 = bitcast <2 x i32> %a to <1 x i64>
   %2 = shufflevector <1 x i64> %1, <1 x i64> undef, <4 x i32> <i32 0, i32 undef, i32 undef, i32 undef>
-  %3 = bitcast i8* %ptr to <4 x i64>*
-  tail call void (<4 x i64>, <4 x i64>*, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, <4 x i64>* %3, i32 256, i64 %0, i32 -1, i32 5)
+  %3 = bitcast ptr %ptr to ptr 
+  tail call void (<4 x i64>, ptr, i32, i64, i32, i32, ...) @llvm.kvx.storec.v4i64(<4 x i64> %2, ptr %3, i32 256, i64 %0, i32 -1, i32 5)
   ret void
 }
 

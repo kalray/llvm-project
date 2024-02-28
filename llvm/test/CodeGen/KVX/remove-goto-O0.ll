@@ -39,22 +39,22 @@ define i32 @factorial(i32 %v){
 ; CHECK-NEXT:    ;;
 entry:
   %v.addr = alloca i32, align 4
-  store i32 %v, i32* %v.addr, align 4
-  %0 = load i32, i32* %v.addr, align 4
+  store i32 %v, ptr %v.addr, align 4
+  %0 = load i32, ptr %v.addr, align 4
   %cmp = icmp sgt i32 %0, 0
   br i1 %cmp, label %if.then, label %if.end
 
 if.then:                                          ; preds = %entry
-  %1 = load i32, i32* %v.addr, align 4
+  %1 = load i32, ptr %v.addr, align 4
   %sub = sub nsw i32 %1, 1
   %call = call i32 @factorial(i32 %sub)
-  %2 = load i32, i32* %v.addr, align 4
+  %2 = load i32, ptr %v.addr, align 4
   %mul = mul nsw i32 %2, %call
-  store i32 %mul, i32* %v.addr, align 4
+  store i32 %mul, ptr %v.addr, align 4
   br label %if.end
 
 if.end:                                           ; preds = %if.then, %entry
-  %3 = load i32, i32* %v.addr, align 4
+  %3 = load i32, ptr %v.addr, align 4
   ret i32 %3
 }
 
@@ -96,26 +96,26 @@ define i32 @f(){
 entry:
   %i = alloca i32, align 4
   %s = alloca i32, align 4
-  store i32 0, i32* %s, align 4
-  store i32 0, i32* %i, align 4
+  store i32 0, ptr %s, align 4
+  store i32 0, ptr %i, align 4
   br label %for.cond
 
 for.cond:                                         ; preds = %for.inc, %entry
-  %0 = load i32, i32* %i, align 4
+  %0 = load i32, ptr %i, align 4
   %cmp = icmp slt i32 %0, 4
   br i1 %cmp, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
-  %1 = load i32, i32* %i, align 4
-  %2 = load i32, i32* %s, align 4
+  %1 = load i32, ptr %i, align 4
+  %2 = load i32, ptr %s, align 4
   %add = add nsw i32 %2, %1
-  store i32 %add, i32* %s, align 4
+  store i32 %add, ptr %s, align 4
   br label %for.inc
 
 for.inc:                                          ; preds = %for.body
-  %3 = load i32, i32* %i, align 4
+  %3 = load i32, ptr %i, align 4
   %inc = add nsw i32 %3, 1
-  store i32 %inc, i32* %i, align 4
+  store i32 %inc, ptr %i, align 4
   br label %for.cond
 
 for.end:                                          ; preds = %for.cond

@@ -176,26 +176,26 @@ entry:
 }
 
 ; Fixme: Do select for tca v2
-; define void @test_select_vector_reg(<256 x i1> * %V, i1 %cc){
-;   %v0 = load volatile <256 x i1>, <256 x i1>* %V, align 32
-;   %v1 = load volatile <256 x i1>, <256 x i1>* %V, align 32
+; define void @test_select_vector_reg(ptr %V, i1 %cc){
+;   %v0 = load volatile <256 x i1>, ptr %V, align 32
+;   %v1 = load volatile <256 x i1>, ptr %V, align 32
 ;   %v3 = select i1 %cc, <256 x i1> %v0, <256 x i1> %v1
-;   store volatile <256 x i1> %v3, <256 x i1>* %V, align 32
+;   store volatile <256 x i1> %v3, ptr %V, align 32
 ;   ret void
 ; }
 
-; define void @test_select_wide_reg(<512 x i1> * %V, i1 %cc){
-;   %v0 = load volatile <512 x i1>, <512 x i1>* %V, align 32
-;   %v1 = load volatile <512 x i1>, <512 x i1>* %V, align 32
+; define void @test_select_wide_reg(ptr %V, i1 %cc){
+;   %v0 = load volatile <512 x i1>, ptr %V, align 32
+;   %v1 = load volatile <512 x i1>, ptr %V, align 32
 ;   %v3 = select i1 %cc, <512 x i1> %v0, <512 x i1> %v1
-;   store volatile <512 x i1> %v3, <512 x i1>* %V, align 32
+;   store volatile <512 x i1> %v3, ptr %V, align 32
 ;   ret void
 ; }
 
-; define void @test_select_matrix_reg(<1024 x i1> * %V, i1 %cc){
-;   %v0 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
-;   %v1 = load volatile <1024 x i1>, <1024 x i1>* %V, align 32
+; define void @test_select_matrix_reg(ptr %V, i1 %cc){
+;   %v0 = load volatile <1024 x i1>, ptr %V, align 32
+;   %v1 = load volatile <1024 x i1>, ptr %V, align 32
 ;   %v3 = select i1 %cc, <1024 x i1> %v0, <1024 x i1> %v1
-;   store volatile <1024 x i1> %v3, <1024 x i1>* %V, align 32
+;   store volatile <1024 x i1> %v3, ptr %V, align 32
 ;   ret void
 ; }

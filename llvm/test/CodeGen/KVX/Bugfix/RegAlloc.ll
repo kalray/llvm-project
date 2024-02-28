@@ -31,7 +31,7 @@ define void @a() {
   %15 = phi <512 x i1> [ %11, %1 ], [ zeroinitializer, %13 ]
   %16 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %15, <512 x i1> undef)
   %17 = tail call <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1> %16, i32 3, i32 0)
-  store <256 x i1> %17, <256 x i1>* undef, align 32
+  store <256 x i1> %17, ptr undef, align 32
   br label %1
 }
 

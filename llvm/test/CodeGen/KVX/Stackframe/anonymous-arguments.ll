@@ -320,15 +320,15 @@ define i32 @add(i32 %n, ...) {
 ; FP-ALL-NEXT:    ret
 ; FP-ALL-NEXT:    ;;
 entry:
-  %args = alloca i8*, align 8
-  %0 = bitcast i8** %args to i8*
-  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %0)
-  call void @llvm.va_start(i8* nonnull %0)
+  %args = alloca ptr, align 8
+  %0 = bitcast ptr %args to ptr 
+  call void @llvm.lifetime.start.p0i8(i64 8, ptr nonnull %0)
+  call void @llvm.va_start(ptr nonnull %0)
   %cmp7 = icmp sgt i32 %n, 0
   br i1 %cmp7, label %for.body.preheader, label %for.cond.cleanup
 
 for.body.preheader:                               ; preds = %entry
-  %ap.cur.pre = load i8*, i8** %args, align 8
+  %ap.cur.pre = load ptr, ptr %args, align 8
   %1 = add i32 %n, -1
   %xtraiter = and i32 %n, 7
   %2 = icmp ult i32 %1, 7
@@ -340,19 +340,19 @@ for.body.preheader.new:                           ; preds = %for.body.preheader
 
 for.cond.cleanup.loopexit.unr-lcssa:              ; preds = %for.body, %for.body.preheader
   %add.lcssa.ph = phi i32 [ undef, %for.body.preheader ], [ %add.7, %for.body ]
-  %ap.cur.unr = phi i8* [ %ap.cur.pre, %for.body.preheader ], [ %ap.next.7, %for.body ]
+  %ap.cur.unr = phi ptr [ %ap.cur.pre, %for.body.preheader ], [ %ap.next.7, %for.body ]
   %sum.08.unr = phi i32 [ 0, %for.body.preheader ], [ %add.7, %for.body ]
   %lcmp.mod = icmp eq i32 %xtraiter, 0
   br i1 %lcmp.mod, label %for.cond.cleanup, label %for.body.epil
 
 for.body.epil:                                    ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil
-  %ap.cur.epil = phi i8* [ %ap.next.epil, %for.body.epil ], [ %ap.cur.unr, %for.cond.cleanup.loopexit.unr-lcssa ]
+  %ap.cur.epil = phi ptr [ %ap.next.epil, %for.body.epil ], [ %ap.cur.unr, %for.cond.cleanup.loopexit.unr-lcssa ]
   %sum.08.epil = phi i32 [ %add.epil, %for.body.epil ], [ %sum.08.unr, %for.cond.cleanup.loopexit.unr-lcssa ]
   %epil.iter = phi i32 [ %epil.iter.sub, %for.body.epil ], [ %xtraiter, %for.cond.cleanup.loopexit.unr-lcssa ]
-  %ap.next.epil = getelementptr inbounds i8, i8* %ap.cur.epil, i64 8
-  store i8* %ap.next.epil, i8** %args, align 8
-  %arg.addr.epil = bitcast i8* %ap.cur.epil to i32*
-  %3 = load i32, i32* %arg.addr.epil, align 8
+  %ap.next.epil = getelementptr inbounds i8, ptr %ap.cur.epil, i64 8
+  store ptr %ap.next.epil, ptr %args, align 8
+  %arg.addr.epil = bitcast ptr %ap.cur.epil to ptr 
+  %3 = load i32, ptr %arg.addr.epil, align 8
   %add.epil = add nsw i32 %3, %sum.08.epil
   %epil.iter.sub = add i32 %epil.iter, -1
   %epil.iter.cmp = icmp eq i32 %epil.iter.sub, 0
@@ -360,53 +360,53 @@ for.body.epil:                                    ; preds = %for.cond.cleanup.lo
 
 for.cond.cleanup:                                 ; preds = %for.cond.cleanup.loopexit.unr-lcssa, %for.body.epil, %entry
   %sum.0.lcssa = phi i32 [ 0, %entry ], [ %add.lcssa.ph, %for.cond.cleanup.loopexit.unr-lcssa ], [ %add.epil, %for.body.epil ]
-  call void @llvm.va_end(i8* nonnull %0)
-  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %0)
+  call void @llvm.va_end(ptr nonnull %0)
+  call void @llvm.lifetime.end.p0i8(i64 8, ptr nonnull %0)
   ret i32 %sum.0.lcssa
 
 for.body:                                         ; preds = %for.body, %for.body.preheader.new
-  %ap.cur = phi i8* [ %ap.cur.pre, %for.body.preheader.new ], [ %ap.next.7, %for.body ]
+  %ap.cur = phi ptr [ %ap.cur.pre, %for.body.preheader.new ], [ %ap.next.7, %for.body ]
   %sum.08 = phi i32 [ 0, %for.body.preheader.new ], [ %add.7, %for.body ]
   %niter = phi i32 [ %unroll_iter, %for.body.preheader.new ], [ %niter.nsub.7, %for.body ]
-  %ap.next = getelementptr inbounds i8, i8* %ap.cur, i64 8
-  store i8* %ap.next, i8** %args, align 8
-  %arg.addr = bitcast i8* %ap.cur to i32*
-  %4 = load i32, i32* %arg.addr, align 8
+  %ap.next = getelementptr inbounds i8, ptr %ap.cur, i64 8
+  store ptr %ap.next, ptr %args, align 8
+  %arg.addr = bitcast ptr %ap.cur to ptr 
+  %4 = load i32, ptr %arg.addr, align 8
   %add = add nsw i32 %4, %sum.08
-  %ap.next.1 = getelementptr inbounds i8, i8* %ap.cur, i64 16
-  store i8* %ap.next.1, i8** %args, align 8
-  %arg.addr.1 = bitcast i8* %ap.next to i32*
-  %5 = load i32, i32* %arg.addr.1, align 8
+  %ap.next.1 = getelementptr inbounds i8, ptr %ap.cur, i64 16
+  store ptr %ap.next.1, ptr %args, align 8
+  %arg.addr.1 = bitcast ptr %ap.next to ptr 
+  %5 = load i32, ptr %arg.addr.1, align 8
   %add.1 = add nsw i32 %5, %add
-  %ap.next.2 = getelementptr inbounds i8, i8* %ap.cur, i64 24
-  store i8* %ap.next.2, i8** %args, align 8
-  %arg.addr.2 = bitcast i8* %ap.next.1 to i32*
-  %6 = load i32, i32* %arg.addr.2, align 8
+  %ap.next.2 = getelementptr inbounds i8, ptr %ap.cur, i64 24
+  store ptr %ap.next.2, ptr %args, align 8
+  %arg.addr.2 = bitcast ptr %ap.next.1 to ptr 
+  %6 = load i32, ptr %arg.addr.2, align 8
   %add.2 = add nsw i32 %6, %add.1
-  %ap.next.3 = getelementptr inbounds i8, i8* %ap.cur, i64 32
-  store i8* %ap.next.3, i8** %args, align 8
-  %arg.addr.3 = bitcast i8* %ap.next.2 to i32*
-  %7 = load i32, i32* %arg.addr.3, align 8
+  %ap.next.3 = getelementptr inbounds i8, ptr %ap.cur, i64 32
+  store ptr %ap.next.3, ptr %args, align 8
+  %arg.addr.3 = bitcast ptr %ap.next.2 to ptr 
+  %7 = load i32, ptr %arg.addr.3, align 8
   %add.3 = add nsw i32 %7, %add.2
-  %ap.next.4 = getelementptr inbounds i8, i8* %ap.cur, i64 40
-  store i8* %ap.next.4, i8** %args, align 8
-  %arg.addr.4 = bitcast i8* %ap.next.3 to i32*
-  %8 = load i32, i32* %arg.addr.4, align 8
+  %ap.next.4 = getelementptr inbounds i8, ptr %ap.cur, i64 40
+  store ptr %ap.next.4, ptr %args, align 8
+  %arg.addr.4 = bitcast ptr %ap.next.3 to ptr 
+  %8 = load i32, ptr %arg.addr.4, align 8
   %add.4 = add nsw i32 %8, %add.3
-  %ap.next.5 = getelementptr inbounds i8, i8* %ap.cur, i64 48
-  store i8* %ap.next.5, i8** %args, align 8
-  %arg.addr.5 = bitcast i8* %ap.next.4 to i32*
-  %9 = load i32, i32* %arg.addr.5, align 8
+  %ap.next.5 = getelementptr inbounds i8, ptr %ap.cur, i64 48
+  store ptr %ap.next.5, ptr %args, align 8
+  %arg.addr.5 = bitcast ptr %ap.next.4 to ptr 
+  %9 = load i32, ptr %arg.addr.5, align 8
   %add.5 = add nsw i32 %9, %add.4
-  %ap.next.6 = getelementptr inbounds i8, i8* %ap.cur, i64 56
-  store i8* %ap.next.6, i8** %args, align 8
-  %arg.addr.6 = bitcast i8* %ap.next.5 to i32*
-  %10 = load i32, i32* %arg.addr.6, align 8
+  %ap.next.6 = getelementptr inbounds i8, ptr %ap.cur, i64 56
+  store ptr %ap.next.6, ptr %args, align 8
+  %arg.addr.6 = bitcast ptr %ap.next.5 to ptr 
+  %10 = load i32, ptr %arg.addr.6, align 8
   %add.6 = add nsw i32 %10, %add.5
-  %ap.next.7 = getelementptr inbounds i8, i8* %ap.cur, i64 64
-  store i8* %ap.next.7, i8** %args, align 8
-  %arg.addr.7 = bitcast i8* %ap.next.6 to i32*
-  %11 = load i32, i32* %arg.addr.7, align 8
+  %ap.next.7 = getelementptr inbounds i8, ptr %ap.cur, i64 64
+  store ptr %ap.next.7, ptr %args, align 8
+  %arg.addr.7 = bitcast ptr %ap.next.6 to ptr 
+  %11 = load i32, ptr %arg.addr.7, align 8
   %add.7 = add nsw i32 %11, %add.6
   %niter.nsub.7 = add i32 %niter, -8
   %niter.ncmp.7 = icmp eq i32 %niter.nsub.7, 0
@@ -414,10 +414,10 @@ for.body:                                         ; preds = %for.body, %for.body
 ; CHECK: addd $r12 = $r12, 96
 }
 
-declare void @llvm.lifetime.start.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.start.p0i8(i64 immarg, ptr nocapture)
 
-declare void @llvm.va_start(i8*)
+declare void @llvm.va_start(ptr )
 
-declare void @llvm.lifetime.end.p0i8(i64 immarg, i8* nocapture)
+declare void @llvm.lifetime.end.p0i8(i64 immarg, ptr nocapture)
 
-declare void @llvm.va_end(i8*)
+declare void @llvm.va_end(ptr )

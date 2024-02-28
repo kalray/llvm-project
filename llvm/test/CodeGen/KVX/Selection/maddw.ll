@@ -115,7 +115,7 @@ entry:
   ret i64 %add
 }
 
-define i64 @not_madduwdri2(i64 %a, i32* nocapture readonly %b) {
+define i64 @not_madduwdri2(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: not_madduwdri2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -133,7 +133,7 @@ define i64 @not_madduwdri2(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %mul = mul i64 %conv, 8589934594
   %add = add i64 %mul, %a
@@ -178,7 +178,7 @@ entry:
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @madduwdri_load(i64 %a, i32* nocapture readonly %b)  {
+define i64 @madduwdri_load(i64 %a, ptr nocapture readonly %b)  {
 ; CHECK-LABEL: madduwdri_load:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -195,13 +195,13 @@ define i64 @madduwdri_load(i64 %a, i32* nocapture readonly %b)  {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %mul = mul nuw nsw i64 %conv, 1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @madduwdrr_load(i64 %a, i32* nocapture readonly %b, i32 %c)  {
+define i64 @madduwdrr_load(i64 %a, ptr nocapture readonly %b, i32 %c)  {
 ; CHECK-LABEL: madduwdrr_load:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -218,7 +218,7 @@ define i64 @madduwdrr_load(i64 %a, i32* nocapture readonly %b, i32 %c)  {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %conv1 = zext i32 %c to i64
   %mul = mul nuw i64 %conv, %conv1
@@ -226,7 +226,7 @@ entry:
   ret i64 %add
 }
 
-define i64 @madduwdrr_load2(i64 %a, i32* nocapture readonly %b, i32* nocapture readonly %c) {
+define i64 @madduwdrr_load2(i64 %a, ptr nocapture readonly %b, ptr nocapture readonly %c) {
 ; CHECK-LABEL: madduwdrr_load2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -247,16 +247,16 @@ define i64 @madduwdrr_load2(i64 %a, i32* nocapture readonly %b, i32* nocapture r
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
-  %1 = load i32, i32* %c, align 4
+  %1 = load i32, ptr %c, align 4
   %conv1 = zext i32 %1 to i64
   %mul = mul nuw i64 %conv1, %conv
   %add = add i64 %mul, %a
   ret i64 %add
 }
 
-define i64 @madduwdri2(i64 %a, i32* nocapture readonly %b) {
+define i64 @madduwdri2(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: madduwdri2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -273,14 +273,14 @@ define i64 @madduwdri2(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %mul = mul nuw nsw i64 %conv, 1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
 
-define i64 @not_madduwdri3(i64 %a, i32* nocapture readonly %b) {
+define i64 @not_madduwdri3(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: not_madduwdri3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -299,7 +299,7 @@ define i64 @not_madduwdri3(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %mul = mul i64 %conv, 4294967296
   %add = add i64 %mul, %a
@@ -325,7 +325,7 @@ entry:
   ret i64 %add
 }
 
-define i64 @madduwdri3(i64 %a, i32* nocapture readonly %b) {
+define i64 @madduwdri3(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: madduwdri3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -342,7 +342,7 @@ define i64 @madduwdri3(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = zext i32 %0 to i64
   %mul = mul i64 %conv, 4294967295
   %add = add i64 %mul, %a
@@ -467,7 +467,7 @@ entry:
   ret i64 %add
 }
 
-define i64 @not_maddwdri2(i64 %a, i32* nocapture readonly %b) {
+define i64 @not_maddwdri2(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: not_maddwdri2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lws $r1 = 0[$r1]
@@ -485,7 +485,7 @@ define i64 @not_maddwdri2(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
   %mul = mul i64 %conv, 8589934594
   %add = add i64 %mul, %a
@@ -530,7 +530,7 @@ entry:
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @maddwdri_load(i64 %a, i32* nocapture readonly %b)  {
+define i64 @maddwdri_load(i64 %a, ptr nocapture readonly %b)  {
 ; CHECK-LABEL: maddwdri_load:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -547,13 +547,13 @@ define i64 @maddwdri_load(i64 %a, i32* nocapture readonly %b)  {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
   %mul = mul nuw nsw i64 %conv, -1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @maddwdrr_load(i64 %a, i32* nocapture readonly %b, i32 %c)  {
+define i64 @maddwdrr_load(i64 %a, ptr nocapture readonly %b, i32 %c)  {
 ; CHECK-LABEL: maddwdrr_load:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -570,7 +570,7 @@ define i64 @maddwdrr_load(i64 %a, i32* nocapture readonly %b, i32 %c)  {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
   %conv1 = sext i32 %c to i64
   %mul = mul nuw i64 %conv, %conv1
@@ -578,7 +578,7 @@ entry:
   ret i64 %add
 }
 
-define i64 @maddwdrr_load2(i64 %a, i32* nocapture readonly %b, i32* nocapture readonly %c) {
+define i64 @maddwdrr_load2(i64 %a, ptr nocapture readonly %b, ptr nocapture readonly %c) {
 ; CHECK-LABEL: maddwdrr_load2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -599,16 +599,16 @@ define i64 @maddwdrr_load2(i64 %a, i32* nocapture readonly %b, i32* nocapture re
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 4)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
-  %1 = load i32, i32* %c, align 4
+  %1 = load i32, ptr %c, align 4
   %conv1 = sext i32 %1 to i64
   %mul = mul nuw i64 %conv1, %conv
   %add = add i64 %mul, %a
   ret i64 %add
 }
 
-define i64 @maddwdri2(i64 %a, i32* nocapture readonly %b) {
+define i64 @maddwdri2(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: maddwdri2:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -625,13 +625,13 @@ define i64 @maddwdri2(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
   %mul = mul nuw nsw i64 %conv, -1234
   %add = add i64 %mul, %a
   ret i64 %add
 }
-define i64 @maddwdri3(i64 %a, i32* nocapture readonly %b) {
+define i64 @maddwdri3(i64 %a, ptr nocapture readonly %b) {
 ; CHECK-LABEL: maddwdri3:
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    lwz $r1 = 0[$r1]
@@ -648,7 +648,7 @@ define i64 @maddwdri3(i64 %a, i32* nocapture readonly %b) {
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;; # (end cycle 3)
 entry:
-  %0 = load i32, i32* %b, align 4
+  %0 = load i32, ptr %b, align 4
   %conv = sext i32 %0 to i64
   %mul = mul i64 %conv, -3
   %add = add i64 %mul, %a

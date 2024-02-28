@@ -4,7 +4,7 @@
 
 target triple = "kvx-kalray-cos"
 
-define void @convdhv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1) {
+define void @convdhv(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: convdhv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
@@ -38,17 +38,17 @@ define void @convdhv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-NEXT:    xso 64[$r0] = $a4
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 23)
-  %3 = load <256 x i1>, <256 x i1>* %0
-  %4 = load <1024 x i1>, <1024 x i1>* %1
+  %3 = load <256 x i1>, ptr %0
+  %4 = load <1024 x i1>, ptr %1
   %5 = tail call <256 x i1> @llvm.kvx.xconvdhv1(<256 x i1> %3, <1024 x i1> %4, i32 0, i32 0)
   %6 = tail call <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1> %5, <1024 x i1> %4, i32 0, i32 1)
-  %7 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  store <256 x i1> %6, <256 x i1>* %7
-  %8 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %1, i64 1
-  %9 = load <1024 x i1>, <1024 x i1>* %8
+  %7 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  store <256 x i1> %6, ptr %7
+  %8 = getelementptr inbounds <1024 x i1>, ptr %1, i64 1
+  %9 = load <1024 x i1>, ptr %8
   %10 = tail call <256 x i1> @llvm.kvx.xconvdhv(<1024 x i1> %9, i32 3, i32 0)
-  %11 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  store <256 x i1> %10, <256 x i1>* %11
+  %11 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  store <256 x i1> %10, ptr %11
   ret void
 }
 
@@ -58,7 +58,7 @@ declare <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1>, <1024 x i1>, i32, i32)
 
 declare <256 x i1> @llvm.kvx.xconvdhv(<1024 x i1>, i32, i32)
 
-define void @convwbv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1) {
+define void @convwbv(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: convwbv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
@@ -105,21 +105,21 @@ define void @convwbv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-NEXT:    xso 64[$r0] = $a4
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 35)
-  %3 = load <256 x i1>, <256 x i1>* %0
-  %4 = load <1024 x i1>, <1024 x i1>* %1
+  %3 = load <256 x i1>, ptr %0
+  %4 = load <1024 x i1>, ptr %1
   %5 = tail call <256 x i1> @llvm.kvx.xconvwbv1(<256 x i1> %3, <1024 x i1> %4, i32 0, i32 0)
   %6 = tail call <256 x i1> @llvm.kvx.xconvwbv0(<256 x i1> %5, <1024 x i1> %4, i32 0, i32 1)
   %7 = tail call <256 x i1> @llvm.kvx.xconvwbv2(<256 x i1> %6, <1024 x i1> %4, i32 2, i32 0)
   %8 = tail call <256 x i1> @llvm.kvx.xconvwbv3(<256 x i1> %7, <1024 x i1> %4, i32 4, i32 1)
-  %9 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  store <256 x i1> %8, <256 x i1>* %9
+  %9 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  store <256 x i1> %8, ptr %9
   %10 = tail call <256 x i1> @llvm.kvx.xconvwbv3(<256 x i1> %7, <1024 x i1> %4, i32 0, i32 0)
-  store <256 x i1> %10, <256 x i1>* %0
-  %11 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %1, i64 1
-  %12 = load <1024 x i1>, <1024 x i1>* %11
+  store <256 x i1> %10, ptr %0
+  %11 = getelementptr inbounds <1024 x i1>, ptr %1, i64 1
+  %12 = load <1024 x i1>, ptr %11
   %13 = tail call <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1> %12, i32 3, i32 1)
-  %14 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  store <256 x i1> %13, <256 x i1>* %14
+  %14 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  store <256 x i1> %13, ptr %14
   ret void
 }
 
@@ -133,7 +133,7 @@ declare <256 x i1> @llvm.kvx.xconvwbv3(<256 x i1>, <1024 x i1>, i32, i32)
 
 declare <256 x i1> @llvm.kvx.xconvwbv(<1024 x i1>, i32, i32)
 
-define void @fmma444hw(<256 x i1>* nocapture %0, <512 x i1>* nocapture %1) {
+define void @fmma444hw(ptr nocapture %0, ptr nocapture %1) {
 ; ALL-LABEL: fmma444hw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 32[$r1]
@@ -180,24 +180,24 @@ define void @fmma444hw(<256 x i1>* nocapture %0, <512 x i1>* nocapture %1) {
 ; ALL-NEXT:    xso 224[$r1] = $a7
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 44)
-  %3 = load <256 x i1>, <256 x i1>* %0
-  %4 = load <512 x i1>, <512 x i1>* %1
-  %5 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  %6 = load <256 x i1>, <256 x i1>* %5
-  %7 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  %8 = load <256 x i1>, <256 x i1>* %7
+  %3 = load <256 x i1>, ptr %0
+  %4 = load <512 x i1>, ptr %1
+  %5 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  %6 = load <256 x i1>, ptr %5
+  %7 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  %8 = load <256 x i1>, ptr %7
   %9 = tail call <256 x i1> @llvm.kvx.xfmma242hw0(<256 x i1> %3, <512 x i1> %4, <256 x i1> %6, <256 x i1> %8)
   %10 = tail call <256 x i1> @llvm.kvx.xfmma242hw1(<256 x i1> %9, <512 x i1> %4, <256 x i1> %6, <256 x i1> %8)
   %11 = tail call <256 x i1> @llvm.kvx.xfmma242hw2(<256 x i1> %10, <512 x i1> %4, <256 x i1> %6, <256 x i1> %8)
-  store <256 x i1> %11, <256 x i1>* %5
+  store <256 x i1> %11, ptr %5
   %12 = tail call <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1> %10, <512 x i1> %4, <256 x i1> %11, <256 x i1> %8)
-  store <256 x i1> %12, <256 x i1>* %7
-  store <256 x i1> %10, <256 x i1>* %0
-  %13 = getelementptr inbounds <512 x i1>, <512 x i1>* %1, i64 1
-  %14 = load <512 x i1>, <512 x i1>* %13
+  store <256 x i1> %12, ptr %7
+  store <256 x i1> %10, ptr %0
+  %13 = getelementptr inbounds <512 x i1>, ptr %1, i64 1
+  %14 = load <512 x i1>, ptr %13
   %15 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> %12, <256 x i1> %11, <512 x i1> %14)
-  %16 = getelementptr inbounds <512 x i1>, <512 x i1>* %1, i64 3
-  store <512 x i1> %15, <512 x i1>* %16
+  %16 = getelementptr inbounds <512 x i1>, ptr %1, i64 3
+  store <512 x i1> %15, ptr %16
   ret void
 }
 
@@ -211,7 +211,7 @@ declare <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1>, <512 x i1>, <256 x i1>, <25
 
 declare <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1>, <256 x i1>, <512 x i1>)
 
-define void @test(<256 x i1>* nocapture %0) {
+define void @test(ptr nocapture %0) {
 ; ALL-LABEL: test:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a0 = 0[$r0]
@@ -224,16 +224,16 @@ define void @test(<256 x i1>* nocapture %0) {
 ; ALL-NEXT:    xso 0[$r0] = $a0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 5)
-  %2 = load <256 x i1>, <256 x i1>* %0
+  %2 = load <256 x i1>, ptr %0
   %3 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %2, i64 1, i64 0, i32 1)
   %4 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %3, i64 1, i64 0, i32 0)
-  store <256 x i1> %4, <256 x i1>* %0
+  store <256 x i1> %4, ptr %0
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.xmovetq(<256 x i1>, i64, i64, i32)
 
-define void @insertwm(<1024 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1) {
+define void @insertwm(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: insertwm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $x1
@@ -264,17 +264,17 @@ define void @insertwm(<1024 x i1>* nocapture %0, <512 x i1>* nocapture readonly 
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 13)
-  %3 = load <1024 x i1>, <1024 x i1>* %0
-  %4 = load <512 x i1>, <512 x i1>* %1
+  %3 = load <1024 x i1>, ptr %0
+  %4 = load <512 x i1>, ptr %1
   %5 = tail call <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1> %3, <512 x i1> %4, i32 0)
   %6 = tail call <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1> %5, <512 x i1> %4, i32 1)
-  store <1024 x i1> %6, <1024 x i1>* %0
+  store <1024 x i1> %6, ptr %0
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xinsertwm(<1024 x i1>, <512 x i1>, i32)
 
-define void @insertvm(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+define void @insertvm(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: insertvm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $x1
@@ -305,19 +305,19 @@ define void @insertvm(<1024 x i1>* nocapture %0, <256 x i1>* nocapture readonly 
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 20)
-  %3 = load <1024 x i1>, <1024 x i1>* %0
-  %4 = load <256 x i1>, <256 x i1>* %1
+  %3 = load <1024 x i1>, ptr %0
+  %4 = load <256 x i1>, ptr %1
   %5 = tail call <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1> %3, <256 x i1> %4, i32 0)
   %6 = tail call <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1> %5, <256 x i1> %4, i32 1)
   %7 = tail call <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1> %6, <256 x i1> %4, i32 2)
   %8 = tail call <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1> %7, <256 x i1> %4, i32 3)
-  store <1024 x i1> %8, <1024 x i1>* %0
+  store <1024 x i1> %8, ptr %0
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xinsertvm(<1024 x i1>, <256 x i1>, i32)
 
-define void @insertvw(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %1) {
+define void @insertvw(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: insertvw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    # implicit-def: $w1
@@ -334,17 +334,17 @@ define void @insertvw(<512 x i1>* nocapture %0, <256 x i1>* nocapture readonly %
 ; ALL-NEXT:    xso 32[$r0] = $a1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 8)
-  %3 = load <512 x i1>, <512 x i1>* %0
-  %4 = load <256 x i1>, <256 x i1>* %1
+  %3 = load <512 x i1>, ptr %0
+  %4 = load <256 x i1>, ptr %1
   %5 = tail call <512 x i1> @llvm.kvx.xinsertvw(<512 x i1> %3, <256 x i1> %4, i32 0)
   %6 = tail call <512 x i1> @llvm.kvx.xinsertvw(<512 x i1> %5, <256 x i1> %4, i32 1)
-  store <512 x i1> %6, <512 x i1>* %0
+  store <512 x i1> %6, ptr %0
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.xinsertvw(<512 x i1>, <256 x i1>, i32)
 
-define void @movefmw(<512 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1) {
+define void @movefmw(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: movefmw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
@@ -364,18 +364,18 @@ define void @movefmw(<512 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-NEXT:    xso 64[$r0] = $a2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 7)
-  %3 = load <1024 x i1>, <1024 x i1>* %1
+  %3 = load <1024 x i1>, ptr %1
   %4 = tail call <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1> %3, i32 0)
-  store <512 x i1> %4, <512 x i1>* %0
+  store <512 x i1> %4, ptr %0
   %5 = tail call <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1> %3, i32 1)
-  %6 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
-  store <512 x i1> %5, <512 x i1>* %6
+  %6 = getelementptr inbounds <512 x i1>, ptr %0, i64 1
+  store <512 x i1> %5, ptr %6
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1>, i32)
 
-define void @movefmv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %1) {
+define void @movefmv(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: movefmv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a3 = 96[$r1]
@@ -395,24 +395,24 @@ define void @movefmv(<256 x i1>* nocapture %0, <1024 x i1>* nocapture readonly %
 ; ALL-NEXT:    xso 96[$r0] = $a3
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 7)
-  %3 = load <1024 x i1>, <1024 x i1>* %1
+  %3 = load <1024 x i1>, ptr %1
   %4 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %3, i32 0)
-  store <256 x i1> %4, <256 x i1>* %0
+  store <256 x i1> %4, ptr %0
   %5 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %3, i32 1)
-  %6 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  store <256 x i1> %5, <256 x i1>* %6
+  %6 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  store <256 x i1> %5, ptr %6
   %7 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %3, i32 2)
-  %8 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  store <256 x i1> %7, <256 x i1>* %8
+  %8 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  store <256 x i1> %7, ptr %8
   %9 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %3, i32 3)
-  %10 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 3
-  store <256 x i1> %9, <256 x i1>* %10
+  %10 = getelementptr inbounds <256 x i1>, ptr %0, i64 3
+  store <256 x i1> %9, ptr %10
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1>, i32)
 
-define void @movefwv(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1) {
+define void @movefwv(ptr nocapture %0, ptr nocapture readonly %1) {
 ; ALL-LABEL: movefwv:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a0 = 0[$r1]
@@ -424,18 +424,18 @@ define void @movefwv(<256 x i1>* nocapture %0, <512 x i1>* nocapture readonly %1
 ; ALL-NEXT:    xso 32[$r0] = $a1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 4)
-  %3 = load <512 x i1>, <512 x i1>* %1
+  %3 = load <512 x i1>, ptr %1
   %4 = tail call <256 x i1> @llvm.kvx.xmovefwv(<512 x i1> %3, i32 0)
-  store <256 x i1> %4, <256 x i1>* %0
+  store <256 x i1> %4, ptr %0
   %5 = tail call <256 x i1> @llvm.kvx.xmovefwv(<512 x i1> %3, i32 1)
-  %6 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  store <256 x i1> %5, <256 x i1>* %6
+  %6 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  store <256 x i1> %5, ptr %6
   ret void
 }
 
 declare <256 x i1> @llvm.kvx.xmovefwv(<512 x i1>, i32)
 
-define void @buildfvm(<256 x i1>* nocapture readonly %0, <1024 x i1>* nocapture %1) {
+define void @buildfvm(ptr nocapture readonly %0, ptr nocapture %1) {
 ; ALL-LABEL: buildfvm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 64[$r0]
@@ -455,19 +455,19 @@ define void @buildfvm(<256 x i1>* nocapture readonly %0, <1024 x i1>* nocapture 
 ; ALL-NEXT:    xso 64[$r1] = $a2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 10)
-  %3 = load <256 x i1>, <256 x i1>* %0
-  %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  %5 = load <256 x i1>, <256 x i1>* %4
-  %6 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 1
-  %7 = load <256 x i1>, <256 x i1>* %6
+  %3 = load <256 x i1>, ptr %0
+  %4 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  %5 = load <256 x i1>, ptr %4
+  %6 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
+  %7 = load <256 x i1>, ptr %6
   %8 = tail call <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1> %3, <256 x i1> %5, <256 x i1> %3, <256 x i1> %7)
-  store <1024 x i1> %8, <1024 x i1>* %1
+  store <1024 x i1> %8, ptr %1
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xbuild1024(<256 x i1>, <256 x i1>, <256 x i1>, <256 x i1>)
 
-define void @buildfwm(<512 x i1>* nocapture readonly %0, <1024 x i1>* nocapture %1) {
+define void @buildfwm(ptr nocapture readonly %0, ptr nocapture %1) {
 ; ALL-LABEL: buildfwm:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 160[$r0]
@@ -499,21 +499,21 @@ define void @buildfwm(<512 x i1>* nocapture readonly %0, <1024 x i1>* nocapture 
 ; ALL-NEXT:    xso 64[$r1] = $a2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 16)
-  %3 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 2
-  %4 = load <512 x i1>, <512 x i1>* %3
+  %3 = getelementptr inbounds <512 x i1>, ptr %0, i64 2
+  %4 = load <512 x i1>, ptr %3
   %5 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %4, <512 x i1> %4)
-  %6 = getelementptr inbounds <1024 x i1>, <1024 x i1>* %1, i64 1
-  store <1024 x i1> %5, <1024 x i1>* %6
-  %7 = getelementptr inbounds <512 x i1>, <512 x i1>* %0, i64 1
-  %8 = load <512 x i1>, <512 x i1>* %7
+  %6 = getelementptr inbounds <1024 x i1>, ptr %1, i64 1
+  store <1024 x i1> %5, ptr %6
+  %7 = getelementptr inbounds <512 x i1>, ptr %0, i64 1
+  %8 = load <512 x i1>, ptr %7
   %9 = tail call <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1> %4, <512 x i1> %8)
-  store <1024 x i1> %9, <1024 x i1>* %1
+  store <1024 x i1> %9, ptr %1
   ret void
 }
 
 declare <1024 x i1> @llvm.kvx.cat.v1024i1(<512 x i1>, <512 x i1>)
 
-define void @buildfvw(<256 x i1>* nocapture readonly %0, <512 x i1>* nocapture %1) {
+define void @buildfvw(ptr nocapture readonly %0, ptr nocapture %1) {
 ; ALL-LABEL: buildfvw:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xlo.u $a1 = 64[$r0]
@@ -525,17 +525,17 @@ define void @buildfvw(<256 x i1>* nocapture readonly %0, <512 x i1>* nocapture %
 ; ALL-NEXT:    xso 0[$r1] = $a0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 4)
-  %3 = load <256 x i1>, <256 x i1>* %0
-  %4 = getelementptr inbounds <256 x i1>, <256 x i1>* %0, i64 2
-  %5 = load <256 x i1>, <256 x i1>* %4
+  %3 = load <256 x i1>, ptr %0
+  %4 = getelementptr inbounds <256 x i1>, ptr %0, i64 2
+  %5 = load <256 x i1>, ptr %4
   %6 = tail call <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1> %3, <256 x i1> %5)
-  store <512 x i1> %6, <512 x i1>* %1
+  store <512 x i1> %6, ptr %1
   ret void
 }
 
 declare <512 x i1> @llvm.kvx.cat.v512i1(<256 x i1>, <256 x i1>)
 
-define void @xcat2048(<2048 x i1>* nocapture %0) {
+define void @xcat2048(ptr nocapture %0) {
 ; ALL-LABEL: xcat2048:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmt44d $a0a1a2a3 = $a60a61a62a63
@@ -566,13 +566,13 @@ define void @xcat2048(<2048 x i1>* nocapture %0) {
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 15)
   %2 = tail call <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1> zeroinitializer, <1024 x i1> zeroinitializer)
-  store <2048 x i1> %2, <2048 x i1>* %0
+  store <2048 x i1> %2, ptr %0
   ret void
 }
 
 declare <2048 x i1> @llvm.kvx.cat.v2048i1(<1024 x i1>, <1024 x i1>)
 
-define void @xcat4096(<4096 x i1>* nocapture %0) {
+define void @xcat4096(ptr nocapture %0) {
 ; ALL-LABEL: xcat4096:
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    xmt44d $a4a5a6a7 = $a60a61a62a63
@@ -629,7 +629,7 @@ define void @xcat4096(<4096 x i1>* nocapture %0) {
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 27)
   %2 = tail call <4096 x i1> @llvm.kvx.cat.v4096i1(<2048 x i1> zeroinitializer, <2048 x i1> zeroinitializer)
-  store <4096 x i1> %2, <4096 x i1>* %0
+  store <4096 x i1> %2, ptr %0
   ret void
 }
 

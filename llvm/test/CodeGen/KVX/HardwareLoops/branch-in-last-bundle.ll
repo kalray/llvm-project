@@ -8,7 +8,7 @@
 target triple = "kvx-kalray-cos"
 
 
-%struct.loops_params_s = type { i64, i32, i32, i32, i32, i64, i32, [32 x i32], [32 x i32], i64, i64, i64, i64, i32, i8*, i64, i64, float**, %struct.intparts_s*, float, float*, float*, i64, float* }
+%struct.loops_params_s = type { i64, i32, i32, i32, i32, i64, i32, [32 x i32], [32 x i32], i64, i64, i64, i64, i32, ptr, i64, i64, ptr, %struct.intparts_s*, float, ptr, ptr, i64, ptr }
 %struct.intparts_s = type { i8, i16, i64, i64 }
 
 define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unnamed_addr #0 {
@@ -268,12 +268,12 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %2 = getelementptr inbounds %struct.loops_params_s, %struct.loops_params_s* %0, i64 0, i32 17
-  %3 = load float**, float*** %2, align 8
-  %4 = load float*, float** %3, align 8
-  %5 = getelementptr inbounds float*, float** %3, i64 1
-  %6 = load float*, float** %5, align 8
+  %3 = load ptr, ptr %2, align 8
+  %4 = load ptr, ptr %3, align 8
+  %5 = getelementptr inbounds ptr, ptr %3, i64 1
+  %6 = load ptr, ptr %5, align 8
   %7 = getelementptr inbounds %struct.loops_params_s, %struct.loops_params_s* %0, i64 0, i32 5
-  %8 = load i64, i64* %7, align 8
+  %8 = load i64, ptr %7, align 8
   %9 = trunc i64 %8 to i32
   br label %10
 
@@ -302,24 +302,24 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
   %26 = phi i64 [ %23, %18 ], [ %198, %179 ]
   %27 = phi i64 [ %21, %18 ], [ %180, %179 ]
   %28 = add nsw i64 %27, 1
-  %29 = getelementptr inbounds float, float* %4, i64 %26
-  %30 = load float, float* %29, align 4
-  %31 = getelementptr inbounds float, float* %6, i64 %26
-  %32 = load float, float* %31, align 4
+  %29 = getelementptr inbounds float, ptr %4, i64 %26
+  %30 = load float, ptr %29, align 4
+  %31 = getelementptr inbounds float, ptr %6, i64 %26
+  %32 = load float, ptr %31, align 4
   %33 = add nsw i64 %26, -1
-  %34 = getelementptr inbounds float, float* %4, i64 %33
-  %35 = load float, float* %34, align 4
+  %34 = getelementptr inbounds float, ptr %4, i64 %33
+  %35 = load float, ptr %34, align 4
   %36 = fmul float %32, %35
   %37 = fsub float %30, %36
   %38 = add nsw i64 %26, 1
-  %39 = getelementptr inbounds float, float* %6, i64 %38
-  %40 = load float, float* %39, align 4
-  %41 = getelementptr inbounds float, float* %4, i64 %38
-  %42 = load float, float* %41, align 4
+  %39 = getelementptr inbounds float, ptr %6, i64 %38
+  %40 = load float, ptr %39, align 4
+  %41 = getelementptr inbounds float, ptr %4, i64 %38
+  %42 = load float, ptr %41, align 4
   %43 = fmul float %40, %42
   %44 = fsub float %37, %43
-  %45 = getelementptr inbounds float, float* %4, i64 %28
-  store float %44, float* %45, align 4
+  %45 = getelementptr inbounds float, ptr %4, i64 %28
+  store float %44, ptr %45, align 4
   %46 = add nsw i64 %26, 2
   %47 = icmp slt i64 %46, %24
   br i1 %47, label %53, label %48
@@ -337,168 +337,168 @@ define float @cholesky(%struct.loops_params_s* nocapture readonly %0) local_unna
 
 53:                                               ; preds = %25
   %54 = add nsw i64 %27, 2
-  %55 = getelementptr inbounds float, float* %4, i64 %46
-  %56 = load float, float* %55, align 4
-  %57 = getelementptr inbounds float, float* %6, i64 %46
-  %58 = load float, float* %57, align 4
+  %55 = getelementptr inbounds float, ptr %4, i64 %46
+  %56 = load float, ptr %55, align 4
+  %57 = getelementptr inbounds float, ptr %6, i64 %46
+  %58 = load float, ptr %57, align 4
   %59 = add nsw i64 %26, 1
-  %60 = getelementptr inbounds float, float* %4, i64 %59
-  %61 = load float, float* %60, align 4
+  %60 = getelementptr inbounds float, ptr %4, i64 %59
+  %61 = load float, ptr %60, align 4
   %62 = fmul float %58, %61
   %63 = fsub float %56, %62
   %64 = add nsw i64 %26, 3
-  %65 = getelementptr inbounds float, float* %6, i64 %64
-  %66 = load float, float* %65, align 4
-  %67 = getelementptr inbounds float, float* %4, i64 %64
-  %68 = load float, float* %67, align 4
+  %65 = getelementptr inbounds float, ptr %6, i64 %64
+  %66 = load float, ptr %65, align 4
+  %67 = getelementptr inbounds float, ptr %4, i64 %64
+  %68 = load float, ptr %67, align 4
   %69 = fmul float %66, %68
   %70 = fsub float %63, %69
-  %71 = getelementptr inbounds float, float* %4, i64 %54
-  store float %70, float* %71, align 4
+  %71 = getelementptr inbounds float, ptr %4, i64 %54
+  store float %70, ptr %71, align 4
   %72 = add nsw i64 %26, 4
   %73 = icmp slt i64 %72, %24
   br i1 %73, label %74, label %48
 
 74:                                               ; preds = %53
   %75 = add nsw i64 %27, 3
-  %76 = getelementptr inbounds float, float* %4, i64 %72
-  %77 = load float, float* %76, align 4
-  %78 = getelementptr inbounds float, float* %6, i64 %72
-  %79 = load float, float* %78, align 4
+  %76 = getelementptr inbounds float, ptr %4, i64 %72
+  %77 = load float, ptr %76, align 4
+  %78 = getelementptr inbounds float, ptr %6, i64 %72
+  %79 = load float, ptr %78, align 4
   %80 = add nsw i64 %26, 3
-  %81 = getelementptr inbounds float, float* %4, i64 %80
-  %82 = load float, float* %81, align 4
+  %81 = getelementptr inbounds float, ptr %4, i64 %80
+  %82 = load float, ptr %81, align 4
   %83 = fmul float %79, %82
   %84 = fsub float %77, %83
   %85 = add nsw i64 %26, 5
-  %86 = getelementptr inbounds float, float* %6, i64 %85
-  %87 = load float, float* %86, align 4
-  %88 = getelementptr inbounds float, float* %4, i64 %85
-  %89 = load float, float* %88, align 4
+  %86 = getelementptr inbounds float, ptr %6, i64 %85
+  %87 = load float, ptr %86, align 4
+  %88 = getelementptr inbounds float, ptr %4, i64 %85
+  %89 = load float, ptr %88, align 4
   %90 = fmul float %87, %89
   %91 = fsub float %84, %90
-  %92 = getelementptr inbounds float, float* %4, i64 %75
-  store float %91, float* %92, align 4
+  %92 = getelementptr inbounds float, ptr %4, i64 %75
+  store float %91, ptr %92, align 4
   %93 = add nsw i64 %26, 6
   %94 = icmp slt i64 %93, %24
   br i1 %94, label %95, label %48
 
 95:                                               ; preds = %74
   %96 = add nsw i64 %27, 4
-  %97 = getelementptr inbounds float, float* %4, i64 %93
-  %98 = load float, float* %97, align 4
-  %99 = getelementptr inbounds float, float* %6, i64 %93
-  %100 = load float, float* %99, align 4
+  %97 = getelementptr inbounds float, ptr %4, i64 %93
+  %98 = load float, ptr %97, align 4
+  %99 = getelementptr inbounds float, ptr %6, i64 %93
+  %100 = load float, ptr %99, align 4
   %101 = add nsw i64 %26, 5
-  %102 = getelementptr inbounds float, float* %4, i64 %101
-  %103 = load float, float* %102, align 4
+  %102 = getelementptr inbounds float, ptr %4, i64 %101
+  %103 = load float, ptr %102, align 4
   %104 = fmul float %100, %103
   %105 = fsub float %98, %104
   %106 = add nsw i64 %26, 7
-  %107 = getelementptr inbounds float, float* %6, i64 %106
-  %108 = load float, float* %107, align 4
-  %109 = getelementptr inbounds float, float* %4, i64 %106
-  %110 = load float, float* %109, align 4
+  %107 = getelementptr inbounds float, ptr %6, i64 %106
+  %108 = load float, ptr %107, align 4
+  %109 = getelementptr inbounds float, ptr %4, i64 %106
+  %110 = load float, ptr %109, align 4
   %111 = fmul float %108, %110
   %112 = fsub float %105, %111
-  %113 = getelementptr inbounds float, float* %4, i64 %96
-  store float %112, float* %113, align 4
+  %113 = getelementptr inbounds float, ptr %4, i64 %96
+  store float %112, ptr %113, align 4
   %114 = add nsw i64 %26, 8
   %115 = icmp slt i64 %114, %24
   br i1 %115, label %116, label %48
 
 116:                                              ; preds = %95
   %117 = add nsw i64 %27, 5
-  %118 = getelementptr inbounds float, float* %4, i64 %114
-  %119 = load float, float* %118, align 4
-  %120 = getelementptr inbounds float, float* %6, i64 %114
-  %121 = load float, float* %120, align 4
+  %118 = getelementptr inbounds float, ptr %4, i64 %114
+  %119 = load float, ptr %118, align 4
+  %120 = getelementptr inbounds float, ptr %6, i64 %114
+  %121 = load float, ptr %120, align 4
   %122 = add nsw i64 %26, 7
-  %123 = getelementptr inbounds float, float* %4, i64 %122
-  %124 = load float, float* %123, align 4
+  %123 = getelementptr inbounds float, ptr %4, i64 %122
+  %124 = load float, ptr %123, align 4
   %125 = fmul float %121, %124
   %126 = fsub float %119, %125
   %127 = add nsw i64 %26, 9
-  %128 = getelementptr inbounds float, float* %6, i64 %127
-  %129 = load float, float* %128, align 4
-  %130 = getelementptr inbounds float, float* %4, i64 %127
-  %131 = load float, float* %130, align 4
+  %128 = getelementptr inbounds float, ptr %6, i64 %127
+  %129 = load float, ptr %128, align 4
+  %130 = getelementptr inbounds float, ptr %4, i64 %127
+  %131 = load float, ptr %130, align 4
   %132 = fmul float %129, %131
   %133 = fsub float %126, %132
-  %134 = getelementptr inbounds float, float* %4, i64 %117
-  store float %133, float* %134, align 4
+  %134 = getelementptr inbounds float, ptr %4, i64 %117
+  store float %133, ptr %134, align 4
   %135 = add nsw i64 %26, 10
   %136 = icmp slt i64 %135, %24
   br i1 %136, label %137, label %48
 
 137:                                              ; preds = %116
   %138 = add nsw i64 %27, 6
-  %139 = getelementptr inbounds float, float* %4, i64 %135
-  %140 = load float, float* %139, align 4
-  %141 = getelementptr inbounds float, float* %6, i64 %135
-  %142 = load float, float* %141, align 4
+  %139 = getelementptr inbounds float, ptr %4, i64 %135
+  %140 = load float, ptr %139, align 4
+  %141 = getelementptr inbounds float, ptr %6, i64 %135
+  %142 = load float, ptr %141, align 4
   %143 = add nsw i64 %26, 9
-  %144 = getelementptr inbounds float, float* %4, i64 %143
-  %145 = load float, float* %144, align 4
+  %144 = getelementptr inbounds float, ptr %4, i64 %143
+  %145 = load float, ptr %144, align 4
   %146 = fmul float %142, %145
   %147 = fsub float %140, %146
   %148 = add nsw i64 %26, 11
-  %149 = getelementptr inbounds float, float* %6, i64 %148
-  %150 = load float, float* %149, align 4
-  %151 = getelementptr inbounds float, float* %4, i64 %148
-  %152 = load float, float* %151, align 4
+  %149 = getelementptr inbounds float, ptr %6, i64 %148
+  %150 = load float, ptr %149, align 4
+  %151 = getelementptr inbounds float, ptr %4, i64 %148
+  %152 = load float, ptr %151, align 4
   %153 = fmul float %150, %152
   %154 = fsub float %147, %153
-  %155 = getelementptr inbounds float, float* %4, i64 %138
-  store float %154, float* %155, align 4
+  %155 = getelementptr inbounds float, ptr %4, i64 %138
+  store float %154, ptr %155, align 4
   %156 = add nsw i64 %26, 12
   %157 = icmp slt i64 %156, %24
   br i1 %157, label %158, label %48
 
 158:                                              ; preds = %137
   %159 = add nsw i64 %27, 7
-  %160 = getelementptr inbounds float, float* %4, i64 %156
-  %161 = load float, float* %160, align 4
-  %162 = getelementptr inbounds float, float* %6, i64 %156
-  %163 = load float, float* %162, align 4
+  %160 = getelementptr inbounds float, ptr %4, i64 %156
+  %161 = load float, ptr %160, align 4
+  %162 = getelementptr inbounds float, ptr %6, i64 %156
+  %163 = load float, ptr %162, align 4
   %164 = add nsw i64 %26, 11
-  %165 = getelementptr inbounds float, float* %4, i64 %164
-  %166 = load float, float* %165, align 4
+  %165 = getelementptr inbounds float, ptr %4, i64 %164
+  %166 = load float, ptr %165, align 4
   %167 = fmul float %163, %166
   %168 = fsub float %161, %167
   %169 = add nsw i64 %26, 13
-  %170 = getelementptr inbounds float, float* %6, i64 %169
-  %171 = load float, float* %170, align 4
-  %172 = getelementptr inbounds float, float* %4, i64 %169
-  %173 = load float, float* %172, align 4
+  %170 = getelementptr inbounds float, ptr %6, i64 %169
+  %171 = load float, ptr %170, align 4
+  %172 = getelementptr inbounds float, ptr %4, i64 %169
+  %173 = load float, ptr %172, align 4
   %174 = fmul float %171, %173
   %175 = fsub float %168, %174
-  %176 = getelementptr inbounds float, float* %4, i64 %159
-  store float %175, float* %176, align 4
+  %176 = getelementptr inbounds float, ptr %4, i64 %159
+  store float %175, ptr %176, align 4
   %177 = add nsw i64 %26, 14
   %178 = icmp slt i64 %177, %24
   br i1 %178, label %179, label %48
 
 179:                                              ; preds = %158
   %180 = add nsw i64 %27, 8
-  %181 = getelementptr inbounds float, float* %4, i64 %177
-  %182 = load float, float* %181, align 4
-  %183 = getelementptr inbounds float, float* %6, i64 %177
-  %184 = load float, float* %183, align 4
+  %181 = getelementptr inbounds float, ptr %4, i64 %177
+  %182 = load float, ptr %181, align 4
+  %183 = getelementptr inbounds float, ptr %6, i64 %177
+  %184 = load float, ptr %183, align 4
   %185 = add nsw i64 %26, 13
-  %186 = getelementptr inbounds float, float* %4, i64 %185
-  %187 = load float, float* %186, align 4
+  %186 = getelementptr inbounds float, ptr %4, i64 %185
+  %187 = load float, ptr %186, align 4
   %188 = fmul float %184, %187
   %189 = fsub float %182, %188
   %190 = add nsw i64 %26, 15
-  %191 = getelementptr inbounds float, float* %6, i64 %190
-  %192 = load float, float* %191, align 4
-  %193 = getelementptr inbounds float, float* %4, i64 %190
-  %194 = load float, float* %193, align 4
+  %191 = getelementptr inbounds float, ptr %6, i64 %190
+  %192 = load float, ptr %191, align 4
+  %193 = getelementptr inbounds float, ptr %4, i64 %190
+  %194 = load float, ptr %193, align 4
   %195 = fmul float %192, %194
   %196 = fsub float %189, %195
-  %197 = getelementptr inbounds float, float* %4, i64 %180
-  store float %196, float* %197, align 4
+  %197 = getelementptr inbounds float, ptr %4, i64 %180
+  store float %196, ptr %197, align 4
   %198 = add nsw i64 %26, 16
   %199 = icmp slt i64 %198, %24
   br i1 %199, label %25, label %48
