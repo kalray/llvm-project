@@ -22209,6 +22209,7 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   return OutputV;
 }
 
+// TODO: Define an printer/allocator that preserves the original ordering
 struct KvxModifier : StringMap<int> {
   static const int INVALID_MODIFIER = -1;
   inline int getModifierValue(const StringRef &M) const {

@@ -2,5 +2,5 @@
 // RUN: %clang_cc1 -triple kvx-kalray-cos -S -verify %s
 
 int xfail_bitcntw(int a) {
-  return __builtin_kvx_bitcntw(a, ".lz.tz"); // expected-error {{This builtin accepts a modifier string composed by: ['', '.', '.lz', '.tz', '.ls']}} expected-error {{cannot compile this builtin function yet}}
+  return __builtin_kvx_bitcntw(a, ".lz.tz"); // expected-error {{This builtin accepts a modifier string composed by: ['', '.lz', '.ls', '.', '.tz']}} expected-error {{cannot compile this builtin function yet}}
 }

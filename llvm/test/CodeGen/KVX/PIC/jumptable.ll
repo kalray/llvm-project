@@ -15,70 +15,22 @@ define void @f(i32* nocapture %x, i32 %state) {
 ; ALL-NEXT:  # %bb.1: # %entry
 ; ALL-NEXT:    zxwd $r1 = $r1
 
-; CHECK-NEXT:    make $r2 = .LJTI0_0
-; PIC-NEXT:     pcrel $r2 = @pcrel( .LJTI0_0 )
+; CHECK-NEXT: 	make $r2 = .LJTI0_0
+; CHECK-NEXT: 	;;
+; CHECK-NEXT: 	make $r1 = 1
+; CHECK-NEXT: 	ld.xs $r2 = $r1[$r2]
 
-; ALL-NEXT:    ;;
+; PIC-NEXT:   	pcrel $r2 = @pcrel( .LJTI0_0 )
+; PIC-NEXT:   	;;
+; PIC-NEXT:   	lws.xs $r1 = $r1[$r2]
+; PIC-NEXT:   	;;
+; PIC-NEXT:   	make $r1 = 1
+; PIC-NEXT:   	addwd $r2 = $r1, $r2
 
-; PIC-NEXT:    lws.xs $r1 = $r1[$r2]
-; PIC-NEXT:    ;;
 
-; ALL-NEXT:    make $r1 = 1
-; CHECK-NEXT:    ld.xs $r2 = $r1[$r2]
-; PIC-NEXT:    addwd $r2 = $r1, $r2
-
-; ALL-NEXT:    ;;
-; ALL-NEXT:    igoto $r2
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_2: # %sw.bb1
-; ALL-NEXT:    addd $r0 = $r0, 4
-; ALL-NEXT:    make $r1 = 2
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_3: # %sw.bb3
-; ALL-NEXT:    addd $r0 = $r0, 8
-; ALL-NEXT:    make $r1 = 3
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_4: # %sw.bb6
-; ALL-NEXT:    addd $r0 = $r0, 12
-; ALL-NEXT:    make $r1 = 4
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_5: # %sw.bb9
-; ALL-NEXT:    addd $r0 = $r0, 16
-; ALL-NEXT:    make $r1 = 5
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_6: # %sw.bb12
-; ALL-NEXT:    addd $r0 = $r0, 20
-; ALL-NEXT:    make $r1 = 6
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_7: # %sw.bb15
-; ALL-NEXT:    addd $r0 = $r0, 24
-; ALL-NEXT:    make $r1 = 7
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_8: # %sw.bb18
-; ALL-NEXT:    addd $r0 = $r0, 28
-; ALL-NEXT:    make $r1 = 8
-; ALL-NEXT:    goto .LBB0_10
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_9: # %sw.bb21
-; ALL-NEXT:    addd $r0 = $r0, 32
-; ALL-NEXT:    make $r1 = 9
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_10: # %sw.epilog.sink.split
-; ALL-NEXT:    lwz $r2 = 0[$r0]
-; ALL-NEXT:    ;;
-; ALL-NEXT:    addw $r1 = $r2, $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:    sw 0[$r0] = $r1
-; ALL-NEXT:    ;;
-; ALL-NEXT:  .LBB0_11: # %sw.epilog
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;;
+; ALL-NEXT: 	;;
+; ALL-NEXT: 	igoto $r2
+; ALL-NEXT: 	;;
 
 ; The jump-table:
 
@@ -88,22 +40,22 @@ define void @f(i32* nocapture %x, i32 %state) {
 
 ; CHECK-NEXT:	.8byte	.LBB0_10
 ; CHECK-NEXT:	.8byte	.LBB0_2
-; CHECK-NEXT:	.8byte	.LBB0_3
 ; CHECK-NEXT:	.8byte	.LBB0_4
 ; CHECK-NEXT:	.8byte	.LBB0_5
-; CHECK-NEXT:	.8byte	.LBB0_6
+; CHECK-NEXT:	.8byte	.LBB0_3
 ; CHECK-NEXT:	.8byte	.LBB0_7
 ; CHECK-NEXT:	.8byte	.LBB0_8
+; CHECK-NEXT:	.8byte	.LBB0_6
 ; CHECK-NEXT:	.8byte	.LBB0_9
 
 ; PIC-NEXT:	.long	.LBB0_10-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_2-.LJTI0_0
-; PIC-NEXT:	.long	.LBB0_3-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_4-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_5-.LJTI0_0
-; PIC-NEXT:	.long	.LBB0_6-.LJTI0_0
+; PIC-NEXT:	.long	.LBB0_3-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_7-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_8-.LJTI0_0
+; PIC-NEXT:	.long	.LBB0_6-.LJTI0_0
 ; PIC-NEXT:	.long	.LBB0_9-.LJTI0_0
 
 entry:
