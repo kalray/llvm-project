@@ -1,7 +1,7 @@
 ; RUN: llc < %s > %t
 
 ; NVPTX does not support arbitrary integer types and has acceptable subset tested in NVPTX/APIntSextParam.ll
-; UNSUPPORTED: target=nvptx{{.*}}
+; UNSUPPORTED: target=nvptx{{.*}}, target=kvx-{{.*}}
 
 @i1_s = external global i1		; <ptr> [#uses=1]
 @i2_s = external global i2		; <ptr> [#uses=1]

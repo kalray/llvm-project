@@ -1,6 +1,6 @@
 ;; Test that macros in inline assembly blocks share the same context,
 ;; thus a definition is available to the whole file. PR36110
-; UNSUPPORTED: target={{.*}}-zos{{.*}},target=nvptx{{.*}}, target=kvx{{.*}}
+; UNSUPPORTED: target={{.*}}-zos{{.*}},target=nvptx{{.*}}, target=kvx-{{.*}}
 ; RUN: not llc < %s 2>&1 | FileCheck %s
 ; REQUIRES: default_triple
 

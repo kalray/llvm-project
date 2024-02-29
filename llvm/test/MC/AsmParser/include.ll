@@ -1,5 +1,5 @@
 ; RUN: llc -I %p/Inputs -filetype asm -o - %s | FileCheck %s
-; UNSUPPORTED: target={{.*}}-zos{{.*}},target=nvptx{{.*}},target=kvx{{.*}}
+; UNSUPPORTED: target={{.*}}-zos{{.*}},target=nvptx{{.*}},target=kvx-{{.*}}
 ; REQUIRES: default_triple
 
 module asm ".include \22module.x\22"

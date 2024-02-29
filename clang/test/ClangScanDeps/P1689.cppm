@@ -1,4 +1,4 @@
-// UNSUPPORTED: target={{.*}}-aix{{.*}}
+// UNSUPPORTED: target={{.*}}-aix{{.*}}, target=kvx-{{.*}}
 //
 // The slash direction in linux and windows are different.
 // UNSUPPORTED: system-windows

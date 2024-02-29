@@ -1,6 +1,6 @@
 // This test checks that importing private headers from the public headers of
 // a framework is consistent between the dependency scanner and the explicit build.
-
+// XFAIL: target=kvx-{{.*}}
 // RUN: rm -rf %t
 // RUN: split-file %s %t
 

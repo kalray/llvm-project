@@ -1,4 +1,4 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -std=c2x -fsyntax-only -verify -Wno-unused %s
 // RUN: %clang_cc1 -fsyntax-only -verify -Wno-unused -x c++ -std=c++17 %s
 
