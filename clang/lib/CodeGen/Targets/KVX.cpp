@@ -146,16 +146,17 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
     AI.setCoerceToType(ArgTy);
 
   CGBuilderTy &Builder = CGF.Builder;
-  Address Addr = Address(Builder.CreateLoad(VAListAddr, "ap.cur"),
+  Address CurPtr = Address(Builder.CreateLoad(VAListAddr, "ap.cur"),
                          getVAListElementType(CGF), SlotSize);
+  Address EltAddress = Address(CurPtr.getPointer(), ArgTy, SlotSize);
 
   auto AllocSize = getDataLayout().getTypeAllocSize(AI.getCoerceToType());
   CharUnits Stride = CharUnits::fromQuantity(AllocSize).alignTo(SlotSize);
 
-  Address NextPtr = Builder.CreateConstInBoundsByteGEP(Addr, Stride, "ap.next");
+  Address NextPtr = Builder.CreateConstInBoundsByteGEP(CurPtr, Stride, "ap.next");
   Builder.CreateStore(NextPtr.getPointer(), VAListAddr);
 
-  return Addr;
+  return EltAddress;
 }
 
 ABIArgInfo KVXABIInfo::classifyBigType(QualType Ty) const {
