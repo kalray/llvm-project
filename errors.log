@@ -1,4 +1,3 @@
-	FAIL: Clang :: CXX/module/module.import/p7.cpp
 	FAIL: Clang :: Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  3
+Failures:  2
