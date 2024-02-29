@@ -1,4 +1,4 @@
-// XFAIL: kvx
+// XFAIL: target=kvx-{{.*}}
 // kvx does call clang -cc1 a second time to convert from llvm ir
 // We support a CC1 option for disabling LLVM's passes.
 // RUN: %clang -O2 -Xclang -disable-llvm-passes -### %s 2>&1 \

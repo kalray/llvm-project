@@ -1,4 +1,4 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %check_clang_tidy %s readability-magic-numbers %t --
 
 // Don't crash

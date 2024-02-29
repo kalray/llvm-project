@@ -1,6 +1,7 @@
 // The slash direction in linux and windows are different.
 // Also the command to create symbolic link is different.
 // UNSUPPORTED: system-windows
+// REQUIRES: object-emission
 //
 // RUN: rm -fr %t
 // RUN: mkdir -p %t

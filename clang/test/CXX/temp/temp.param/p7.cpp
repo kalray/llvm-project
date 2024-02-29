@@ -1,8 +1,7 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -fsyntax-only -verify=expected,cxx17 -std=c++98 %s -Wno-c++11-extensions
 // RUN: %clang_cc1 -fsyntax-only -verify=expected,cxx17 -std=c++17 %s
 // RUN: %clang_cc1 -fsyntax-only -verify=expected,cxx20 -std=c++20 %s
-// XFAIL: kvx
 // T18165
 // C++98:
 // A non-type template-parameter shall not be declared to have

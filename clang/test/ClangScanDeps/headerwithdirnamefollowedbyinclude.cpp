@@ -1,4 +1,4 @@
-// XFAIL: kvx
+// XFAIL: target=kvx-{{.*}}
 
 // RUN: rm -rf %t.dir
 // RUN: rm -rf %t.dir/foodir

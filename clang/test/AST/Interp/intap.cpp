@@ -1,4 +1,4 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -fexperimental-new-constant-interpreter -fms-extensions -std=c++11 -verify %s
 // RUN: %clang_cc1 -fexperimental-new-constant-interpreter -fms-extensions -std=c++20 -verify %s
 // RUN: %clang_cc1 -std=c++11 -fms-extensions -verify=ref %s

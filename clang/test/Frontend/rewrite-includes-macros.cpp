@@ -1,3 +1,4 @@
+// UNSUPPORTED: target=kvx-{{.*}}
 // RUN: %clang_cl /E -Xclang -frewrite-includes -- %s | %clang_cl /c -Xclang -verify /Tp -
 // expected-no-diagnostics
 

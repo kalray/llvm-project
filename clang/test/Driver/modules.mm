@@ -1,4 +1,4 @@
-// XFAIL: kvx
+// XFAIL: target=kvx-{{.*}}
 // See T20690
 
 // RUN: %clang -### %s 2>&1 | FileCheck -check-prefix=CHECK-NO-MODULES %s

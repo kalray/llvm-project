@@ -1,3 +1,4 @@
+// UNSUPPORTED: target=kvx-{{.*}}
 // RUN: %check_clang_tidy %s bugprone-inc-dec-in-conditions %t
 
 _BitInt(8) v_401_0() {
