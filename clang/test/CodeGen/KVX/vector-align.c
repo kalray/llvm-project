@@ -5,14 +5,21 @@ typedef double double16 __attribute__ ((__vector_size__ (16 * sizeof(double))));
 
 // CHECK-LABEL: @fn(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[RESULT_PTR:%.*]] = alloca ptr, align 8
 // CHECK-NEXT:    [[A_ADDR:%.*]] = alloca <16 x double>, align 32
 // CHECK-NEXT:    [[B_ADDR:%.*]] = alloca <16 x double>, align 32
-// CHECK-NEXT:    store <16 x double> [[A:%.*]], ptr [[A_ADDR]], align 32
-// CHECK-NEXT:    store <16 x double> [[B:%.*]], ptr [[B_ADDR]], align 32
-// CHECK-NEXT:    [[TMP0:%.*]] = load <16 x double>, ptr [[A_ADDR]], align 32
-// CHECK-NEXT:    [[TMP1:%.*]] = load <16 x double>, ptr [[B_ADDR]], align 32
-// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[TMP0]], [[TMP1]]
-// CHECK-NEXT:    ret <16 x double> [[ADD]]
+// CHECK-NEXT:    store ptr [[AGG_RESULT:%.*]], ptr [[RESULT_PTR]], align 8
+// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, ptr [[TMP0:%.*]], align 32
+// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, ptr [[TMP1:%.*]], align 32
+// CHECK-NEXT:    store <16 x double> [[A]], ptr [[A_ADDR]], align 32
+// CHECK-NEXT:    store <16 x double> [[B]], ptr [[B_ADDR]], align 32
+// CHECK-NEXT:    [[TMP2:%.*]] = load <16 x double>, ptr [[A_ADDR]], align 32
+// CHECK-NEXT:    [[TMP3:%.*]] = load <16 x double>, ptr [[B_ADDR]], align 32
+// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[TMP2]], [[TMP3]]
+// CHECK-NEXT:    store <16 x double> [[ADD]], ptr [[AGG_RESULT]], align 32
+// CHECK-NEXT:    [[TMP4:%.*]] = load <16 x double>, ptr [[AGG_RESULT]], align 32
+// CHECK-NEXT:    store <16 x double> [[TMP4]], ptr [[AGG_RESULT]], align 32
+// CHECK-NEXT:    ret void
 //
 double16 fn(double16 a, double16 b) {
   return a + b;

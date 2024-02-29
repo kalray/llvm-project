@@ -86,7 +86,8 @@ long addrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @addrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = sext <32 x i16> [[V:%.*]] to <32 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// ALL-NEXT:    [[CONV_I:%.*]] = sext <32 x i16> [[V]] to <32 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v32i64(<32 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -136,7 +137,8 @@ long addrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @addrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = sext <32 x i32> [[V:%.*]] to <32 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[CONV_I:%.*]] = sext <32 x i32> [[V]] to <32 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v32i64(<32 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -146,7 +148,8 @@ long addrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @addrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = sext <16 x i32> [[V:%.*]] to <16 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[CONV_I:%.*]] = sext <16 x i32> [[V]] to <16 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v16i64(<16 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -236,7 +239,8 @@ unsigned long addurhqd(__kvx_v4hu V) {
 
 // ALL-LABEL: @addurhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = zext <32 x i16> [[V:%.*]] to <32 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[CONV_I:%.*]] = zext <32 x i16> [[V]] to <32 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v32i64(<32 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -289,7 +293,8 @@ unsigned long addurwqd(__kvx_v4su V) {
 
 // ALL-LABEL: @addurwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = zext <32 x i32> [[V:%.*]] to <32 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[CONV_I:%.*]] = zext <32 x i32> [[V]] to <32 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v32i64(<32 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -299,7 +304,8 @@ unsigned long addurwvd(__kvx_v32su V) {
 
 // ALL-LABEL: @addurwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[CONV_I:%.*]] = zext <16 x i32> [[V:%.*]] to <16 x i64>
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[CONV_I:%.*]] = zext <16 x i32> [[V]] to <16 x i64>
 // ALL-NEXT:    [[RDX_ADD_I:%.*]] = tail call i64 @llvm.vector.reduce.add.v16i64(<16 x i64> [[CONV_I]])
 // ALL-NEXT:    ret i64 [[RDX_ADD_I]]
 //
@@ -389,7 +395,8 @@ long maxrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @maxrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.smax.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.smax.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i16 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -439,7 +446,8 @@ long maxrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @maxrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smax.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smax.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -449,7 +457,8 @@ long maxrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @maxrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smax.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smax.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -539,7 +548,8 @@ unsigned long maxurhqd(__kvx_v4hu V) {
 
 // ALL-LABEL: @maxurhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.umax.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.umax.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i16 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -591,7 +601,8 @@ unsigned long maxurwqd(__kvx_v4su V) {
 
 // ALL-LABEL: @maxurwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umax.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umax.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -601,7 +612,8 @@ unsigned long maxurwvd(__kvx_v32su V) {
 
 // ALL-LABEL: @maxurwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umax.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umax.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -691,7 +703,8 @@ long minrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @minrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.smin.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.smin.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i16 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -741,7 +754,8 @@ long minrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @minrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smin.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smin.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -751,7 +765,8 @@ long minrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @minrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smin.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.smin.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = sext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -841,7 +856,8 @@ unsigned long minurhqd(__kvx_v4hu V) {
 
 // ALL-LABEL: @minurhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.umin.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i16 @llvm.vector.reduce.umin.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i16 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -893,7 +909,8 @@ unsigned long minurwqd(__kvx_v4su V) {
 
 // ALL-LABEL: @minurwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umin.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umin.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -903,7 +920,8 @@ unsigned long minurwvd(__kvx_v32su V) {
 
 // ALL-LABEL: @minurwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umin.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_MIN_I:%.*]] = tail call i32 @llvm.vector.reduce.umin.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_MIN_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -993,7 +1011,8 @@ unsigned long andrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @andrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i16 @llvm.vector.reduce.and.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i16 @llvm.vector.reduce.and.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i16 [[RDX_AND_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1043,7 +1062,8 @@ unsigned long andrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @andrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i32 @llvm.vector.reduce.and.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i32 @llvm.vector.reduce.and.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_AND_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1053,7 +1073,8 @@ unsigned long andrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @andrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i32 @llvm.vector.reduce.and.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_AND_I:%.*]] = tail call i32 @llvm.vector.reduce.and.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_AND_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1143,7 +1164,8 @@ unsigned long orrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @orrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i16 @llvm.vector.reduce.or.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i16 @llvm.vector.reduce.or.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i16 [[RDX_OR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1193,7 +1215,8 @@ unsigned long orrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @orrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i32 @llvm.vector.reduce.or.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i32 @llvm.vector.reduce.or.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_OR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1203,7 +1226,8 @@ unsigned long orrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @orrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i32 @llvm.vector.reduce.or.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_OR_I:%.*]] = tail call i32 @llvm.vector.reduce.or.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_OR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1293,7 +1317,8 @@ unsigned long xorrhqd(__kvx_v4hi V) {
 
 // ALL-LABEL: @xorrhvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i16 @llvm.vector.reduce.xor.v32i16(<32 x i16> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i16 @llvm.vector.reduce.xor.v32i16(<32 x i16> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i16 [[RDX_XOR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1343,7 +1368,8 @@ unsigned long xorrwqd(__kvx_v4si V) {
 
 // ALL-LABEL: @xorrwvd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i32 @llvm.vector.reduce.xor.v32i32(<32 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <32 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i32 @llvm.vector.reduce.xor.v32i32(<32 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_XOR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //
@@ -1353,7 +1379,8 @@ unsigned long xorrwvd(__kvx_v32si V) {
 
 // ALL-LABEL: @xorrwxd(
 // ALL-NEXT:  entry:
-// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i32 @llvm.vector.reduce.xor.v16i32(<16 x i32> [[V:%.*]])
+// ALL-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// ALL-NEXT:    [[RDX_XOR_I:%.*]] = tail call i32 @llvm.vector.reduce.xor.v16i32(<16 x i32> [[V]])
 // ALL-NEXT:    [[CONV_I:%.*]] = zext i32 [[RDX_XOR_I]] to i64
 // ALL-NEXT:    ret i64 [[CONV_I]]
 //

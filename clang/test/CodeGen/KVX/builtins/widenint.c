@@ -120,7 +120,8 @@ V4s widenbhq_q(V4c v) { return __builtin_kvx_widenbhq(v, ".q"); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <8 x i16> [[TMP16]], <8 x i16> [[TMP17]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <8 x i16> [[TMP18]], <8 x i16> [[TMP19]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <16 x i16> [[TMP20]], <16 x i16> [[TMP21]], <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-// CHECK-NEXT:    ret <32 x i16> [[TMP22]]
+// CHECK-NEXT:    store <32 x i16> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    ret void
 //
 V32s widenbhv(V32c v) { return __builtin_kvx_widenbhv(v, ""); }
 
@@ -149,7 +150,8 @@ V32s widenbhv(V32c v) { return __builtin_kvx_widenbhv(v, ""); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <8 x i16> [[TMP16]], <8 x i16> [[TMP17]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <8 x i16> [[TMP18]], <8 x i16> [[TMP19]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <16 x i16> [[TMP20]], <16 x i16> [[TMP21]], <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-// CHECK-NEXT:    ret <32 x i16> [[TMP22]]
+// CHECK-NEXT:    store <32 x i16> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V32s widenbhv_z(V32c v) { return __builtin_kvx_widenbhv(v, ".z"); }
 
@@ -178,7 +180,8 @@ V32s widenbhv_z(V32c v) { return __builtin_kvx_widenbhv(v, ".z"); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <8 x i16> [[TMP16]], <8 x i16> [[TMP17]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <8 x i16> [[TMP18]], <8 x i16> [[TMP19]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <16 x i16> [[TMP20]], <16 x i16> [[TMP21]], <32 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31>
-// CHECK-NEXT:    ret <32 x i16> [[TMP22]]
+// CHECK-NEXT:    store <32 x i16> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V32s widenbhv_q(V32c v) { return __builtin_kvx_widenbhv(v, ".q"); }
 
@@ -363,7 +366,8 @@ V4i widenhwq_q(V4s v) { return __builtin_kvx_widenhwq(v, ".q"); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <4 x i32> [[TMP16]], <4 x i32> [[TMP17]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <4 x i32> [[TMP18]], <4 x i32> [[TMP19]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <8 x i32> [[TMP20]], <8 x i32> [[TMP21]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    ret <16 x i32> [[TMP22]]
+// CHECK-NEXT:    store <16 x i32> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V16i widenhwx(V16s v) { return __builtin_kvx_widenhwx(v, ""); }
 
@@ -392,7 +396,8 @@ V16i widenhwx(V16s v) { return __builtin_kvx_widenhwx(v, ""); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <4 x i32> [[TMP16]], <4 x i32> [[TMP17]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <4 x i32> [[TMP18]], <4 x i32> [[TMP19]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <8 x i32> [[TMP20]], <8 x i32> [[TMP21]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    ret <16 x i32> [[TMP22]]
+// CHECK-NEXT:    store <16 x i32> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V16i widenhwx_z(V16s v) { return __builtin_kvx_widenhwx(v, ".z"); }
 
@@ -421,7 +426,8 @@ V16i widenhwx_z(V16s v) { return __builtin_kvx_widenhwx(v, ".z"); }
 // CHECK-NEXT:    [[TMP20:%.*]] = shufflevector <4 x i32> [[TMP16]], <4 x i32> [[TMP17]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP21:%.*]] = shufflevector <4 x i32> [[TMP18]], <4 x i32> [[TMP19]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP22:%.*]] = shufflevector <8 x i32> [[TMP20]], <8 x i32> [[TMP21]], <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
-// CHECK-NEXT:    ret <16 x i32> [[TMP22]]
+// CHECK-NEXT:    store <16 x i32> [[TMP22]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V16i widenhwx_q(V16s v) { return __builtin_kvx_widenhwx(v, ".q"); }
 
@@ -451,7 +457,8 @@ V16i widenhwx_q(V16s v) { return __builtin_kvx_widenhwx(v, ".q"); }
 // CHECK-NEXT:    [[TMP21:%.*]] = insertelement <8 x i64> [[TMP20]], i64 [[TMP11]], i64 5
 // CHECK-NEXT:    [[TMP22:%.*]] = insertelement <8 x i64> [[TMP21]], i64 [[TMP13]], i64 6
 // CHECK-NEXT:    [[TMP23:%.*]] = insertelement <8 x i64> [[TMP22]], i64 [[TMP15]], i64 7
-// CHECK-NEXT:    ret <8 x i64> [[TMP23]]
+// CHECK-NEXT:    store <8 x i64> [[TMP23]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V8Oi widenwdo(V8i v) { return __builtin_kvx_widenwdo(v, ""); }
 
@@ -481,7 +488,8 @@ V8Oi widenwdo(V8i v) { return __builtin_kvx_widenwdo(v, ""); }
 // CHECK-NEXT:    [[TMP21:%.*]] = insertelement <8 x i64> [[TMP20]], i64 [[TMP11]], i64 5
 // CHECK-NEXT:    [[TMP22:%.*]] = insertelement <8 x i64> [[TMP21]], i64 [[TMP13]], i64 6
 // CHECK-NEXT:    [[TMP23:%.*]] = insertelement <8 x i64> [[TMP22]], i64 [[TMP15]], i64 7
-// CHECK-NEXT:    ret <8 x i64> [[TMP23]]
+// CHECK-NEXT:    store <8 x i64> [[TMP23]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V8Oi widenwdo_z(V8i v) { return __builtin_kvx_widenwdo(v, ".z"); }
 
@@ -511,7 +519,8 @@ V8Oi widenwdo_z(V8i v) { return __builtin_kvx_widenwdo(v, ".z"); }
 // CHECK-NEXT:    [[TMP21:%.*]] = insertelement <8 x i64> [[TMP20]], i64 [[TMP11]], i64 5
 // CHECK-NEXT:    [[TMP22:%.*]] = insertelement <8 x i64> [[TMP21]], i64 [[TMP13]], i64 6
 // CHECK-NEXT:    [[TMP23:%.*]] = insertelement <8 x i64> [[TMP22]], i64 [[TMP15]], i64 7
-// CHECK-NEXT:    ret <8 x i64> [[TMP23]]
+// CHECK-NEXT:    store <8 x i64> [[TMP23]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 V8Oi widenwdo_q(V8i v) { return __builtin_kvx_widenwdo(v, ".q"); }
 
