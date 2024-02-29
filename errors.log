@@ -1,8 +1,5 @@
-	FAIL: Clang :: ASTMerge/codegen-body/test.c
 	FAIL: Clang :: CXX/module/module.import/p7.cpp
 	FAIL: Clang :: ClangScanDeps/P1689.cppm
-	FAIL: Clang :: ClangScanDeps/headerwithdirname.cpp
-	FAIL: Clang :: ClangScanDeps/headerwithdirnamefollowedbyinclude.cpp
 	FAIL: Clang :: ClangScanDeps/module-format.c
 	FAIL: Clang :: ClangScanDeps/modules-full-output-tu-order.c
 	FAIL: Clang :: ClangScanDeps/modules-priv-fw-from-pub.m
@@ -12,23 +9,6 @@
 	FAIL: Clang :: CodeGen/KVX/store.c
 	FAIL: Clang :: CodeGen/KVX/storec-kv3-2.c
 	FAIL: Clang :: CodeGen/KVX/storec.c
-	FAIL: Clang :: CodeGen/thinlto_backend.ll
-	FAIL: Clang :: CodeGenObjC/debug-info-property.m
-	FAIL: Clang :: CodeGenObjC/debug-info-property2.m
-	FAIL: Clang :: CodeGenObjC/debug-info-property4.m
-	FAIL: Clang :: CodeGenObjC/property-dbg.m
 	FAIL: Clang :: Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
-	FAIL: Clang :: Driver/disable-llvm.c
-	FAIL: Clang :: Driver/flang/flang.f90
-	FAIL: Clang :: Driver/flang/flang_ucase.F90
-	FAIL: Clang :: Driver/modules.mm
-	FAIL: Clang :: Frontend/rewrite-includes-macros.cpp
-	FAIL: Clang :: PCH/gch-probe.c
-	FAIL: Clang Tools :: clang-tidy/checkers/bugprone/inc-dec-in-conditions-bitint-no-crash.c
-	FAIL: LLVM :: CodeGen/Generic/APIntParam.ll
-	FAIL: LLVM :: CodeGen/Generic/APIntSextParam.ll
-	FAIL: LLVM :: CodeGen/Generic/APIntZextParam.ll
-	FAIL: LLVM :: CodeGen/KVX/Atomics/ld-st.ll
-	FAIL: LLVM :: CodeGen/KVX/Atomics/operations.ll
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  36
+Failures:  13

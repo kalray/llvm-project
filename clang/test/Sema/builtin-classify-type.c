@@ -1,4 +1,4 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -fsyntax-only -verify %s -fblocks
 // RUN: %clang_cc1 -fsyntax-only -verify %s -fblocks -fexperimental-new-constant-interpreter
 

@@ -1,4 +1,4 @@
-// XFAIL: target=kvx{{.*}}
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -fexperimental-new-constant-interpreter -verify=both,expected -Wno-unused-value %s
 // RUN: %clang_cc1 -verify=both,ref -Wno-unused-value %s
 

@@ -1,5 +1,6 @@
 // This test checks that ordering of TUs in the input CDB is preserved in the full output.
-
+// KVX emits a temporary .bc
+// XFAIL: target=kvx-{{.*}}
 // RUN: rm -rf %t
 // RUN: split-file %s %t
 
