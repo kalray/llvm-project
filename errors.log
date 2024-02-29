@@ -1,9 +1,4 @@
 	FAIL: Clang :: CXX/module/module.import/p7.cpp
-	FAIL: Clang :: ClangScanDeps/P1689.cppm
-	FAIL: Clang :: ClangScanDeps/module-format.c
-	FAIL: Clang :: ClangScanDeps/modules-full-output-tu-order.c
-	FAIL: Clang :: ClangScanDeps/modules-priv-fw-from-pub.m
-	FAIL: Clang :: ClangScanDeps/pr61006.cppm
 	FAIL: Clang :: CodeGen/KVX/loadc-kv3-2.c
 	FAIL: Clang :: CodeGen/KVX/loadc.c
 	FAIL: Clang :: CodeGen/KVX/store.c
@@ -11,4 +6,4 @@
 	FAIL: Clang :: CodeGen/KVX/storec.c
 	FAIL: Clang :: Driver/check-time-trace-ParseDeclarationOrFunctionDefinition.cpp
 	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
-Failures:  13
+Failures:  8
