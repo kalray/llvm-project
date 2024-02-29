@@ -2603,7 +2603,7 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
       "s390x-suse-linux", "s390x-redhat-linux"};
 
   static const char *const KVXLibDirs[] = {"/lib"};
-  static const char *const KVXTriples[] = {"kvx-cos"};
+  static const char *const KVXTriples[] = {"kvx-kalray-cos"};
 
   using std::begin;
   using std::end;

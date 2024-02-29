@@ -59,7 +59,9 @@ endif()
 add_dependencies(clang clang-resource-headers)
 
 if(NOT CLANG_LINKS_TO_CREATE)
-  set(CLANG_LINKS_TO_CREATE kvx-cos-clang clang++ kvx-cos-clang++ clang-cl kvx-cos-clang-cl clang-cpp kvx-cos-clang-cpp)
+  set(CLANG_LINKS_TO_CREATE clang++ clang-cpp clang-cl 
+          kvx-cos-clang kvx-cos-clang++ kvx-cos-clang-cl kvx-cos-clang-cpp
+          kvx-elf-clang kvx-elf-clang++ kvx-elf-clang-cl kvx-elf-clang-cpp)
 endif()
 
 if (CLANG_ENABLE_HLSL)
