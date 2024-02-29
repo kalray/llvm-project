@@ -1,3 +1,4 @@
+// REQUIRES: object-emission
 // RUN: mkdir -p %t
 // RUN: split-file %s %t
 
