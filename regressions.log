@@ -1,0 +1,11 @@
+Bugs:
+- jumptable.ll/@f: jumptable lowering looks broken. No store generated, all BB code eliminated.
+
+Performance regressions:
+- @zeroinit2048: xso ordering is more random, is it impactful?
+- jfdctint.ll: more stack used. More spills?
+- loadstore-T12917.ll/@f: "call h" got transformed into "ld $r16" + "set $ra" + "add $r12" + "goto", which is slower
+- loadc.ll/@loadcbc: extra zxwd in arguments and return values
+- maddwq.ll/@maddsumwq_v3: srld immediate pattern was not matched
+- vecreduce.ll/@v2_vecreduce_or_cmp_sle_i64: useless compd.ne
+
