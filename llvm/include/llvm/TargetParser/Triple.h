@@ -158,6 +158,11 @@ public:
 
     PPCSubArch_spe,
 
+    // KVX sub-archs.
+    KVXSubArch_kv4v1,
+    KVXSubArch_kv3v2,
+    KVXSubArch_kv3v1,
+  
     // SPIR-V sub-arch corresponds to its version.
     SPIRVSubArch_v10,
     SPIRVSubArch_v11,

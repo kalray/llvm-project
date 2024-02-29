@@ -588,6 +588,21 @@ static llvm::Triple computeTargetTriple(const Driver &D,
     }
   }
 
+  if (Target.isOSClusterOS() || Target.isOSKVXOSPorting()) {
+    Target.setVendor(llvm::Triple::Kalray);
+    StringRef March = "kv3-v1";
+    if (Arg *A = Args.getLastArg(options::OPT_march_EQ))
+      March = A->getValue();
+
+    llvm::Triple::SubArchType SA =
+    llvm::StringSwitch<llvm::Triple::SubArchType>(March)
+      .Case("kv3-2", llvm::Triple::KVXSubArch_kv3v2)
+      .Case("kv4-1", llvm::Triple::KVXSubArch_kv4v1)
+      .Default(llvm::Triple::KVXSubArch_kv3v1);
+
+    Target.setArch(llvm::Triple::kvx, SA);
+  }
+
   // The `-maix[32|64]` flags are only valid for AIX targets.
   if (Arg *A = Args.getLastArgNoClaim(options::OPT_maix32, options::OPT_maix64);
       A && !Target.isOSAIX())
