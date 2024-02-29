@@ -1,2 +1,2 @@
-	XPASS: Clang :: CodeGen/2007-06-18-SextAttrAggregate.c
+	FAIL: Clang :: CodeGen/2004-02-13-IllegalVararg.c
 Failures:  1

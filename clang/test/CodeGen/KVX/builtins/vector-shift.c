@@ -65,9 +65,11 @@ v32i8 shiftbv_last(v32i8 v, char b){
 
 // CHECK-LABEL: @shiftbt_one(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <64 x i8> poison, i8 [[B:%.*]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <64 x i8> [[TMP0]], <64 x i8> [[V:%.*]], <64 x i32> <i32 65, i32 66, i32 67, i32 68, i32 69, i32 70, i32 71, i32 72, i32 73, i32 74, i32 75, i32 76, i32 77, i32 78, i32 79, i32 80, i32 81, i32 82, i32 83, i32 84, i32 85, i32 86, i32 87, i32 88, i32 89, i32 90, i32 91, i32 92, i32 93, i32 94, i32 95, i32 96, i32 97, i32 98, i32 99, i32 100, i32 101, i32 102, i32 103, i32 104, i32 105, i32 106, i32 107, i32 108, i32 109, i32 110, i32 111, i32 112, i32 113, i32 114, i32 115, i32 116, i32 117, i32 118, i32 119, i32 120, i32 121, i32 122, i32 123, i32 124, i32 125, i32 126, i32 127, i32 0>
-// CHECK-NEXT:    ret <64 x i8> [[TMP1]]
+// CHECK-NEXT:    [[V:%.*]] = load <64 x i8>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <64 x i8> poison, i8 [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <64 x i8> [[TMP1]], <64 x i8> [[V]], <64 x i32> <i32 65, i32 66, i32 67, i32 68, i32 69, i32 70, i32 71, i32 72, i32 73, i32 74, i32 75, i32 76, i32 77, i32 78, i32 79, i32 80, i32 81, i32 82, i32 83, i32 84, i32 85, i32 86, i32 87, i32 88, i32 89, i32 90, i32 91, i32 92, i32 93, i32 94, i32 95, i32 96, i32 97, i32 98, i32 99, i32 100, i32 101, i32 102, i32 103, i32 104, i32 105, i32 106, i32 107, i32 108, i32 109, i32 110, i32 111, i32 112, i32 113, i32 114, i32 115, i32 116, i32 117, i32 118, i32 119, i32 120, i32 121, i32 122, i32 123, i32 124, i32 125, i32 126, i32 127, i32 0>
+// CHECK-NEXT:    store <64 x i8> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v64i8 shiftbt_one(v64i8 v, char b){
   return __builtin_kvx_shiftbt(v, 1, b);
@@ -75,9 +77,11 @@ v64i8 shiftbt_one(v64i8 v, char b){
 
 // CHECK-LABEL: @shiftbt_last(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <64 x i8> poison, i8 [[B:%.*]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <64 x i8> [[TMP0]], <64 x i8> [[V:%.*]], <64 x i32> <i32 127, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <64 x i8> [[TMP1]]
+// CHECK-NEXT:    [[V:%.*]] = load <64 x i8>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <64 x i8> poison, i8 [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <64 x i8> [[TMP1]], <64 x i8> [[V]], <64 x i32> <i32 127, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <64 x i8> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v64i8 shiftbt_last(v64i8 v, char b){
   return __builtin_kvx_shiftbt(v, 63, b);
@@ -145,10 +149,12 @@ v16i16 shifthx_last(v16i16 v, short b){
 
 // CHECK-LABEL: @shifthv_one(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sext i8 [[B:%.*]] to i16
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <32 x i16> poison, i16 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i16> [[TMP0]], <32 x i16> [[V:%.*]], <32 x i32> <i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 45, i32 46, i32 47, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60, i32 61, i32 62, i32 63, i32 0>
-// CHECK-NEXT:    ret <32 x i16> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <32 x i16> poison, i16 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i16> [[TMP1]], <32 x i16> [[V]], <32 x i32> <i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 45, i32 46, i32 47, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60, i32 61, i32 62, i32 63, i32 0>
+// CHECK-NEXT:    store <32 x i16> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v32i16 shifthv_one(v32i16 v, char b){
   return __builtin_kvx_shifthv(v, 1, b);
@@ -156,10 +162,12 @@ v32i16 shifthv_one(v32i16 v, char b){
 
 // CHECK-LABEL: @shifthv_last(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <32 x i16>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sext i8 [[B:%.*]] to i16
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <32 x i16> poison, i16 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x i16> [[TMP0]], <32 x i16> [[V:%.*]], <32 x i32> <i32 63, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <32 x i16> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <32 x i16> poison, i16 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x i16> [[TMP1]], <32 x i16> [[V]], <32 x i32> <i32 63, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <32 x i16> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v32i16 shifthv_last(v32i16 v, char b){
   return __builtin_kvx_shifthv(v, 31, b);
@@ -217,10 +225,12 @@ v8i32 shiftwo_last(v8i32 v, int b){
 
 // CHECK-LABEL: @shiftwx_one(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sext i16 [[B:%.*]] to i32
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <16 x i32> poison, i32 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i32> [[TMP0]], <16 x i32> [[V:%.*]], <16 x i32> <i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 0>
-// CHECK-NEXT:    ret <16 x i32> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <16 x i32> poison, i32 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i32> [[TMP1]], <16 x i32> [[V]], <16 x i32> <i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 0>
+// CHECK-NEXT:    store <16 x i32> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v16i32 shiftwx_one(v16i32 v, short b){
   return __builtin_kvx_shiftwx(v, 1, b);
@@ -228,10 +238,12 @@ v16i32 shiftwx_one(v16i32 v, short b){
 
 // CHECK-LABEL: @shiftwx_last(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sext i16 [[B:%.*]] to i32
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <16 x i32> poison, i32 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x i32> [[TMP0]], <16 x i32> [[V:%.*]], <16 x i32> <i32 31, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <16 x i32> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <16 x i32> poison, i32 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x i32> [[TMP1]], <16 x i32> [[V]], <16 x i32> <i32 31, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <16 x i32> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v16i32 shiftwx_last(v16i32 v, short b){
   return __builtin_kvx_shiftwx(v, 15, b);
@@ -279,10 +291,12 @@ v4f16 shiftfhq_one(v4f16 v, half b){
 
 // CHECK-LABEL: @shiftdo_one(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <8 x i64>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = fptosi double [[B:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x i64> poison, i64 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i64> [[TMP0]], <8 x i64> [[V:%.*]], <8 x i32> <i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 0>
-// CHECK-NEXT:    ret <8 x i64> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <8 x i64> poison, i64 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i64> [[TMP1]], <8 x i64> [[V]], <8 x i32> <i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 0>
+// CHECK-NEXT:    store <8 x i64> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v8i64 shiftdo_one(v8i64 v, double b){
   return __builtin_kvx_shiftdo(v, 1, b);
@@ -290,10 +304,12 @@ v8i64 shiftdo_one(v8i64 v, double b){
 
 // CHECK-LABEL: @shiftdo_last(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <8 x i64>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = fptosi double [[B:%.*]] to i64
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x i64> poison, i64 [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x i64> [[TMP0]], <8 x i64> [[V:%.*]], <8 x i32> <i32 15, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <8 x i64> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <8 x i64> poison, i64 [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x i64> [[TMP1]], <8 x i64> [[V]], <8 x i32> <i32 15, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <8 x i64> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v8i64 shiftdo_last(v8i64 v, double b){
   return __builtin_kvx_shiftdo(v, 7, b);
@@ -351,10 +367,12 @@ v16f16 shiftfhx_last(v16f16 v, half b){
 
 // CHECK-LABEL: @shiftfhv_one(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <32 x half>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i8 [[B:%.*]] to half
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <32 x half> poison, half [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x half> [[TMP0]], <32 x half> [[V:%.*]], <32 x i32> <i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 45, i32 46, i32 47, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60, i32 61, i32 62, i32 63, i32 0>
-// CHECK-NEXT:    ret <32 x half> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <32 x half> poison, half [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x half> [[TMP1]], <32 x half> [[V]], <32 x i32> <i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 45, i32 46, i32 47, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60, i32 61, i32 62, i32 63, i32 0>
+// CHECK-NEXT:    store <32 x half> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v32f16 shiftfhv_one(v32f16 v, char b){
   return __builtin_kvx_shiftfhv(v, 1, b);
@@ -362,10 +380,12 @@ v32f16 shiftfhv_one(v32f16 v, char b){
 
 // CHECK-LABEL: @shiftfhv_last(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <32 x half>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i8 [[B:%.*]] to half
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <32 x half> poison, half [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <32 x half> [[TMP0]], <32 x half> [[V:%.*]], <32 x i32> <i32 63, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <32 x half> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <32 x half> poison, half [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <32 x half> [[TMP1]], <32 x half> [[V]], <32 x i32> <i32 63, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <32 x half> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v32f16 shiftfhv_last(v32f16 v, char b){
   return __builtin_kvx_shiftfhv(v, 31, b);
@@ -423,10 +443,12 @@ v8f32 shiftfwo_last(v8f32 v, float b){
 
 // CHECK-LABEL: @shiftfwx_one(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <16 x float>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i16 [[B:%.*]] to float
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <16 x float> poison, float [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x float> [[TMP0]], <16 x float> [[V:%.*]], <16 x i32> <i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 0>
-// CHECK-NEXT:    ret <16 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <16 x float> poison, float [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x float> [[TMP1]], <16 x float> [[V]], <16 x i32> <i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 0>
+// CHECK-NEXT:    store <16 x float> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v16f32 shiftfwx_one(v16f32 v, short b){
   return __builtin_kvx_shiftfwx(v, 1, b);
@@ -434,10 +456,12 @@ v16f32 shiftfwx_one(v16f32 v, short b){
 
 // CHECK-LABEL: @shiftfwx_last(
 // CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[V:%.*]] = load <16 x float>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i16 [[B:%.*]] to float
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <16 x float> poison, float [[CONV]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <16 x float> [[TMP0]], <16 x float> [[V:%.*]], <16 x i32> <i32 31, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <16 x float> [[TMP1]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <16 x float> poison, float [[CONV]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <16 x float> [[TMP1]], <16 x float> [[V]], <16 x i32> <i32 31, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <16 x float> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v16f32 shiftfwx_last(v16f32 v, short b){
   return __builtin_kvx_shiftfwx(v, 15, b);
@@ -475,9 +499,11 @@ v4f64 shiftfdq_last(v4f64 v, double b){
 
 // CHECK-LABEL: @shiftfdo_one(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x double> poison, double [[B:%.*]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x double> [[TMP0]], <8 x double> [[V:%.*]], <8 x i32> <i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 0>
-// CHECK-NEXT:    ret <8 x double> [[TMP1]]
+// CHECK-NEXT:    [[V:%.*]] = load <8 x double>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <8 x double> poison, double [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x double> [[TMP1]], <8 x double> [[V]], <8 x i32> <i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 0>
+// CHECK-NEXT:    store <8 x double> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v8f64 shiftfdo_one(v8f64 v, double b){
   return __builtin_kvx_shiftfdo(v, 1, b);
@@ -485,9 +511,11 @@ v8f64 shiftfdo_one(v8f64 v, double b){
 
 // CHECK-LABEL: @shiftfdo_last(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x double> poison, double [[B:%.*]], i64 0
-// CHECK-NEXT:    [[TMP1:%.*]] = shufflevector <8 x double> [[TMP0]], <8 x double> [[V:%.*]], <8 x i32> <i32 15, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
-// CHECK-NEXT:    ret <8 x double> [[TMP1]]
+// CHECK-NEXT:    [[V:%.*]] = load <8 x double>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    [[TMP1:%.*]] = insertelement <8 x double> poison, double [[B:%.*]], i64 0
+// CHECK-NEXT:    [[TMP2:%.*]] = shufflevector <8 x double> [[TMP1]], <8 x double> [[V]], <8 x i32> <i32 15, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0>
+// CHECK-NEXT:    store <8 x double> [[TMP2]], ptr [[AGG_RESULT:%.*]], align 32, !tbaa [[TBAA2]]
+// CHECK-NEXT:    ret void
 //
 v8f64 shiftfdo_last(v8f64 v, double b){
   return __builtin_kvx_shiftfdo(v, 7, b);

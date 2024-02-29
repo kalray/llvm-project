@@ -46,7 +46,7 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
   br label %10
 
 10:
-  %11 = bitcast ptr undef to ptr 
+  %11 = bitcast ptr undef to ptr
   %12 = getelementptr inbounds [768 x half], [768 x half]* %2, i64 undef, i64 undef
   %13 = tail call <512 x i1> @llvm.kvx.xfmma444hw(<256 x i1> undef, <256 x i1> undef, <512 x i1> undef)
   %14 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> undef, ptr nonnull undef, i32 3, i32 0)

@@ -7,8 +7,11 @@
 
 // CHECK-LABEL: @fn(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[A:%.*]], [[B:%.*]]
-// CHECK-NEXT:    ret <16 x double> [[ADD]]
+// CHECK-NEXT:    [[A:%.*]] = load <16 x double>, ptr [[TMP0:%.*]], align 128, !tbaa [[TBAA3:![0-9]+]]
+// CHECK-NEXT:    [[B:%.*]] = load <16 x double>, ptr [[TMP1:%.*]], align 128, !tbaa [[TBAA3]]
+// CHECK-NEXT:    [[ADD:%.*]] = fadd <16 x double> [[A]], [[B]]
+// CHECK-NEXT:    store <16 x double> [[ADD]], ptr [[AGG_RESULT:%.*]], align 128, !tbaa [[TBAA3]]
+// CHECK-NEXT:    ret void
 //
 double16 fn(double16 a, double16 b) {
   return a + b;

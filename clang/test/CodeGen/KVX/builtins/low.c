@@ -24,7 +24,8 @@ v4i32 low128(v8i32 v) {
 
 // CHECK-LABEL: @low256(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[KVX_LOW:%.*]] = shufflevector <16 x i32> [[V:%.*]], <16 x i32> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[V:%.*]] = load <16 x i32>, ptr [[TMP0:%.*]], align 32, !tbaa [[TBAA2:![0-9]+]]
+// CHECK-NEXT:    [[KVX_LOW:%.*]] = shufflevector <16 x i32> [[V]], <16 x i32> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    ret <8 x i32> [[KVX_LOW]]
 //
 v8i32 low256(v16i32 v) {

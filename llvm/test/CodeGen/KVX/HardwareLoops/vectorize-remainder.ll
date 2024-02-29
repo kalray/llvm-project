@@ -212,12 +212,12 @@ define dso_local void @matrix_mul_const(i32 %0, ptr nocapture %1, ptr nocapture 
   %30 = add i32 %13, %29
   %31 = zext i32 %30 to i64
   %32 = getelementptr inbounds i16, ptr %2, i64 %31
-  %33 = bitcast ptr %32 to ptr 
+  %33 = bitcast ptr %32 to ptr
   %34 = load <2 x i16>, ptr %33, align 2, !tbaa !2
   %35 = sext <2 x i16> %34 to <2 x i32>
   %36 = mul nsw <2 x i32> %26, %35
   %37 = getelementptr inbounds i32, ptr %1, i64 %31
-  %38 = bitcast ptr %37 to ptr 
+  %38 = bitcast ptr %37 to ptr
   store <2 x i32> %36, ptr %38, align 4, !tbaa !6
   %39 = add i64 %28, 2
   %40 = icmp eq i64 %39, %24

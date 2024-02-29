@@ -113,6 +113,11 @@ public:
 };
 } // end anonymous namespace
 
+std::unique_ptr<TargetCodeGenInfo>
+CodeGen::createKVXTargetCodeGenInfo(CodeGenModule &CGM) {
+  return std::make_unique<KVXTargetCodeGenInfo>(CGM.getTypes());
+}
+
 const unsigned KVXABIInfo::Alignment = 64;
 const unsigned KVXABIInfo::RegSize = 64;
 const unsigned KVXABIInfo::NumRegs = 4;
