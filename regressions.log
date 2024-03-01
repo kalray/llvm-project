@@ -1,11 +1,47 @@
 Bugs:
-- jumptable.ll/@f: jumptable lowering looks broken. No store generated, all BB code eliminated.
-
 Performance regressions:
 - @zeroinit2048: xso ordering is more random, is it impactful?
-- jfdctint.ll: more stack used. More spills?
-- loadstore-T12917.ll/@f: "call h" got transformed into "ld $r16" + "set $ra" + "add $r12" + "goto", which is slower
+    indeed it is, even before it was not in the good order. Should find a fix.
+
+- jfdctint.ll: more stack used. More spills? Yes, 2 callee saved registers more go to the stack, and it has 2 more lq/sq,
+  and specially, the bundles density is lower.
+
 - loadc.ll/@loadcbc: extra zxwd in arguments and return values
 - maddwq.ll/@maddsumwq_v3: srld immediate pattern was not matched
 - vecreduce.ll/@v2_vecreduce_or_cmp_sle_i64: useless compd.ne
 
+Optimizations:
+- loadstore-T12917.ll/@f: "call h" got transformed into "ld $r16" + "set $ra" + "add $r12" + "goto", which is slower.
+  This is a progression. It did tailcall the function, and restored the stack before.
+  -- before:
+cb.weqz $r15 ? .LBB0_2     <=== decide to iterate or not
+....
+faddd $r0 = $r0, $r11
+call h                     <=== call function
+;; # (end cycle 60)
+LBB0_2: # %if.end          <=== no iteration goes here
+ld $r16 = 24[$r12]         <=== call h returns here
+;; # (end cycle 0)
+set $ra = $r16             <=== define new return address
+addd $r12 = $r12, 32       <=== restore stack
+;; # (end cycle 5)
+ret                        <=== returns to caller
+;;
+  -- after:
+cb.weqz $r15 ? .LBB0_2     <=== decide to iterate or not
+;;
+# %bb.1: # %if.then
+faddd $r15 = $r32, 0x0
+ld $r16 = 24[$r12]
+;; # (end cycle 0)
+faddd $r15 = $r15, $r33
+;; # (end cycle 4)
+set $ra = $r16           <=== early define return address of caller
+;; # (end cycle 5)
+....
+; CHECK-NEXT:    addd $r12 = $r12, 32    <===== restore stack
+; CHECK-NEXT:    goto h            <==== h won't return here but to caller
+
+Not a bug:
+- jumptable.ll/@f: jumptable lowering looks broken. No store generated, all BB code eliminated. <- Not a bug,
+    I removed duplicated code between pic non-pic.
