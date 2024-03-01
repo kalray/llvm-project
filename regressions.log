@@ -1,4 +1,5 @@
-Bugs:
+== Unsolved ==
+
 Performance regressions:
 - @zeroinit2048: xso ordering is more random, is it impactful?
     indeed it is, even before it was not in the good order. Should find a fix.
@@ -9,6 +10,8 @@ Performance regressions:
 - loadc.ll/@loadcbc: extra zxwd in arguments and return values
 - maddwq.ll/@maddsumwq_v3: srld immediate pattern was not matched
 - vecreduce.ll/@v2_vecreduce_or_cmp_sle_i64: useless compd.ne
+
+== Solved ==
 
 Optimizations:
 - loadstore-T12917.ll/@f: "call h" got transformed into "ld $r16" + "set $ra" + "add $r12" + "goto", which is slower.
