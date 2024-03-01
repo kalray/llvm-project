@@ -288,10 +288,14 @@ Tool *ClusterOS::buildLinker() const {
   return new tools::clusteros::Linker(*this);
 }
 
+// These no include flags are .... strange. IMO, nostdinc* should disable
+// both front-end include as well linker flags, where nostdlib* should
+// disable only linker flags. But seems clang/test/Driver/nostdincxx.cpp
+// assumes nostdlib* also disables include paths. ¯\_(ツ)_/¯
 void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
                                           ArgStringList &CC1Args) const {
-  if (DriverArgs.hasArg(options::OPT_nostdinc) ||
-      DriverArgs.hasArg(options::OPT_nostdlibinc))
+  if (DriverArgs.hasArg(options::OPT_nostdinc, options::OPT_nostdlibinc,
+                        options::OPT_nostdlib))
     return;
 
   // Include LLVM toolchain include dir first.
@@ -302,8 +306,9 @@ void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
 
 void ClusterOS::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
                                              ArgStringList &CC1Args) const {
-  if (DriverArgs.hasArg(options::OPT_nostdincxx) ||
-      DriverArgs.hasArg(options::OPT_nostdlibinc))
+  if (DriverArgs.hasArg(options::OPT_nostdincxx, options::OPT_nostdinc,
+                        options::OPT_nostdlibxx, options::OPT_nostdlibinc,
+                        options::OPT_nostdlib))
     return;
 
   addSystemInclude(DriverArgs, CC1Args,
