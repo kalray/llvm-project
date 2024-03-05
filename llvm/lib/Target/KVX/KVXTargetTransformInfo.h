@@ -88,7 +88,35 @@ public:
 
   unsigned getRegisterClassForType(bool Vector, Type *Ty) const;
 
-  unsigned getMaxInterleaveFactor(ElementCount VF) const { return 3; }
+  unsigned getMaxInterleaveFactor(ElementCount VF) const {
+    // FIXME: Workaround for VPPlan + InsCombine bugs.
+    // Enforcing interleave when no vectorization is done (VF = 1)
+    // generates a useless runtime test for this code, for
+    // InterleaveCount (IC = 2), as iteration count is known to be
+    // a multiple of 2. It also generates redundant code.
+    // Appart from that, it creates a useless operation %0 = %index + 0
+    // which InstructionCombiner bug breaks the code.
+    // Input C code:
+    // int my_parityl(unsigned long x) {
+    //   int i;
+    //   int count = 0;
+    //   for (i = 0; i < 8 * sizeof(unsigned long); i++)
+    //     if (x & ((unsigned long)1 << i))
+    //       count++;
+    //   return count & 1;
+    // };
+    // Once the InstCombine bug is fixed, as well the useless intruction
+    // generation in VPlan, we should reconsider the performance impact
+    // of this, and perhaps prevent useless code duplication.
+    if (VF.isScalar())
+      return 1;
+
+    // Not knowing the largest element size is rather limiting,
+    // so let's assume we operate with 32 bit values. We would
+    // like to operate in 8 x 32 elements per iteration so we
+    // compute:
+    return std::max(1u, 8u / VF.getKnownMinValue());
+  }
 
   unsigned getRegUsageForType(Type *Ty) const {
     if (!Ty->isSized())
