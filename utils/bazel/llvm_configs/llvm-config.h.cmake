@@ -105,6 +105,9 @@
 /* Define if the RISCV target is built in */
 #cmakedefine01 LLVM_HAS_RISCV_TARGET
 
+/* Define if the KVX target is built in */
+#cmakedefine01 LLVM_HAS_KVX_TARGET
+
 /* Define if the Sparc target is built in */
 #cmakedefine01 LLVM_HAS_SPARC_TARGET
 
