@@ -20,7 +20,6 @@ KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
   CalleeSaveStackSlotSize = 8;
   CodePointerSize = 8;
   CommentString = "#";
-  CompressDebugSections = DebugCompressionType::None;
   Data64bitsDirective = "\t.8byte\t";
   DwarfRegNumForCFI = true;
   ExceptionsType = ExceptionHandling::SjLj;
