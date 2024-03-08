@@ -920,29 +920,30 @@ define void @lv_sv_space256_512(ptr addrspace(256) %0, i64 %1) {
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    slld $r1 = $r1, 6
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xlo.u $a0 = $r1[$r0]
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.u $a1 = 32[$r2]
+; CV1-NEXT:    xlo.u $a0 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xso 32[$r0] = $a1
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 0[$r0] = $a0
-; CV1-NEXT:    ret
+; CV1-NEXT:    xlo.u $a1 = $r1[$r0]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    xso 0[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    xso 32[$r0] = $a0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: lv_sv_space256_512:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    addx64d $r1 = $r1, $r0
-; CV2-NEXT:    slld $r2 = $r1, 6
+; CV2-NEXT:    slld $r1 = $r1, 6
+; CV2-NEXT:    addx64d $r2 = $r1, $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xlo $a0 = $r2[$r0]
+; CV2-NEXT:    xlo.u $a0 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.u $a1 = 32[$r1]
+; CV2-NEXT:    xlo $a1 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xso 32[$r0] = $a1
+; CV2-NEXT:    xso 0[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    xso 32[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
 entry:
@@ -957,29 +958,30 @@ define void @lv_sv_space257_512(ptr addrspace(257) %0, i64 %1) {
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    slld $r1 = $r1, 6
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xlo.u $a0 = $r1[$r0]
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.us $a1 = 32[$r2]
+; CV1-NEXT:    xlo.us $a0 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xso 32[$r0] = $a1
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 0[$r0] = $a0
-; CV1-NEXT:    ret
+; CV1-NEXT:    xlo.u $a1 = $r1[$r0]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    xso 0[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    xso 32[$r0] = $a0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: lv_sv_space257_512:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    addx64d $r1 = $r1, $r0
-; CV2-NEXT:    slld $r2 = $r1, 6
+; CV2-NEXT:    slld $r1 = $r1, 6
+; CV2-NEXT:    addx64d $r2 = $r1, $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xlo $a0 = $r2[$r0]
+; CV2-NEXT:    xlo.us $a0 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.us $a1 = 32[$r1]
+; CV2-NEXT:    xlo $a1 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xso 32[$r0] = $a1
+; CV2-NEXT:    xso 0[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    xso 32[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
 entry:
@@ -994,29 +996,30 @@ define void @lv_sv_space258_512(ptr addrspace(258) %0, i64 %1) {
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    slld $r1 = $r1, 6
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    xlo.u.xs $a0 = $r1[$r0]
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.us $a1 = 32[$r2]
+; CV1-NEXT:    xlo.us $a0 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xso 32[$r0] = $a1
-; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 0[$r0] = $a0
-; CV1-NEXT:    ret
+; CV1-NEXT:    xlo.u.xs $a1 = $r1[$r0]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    xso 0[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    xso 32[$r0] = $a0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: lv_sv_space258_512:
 ; CV2:       # %bb.0: # %entry
-; CV2-NEXT:    addx64d $r1 = $r1, $r0
-; CV2-NEXT:    slld $r2 = $r1, 6
+; CV2-NEXT:    slld $r1 = $r1, 6
+; CV2-NEXT:    addx64d $r2 = $r1, $r0
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    xlo.xs $a0 = $r2[$r0]
+; CV2-NEXT:    xlo.s $a0 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.s $a1 = 32[$r1]
+; CV2-NEXT:    xlo.xs $a1 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xso 32[$r0] = $a1
+; CV2-NEXT:    xso 0[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    xso 0[$r0] = $a0
+; CV2-NEXT:    xso 32[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 7)
 entry:
@@ -1033,21 +1036,21 @@ define void @lv_sv_space256_1024(ptr addrspace(256) %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.u $a0 = 64[$r2]
+; CV1-NEXT:    xlo.u $a0 = 96[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xlo.u $a1 = 96[$r2]
+; CV1-NEXT:    xlo.u $a1 = 64[$r2]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xlo.u $a2 = $r1[$r0]
+; CV1-NEXT:    xlo.u $a2 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xlo.u $a3 = 32[$r2]
+; CV1-NEXT:    xlo.u $a3 = $r1[$r0]
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 32[$r0] = $a3
+; CV1-NEXT:    xso 0[$r0] = $a3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    xso 0[$r0] = $a2
+; CV1-NEXT:    xso 32[$r0] = $a2
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    xso 96[$r0] = $a1
+; CV1-NEXT:    xso 64[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    xso 64[$r0] = $a0
+; CV1-NEXT:    xso 96[$r0] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -1057,21 +1060,21 @@ define void @lv_sv_space256_1024(ptr addrspace(256) %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    addd $r2 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.u $a0 = 64[$r2]
+; CV2-NEXT:    xlo.u $a0 = 96[$r2]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xlo.u $a1 = 96[$r2]
+; CV2-NEXT:    xlo.u $a1 = 64[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    xlo $a2 = $r1[$r0]
+; CV2-NEXT:    xlo.u $a2 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xlo.u $a3 = 32[$r2]
+; CV2-NEXT:    xlo $a3 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xso 32[$r0] = $a3
+; CV2-NEXT:    xso 0[$r0] = $a3
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    xso 0[$r0] = $a2
+; CV2-NEXT:    xso 32[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    xso 96[$r0] = $a1
+; CV2-NEXT:    xso 64[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 64[$r0] = $a0
+; CV2-NEXT:    xso 96[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 12)
 entry:
@@ -1088,21 +1091,21 @@ define void @lv_sv_space257_1024(ptr addrspace(257) %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.us $a0 = 64[$r2]
+; CV1-NEXT:    xlo.us $a0 = 96[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xlo.us $a1 = 96[$r2]
+; CV1-NEXT:    xlo.us $a1 = 64[$r2]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xlo.u $a2 = $r1[$r0]
+; CV1-NEXT:    xlo.us $a2 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xlo.us $a3 = 32[$r2]
+; CV1-NEXT:    xlo.u $a3 = $r1[$r0]
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 32[$r0] = $a3
+; CV1-NEXT:    xso 0[$r0] = $a3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    xso 0[$r0] = $a2
+; CV1-NEXT:    xso 32[$r0] = $a2
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    xso 96[$r0] = $a1
+; CV1-NEXT:    xso 64[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    xso 64[$r0] = $a0
+; CV1-NEXT:    xso 96[$r0] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -1112,21 +1115,21 @@ define void @lv_sv_space257_1024(ptr addrspace(257) %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    addd $r2 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.us $a0 = 64[$r2]
+; CV2-NEXT:    xlo.us $a0 = 96[$r2]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xlo.us $a1 = 96[$r2]
+; CV2-NEXT:    xlo.us $a1 = 64[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    xlo $a2 = $r1[$r0]
+; CV2-NEXT:    xlo.us $a2 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xlo.us $a3 = 32[$r2]
+; CV2-NEXT:    xlo $a3 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xso 32[$r0] = $a3
+; CV2-NEXT:    xso 0[$r0] = $a3
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    xso 0[$r0] = $a2
+; CV2-NEXT:    xso 32[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    xso 96[$r0] = $a1
+; CV2-NEXT:    xso 64[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 64[$r0] = $a0
+; CV2-NEXT:    xso 96[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 12)
 entry:
@@ -1143,21 +1146,21 @@ define void @lv_sv_space258_1024(ptr addrspace(258) %0, i64 %1) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    addd $r2 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    xlo.us $a0 = 64[$r2]
+; CV1-NEXT:    xlo.us $a0 = 96[$r2]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    xlo.us $a1 = 96[$r2]
+; CV1-NEXT:    xlo.us $a1 = 64[$r2]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    xlo.u.xs $a2 = $r1[$r0]
+; CV1-NEXT:    xlo.us $a2 = 32[$r2]
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    xlo.us $a3 = 32[$r2]
+; CV1-NEXT:    xlo.u.xs $a3 = $r1[$r0]
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    xso 32[$r0] = $a3
+; CV1-NEXT:    xso 0[$r0] = $a3
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    xso 0[$r0] = $a2
+; CV1-NEXT:    xso 32[$r0] = $a2
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    xso 96[$r0] = $a1
+; CV1-NEXT:    xso 64[$r0] = $a1
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    xso 64[$r0] = $a0
+; CV1-NEXT:    xso 96[$r0] = $a0
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 11)
 ;
@@ -1167,21 +1170,21 @@ define void @lv_sv_space258_1024(ptr addrspace(258) %0, i64 %1) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    addd $r2 = $r0, $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    xlo.s $a0 = 64[$r2]
+; CV2-NEXT:    xlo.s $a0 = 96[$r2]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    xlo.s $a1 = 96[$r2]
+; CV2-NEXT:    xlo.s $a1 = 64[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    xlo.xs $a2 = $r1[$r0]
+; CV2-NEXT:    xlo.s $a2 = 32[$r2]
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    xlo.s $a3 = 32[$r2]
+; CV2-NEXT:    xlo.xs $a3 = $r1[$r0]
 ; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    xso 32[$r0] = $a3
+; CV2-NEXT:    xso 0[$r0] = $a3
 ; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    xso 0[$r0] = $a2
+; CV2-NEXT:    xso 32[$r0] = $a2
 ; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    xso 96[$r0] = $a1
+; CV2-NEXT:    xso 64[$r0] = $a1
 ; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    xso 64[$r0] = $a0
+; CV2-NEXT:    xso 96[$r0] = $a0
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 12)
 entry:
