@@ -9749,12 +9749,10 @@ InstructionCost BoUpSLP::getTreeCost(ArrayRef<Value *> VectorizedVals) {
     auto BWIt = MinBWs.find(&Root);
     if (BWIt != MinBWs.end()) {
       Type *DstTy = Root.Scalars.front()->getType();
-      unsigned OriginalSz = DL->getTypeSizeInBits(DstTy);
-      if (OriginalSz != BWIt->second.first) {
-        unsigned Opcode = Instruction::Trunc;
-        if (OriginalSz < BWIt->second.first)
-          Opcode = BWIt->second.second ? Instruction::SExt : Instruction::ZExt;
-        Type *SrcTy = IntegerType::get(DstTy->getContext(), BWIt->second.first);
+      Type *SrcTy = IntegerType::get(DstTy->getContext(), BWIt->second.first);
+      if (DstTy != SrcTy) {
+        unsigned Opcode =
+        CastInst::getCastOpcode(SrcTy, BWIt->second.second, DstTy, BWIt->second.second);
         Cost += TTI->getCastInstrCost(Opcode, DstTy, SrcTy,
                                       TTI::CastContextHint::None,
                                       TTI::TCK_RecipThroughput);
