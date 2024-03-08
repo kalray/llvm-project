@@ -344,13 +344,14 @@ define <16 x i8> @nandd_rr(<16 x i8> %0, <16 x i8> %1) {
   ret <16 x i8> %4
 }
 
+; FIXME: Concat cost should be 1
 define <16 x i8> @concat(<8 x i8> %a) #0 {
 ; ALL-LABEL: 'concat'
-; ALL-NEXT:  Cost Model: Found an estimated cost of -1 for instruction: %r = shufflevector <8 x i8> %a, <8 x i8> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 28 for instruction: %r = shufflevector <8 x i8> %a, <8 x i8> undef, <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %r = shufflevector <8 x i8> %a, <8 x i8> undef,
-  <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+  <16 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   ret <16 x i8> %r
 }
 
