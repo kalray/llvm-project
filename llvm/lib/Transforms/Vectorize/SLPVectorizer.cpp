@@ -8577,7 +8577,8 @@ BoUpSLP::getEntryCost(const TreeEntry *E, ArrayRef<Value *> VectorizedVals,
                 VecOpcode =
                     It->second.second ? Instruction::SExt : Instruction::ZExt;
               TTI::CastContextHint CCH = GetCastContextHint(VL0);
-              VecCost += TTI->getCastInstrCost(VecOpcode, UserVecTy, VecTy, CCH,
+              if (UserVecTy != VecTy)
+                VecCost += TTI->getCastInstrCost(VecOpcode, UserVecTy, VecTy, CCH,
                                                CostKind);
             }
           }
@@ -9077,9 +9078,13 @@ BoUpSLP::getEntryCost(const TreeEntry *E, ArrayRef<Value *> VectorizedVals,
         Type *Src1SclTy = E->getAltOp()->getOperand(0)->getType();
         auto *Src0Ty = FixedVectorType::get(Src0SclTy, VL.size());
         auto *Src1Ty = FixedVectorType::get(Src1SclTy, VL.size());
-        VecCost = TTIRef.getCastInstrCost(E->getOpcode(), VecTy, Src0Ty,
-                                          TTI::CastContextHint::None, CostKind);
-        VecCost +=
+        VecCost = 0;
+        if (VecTy != Src0Ty)
+          VecCost = TTIRef.getCastInstrCost(E->getOpcode(), VecTy, Src0Ty,
+                                            TTI::CastContextHint::None, CostKind);
+
+        if (VecTy != Src1Ty)
+          VecCost +=
             TTIRef.getCastInstrCost(E->getAltOpcode(), VecTy, Src1Ty,
                                     TTI::CastContextHint::None, CostKind);
       }
