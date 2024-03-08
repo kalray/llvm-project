@@ -111,6 +111,9 @@
 /* Define if the SPIRV target is built in */
 #cmakedefine01 LLVM_HAS_SPIRV_TARGET
 
+/* Define if the KVX target is built in */
+#cmakedefine01 LLVM_HAS_KVX_TARGET
+
 /* Define if the SystemZ target is built in */
 #cmakedefine01 LLVM_HAS_SYSTEMZ_TARGET
 
