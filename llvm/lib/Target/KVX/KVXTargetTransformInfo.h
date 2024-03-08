@@ -176,6 +176,8 @@ public:
   InstructionCost getCFInstrCost(unsigned Opcode, TTI::TargetCostKind CostKind,
                                  const Instruction *I = nullptr);
 
+  unsigned getNumberOfParts(Type *Tp);
+
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };

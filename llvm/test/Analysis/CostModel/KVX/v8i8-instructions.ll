@@ -438,10 +438,11 @@ define <8 x i8> @nandd_ri37_2(<8 x i8> %0) {
   ret <8 x i8> %3
 }
 
+; FIXME: Concat cost should be 1
 define <8 x i8> @concat(<4 x i8> %a) #0 {
 ;
 ; ALL-LABEL: 'concat'
-; ALL-NEXT:  Cost Model: Found an estimated cost of -1 for instruction: %r = shufflevector <4 x i8> %a, <4 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 14 for instruction: %r = shufflevector <4 x i8> %a, <4 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 0, i32 1, i32 2, i32 3>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %r
 ;
   %r = shufflevector <4 x i8> %a, <4 x i8> undef,
