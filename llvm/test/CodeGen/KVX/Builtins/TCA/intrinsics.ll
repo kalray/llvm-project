@@ -955,17 +955,17 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, ptr %4, ptr 
 ; CHECK-NEXT:    ;; # (end cycle 174)
 ; CHECK-NEXT:    xso.even $r33 ? 32[$r4] = $a4
 ; CHECK-NEXT:    ;; # (end cycle 175)
-; CHECK-NEXT:    xso 32[$r5] = $a7
-; CHECK-NEXT:    ;; # (end cycle 176)
 ; CHECK-NEXT:    xso 0[$r5] = $a6
+; CHECK-NEXT:    ;; # (end cycle 176)
+; CHECK-NEXT:    xso 32[$r5] = $a7
 ; CHECK-NEXT:    ;; # (end cycle 177)
-; CHECK-NEXT:    xso 32[$r6] = $a1
-; CHECK-NEXT:    ;; # (end cycle 178)
 ; CHECK-NEXT:    xso 0[$r6] = $a0
+; CHECK-NEXT:    ;; # (end cycle 178)
+; CHECK-NEXT:    xso 32[$r6] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 179)
-; CHECK-NEXT:    xso 96[$r6] = $a3
-; CHECK-NEXT:    ;; # (end cycle 180)
 ; CHECK-NEXT:    xso 64[$r6] = $a2
+; CHECK-NEXT:    ;; # (end cycle 180)
+; CHECK-NEXT:    xso 96[$r6] = $a3
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10

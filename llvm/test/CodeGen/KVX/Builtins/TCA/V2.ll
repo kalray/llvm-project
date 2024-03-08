@@ -855,13 +855,13 @@ define void @xloadStore256(ptr addrspace(257) %0) {
 define void @xloadStore512(ptr addrspace(258) %0) {
 ; CHECK-LABEL: xloadStore512:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo.s $a0 = 64[$r0]
+; CHECK-NEXT:    xlo.s $a0 = 96[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xlo.s $a1 = 96[$r0]
+; CHECK-NEXT:    xlo.s $a1 = 64[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    xso 0[$r0] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xso 32[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %2 = getelementptr inbounds <512 x i1>, ptr addrspace(258) %0, i64 1
@@ -873,21 +873,21 @@ define void @xloadStore512(ptr addrspace(258) %0) {
 define void @xloadStore1024(ptr addrspace(256) %0) {
 ; CHECK-LABEL: xloadStore1024:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    xlo.u $a0 = 192[$r0]
+; CHECK-NEXT:    xlo.u $a0 = 224[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    xlo.u $a1 = 224[$r0]
+; CHECK-NEXT:    xlo.u $a1 = 192[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    xlo.u $a2 = 128[$r0]
+; CHECK-NEXT:    xlo.u $a2 = 160[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    xlo.u $a3 = 160[$r0]
+; CHECK-NEXT:    xlo.u $a3 = 128[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    xso 32[$r0] = $a3
+; CHECK-NEXT:    xso 0[$r0] = $a3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    xso 0[$r0] = $a2
+; CHECK-NEXT:    xso 32[$r0] = $a2
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    xso 96[$r0] = $a1
+; CHECK-NEXT:    xso 64[$r0] = $a1
 ; CHECK-NEXT:    ;; # (end cycle 9)
-; CHECK-NEXT:    xso 64[$r0] = $a0
+; CHECK-NEXT:    xso 96[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 10)
   %2 = getelementptr inbounds <1024 x i1>, ptr addrspace(256) %0, i64 1

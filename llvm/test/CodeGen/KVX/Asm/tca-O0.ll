@@ -326,12 +326,13 @@ define void @use_wide_reg(ptr %w, ptr %v) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 144[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyo $a2 = $a1
+; CHECK-NEXT:    xcopyo $a2 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a2
+; CHECK-NEXT:    xso 0[$r0] = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    # kill: def $a0 killed $a0 killed $w0
-; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xcopyo $a0 = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 32[$r0] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -176
 ; CHECK-NEXT:    ;;
@@ -427,24 +428,29 @@ define void @use_matrix_reg(ptr %x) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    ld $r0 = 344[$r31]
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyo $a4 = $a2
+; CHECK-NEXT:    xcopyo $a4 = $a0
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyo $a5 = $a3
+; CHECK-NEXT:    xcopyo $a5 = $a1
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xcopyo $a6 = $a5
+; CHECK-NEXT:    xcopyo $a6 = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 96[$r0] = $a6
+; CHECK-NEXT:    xso 0[$r0] = $a6
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    # kill: def $a4 killed $a4 killed $w2
-; CHECK-NEXT:    xso 64[$r0] = $a4
+; CHECK-NEXT:    xcopyo $a4 = $a5
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    # kill: def $w0 killed $w0 killed $x0
-; CHECK-NEXT:    xcopyo $a2 = $a1
+; CHECK-NEXT:    xso 32[$r0] = $a4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    xso 32[$r0] = $a2
+; CHECK-NEXT:    xcopyo $a0 = $a2
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    # kill: def $a0 killed $a0 killed $w0
-; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    xcopyo $a1 = $a3
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyo $a2 = $a0
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xcopyo $a0 = $a1
+; CHECK-NEXT:    ;;
+; CHECK-NEXT:    xso 96[$r0] = $a0
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    addd $r12 = $r14, -368
 ; CHECK-NEXT:    ;;
