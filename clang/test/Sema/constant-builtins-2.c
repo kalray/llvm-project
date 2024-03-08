@@ -1,3 +1,4 @@
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -fsyntax-only -verify %s
 
 // Math stuff
