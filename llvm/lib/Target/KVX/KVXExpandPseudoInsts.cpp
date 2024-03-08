@@ -103,25 +103,25 @@ static bool expandCacheInstruction(const KVXInstrInfo *TII,
   switch (MBBI->getOpcode()) {
   case KVX::DINVALLp:
     OpCode = OffsetIsReg
-                 ? KVX::DINVALLrr
+                 ? (unsigned) KVX::DINVALLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DINVALLri10,
                                 KVX::DINVALLri37, KVX::DINVALLri64);
     break;
   case KVX::DTOUCHLp:
     OpCode = OffsetIsReg
-                 ? KVX::DTOUCHLrr
+                 ? (unsigned) KVX::DTOUCHLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DTOUCHLri10,
                                 KVX::DTOUCHLri37, KVX::DTOUCHLri64);
     break;
   case KVX::DZEROLp:
     OpCode = OffsetIsReg
-                 ? KVX::DZEROLrr
+                 ? (unsigned) KVX::DZEROLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DZEROLri10,
                                 KVX::DZEROLri37, KVX::DZEROLri64);
     break;
   case KVX::I1INVALSp:
     OpCode = OffsetIsReg
-                 ? KVX::I1INVALSrr
+                 ? (unsigned) KVX::I1INVALSrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::I1INVALSri10,
                                 KVX::I1INVALSri37, KVX::I1INVALSri64);
     break;
@@ -305,7 +305,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   // NOTE: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
-  uint64_t MOSize = MO.getSize();
+  uint64_t MOSize = MO.getSize().toRaw();
 
   if (!MO.isAtomic()) {
     MBBI->print(errs());
@@ -688,7 +688,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // FIXME: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
-  uint64_t MOSize = MO.getSize();
+  uint64_t MOSize = MO.getSize().toRaw();
   const auto MemMode = isGlobalAddrspace(MO.getAddrSpace())
                            ? KVXMOD::COHERENCY_G
                            : KVXMOD::COHERENCY_;
