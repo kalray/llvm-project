@@ -3795,14 +3795,11 @@ SDValue SplitVectorStore(StoreSDNode *Store, SelectionDAG &Dag) {
   Align BaseAlign = Store->getAlign();
   Align Size = Align(LoMemVT.getStoreSize());
   Align HiAlign = std::min(BaseAlign, Size);
-
   SDValue LoStore =
-      Dag.getTruncStore(Chain, SL, Lo, BasePtr, SrcValue, LoMemVT, BaseAlign,
-                        Store->getMemOperand()->getFlags());
+      Dag.getStore(Chain, SL, Lo, BasePtr, SrcValue, BaseAlign, Store->getMemOperand()->getFlags());
   SDValue HiStore =
-      Dag.getTruncStore(Chain, SL, Hi, HiPtr, SrcValue.getWithOffset(Size.value()),
-                        HiMemVT, HiAlign, Store->getMemOperand()->getFlags());
-
+      Dag.getStore(LoStore, SL, Hi, HiPtr, SrcValue.getWithOffset(Size.value()),
+                        HiAlign, Store->getMemOperand()->getFlags());
   return Dag.getNode(ISD::TokenFactor, SL, MVT::Other, LoStore, HiStore);
 }
 
