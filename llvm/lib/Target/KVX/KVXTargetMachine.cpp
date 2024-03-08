@@ -148,11 +148,12 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
       TLOF(std::make_unique<KVXELFTargetObjectFile>()) {
 
   Options.DisableIntegratedAS = true;
-  Options.BinutilsVersion = {2, 37};
+  Options.BinutilsVersion = {2, 40};
   Options.EnableFastISel = false;
   Options.EnableGlobalISel = false;
   Options.EnableCFIFixup = true;
-    setSupportsDebugEntryValues(true);
+  Options.MCOptions.CompressDebugSections = DebugCompressionType::None;
+  setSupportsDebugEntryValues(true);
   initAsmInfo();
 }
 
