@@ -908,7 +908,7 @@ bool KVXInstrInfo::getBaseAndOffsetPosition(const MachineInstr &MI,
 
 /// Gets the width of the memory access.
 /// Uses the MemoryAccessWidth TSFlag
-static bool getMemWidth(const MachineInstr &MI, unsigned &Width) {
+static bool getMemWidth(const MachineInstr &MI, LocationSize &Width) {
   unsigned WidthType =
       getKVXFlag(MI, KVXII::MemAccessSizePos, KVXII::MemAccessSizeMask);
 
@@ -939,7 +939,7 @@ bool hasXSMod(const MachineInstr &MI) {
 
 bool KVXInstrInfo::getMemOperandsWithOffsetWidth(
     const MachineInstr &MI, SmallVectorImpl<const MachineOperand *> &BaseOps,
-    int64_t &Offset, bool &OffsetIsScalable, unsigned &Width,
+    int64_t &Offset, bool &OffsetIsScalable, LocationSize &Width,
     const TargetRegisterInfo *TRI) const {
 
   unsigned BasePos, OffsetPos;
@@ -986,21 +986,21 @@ bool KVXInstrInfo::areMemAccessesTriviallyDisjoint(
   SmallVector<const MachineOperand *, 1> BaseOp1{}, BaseOp2{};
   int64_t Offset1, Offset2;
   bool OffsetIsScalable1, OffsetIsScalable2;
-  unsigned Width1, Width2;
+  LocationSize Width1(0), Width2(0);
 
   if (!getMemOperandsWithOffsetWidth(MI1, BaseOp1, Offset1, OffsetIsScalable1,
                                      Width1, nullptr))
     return false;
 
   if (OffsetIsScalable1)
-    Offset1 *= Width1;
+    Offset1 *= Width1.getValue();
 
   if (!getMemOperandsWithOffsetWidth(MI2, BaseOp2, Offset2, OffsetIsScalable2,
                                      Width2, nullptr))
     return false;
 
   if (OffsetIsScalable2)
-    Offset2 *= Width2;
+    Offset2 *= Width2.getValue();
 
   assert(BaseOp1.size() == 1 && BaseOp2.size() == 1 &&
          "More than 1 base operand not supported");
@@ -1011,7 +1011,7 @@ bool KVXInstrInfo::areMemAccessesTriviallyDisjoint(
 
   int64_t LowOffset = std::min(Offset1, Offset2);
   int64_t HighOffset = std::max(Offset1, Offset2);
-  int64_t LowWidth = (LowOffset == Offset1) ? Width1 : Width2;
+  int64_t LowWidth = (LowOffset == Offset1) ? Width1.getValue() : Width2.getValue();
 
   return (LowOffset + LowWidth <= HighOffset);
 }
