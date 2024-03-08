@@ -748,6 +748,9 @@ InstructionCost KVXTTIImpl::getScalarizationOverhead(VectorType *Ty,
   unsigned Size, ScalarSize = Ty->getScalarSizeInBits(),
                  RegWidth = getRegisterBitWidth(false);
 
+  if (ScalarSize == 1)
+    return InstructionCost::getInvalid(0xDEAD);
+
   // non-complex insert/extract cases
   auto *FVTy = dyn_cast<FixedVectorType>(Ty);
   Size = ScalarSize * (FVTy ? FVTy->getNumElements() : 1);
@@ -840,7 +843,7 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     break;
   }
   default:
-    LLVM_DEBUG(errs() << "KVX untreated intrinsic: " << *ICA.getInst() << '\n');
+    LLVM_DEBUG(errs() << "KVX untreated intrinsic: " << ICA.getID() << '\n');
     return BaseT::getIntrinsicInstrCost(ICA, CostKind);
     break;
   }
@@ -934,6 +937,17 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
   return BaseCost * std::max(1u, PrimSz / 256);
 }
 
+unsigned KVXTTIImpl::getNumberOfParts(Type *Tp) {
+  // vXi1 vectors are produced from control flow operations.
+  // Always scalaryze them.
+  if (Tp->isVectorTy()) {
+    if (Tp->getScalarSizeInBits() == 1)
+      return Tp->getPrimitiveSizeInBits().getKnownMinValue();
+  }
+
+  return BasicTTIImplBase::getNumberOfParts(Tp);
+}
+
 InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
                                              Type *Src,
                                              TTI::CastContextHint CCH,
@@ -943,7 +957,8 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
   if (!(COND)) {                                                               \
     errs() << TXT << ":" << *Src << " == (" << Opcode << ") ==> " << *Dst      \
            << '\n';                                                            \
-    return InstructionCost::getInvalid();                                      \
+    assert(false && TXT);                                                      \
+    report_fatal_error(TXT);                                                   \
   }
   // Sanity check
   assertM(Dst->isSized() && Src->isSized(), "Cast with non-sized types");
