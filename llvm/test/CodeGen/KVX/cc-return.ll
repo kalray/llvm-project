@@ -26,3 +26,22 @@ entry:
   ret i16 %add
 }
 
+%BIG = type { [9 x i64] }
+
+define %BIG @test3() {
+; CHECK-LABEL: test3:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    make $r0 = 0
+; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    sd 64[$r15] = $r0
+; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    copyd $r2 = $r0
+; CHECK-NEXT:    copyd $r3 = $r0
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    so 32[$r15] = $r0r1r2r3
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 3)
+  ret %BIG zeroinitializer
+}
