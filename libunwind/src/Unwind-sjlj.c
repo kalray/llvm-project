@@ -32,7 +32,7 @@ struct _Unwind_FunctionContext {
   // next function in stack of handlers
   struct _Unwind_FunctionContext *prev;
 
-#if defined(__ve__)
+#if defined(__ve__) || defined(__kvx__)
   // VE requires to store 64 bit pointers in the buffer for SjLj exception.
   // We expand the size of values defined here.  This size must be matched
   // to the size returned by TargetMachine::getSjLjDataSize().
