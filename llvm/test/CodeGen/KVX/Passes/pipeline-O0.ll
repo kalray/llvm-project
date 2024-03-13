@@ -13,6 +13,8 @@
 ; CHECK-NEXT: ModulePass Manager
 ; CHECK-NEXT: Pre-ISel Intrinsic Lowering
 ; CHECK-NEXT: FunctionPass Manager
+; CHECK-NEXT: Expand large div/rem
+; CHECK-NEXT: Expand large fp convert
 ; CHECK-NEXT: Expand Atomic instructions
 ; CHECK-NEXT: Module Verifier
 ; CHECK-NEXT: Lower Garbage Collection Instructions
@@ -24,17 +26,11 @@
 ; CHECK-NEXT: Expand reduction intrinsics
 ; CHECK-NEXT: SJLJ Exception Handling preparation
 ; CHECK-NEXT: Exception handling preparation
+; CHECK-NEXT: Prepare callbr
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
 ; CHECK-NEXT: Module Verifier
-; CHECK-NEXT: Dominator Tree Construction
-; CHECK-NEXT: Basic Alias Analysis (stateless AA impl)
-; CHECK-NEXT: Function Alias Analysis Results
-; CHECK-NEXT: Natural Loop Information
-; CHECK-NEXT: Post-Dominator Tree Construction
-; CHECK-NEXT: Branch Probability Analysis
-; CHECK-NEXT: Lazy Branch Probability Analysis
-; CHECK-NEXT: Lazy Block Frequency Analysis
+; CHECK-NEXT: Assignment Tracking Analysis
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
 ; CHECK-NEXT: Finalize ISel and expand pseudo-instructions
 ; CHECK-NEXT: Local Stack Slot Allocation
@@ -59,8 +55,10 @@
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
+; CHECK-NEXT: Machine Sanitizer Binary Metadata
 ; CHECK-NEXT: Insert CFI remember/restore state instructions
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
+; CHECK-NEXT: Stack Frame Layout Analysis
 ; CHECK-NEXT: KVX Assembly Printer
 ; CHECK-NEXT: Free MachineFunction
