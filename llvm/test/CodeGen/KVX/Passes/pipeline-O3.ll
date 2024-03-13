@@ -13,9 +13,12 @@
 ; CHECK-NEXT: Create Garbage Collector Module Metadata
 ; CHECK-NEXT: Machine Branch Probability Analysis
 ; CHECK-NEXT: Default Regalloc Eviction Advisor
+; CHECK-NEXT: Default Regalloc Priority Advisor
 ; CHECK-NEXT: ModulePass Manager
 ; CHECK-NEXT: Pre-ISel Intrinsic Lowering
 ; CHECK-NEXT: FunctionPass Manager
+; CHECK-NEXT: Expand large div/rem
+; CHECK-NEXT: Expand large fp convert
 ; CHECK-NEXT: Expand Atomic instructions
 ; CHECK-NEXT: Dead Code Elimination
 ; CHECK-NEXT: Simplify the CFG
@@ -64,6 +67,7 @@
 ; CHECK-NEXT: Hardware Loop Insertion
 ; CHECK-NEXT: KVX Hardware loops Prepare
 ; CHECK-NEXT: KVX CodeGen Prepare
+; CHECK-NEXT: Prepare callbr
 ; CHECK-NEXT: Safe Stack instrumentation pass
 ; CHECK-NEXT: Insert stack protectors
 ; CHECK-NEXT: Module Verifier
@@ -73,6 +77,7 @@
 ; CHECK-NEXT: Natural Loop Information
 ; CHECK-NEXT: Post-Dominator Tree Construction
 ; CHECK-NEXT: Branch Probability Analysis
+; CHECK-NEXT: Assignment Tracking Analysis
 ; CHECK-NEXT: Lazy Branch Probability Analysis
 ; CHECK-NEXT: Lazy Block Frequency Analysis
 ; CHECK-NEXT: KVX DAG->DAG Pattern Instruction Selection
@@ -107,6 +112,7 @@
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: Modulo Software Pipelining
 ; CHECK-NEXT: Detect Dead Lanes
+; CHECK-NEXT: Init Undef Pass
 ; CHECK-NEXT: Process Implicit Definitions
 ; CHECK-NEXT: Remove unreachable machine basic blocks
 ; CHECK-NEXT: Live Variable Analysis
@@ -116,7 +122,7 @@
 ; CHECK-NEXT: Two-Address instruction pass
 ; CHECK-NEXT: Slot index numbering
 ; CHECK-NEXT: Live Interval Analysis
-; CHECK-NEXT: Simple Register Coalescing
+; CHECK-NEXT: Register Coalescer
 ; CHECK-NEXT: Rename Disconnected Subregister Components
 ; CHECK-NEXT: Machine Instruction Scheduler
 ; CHECK-NEXT: Machine Block Frequency Analysis
@@ -144,6 +150,7 @@
 ; CHECK-NEXT: Machine Optimization Remark Emitter
 ; CHECK-NEXT: Shrink Wrapping analysis
 ; CHECK-NEXT: Prologue/Epilogue Insertion & Frame Finalization
+; CHECK-NEXT: Machine Late Instructions Cleanup Pass
 ; CHECK-NEXT: Control Flow Optimizer
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Tail Duplication
@@ -172,8 +179,10 @@
 ; CHECK-NEXT: Contiguously Lay Out Funclets
 ; CHECK-NEXT: StackMap Liveness Analysis
 ; CHECK-NEXT: Live DEBUG_VALUE analysis
+; CHECK-NEXT: Machine Sanitizer Binary Metadata
 ; CHECK-NEXT: Insert CFI remember/restore state instructions
 ; CHECK-NEXT: Lazy Machine Block Frequency Analysis
 ; CHECK-NEXT: Machine Optimization Remark Emitter
+; CHECK-NEXT: Stack Frame Layout Analysis
 ; CHECK-NEXT: KVX Assembly Printer
 ; CHECK-NEXT: Free MachineFunction
