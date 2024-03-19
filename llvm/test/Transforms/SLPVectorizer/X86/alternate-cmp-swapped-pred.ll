@@ -5,14 +5,17 @@ define i16 @test(i16 %call37) {
 ; CHECK-LABEL: @test(
 ; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[CALL:%.*]] = load i16, ptr undef, align 2
-; CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x i16> <i16 poison, i16 0, i16 0, i16 poison, i16 poison, i16 0, i16 poison, i16 0>, i16 [[CALL37:%.*]], i32 3
-; CHECK-NEXT:    [[TMP1:%.*]] = insertelement <8 x i16> [[TMP0]], i16 [[CALL]], i32 0
-; CHECK-NEXT:    [[SHUFFLE:%.*]] = shufflevector <8 x i16> [[TMP1]], <8 x i16> poison, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 3, i32 5, i32 3, i32 7>
-; CHECK-NEXT:    [[TMP2:%.*]] = icmp slt <8 x i16> [[SHUFFLE]], zeroinitializer
-; CHECK-NEXT:    [[TMP3:%.*]] = icmp sgt <8 x i16> [[SHUFFLE]], zeroinitializer
-; CHECK-NEXT:    [[TMP4:%.*]] = shufflevector <8 x i1> [[TMP2]], <8 x i1> [[TMP3]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 12, i32 5, i32 6, i32 7>
-; CHECK-NEXT:    [[TMP5:%.*]] = zext <8 x i1> [[TMP4]] to <8 x i16>
-; CHECK-NEXT:    [[TMP6:%.*]] = call i16 @llvm.vector.reduce.add.v8i16(<8 x i16> [[TMP5]])
+; CHECK-NEXT:    [[TMP0:%.*]] = insertelement <4 x i16> <i16 poison, i16 0, i16 0, i16 0>, i16 [[CALL37:%.*]], i32 0
+; CHECK-NEXT:    [[TMP1:%.*]] = insertelement <4 x i16> <i16 0, i16 0, i16 poison, i16 0>, i16 [[CALL37]], i32 2
+; CHECK-NEXT:    [[TMP2:%.*]] = icmp sgt <4 x i16> [[TMP0]], [[TMP1]]
+; CHECK-NEXT:    [[TMP3:%.*]] = insertelement <4 x i16> <i16 poison, i16 0, i16 0, i16 poison>, i16 [[CALL37]], i32 3
+; CHECK-NEXT:    [[TMP4:%.*]] = insertelement <4 x i16> [[TMP3]], i16 [[CALL]], i32 0
+; CHECK-NEXT:    [[TMP5:%.*]] = icmp slt <4 x i16> [[TMP4]], zeroinitializer
+; CHECK-NEXT:    [[TMP10:%.*]] = zext <4 x i1> [[TMP5]] to <4 x i16>
+; CHECK-NEXT:    [[TMP7:%.*]] = call i16 @llvm.vector.reduce.add.v4i16(<4 x i16> [[TMP10]])
+; CHECK-NEXT:    [[TMP8:%.*]] = zext <4 x i1> [[TMP2]] to <4 x i16>
+; CHECK-NEXT:    [[TMP9:%.*]] = call i16 @llvm.vector.reduce.add.v4i16(<4 x i16> [[TMP8]])
+; CHECK-NEXT:    [[TMP6:%.*]] = add i16 [[TMP7]], [[TMP9]]
 ; CHECK-NEXT:    [[OP_RDX:%.*]] = add i16 [[TMP6]], 0
 ; CHECK-NEXT:    ret i16 [[OP_RDX]]
 ;

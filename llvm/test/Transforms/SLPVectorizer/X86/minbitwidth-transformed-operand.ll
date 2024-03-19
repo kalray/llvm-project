@@ -6,19 +6,37 @@ define void @test(i64 %d.promoted.i) {
 ; CHECK-SAME: i64 [[D_PROMOTED_I:%.*]]) {
 ; CHECK-NEXT:  entry:
 ; CHECK-NEXT:    [[AND_1_I:%.*]] = and i64 0, [[D_PROMOTED_I]]
-; CHECK-NEXT:    [[TMP0:%.*]] = insertelement <8 x i64> <i64 0, i64 poison, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0>, i64 [[AND_1_I]], i32 1
-; CHECK-NEXT:    [[TMP1:%.*]] = trunc <8 x i64> [[TMP0]] to <8 x i1>
-; CHECK-NEXT:    [[TMP2:%.*]] = mul <8 x i1> [[TMP1]], zeroinitializer
+; CHECK-NEXT:    [[CONV12_1_I:%.*]] = trunc i64 [[AND_1_I]] to i32
+; CHECK-NEXT:    [[MUL_I_1_I:%.*]] = mul i32 [[CONV12_1_I]], 0
+; CHECK-NEXT:    [[CONV12_I:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_I:%.*]] = mul i32 [[CONV12_I]], 0
+; CHECK-NEXT:    [[CONV12_297_I:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_298_I:%.*]] = mul i32 [[CONV12_297_I]], 0
+; CHECK-NEXT:    [[CONV12_1_2_I:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_1_2_I:%.*]] = mul i32 [[CONV12_1_2_I]], 0
 ; CHECK-NEXT:    [[AND_1_I_1:%.*]] = and i64 0, 0
-; CHECK-NEXT:    [[TMP3:%.*]] = insertelement <8 x i64> <i64 0, i64 poison, i64 0, i64 0, i64 0, i64 0, i64 0, i64 0>, i64 [[AND_1_I_1]], i32 1
-; CHECK-NEXT:    [[TMP4:%.*]] = trunc <8 x i64> [[TMP3]] to <8 x i1>
-; CHECK-NEXT:    [[TMP5:%.*]] = mul <8 x i1> [[TMP4]], zeroinitializer
-; CHECK-NEXT:    [[TMP6:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[TMP5]])
+; CHECK-NEXT:    [[CONV12_1_I_1:%.*]] = trunc i64 [[AND_1_I_1]] to i32
+; CHECK-NEXT:    [[MUL_I_1_I_1:%.*]] = mul i32 [[CONV12_1_I_1]], 0
+; CHECK-NEXT:    [[CONV12_I_1:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_I_1:%.*]] = mul i32 [[CONV12_I_1]], 0
+; CHECK-NEXT:    [[CONV12_297_I_1:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_298_I_1:%.*]] = mul i32 [[CONV12_297_I_1]], 0
+; CHECK-NEXT:    [[CONV12_1_2_I_1:%.*]] = trunc i64 0 to i32
+; CHECK-NEXT:    [[MUL_I_1_2_I_1:%.*]] = mul i32 [[CONV12_1_2_I_1]], 0
+; CHECK-NEXT:    [[TMP6:%.*]] = call i1 @llvm.vector.reduce.or.v4i1(<4 x i1> zeroinitializer)
 ; CHECK-NEXT:    [[TMP7:%.*]] = zext i1 [[TMP6]] to i32
-; CHECK-NEXT:    [[TMP8:%.*]] = call i1 @llvm.vector.reduce.or.v8i1(<8 x i1> [[TMP2]])
+; CHECK-NEXT:    [[TMP8:%.*]] = call i1 @llvm.vector.reduce.or.v4i1(<4 x i1> zeroinitializer)
 ; CHECK-NEXT:    [[TMP9:%.*]] = zext i1 [[TMP8]] to i32
 ; CHECK-NEXT:    [[OP_RDX:%.*]] = or i32 [[TMP7]], [[TMP9]]
-; CHECK-NEXT:    [[TMP10:%.*]] = and i32 [[OP_RDX]], 0
+; CHECK-NEXT:    [[OP_RDX1:%.*]] = or i32 [[OP_RDX]], [[MUL_I_I_1]]
+; CHECK-NEXT:    [[OP_RDX2:%.*]] = or i32 [[MUL_I_1_I_1]], [[MUL_I_298_I_1]]
+; CHECK-NEXT:    [[OP_RDX3:%.*]] = or i32 [[MUL_I_1_2_I_1]], [[MUL_I_I]]
+; CHECK-NEXT:    [[OP_RDX4:%.*]] = or i32 [[MUL_I_1_I]], [[MUL_I_298_I]]
+; CHECK-NEXT:    [[OP_RDX5:%.*]] = or i32 [[OP_RDX1]], [[OP_RDX2]]
+; CHECK-NEXT:    [[OP_RDX6:%.*]] = or i32 [[OP_RDX3]], [[OP_RDX4]]
+; CHECK-NEXT:    [[OP_RDX7:%.*]] = or i32 [[OP_RDX5]], [[OP_RDX6]]
+; CHECK-NEXT:    [[OP_RDX8:%.*]] = or i32 [[OP_RDX7]], [[MUL_I_1_2_I]]
+; CHECK-NEXT:    [[TMP10:%.*]] = and i32 [[OP_RDX8]], 0
 ; CHECK-NEXT:    store i32 [[TMP10]], ptr null, align 4
 ; CHECK-NEXT:    ret void
 ;
