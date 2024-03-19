@@ -256,6 +256,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setOperationAction(ISD::CONCAT_VECTORS, VT, Custom);
   }
 
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v2i8, Legal);
+  setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::v4i8, Legal);
 
   for (auto VT : {MVT::v2i8, MVT::v2f64,MVT::v2i64,
                   MVT::v4i8, MVT::v4f64, MVT::v4i64,
