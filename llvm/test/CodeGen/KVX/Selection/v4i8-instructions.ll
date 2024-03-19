@@ -956,16 +956,13 @@ define <4 x i8> @test_insertelement3(<4 x i8> %a, i8 %x) #0 {
 define <4 x i8> @test_insertelement(<4 x i8> %a, i8 %x, i64 %p) #0 {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    andd $r2 = $r2, 3
-; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    sllw $r2 = $r2, 3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sw 28[$r12] = $r0
-; ALL-NEXT:    addd $r0 = $r12, 28
+; ALL-NEXT:    rorw $r0 = $r0, $r2
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sb $r2[$r0] = $r1
+; ALL-NEXT:    insf $r0 = $r1, 7, 0
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lwz $r0 = 28[$r12]
-; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    rolw $r0 = $r0, $r2
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %i = insertelement <4 x i8> %a, i8 %x, i64 %p
