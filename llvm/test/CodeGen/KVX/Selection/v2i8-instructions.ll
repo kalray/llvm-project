@@ -716,16 +716,14 @@ define <2 x i8> @test_insertelement1(<2 x i8> %a, i8 %x) #0 {
 define <2 x i8> @test_insertelement(<2 x i8> %a, i8 %x, i64 %p) #0 {
 ; ALL-LABEL: test_insertelement:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    andd $r2 = $r2, 1
-; ALL-NEXT:    addd $r12 = $r12, -32
+; ALL-NEXT:    insf $r0 = $r1, 15, 8
+; ALL-NEXT:    copyd $r3 = $r0
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sh 30[$r12] = $r0
-; ALL-NEXT:    addd $r0 = $r12, 30
+; ALL-NEXT:    insf $r3 = $r1, 7, 0
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sb $r2[$r0] = $r1
+; ALL-NEXT:    cmoved.even $r0 ? $r3 = $r2
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lhz $r0 = 30[$r12]
-; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    copyd $r0 = $r3
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 3)
   %i = insertelement <2 x i8> %a, i8 %x, i64 %p

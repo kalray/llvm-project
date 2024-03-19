@@ -2670,3 +2670,24 @@ def : Pat <(v1024i1 (int_kvx_xcopyv v1024i1:$op0, shufflev_no)),
            (COPY $op0)>;
 }
 
+foreach i = 0...1 in
+  def : Pat <(v2i8 (vector_insert v2i8:$v, i32:$e, (i64 i))),
+              (INSF SingleReg:$v, SingleReg:$e, !add(!mul(i, 8), 7), !mul(i, 8))>;
+
+foreach i = 0...3 in
+  def : Pat <(v4i8 (vector_insert v4i8:$v, i32:$e, (i64 i))),
+              (INSF SingleReg:$v, SingleReg:$e, !add(!mul(i, 8), 7), !mul(i, 8))>;
+
+def : Pat <(v2i8 (vector_insert v2i8:$v, i32:$e, i64:$p)),
+            (CMOVEDrr
+              (INSF SingleReg:$v, SingleReg:$e, 15, 8),
+              (INSF SingleReg:$v, SingleReg:$e, 7, 0),
+              SingleReg:$p, scalarcond_even)>;
+
+def : Pat <(v4i8 (vector_insert v4i8:$v, i32:$e, i64:$p)),
+            (ROLWrr
+              (INSF
+                (RORWrr SingleReg:$v,
+                  (SLLWri SingleReg:$p, 3)), SingleReg:$e, 7, 0),
+              (SLLWri SingleReg:$p, 3))>;
+
