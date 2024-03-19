@@ -305,7 +305,7 @@ static bool expandALOAD(unsigned int Opcode, const KVXInstrInfo *TII,
   // NOTE: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
-  uint64_t MOSize = MO.getSize();
+  uint64_t MOSize = MO.getSize().toRaw();
 
   if (!MO.isAtomic()) {
     MBBI->print(errs());
@@ -688,7 +688,7 @@ static bool expandACMPSWAP(const KVXInstrInfo *TII, MachineBasicBlock &MBB,
   // FIXME: Some instructions can have more than 1 MemOperand. We assume that
   // the first one is the right one.
   MachineMemOperand &MO = *MI.memoperands()[0];
-  uint64_t MOSize = MO.getSize();
+  uint64_t MOSize = MO.getSize().toRaw();
   const auto MemMode = isGlobalAddrspace(MO.getAddrSpace())
                            ? KVXMOD::COHERENCY_G
                            : KVXMOD::COHERENCY_;
