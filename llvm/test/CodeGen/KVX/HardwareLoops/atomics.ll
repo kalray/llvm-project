@@ -14,7 +14,7 @@ define void @set(ptr %x, i32 %num) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CV1-NEXT:    make $r1 = 0
-; CV1-NEXT:    make $r2 = 4
+; CV1-NEXT:    addd $r2 = $r12, 28
 ; CV1-NEXT:    make $r3 = 16
 ; CV1-NEXT:    zxwd $r4 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -24,23 +24,26 @@ define void @set(ptr %x, i32 %num) {
 ; CV1-NEXT:    # =>This Loop Header: Depth=1
 ; CV1-NEXT:    # Child Loop BB0_3 Depth 2
 ; CV1-NEXT:    sw 28[$r12] = $r1
+; CV1-NEXT:    copyd $r5 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_3: # %for.body
+; CV1-NEXT:  .LBB0_3: # %atomicrmw.start
 ; CV1-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CV1-NEXT:    # => This Inner Loop Header: Depth=2
-; CV1-NEXT:    lwz.u $r7 = 28[$r12]
+; CV1-NEXT:    addw $r4 = $r5, -4
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfw $r6 = $r2, $r7
+; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapw 0[$r2] = $r6r7
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    lwz.u $r4 = 0[$r2]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapw 28[$r12] = $r6r7
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cmoved.even $r6 ? $r5 = $r4
 ; CV1-NEXT:    cb.even $r6 ? .LBB0_3
-; CV1-NEXT:    ;;
-; CV1-NEXT:  # %bb.4: # %for.body
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:  # %bb.4: # %atomicrmw.end
 ; CV1-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CV1-NEXT:    sw.xs $r1[$r0] = $r3
 ; CV1-NEXT:    addd $r1 = $r1, 1
-; CV1-NEXT:    copyw $r4 = $r7
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .__LOOPDO_0_END_:
 ; CV1-NEXT:  .LBB0_5: # %for.cond.cleanup
@@ -55,7 +58,7 @@ define void @set(ptr %x, i32 %num) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CV2-NEXT:    make $r1 = 0
-; CV2-NEXT:    make $r2 = 4
+; CV2-NEXT:    addd $r2 = $r12, 28
 ; CV2-NEXT:    make $r3 = 16
 ; CV2-NEXT:    zxwd $r4 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -65,23 +68,24 @@ define void @set(ptr %x, i32 %num) {
 ; CV2-NEXT:    # =>This Loop Header: Depth=1
 ; CV2-NEXT:    # Child Loop BB0_3 Depth 2
 ; CV2-NEXT:    sw 28[$r12] = $r1
+; CV2-NEXT:    copyd $r5 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_3: # %for.body
+; CV2-NEXT:  .LBB0_3: # %atomicrmw.start
 ; CV2-NEXT:    # Parent Loop BB0_2 Depth=1
 ; CV2-NEXT:    # => This Inner Loop Header: Depth=2
-; CV2-NEXT:    lwz.u $r7 = 28[$r12]
+; CV2-NEXT:    addw $r4 = $r5, -4
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sbfw $r6 = $r2, $r7
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapw $r6, 28[$r12] = $r6r7
+; CV2-NEXT:    acswapw.v $r4, [$r2] = $r4r5
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    copyd $r5 = $r4
+; CV2-NEXT:    compw.eq $r6 = $r4, $r5
 ; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r6 ? .LBB0_3
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  # %bb.4: # %for.body
+; CV2-NEXT:  # %bb.4: # %atomicrmw.end
 ; CV2-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CV2-NEXT:    sw.xs $r1[$r0] = $r3
 ; CV2-NEXT:    addd $r1 = $r1, 1
-; CV2-NEXT:    copyw $r4 = $r7
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .__LOOPDO_0_END_:
 ; CV2-NEXT:  .LBB0_5: # %for.cond.cleanup

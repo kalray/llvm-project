@@ -69,13 +69,6 @@ public:
 
   SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
-  bool shouldInsertFencesForAtomic(const Instruction *I) const override;
-
-  Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
-                                AtomicOrdering Ord) const override;
-  Instruction *emitTrailingFence(IRBuilderBase &Builder, Instruction *Inst,
-                                 AtomicOrdering Ord) const override;
-
   TargetLoweringBase::LegalizeTypeAction
   getPreferredVectorAction(MVT VT) const override;
 
@@ -175,7 +168,6 @@ private:
 
   SDValue lowerIntToFP(SDValue Op, SelectionDAG &DAG) const;
   SDValue lowerATOMIC_FENCE(SDValue Op, SelectionDAG &DAG) const;
-  SDValue lowerATOMIC_LOAD_OP(SDValue Op, SelectionDAG &DAG) const;
 
   bool IsEligibleForTailCallOptimization(
       CCState &CCInfo, CallLoweringInfo &CLI, MachineFunction &MF,
@@ -300,6 +292,17 @@ private:
   }
 
   bool isUsedByReturnOnly(SDNode *, SDValue & /*Chain*/) const override;
+
+  // Control extending atomics operations  at IR level:
+  bool shouldInsertFencesForAtomic(const Instruction *I) const override;
+
+  Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
+                                AtomicOrdering Ord) const override;
+  Instruction *emitTrailingFence(IRBuilderBase &Builder, Instruction *Inst,
+                                 AtomicOrdering Ord) const override;
+
+  AtomicExpansionKind
+  shouldExpandAtomicRMWInIR(AtomicRMWInst *RMW) const override;
 };
 
 } // namespace llvm

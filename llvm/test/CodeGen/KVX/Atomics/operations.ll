@@ -27,31 +27,40 @@ define i64 @signal_fence(i64 %0) {
 define i64 @atomicrmw_i64_xchg(ptr %ptr, i64 %c, i64 %s) {
 ; CV1-LABEL: atomicrmw_i64_xchg:
 ; CV1:         fence
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB2_1:
 ; CV1-NEXT:    copyd $r2 = $r1
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
+; CV1-NEXT:    ld $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:  .LBB2_1:
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ld.u $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cb.even $r2 ? .LBB2_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r1
+; CV1-NEXT:    cb.even $r4 ? .LBB2_1
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: atomicrmw_i64_xchg:
 ; CV2:         fence
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB2_1:
 ; CV2-NEXT:    copyd $r2 = $r1
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    cb.even $r2 ? .LBB2_1
+; CV2-NEXT:    ld $r1 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:  .LBB2_1:
+; CV2-NEXT:    copyd $r3 = $r1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    acswapd.v $r1, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compd.eq $r3 = $r1, $r3
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    cb.even $r3 ? .LBB2_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xchg ptr %ptr, i64 %c release
@@ -60,28 +69,37 @@ define i64 @atomicrmw_i64_xchg(ptr %ptr, i64 %c, i64 %s) {
 
 define i32 @atomicrmw_i32_xchg(ptr %ptr, i32 %c, i32 %s) {
 ; CV1-LABEL: atomicrmw_i32_xchg:
-; CV1:       .LBB3_1:
-; CV1-NEXT:    copyw $r2 = $r1
-; CV1-NEXT:    lwz.u $r3 = 0[$r0]
+; CV1:         copyd $r2 = $r1
+; CV1-NEXT:    lwz $r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapw 0[$r0] = $r2r3
+; CV1-NEXT:  .LBB3_1:
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    acswapw 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    lwz.u $r1 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    cb.even $r2 ? .LBB3_1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    copyw $r0 = $r3
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r1
+; CV1-NEXT:    cb.even $r4 ? .LBB3_1
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: atomicrmw_i32_xchg:
-; CV2:       .LBB3_1:
-; CV2-NEXT:    copyw $r2 = $r1
-; CV2-NEXT:    lwz.u $r3 = 0[$r0]
+; CV2:         lwz $r1 = 0[$r0]
+; CV2-NEXT:    copyd $r2 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    cb.even $r2 ? .LBB3_1
+; CV2-NEXT:  .LBB3_1:
+; CV2-NEXT:    copyd $r3 = $r1
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    acswapw.v $r1, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compw.eq $r3 = $r1, $r3
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    cb.even $r3 ? .LBB3_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyw $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r1
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xchg ptr %ptr, i32 %c monotonic
@@ -95,67 +113,80 @@ define i64 @atomicrmw_i64_xchg_as(ptr addrspace(1) %ptr, i64 %c, i64 %s) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sd 24[$r12] = $r16
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sq 8[$r12] = $r18r19
-; CV1-NEXT:    make $r0 = 5
-; CV1-NEXT:    copyd $r18 = $r1
-; CV1-NEXT:    copyd $r19 = $r0
-; CV1-NEXT:    call __kvx_atomic_global_in
+; CV1-NEXT:    sq 8[$r12] = $r20r21
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:  .LBB4_1:
-; CV1-NEXT:    copyd $r0 = $r18
-; CV1-NEXT:    ld.u $r1 = 0[$r19]
+; CV1-NEXT:    sd 0[$r12] = $r18
+; CV1-NEXT:    make $r0 = 5
+; CV1-NEXT:    copyd $r18 = $r0
+; CV1-NEXT:    copyd $r20 = $r1
+; CV1-NEXT:    call __kvx_atomic_global_in
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld $r21 = 0[$r18]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 0[$r19] = $r0r1
+; CV1-NEXT:  .LBB4_1:
+; CV1-NEXT:    copyq $r0r1 = $r20, $r21
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    acswapd 0[$r18] = $r0r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ld.u $r1 = 0[$r18]
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cb.even $r0 ? .LBB4_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r0 ? $r21 = $r1
+; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    make $r0 = 5
-; CV1-NEXT:    copyd $r18 = $r1
 ; CV1-NEXT:    call __kvx_atomic_global_out
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lq $r18r19 = 8[$r12]
-; CV1-NEXT:    copyd $r0 = $r18
+; CV1-NEXT:    copyd $r0 = $r21
+; CV1-NEXT:    ld $r18 = 0[$r12]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ld $r16 = 24[$r12]
+; CV1-NEXT:    lq $r20r21 = 8[$r12]
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ld $r16 = 24[$r12]
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    set $ra = $r16
 ; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: atomicrmw_i64_xchg_as:
-; CV2:         addd $r12 = $r12, -32
+; CV2:         addd $r12 = $r12, -64
 ; CV2-NEXT:    get $r16 = $ra
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    sd 24[$r12] = $r16
+; CV2-NEXT:    sd 56[$r12] = $r16
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sq 8[$r12] = $r18r19
+; CV2-NEXT:    sq 40[$r12] = $r20r21
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    sq 24[$r12] = $r18r19
 ; CV2-NEXT:    make $r0 = 5
-; CV2-NEXT:    copyd $r18 = $r1
-; CV2-NEXT:    copyd $r19 = $r0
+; CV2-NEXT:    copyd $r18 = $r0
+; CV2-NEXT:    copyd $r20 = $r1
 ; CV2-NEXT:    call __kvx_atomic_global_in
-; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:  .LBB4_1:
-; CV2-NEXT:    copyd $r0 = $r18
-; CV2-NEXT:    ld.u $r1 = 0[$r19]
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ld $r19 = 0[$r18]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd.g $r0, [$r19] = $r0r1
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:  .LBB4_1:
+; CV2-NEXT:    copyd $r21 = $r19
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    acswapd.v.g $r19, [$r18] = $r20r21
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compd.eq $r0 = $r19, $r21
+; CV2-NEXT:    ;; # (end cycle 4)
 ; CV2-NEXT:    cb.even $r0 ? .LBB4_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    make $r0 = 5
-; CV2-NEXT:    copyd $r18 = $r1
 ; CV2-NEXT:    call __kvx_atomic_global_out
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lq $r18r19 = 8[$r12]
-; CV2-NEXT:    copyd $r0 = $r18
+; CV2-NEXT:    lq $r18r19 = 24[$r12]
+; CV2-NEXT:    copyd $r0 = $r19
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ld $r16 = 24[$r12]
+; CV2-NEXT:    lq $r20r21 = 40[$r12]
 ; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ld $r16 = 56[$r12]
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    set $ra = $r16
-; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    addd $r12 = $r12, 64
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %res = atomicrmw xchg ptr addrspace(1) %ptr, i64 %c seq_cst
@@ -165,63 +196,78 @@ define i64 @atomicrmw_i64_xchg_as(ptr addrspace(1) %ptr, i64 %c, i64 %s) {
 define i8 @atomic_test_and_set(ptr %ptr) {
 ; CV1-LABEL: atomic_test_and_set:
 ; CV1:         fence
-; CV1-NEXT:    make $r1 = 1
-; CV1-NEXT:    andd $r3 = $r0, 3
+; CV1-NEXT:    andd $r0 = $r0, -4
+; CV1-NEXT:    andw $r1 = $r0, 3
+; CV1-NEXT:    make $r2 = 255
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    slld $r3 = $r3, 3
-; CV1-NEXT:    sbfd $r7 = $r3, 0
+; CV1-NEXT:    sllw $r1 = $r1, 3
+; CV1-NEXT:    make $r3 = 1
+; CV1-NEXT:    lwz $r5 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB5_1:
-; CV1-NEXT:    lwz.u $r5 = $r7[$r0]
-; CV1-NEXT:    sllw $r6 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    srlw $r2 = $r5, $r3
-; CV1-NEXT:    iorw $r4 = $r5, $r6
+; CV1-NEXT:    sllw $r2 = $r2, $r1
+; CV1-NEXT:    sllw $r3 = $r3, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    notw $r2 = $r2
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    andw $r2 = $r2, 255
+; CV1-NEXT:  .LBB5_1:
+; CV1-NEXT:    andw $r4 = $r5, $r2
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    iorw $r4 = $r4, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapw 0[$r0] = $r6r7
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    lwz.u $r4 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.wnez $r2 ? .LBB5_3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    acswapw $r7[$r0] = $r4r5
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    cb.even $r4 ? .LBB5_1
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB5_3:
+; CV1-NEXT:    cmoved.even $r6 ? $r5 = $r4
+; CV1-NEXT:    cb.even $r6 ? .LBB5_1
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    fence
-; CV1-NEXT:    compw.ne $r0 = $r2, 0
-; CV1-NEXT:    ret
+; CV1-NEXT:    srlw $r0 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    zxbd $r0 = $r0
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    compw.ne $r0 = $r0, 0
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: atomic_test_and_set:
 ; CV2:         fence
-; CV2-NEXT:    make $r1 = 1
-; CV2-NEXT:    andd $r3 = $r0, 3
+; CV2-NEXT:    andd $r0 = $r0, -4
+; CV2-NEXT:    andw $r1 = $r0, 3
+; CV2-NEXT:    make $r2 = 255
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    slld $r3 = $r3, 3
-; CV2-NEXT:    sbfd $r7 = $r3, 0
+; CV2-NEXT:    sllw $r1 = $r1, 3
+; CV2-NEXT:    make $r3 = 1
+; CV2-NEXT:    lwz $r4 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    addd $r0 = $r0, $r7
+; CV2-NEXT:    sllw $r2 = $r2, $r1
+; CV2-NEXT:    sllw $r3 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:  .LBB5_1:
-; CV2-NEXT:    lwz.u $r5 = 0[$r0]
-; CV2-NEXT:    sllw $r6 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlw $r2 = $r5, $r3
-; CV2-NEXT:    iorw $r4 = $r5, $r6
+; CV2-NEXT:    notw $r2 = $r2
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    andw $r2 = $r2, 255
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.wnez $r2 ? .LBB5_3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
+; CV2-NEXT:  .LBB5_1:
+; CV2-NEXT:    copyd $r5 = $r4
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    cb.even $r4 ? .LBB5_1
+; CV2-NEXT:    andw $r4 = $r5, $r2
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    cb.even $r5 ? .LBB5_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB5_3:
 ; CV2-NEXT:    fence
-; CV2-NEXT:    compw.ne $r0 = $r2, 0
-; CV2-NEXT:    ret
+; CV2-NEXT:    srlw $r0 = $r4, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    zxbd $r0 = $r0
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    compw.ne $r0 = $r0, 0
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 2)
   %res = atomicrmw xchg ptr %ptr, i8 1 seq_cst
   %tobool = icmp ne i8 %res, 0
   %conv = zext i1 %tobool to i8
@@ -233,57 +279,27 @@ define i8 @atomic_test_and_set(ptr %ptr) {
 define i64 @cmpxchg_i64(ptr %ptr, i64 %c, i64 %s) {
 ; CV1-LABEL: cmpxchg_i64:
 ; CV1:         fence
-; CV1-NEXT:    copyd $r5 = $r1
+; CV1-NEXT:    copyd $r3 = $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB6_1:
-; CV1-NEXT:    copyd $r4 = $r2
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r4 ? .LBB6_3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r4 = $r3, $r5
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r0 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r4 ? .LBB6_1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB6_4
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB6_3:
-; CV1-NEXT:    copyd $r3 = $r5
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB6_4:
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r0
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ;; # (end cycle 7)
 ;
 ; CV2-LABEL: cmpxchg_i64:
 ; CV2:         fence
-; CV2-NEXT:    copyd $r5 = $r1
+; CV2-NEXT:    copyd $r3 = $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB6_1:
-; CV2-NEXT:    copyd $r4 = $r2
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r4, [$r0] = $r4r5
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r4 ? .LBB6_3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r4 = $r3, $r5
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r4 ? .LBB6_1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB6_4
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB6_3:
-; CV2-NEXT:    copyd $r3 = $r5
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB6_4:
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    acswapd.v $r0, [$r0] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ;; # (end cycle 1)
   %cx = cmpxchg ptr %ptr, i64 %c, i64 %s seq_cst seq_cst
   %res = extractvalue { i64, i1 } %cx, 0
   ret i64 %res
@@ -391,22 +407,88 @@ entry:
 
 ; Tests for atomic rmw operations
 define i8 @atomicrmw_i8_min(ptr %src, i8 %b) {
-; CHECK-LABEL: atomicrmw_i8_min:
-; CHECK:         addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call __sync_fetch_and_min_1
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fence
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CV1-LABEL: atomicrmw_i8_min:
+; CV1:         fence
+; CV1-NEXT:    andd $r0 = $r0, -4
+; CV1-NEXT:    andw $r2 = $r0, 3
+; CV1-NEXT:    make $r3 = 255
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    sxbd $r1 = $r1
+; CV1-NEXT:    sllw $r2 = $r2, 3
+; CV1-NEXT:    lwz $r5 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    sllw $r3 = $r3, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    notw $r3 = $r3
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:  .LBB12_1:
+; CV1-NEXT:    srlw $r4 = $r5, $r2
+; CV1-NEXT:    andw $r6 = $r5, $r3
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    sxbd $r4 = $r4
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    minw $r4 = $r4, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    zxbd $r4 = $r4
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    sllw $r4 = $r4, $r2
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    iorw $r4 = $r6, $r4
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    acswapw 0[$r0] = $r6r7
+; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    lwz.u $r4 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 8)
+; CV1-NEXT:    cmoved.even $r6 ? $r5 = $r4
+; CV1-NEXT:    cb.even $r6 ? .LBB12_1
+; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    fence
+; CV1-NEXT:    srlw $r0 = $r5, $r2
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 0)
+;
+; CV2-LABEL: atomicrmw_i8_min:
+; CV2:         fence
+; CV2-NEXT:    andd $r0 = $r0, -4
+; CV2-NEXT:    andw $r2 = $r0, 3
+; CV2-NEXT:    make $r3 = 255
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    sxbd $r1 = $r1
+; CV2-NEXT:    sllw $r2 = $r2, 3
+; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    sllw $r3 = $r3, $r2
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    notw $r3 = $r3
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:  .LBB12_1:
+; CV2-NEXT:    copyd $r5 = $r4
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    srlw $r4 = $r5, $r2
+; CV2-NEXT:    andw $r6 = $r5, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    sxbd $r4 = $r4
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    minw $r4 = $r4, $r1
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    zxbd $r4 = $r4
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    sllw $r4 = $r4, $r2
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    iorw $r4 = $r6, $r4
+; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    ;; # (end cycle 7)
+; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    ;; # (end cycle 10)
+; CV2-NEXT:    cb.even $r5 ? .LBB12_1
+; CV2-NEXT:    ;;
+; CV2-NEXT:    fence
+; CV2-NEXT:    srlw $r0 = $r4, $r2
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw min ptr %src, i8 %b seq_cst
   ret i8 %res
 }
@@ -415,15 +497,20 @@ define i64 @atomicrmw_i64_max(ptr %src, i64 %b) {
 ; CV1-LABEL: atomicrmw_i64_max:
 ; CV1:         fence
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB13_1:
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
+; CV1-NEXT:    maxd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    maxd $r2 = $r1, $r3
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r2 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB13_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB13_1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    fence
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
@@ -432,17 +519,21 @@ define i64 @atomicrmw_i64_max(ptr %src, i64 %b) {
 ; CV2-LABEL: atomicrmw_i64_max:
 ; CV2:         fence
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r2 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB13_1:
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    maxd $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB13_1
+; CV2-NEXT:    maxd $r2 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r3 ? .LBB13_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw max ptr %src, i64 %b seq_cst
@@ -453,15 +544,20 @@ define i64 @atomicrmw_i64_add(ptr %src, i64 %b) {
 ; CV1-LABEL: atomicrmw_i64_add:
 ; CV1:         fence
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB14_1:
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
+; CV1-NEXT:    addd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addd $r2 = $r1, $r3
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r2 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB14_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB14_1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -469,16 +565,20 @@ define i64 @atomicrmw_i64_add(ptr %src, i64 %b) {
 ; CV2-LABEL: atomicrmw_i64_add:
 ; CV2:         fence
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r2 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB14_1:
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addd $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB14_1
+; CV2-NEXT:    addd $r2 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r3 ? .LBB14_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw add ptr %src, i64 %b release
@@ -489,15 +589,20 @@ define i64 @atomicrmw_i64_sub(ptr %src, i64 %b) {
 ; CV1-LABEL: atomicrmw_i64_sub:
 ; CV1:         fence
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB15_1:
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    sbfd $r2 = $r1, $r3
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r2 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB15_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB15_1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -505,16 +610,20 @@ define i64 @atomicrmw_i64_sub(ptr %src, i64 %b) {
 ; CV2-LABEL: atomicrmw_i64_sub:
 ; CV2:         fence
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r2 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB15_1:
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbfd $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB15_1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r3 ? .LBB15_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw sub ptr %src, i64 %b release
@@ -525,15 +634,20 @@ define i64 @atomicrmw_i64_nand(ptr %src, i64 %b) {
 ; CV1-LABEL: atomicrmw_i64_nand:
 ; CV1:         fence
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB16_1:
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
+; CV1-NEXT:    nandd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    nandd $r2 = $r1, $r3
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r2 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB16_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB16_1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
@@ -541,16 +655,20 @@ define i64 @atomicrmw_i64_nand(ptr %src, i64 %b) {
 ; CV2-LABEL: atomicrmw_i64_nand:
 ; CV2:         fence
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r2 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB16_1:
-; CV2-NEXT:    ld.u $r3 = 0[$r0]
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    nandd $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB16_1
+; CV2-NEXT:    nandd $r2 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r3 ? .LBB16_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw nand ptr %src, i64 %b release
@@ -561,32 +679,41 @@ define i32 @atomicrmw_i32_xor(ptr %src, i32 %b) {
 ; CV1-LABEL: atomicrmw_i32_xor:
 ; CV1:         fence
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    lwz $r3 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB17_1:
-; CV1-NEXT:    lwz.u $r3 = 0[$r0]
+; CV1-NEXT:    eorw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    eorw $r2 = $r1, $r3
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapw 0[$r0] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    lwz.u $r2 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapw 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB17_1
-; CV1-NEXT:    ;;
-; CV1-NEXT:    copyw $r0 = $r3
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB17_1
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: atomicrmw_i32_xor:
 ; CV2:         fence
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    lwz $r2 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB17_1:
-; CV2-NEXT:    lwz.u $r3 = 0[$r0]
+; CV2-NEXT:    copyd $r3 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    eorw $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapw $r2, [$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB17_1
+; CV2-NEXT:    eorw $r2 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw.v $r2, [$r0] = $r2r3
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compw.eq $r3 = $r2, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r3 ? .LBB17_1
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    copyw $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %res = atomicrmw xor ptr %src, i32 %b release
@@ -596,38 +723,46 @@ define i32 @atomicrmw_i32_xor(ptr %src, i32 %b) {
 ; Test for __global OpenCL AS
 define i64 @atomicrmw_i64_sub_global_as(ptr addrspace(1)%src, i64 %b) {
 ; CV1-LABEL: atomicrmw_i64_sub_global_as:
-; CV1:         addd $r12 = $r12, -32
+; CV1:         addd $r12 = $r12, -64
 ; CV1-NEXT:    get $r16 = $ra
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sd 24[$r12] = $r16
+; CV1-NEXT:    sd 56[$r12] = $r16
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    sq 8[$r12] = $r18r19
+; CV1-NEXT:    sq 40[$r12] = $r20r21
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    sq 24[$r12] = $r18r19
 ; CV1-NEXT:    make $r0 = 3
 ; CV1-NEXT:    copyd $r18 = $r1
 ; CV1-NEXT:    copyd $r19 = $r0
 ; CV1-NEXT:    call __kvx_atomic_global_in
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:  .LBB18_1:
-; CV1-NEXT:    ld.u $r1 = 0[$r19]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    sbfd $r0 = $r18, $r1
 ; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld $r21 = 0[$r19]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:  .LBB18_1:
+; CV1-NEXT:    sbfd $r20 = $r18, $r21
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyq $r0r1 = $r20, $r21
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r19] = $r0r1
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r1 = 0[$r19]
+; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cb.even $r0 ? .LBB18_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r0 ? $r21 = $r1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    make $r0 = 3
-; CV1-NEXT:    copyd $r18 = $r1
 ; CV1-NEXT:    call __kvx_atomic_global_out
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lq $r18r19 = 8[$r12]
-; CV1-NEXT:    copyd $r0 = $r18
+; CV1-NEXT:    lq $r18r19 = 24[$r12]
+; CV1-NEXT:    copyd $r0 = $r21
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    ld $r16 = 24[$r12]
+; CV1-NEXT:    lq $r20r21 = 40[$r12]
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ld $r16 = 56[$r12]
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    set $ra = $r16
-; CV1-NEXT:    addd $r12 = $r12, 32
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    addd $r12 = $r12, 64
+; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
@@ -637,33 +772,40 @@ define i64 @atomicrmw_i64_sub_global_as(ptr addrspace(1)%src, i64 %b) {
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sd 24[$r12] = $r16
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    sq 8[$r12] = $r18r19
+; CV2-NEXT:    sd 16[$r12] = $r20
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    sq 0[$r12] = $r18r19
 ; CV2-NEXT:    make $r0 = 3
 ; CV2-NEXT:    copyd $r18 = $r1
 ; CV2-NEXT:    copyd $r19 = $r0
 ; CV2-NEXT:    call __kvx_atomic_global_in
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 3)
+; CV2-NEXT:    ld $r20 = 0[$r19]
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB18_1:
-; CV2-NEXT:    ld.u $r1 = 0[$r19]
+; CV2-NEXT:    copyd $r1 = $r20
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sbfd $r0 = $r18, $r1
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd.g $r0, [$r19] = $r0r1
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v.g $r20, [$r19] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r20, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    cb.even $r0 ? .LBB18_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    make $r0 = 3
-; CV2-NEXT:    copyd $r18 = $r1
 ; CV2-NEXT:    call __kvx_atomic_global_out
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lq $r18r19 = 8[$r12]
-; CV2-NEXT:    copyd $r0 = $r18
+; CV2-NEXT:    lq $r18r19 = 0[$r12]
+; CV2-NEXT:    copyd $r0 = $r20
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    ld $r16 = 24[$r12]
+; CV2-NEXT:    ld $r20 = 16[$r12]
 ; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ld $r16 = 24[$r12]
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    set $ra = $r16
 ; CV2-NEXT:    addd $r12 = $r12, 32
-; CV2-NEXT:    ;; # (end cycle 6)
+; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %res = atomicrmw sub ptr addrspace(1)%src, i64 %b release
@@ -675,17 +817,22 @@ define i64 @atomicrmw_i64_sub_global_as(ptr addrspace(1)%src, i64 %b) {
 define i64 @bigimm(ptr %0, i64 %1) {
 ; CV1-LABEL: bigimm:
 ; CV1:         fence
-; CV1-NEXT:    addd $r0 = $r0, 0x40000000000
+; CV1-NEXT:    make $r4 = 0x40000000000
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    ld $r3 = 0x40000000000[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB19_1:
-; CV1-NEXT:    ld.u $r3 = 0[$r0]
+; CV1-NEXT:    addd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addd $r2 = $r1, $r3
+; CV1-NEXT:    copyq $r6r7 = $r2, $r3
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd $r4[$r0] = $r6r7
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r2 = $r4[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    acswapd 0[$r0] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cb.even $r2 ? .LBB19_1
-; CV1-NEXT:    ;;
+; CV1-NEXT:    cmoved.even $r6 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r6 ? .LBB19_1
+; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    fence
 ; CV1-NEXT:    copyd $r0 = $r3
 ; CV1-NEXT:    ret
@@ -693,18 +840,23 @@ define i64 @bigimm(ptr %0, i64 %1) {
 ;
 ; CV2-LABEL: bigimm:
 ; CV2:         fence
+; CV2-NEXT:    make $r3 = 0x40000000000
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    ld $r2 = 0x40000000000[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB19_1:
-; CV2-NEXT:    ld.u $r3 = 0x40000000000[$r0]
+; CV2-NEXT:    copyd $r5 = $r2
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addd $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    acswapd $r2, 0x40000000000[$r0] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r2 ? .LBB19_1
+; CV2-NEXT:    addd $r4 = $r5, $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r2, $r3[$r0] = $r4r5
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r4 = $r2, $r5
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.even $r4 ? .LBB19_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    copyd $r0 = $r2
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)
   %3 = getelementptr inbounds i64, ptr %0, i64 549755813888

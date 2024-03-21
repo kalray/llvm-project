@@ -69,7 +69,6 @@ static kmp_int32 __kmp_set_stack_info(int gtid, kmp_info_t *th) {
 }
 
 static void *__kmp_launch_worker(void *thr) {
-  void *volatile padding = 0;
   int gtid;
 
   gtid = ((kmp_info_t *)thr)->th.th_info.ds.ds_gtid;
@@ -77,10 +76,6 @@ static void *__kmp_launch_worker(void *thr) {
 #ifdef KMP_TDATA_GTID
   __kmp_gtid = gtid;
 #endif
-
-  if (__kmp_stkoffset > 0 && gtid > 0) {
-    padding = KMP_ALLOCA(gtid * __kmp_stkoffset);
-  }
 
   KMP_MB();
   __kmp_set_stack_info(gtid, (kmp_info_t *)thr);
