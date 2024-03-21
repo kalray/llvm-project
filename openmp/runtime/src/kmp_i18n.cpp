@@ -783,10 +783,10 @@ static char *sys_error(int err) {
   */
 
 // KVX newlib, which contains strerror_r, is currently compiled for GNU.
-#if (defined(__GLIBC__) && defined(_GNU_SOURCE)) ||                            \
-    (defined(__BIONIC__) && defined(_GNU_SOURCE) &&                            \
-     __ANDROID_API__ >= __ANDROID_API_M__) ||                                  \
-    KMP_OS_CLUSTER_OS
+#if ((defined(__GLIBC__) && defined(_GNU_SOURCE)) ||                           \
+     (defined(__BIONIC__) && defined(_GNU_SOURCE) &&                            \
+     __ANDROID_API__ >= __ANDROID_API_M__) ||                                 \
+     KMP_OS_CLUSTER_OS)
   // GNU version of strerror_r.
 
   char buffer[2048];

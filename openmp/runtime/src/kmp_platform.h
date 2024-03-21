@@ -86,6 +86,8 @@
 #if (defined _AIX)
 #undef KMP_OS_AIX
 #define KMP_OS_AIX 1
+#endif
+
 #if (defined __CLUSTER_OS__)
 #undef KMP_OS_CLUSTER_OS
 #define KMP_OS_CLUSTER_OS 1
