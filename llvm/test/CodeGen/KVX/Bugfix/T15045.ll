@@ -19,492 +19,222 @@ target triple = "kvx-kalray-cos"
 define void @_Z1av() {
 ; CV1-LABEL: _Z1av:
 ; CV1:         fence
-; CV1-NEXT:    make $r0 = 0
+; CV1-NEXT:    make $r1 = 0
 ; CV1-NEXT:    addd $r12 = $r12, -32
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyd $r3 = $r0
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    addd $r2 = $r12, 24
 ; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld.u $r0 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB0_1:
-; CV1-NEXT:    copyd $r2 = $r0
+; CV1-NEXT:    ld $r0 = 0[$r1]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
+; CV1-NEXT:    copyd $r0 = $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_3
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
+; CV1-NEXT:    fence
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_1
+; CV1-NEXT:    ld.u $r3 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cb.odd $r4 ? .LBB0_9
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_4
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_3:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_4:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_5:
-; CV1-NEXT:    ld $r1 = 0[$r0]
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ld $r3 = 0[$r1]
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_6:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_8
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r0 = 0[$r2]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_6
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_9
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_8:
-; CV1-NEXT:    copyd $r1 = $r3
+; CV1-NEXT:    ld $r0 = 0[$r1]
 ; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    fence
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld.u $r3 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ld $r3 = 0[$r1]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fence
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r0 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r0 = 0[$r1]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    fence
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld.u $r3 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ld $r3 = 0[$r1]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fence
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r0 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    ld $r0 = 0[$r1]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    copyd $r0 = $r1
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    fence
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ld.u $r3 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    cb.dnez $r4 ? .LBB0_9
+; CV1-NEXT:    ;;
+; CV1-NEXT:    copyq $r4r5 = $r0, $r1
+; CV1-NEXT:    ld $r3 = 0[$r1]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    fence
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    acswapd 0[$r2] = $r4r5
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ld.u $r0 = 0[$r2]
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    cb.deqz $r4 ? .LBB0_1
+; CV1-NEXT:    ;;
 ; CV1-NEXT:  .LBB0_9:
-; CV1-NEXT:    compd.eq $r1 = $r1, 0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compw.ne $r1 = $r1, 1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.even $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_11:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_13
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_11
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_14
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_13:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_14:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_16:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_18
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_16
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_19
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_18:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_19:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_21:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_23
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_21
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_24
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_23:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_24:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_26:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_28
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_26
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_29
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_28:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_29:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_31:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_33
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_31
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_34
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_33:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_34:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_36:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_38
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_36
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_39
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_38:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_39:
-; CV1-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld $r1 = 0[$r0]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    fence
-; CV1-NEXT:    copyd $r3 = $r0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:  .LBB0_41:
-; CV1-NEXT:    copyd $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    acswapd 24[$r12] = $r2r3
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_43
-; CV1-NEXT:    ;;
-; CV1-NEXT:    ld.u $r1 = 24[$r12]
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.eq $r2 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cb.odd $r2 ? .LBB0_41
-; CV1-NEXT:    ;;
-; CV1-NEXT:    goto .LBB0_44
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_43:
-; CV1-NEXT:    copyd $r1 = $r3
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:  .LBB0_44:
-; CV1-NEXT:    cb.dnez $r1 ? .LBB0_5
-; CV1-NEXT:    ;;
-; CV1-NEXT:  .LBB0_45:
 ; CV1-NEXT:    addd $r12 = $r12, 32
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: _Z1av:
 ; CV2:         fence
-; CV2-NEXT:    make $r0 = 0
+; CV2-NEXT:    make $r1 = 0
 ; CV2-NEXT:    addd $r12 = $r12, -32
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    copyd $r3 = $r0
+; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    addd $r2 = $r12, 24
 ; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r0, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB0_1:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_3
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_1
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_4
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_3:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_4:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_5:
-; CV2-NEXT:    ld $r1 = 0[$r0]
+; CV2-NEXT:    ld $r0 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
+; CV2-NEXT:    copyd $r0 = $r1
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_6:
-; CV2-NEXT:    copyd $r2 = $r0
+; CV2-NEXT:    acswapd.v $r3, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.odd $r3 ? .LBB0_9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
+; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_8
+; CV2-NEXT:    acswapd.v $r0, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
+; CV2-NEXT:    ld $r0 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_6
+; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r3, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
 ; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_9
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_8:
-; CV2-NEXT:    copyd $r1 = $r3
+; CV2-NEXT:    ld $r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r0, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r0 = 0[$r1]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r3, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r3 = 0[$r1]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r0, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r0 = 0[$r1]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
+; CV2-NEXT:    copyd $r0 = $r1
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r3, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r3 = $r3, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
+; CV2-NEXT:    ;;
+; CV2-NEXT:    ld $r3 = 0[$r1]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    fence
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapd.v $r0, [$r2] = $r0r1
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    compd.eq $r0 = $r0, $r1
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    cb.deqz $r0 ? .LBB0_1
+; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB0_9:
-; CV2-NEXT:    compd.eq $r1 = $r1, 0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compw.ne $r1 = $r1, 1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.even $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_11:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_13
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_11
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_14
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_13:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_14:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_16:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_18
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_16
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_19
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_18:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_19:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_21:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_23
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_21
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_24
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_23:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_24:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_26:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_28
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_26
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_29
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_28:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_29:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_31:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_33
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_31
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_34
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_33:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_34:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_36:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_38
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_36
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_39
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_38:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_39:
-; CV2-NEXT:    cb.deqz $r1 ? .LBB0_45
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld $r1 = 0[$r0]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    fence
-; CV2-NEXT:    copyd $r3 = $r0
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:  .LBB0_41:
-; CV2-NEXT:    copyd $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, 24[$r12] = $r2r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_43
-; CV2-NEXT:    ;;
-; CV2-NEXT:    ld.u $r1 = 24[$r12]
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.odd $r2 ? .LBB0_41
-; CV2-NEXT:    ;;
-; CV2-NEXT:    goto .LBB0_44
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_43:
-; CV2-NEXT:    copyd $r1 = $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:  .LBB0_44:
-; CV2-NEXT:    cb.dnez $r1 ? .LBB0_5
-; CV2-NEXT:    ;;
-; CV2-NEXT:  .LBB0_45:
 ; CV2-NEXT:    addd $r12 = $r12, 32
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;; # (end cycle 0)

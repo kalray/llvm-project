@@ -31,6 +31,10 @@ using namespace llvm;
 
 #define DEBUG_TYPE "KVXISelLowering"
 
+#define KVX_DEBUG_P(X)                                                         \
+  LLVM_DEBUG(dbgs() << __FILE__ << "::" << __LINE__ << "|" << __FUNCTION__     \
+                    << ": " << X << ".\n")
+
 STATISTIC(NumTailCalls, "Number of tail calls");
 
 static cl::opt<int> MinimumJumpTablesEntries(
@@ -884,23 +888,8 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::EXTRACT_VECTOR_ELT, MVT::v8f16, Legal);
   setOperationAction(ISD::SELECT, MVT::v8f16, Custom);
 
-  // NOTE: We could use ACSWAPW instruction with some shifts and masks to
-  // support custom lowering of i8 and i16 operations. See ASWAPp for i8.
-  for (auto VT : {MVT::i32, MVT::i64}) {
-    setOperationAction(ISD::ATOMIC_LOAD_ADD, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_SUB, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_AND, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_CLR, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_OR, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_XOR, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_NAND, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_MIN, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_MAX, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_UMIN, VT, Custom);
-    setOperationAction(ISD::ATOMIC_LOAD_UMAX, VT, Custom);
-    // ATOMIC_SWAP is and AtomicRMW operation with XCHG operator.
-    setOperationAction(ISD::ATOMIC_SWAP, VT, Custom);
-  }
+  for (auto VT : {MVT::i32, MVT::i64})
+    setOperationAction(ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS, VT, Custom);
 
   for (auto VT : {MVT::v8f32, MVT::v8i32, MVT::v16f16, MVT::v16i16, MVT::v32i8,
                   MVT::v8i16, MVT::v16i8})
@@ -1534,6 +1523,221 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   return Chain;
 }
 
+static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
+  // ATOMIC_CMP_SWAP_WITH_SUCCESS results in 2 values:
+  //  Val, Success, OUTCHAIN
+  ///     = ATOMIC_CMP_SWAP_WITH_SUCCESS(INCHAIN, ptr, cmp, swap)
+  // In CV1 we obtain that by doing:
+  // (let $r0 $r1 be inputs {new, expected})
+  // (let $r0 $r1 be outputs {val, success})
+  // acswap? $rXrY, [$rZ] = $r0r1 # Do compareExchange
+  // ;;
+  // l?.u $rA = [$rZ]            # Load new value of memory
+  // ;;
+  // copyd $r1 = $r0              # Copy success/failure to output
+  // cmoved.even $rY ? $r0 = $rA  # If failed, copy the new memory value
+
+  const EVT VT = N->getValueType(0);
+  const unsigned Is64bits = (VT.getFixedSizeInBits() == 64) ? 1 : 0;
+
+  SDLoc DL(N);
+  assert((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 64) &&
+         " Bad cmpSwap size for lowering.");
+  static const unsigned Opcodes[2][4] = {
+      {KVX::ACSWAPWri10, KVX::ACSWAPWri37, KVX::ACSWAPWri64, KVX::ACSWAPWrr},
+      {KVX::ACSWAPDri10, KVX::ACSWAPDri37, KVX::ACSWAPDri64, KVX::ACSWAPDrr}};
+  static const unsigned LoadOpcodes[2][4] = {
+      {KVX::LWZri10, KVX::LWZri37, KVX::LWZri64, KVX::LWZrr},
+      {KVX::LDri10, KVX::LDri37, KVX::LDri64, KVX::LDrr}};
+
+  SmallVector<SDValue, 4> LoadArgs;
+  unsigned Opcode, LoadOpcode;
+  SDValue Ptr = N->getBasePtr();
+  SDValue DoScale = SDValue();
+  if (!(Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr))) {
+    LoadArgs.push_back(Dag.getConstant(0, DL, MVT::i64, true));
+    LoadArgs.push_back(Ptr);
+    Opcode = Opcodes[Is64bits][0];
+    LoadOpcode = LoadOpcodes[Is64bits][0];
+  } else if (!isa<ConstantSDNode>(Ptr.getOperand(1))) {
+    Opcode = Opcodes[Is64bits][3];
+    LoadOpcode = LoadOpcodes[Is64bits][3];
+    SDValue Offset = Ptr.getOperand(1);
+    unsigned Scale = KVXMOD::DOSCALE_;
+    if (Offset.getOpcode() == ISD::SHL) {
+      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
+        auto Shl =
+            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
+        if (1 << Shl == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
+          Scale = KVXMOD::DOSCALE_XS;
+          Offset = Offset->getOperand(0);
+        }
+      }
+    } else if (Offset.getOpcode() == ISD::MUL) {
+      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
+        auto Mul =
+            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
+        if (Mul == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
+          Scale = KVXMOD::DOSCALE_XS;
+          Offset = Offset->getOperand(0);
+        }
+      }
+    }
+    DoScale = Dag.getConstant(Scale, DL, MVT::i32, true);
+    LoadArgs.push_back(Offset);
+    LoadArgs.push_back(Ptr.getOperand(0));
+  } else {
+    const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
+    unsigned Pos = isInt<10>(V) ? 0 : isInt<37>(V) ? 1 : 2;
+    Opcode = Opcodes[Is64bits][Pos];
+    LoadOpcode = LoadOpcodes[Is64bits][Pos];
+    LoadArgs.push_back(Ptr.getOperand(1));
+    LoadArgs.push_back(Ptr.getOperand(0));
+  }
+  SDValue Swap = N->getOperand(N->getNumOperands() - 1);
+  SDValue Cmp = N->getOperand(N->getNumOperands() - 2);
+  EVT DoubleVT(MVT::v2i64);
+  SDValue SubIdx0 = Dag.getTargetConstant(KVX::sub_d0, DL, MVT::i32);
+  SDValue SubIdx1 = Dag.getTargetConstant(KVX::sub_d1, DL, MVT::i32);
+  SDValue ValExpected = SDValue(
+      Dag.getMachineNode(
+          TargetOpcode::REG_SEQUENCE, DL, DoubleVT,
+          {Dag.getTargetConstant(KVX::PairedRegRegClassID, DL, MVT::i64), Cmp,
+           SubIdx1, Swap, SubIdx0}),
+      0);
+
+  SmallVector<SDValue, 4> SwapArgs = LoadArgs;
+  SwapArgs.push_back(ValExpected);
+  if (DoScale)
+    SwapArgs.push_back(DoScale);
+  // Add chain operand.
+  SwapArgs.push_back(N->getChain());
+  auto *ACPSW =
+      Dag.getMachineNode(Opcode, DL, {DoubleVT, MVT::Other}, SwapArgs);
+
+  // Uncached load.
+  LoadArgs.push_back(Dag.getTargetConstant(KVXMOD::VARIANT_U, DL, MVT::i32));
+  if (DoScale)
+    LoadArgs.push_back(DoScale);
+
+  SDValue Updated =
+      SDValue(Dag.getMachineNode(TargetOpcode::EXTRACT_SUBREG, DL, VT,
+                                 {SDValue(ACPSW, 0), SubIdx0}),
+              0);
+
+  LoadArgs.push_back(SDValue(ACPSW, 1)); // Get the chain from the swap.
+  auto *LoadNode =
+      Dag.getMachineNode(LoadOpcode, DL, {VT, MVT::Other}, LoadArgs);
+  SDValue Load(LoadNode, 0);
+  SDValue TokenChain(LoadNode, 1);
+
+  SDValue CMove(
+      Dag.getMachineNode(
+          KVX::CMOVEDrr, DL, VT,
+          {Updated, Cmp, Load,
+           Dag.getTargetConstant(KVXMOD::SCALARCOND_EVEN, DL, MVT::i32)}),
+      0);
+  SmallVector<SDValue, 3> TokenArgs = {CMove, Updated, TokenChain};
+  auto Token = Dag.getMergeValues(TokenArgs, DL);
+  return Token;
+}
+
+static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
+  // ATOMIC_CMP_SWAP_WITH_SUCCESS results in 2 values:
+  // {MemoryValue, Succsessfully swapped}
+  // In CV2 we obtain that by doing:
+  // (let $rX rY be inputs {new, expected})
+  // (let $r0 $r1 be outputs)
+  // acswap?.v $r0, [$rZ] = $rXrY # Do compareExchange, returning value
+  // ;;
+  // cmp.?eq $r1 = $r0, $rY
+
+  // TODO: Support 128 bit swaps
+  // const EVT VT = N->getValueType(0);
+  // assert ((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 128)
+  // && " Bad cmpSwap size for lowering.");
+  static const unsigned Opcodes[2][3] = {
+      {KVX::ACSWAPWri27, KVX::ACSWAPWri54, KVX::ACSWAPWr},
+      {KVX::ACSWAPDri27, KVX::ACSWAPDri54, KVX::ACSWAPDr},
+      // {KVX::ACSWAPQri27, KVX::ACSWAPQri54, KVX::ACSWAPQr} TODO: Support 128
+      // bit swaps
+  };
+  const EVT VT = N->getValueType(0);
+  const unsigned Is64bits = (VT.getFixedSizeInBits() == 64) ? 1 : 0;
+
+  SDLoc DL(N);
+  assert((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 64) &&
+         " Bad cmpSwap size for lowering.");
+
+  SmallVector<SDValue, 4> LoadArgs;
+  unsigned Opcode;
+  SDValue Ptr = N->getBasePtr();
+  if ((Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr)) &&
+      (isa<ConstantSDNode>(Ptr.getOperand(1))) &&
+      isInt<54>(cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue())) {
+    const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
+    unsigned Pos = isInt<27>(V) ? 0 : 1;
+    Opcode = Opcodes[Is64bits][Pos];
+    LoadArgs.push_back(Ptr.getOperand(1));
+    LoadArgs.push_back(Ptr.getOperand(0));
+  } else { // r variant
+    Opcode = Opcodes[Is64bits][2];
+    LoadArgs.push_back(Ptr);
+  }
+
+  SDValue Swap = N->getOperand(N->getNumOperands() - 1);
+  SDValue Cmp = N->getOperand(N->getNumOperands() - 2);
+  EVT DoubleVT(MVT::v2i64);
+  SDValue SubIdx0 = Dag.getTargetConstant(KVX::sub_d0, DL, MVT::i32);
+  SDValue SubIdx1 = Dag.getTargetConstant(KVX::sub_d1, DL, MVT::i32);
+  SDValue ValExpected = SDValue(
+      Dag.getMachineNode(
+          TargetOpcode::REG_SEQUENCE, DL, DoubleVT,
+          {Dag.getTargetConstant(KVX::PairedRegRegClassID, DL, MVT::i64), Cmp,
+           SubIdx1, Swap, SubIdx0}),
+      0);
+
+  const auto COHERENCY = (N->getAddressSpace() == KVX::AS_OCL_GLOBAL)
+                             ? KVXMOD::COHERENCY_G
+                             : KVXMOD::COHERENCY_;
+  SmallVector<SDValue, 4> SwapArgs = LoadArgs;
+  SwapArgs.push_back(ValExpected);
+  SwapArgs.push_back(Dag.getTargetConstant(KVXMOD::BOOLCAS_V, DL, MVT::i32));
+  SwapArgs.push_back(Dag.getTargetConstant(COHERENCY, DL, MVT::i32));
+  // Add chain operand.
+  SwapArgs.push_back(N->getChain());
+  auto *ACPSW = Dag.getMachineNode(Opcode, DL, {VT, MVT::Other}, SwapArgs);
+
+  const auto COMP = Is64bits ? KVX::COMPDrr : KVX::COMPWrr;
+
+  auto *CMP = Dag.getMachineNode(
+      COMP, DL, VT,
+      {SDValue(ACPSW, 0), Cmp,
+       Dag.getTargetConstant((uint64_t)(KVX::ComparisonMod::EQ), DL,
+                             MVT::i32)});
+
+  SmallVector<SDValue, 3> TokenArgs = {SDValue(ACPSW, 0), SDValue(CMP, 0),
+                                       SDValue(ACPSW, 1)};
+  auto Token = Dag.getMergeValues(TokenArgs, DL);
+  return Token;
+}
+
+static SDValue lowerATOMIC_CMP_SWAP_W_S(const SDValue &N, SelectionDAG &Dag,
+                                        const bool IsV1) {
+  auto VT = N->getValueType(0);
+  if (!VT.isSimple() || VT.getFixedSizeInBits() < 32 ||
+      VT.getFixedSizeInBits() > 64)
+    return SDValue();
+
+  const AtomicSDNode *Node = dyn_cast<const AtomicSDNode>(N.getNode());
+  if (!Node)
+    return SDValue();
+
+  if (IsV1)
+    return buildCV1CmpSwap(Node, Dag);
+  return buildCV2CmpSwap(Node, Dag);
+}
+
 SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   const unsigned Opcode = Op.getOpcode();
   switch (Opcode) {
@@ -1634,20 +1838,8 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
     return lowerIntToFP(Op, DAG);
   case ISD::ATOMIC_FENCE:
     return lowerATOMIC_FENCE(Op, DAG);
-  case ISD::ATOMIC_LOAD_ADD:
-  case ISD::ATOMIC_LOAD_SUB:
-  case ISD::ATOMIC_LOAD_AND:
-  case ISD::ATOMIC_LOAD_CLR:
-  case ISD::ATOMIC_LOAD_OR:
-  case ISD::ATOMIC_LOAD_XOR:
-  case ISD::ATOMIC_LOAD_NAND:
-  case ISD::ATOMIC_LOAD_MIN:
-  case ISD::ATOMIC_LOAD_MAX:
-  case ISD::ATOMIC_LOAD_UMIN:
-  case ISD::ATOMIC_LOAD_UMAX:
-    // ATOMIC_SWAP can be seen as an ATOMIC_LOAD_XCHG.
-  case ISD::ATOMIC_SWAP:
-    return lowerATOMIC_LOAD_OP(Op, DAG);
+  case ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS:
+    return lowerATOMIC_CMP_SWAP_W_S(Op, DAG, Subtarget.isV1());
   case ISD::ADDRSPACECAST:
     return lowerADDRSPACECAST(Op, DAG);
   case ISD::FDIV: {
@@ -1882,6 +2074,12 @@ SDValue KVXTargetLowering::lowerStackCheckAlloca(SDValue Op,
 
   SDValue Ops[2] = {NewSP, Chain};
   return DAG.getMergeValues(Ops, DL);
+}
+
+TargetLowering::AtomicExpansionKind
+KVXTargetLowering::shouldExpandAtomicRMWInIR(AtomicRMWInst *RMW) const {
+  KVX_DEBUG_P(*RMW);
+  return AtomicExpansionKind::CmpXChg;
 }
 
 bool KVXTargetLowering::shouldInsertFencesForAtomic(
@@ -2840,6 +3038,11 @@ SDValue KVXTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
     }
   }
 
+  if (LHS->getOpcode() == ISD::ATOMIC_CMP_SWAP_WITH_SUCCESS) {
+    EmitComp = false;
+    CBCond = DAG.getConstant(KVXMOD::SCALARCOND_EVEN, DL, ModVT);
+  }
+
   if (EmitComp) {
     LHS = DAG.getNode(KVXISD::COMP, DL, Type, LHS, RHS, CompCond);
     CBCond = DAG.getConstant(KVXMOD::SCALARCOND_ODD, DL, ModVT);
@@ -2908,30 +3111,6 @@ SDValue KVXTargetLowering::lowerATOMIC_FENCE(SDValue Op,
 
   // Fallback: do not emit anything.
   return DAG.getUNDEF(MVT::Other);
-}
-
-SDValue KVXTargetLowering::lowerATOMIC_LOAD_OP(SDValue Op,
-                                               SelectionDAG &DAG) const {
-  EVT MemVT = cast<AtomicSDNode>(Op)->getMemoryVT();
-  MVT LoadVT = MemVT.getSimpleVT();
-
-  switch (LoadVT.SimpleTy) {
-  default:
-    break;
-    // Expand all atomic_load operations to libcall for i8 and i16.
-  case MVT::i8:
-    // Except for ATOMIC_SWAP in order to support __atomic_test_and_set.
-    if (Op.getOpcode() == ISD::ATOMIC_SWAP)
-      return Op;
-    LLVM_FALLTHROUGH;
-  case MVT::i16:
-    RTLIB::Libcall LC = RTLIB::getSYNC(Op.getOpcode(), LoadVT);
-    SmallVector<SDValue, 2> Ops(Op->op_begin() + 1, Op->op_end());
-    MakeLibCallOptions CallOptions;
-    return makeLibCall(DAG, LC, MVT::i32, Ops, CallOptions, SDLoc(Op)).first;
-  }
-
-  return Op;
 }
 
 static SDValue combineSETCC(SDNode *N, SelectionDAG &DAG) {
