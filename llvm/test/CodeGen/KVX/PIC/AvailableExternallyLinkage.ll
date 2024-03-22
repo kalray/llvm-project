@@ -26,7 +26,7 @@ define linkonce_odr void @_ZNSt9exceptionC2ERKS_(i32 (...) *** %addr) unnamed_ad
 ; CHECK-NEXT:    sd 0[$r0] = $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 5)
-  store i32 (...)** bitcast (ptr getelementptr inbounds ({ [5 x ptr ] }, { [5 x ptr ] }* @_ZTVSt9exception, i64 0, inrange i32 0, i64 2) to i32 (...)**), i32 (...)*** %addr, align 8
+  store i32 (...)** bitcast (ptr getelementptr inbounds ({ [5 x ptr ] }, { [5 x ptr ] }* @_ZTVSt9exception, i64 0, i32 0, i64 2) to i32 (...)**), i32 (...)*** %addr, align 8
   ret void
 }
 
