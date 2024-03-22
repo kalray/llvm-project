@@ -1355,7 +1355,7 @@ define i32 @predicated_or_dominates_reduction(ptr %b) {
 ; CHECK-NEXT:    [[TMP43:%.*]] = phi <4 x i32> [ [[TMP37]], [[PRED_LOAD_CONTINUE4]] ], [ [[TMP42]], [[PRED_LOAD_IF5]] ]
 ; CHECK-NEXT:    [[TMP44:%.*]] = icmp ne <4 x i32> [[TMP43]], zeroinitializer
 ; CHECK-NEXT:    [[TMP46:%.*]] = xor <4 x i1> [[TMP19]], <i1 true, i1 true, i1 true, i1 true>
-; CHECK-NEXT:    [[TMP47:%.*]] = or <4 x i1> [[TMP45]], [[TMP46]]
+; CHECK-NEXT:    [[TMP47:%.*]] = select <4 x i1> [[TMP46]], <4 x i1> <i1 true, i1 true, i1 true, i1 true>, <4 x i1> [[TMP44]]
 ; CHECK-NEXT:    [[TMP48:%.*]] = zext <4 x i1> [[TMP47]] to <4 x i32>
 ; CHECK-NEXT:    [[TMP49:%.*]] = call i32 @llvm.vector.reduce.add.v4i32(<4 x i32> [[TMP48]])
 ; CHECK-NEXT:    [[TMP50]] = add i32 [[TMP49]], [[VEC_PHI]]
