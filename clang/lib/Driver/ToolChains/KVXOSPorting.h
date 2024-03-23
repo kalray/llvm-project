@@ -59,6 +59,27 @@ public:
                                  llvm::opt::ArgStringList &CC1Args) const
       override;
 
+  bool useIntegratedAs() const override { return false; }
+  bool isCrossCompiling() const override { return true; }
+  bool IsMathErrnoDefault() const override { return false; }
+  bool SupportsProfiling() const override { return false; }
+  unsigned GetDefaultDwarfVersion() const override { return 5; }
+  /// IsIntegratedAssemblerDefault - Does this tool chain enable -integrated-as
+  /// by default.
+  bool IsIntegratedAssemblerDefault() const override { return false; }
+
+  /// IsIntegratedBackendDefault - Does this tool chain enable
+  /// -fintegrated-objemitter by default.
+  bool IsIntegratedBackendDefault() const override { return false; }
+
+  /// IsIntegratedBackendSupported - Does this tool chain support
+  /// -fintegrated-objemitter.
+  bool IsIntegratedBackendSupported() const override { return false; }
+
+  /// IsNonIntegratedBackendSupported - Does this tool chain support
+  /// -fno-integrated-objemitter.
+  bool IsNonIntegratedBackendSupported() const override { return true; }
+
 protected:
   Tool *buildAssembler() const override;
   Tool *buildLinker() const override;

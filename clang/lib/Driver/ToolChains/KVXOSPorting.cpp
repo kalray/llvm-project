@@ -23,6 +23,25 @@ using namespace clang::driver::toolchains;
 using namespace clang;
 using namespace llvm::opt;
 
+static std::string getSubarchName(const ArgList &Args,
+                                  bool IsIncludePath = false) {
+  std::string March = "kv3-1";
+  const Arg *A = Args.getLastArg(options::OPT_march_EQ);
+  if (A) { // If passed -march to the driver, use that arch
+    std::string ArgMarch = A->getValue();
+    if (ArgMarch.size())
+      March = ArgMarch;
+  }
+
+  if (IsIncludePath) {
+    if (March == "kv3-1")
+      return "/";
+    return (std::string("/") + March);
+  }
+
+  return March;
+}
+
 void kvxosporting::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                            const InputInfo &Output,
                                            const InputInfoList &Inputs,
@@ -30,6 +49,10 @@ void kvxosporting::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                            const char *LinkingOutput) const {
   claimNoWarnArgs(Args);
   ArgStringList CmdArgs;
+
+  std::string March = getSubarchName(Args);
+
+  CmdArgs.push_back(Args.MakeArgString("-march=" + March));
 
   Args.AddAllArgValues(CmdArgs, options::OPT_Wa_COMMA, options::OPT_Xassembler);
 
@@ -39,8 +62,13 @@ void kvxosporting::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
   for (const auto &II : Inputs)
     CmdArgs.push_back(II.getFilename());
 
-  const char *Exec =
-      Args.MakeArgString(getToolChain().GetProgramPath("kvx-elf-as"));
+  const auto AsPath = getToolChain().GetProgramPath("kvx-elf-as");
+  if (AsPath.empty()) {
+    llvm::errs() << "Can't find path for 'kvx-elf-as'\n";
+    C.setContainsError();
+    return;
+  }
+  const char *Exec = Args.MakeArgString(AsPath);
   C.addCommand(std::make_unique<Command>(
       JA, *this, ResponseFileSupport::AtFileCurCP(), Exec, CmdArgs, Inputs));
 }
@@ -57,11 +85,19 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   CmdArgs.push_back(Output.getFilename());
 
   std::string LDPath = getToolChain().GetProgramPath("kvx-elf-ld");
+  if (LDPath.empty()) {
+    llvm::errs() << "Can't find path for 'kvx-elf-ld'\n";
+    C.setContainsError();
+    return;
+  }
   std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
-
+  std::string SYSROOT = llvm::sys::path::parent_path(LDPrefix).str();
+  std::string ARCH = getSubarchName(Args, true);
+  auto DefaultLibPath = SYSROOT + "/kvx-elf/lib" + ARCH + "/";
+  // For not using gcc's crt0.o.
+  // TODO: FIXME: Compile crt0.o for different archs in kvx-llvm/elf folder
   if (!Args.hasArg(options::OPT_nostdlib)) {
-    CmdArgs.push_back(
-        Args.MakeArgString(LDPrefix + "/../kvx-llvm/elf/lib/crt0.o"));
+    CmdArgs.push_back(Args.MakeArgString(DefaultLibPath + "crt0.o"));
   }
 
   for (const auto &II : Inputs)
@@ -69,8 +105,7 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back(II.getFilename());
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
-    CmdArgs.push_back(
-        Args.MakeArgString("-L" + LDPrefix + "/../kvx-llvm/elf/lib"));
+    CmdArgs.push_back(Args.MakeArgString("-L" + DefaultLibPath));
 
     CmdArgs.push_back("-melf64kvx");
     CmdArgs.push_back("-Tbare.ld");
