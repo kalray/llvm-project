@@ -588,8 +588,18 @@ static llvm::Triple computeTargetTriple(const Driver &D,
     }
   }
 
-  if (Target.isOSClusterOS() || Target.isOSKVXOSPorting()) {
-    Target.setVendor(llvm::Triple::Kalray);
+  // OSporting and ClusterOS are kvx exclusive.
+  if (Target.isOSClusterOS() || Target.isOSKVXOSPorting())
+    Target.setArch(llvm::Triple::kvx);
+
+  if (Target.isKVX()) {
+    // We don't support baremetal yet, default to ClusterOS.
+    // See that default kvx target is ClusterOS. If it
+    // arrives here means the user has explicitly set
+    // --target but did not set the OS.
+    if (Target.getOS() == llvm::Triple::UnknownOS)
+      Target.setOS(llvm::Triple::ClusterOS);
+
     StringRef March = "kv3-v1";
     if (Arg *A = Args.getLastArg(options::OPT_march_EQ))
       March = A->getValue();
