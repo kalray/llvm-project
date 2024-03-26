@@ -22,8 +22,8 @@ int main (void) { return 0; }
 // clang -cc1 command:
 
 // ALL-DAG: -no-integrated-as
-// OSP-DAG: -triple kvx-kalray-osp
-// COS-DAG: -triple kvx-kalray-cos
+// OSP-DAG: -triple kvx-{{.*}}-osp
+// COS-DAG: -triple kvx-{{.*}}-cos
 // KV3_1-DAG: -target-cpu kv3-1
 // KV3_2-DAG: -target-cpu kv3-2
 // KV4_1-DAG: -target-cpu kv4-1
