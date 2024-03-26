@@ -1808,8 +1808,9 @@ SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
   SDLoc Loc(Op);
   unsigned TargetInstruction = 0;
   SDValue Op1;
+  auto *CN = dyn_cast<ConstantSDNode>(Op->getOperand(1));
   if (Opcode == ISD::SMUL_LOHI) {
-    if (auto *CN = dyn_cast<ConstantSDNode>(Op->getOperand(1))) {
+    if (CN != nullptr && Subtarget.isV1()) {
       const APInt &AP = CN->getAPIntValue();
       unsigned NB = AP.getMinSignedBits();
       Op1 = DAG.getTargetConstant(AP.getSExtValue(), Loc, MVT::i64);
@@ -1819,7 +1820,7 @@ SDValue KVXTargetLowering::lowerMulExtend(const unsigned Opcode, SDValue Op,
       TargetInstruction = KVX::MULDTrr;
       Op1 = Op.getOperand(1);
     }
-  } else if (auto *CN = dyn_cast<ConstantSDNode>(Op->getOperand(1))) {
+  } else if (CN != nullptr && Subtarget.isV1()) {
     const APInt &AP = CN->getAPIntValue();
     unsigned NB = AP.getMinSignedBits();
     Op1 = DAG.getTargetConstant(AP.getZExtValue(), Loc, MVT::i64);
