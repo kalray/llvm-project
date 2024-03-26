@@ -27065,6 +27065,10 @@ SDValue DAGCombiner::SimplifyVCastOp(SDNode *N, const SDLoc &DL) {
     EVT SrcVT = N0.getValueType();
     EVT SrcEltVT = SrcVT.getVectorElementType();
     SDValue IndexC = DAG.getVectorIdxConstant(Index0, DL);
+    if (!TLI.isTypeLegal(SrcEltVT) && LegalTypes)
+      SrcEltVT =
+          TLI.getTypeToTransformTo(*DAG.getContext(), SrcEltVT.getSimpleVT());
+
     SDValue Elt =
         DAG.getNode(ISD::EXTRACT_VECTOR_ELT, DL, SrcEltVT, Src0, IndexC);
     SDValue ScalarBO = DAG.getNode(Opcode, DL, EltVT, Elt, N->getFlags());
