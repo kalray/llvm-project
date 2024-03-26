@@ -531,6 +531,9 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
                   MVT::v4i64, MVT::v2i8, MVT::v4i8})
     setOperationAction(ISD::SIGN_EXTEND_INREG, VT, Expand);
 
+  for (auto VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8})
+    setOperationAction(ISD::SIGN_EXTEND, VT, Expand);
+
   for (auto VT :
        {MVT::v2i8, MVT::v2f16, MVT::v2i16, MVT::v2i32, MVT::v2i64, MVT::v4i8,
         MVT::v4i16, MVT::v4f32, MVT::v4i32, MVT::v4i64, MVT::v8i8}) {
@@ -1620,10 +1623,10 @@ static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   if (DoScale)
     LoadArgs.push_back(DoScale);
 
-  SDValue Updated =
-      SDValue(Dag.getMachineNode(TargetOpcode::EXTRACT_SUBREG, DL, VT,
-                                 {SDValue(ACPSW, 0), SubIdx0}),
-              0);
+  SDValue Updated = SDValue(Dag.getMachineNode(TargetOpcode::EXTRACT_SUBREG, DL,
+                                               N->getValueType(1),
+                                               {SDValue(ACPSW, 0), SubIdx0}),
+                            0);
 
   LoadArgs.push_back(SDValue(ACPSW, 1)); // Get the chain from the swap.
   auto *LoadNode =
@@ -1711,7 +1714,7 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   const auto COMP = Is64bits ? KVX::COMPDrr : KVX::COMPWrr;
 
   auto *CMP = Dag.getMachineNode(
-      COMP, DL, VT,
+      COMP, DL, N->getValueType(1),
       {SDValue(ACPSW, 0), Cmp,
        Dag.getTargetConstant((uint64_t)(KVX::ComparisonMod::EQ), DL,
                              MVT::i32)});

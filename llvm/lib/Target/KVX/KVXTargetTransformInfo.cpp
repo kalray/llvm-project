@@ -510,7 +510,7 @@ InstructionCost KVXTTIImpl::getVectorInstrCost(unsigned Opcode, Type *Ty,
                                      TTI::TargetCostKind CostKind,
                                      unsigned Index, Value *Op0, Value *Op1) const {
   auto EltSz = Ty->getScalarSizeInBits();
-  if (EltSz == 1) {
+  if (EltSz < 8) {
     LLVM_DEBUG(dbgs() << "Invalid, bit-vector operation\n");
     return InstructionCost::getInvalid();
   }
