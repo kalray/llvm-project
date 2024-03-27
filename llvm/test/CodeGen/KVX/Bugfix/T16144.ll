@@ -284,7 +284,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    lbz $r3 = 19[$r12]
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sllw $r1 = $r1, 3
-; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    lwz $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllw $r2 = $r2, $r1
 ; CV2-NEXT:    ;; # (end cycle 2)
@@ -293,18 +293,17 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  .LBB2_3: # %atomicrmw.start8
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andw $r4 = $r5, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    lwz.u $r6 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    cb.even $r4 ? .LBB2_3
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cb.even $r5 ? .LBB2_3
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB2_13
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB2_4:
@@ -327,25 +326,24 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    sllw $r1 = $r1, 3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllw $r2 = $r2, $r1
-; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    lwz $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    notw $r2 = $r2
 ; CV2-NEXT:    sllw $r3 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  .LBB2_7: # %atomicrmw.start47
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andw $r4 = $r5, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    lwz.u $r6 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    cb.even $r4 ? .LBB2_7
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cb.even $r5 ? .LBB2_7
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB2_13
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB2_8:
@@ -363,25 +361,24 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    sllw $r1 = $r1, 3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllw $r2 = $r2, $r1
-; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    lwz $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    notw $r2 = $r2
 ; CV2-NEXT:    sllw $r3 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  .LBB2_10: # %atomicrmw.start21
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andw $r4 = $r5, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    lwz.u $r6 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    cb.even $r4 ? .LBB2_10
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cb.even $r5 ? .LBB2_10
-; CV2-NEXT:    ;;
 ; CV2-NEXT:    goto .LBB2_16
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB2_11:
@@ -394,28 +391,27 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    sllw $r1 = $r1, 3
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllw $r2 = $r2, $r1
-; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    lwz $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    notw $r2 = $r2
 ; CV2-NEXT:    sllw $r3 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  .LBB2_12: # %atomicrmw.start34
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andw $r4 = $r5, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    lwz.u $r6 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    cb.even $r4 ? .LBB2_12
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cb.even $r5 ? .LBB2_12
-; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB2_13: # %atomicrmw.end46
 ; CV2-NEXT:    fence
-; CV2-NEXT:    srlw $r0 = $r4, $r1
+; CV2-NEXT:    srlw $r0 = $r5, $r1
 ; CV2-NEXT:    goto .LBB2_17
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB2_14:
@@ -425,7 +421,7 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    lbz $r3 = 19[$r12]
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    sllw $r1 = $r1, 3
-; CV2-NEXT:    lwz $r4 = 0[$r0]
+; CV2-NEXT:    lwz $r5 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    sllw $r2 = $r2, $r1
 ; CV2-NEXT:    ;; # (end cycle 2)
@@ -434,20 +430,19 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    ;; # (end cycle 3)
 ; CV2-NEXT:  .LBB2_15: # %atomicrmw.start
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    andw $r4 = $r5, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    iorw $r4 = $r4, $r3
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    acswapw $r4, [$r0] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    acswapw.v $r4, [$r0] = $r4r5
+; CV2-NEXT:    lwz.u $r6 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    compw.eq $r5 = $r4, $r5
+; CV2-NEXT:    cb.even $r4 ? .LBB2_15
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cb.even $r5 ? .LBB2_15
-; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB2_16: # %atomicrmw.end
-; CV2-NEXT:    srlw $r0 = $r4, $r1
+; CV2-NEXT:    srlw $r0 = $r5, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB2_17:
 ; CV2-NEXT:    sb 18[$r12] = $r0

@@ -54,20 +54,20 @@ define void @foo32() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addx4d $r0 = $r1, $r0
 ; CV2-NEXT:    lwz.xs $r3 = $r1[$r0]
+; CV2-NEXT:    addx4d $r4 = $r1, $r0
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:  .LBB0_1: # %atomicrmw.start
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV2-NEXT:    copyd $r2 = $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapw.v $r1, [$r0] = $r2r3
+; CV2-NEXT:    acswapw $r2, [$r4] = $r2r3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    compw.eq $r2 = $r1, $r3
-; CV2-NEXT:    copyd $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    lwz.u $r5 = $r1[$r0]
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r2 ? .LBB0_1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r3 = $r5
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:  # %bb.2: # %atomicrmw.end
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    ret
@@ -123,20 +123,20 @@ define void @foo64() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    addx8d $r0 = $r1, $r0
 ; CV2-NEXT:    ld.xs $r3 = $r1[$r0]
+; CV2-NEXT:    addx8d $r4 = $r1, $r0
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:  .LBB1_1: # %atomicrmw.start
 ; CV2-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV2-NEXT:    copyd $r2 = $r3
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd.v $r1, [$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, [$r4] = $r2r3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    compd.eq $r2 = $r1, $r3
-; CV2-NEXT:    copyd $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    ld.u $r5 = $r1[$r0]
+; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r2 ? .LBB1_1
-; CV2-NEXT:    ;;
+; CV2-NEXT:    cmoved.even $r2 ? $r3 = $r5
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:  # %bb.2: # %atomicrmw.end
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    ret
