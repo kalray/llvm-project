@@ -1,3 +1,4 @@
+// UNSUPPORTED: target=kvx-{{.*}}
 // RUN: %clang_cc1 -emit-llvm -triple %itanium_abi_triple -o - %s | FileCheck %s --check-prefixes=CHECK,CHECKNOOCL
 // RUN: %clang_cc1 -emit-llvm -triple x86_64-windows-msvc -o - %s | FileCheck %s --check-prefixes=WIN,WINNOOCL
 // RUN: %clang_cc1 -cl-std=clc++ -emit-llvm -triple %itanium_abi_triple -o - %s | FileCheck %s --check-prefixes=CHECK,CHECKOCL
