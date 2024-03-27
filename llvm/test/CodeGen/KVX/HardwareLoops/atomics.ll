@@ -75,13 +75,13 @@ define void @set(ptr %x, i32 %num) {
 ; CV2-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV2-NEXT:    addw $r4 = $r5, -4
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapw.v $r4, [$r2] = $r4r5
+; CV2-NEXT:    acswapw $r4, [$r2] = $r4r5
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    copyd $r5 = $r4
-; CV2-NEXT:    compw.eq $r6 = $r4, $r5
-; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cb.even $r6 ? .LBB0_3
-; CV2-NEXT:    ;;
+; CV2-NEXT:    lwz.u $r6 = 0[$r2]
+; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    cb.even $r4 ? .LBB0_3
+; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
+; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:  # %bb.4: # %atomicrmw.end
 ; CV2-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CV2-NEXT:    sw.xs $r1[$r0] = $r3
