@@ -1571,7 +1571,7 @@ static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
       if (isa<ConstantSDNode>(Offset->getOperand(1))) {
         auto Shl =
             cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
-        if (1 << Shl == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
+        if (1u << Shl == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
           Scale = KVXMOD::DOSCALE_XS;
           Offset = Offset->getOperand(0);
         }
@@ -1651,14 +1651,20 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   // In CV2 we obtain that by doing:
   // (let $rX rY be inputs {new, expected})
   // (let $r0 $r1 be outputs)
-  // acswap?.v $r0, [$rZ] = $rXrY # Do compareExchange, returning value
+  // acswap?.b $r1, [$rZ] = $rXrY # Do compareExchange, returning value
   // ;;
-  // cmp.?eq $r1 = $r0, $rY
+  // l?.u $rA = [$rZ]            # Load new value of memory
+  // ;;
+  // cmoved.odd $r1 ? $r0 = $rA  # If failed, copy the new memory value
 
   // TODO: Support 128 bit swaps
   // const EVT VT = N->getValueType(0);
   // assert ((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 128)
   // && " Bad cmpSwap size for lowering.");
+  static const unsigned LoadOpcodes[2][4] = {
+      {KVX::LWZri10, KVX::LWZri37, KVX::LWZri64, KVX::LWZrr},
+      {KVX::LDri10, KVX::LDri37, KVX::LDri64, KVX::LDrr}};
+
   static const unsigned Opcodes[2][3] = {
       {KVX::ACSWAPWri27, KVX::ACSWAPWri54, KVX::ACSWAPWr},
       {KVX::ACSWAPDri27, KVX::ACSWAPDri54, KVX::ACSWAPDr},
@@ -1672,22 +1678,61 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   assert((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 64) &&
          " Bad cmpSwap size for lowering.");
 
-  SmallVector<SDValue, 4> LoadArgs;
-  unsigned Opcode;
+  SmallVector<SDValue, 4> SwapArgs, LoadArgs;
+  unsigned Opcode, LoadOpcode;
   SDValue Ptr = N->getBasePtr();
+  SDValue DoScale = SDValue();
+
   if ((Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr)) &&
       (isa<ConstantSDNode>(Ptr.getOperand(1))) &&
       isInt<54>(cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue())) {
     const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
     unsigned Pos = isInt<27>(V) ? 0 : 1;
     Opcode = Opcodes[Is64bits][Pos];
-    LoadArgs.push_back(Ptr.getOperand(1));
-    LoadArgs.push_back(Ptr.getOperand(0));
+    SwapArgs.push_back(Ptr.getOperand(1));
+    SwapArgs.push_back(Ptr.getOperand(0));
   } else { // r variant
     Opcode = Opcodes[Is64bits][2];
-    LoadArgs.push_back(Ptr);
+    SwapArgs.push_back(Ptr);
   }
 
+  if (!(Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr))) {
+    LoadArgs.push_back(Dag.getConstant(0, DL, MVT::i64, true));
+    LoadArgs.push_back(Ptr);
+    LoadOpcode = LoadOpcodes[Is64bits][0];
+  } else if (!isa<ConstantSDNode>(Ptr.getOperand(1))) {
+    LoadOpcode = LoadOpcodes[Is64bits][2];
+    SDValue Offset = Ptr.getOperand(1);
+    unsigned Scale = KVXMOD::DOSCALE_;
+    if (Offset.getOpcode() == ISD::SHL) {
+      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
+        auto Shl =
+            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
+        if (1u << Shl == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
+          Scale = KVXMOD::DOSCALE_XS;
+          Offset = Offset->getOperand(0);
+        }
+      }
+    } else if (Offset.getOpcode() == ISD::MUL) {
+      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
+        auto Mul =
+            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
+        if (Mul == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
+          Scale = KVXMOD::DOSCALE_XS;
+          Offset = Offset->getOperand(0);
+        }
+      }
+    }
+    DoScale = Dag.getConstant(Scale, DL, MVT::i32, true);
+    LoadArgs.push_back(Offset);
+    LoadArgs.push_back(Ptr.getOperand(0));
+  } else {
+    const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
+    unsigned Pos = isInt<10>(V) ? 0 : isInt<37>(V) ? 1 : 2;
+    LoadOpcode = LoadOpcodes[Is64bits][Pos];
+    LoadArgs.push_back(Ptr.getOperand(1));
+    LoadArgs.push_back(Ptr.getOperand(0));
+  }
   SDValue Swap = N->getOperand(N->getNumOperands() - 1);
   SDValue Cmp = N->getOperand(N->getNumOperands() - 2);
   EVT DoubleVT(MVT::v2i64);
@@ -1703,24 +1748,34 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   const auto COHERENCY = (N->getAddressSpace() == KVX::AS_OCL_GLOBAL)
                              ? KVXMOD::COHERENCY_G
                              : KVXMOD::COHERENCY_;
-  SmallVector<SDValue, 4> SwapArgs = LoadArgs;
+
   SwapArgs.push_back(ValExpected);
-  SwapArgs.push_back(Dag.getTargetConstant(KVXMOD::BOOLCAS_V, DL, MVT::i32));
+  SwapArgs.push_back(Dag.getTargetConstant(KVXMOD::BOOLCAS_, DL, MVT::i32));
   SwapArgs.push_back(Dag.getTargetConstant(COHERENCY, DL, MVT::i32));
   // Add chain operand.
   SwapArgs.push_back(N->getChain());
   auto *ACPSW = Dag.getMachineNode(Opcode, DL, {VT, MVT::Other}, SwapArgs);
 
-  const auto COMP = Is64bits ? KVX::COMPDrr : KVX::COMPWrr;
+  // Uncached load.
+  LoadArgs.push_back(Dag.getTargetConstant(KVXMOD::VARIANT_U, DL, MVT::i32));
+  if (DoScale)
+    LoadArgs.push_back(DoScale);
 
-  auto *CMP = Dag.getMachineNode(
-      COMP, DL, N->getValueType(1),
-      {SDValue(ACPSW, 0), Cmp,
-       Dag.getTargetConstant((uint64_t)(KVX::ComparisonMod::EQ), DL,
-                             MVT::i32)});
+  SDValue Updated(SDValue(ACPSW, 0));
 
-  SmallVector<SDValue, 3> TokenArgs = {SDValue(ACPSW, 0), SDValue(CMP, 0),
-                                       SDValue(ACPSW, 1)};
+  LoadArgs.push_back(SDValue(ACPSW, 1)); // Get the chain from the swap.
+  auto *LoadNode =
+      Dag.getMachineNode(LoadOpcode, DL, {VT, MVT::Other}, LoadArgs);
+  SDValue Load(LoadNode, 0);
+  SDValue TokenChain(LoadNode, 1);
+
+  SDValue CMove(
+      Dag.getMachineNode(
+          KVX::CMOVEDrr, DL, VT,
+          {Updated, Cmp, Load,
+           Dag.getTargetConstant(KVXMOD::SCALARCOND_EVEN, DL, MVT::i32)}),
+      0);
+  SmallVector<SDValue, 3> TokenArgs = {CMove, Updated, TokenChain};
   auto Token = Dag.getMergeValues(TokenArgs, DL);
   return Token;
 }
@@ -2126,10 +2181,7 @@ Instruction *KVXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
     return L2Bypass;
   } // Emit a fence.
   switch (Ord) {
-  case AtomicOrdering::NotAtomic:
-  case AtomicOrdering::Unordered:
-  case AtomicOrdering::Monotonic:
-  case AtomicOrdering::Acquire:
+  default:
     return nullptr; // Nothing to do
   case AtomicOrdering::SequentiallyConsistent:
   case AtomicOrdering::Release:
@@ -2173,10 +2225,7 @@ Instruction *KVXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
     return L2Bypass;
   } // Emit a fence.
   switch (Ord) {
-  case AtomicOrdering::NotAtomic:
-  case AtomicOrdering::Unordered:
-  case AtomicOrdering::Monotonic:
-  case AtomicOrdering::Release:
+  default:
     return nullptr; // Nothing to do
   case AtomicOrdering::Acquire:
   case AtomicOrdering::AcquireRelease:
