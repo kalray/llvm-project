@@ -5298,9 +5298,15 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
         // If the argument doesn't match, perform a bitcast to coerce it.  This
         // can happen due to trivial type mismatches.
         if (FirstIRArg < IRFuncTy->getNumParams() &&
-            V->getType() != IRFuncTy->getParamType(FirstIRArg))
-          V = Builder.CreateBitCast(V, IRFuncTy->getParamType(FirstIRArg));
-
+            V->getType() != IRFuncTy->getParamType(FirstIRArg)) {
+          if (auto VT = V->getType(), OVT = IRFuncTy->getParamType(FirstIRArg);
+              VT->isPointerTy() && OVT->isPointerTy() &&
+              VT->getPointerAddressSpace() != OVT->getPointerAddressSpace())
+            V = Builder.CreateAddrSpaceCast(V,
+                                            IRFuncTy->getParamType(FirstIRArg));
+          else
+            V = Builder.CreateBitCast(V, IRFuncTy->getParamType(FirstIRArg));
+        }
         if (ArgHasMaybeUndefAttr)
           V = Builder.CreateFreeze(V);
         IRCallArgs[FirstIRArg] = V;
