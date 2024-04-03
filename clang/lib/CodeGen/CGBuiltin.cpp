@@ -62,6 +62,7 @@
 #include "llvm/Support/ConvertUTF.h"
 #include "llvm/Support/MathExtras.h"
 #include "llvm/Support/ScopedPrinter.h"
+#include "llvm/Target/KVX/KVXCommon.h"
 #include "llvm/TargetParser/AArch64TargetParser.h"
 #include "llvm/TargetParser/X86TargetParser.h"
 #include <optional>
@@ -22085,6 +22086,11 @@ Value *CodeGenFunction::EmitRISCVBuiltinExpr(unsigned BuiltinID,
   return Builder.CreateCall(F, Ops, "");
 }
 
+namespace KVXBuiltins {
+
+using namespace clang::KVX;
+using namespace llvm::KVX;
+
 typedef enum {
   SATURATE_INVALID = -1,
   SATURATE_DEFAULT = 0,
@@ -22121,42 +22127,42 @@ static Value *KVX_emitShiftBuiltin(CodeGenFunction &CGF, const CallExpr *E,
                                    unsigned int BuiltinID) {
   int64_t ShiftIndexBits;
   switch (BuiltinID) {
-  case KVX::BI__builtin_kvx_shiftfwp:
-  case KVX::BI__builtin_kvx_shiftfdp:
-  case KVX::BI__builtin_kvx_shiftwp:
-  case KVX::BI__builtin_kvx_shiftdp:
+  case BI__builtin_kvx_shiftfwp:
+  case BI__builtin_kvx_shiftfdp:
+  case BI__builtin_kvx_shiftwp:
+  case BI__builtin_kvx_shiftdp:
     ShiftIndexBits = 1;
     break;
-  case KVX::BI__builtin_kvx_shiftfhq:
-  case KVX::BI__builtin_kvx_shiftfwq:
-  case KVX::BI__builtin_kvx_shiftfdq:
-  case KVX::BI__builtin_kvx_shifthq:
-  case KVX::BI__builtin_kvx_shiftwq:
-  case KVX::BI__builtin_kvx_shiftdq:
+  case BI__builtin_kvx_shiftfhq:
+  case BI__builtin_kvx_shiftfwq:
+  case BI__builtin_kvx_shiftfdq:
+  case BI__builtin_kvx_shifthq:
+  case BI__builtin_kvx_shiftwq:
+  case BI__builtin_kvx_shiftdq:
     ShiftIndexBits = 2;
     break;
-  case KVX::BI__builtin_kvx_shiftbo:
-  case KVX::BI__builtin_kvx_shiftdo:
-  case KVX::BI__builtin_kvx_shiftfdo:
-  case KVX::BI__builtin_kvx_shiftfho:
-  case KVX::BI__builtin_kvx_shiftfwo:
-  case KVX::BI__builtin_kvx_shiftho:
-  case KVX::BI__builtin_kvx_shiftwo:
+  case BI__builtin_kvx_shiftbo:
+  case BI__builtin_kvx_shiftdo:
+  case BI__builtin_kvx_shiftfdo:
+  case BI__builtin_kvx_shiftfho:
+  case BI__builtin_kvx_shiftfwo:
+  case BI__builtin_kvx_shiftho:
+  case BI__builtin_kvx_shiftwo:
     ShiftIndexBits = 3;
     break;
-  case KVX::BI__builtin_kvx_shiftbx:
-  case KVX::BI__builtin_kvx_shiftfhx:
-  case KVX::BI__builtin_kvx_shiftfwx:
-  case KVX::BI__builtin_kvx_shifthx:
-  case KVX::BI__builtin_kvx_shiftwx:
+  case BI__builtin_kvx_shiftbx:
+  case BI__builtin_kvx_shiftfhx:
+  case BI__builtin_kvx_shiftfwx:
+  case BI__builtin_kvx_shifthx:
+  case BI__builtin_kvx_shiftwx:
     ShiftIndexBits = 4;
     break;
-  case KVX::BI__builtin_kvx_shiftbv:
-  case KVX::BI__builtin_kvx_shiftfhv:
-  case KVX::BI__builtin_kvx_shifthv:
+  case BI__builtin_kvx_shiftbv:
+  case BI__builtin_kvx_shiftfhv:
+  case BI__builtin_kvx_shifthv:
     ShiftIndexBits = 5;
     break;
-  case KVX::BI__builtin_kvx_shiftbt:
+  case BI__builtin_kvx_shiftbt:
     ShiftIndexBits = 6;
     break;
   }
@@ -22315,8 +22321,11 @@ static const KvxModifier KvxExtendMul({{"", 0}, {"s", 0}, {"su", 1}, {"u", 2}});
 static const KvxModifier KvxHindex({{"h0", 0}, {"h1", 1}});
 static const KvxModifier
     KvxQindex({{"q0", 0}, {"q1", 1}, {"q2", 2}, {"q3", 3}});
-static const KvxModifier KvxLdStAddrSpaceMod(
-    {{"", 0}, {".", 0}, {".u", 256}, {".us", 257}, {".s", 258}});
+static const KvxModifier KvxLdStAddrSpaceMod({{"", 0},
+                                              {".", 0},
+                                              {".u", ADDRSPACE::AS_BYPASS},
+                                              {".us", ADDRSPACE::AS_PRELOAD},
+                                              {".s", ADDRSPACE::AS_SPECULATE}});
 static const KvxModifier KvxNarrowInt({{"", 0}, {"q", 1}, {"s", 2}, {"us", 3}});
 static const KvxModifier KvxShiftLeft({{"", 0}, {"s", 1}, {"us", 2}, {"r", 3}});
 static const KvxModifier
@@ -23119,9 +23128,13 @@ static inline Value *KVX_emitIntNegBuiltin(CodeGenFunction &CGF,
   }
   return nullptr;
 }
+} // namespace KVXBuiltins
 
 Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                            const CallExpr *E) {
+  using namespace clang::KVX;
+  using namespace KVXBuiltins;
+
   static const std::string SystemRegNames[] = {
       // System Function Registers
       "$pc",      "$ps",      "$pcr",     "$ra",      "$cs",      "$csit",
@@ -23165,8 +23178,8 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   const static std::set<unsigned short> GetSetFxCV1OnlyRegs = {40};
 
   switch (BuiltinID) {
-  case KVX::BI__builtin_kvx_get:
-  case KVX::BI__builtin_kvx_set: {
+  case BI__builtin_kvx_get:
+  case BI__builtin_kvx_set: {
     const static std::set<unsigned short> GetRegs = {
         0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11, 12,  13,
         14,  15,  16,  17,  18,  19,  20,  21,  22,  23,  24,  25, 26,  27,
@@ -23199,7 +23212,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     uint64_t SystemRegNumber =
         cast<clang::IntegerLiteral>(SystemRegMacro)->getValue().getZExtValue();
 
-    const auto Access = (BuiltinID == KVX::BI__builtin_kvx_get)
+    const auto Access = (BuiltinID == BI__builtin_kvx_get)
                             ? SpecialRegisterAccessKind::VolatileRead
                             : SpecialRegisterAccessKind::Write;
 
@@ -23249,9 +23262,9 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
                                       SystemReg);
   }
 
-  case KVX::BI__builtin_kvx_wfxl:
-  case KVX::BI__builtin_kvx_wfxm: {
-    bool WFXM = (BuiltinID == KVX::BI__builtin_kvx_wfxm);
+  case BI__builtin_kvx_wfxl:
+  case BI__builtin_kvx_wfxm: {
+    bool WFXM = (BuiltinID == BI__builtin_kvx_wfxm);
 
     auto *SystemRegMacro = E->getArg(0)->IgnoreParenImpCasts();
     uint64_t SystemRegNumber =
@@ -23299,16 +23312,16 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(F, {RegNum, ArgValue, InstrType});
   }
 
-  case KVX::BI__builtin_kvx_acswapd:
-  case KVX::BI__builtin_kvx_acswapw: {
+  case BI__builtin_kvx_acswapd:
+  case BI__builtin_kvx_acswapw: {
     if (!(E->getNumArgs() == 3 ||
           (E->getNumArgs() == 4 && (Target.getCPUstr() != "kv3-1"))))
       CGM.Error(E->getBeginLoc(), "Incorrect number of arguments to builtin");
 
-    Intrinsic::KVXIntrinsics Intr = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+    Intrinsic::KVXIntrinsics Intr = (BuiltinID == BI__builtin_kvx_acswapw)
                                         ? Intrinsic::kvx_acswapw
                                         : Intrinsic::kvx_acswapd;
-    const auto Type = (BuiltinID == KVX::BI__builtin_kvx_acswapw)
+    const auto Type = (BuiltinID == BI__builtin_kvx_acswapw)
                           ? getContext().IntTy
                           : getContext().LongTy;
     if (E->getNumArgs() == 4)
@@ -23327,7 +23340,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     auto *const One = ConstantInt::get(IntTy, 1);
     return Builder.CreateCall(Callee, {Addr, Update, Expect, One, Zero});
   }
-  case KVX::BI__builtin_kvx_fence: {
+  case BI__builtin_kvx_fence: {
     if (E->getNumArgs() == 1)
       return KVX_emit(1, *this, E, llvm::Intrinsic::kvx_fence, {KVX_ACCESSES},
                       "kv3-2");
@@ -23341,140 +23354,140 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(Callee, {Zero});
   }
 
-  case KVX::BI__builtin_kvx_lbz:
+  case BI__builtin_kvx_lbz:
     return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int8Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lbs:
+  case BI__builtin_kvx_lbs:
     return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int8Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lhz:
+  case BI__builtin_kvx_lhz:
     return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int16Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lhs:
+  case BI__builtin_kvx_lhs:
     return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int16Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lwz:
+  case BI__builtin_kvx_lwz:
     return Builder.CreateZExt(KVX_emitLoadBuiltin(*this, E, Int32Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lws:
+  case BI__builtin_kvx_lws:
     return Builder.CreateSExt(KVX_emitLoadBuiltin(*this, E, Int32Ty), Int64Ty);
-  case KVX::BI__builtin_kvx_lwf:
+  case BI__builtin_kvx_lwf:
     return KVX_emitLoadBuiltin(*this, E, FloatTy);
-  case KVX::BI__builtin_kvx_ld:
+  case BI__builtin_kvx_ld:
     return KVX_emitLoadBuiltin(*this, E, Int64Ty);
-  case KVX::BI__builtin_kvx_ldf:
+  case BI__builtin_kvx_ldf:
     return KVX_emitLoadBuiltin(*this, E, DoubleTy);
-  case KVX::BI__builtin_kvx_lbo:
+  case BI__builtin_kvx_lbo:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 8));
-  case KVX::BI__builtin_kvx_lhq:
+  case BI__builtin_kvx_lhq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 4));
-  case KVX::BI__builtin_kvx_lwp:
+  case BI__builtin_kvx_lwp:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 2));
-  case KVX::BI__builtin_kvx_lfwp:
+  case BI__builtin_kvx_lfwp:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 2));
-  case KVX::BI__builtin_kvx_lbx:
+  case BI__builtin_kvx_lbx:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 16));
-  case KVX::BI__builtin_kvx_lho:
+  case BI__builtin_kvx_lho:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 8));
-  case KVX::BI__builtin_kvx_lwq:
+  case BI__builtin_kvx_lwq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 4));
-  case KVX::BI__builtin_kvx_ldp:
+  case BI__builtin_kvx_ldp:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int64Ty, 2));
-  case KVX::BI__builtin_kvx_lfwq:
+  case BI__builtin_kvx_lfwq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 4));
-  case KVX::BI__builtin_kvx_lfdp:
+  case BI__builtin_kvx_lfdp:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 2));
-  case KVX::BI__builtin_kvx_lbv:
+  case BI__builtin_kvx_lbv:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int8Ty, 32));
-  case KVX::BI__builtin_kvx_lhx:
+  case BI__builtin_kvx_lhx:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int16Ty, 16));
-  case KVX::BI__builtin_kvx_lwo:
+  case BI__builtin_kvx_lwo:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int32Ty, 8));
-  case KVX::BI__builtin_kvx_ldq:
+  case BI__builtin_kvx_ldq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(Int64Ty, 4));
-  case KVX::BI__builtin_kvx_lfwo:
+  case BI__builtin_kvx_lfwo:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(FloatTy, 8));
-  case KVX::BI__builtin_kvx_lfdq:
+  case BI__builtin_kvx_lfdq:
     return KVX_emitLoadBuiltin(*this, E, llvm::FixedVectorType::get(DoubleTy, 4));
 
-  case KVX::BI__builtin_kvx_storeb:
+  case BI__builtin_kvx_storeb:
     return KVX_emitStoreBuiltin(*this, E, Int8Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_storeh:
+  case BI__builtin_kvx_storeh:
     return KVX_emitStoreBuiltin(*this, E, Int16Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_storew:
+  case BI__builtin_kvx_storew:
     return KVX_emitStoreBuiltin(*this, E, Int32Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_stored:
+  case BI__builtin_kvx_stored:
     return KVX_emitStoreBuiltin(*this, E, Int64Ty);
-  case KVX::BI__builtin_kvx_storeq:
+  case BI__builtin_kvx_storeq:
     return KVX_emitStoreBuiltin(*this, E,
                                 llvm::IntegerType::get(getLLVMContext(), 128),
                                 llvm::FixedVectorType::get(Int64Ty, 2));
-  case KVX::BI__builtin_kvx_storehf:
+  case BI__builtin_kvx_storehf:
     return KVX_emitStoreBuiltin(*this, E, HalfTy);
-  case KVX::BI__builtin_kvx_storewf:
+  case BI__builtin_kvx_storewf:
     return KVX_emitStoreBuiltin(*this, E, FloatTy);
-  case KVX::BI__builtin_kvx_storedf:
+  case BI__builtin_kvx_storedf:
     return KVX_emitStoreBuiltin(*this, E, DoubleTy);
-  case KVX::BI__builtin_kvx_store64:
+  case BI__builtin_kvx_store64:
     return KVX_emitStoreBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 1), Int64Ty);
-  case KVX::BI__builtin_kvx_store128:
+  case BI__builtin_kvx_store128:
     return KVX_emitStoreBuiltin(*this, E,
                                 llvm::FixedVectorType::get(Int64Ty, 2));
-  case KVX::BI__builtin_kvx_store256:
+  case BI__builtin_kvx_store256:
     return KVX_emitStoreBuiltin(*this, E,
                                 llvm::FixedVectorType::get(Int64Ty, 4));
 
-  case KVX::BI__builtin_kvx_storecb:
+  case BI__builtin_kvx_storecb:
     return KVX_emitStoreCondBuiltin(*this, E, Int8Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_storech:
+  case BI__builtin_kvx_storech:
     return KVX_emitStoreCondBuiltin(*this, E, Int16Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_storecw:
+  case BI__builtin_kvx_storecw:
     return KVX_emitStoreCondBuiltin(*this, E, Int32Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_storecd:
+  case BI__builtin_kvx_storecd:
     return KVX_emitStoreCondBuiltin(*this, E, Int64Ty);
-  case KVX::BI__builtin_kvx_storecq:
+  case BI__builtin_kvx_storecq:
     return KVX_emitStoreCondBuiltin(*this, E,
                                     llvm::FixedVectorType::get(Int64Ty, 2));
-  case KVX::BI__builtin_kvx_storechf:
+  case BI__builtin_kvx_storechf:
     return KVX_emitStoreCondBuiltin(*this, E, HalfTy);
-  case KVX::BI__builtin_kvx_storecwf:
+  case BI__builtin_kvx_storecwf:
     return KVX_emitStoreCondBuiltin(*this, E, FloatTy);
-  case KVX::BI__builtin_kvx_storecdf:
+  case BI__builtin_kvx_storecdf:
     return KVX_emitStoreCondBuiltin(*this, E, DoubleTy);
-  case KVX::BI__builtin_kvx_storec64:
+  case BI__builtin_kvx_storec64:
     return KVX_emitStoreCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int32Ty, 2), nullptr, true);
-  case KVX::BI__builtin_kvx_storec128:
+  case BI__builtin_kvx_storec128:
     return KVX_emitStoreCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
-  case KVX::BI__builtin_kvx_storec256:
+  case BI__builtin_kvx_storec256:
     return KVX_emitStoreCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
 
-  case KVX::BI__builtin_kvx_loadcbz:
+  case BI__builtin_kvx_loadcbz:
     return KVX_emitLoadCondBuiltin(*this, E, Int8Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_loadchz:
+  case BI__builtin_kvx_loadchz:
     return KVX_emitLoadCondBuiltin(*this, E, Int16Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_loadcwz:
+  case BI__builtin_kvx_loadcwz:
     return KVX_emitLoadCondBuiltin(*this, E, Int32Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_loadcd:
+  case BI__builtin_kvx_loadcd:
     return KVX_emitLoadCondBuiltin(*this, E, Int64Ty, Int64Ty);
-  case KVX::BI__builtin_kvx_loadcq:
+  case BI__builtin_kvx_loadcq:
     return KVX_emitLoadCondBuiltin(*this, E,
                                    llvm::FixedVectorType::get(Int64Ty, 2));
-  case KVX::BI__builtin_kvx_loadchf:
+  case BI__builtin_kvx_loadchf:
     return KVX_emitLoadCondBuiltin(*this, E, HalfTy);
-  case KVX::BI__builtin_kvx_loadcwf:
+  case BI__builtin_kvx_loadcwf:
     return KVX_emitLoadCondBuiltin(*this, E, FloatTy);
-  case KVX::BI__builtin_kvx_loadcdf:
+  case BI__builtin_kvx_loadcdf:
     return KVX_emitLoadCondBuiltin(*this, E, DoubleTy);
-  case KVX::BI__builtin_kvx_loadc64:
+  case BI__builtin_kvx_loadc64:
     return KVX_emitLoadCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int32Ty, 2), nullptr, true);
-  case KVX::BI__builtin_kvx_loadc128:
+  case BI__builtin_kvx_loadc128:
     return KVX_emitLoadCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 2), nullptr, true);
-  case KVX::BI__builtin_kvx_loadc256:
+  case BI__builtin_kvx_loadc256:
     return KVX_emitLoadCondBuiltin(
         *this, E, llvm::FixedVectorType::get(Int64Ty, 4), nullptr, true);
 
-  case KVX::BI__builtin_kvx_ready: {
+  case BI__builtin_kvx_ready: {
     int N = E->getNumArgs();
     unsigned int IID = Intrinsic::kvx_ready;
 
@@ -23529,84 +23542,121 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateCall(CGM.getIntrinsic(IID), Args);
   }
 
-  case KVX::BI__builtin_kvx_addbo:
-  case KVX::BI__builtin_kvx_addbx:
-  case KVX::BI__builtin_kvx_addbv:
-  case KVX::BI__builtin_kvx_addhq:
-  case KVX::BI__builtin_kvx_addho:
-  case KVX::BI__builtin_kvx_addhx:
-  case KVX::BI__builtin_kvx_addw:
-  case KVX::BI__builtin_kvx_addwp:
-  case KVX::BI__builtin_kvx_addwq:
-  case KVX::BI__builtin_kvx_addwo:
-  case KVX::BI__builtin_kvx_addd:
-  case KVX::BI__builtin_kvx_adddp:
-  case KVX::BI__builtin_kvx_adddq:
+  case BI__builtin_kvx_addbo:
+  case BI__builtin_kvx_addbx:
+  case BI__builtin_kvx_addbv:
+  case BI__builtin_kvx_addhq:
+  case BI__builtin_kvx_addho:
+  case BI__builtin_kvx_addhx:
+  case BI__builtin_kvx_addw:
+  case BI__builtin_kvx_addwp:
+  case BI__builtin_kvx_addwq:
+  case BI__builtin_kvx_addwo:
+  case BI__builtin_kvx_addd:
+  case BI__builtin_kvx_adddp:
+  case BI__builtin_kvx_adddq:
     return KVX_emitIntAddBuiltin(*this, E);
 
-  case KVX::BI__builtin_kvx_sbfbo:
-  case KVX::BI__builtin_kvx_sbfbx:
-  case KVX::BI__builtin_kvx_sbfbv:
-  case KVX::BI__builtin_kvx_sbfhq:
-  case KVX::BI__builtin_kvx_sbfho:
-  case KVX::BI__builtin_kvx_sbfhx:
-  case KVX::BI__builtin_kvx_sbfw:
-  case KVX::BI__builtin_kvx_sbfwp:
-  case KVX::BI__builtin_kvx_sbfwq:
-  case KVX::BI__builtin_kvx_sbfwo:
-  case KVX::BI__builtin_kvx_sbfd:
-  case KVX::BI__builtin_kvx_sbfdp:
-  case KVX::BI__builtin_kvx_sbfdq:
+  case BI__builtin_kvx_sbfbo:
+  case BI__builtin_kvx_sbfbx:
+  case BI__builtin_kvx_sbfbv:
+  case BI__builtin_kvx_sbfhq:
+  case BI__builtin_kvx_sbfho:
+  case BI__builtin_kvx_sbfhx:
+  case BI__builtin_kvx_sbfw:
+  case BI__builtin_kvx_sbfwp:
+  case BI__builtin_kvx_sbfwq:
+  case BI__builtin_kvx_sbfwo:
+  case BI__builtin_kvx_sbfd:
+  case BI__builtin_kvx_sbfdp:
+  case BI__builtin_kvx_sbfdq:
     return KVX_emitIntSubBuiltin(*this, E);
 
-  case KVX::BI__builtin_kvx_negbo:
-  case KVX::BI__builtin_kvx_negbx:
-  case KVX::BI__builtin_kvx_negbv:
-  case KVX::BI__builtin_kvx_neghq:
-  case KVX::BI__builtin_kvx_negho:
-  case KVX::BI__builtin_kvx_neghx:
-  case KVX::BI__builtin_kvx_negw:
-  case KVX::BI__builtin_kvx_negwp:
-  case KVX::BI__builtin_kvx_negwq:
-  case KVX::BI__builtin_kvx_negwo:
-  case KVX::BI__builtin_kvx_negd:
-  case KVX::BI__builtin_kvx_negdp:
-  case KVX::BI__builtin_kvx_negdq:
+  case BI__builtin_kvx_scall: {
+    for (unsigned I = 0; I < E->getNumArgs(); I++) {
+      const Expr *Arg = E->getArg(I);
+      if (Arg->getType()->isAggregateType()) {
+        this->CGM.Error(
+            Arg->getBeginLoc(),
+            "scall builtin does not support passing aggregate values");
+        return nullptr;
+      }
+    }
+
+    Value *Callee = EmitScalarExpr(E->getArg(0));
+    auto *SCallPtrType = llvm::PointerType::get(Int64Ty, ADDRSPACE::AS_SCALL);
+    Value *CalleePtr = Builder.CreateIntToPtr(Callee, SCallPtrType);
+
+    SmallVector<Value *, 12> CallArgs = {};
+    SmallVector<llvm::Type *, 12> TypeArgs = {};
+    for (unsigned I = 1; I < E->getNumArgs(); I++) {
+      const Expr *Arg = E->getArg(I);
+      Value *ArgVal = EmitScalarExpr(Arg);
+      auto *ArgType = ArgVal->getType();
+      if (ArgType->getPrimitiveSizeInBits().getFixedSize() > 64) {
+        this->CGM.Error(
+            Arg->getBeginLoc(),
+            "scall builtin only supports scalars of size <= 64 bits");
+        return nullptr;
+      }
+      CallArgs.push_back(ArgVal);
+      TypeArgs.push_back(ArgType);
+    }
+
+    auto *FnType = llvm::FunctionType::get(Int64Ty, TypeArgs, false);
+    auto *Call = Builder.CreateCall(FnType, CalleePtr, CallArgs);
+    Call->setTailCallKind(CallInst::TCK_NoTail);
+    return Call;
+  }
+
+  case BI__builtin_kvx_negbo:
+  case BI__builtin_kvx_negbx:
+  case BI__builtin_kvx_negbv:
+  case BI__builtin_kvx_neghq:
+  case BI__builtin_kvx_negho:
+  case BI__builtin_kvx_neghx:
+  case BI__builtin_kvx_negw:
+  case BI__builtin_kvx_negwp:
+  case BI__builtin_kvx_negwq:
+  case BI__builtin_kvx_negwo:
+  case BI__builtin_kvx_negd:
+  case BI__builtin_kvx_negdp:
+  case BI__builtin_kvx_negdq:
     return KVX_emitIntNegBuiltin(*this, E);
 
-  case KVX::BI__builtin_kvx_shiftbo:
-  case KVX::BI__builtin_kvx_shiftbt:
-  case KVX::BI__builtin_kvx_shiftbv:
-  case KVX::BI__builtin_kvx_shiftbx:
-  case KVX::BI__builtin_kvx_shiftdo:
-  case KVX::BI__builtin_kvx_shiftdp:
-  case KVX::BI__builtin_kvx_shiftdq:
-  case KVX::BI__builtin_kvx_shiftfdo:
-  case KVX::BI__builtin_kvx_shiftfdp:
-  case KVX::BI__builtin_kvx_shiftfdq:
-  case KVX::BI__builtin_kvx_shiftfho:
-  case KVX::BI__builtin_kvx_shiftfhq:
-  case KVX::BI__builtin_kvx_shiftfhv:
-  case KVX::BI__builtin_kvx_shiftfhx:
-  case KVX::BI__builtin_kvx_shiftfwo:
-  case KVX::BI__builtin_kvx_shiftfwp:
-  case KVX::BI__builtin_kvx_shiftfwq:
-  case KVX::BI__builtin_kvx_shiftfwx:
-  case KVX::BI__builtin_kvx_shiftho:
-  case KVX::BI__builtin_kvx_shifthq:
-  case KVX::BI__builtin_kvx_shifthv:
-  case KVX::BI__builtin_kvx_shifthx:
-  case KVX::BI__builtin_kvx_shiftwo:
-  case KVX::BI__builtin_kvx_shiftwp:
-  case KVX::BI__builtin_kvx_shiftwq:
-  case KVX::BI__builtin_kvx_shiftwx:
+  case BI__builtin_kvx_shiftbo:
+  case BI__builtin_kvx_shiftbt:
+  case BI__builtin_kvx_shiftbv:
+  case BI__builtin_kvx_shiftbx:
+  case BI__builtin_kvx_shiftdo:
+  case BI__builtin_kvx_shiftdp:
+  case BI__builtin_kvx_shiftdq:
+  case BI__builtin_kvx_shiftfdo:
+  case BI__builtin_kvx_shiftfdp:
+  case BI__builtin_kvx_shiftfdq:
+  case BI__builtin_kvx_shiftfho:
+  case BI__builtin_kvx_shiftfhq:
+  case BI__builtin_kvx_shiftfhv:
+  case BI__builtin_kvx_shiftfhx:
+  case BI__builtin_kvx_shiftfwo:
+  case BI__builtin_kvx_shiftfwp:
+  case BI__builtin_kvx_shiftfwq:
+  case BI__builtin_kvx_shiftfwx:
+  case BI__builtin_kvx_shiftho:
+  case BI__builtin_kvx_shifthq:
+  case BI__builtin_kvx_shifthv:
+  case BI__builtin_kvx_shifthx:
+  case BI__builtin_kvx_shiftwo:
+  case BI__builtin_kvx_shiftwp:
+  case BI__builtin_kvx_shiftwq:
+  case BI__builtin_kvx_shiftwx:
     return KVX_emitShiftBuiltin(*this, E, BuiltinID);
 
     /// TCA - GPR to TCA copy
-  case KVX::BI__builtin_kvx_xswapo256:
+  case BI__builtin_kvx_xswapo256:
     return KVX_emit_xswapo256(*this, E);
 
-  case KVX::BI__builtin_kvx_ffdmdawq: {
+  case BI__builtin_kvx_ffdmdawq: {
     KvxModifiers KvxMods = {KVX_ROUNDING, KVX_SILENT};
     if (Target.getCPUstr() != "kv3-1")
       return KVX_emit(4, *this, E, Intrinsic::kvx_ffdmda, KvxMods, "", 1,
@@ -23683,40 +23733,40 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
     return Builder.CreateVectorConcat(Result[0], Result[1]);
   }
 
-  case KVX::BI__builtin_kvx_xundef1024:
-  case KVX::BI__builtin_kvx_xundef2048:
-  case KVX::BI__builtin_kvx_xundef256:
-  case KVX::BI__builtin_kvx_xundef4096:
-  case KVX::BI__builtin_kvx_xundef512:
+  case BI__builtin_kvx_xundef1024:
+  case BI__builtin_kvx_xundef2048:
+  case BI__builtin_kvx_xundef256:
+  case BI__builtin_kvx_xundef4096:
+  case BI__builtin_kvx_xundef512:
     return UndefValue::get(ConvertType(E->getType()));
 
-  case KVX::BI__builtin_kvx_xzero1024:
-  case KVX::BI__builtin_kvx_xzero2048:
-  case KVX::BI__builtin_kvx_xzero256:
-  case KVX::BI__builtin_kvx_xzero4096:
-  case KVX::BI__builtin_kvx_xzero512:
+  case BI__builtin_kvx_xzero1024:
+  case BI__builtin_kvx_xzero2048:
+  case BI__builtin_kvx_xzero256:
+  case BI__builtin_kvx_xzero4096:
+  case BI__builtin_kvx_xzero512:
     return Constant::getNullValue(ConvertType(E->getType()));
-  case KVX::BI__builtin_kvx_cat128:
-  case KVX::BI__builtin_kvx_cat256:
-  case KVX::BI__builtin_kvx_cat512:
+  case BI__builtin_kvx_cat128:
+  case BI__builtin_kvx_cat256:
+  case BI__builtin_kvx_cat512:
     return Builder.CreateVectorConcat(EmitScalarExpr(E->getArg(0)),
                                       EmitScalarExpr(E->getArg(1)), "kvx_cat");
-  case KVX::BI__builtin_kvx_low64:
-  case KVX::BI__builtin_kvx_low128:
-  case KVX::BI__builtin_kvx_low256:
+  case BI__builtin_kvx_low64:
+  case BI__builtin_kvx_low128:
+  case BI__builtin_kvx_low256:
     return Builder
         .SplitVector(EmitScalarExpr(E->getArg(0)), true, false, "kvx_low")
         .first;
 
-  case KVX::BI__builtin_kvx_high64:
-  case KVX::BI__builtin_kvx_high128:
-  case KVX::BI__builtin_kvx_high256:
+  case BI__builtin_kvx_high64:
+  case BI__builtin_kvx_high128:
+  case BI__builtin_kvx_high256:
     return Builder
         .SplitVector(EmitScalarExpr(E->getArg(0)), false, true, "kvx_high")
         .second;
 
 #define KVX_BUILTIN(ID, TYPES, MODE, NARGS, CPUS, ...)                         \
-  case KVX::BI__builtin_kvx_##ID: {                                            \
+  case BI__builtin_kvx_##ID: {                                                 \
     const auto IDVal = Intrinsic::kvx_##ID;                                    \
     const StringRef CPUSstr(CPUS);                                             \
     KvxModifiers KvxMods = {__VA_ARGS__};                                      \
@@ -23724,7 +23774,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
   }
 #define KVX_MANY_BUILTIN(IDin, TYPES, MODE, NARGS, CPUS, IDout, NumParts, O,   \
                          ...)                                                  \
-  case KVX::BI__builtin_kvx_##IDin: {                                          \
+  case BI__builtin_kvx_##IDin: {                                               \
     const auto IDVal = Intrinsic::IDout;                                       \
     const StringRef CPUSstr(CPUS);                                             \
     KvxModifiers KvxMods = {__VA_ARGS__};                                      \
