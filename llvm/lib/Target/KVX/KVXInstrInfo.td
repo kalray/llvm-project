@@ -1582,8 +1582,6 @@ def IGOTO : KVX_INSTRUCTION
    [(brind i64:$a1)],
    BCU>;
 
-defm SCALL : MC_00<"scall">;
-
 let isTerminator=1, hasSideEffects=1, isNotDuplicable=1, Defs = [LC,LE,LS] in
 def LOOPDO : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1, Pcrel17:$a2),
@@ -1630,8 +1628,11 @@ def SDTKVXWrapper : SDTypeProfile<1, 1, [SDTCisSameAs<0, 1>, SDTCisPtrTy<0>]>;
 def KVXWrapper : SDNode<"KVXISD::AddrWrapper", SDTKVXWrapper>;
 def SDT_KVXCall : SDTypeProfile<0, -1, [SDTCisVT<0, i64>]>;
 def Call : SDNode<"KVXISD::CALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+def SCall : SDNode<"KVXISD::SCALL", SDT_KVXCall, [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
-let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1 in
+defvar CallDefs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS];
+
+let Defs = CallDefs, isCall = 1 in
 def CALL : KVX_INSTRUCTION
   <(outs), (ins Pcrel27:$a1),
    "call $a1",
@@ -1640,12 +1641,26 @@ def CALL : KVX_INSTRUCTION
 
 def : Pat<(Call texternalsym:$func),(CALL Pcrel27:$func)>;
 
-let Defs = [RA, PM0, PM1, PM2, PM3, PM4, PM5, PM6, PM7, PCR, PMC, CS], isCall = 1, isIndirectBranch = 1 in
+let Defs = CallDefs, isCall = 1, isIndirectBranch = 1 in
 def ICALL : KVX_INSTRUCTION
   <(outs), (ins SingleReg:$a1),
    "icall $a1",
    [(Call SingleReg:$a1)],
    BCU>;
+
+let Defs = CallDefs, isCall = 1, isIndirectBranch = 1 in {
+  def SCALLr : KVX_INSTRUCTION
+    <(outs), (ins SingleReg:$a1),
+    "scall $a1",
+    [(SCall SingleReg:$a1)],
+    ALL_ID>;
+
+  def SCALLs : KVX_INSTRUCTION
+    <(outs), (ins Sysnumber:$a1),
+    "scall $a1",
+    [(SCall Sysnumber:$a1)],
+    ALL_ID>;
+}
 
 let isBranch = 1, isTerminator = 1 in
 def CB : KVX_INSTRUCTION
