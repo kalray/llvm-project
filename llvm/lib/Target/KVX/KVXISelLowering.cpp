@@ -1492,12 +1492,24 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Emit the call.
   SDVTList NodeTys = DAG.getVTList(MVT::Other, MVT::Glue);
 
+  // Switch to SCALL if we detect a scall
+  unsigned CallISD = KVXISD::CALL;
+  if (CLI.CB) {
+    auto *CalleeType = CLI.CB->getCalledOperand()->getType();
+    if (CalleeType->isPointerTy() &&
+        CalleeType->getPointerAddressSpace() == KVX::ADDRSPACE::AS_SCALL)
+      CallISD = KVXISD::SCALL;
+  }
+
   if (IsTailCall) {
+    if (CallISD == KVXISD::SCALL)
+      report_fatal_error("Tailcall with scall address space not supported");
+
     MF.getFrameInfo().setHasTailCall();
     return DAG.getNode(KVXISD::TAIL, DL, NodeTys, Ops);
   }
 
-  Chain = DAG.getNode(KVXISD::CALL, DL, NodeTys, Ops);
+  Chain = DAG.getNode(CallISD, DL, NodeTys, Ops);
   Glue = Chain.getValue(1);
 
   // Mark the end of the call, which is glued to the call itself.
