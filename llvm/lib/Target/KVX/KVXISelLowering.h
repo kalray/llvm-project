@@ -37,6 +37,7 @@ enum NodeType : unsigned {
   GetSystemReg,
   JT,
   JT_PCREL,
+  SCALL,
   SEXT_MUL,
   SZEXT_MUL,
   ZEXT_MUL,

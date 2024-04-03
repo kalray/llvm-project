@@ -18,6 +18,7 @@
 #include "llvm/CodeGen/MachineInstr.h"
 #include "llvm/PassRegistry.h"
 #include "llvm/Support/CommandLine.h"
+#include "llvm/Target/KVX/KVXCommon.h"
 
 class KVXAsmPrinter;
 extern llvm::cl::OptionCategory KVXclOpts;
@@ -185,15 +186,6 @@ inline uint64_t getKVXFlag(const MachineInstr &MI, int Pos, int Mask) {
 namespace KVX {
 enum STAGE { PRE_RA, PRE_SCHED2, PRE_BUNDLE, PRE_EMIT };
 
-enum ADDRSPACE : int {
-  AS_NORMAL = 0,
-  AS_OCL_GLOBAL = 1,
-  AS_OCL_CONSTANT = 2,
-  AS_OCL_LOCAL = 3,
-  AS_BYPASS = 256,
-  AS_PRELOAD = 257,
-  AS_SPECULATE = 258,
-};
 } // namespace KVX
 
 bool isScalarcondWord(unsigned Cond);
