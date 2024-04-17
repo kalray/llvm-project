@@ -1,4 +1,4 @@
-; RUN: opt -S -passes=atomic-expand -o %t %s | FileCheck %s --implicit-check-not="= atomic{{.*}}i8" --check-prefix=IR < %t
+; RUN: opt -S -passes=atomic-expand -o - %s | FileCheck %s --implicit-check-not="= atomic{{.*}}i8" --check-prefix=IR
 ; IR-COUNT-4: cmpxchg ptr{{.*}}i32
 
 target triple = "kvx-kalray-cos"
