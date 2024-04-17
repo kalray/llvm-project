@@ -20,13 +20,13 @@ struct S g_s;
 // CHECK: @test_static.l_static_var = internal addrspace(1) global float 0.000000e+00, align 4
 // CHECK: @g_static_var = internal addrspace(1) global float 0.000000e+00, align 4
 // CHECK: @i = addrspace(1) global i32 0, align 4
-// CHECK: @ptr = addrspace(1) global ptr addrspace(5) null, align 8
+// CHECK: @ptr = addrspace(1) global ptr addrspace(4) null, align 8
 //.
 // CHECK-LABEL: define {{[^@]+}}@f__p
-// CHECK-SAME: (ptr addrspace(4) noundef [[ARG:%.*]]) #[[ATTR0:[0-9]+]] {
+// CHECK-SAME: (ptr noundef [[ARG:%.*]]) #[[ATTR0:[0-9]+]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(4), align 8
-// CHECK-NEXT:    store ptr addrspace(4) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr, align 8
+// CHECK-NEXT:    store ptr [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
 void f__p(__private int *arg) {}
@@ -41,28 +41,28 @@ void f__p(__private int *arg) {}
 void f__g(__global int *arg) {}
 
 // CHECK-LABEL: define {{[^@]+}}@f__l
-// CHECK-SAME: (ptr addrspace(2) noundef [[ARG:%.*]]) #[[ATTR0]] {
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    store ptr addrspace(2) [[ARG]], ptr [[ARG_ADDR]], align 8
-// CHECK-NEXT:    ret void
-//
-void f__l(__local int *arg) {}
-
-// CHECK-LABEL: define {{[^@]+}}@f__c
 // CHECK-SAME: (ptr addrspace(3) noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(3), align 8
 // CHECK-NEXT:    store ptr addrspace(3) [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
+void f__l(__local int *arg) {}
+
+// CHECK-LABEL: define {{[^@]+}}@f__c
+// CHECK-SAME: (ptr addrspace(2) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(2), align 8
+// CHECK-NEXT:    store ptr addrspace(2) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    ret void
+//
 void f__c(__constant int *arg) {}
 
 // CHECK-LABEL: define {{[^@]+}}@fp
-// CHECK-SAME: (ptr addrspace(4) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-SAME: (ptr noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(4), align 8
-// CHECK-NEXT:    store ptr addrspace(4) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr, align 8
+// CHECK-NEXT:    store ptr [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
 void fp(private int *arg) {}
@@ -77,37 +77,37 @@ void fp(private int *arg) {}
 void fg(global int *arg) {}
 
 // CHECK-LABEL: define {{[^@]+}}@fl
-// CHECK-SAME: (ptr addrspace(2) noundef [[ARG:%.*]]) #[[ATTR0]] {
-// CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    store ptr addrspace(2) [[ARG]], ptr [[ARG_ADDR]], align 8
-// CHECK-NEXT:    ret void
-//
-void fl(local int *arg) {}
-
-// CHECK-LABEL: define {{[^@]+}}@fc
 // CHECK-SAME: (ptr addrspace(3) noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(3), align 8
 // CHECK-NEXT:    store ptr addrspace(3) [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
+void fl(local int *arg) {}
+
+// CHECK-LABEL: define {{[^@]+}}@fc
+// CHECK-SAME: (ptr addrspace(2) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-NEXT:  entry:
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(2), align 8
+// CHECK-NEXT:    store ptr addrspace(2) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    ret void
+//
 void fc(constant int *arg) {}
 
 // CHECK-LABEL: define {{[^@]+}}@fd
-// CHECK-SAME: (ptr addrspace(6) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-SAME: (ptr addrspace(5) noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(6), align 8
-// CHECK-NEXT:    store ptr addrspace(6) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(5), align 8
+// CHECK-NEXT:    store ptr addrspace(5) [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
 void fd(__attribute__((opencl_global_device)) int *arg) {}
 
 // CHECK-LABEL: define {{[^@]+}}@fh
-// CHECK-SAME: (ptr addrspace(7) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-SAME: (ptr addrspace(6) noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(7), align 8
-// CHECK-NEXT:    store ptr addrspace(7) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(6), align 8
+// CHECK-NEXT:    store ptr addrspace(6) [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
 void fh(__attribute__((opencl_global_host)) int *arg) {}
@@ -116,11 +116,11 @@ int i;
 int *ptr;
 
 // CHECK-LABEL: define {{[^@]+}}@f
-// CHECK-SAME: (ptr addrspace(5) noundef [[ARG:%.*]]) #[[ATTR0]] {
+// CHECK-SAME: (ptr addrspace(4) noundef [[ARG:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(5), align 8
+// CHECK-NEXT:    [[ARG_ADDR:%.*]] = alloca ptr addrspace(4), align 8
 // CHECK-NEXT:    [[I:%.*]] = alloca i32, align 4
-// CHECK-NEXT:    store ptr addrspace(5) [[ARG]], ptr [[ARG_ADDR]], align 8
+// CHECK-NEXT:    store ptr addrspace(4) [[ARG]], ptr [[ARG_ADDR]], align 8
 // CHECK-NEXT:    ret void
 //
 void f(int *arg) {
@@ -133,20 +133,20 @@ void f(int *arg) {
 typedef int int_td;
 typedef int *intp_td;
 // CHECK-LABEL: define {{[^@]+}}@test_typedef
-// CHECK-SAME: (ptr addrspace(1) noundef [[X:%.*]], ptr addrspace(3) noundef [[Y:%.*]], ptr addrspace(5) noundef [[Z:%.*]]) #[[ATTR0]] {
+// CHECK-SAME: (ptr addrspace(1) noundef [[X:%.*]], ptr addrspace(2) noundef [[Y:%.*]], ptr addrspace(4) noundef [[Z:%.*]]) #[[ATTR0]] {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[X_ADDR:%.*]] = alloca ptr addrspace(1), align 8
-// CHECK-NEXT:    [[Y_ADDR:%.*]] = alloca ptr addrspace(3), align 8
-// CHECK-NEXT:    [[Z_ADDR:%.*]] = alloca ptr addrspace(5), align 8
+// CHECK-NEXT:    [[Y_ADDR:%.*]] = alloca ptr addrspace(2), align 8
+// CHECK-NEXT:    [[Z_ADDR:%.*]] = alloca ptr addrspace(4), align 8
 // CHECK-NEXT:    store ptr addrspace(1) [[X]], ptr [[X_ADDR]], align 8
-// CHECK-NEXT:    store ptr addrspace(3) [[Y]], ptr [[Y_ADDR]], align 8
-// CHECK-NEXT:    store ptr addrspace(5) [[Z]], ptr [[Z_ADDR]], align 8
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(3), ptr [[Y_ADDR]], align 8
-// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr addrspace(3) [[TMP0]], align 4
+// CHECK-NEXT:    store ptr addrspace(2) [[Y]], ptr [[Y_ADDR]], align 8
+// CHECK-NEXT:    store ptr addrspace(4) [[Z]], ptr [[Z_ADDR]], align 8
+// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(2), ptr [[Y_ADDR]], align 8
+// CHECK-NEXT:    [[TMP1:%.*]] = load i32, ptr addrspace(2) [[TMP0]], align 4
 // CHECK-NEXT:    [[TMP2:%.*]] = load ptr addrspace(1), ptr [[X_ADDR]], align 8
 // CHECK-NEXT:    store i32 [[TMP1]], ptr addrspace(1) [[TMP2]], align 4
-// CHECK-NEXT:    [[TMP3:%.*]] = load ptr addrspace(5), ptr [[Z_ADDR]], align 8
-// CHECK-NEXT:    store i32 0, ptr addrspace(5) [[TMP3]], align 4
+// CHECK-NEXT:    [[TMP3:%.*]] = load ptr addrspace(4), ptr [[Z_ADDR]], align 8
+// CHECK-NEXT:    store i32 0, ptr addrspace(4) [[TMP3]], align 4
 // CHECK-NEXT:    ret void
 //
 void test_typedef(global int_td *x, constant int_td *y, intp_td z) {
@@ -157,10 +157,10 @@ void test_typedef(global int_td *x, constant int_td *y, intp_td z) {
 // CHECK-LABEL: define {{[^@]+}}@test_struct
 // CHECK-SAME: () #[[ATTR0]] {
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[PS:%.*]] = alloca ptr addrspace(5), align 8
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(5), ptr [[PS]], align 8
-// CHECK-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(5) [[TMP0]], i32 0, i32 0
-// CHECK-NEXT:    store i32 0, ptr addrspace(5) [[X]], align 8
+// CHECK-NEXT:    [[PS:%.*]] = alloca ptr addrspace(4), align 8
+// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(4), ptr [[PS]], align 8
+// CHECK-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(4) [[TMP0]], i32 0, i32 0
+// CHECK-NEXT:    store i32 0, ptr addrspace(4) [[X]], align 8
 // CHECK-NEXT:    store i32 0, ptr addrspace(1) @g_s, align 8
 // CHECK-NEXT:    ret void
 //
