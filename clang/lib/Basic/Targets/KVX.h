@@ -28,29 +28,6 @@ class LLVM_LIBRARY_VISIBILITY KVXTargetInfo : public TargetInfo {
   static const TargetInfo::GCCRegAlias GCCRegAliases[];
   std::string CPU;
 
-  const LangASMap KVX_AS_Map = {
-      (unsigned)LangAS::Default,              // Default
-      (unsigned)LangAS::opencl_global,        // opencl_global
-      (unsigned)LangAS::opencl_local,         // opencl_local
-      (unsigned)LangAS::opencl_constant,      // opencl_constant
-      (unsigned)LangAS::opencl_private,       // opencl_private
-      (unsigned)LangAS::opencl_generic,       // opencl_generic
-      (unsigned)LangAS::opencl_global_device, // opencl_global_device
-      (unsigned)LangAS::opencl_global_host,   // opencl_global_host
-      (unsigned)LangAS::opencl_global_device, // cuda_device
-      (unsigned)LangAS::opencl_constant,      // cuda_constant
-      (unsigned)LangAS::opencl_local,         // cuda_shared
-      (unsigned)LangAS::opencl_global,        // sycl_global
-      (unsigned)LangAS::opencl_global_device, // sycl_global_device
-      (unsigned)LangAS::opencl_global_host,   // sycl_global_host
-      (unsigned)LangAS::opencl_local,         // sycl_local
-      (unsigned)LangAS::opencl_private,       // sycl_private
-      (unsigned)LangAS::Default,              // ptr32_sptr
-      (unsigned)LangAS::Default,              // ptr32_uptr
-      (unsigned)LangAS::Default,              // ptr64
-      (unsigned)LangAS::Default,              // hlsl_groupshared
-      256                                     // Or target starts from 256
-  };
 
 public:
   KVXTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
@@ -93,8 +70,6 @@ public:
                     "v64:64-v128:128-v256:256-v512:256-v1024:256-"
                     "f16:16-f32:32-f64:64-a:0:64-m:e-n32:64");
     CPU = "kv3-1"; // Set the default cpu as kv3-1
-
-    AddrSpaceMap = &KVX_AS_Map;
   }
 
   void adjust(DiagnosticsEngine &Diags, LangOptions &Opts) override;
