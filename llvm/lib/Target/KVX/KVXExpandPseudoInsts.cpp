@@ -103,25 +103,25 @@ static bool expandCacheInstruction(const KVXInstrInfo *TII,
   switch (MBBI->getOpcode()) {
   case KVX::DINVALLp:
     OpCode = OffsetIsReg
-                 ? KVX::DINVALLrr
+                 ? (unsigned)KVX::DINVALLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DINVALLri10,
                                 KVX::DINVALLri37, KVX::DINVALLri64);
     break;
   case KVX::DTOUCHLp:
     OpCode = OffsetIsReg
-                 ? KVX::DTOUCHLrr
+                 ? (unsigned)KVX::DTOUCHLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DTOUCHLri10,
                                 KVX::DTOUCHLri37, KVX::DTOUCHLri64);
     break;
   case KVX::DZEROLp:
     OpCode = OffsetIsReg
-                 ? KVX::DZEROLrr
+                 ? (unsigned)KVX::DZEROLrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::DZEROLri10,
                                 KVX::DZEROLri37, KVX::DZEROLri64);
     break;
   case KVX::I1INVALSp:
     OpCode = OffsetIsReg
-                 ? KVX::I1INVALSrr
+                 ? (unsigned)KVX::I1INVALSrr
                  : GetImmOpCode(MI.getOperand(0).getImm(), KVX::I1INVALSri10,
                                 KVX::I1INVALSri37, KVX::I1INVALSri64);
     break;
