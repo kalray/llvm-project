@@ -50,48 +50,48 @@ typedef double __attribute__((ext_vector_type(16))) double16;
 
 // CHECK-LABEL: @local_memory_alignment_global(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    store volatile i8 0, ptr addrspace(2) @local_memory_alignment_global.lds_i8, align 1, !tbaa [[TBAA4:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x i8> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2i8, align 2, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i8> <i8 0, i8 0, i8 0, i8 undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3i8, align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i8> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4i8, align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x i8> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8i8, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x i8> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16i8, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile i16 0, ptr addrspace(2) @local_memory_alignment_global.lds_i16, align 2, !tbaa [[TBAA7:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x i16> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2i16, align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i16> <i16 0, i16 0, i16 0, i16 undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3i16, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i16> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4i16, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x i16> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8i16, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x i16> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16i16, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile i32 0, ptr addrspace(2) @local_memory_alignment_global.lds_i32, align 4, !tbaa [[TBAA9:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x i32> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2i32, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i32> <i32 0, i32 0, i32 0, i32 undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3i32, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i32> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4i32, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x i32> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8i32, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x i32> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16i32, align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile i64 0, ptr addrspace(2) @local_memory_alignment_global.lds_i64, align 8, !tbaa [[TBAA11:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x i64> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2i64, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i64> <i64 0, i64 0, i64 0, i64 undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3i64, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x i64> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4i64, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x i64> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8i64, align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x i64> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16i64, align 128, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile half 0xH0000, ptr addrspace(2) @local_memory_alignment_global.lds_f16, align 2, !tbaa [[TBAA13:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x half> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2f16, align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x half> <half 0xH0000, half 0xH0000, half 0xH0000, half undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3f16, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x half> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4f16, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x half> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8f16, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x half> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16f16, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile float 0.000000e+00, ptr addrspace(2) @local_memory_alignment_global.lds_f32, align 4, !tbaa [[TBAA15:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x float> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2f32, align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x float> <float 0.000000e+00, float 0.000000e+00, float 0.000000e+00, float undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3f32, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x float> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4f32, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x float> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8f32, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x float> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16f32, align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile double 0.000000e+00, ptr addrspace(2) @local_memory_alignment_global.lds_f64, align 8, !tbaa [[TBAA17:![0-9]+]]
-// CHECK-NEXT:    store volatile <2 x double> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v2f64, align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x double> <double 0.000000e+00, double 0.000000e+00, double 0.000000e+00, double undef>, ptr addrspace(2) @local_memory_alignment_global.lds_v3f64, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <4 x double> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v4f64, align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <8 x double> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v8f64, align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    store volatile <16 x double> zeroinitializer, ptr addrspace(2) @local_memory_alignment_global.lds_v16f64, align 128, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile i8 0, ptr addrspace(3) @local_memory_alignment_global.lds_i8, align 1, !tbaa [[TBAA4:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x i8> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2i8, align 2, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i8> <i8 0, i8 0, i8 0, i8 undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3i8, align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i8> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4i8, align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x i8> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8i8, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x i8> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16i8, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile i16 0, ptr addrspace(3) @local_memory_alignment_global.lds_i16, align 2, !tbaa [[TBAA7:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x i16> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2i16, align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i16> <i16 0, i16 0, i16 0, i16 undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3i16, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i16> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4i16, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x i16> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8i16, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x i16> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16i16, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile i32 0, ptr addrspace(3) @local_memory_alignment_global.lds_i32, align 4, !tbaa [[TBAA9:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x i32> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2i32, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i32> <i32 0, i32 0, i32 0, i32 undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3i32, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i32> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4i32, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x i32> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8i32, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x i32> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16i32, align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile i64 0, ptr addrspace(3) @local_memory_alignment_global.lds_i64, align 8, !tbaa [[TBAA11:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x i64> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2i64, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i64> <i64 0, i64 0, i64 0, i64 undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3i64, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x i64> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4i64, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x i64> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8i64, align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x i64> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16i64, align 128, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile half 0xH0000, ptr addrspace(3) @local_memory_alignment_global.lds_f16, align 2, !tbaa [[TBAA13:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x half> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2f16, align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x half> <half 0xH0000, half 0xH0000, half 0xH0000, half undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3f16, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x half> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4f16, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x half> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8f16, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x half> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16f16, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile float 0.000000e+00, ptr addrspace(3) @local_memory_alignment_global.lds_f32, align 4, !tbaa [[TBAA15:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x float> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2f32, align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x float> <float 0.000000e+00, float 0.000000e+00, float 0.000000e+00, float undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3f32, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x float> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4f32, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x float> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8f32, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x float> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16f32, align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile double 0.000000e+00, ptr addrspace(3) @local_memory_alignment_global.lds_f64, align 8, !tbaa [[TBAA17:![0-9]+]]
+// CHECK-NEXT:    store volatile <2 x double> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v2f64, align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x double> <double 0.000000e+00, double 0.000000e+00, double 0.000000e+00, double undef>, ptr addrspace(3) @local_memory_alignment_global.lds_v3f64, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <4 x double> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v4f64, align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <8 x double> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v8f64, align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    store volatile <16 x double> zeroinitializer, ptr addrspace(3) @local_memory_alignment_global.lds_v16f64, align 128, !tbaa [[TBAA4]]
 // CHECK-NEXT:    ret void
 //
 kernel void local_memory_alignment_global()
@@ -197,174 +197,174 @@ kernel void local_memory_alignment_global()
 
 // CHECK-LABEL: @local_memory_alignment_arg(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[LDS_I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16I8_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16I16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16I32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16I64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16F16_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16F32_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V2F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V3F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V4F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V8F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    [[LDS_V16F64_ADDR:%.*]] = alloca ptr addrspace(2), align 8
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_I8:%.*]], ptr [[LDS_I8_ADDR]], align 8, !tbaa [[TBAA24:![0-9]+]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2I8:%.*]], ptr [[LDS_V2I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3I8:%.*]], ptr [[LDS_V3I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4I8:%.*]], ptr [[LDS_V4I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8I8:%.*]], ptr [[LDS_V8I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16I8:%.*]], ptr [[LDS_V16I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_I16:%.*]], ptr [[LDS_I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2I16:%.*]], ptr [[LDS_V2I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3I16:%.*]], ptr [[LDS_V3I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4I16:%.*]], ptr [[LDS_V4I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8I16:%.*]], ptr [[LDS_V8I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16I16:%.*]], ptr [[LDS_V16I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_I32:%.*]], ptr [[LDS_I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2I32:%.*]], ptr [[LDS_V2I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3I32:%.*]], ptr [[LDS_V3I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4I32:%.*]], ptr [[LDS_V4I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8I32:%.*]], ptr [[LDS_V8I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16I32:%.*]], ptr [[LDS_V16I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_I64:%.*]], ptr [[LDS_I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2I64:%.*]], ptr [[LDS_V2I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3I64:%.*]], ptr [[LDS_V3I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4I64:%.*]], ptr [[LDS_V4I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8I64:%.*]], ptr [[LDS_V8I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16I64:%.*]], ptr [[LDS_V16I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_F16:%.*]], ptr [[LDS_F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2F16:%.*]], ptr [[LDS_V2F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3F16:%.*]], ptr [[LDS_V3F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4F16:%.*]], ptr [[LDS_V4F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8F16:%.*]], ptr [[LDS_V8F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16F16:%.*]], ptr [[LDS_V16F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_F32:%.*]], ptr [[LDS_F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2F32:%.*]], ptr [[LDS_V2F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3F32:%.*]], ptr [[LDS_V3F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4F32:%.*]], ptr [[LDS_V4F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8F32:%.*]], ptr [[LDS_V8F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16F32:%.*]], ptr [[LDS_V16F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_F64:%.*]], ptr [[LDS_F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V2F64:%.*]], ptr [[LDS_V2F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V3F64:%.*]], ptr [[LDS_V3F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V4F64:%.*]], ptr [[LDS_V4F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V8F64:%.*]], ptr [[LDS_V8F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store ptr addrspace(2) [[LDS_V16F64:%.*]], ptr [[LDS_V16F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(2), ptr [[LDS_I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile i8 0, ptr addrspace(2) [[TMP0]], align 1, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP1:%.*]] = load ptr addrspace(2), ptr [[LDS_V2I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x i8> zeroinitializer, ptr addrspace(2) [[TMP1]], align 2, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP2:%.*]] = load ptr addrspace(2), ptr [[LDS_V3I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i8> <i8 0, i8 0, i8 0, i8 undef>, ptr addrspace(2) [[TMP2]], align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP3:%.*]] = load ptr addrspace(2), ptr [[LDS_V4I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i8> zeroinitializer, ptr addrspace(2) [[TMP3]], align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP4:%.*]] = load ptr addrspace(2), ptr [[LDS_V8I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x i8> zeroinitializer, ptr addrspace(2) [[TMP4]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP5:%.*]] = load ptr addrspace(2), ptr [[LDS_V16I8_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x i8> zeroinitializer, ptr addrspace(2) [[TMP5]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP6:%.*]] = load ptr addrspace(2), ptr [[LDS_I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile i16 0, ptr addrspace(2) [[TMP6]], align 2, !tbaa [[TBAA7]]
-// CHECK-NEXT:    [[TMP7:%.*]] = load ptr addrspace(2), ptr [[LDS_V2I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x i16> zeroinitializer, ptr addrspace(2) [[TMP7]], align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP8:%.*]] = load ptr addrspace(2), ptr [[LDS_V3I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i16> <i16 0, i16 0, i16 0, i16 undef>, ptr addrspace(2) [[TMP8]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP9:%.*]] = load ptr addrspace(2), ptr [[LDS_V4I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i16> zeroinitializer, ptr addrspace(2) [[TMP9]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP10:%.*]] = load ptr addrspace(2), ptr [[LDS_V8I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x i16> zeroinitializer, ptr addrspace(2) [[TMP10]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP11:%.*]] = load ptr addrspace(2), ptr [[LDS_V16I16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x i16> zeroinitializer, ptr addrspace(2) [[TMP11]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP12:%.*]] = load ptr addrspace(2), ptr [[LDS_I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile i32 0, ptr addrspace(2) [[TMP12]], align 4, !tbaa [[TBAA9]]
-// CHECK-NEXT:    [[TMP13:%.*]] = load ptr addrspace(2), ptr [[LDS_V2I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x i32> zeroinitializer, ptr addrspace(2) [[TMP13]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP14:%.*]] = load ptr addrspace(2), ptr [[LDS_V3I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i32> <i32 0, i32 0, i32 0, i32 undef>, ptr addrspace(2) [[TMP14]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP15:%.*]] = load ptr addrspace(2), ptr [[LDS_V4I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i32> zeroinitializer, ptr addrspace(2) [[TMP15]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP16:%.*]] = load ptr addrspace(2), ptr [[LDS_V8I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x i32> zeroinitializer, ptr addrspace(2) [[TMP16]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP17:%.*]] = load ptr addrspace(2), ptr [[LDS_V16I32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x i32> zeroinitializer, ptr addrspace(2) [[TMP17]], align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP18:%.*]] = load ptr addrspace(2), ptr [[LDS_I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile i64 0, ptr addrspace(2) [[TMP18]], align 8, !tbaa [[TBAA11]]
-// CHECK-NEXT:    [[TMP19:%.*]] = load ptr addrspace(2), ptr [[LDS_V2I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x i64> zeroinitializer, ptr addrspace(2) [[TMP19]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP20:%.*]] = load ptr addrspace(2), ptr [[LDS_V3I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i64> <i64 0, i64 0, i64 0, i64 undef>, ptr addrspace(2) [[TMP20]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP21:%.*]] = load ptr addrspace(2), ptr [[LDS_V4I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x i64> zeroinitializer, ptr addrspace(2) [[TMP21]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP22:%.*]] = load ptr addrspace(2), ptr [[LDS_V8I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x i64> zeroinitializer, ptr addrspace(2) [[TMP22]], align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP23:%.*]] = load ptr addrspace(2), ptr [[LDS_V16I64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x i64> zeroinitializer, ptr addrspace(2) [[TMP23]], align 128, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP24:%.*]] = load ptr addrspace(2), ptr [[LDS_F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile half 0xH0000, ptr addrspace(2) [[TMP24]], align 2, !tbaa [[TBAA13]]
-// CHECK-NEXT:    [[TMP25:%.*]] = load ptr addrspace(2), ptr [[LDS_V2F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x half> zeroinitializer, ptr addrspace(2) [[TMP25]], align 4, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP26:%.*]] = load ptr addrspace(2), ptr [[LDS_V3F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x half> <half 0xH0000, half 0xH0000, half 0xH0000, half undef>, ptr addrspace(2) [[TMP26]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP27:%.*]] = load ptr addrspace(2), ptr [[LDS_V4F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x half> zeroinitializer, ptr addrspace(2) [[TMP27]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP28:%.*]] = load ptr addrspace(2), ptr [[LDS_V8F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x half> zeroinitializer, ptr addrspace(2) [[TMP28]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP29:%.*]] = load ptr addrspace(2), ptr [[LDS_V16F16_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x half> zeroinitializer, ptr addrspace(2) [[TMP29]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP30:%.*]] = load ptr addrspace(2), ptr [[LDS_F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile float 0.000000e+00, ptr addrspace(2) [[TMP30]], align 4, !tbaa [[TBAA15]]
-// CHECK-NEXT:    [[TMP31:%.*]] = load ptr addrspace(2), ptr [[LDS_V2F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x float> zeroinitializer, ptr addrspace(2) [[TMP31]], align 8, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP32:%.*]] = load ptr addrspace(2), ptr [[LDS_V3F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x float> <float 0.000000e+00, float 0.000000e+00, float 0.000000e+00, float undef>, ptr addrspace(2) [[TMP32]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP33:%.*]] = load ptr addrspace(2), ptr [[LDS_V4F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x float> zeroinitializer, ptr addrspace(2) [[TMP33]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP34:%.*]] = load ptr addrspace(2), ptr [[LDS_V8F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x float> zeroinitializer, ptr addrspace(2) [[TMP34]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP35:%.*]] = load ptr addrspace(2), ptr [[LDS_V16F32_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x float> zeroinitializer, ptr addrspace(2) [[TMP35]], align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP36:%.*]] = load ptr addrspace(2), ptr [[LDS_F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile double 0.000000e+00, ptr addrspace(2) [[TMP36]], align 8, !tbaa [[TBAA17]]
-// CHECK-NEXT:    [[TMP37:%.*]] = load ptr addrspace(2), ptr [[LDS_V2F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <2 x double> zeroinitializer, ptr addrspace(2) [[TMP37]], align 16, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP38:%.*]] = load ptr addrspace(2), ptr [[LDS_V3F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x double> <double 0.000000e+00, double 0.000000e+00, double 0.000000e+00, double undef>, ptr addrspace(2) [[TMP38]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP39:%.*]] = load ptr addrspace(2), ptr [[LDS_V4F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <4 x double> zeroinitializer, ptr addrspace(2) [[TMP39]], align 32, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP40:%.*]] = load ptr addrspace(2), ptr [[LDS_V8F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <8 x double> zeroinitializer, ptr addrspace(2) [[TMP40]], align 64, !tbaa [[TBAA4]]
-// CHECK-NEXT:    [[TMP41:%.*]] = load ptr addrspace(2), ptr [[LDS_V16F64_ADDR]], align 8, !tbaa [[TBAA24]]
-// CHECK-NEXT:    store volatile <16 x double> zeroinitializer, ptr addrspace(2) [[TMP41]], align 128, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[LDS_I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16I8_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16I16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16I32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16I64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16F16_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16F32_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V2F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V3F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V4F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V8F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    [[LDS_V16F64_ADDR:%.*]] = alloca ptr addrspace(3), align 8
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_I8:%.*]], ptr [[LDS_I8_ADDR]], align 8, !tbaa [[TBAA24:![0-9]+]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2I8:%.*]], ptr [[LDS_V2I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3I8:%.*]], ptr [[LDS_V3I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4I8:%.*]], ptr [[LDS_V4I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8I8:%.*]], ptr [[LDS_V8I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16I8:%.*]], ptr [[LDS_V16I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_I16:%.*]], ptr [[LDS_I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2I16:%.*]], ptr [[LDS_V2I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3I16:%.*]], ptr [[LDS_V3I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4I16:%.*]], ptr [[LDS_V4I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8I16:%.*]], ptr [[LDS_V8I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16I16:%.*]], ptr [[LDS_V16I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_I32:%.*]], ptr [[LDS_I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2I32:%.*]], ptr [[LDS_V2I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3I32:%.*]], ptr [[LDS_V3I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4I32:%.*]], ptr [[LDS_V4I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8I32:%.*]], ptr [[LDS_V8I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16I32:%.*]], ptr [[LDS_V16I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_I64:%.*]], ptr [[LDS_I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2I64:%.*]], ptr [[LDS_V2I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3I64:%.*]], ptr [[LDS_V3I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4I64:%.*]], ptr [[LDS_V4I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8I64:%.*]], ptr [[LDS_V8I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16I64:%.*]], ptr [[LDS_V16I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_F16:%.*]], ptr [[LDS_F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2F16:%.*]], ptr [[LDS_V2F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3F16:%.*]], ptr [[LDS_V3F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4F16:%.*]], ptr [[LDS_V4F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8F16:%.*]], ptr [[LDS_V8F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16F16:%.*]], ptr [[LDS_V16F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_F32:%.*]], ptr [[LDS_F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2F32:%.*]], ptr [[LDS_V2F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3F32:%.*]], ptr [[LDS_V3F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4F32:%.*]], ptr [[LDS_V4F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8F32:%.*]], ptr [[LDS_V8F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16F32:%.*]], ptr [[LDS_V16F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_F64:%.*]], ptr [[LDS_F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V2F64:%.*]], ptr [[LDS_V2F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V3F64:%.*]], ptr [[LDS_V3F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V4F64:%.*]], ptr [[LDS_V4F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V8F64:%.*]], ptr [[LDS_V8F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store ptr addrspace(3) [[LDS_V16F64:%.*]], ptr [[LDS_V16F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(3), ptr [[LDS_I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile i8 0, ptr addrspace(3) [[TMP0]], align 1, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP1:%.*]] = load ptr addrspace(3), ptr [[LDS_V2I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x i8> zeroinitializer, ptr addrspace(3) [[TMP1]], align 2, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP2:%.*]] = load ptr addrspace(3), ptr [[LDS_V3I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i8> <i8 0, i8 0, i8 0, i8 undef>, ptr addrspace(3) [[TMP2]], align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP3:%.*]] = load ptr addrspace(3), ptr [[LDS_V4I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i8> zeroinitializer, ptr addrspace(3) [[TMP3]], align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP4:%.*]] = load ptr addrspace(3), ptr [[LDS_V8I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x i8> zeroinitializer, ptr addrspace(3) [[TMP4]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP5:%.*]] = load ptr addrspace(3), ptr [[LDS_V16I8_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x i8> zeroinitializer, ptr addrspace(3) [[TMP5]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP6:%.*]] = load ptr addrspace(3), ptr [[LDS_I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile i16 0, ptr addrspace(3) [[TMP6]], align 2, !tbaa [[TBAA7]]
+// CHECK-NEXT:    [[TMP7:%.*]] = load ptr addrspace(3), ptr [[LDS_V2I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x i16> zeroinitializer, ptr addrspace(3) [[TMP7]], align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP8:%.*]] = load ptr addrspace(3), ptr [[LDS_V3I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i16> <i16 0, i16 0, i16 0, i16 undef>, ptr addrspace(3) [[TMP8]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP9:%.*]] = load ptr addrspace(3), ptr [[LDS_V4I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i16> zeroinitializer, ptr addrspace(3) [[TMP9]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP10:%.*]] = load ptr addrspace(3), ptr [[LDS_V8I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x i16> zeroinitializer, ptr addrspace(3) [[TMP10]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP11:%.*]] = load ptr addrspace(3), ptr [[LDS_V16I16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x i16> zeroinitializer, ptr addrspace(3) [[TMP11]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP12:%.*]] = load ptr addrspace(3), ptr [[LDS_I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile i32 0, ptr addrspace(3) [[TMP12]], align 4, !tbaa [[TBAA9]]
+// CHECK-NEXT:    [[TMP13:%.*]] = load ptr addrspace(3), ptr [[LDS_V2I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x i32> zeroinitializer, ptr addrspace(3) [[TMP13]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP14:%.*]] = load ptr addrspace(3), ptr [[LDS_V3I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i32> <i32 0, i32 0, i32 0, i32 undef>, ptr addrspace(3) [[TMP14]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP15:%.*]] = load ptr addrspace(3), ptr [[LDS_V4I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i32> zeroinitializer, ptr addrspace(3) [[TMP15]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP16:%.*]] = load ptr addrspace(3), ptr [[LDS_V8I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x i32> zeroinitializer, ptr addrspace(3) [[TMP16]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP17:%.*]] = load ptr addrspace(3), ptr [[LDS_V16I32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x i32> zeroinitializer, ptr addrspace(3) [[TMP17]], align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP18:%.*]] = load ptr addrspace(3), ptr [[LDS_I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile i64 0, ptr addrspace(3) [[TMP18]], align 8, !tbaa [[TBAA11]]
+// CHECK-NEXT:    [[TMP19:%.*]] = load ptr addrspace(3), ptr [[LDS_V2I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x i64> zeroinitializer, ptr addrspace(3) [[TMP19]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP20:%.*]] = load ptr addrspace(3), ptr [[LDS_V3I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i64> <i64 0, i64 0, i64 0, i64 undef>, ptr addrspace(3) [[TMP20]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP21:%.*]] = load ptr addrspace(3), ptr [[LDS_V4I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x i64> zeroinitializer, ptr addrspace(3) [[TMP21]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP22:%.*]] = load ptr addrspace(3), ptr [[LDS_V8I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x i64> zeroinitializer, ptr addrspace(3) [[TMP22]], align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP23:%.*]] = load ptr addrspace(3), ptr [[LDS_V16I64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x i64> zeroinitializer, ptr addrspace(3) [[TMP23]], align 128, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP24:%.*]] = load ptr addrspace(3), ptr [[LDS_F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile half 0xH0000, ptr addrspace(3) [[TMP24]], align 2, !tbaa [[TBAA13]]
+// CHECK-NEXT:    [[TMP25:%.*]] = load ptr addrspace(3), ptr [[LDS_V2F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x half> zeroinitializer, ptr addrspace(3) [[TMP25]], align 4, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP26:%.*]] = load ptr addrspace(3), ptr [[LDS_V3F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x half> <half 0xH0000, half 0xH0000, half 0xH0000, half undef>, ptr addrspace(3) [[TMP26]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP27:%.*]] = load ptr addrspace(3), ptr [[LDS_V4F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x half> zeroinitializer, ptr addrspace(3) [[TMP27]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP28:%.*]] = load ptr addrspace(3), ptr [[LDS_V8F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x half> zeroinitializer, ptr addrspace(3) [[TMP28]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP29:%.*]] = load ptr addrspace(3), ptr [[LDS_V16F16_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x half> zeroinitializer, ptr addrspace(3) [[TMP29]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP30:%.*]] = load ptr addrspace(3), ptr [[LDS_F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile float 0.000000e+00, ptr addrspace(3) [[TMP30]], align 4, !tbaa [[TBAA15]]
+// CHECK-NEXT:    [[TMP31:%.*]] = load ptr addrspace(3), ptr [[LDS_V2F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x float> zeroinitializer, ptr addrspace(3) [[TMP31]], align 8, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP32:%.*]] = load ptr addrspace(3), ptr [[LDS_V3F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x float> <float 0.000000e+00, float 0.000000e+00, float 0.000000e+00, float undef>, ptr addrspace(3) [[TMP32]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP33:%.*]] = load ptr addrspace(3), ptr [[LDS_V4F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x float> zeroinitializer, ptr addrspace(3) [[TMP33]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP34:%.*]] = load ptr addrspace(3), ptr [[LDS_V8F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x float> zeroinitializer, ptr addrspace(3) [[TMP34]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP35:%.*]] = load ptr addrspace(3), ptr [[LDS_V16F32_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x float> zeroinitializer, ptr addrspace(3) [[TMP35]], align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP36:%.*]] = load ptr addrspace(3), ptr [[LDS_F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile double 0.000000e+00, ptr addrspace(3) [[TMP36]], align 8, !tbaa [[TBAA17]]
+// CHECK-NEXT:    [[TMP37:%.*]] = load ptr addrspace(3), ptr [[LDS_V2F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <2 x double> zeroinitializer, ptr addrspace(3) [[TMP37]], align 16, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP38:%.*]] = load ptr addrspace(3), ptr [[LDS_V3F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x double> <double 0.000000e+00, double 0.000000e+00, double 0.000000e+00, double undef>, ptr addrspace(3) [[TMP38]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP39:%.*]] = load ptr addrspace(3), ptr [[LDS_V4F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <4 x double> zeroinitializer, ptr addrspace(3) [[TMP39]], align 32, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP40:%.*]] = load ptr addrspace(3), ptr [[LDS_V8F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <8 x double> zeroinitializer, ptr addrspace(3) [[TMP40]], align 64, !tbaa [[TBAA4]]
+// CHECK-NEXT:    [[TMP41:%.*]] = load ptr addrspace(3), ptr [[LDS_V16F64_ADDR]], align 8, !tbaa [[TBAA24]]
+// CHECK-NEXT:    store volatile <16 x double> zeroinitializer, ptr addrspace(3) [[TMP41]], align 128, !tbaa [[TBAA4]]
 // CHECK-NEXT:    ret void
 //
 kernel void local_memory_alignment_arg(

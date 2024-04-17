@@ -1751,6 +1751,7 @@ void KVXTargetInfo::adjust(DiagnosticsEngine &Diags, LangOptions &Opts) {
   // Keep vector aligned to its size.
   if (Opts.OpenCL)
     MaxVectorAlign = 0;
+  Opts.FakeAddressSpaceMap |= Opts.OpenCL;
 }
 
 #define VECTOR_TYPE(base, count)                                               \
@@ -1863,7 +1864,12 @@ void KVXTargetInfo::getTargetDefines(const LangOptions &Opts,
 
   Builder.defineMacro("__kvx_v256", VECTOR_TYPE(unsigned long, 4));
 
-  Builder.defineMacro("FLT_EVAL_METHOD", "0");
+  // FLT_EVAL_METHOD should only be set in super-set of C99 standards.
+  // If a standard is not specified, asusme it is C99 or newer as clang
+  // defaults to C99.
+  if (Opts.LangStd == LangStandard::lang_unspecified ||
+      LangStandard::getLangStandardForKind(Opts.LangStd).isC99())
+    Builder.defineMacro("FLT_EVAL_METHOD", "0");
 }
 
 const Builtin::Info KVXTargetInfo::BuiltinInfo[] = {
