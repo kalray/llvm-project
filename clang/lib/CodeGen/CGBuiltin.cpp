@@ -23205,7 +23205,7 @@ Value *CodeGenFunction::EmitKVXBuiltinExpr(unsigned BuiltinID,
       const Expr *Arg = E->getArg(I);
       Value *ArgVal = EmitScalarExpr(Arg);
       auto *ArgType = ArgVal->getType();
-      if (ArgType->getPrimitiveSizeInBits().getFixedSize() > 64) {
+      if (ArgType->getPrimitiveSizeInBits() > 64) {
         this->CGM.Error(
             Arg->getBeginLoc(),
             "scall builtin only supports scalars of size <= 64 bits");
