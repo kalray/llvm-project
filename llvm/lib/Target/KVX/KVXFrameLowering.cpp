@@ -438,32 +438,60 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   }
 
   auto *KVXFI = MF.getInfo<KVXMachineFunctionInfo>();
+  MachineFrameInfo &MFI = MF.getFrameInfo();
+  uint64_t StackSize = MFI.getStackSize();
+  if (KVXFI->isAdjustLocalAreaSP()) {
+    StackSize = alignTo(StackSize + KVXFI->getMaxAlignment(), 32);
+    MFI.setStackSize(StackSize);
+
+    LLVM_DEBUG(dbgs() << "Local/Alloca reAlign=" << KVXFI->getMaxAlignment()
+                      << "\n");
+    LLVM_DEBUG(dbgs() << "new StackSize=" << MFI.getStackSize() << "\n");
+  }
   // Restore SP from FP first.
   if (hasFP(MF)) {
+    if (!MFI.getStackSize()) {
+      LLVM_DEBUG(dbgs() << "Enforcing StackSize to 32 bytes.");
+      MFI.setStackSize(32);
+    }
     // SUBDri64 is translated to ADDDri at FrameIndexElimination.
     BuildMI(MBB, MI, DL, TII->get(KVX::SUBDri64), getSPReg())
         .addReg(getFPReg())
         .addFrameIndex(KVXFI->getFPIndex())
         .setMIFlags(MachineInstr::FrameDestroy);
+
+    auto CFIIndex = MF.addFrameInst(MCCFIInstruction::cfiDefCfa(
+        nullptr, TRI->getDwarfRegNum(getSPReg(), true),
+        MF.getFrameInfo().getStackSize()));
+
+    BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(CFIIndex)
+        .setMIFlags(MachineInstr::FrameSetup);
   }
 
   // Emit load instructions.
   for (unsigned I = 0; I < RegSaved.size(); ++I) {
     TII->loadRegFromStackSlot(MBB, MI, RegSaved[I], FrameIdxSaved[I],
-                              RCSaved[I], TRI, Register());
+                              RCSaved[I], TRI, Register(), true, DL);
   }
 
   return true;
 }
 
 bool KVXFrameLowering::hasFP(const MachineFunction &MF) const {
+  if (MF.getFunction().hasFnAttribute(Attribute::Naked))
+    return false;
+
   if (MF.getTarget().Options.DisableFramePointerElim(MF))
     return true;
 
   const TargetRegisterInfo *RegInfo = MF.getSubtarget().getRegisterInfo();
 
-  return MF.getFrameInfo().hasVarSizedObjects() ||
-         RegInfo->hasStackRealignment(MF);
+  const auto &MFI = MF.getFrameInfo();
+
+  return RegInfo->hasStackRealignment(MF) || MFI.isFrameAddressTaken() ||
+         MFI.hasVarSizedObjects() || hasStackLimitRegister() ||
+         MF.getTarget().Options.DisableFramePointerElim(MF);
 }
 
 bool KVXFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {

@@ -44,6 +44,10 @@ struct KVXRegisterInfo : public KVXGenRegisterInfo {
     return true;
   }
 
+  bool useFPForScavengingIndex(const MachineFunction &MF) const override {
+    return false;
+  }
+
   // bool isConstantPhysReg(MCRegister PhysReg) const override;
   bool isVolatilePhysReg(MCRegister PhysReg) const override;
   const uint32_t *getNoPreservedMask() const override;

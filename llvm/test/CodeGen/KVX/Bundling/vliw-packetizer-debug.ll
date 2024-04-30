@@ -18,7 +18,6 @@ define i32 @debug_sanity(ptr nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg 
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -53,8 +52,11 @@ define i32 @debug_sanity(ptr nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg 
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:  .Ltmp1:
+; CHECK-NEXT:    .cfi_restore 19
+; CHECK-NEXT:    .cfi_restore 18
 ; CHECK-NEXT:    ld $r20 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    .cfi_restore 20
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    .loc 1 8 3 epilogue_begin is_stmt 0
@@ -62,6 +64,7 @@ define i32 @debug_sanity(ptr nocapture %p, i32 %a, i32 %b, i32 %c, i32 %d) !dbg 
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp2:

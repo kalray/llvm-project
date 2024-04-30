@@ -19,7 +19,6 @@ define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -86,12 +85,15 @@ define i32 @noalign(i32 %n, i32 %n2, i32 %n3) #0 !dbg !10 {
 ; CHECK-NEXT:    .loc 1 11 3 epilogue_begin is_stmt 0 # dwarf.c:11:3
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 12, 32
 ; CHECK-NEXT:    ld $r14 = 48[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
@@ -145,7 +147,6 @@ define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -217,14 +218,18 @@ define i32 @stackrealign1(i32 %n, i32 %n2, i32 %n3) #0 !dbg !32 {
 ; CHECK-NEXT:    .loc 1 37 3 epilogue_begin is_stmt 0 # dwarf.c:37:3
 ; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 12, 128
 ; CHECK-NEXT:    ld $r31 = 232[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 31
 ; CHECK-NEXT:    ld $r14 = 240[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 248[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
@@ -276,7 +281,6 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 256
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 248[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -386,14 +390,18 @@ define i32 @stackrealign2(i32 %n) #0 !dbg !52 {
 ; CHECK-NEXT:    .loc 1 73 3 epilogue_begin # dwarf.c:73:3
 ; CHECK-NEXT:    addd $r12 = $r14, -240
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 12, 128
 ; CHECK-NEXT:    ld $r31 = 232[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 31
 ; CHECK-NEXT:    ld $r14 = 240[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 248[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    addd $r12 = $r12, 256
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
@@ -463,7 +471,6 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_offset 67, -8
@@ -568,12 +575,15 @@ define i32 @teststackalloca(i32 %n) #0 !dbg !88 {
 ; CHECK-NEXT:    .loc 1 119 3 epilogue_begin # dwarf.c:119:3
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 12, 32
 ; CHECK-NEXT:    ld $r14 = 48[$r12]
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0

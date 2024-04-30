@@ -152,7 +152,9 @@ KVXTargetMachine::KVXTargetMachine(const Target &T, const Triple &TT,
   Options.EnableFastISel = false;
   Options.EnableGlobalISel = false;
   Options.EnableCFIFixup = true;
+  Options.EnableDebugEntryValues = true;
   Options.MCOptions.CompressDebugSections = DebugCompressionType::None;
+  Options.DebuggerTuning = DebuggerKind::GDB;
   setSupportsDebugEntryValues(true);
   initAsmInfo();
 }
