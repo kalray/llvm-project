@@ -55,6 +55,11 @@ public:
   bool hasFP(const MachineFunction &MF) const override;
 
   bool hasReservedCallFrame(const MachineFunction &MF) const override;
+
+  // FIXME: Stack size can be improved if frame aligment is handled in the
+  // backend bool targetHandlesStackFrameRounding() const override { return
+  // true; }
+
   MachineBasicBlock::iterator
   eliminateCallFramePseudoInstr(MachineFunction &MF, MachineBasicBlock &MBB,
                                 MachineBasicBlock::iterator MI) const override;

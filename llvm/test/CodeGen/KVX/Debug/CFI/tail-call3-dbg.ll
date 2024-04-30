@@ -15,7 +15,6 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -49,12 +48,15 @@ define %struct.Y @f(i64 %x.coerce0, i64 %x.coerce1, i64 %x.coerce2, i64 %x.coerc
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    lq $r18r19 = 40[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    .cfi_restore 19
+; CHECK-NEXT:    .cfi_restore 18
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    goto h
 ; CHECK-NEXT:    ;;
 entry:

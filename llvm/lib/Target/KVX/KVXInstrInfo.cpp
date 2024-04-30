@@ -325,19 +325,28 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                         const TargetRegisterClass *RC,
                                         const TargetRegisterInfo *TRI,
                                         Register VReg) const {
+  return loadRegFromStackSlot(MBB, I, DstReg, FI, RC, TRI, VReg, false,
+                              DebugLoc());
+}
+
+void KVXInstrInfo::loadRegFromStackSlot(
+    MachineBasicBlock &MBB, MachineBasicBlock::iterator I, Register DstReg,
+    int FI, const TargetRegisterClass *RC, const TargetRegisterInfo *TRI,
+    Register VReg, bool IsEpilogue, DebugLoc DL) const {
   LLVM_DEBUG(dbgs() << "Loading from stack to register (" << DstReg << ").\n");
-  DebugLoc DL;
   if (I != MBB.end())
     DL = I->getDebugLoc();
-
+  unsigned Width = 1;
   int Pseudo = 0;
   if (KVX::SingleRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a single GPR, loading using LDp.\n");
     Pseudo = KVX::LDp;
   } else if (KVX::PairedRegRegClass.hasSubClassEq(RC)) {
+    Width = 2;
     LLVM_DEBUG(dbgs() << "It is a paired GPR, loading using LQp.\n");
     Pseudo = KVX::LQp;
   } else if (KVX::QuadRegRegClass.hasSubClassEq(RC)) {
+    Width = 4;
     LLVM_DEBUG(dbgs() << "It is a quad GPR, loading using LOp.\n");
     Pseudo = KVX::LOp;
   } else if (KVX::BlockRegRegClass.hasSubClassEq(RC)) {
@@ -354,14 +363,29 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
     LLVM_DEBUG(
         dbgs() << "It is a matrix TCA register, loading using LMATRIXp.\n");
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
-    LLVM_DEBUG(dbgs() << "It is a RA register, using LDp and SETrsta.\n");
+    LLVM_DEBUG(dbgs() << "It is the RA register, using LDp and SETrsta.\n");
+
     Register ScratchReg = findScratchRegister(MBB, true, KVX::R16);
-    BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
-        .addImm(0)
-        .addFrameIndex(FI)
-        .addImm(KVXMOD::VARIANT_);
-    BuildMI(MBB, I, DL, get(KVX::SETrst3), KVX::RA)
-        .addReg(ScratchReg, RegState::Kill);
+    auto LDp = BuildMI(MBB, I, DL, get(KVX::LDp), ScratchReg)
+                   .addImm(0)
+                   .addFrameIndex(FI)
+                   .addImm(KVXMOD::VARIANT_);
+    if (IsEpilogue)
+      LDp.setMIFlag(MachineInstr::FrameDestroy);
+
+    auto SRA = BuildMI(MBB, I, DL, get(KVX::SETrst3), KVX::RA)
+                   .addReg(ScratchReg, RegState::Kill);
+    if (IsEpilogue) {
+      SRA.setMIFlag(MachineInstr::FrameDestroy);
+      unsigned CFIIndex =
+          MBB.getParent()->addFrameInst(MCCFIInstruction::createRestore(
+              nullptr, TRI->getDwarfRegNum(KVX::RA, false)));
+
+      BuildMI(MBB, SRA.getInstr()->getNextNode(), DL,
+              get(TargetOpcode::CFI_INSTRUCTION))
+          .addCFIIndex(CFIIndex)
+          .setMIFlag(MachineInstr::FrameDestroy);
+    }
     return;
   } else
     report_fatal_error("Don't know how to load register from the stack.");
@@ -371,17 +395,48 @@ void KVXInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                  .addImm(0)
                  .addFrameIndex(FI)
                  .addImm(KVXMOD::VARIANT_);
+  if (IsEpilogue)
+    MIB.setMIFlag(MachineInstr::FrameDestroy);
+
   LLVM_DEBUG(dbgs() << "Created Load: "; MIB->dump());
-  (void)MIB;
-  return;
+
+  if (!IsEpilogue)
+    return;
+
+  if (Width == 1) {
+    unsigned CFIIndex =
+        MBB.getParent()->addFrameInst(MCCFIInstruction::createRestore(
+            nullptr, TRI->getDwarfRegNum(DstReg, false)));
+
+    BuildMI(MBB, MIB.getInstr()->getNextNode(), DL,
+            get(TargetOpcode::CFI_INSTRUCTION))
+        .addCFIIndex(CFIIndex)
+        .setMIFlag(MachineInstr::FrameDestroy);
+    return;
+  }
+
+  for (unsigned SR = 0; SR < Width; ++SR) {
+    const uint16_t SubIndx[] = {KVX::sub_d0, KVX::sub_d1, KVX::sub_d2,
+                                KVX::sub_d3};
+
+    Register SubReg = TRI->getSubReg(DstReg, SubIndx[SR]);
+    unsigned CFIIndex =
+        MBB.getParent()->addFrameInst(MCCFIInstruction::createRestore(
+            nullptr, TRI->getDwarfRegNum(SubReg, false)));
+
+    MIB = BuildMI(MBB, MIB.getInstr()->getNextNode(), DL,
+                  get(TargetOpcode::CFI_INSTRUCTION))
+              .addCFIIndex(CFIIndex)
+              .setMIFlag(MachineInstr::FrameDestroy);
+  }
 }
 
 void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
-                                      MachineBasicBlock::iterator I,
-                                      Register SrcReg, bool IsKill, int FI,
-                                      const TargetRegisterClass *RC,
-                                      const TargetRegisterInfo *TRI,
-                                      Register VReg) const {
+                                       MachineBasicBlock::iterator I,
+                                       Register SrcReg, bool IsKill, int FI,
+                                       const TargetRegisterClass *RC,
+                                       const TargetRegisterInfo *TRI,
+                                       Register VReg) const {
   LLVM_DEBUG(dbgs() << "Storing register (" << SrcReg << ") to the stack.\n");
 
   DebugLoc DL;
@@ -416,21 +471,9 @@ void KVXInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   } else if (KVX::OnlyraRegRegClass.hasSubClassEq(RC)) {
     LLVM_DEBUG(dbgs() << "It is a RA register, using GET and SDp.\n");
 
-    MachineFunction &MF = *MBB.getParent();
-    const TargetSubtargetInfo &STI = MF.getSubtarget();
-    const TargetInstrInfo *TII = STI.getInstrInfo();
-    const MCRegisterInfo *MRI = STI.getRegisterInfo();
-
     Register ScratchReg = findScratchRegister(MBB, false, KVX::R16);
     BuildMI(MBB, I, DL, get(KVX::GET), ScratchReg)
         .addReg(KVX::RA)
-        .setMIFlags(MachineInstr::FrameSetup);
-
-    unsigned CFIIndex = MF.addFrameInst(MCCFIInstruction::createRegister(
-        nullptr, MRI->getDwarfRegNum(KVX::RA, true),
-        MRI->getDwarfRegNum(ScratchReg, true)));
-    BuildMI(MBB, I, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
-        .addCFIIndex(CFIIndex)
         .setMIFlags(MachineInstr::FrameSetup);
 
     BuildMI(MBB, I, DL, get(KVX::SDp))
