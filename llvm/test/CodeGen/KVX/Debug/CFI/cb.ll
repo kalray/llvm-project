@@ -26,7 +26,6 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:    sd 24[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -73,6 +72,7 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    addx2w $r0 = $r18, $r0
 ; CHECK-NEXT:    ld $r18 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    .cfi_restore 18
 ; CHECK-NEXT:  .Ltmp5:
 ; CHECK-NEXT:    #DEBUG_VALUE: add_or_sub:S <- $r0
 ; CHECK-NEXT:    .loc 1 12 3 # test.c:12:3
@@ -83,6 +83,7 @@ define i32 @add_or_sub(i32 %x, i32 %y, i32 %doAdd) !dbg !7 {
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp6:

@@ -18,7 +18,6 @@ define void @testuvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr 
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -82,20 +81,29 @@ define void @testuvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr 
 ; CHECK-NEXT:    sq 0[$r18] = $r20r21
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    .cfi_def_cfa 12, 32
 ; CHECK-NEXT:    .loc 1 5 58 # cfi-order.c:5:58
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .Ltmp3:
+; CHECK-NEXT:    .cfi_restore 19
+; CHECK-NEXT:    .cfi_restore 18
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    .cfi_restore 23
+; CHECK-NEXT:    .cfi_restore 22
+; CHECK-NEXT:    .cfi_restore 21
+; CHECK-NEXT:    .cfi_restore 20
 ; CHECK-NEXT:    ld $r14 = 48[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp4:
@@ -122,7 +130,6 @@ define void @testsvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr 
 ; CHECK-NEXT:    addd $r12 = $r12, -64
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 64
 ; CHECK-NEXT:    sd 56[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
@@ -186,20 +193,29 @@ define void @testsvec(ptr nocapture readonly %A, ptr nocapture readonly %B, ptr 
 ; CHECK-NEXT:    sq 0[$r18] = $r20r21
 ; CHECK-NEXT:    addd $r12 = $r14, -48
 ; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    .cfi_def_cfa 12, 32
 ; CHECK-NEXT:    .loc 1 6 58 # cfi-order.c:6:58
 ; CHECK-NEXT:    lq $r18r19 = 0[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .Ltmp8:
+; CHECK-NEXT:    .cfi_restore 19
+; CHECK-NEXT:    .cfi_restore 18
 ; CHECK-NEXT:    lo $r20r21r22r23 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    .cfi_restore 23
+; CHECK-NEXT:    .cfi_restore 22
+; CHECK-NEXT:    .cfi_restore 21
+; CHECK-NEXT:    .cfi_restore 20
 ; CHECK-NEXT:    ld $r14 = 48[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 56[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 64
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp9:
@@ -224,7 +240,6 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    .cfi_register 67, 16
 ; CHECK-NEXT:    .cfi_def_cfa_offset 32
 ; CHECK-NEXT:  .Ltmp10:
 ; CHECK-NEXT:    #DEBUG_VALUE: f:S3 <- undef
@@ -246,14 +261,17 @@ define i32 @f() local_unnamed_addr #1 !dbg !47 {
 ; CHECK-NEXT:    .loc 1 32 3 prologue_end epilogue_begin is_stmt 1 # cfi-order.c:32:3
 ; CHECK-NEXT:    addd $r12 = $r14, -16
 ; CHECK-NEXT:    ;;
+; CHECK-NEXT:    .cfi_def_cfa 12, 32
 ; CHECK-NEXT:    ld $r14 = 16[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
+; CHECK-NEXT:    .cfi_restore 14
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    .cfi_def_cfa_offset 0
+; CHECK-NEXT:    .cfi_restore 67
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .Ltmp12:
