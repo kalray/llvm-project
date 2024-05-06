@@ -1,0 +1,280 @@
+# RUN: llc -x mir -start-after=stack-frame-layout -o - %s | FileCheck %s
+# CHECK: make $r1 = .LBB0_1
+# CHECK: .LBB0_1:{{.*}} # Block address taken
+--- |
+  target triple = "kvx-kalray-cos"
+  
+  define dso_local noundef i32 @main() local_unnamed_addr #0 {
+    %1 = alloca [5 x ptr], align 8
+    call void @llvm.lifetime.start.p0(i64 40, ptr nonnull %1) #4
+    %2 = tail call ptr @llvm.frameaddress.p0(i32 0)
+    store ptr %2, ptr %1, align 8
+    %3 = tail call ptr @llvm.stacksave.p0()
+    %4 = getelementptr inbounds i8, ptr %1, i64 16
+    store ptr %3, ptr %4, align 8
+    %5 = call i32 @llvm.eh.sjlj.setjmp(ptr nonnull %1)
+    call void @llvm.lifetime.end.p0(i64 40, ptr nonnull %1) #4
+    ret i32 0
+  }
+  
+  declare void @llvm.lifetime.start.p0(i64 immarg, ptr nocapture) #1
+  
+  declare ptr @llvm.frameaddress.p0(i32 immarg) #2
+  
+  declare ptr @llvm.stacksave.p0() #3
+  
+  declare i32 @llvm.eh.sjlj.setjmp(ptr) #4
+  
+  declare void @llvm.lifetime.end.p0(i64 immarg, ptr nocapture) #1
+  
+  declare void @_Unwind_SjLj_Register(ptr)
+  
+  declare void @_Unwind_SjLj_Unregister(ptr)
+  
+  declare void @llvm.stackrestore.p0(ptr) #3
+  
+  declare void @llvm.eh.sjlj.setup.dispatch() #4
+  
+  declare ptr @llvm.eh.sjlj.lsda() #5
+  
+  declare void @llvm.eh.sjlj.callsite(i32 immarg) #5
+  
+  declare void @llvm.eh.sjlj.functioncontext(ptr) #4
+  
+  attributes #0 = { nounwind "no-trapping-math"="true" "stack-protector-buffer-size"="8" }
+  attributes #1 = { nocallback nofree nosync nounwind willreturn memory(argmem: readwrite) }
+  attributes #2 = { nocallback nofree nosync nounwind willreturn memory(none) }
+  attributes #3 = { nocallback nofree nosync nounwind willreturn }
+  attributes #4 = { nounwind }
+  attributes #5 = { nounwind memory(none) }
+  
+  !llvm.module.flags = !{!0}
+  
+  !0 = !{i32 1, !"wchar_size", i32 4}
+  
+...
+---
+name:            main
+alignment:       64
+exposesReturnsTwice: false
+legalized:       false
+regBankSelected: false
+selected:        false
+failedISel:      false
+tracksRegLiveness: true
+hasWinCFI:       false
+callsEHReturn:   false
+callsUnwindInit: false
+hasEHCatchret:   false
+hasEHScopes:     false
+hasEHFunclets:   false
+isOutlined:      false
+debugInstrRef:   false
+failsVerification: false
+tracksDebugUserValues: true
+registers:       []
+liveins:         []
+frameInfo:
+  isFrameAddressTaken: true
+  isReturnAddressTaken: false
+  hasStackMap:     false
+  hasPatchPoint:   false
+  stackSize:       192
+  offsetAdjustment: 0
+  maxAlignment:    8
+  adjustsStack:    false
+  hasCalls:        false
+  stackProtector:  ''
+  functionContext: ''
+  maxCallFrameSize: 0
+  cvBytesOfCalleeSavedRegisters: 0
+  hasOpaqueSPAdjustment: false
+  hasVAStart:      false
+  hasMustTailInVarArgFunc: false
+  hasTailCall:     false
+  localFrameSize:  0
+  savePoint:       ''
+  restorePoint:    ''
+fixedStack:      []
+stack:
+  - { id: 0, name: '', type: default, offset: -168, size: 40, alignment: 8, 
+      stack-id: default, callee-saved-register: '', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 1, name: '', type: spill-slot, offset: -8, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$ra', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 2, name: '', type: spill-slot, offset: -16, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r14', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 3, name: '', type: spill-slot, offset: -24, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r31', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 4, name: '', type: spill-slot, offset: -32, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r30', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 5, name: '', type: spill-slot, offset: -40, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r29', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 6, name: '', type: spill-slot, offset: -48, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r28', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 7, name: '', type: spill-slot, offset: -56, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r27', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 8, name: '', type: spill-slot, offset: -64, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r26', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 9, name: '', type: spill-slot, offset: -72, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r25', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 10, name: '', type: spill-slot, offset: -80, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r24', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 11, name: '', type: spill-slot, offset: -88, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r23', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 12, name: '', type: spill-slot, offset: -96, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r22', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 13, name: '', type: spill-slot, offset: -104, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r21', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 14, name: '', type: spill-slot, offset: -112, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r20', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 15, name: '', type: spill-slot, offset: -120, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r19', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 16, name: '', type: spill-slot, offset: -128, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r18', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+entry_values:    []
+callSites:       []
+debugValueSubstitutions: []
+constants:       []
+machineFunctionInfo: {}
+body:             |
+  bb.0 (%ir-block.0):
+    successors: %bb.2(0x40000000), %bb.1(0x40000000)
+    liveins: $r31, $r30, $r29, $r28, $r27, $r26, $r25, $r24, $r23, $r22, $r21, $r20, $r19, $r18
+  
+    frame-setup BUNDLE implicit-def $r12, implicit-def $r16, implicit-def $r1, implicit $r12, implicit $ra {
+      MCYCLESp 0
+      $r12 = frame-setup ADDDri10 $r12, -192
+      $r16 = frame-setup GET $ra
+      $r1 = MAKEi64 %bb.1
+    }
+    frame-setup CFI_INSTRUCTION def_cfa_offset 192
+    BUNDLE implicit $r12, implicit killed $r16 {
+      MCYCLESp 1
+      SDri10 184, $r12, killed $r16
+    }
+    frame-setup CFI_INSTRUCTION offset $ra, -8
+    frame-setup BUNDLE implicit-def $r14, implicit $r12, implicit $r14 {
+      MCYCLESp 2
+      SDri10 176, $r12, $r14
+      $r14 = frame-setup ADDDri64 $r12, 176
+    }
+    frame-setup CFI_INSTRUCTION def_cfa $r14, 16
+    frame-setup CFI_INSTRUCTION offset $r14, -16
+    BUNDLE implicit-def $r0, implicit $r14, implicit $r12, implicit killed $q28 {
+      MCYCLESp 3
+      $r0 = ADDDri10 $r14, -152
+      SOri10 144, $r12, killed $q28
+    }
+    frame-setup CFI_INSTRUCTION offset $r31, -48
+    frame-setup CFI_INSTRUCTION offset $r30, -40
+    frame-setup CFI_INSTRUCTION offset $r29, -32
+    frame-setup CFI_INSTRUCTION offset $r28, -24
+    BUNDLE implicit $r12, implicit killed $q24 {
+      MCYCLESp 4
+      SOri10 112, $r12, killed $q24
+    }
+    frame-setup CFI_INSTRUCTION offset $r27, -80
+    frame-setup CFI_INSTRUCTION offset $r26, -72
+    frame-setup CFI_INSTRUCTION offset $r25, -64
+    frame-setup CFI_INSTRUCTION offset $r24, -56
+    BUNDLE implicit $r12, implicit killed $q20 {
+      MCYCLESp 5
+      SOri10 80, $r12, killed $q20
+    }
+    frame-setup CFI_INSTRUCTION offset $r23, -112
+    frame-setup CFI_INSTRUCTION offset $r22, -104
+    frame-setup CFI_INSTRUCTION offset $r21, -96
+    frame-setup CFI_INSTRUCTION offset $r20, -88
+    BUNDLE implicit $r12, implicit killed $p18 {
+      MCYCLESp 6
+      SQri10 64, $r12, killed $p18
+    }
+    frame-setup CFI_INSTRUCTION offset $r19, -128
+    frame-setup CFI_INSTRUCTION offset $r18, -120
+    BUNDLE implicit $r14, implicit $r12 {
+      MCYCLESp 7
+      SDri10 -152, $r14, $r12
+    }
+    BUNDLE implicit $r14, implicit $r12 {
+      MCYCLESp 8
+      SDri10 -136, $r14, $r12
+    }
+    SDri10 8, killed $r0, killed $r1, csr_noregs
+    GOTO %bb.2
+  
+  bb.1 (%ir-block.0, machine-block-address-taken, landing-pad):
+    successors: %bb.2(0x80000000)
+  
+  bb.2 (%ir-block.0):
+    frame-destroy BUNDLE implicit-def $r0, implicit-def $r12, implicit $r14 {
+      MCYCLESp 0
+      $r0 = MAKEi16 0
+      $r12 = frame-destroy ADDDri10 $r14, -176
+    }
+    frame-setup CFI_INSTRUCTION def_cfa $r12, 32
+    BUNDLE implicit-def $p18, implicit-def $r18, implicit-def $r19, implicit $r12 {
+      MCYCLESp 0
+      $p18 = LQri10 64, $r12, 0
+    }
+    frame-destroy CFI_INSTRUCTION restore $r19
+    frame-destroy CFI_INSTRUCTION restore $r18
+    BUNDLE implicit-def $q20, implicit-def $p20, implicit-def $r20, implicit-def $r21, implicit-def $p22, implicit-def $r22, implicit-def $r23, implicit $r12 {
+      MCYCLESp 1
+      $q20 = LOri10 80, $r12, 0
+    }
+    frame-destroy CFI_INSTRUCTION restore $r23
+    frame-destroy CFI_INSTRUCTION restore $r22
+    frame-destroy CFI_INSTRUCTION restore $r21
+    frame-destroy CFI_INSTRUCTION restore $r20
+    BUNDLE implicit-def $q24, implicit-def $p24, implicit-def $r24, implicit-def $r25, implicit-def $p26, implicit-def $r26, implicit-def $r27, implicit $r12 {
+      MCYCLESp 2
+      $q24 = LOri10 112, $r12, 0
+    }
+    frame-destroy CFI_INSTRUCTION restore $r27
+    frame-destroy CFI_INSTRUCTION restore $r26
+    frame-destroy CFI_INSTRUCTION restore $r25
+    frame-destroy CFI_INSTRUCTION restore $r24
+    BUNDLE implicit-def $q28, implicit-def $p28, implicit-def $r28, implicit-def $r29, implicit-def $p30, implicit-def $r30, implicit-def $r31, implicit $r12 {
+      MCYCLESp 3
+      $q28 = LOri10 144, $r12, 0
+    }
+    frame-destroy CFI_INSTRUCTION restore $r31
+    frame-destroy CFI_INSTRUCTION restore $r30
+    frame-destroy CFI_INSTRUCTION restore $r29
+    frame-destroy CFI_INSTRUCTION restore $r28
+    BUNDLE implicit-def $r14, implicit $r12 {
+      MCYCLESp 4
+      $r14 = LDri10 176, $r12, 0
+    }
+    frame-destroy CFI_INSTRUCTION restore $r14
+    BUNDLE implicit-def $r16, implicit $r12 {
+      MCYCLESp 5
+      $r16 = LDri10 184, $r12, 0
+    }
+    frame-destroy BUNDLE implicit-def $ra, implicit-def $r12, implicit killed $r16, implicit $r12 {
+      MCYCLESp 10
+      $ra = frame-destroy SETrst3 killed $r16
+      $r12 = frame-destroy ADDDri10 $r12, 192
+    }
+    frame-destroy CFI_INSTRUCTION def_cfa_offset 0
+    frame-destroy CFI_INSTRUCTION restore $ra
+    RET implicit $ra, implicit killed $r0
+
+...
