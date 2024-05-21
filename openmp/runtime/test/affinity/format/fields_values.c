@@ -27,6 +27,10 @@ typedef int pid_t;
 #define gettid GetCurrentThreadId
 #define my_gethostname(buf, sz) GetComputerNameA(buf, &(sz))
 #elif defined(__KVX__)
+#ifdef __CLUSTER_OS__
+int getpid(void) { return 0; }
+#endif
+extern void __kmp_expand_host_name(char *buffer, size_t size);
 #define my_gethostname(buf, sz) __kmp_expand_host_name(buf, sz)
 #else
 #include <unistd.h>
