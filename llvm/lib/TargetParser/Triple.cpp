@@ -278,7 +278,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case Win32: return "windows";
   case ZOS: return "zos";
   case ClusterOS: return "cos";
-  case KVXOSPorting: return "osp";
+  case KVXOSPorting: return "mbr";
   case ShaderModel: return "shadermodel";
   case LiteOS: return "liteos";
   case XROS: return "xros";
@@ -658,7 +658,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("emscripten", Triple::Emscripten)
     .StartsWith("cos", Triple::ClusterOS)
-    .StartsWith("osp", Triple::KVXOSPorting)
+    .StartsWith("mbr", Triple::KVXOSPorting)
     .StartsWith("shadermodel", Triple::ShaderModel)
     .StartsWith("liteos", Triple::LiteOS)
     .StartsWith("serenity", Triple::Serenity)

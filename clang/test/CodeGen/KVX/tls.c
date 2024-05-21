@@ -1,7 +1,7 @@
 // RUN: %clang -### -S -o - -O3 %s 2>&1 | FileCheck %s --check-prefix=ARG
-// RUN: %clang -### -S --target=kvx-kalray-osp -o - -O3 %s 2>&1 | FileCheck %s --check-prefix=ARG
+// RUN: %clang -### -S --target=kvx-kalray-mbr -o - -O3 %s 2>&1 | FileCheck %s --check-prefix=ARG
 // RUN: %clang -S -emit-llvm -o - -O3 %s | FileCheck %s
-// RUN: %clang -S --target=kvx-kalray-osp -emit-llvm -o - -O3 %s | FileCheck %s
+// RUN: %clang -S --target=kvx-kalray-mbr -emit-llvm -o - -O3 %s | FileCheck %s
 
 // ARG: "-cc1"
 // ARG-SAME: "-ftls-model=local-exec"
