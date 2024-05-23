@@ -151,7 +151,9 @@ void KVXFrameLowering::emitPrologue(MachineFunction &MF,
     LLVM_DEBUG(dbgs() << "new StackSize=" << MFI.getStackSize() << "\n");
   }
 
-  DebugLoc DL = MBB.findDebugLoc(MBBI);
+  // Debug location must be unknown since the first debug location is used
+  // to determine the end of the prologue.
+  DebugLoc DL;
   const KVXInstrInfo *TII = STI.getInstrInfo();
 
   // Emit stack check code, -fstack-limit-register)
@@ -490,8 +492,7 @@ bool KVXFrameLowering::hasFP(const MachineFunction &MF) const {
   const auto &MFI = MF.getFrameInfo();
 
   return RegInfo->hasStackRealignment(MF) || MFI.isFrameAddressTaken() ||
-         MFI.hasVarSizedObjects() || hasStackLimitRegister() ||
-         MF.getTarget().Options.DisableFramePointerElim(MF);
+         MFI.hasVarSizedObjects() || hasStackLimitRegister();
 }
 
 bool KVXFrameLowering::hasReservedCallFrame(const MachineFunction &MF) const {
