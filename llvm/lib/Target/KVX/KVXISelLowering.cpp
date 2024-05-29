@@ -1565,6 +1565,11 @@ static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
       {KVX::LWZri10, KVX::LWZri37, KVX::LWZri64, KVX::LWZrr},
       {KVX::LDri10, KVX::LDri37, KVX::LDri64, KVX::LDrr}};
 
+  static const unsigned RI10 = 0;
+  static const unsigned RI37 = 1;
+  static const unsigned RI64 = 2;
+  static const unsigned RR = 3;
+
   SmallVector<SDValue, 4> LoadArgs;
   unsigned Opcode, LoadOpcode;
   SDValue Ptr = N->getBasePtr();
@@ -1572,11 +1577,11 @@ static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   if (!(Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr))) {
     LoadArgs.push_back(Dag.getConstant(0, DL, MVT::i64, true));
     LoadArgs.push_back(Ptr);
-    Opcode = Opcodes[Is64bits][0];
-    LoadOpcode = LoadOpcodes[Is64bits][0];
+    Opcode = Opcodes[Is64bits][RI10];
+    LoadOpcode = LoadOpcodes[Is64bits][RI10];
   } else if (!isa<ConstantSDNode>(Ptr.getOperand(1))) {
-    Opcode = Opcodes[Is64bits][3];
-    LoadOpcode = LoadOpcodes[Is64bits][3];
+    Opcode = Opcodes[Is64bits][RR];
+    LoadOpcode = LoadOpcodes[Is64bits][RR];
     SDValue Offset = Ptr.getOperand(1);
     unsigned Scale = KVXMOD::DOSCALE_;
     if (Offset.getOpcode() == ISD::SHL) {
@@ -1603,10 +1608,11 @@ static SDValue buildCV1CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
     LoadArgs.push_back(Ptr.getOperand(0));
   } else {
     const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
-    unsigned Pos = isInt<10>(V) ? 0 : isInt<37>(V) ? 1 : 2;
+    unsigned Pos = isInt<10>(V) ? RI10 : isInt<37>(V) ? RI37 : RI64;
     Opcode = Opcodes[Is64bits][Pos];
     LoadOpcode = LoadOpcodes[Is64bits][Pos];
-    LoadArgs.push_back(Ptr.getOperand(1));
+    auto Offset = Dag.getConstant(V, SDLoc(Ptr.getOperand(1)), MVT::i64, true);
+    LoadArgs.push_back(Offset);
     LoadArgs.push_back(Ptr.getOperand(0));
   }
   SDValue Swap = N->getOperand(N->getNumOperands() - 1);
@@ -1673,16 +1679,23 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   // const EVT VT = N->getValueType(0);
   // assert ((VT.getFixedSizeInBits() >= 32) && (VT.getFixedSizeInBits() <= 128)
   // && " Bad cmpSwap size for lowering.");
-  static const unsigned LoadOpcodes[2][4] = {
-      {KVX::LWZri10, KVX::LWZri37, KVX::LWZri64, KVX::LWZrr},
-      {KVX::LDri10, KVX::LDri37, KVX::LDri64, KVX::LDrr}};
+  static const unsigned LoadOpcodes[2][3] = {
+      {KVX::LWZri10, KVX::LWZri37, KVX::LWZri64},
+      {KVX::LDri10, KVX::LDri37, KVX::LDri64}};
 
+  static const unsigned LoadRI10 = 0;
+  static const unsigned LoadRI37 = 1;
+  static const unsigned LoadRI64 = 2;
   static const unsigned Opcodes[2][3] = {
       {KVX::ACSWAPWri27, KVX::ACSWAPWri54, KVX::ACSWAPWr},
       {KVX::ACSWAPDri27, KVX::ACSWAPDri54, KVX::ACSWAPDr},
       // {KVX::ACSWAPQri27, KVX::ACSWAPQri54, KVX::ACSWAPQr} TODO: Support 128
       // bit swaps
   };
+
+  static const unsigned AcswapRI27 = 0;
+  static const unsigned AcswapRI54 = 1;
+  static const unsigned AcswapRR = 2;
   const EVT VT = N->getValueType(0);
   const unsigned Is64bits = (VT.getFixedSizeInBits() == 64) ? 1 : 0;
 
@@ -1693,56 +1706,33 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   SmallVector<SDValue, 4> SwapArgs, LoadArgs;
   unsigned Opcode, LoadOpcode;
   SDValue Ptr = N->getBasePtr();
-  SDValue DoScale = SDValue();
 
   if ((Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr)) &&
       (isa<ConstantSDNode>(Ptr.getOperand(1))) &&
       isInt<54>(cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue())) {
     const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
-    unsigned Pos = isInt<27>(V) ? 0 : 1;
+    unsigned Pos = isInt<27>(V) ? AcswapRI27 : AcswapRI54;
     Opcode = Opcodes[Is64bits][Pos];
-    SwapArgs.push_back(Ptr.getOperand(1));
+    auto Offset = Dag.getConstant(V, SDLoc(Ptr.getOperand(1)), MVT::i64, true);
+    SwapArgs.push_back(Offset);
     SwapArgs.push_back(Ptr.getOperand(0));
   } else { // r variant
-    Opcode = Opcodes[Is64bits][2];
+    Opcode = Opcodes[Is64bits][AcswapRR];
     SwapArgs.push_back(Ptr);
   }
 
-  if (!(Ptr.getOpcode() == ISD::ADD || Dag.isADDLike(Ptr))) {
+  // If we do need to compute ptr + offset into a register for acswap,
+  // use the same result for the loads. Else, it will be an immediate.
+  if (Opcode == Opcodes[Is64bits][AcswapRR]) {
     LoadArgs.push_back(Dag.getConstant(0, DL, MVT::i64, true));
     LoadArgs.push_back(Ptr);
-    LoadOpcode = LoadOpcodes[Is64bits][0];
-  } else if (!isa<ConstantSDNode>(Ptr.getOperand(1))) {
-    LoadOpcode = LoadOpcodes[Is64bits][2];
-    SDValue Offset = Ptr.getOperand(1);
-    unsigned Scale = KVXMOD::DOSCALE_;
-    if (Offset.getOpcode() == ISD::SHL) {
-      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
-        auto Shl =
-            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
-        if (1u << Shl == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
-          Scale = KVXMOD::DOSCALE_XS;
-          Offset = Offset->getOperand(0);
-        }
-      }
-    } else if (Offset.getOpcode() == ISD::MUL) {
-      if (isa<ConstantSDNode>(Offset->getOperand(1))) {
-        auto Mul =
-            cast<ConstantSDNode>(Offset->getOperand(1))->getLimitedValue();
-        if (Mul == N->getMemoryVT().getStoreSize().getKnownMinValue()) {
-          Scale = KVXMOD::DOSCALE_XS;
-          Offset = Offset->getOperand(0);
-        }
-      }
-    }
-    DoScale = Dag.getConstant(Scale, DL, MVT::i32, true);
-    LoadArgs.push_back(Offset);
-    LoadArgs.push_back(Ptr.getOperand(0));
+    LoadOpcode = LoadOpcodes[Is64bits][LoadRI10];
   } else {
     const auto V = cast<ConstantSDNode>(Ptr.getOperand(1))->getLimitedValue();
-    unsigned Pos = isInt<10>(V) ? 0 : isInt<37>(V) ? 1 : 2;
+    unsigned Pos = isInt<10>(V) ? LoadRI10 : isInt<37>(V) ? LoadRI37 : LoadRI64;
     LoadOpcode = LoadOpcodes[Is64bits][Pos];
-    LoadArgs.push_back(Ptr.getOperand(1));
+    auto Offset = Dag.getConstant(V, SDLoc(Ptr.getOperand(1)), MVT::i64, true);
+    LoadArgs.push_back(Offset);
     LoadArgs.push_back(Ptr.getOperand(0));
   }
   SDValue Swap = N->getOperand(N->getNumOperands() - 1);
@@ -1770,8 +1760,6 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
 
   // Uncached load.
   LoadArgs.push_back(Dag.getTargetConstant(KVXMOD::VARIANT_U, DL, MVT::i32));
-  if (DoScale)
-    LoadArgs.push_back(DoScale);
 
   SDValue Updated(SDValue(ACPSW, 0));
 
