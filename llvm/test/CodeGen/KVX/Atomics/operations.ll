@@ -812,21 +812,20 @@ define i64 @atomicrmw_i64_sub_global_as(ptr addrspace(1)%src, i64 %b) {
 define i64 @bigimm(ptr %0, i64 %1) {
 ; CV1-LABEL: bigimm:
 ; CV1:         fence
-; CV1-NEXT:    make $r4 = 0x40000000000
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    ld $r3 = 0x40000000000[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB19_1:
 ; CV1-NEXT:    addd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r6r7 = $r2, $r3
+; CV1-NEXT:    copyq $r4r5 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    acswapd $r4[$r0] = $r6r7
+; CV1-NEXT:    acswapd 0x40000000000[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    ld.u $r2 = $r4[$r0]
+; CV1-NEXT:    ld.u $r2 = 0x40000000000[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    cmoved.even $r6 ? $r3 = $r2
-; CV1-NEXT:    cb.even $r6 ? .LBB19_1
+; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r2
+; CV1-NEXT:    cb.even $r4 ? .LBB19_1
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    fence
 ; CV1-NEXT:    copyd $r0 = $r3
@@ -835,19 +834,18 @@ define i64 @bigimm(ptr %0, i64 %1) {
 ;
 ; CV2-LABEL: bigimm:
 ; CV2:         fence
-; CV2-NEXT:    make $r4 = 0x40000000000
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    ld $r3 = 0x40000000000[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:  .LBB19_1:
 ; CV2-NEXT:    addd $r2 = $r3, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    acswapd $r2, $r4[$r0] = $r2r3
+; CV2-NEXT:    acswapd $r2, 0x40000000000[$r0] = $r2r3
 ; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    ld.u $r5 = $r4[$r0]
+; CV2-NEXT:    ld.u $r4 = 0x40000000000[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r2 ? .LBB19_1
-; CV2-NEXT:    cmoved.even $r2 ? $r3 = $r5
+; CV2-NEXT:    cmoved.even $r2 ? $r3 = $r4
 ; CV2-NEXT:    ;; # (end cycle 5)
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    copyd $r0 = $r3
