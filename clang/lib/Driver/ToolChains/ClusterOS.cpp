@@ -71,16 +71,25 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   const bool HasStdlib = !Args.hasArg(options::OPT_nostdlib);
   std::string LibDir, GCCLibDir, LLVMLibDir, LLVMTCLibDir;
+
+  std::string Suffix = CTC.getGCCMultilibGCCSuffix().str();
+  if (Suffix == "") {
+    // FIXME: Hacky-hack: For what ever reason, -march= is not passed
+    // on into the multiplib selection when the kvx-cos-clang link is
+    // used. Check the correct Suffix.
+    const Arg *A = Args.getLastArg(options::OPT_march_EQ);
+    if (A && llvm::StringRef(A->getValue()) != "kv3-1")
+      Suffix = "/" + std::string(A->getValue());
+  }
+
   if (CTC.GCCInstallationIsValid()) {
-    LibDir = CTC.getGCCInstallPath().str() + "/../../../../kvx-cos/lib" +
-             CTC.getGCCMultilibGCCSuffix().str();
-    GCCLibDir =
-        CTC.getGCCInstallPath().str() + CTC.getGCCMultilibGCCSuffix().str();
-    LLVMLibDir = CTC.getGCCInstallPath().str() + "/../../../../lib/llvm/cos" +
-                 CTC.getGCCMultilibGCCSuffix().str();
+    LibDir =
+        CTC.getGCCInstallPath().str() + "/../../../../kvx-cos/lib" + Suffix;
+    GCCLibDir = CTC.getGCCInstallPath().str() + Suffix;
+    LLVMLibDir =
+        CTC.getGCCInstallPath().str() + "/../../../../lib/llvm/cos" + Suffix;
     LLVMTCLibDir = CTC.getGCCInstallPath().str() +
-                   "/../../../../kvx-llvm/cos/lib" +
-                   CTC.getGCCMultilibGCCSuffix().str();
+                   "/../../../../kvx-llvm/cos/lib" + Suffix;
   } else {
     // GCCInstallation isn't valid, which means that the toolchain isn't
     // installed in /opt/kalray/accesscore nor the user didn't provided
@@ -89,18 +98,11 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     std::string LDPath = getToolChain().GetProgramPath("kvx-cos-ld");
     std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
 
-    const Arg *A = Args.getLastArg(options::OPT_march_EQ);
-    std::string SubFolder;
-    if (!A || llvm::StringRef(A->getValue()) == "kv3-1")
-      SubFolder = "";
-    else
-      SubFolder = "/" + std::string(A->getValue());
-
-    LibDir = LDPrefix + "/../kvx-cos/lib" + SubFolder;
-    GCCLibDir = LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data() +
-                SubFolder;
-    LLVMLibDir = LDPrefix + "/../lib/llvm/cos" + SubFolder;
-    LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib" + SubFolder;
+    LibDir = LDPrefix + "/../kvx-cos/lib" + Suffix;
+    GCCLibDir =
+        LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data() + Suffix;
+    LLVMLibDir = LDPrefix + "/../lib/llvm/cos" + Suffix;
+    LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib" + Suffix;
   }
 
   ArgStringList CmdArgs;

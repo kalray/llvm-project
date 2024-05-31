@@ -609,7 +609,7 @@ static llvm::Triple computeTargetTriple(const Driver &D,
       .Case("kv3-2", llvm::Triple::KVXSubArch_kv3v2)
       .Case("kv4-1", llvm::Triple::KVXSubArch_kv4v1)
       .Default(llvm::Triple::KVXSubArch_kv3v1);
-
+    Target.setVendor(llvm::Triple::Kalray);
     Target.setArch(llvm::Triple::kvx, SA);
   }
 
