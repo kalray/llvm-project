@@ -822,24 +822,23 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     CostFactor = 2;
     BitWidth = 128;
     // If the shift amount is not a splat value it must split the vectors.
-    if (ICA.getReturnType()->isVectorTy()) {
-      VectorType *VT = cast<VectorType>(ICA.getReturnType());
-      const IntrinsicInst *I = ICA.getInst();
-      if (I)
-        if (auto *Shift = dyn_cast<ShuffleVectorInst>(I->getOperand(2))) {
-          auto *V = dyn_cast<ShuffleVectorInst>(Shift);
-          if (V && V->isZeroEltSplat()) {
-            // From a register value, must compute left/right shift amount
-            if (!isa<Constant>(V))
-              CostFactor += 1;
-            break;
-          }
-          auto *C = dyn_cast<Constant>(Shift);
-          if (C && C->getSplatValue(true))
-            break;
+    if (!ICA.getReturnType()->isVectorTy())
+      return InstructionCost(2);
+
+    const IntrinsicInst *I = ICA.getInst();
+    if (I)
+      if (auto *Shift = dyn_cast<ShuffleVectorInst>(I->getOperand(2))) {
+        auto *V = dyn_cast<ShuffleVectorInst>(Shift);
+        if (V && V->isZeroEltSplat()) {
+          // From a register value, must compute left/right shift amount
+          if (!isa<Constant>(V))
+            CostFactor += 1;
+          break;
         }
-      CostFactor *= VT->getElementCount().getKnownMinValue();
-    }
+        auto *C = dyn_cast<Constant>(Shift);
+        if (C && C->getSplatValue(true))
+          break;
+      }
     break;
   }
   default:
@@ -847,6 +846,9 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     return BaseT::getIntrinsicInstrCost(ICA, CostKind);
     break;
   }
+
+  if (ICA.getArgs().empty())
+    return BaseT::getIntrinsicInstrCost(ICA, CostKind);
 
   Type *Ty = ICA.getReturnType();
   const unsigned VecSize = Ty->getPrimitiveSizeInBits();
