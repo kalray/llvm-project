@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "KVXOSPorting.h"
+#include "Arch/KVX.h"
 #include "CommonArgs.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
@@ -35,7 +36,7 @@ static std::string getSubarchName(const ArgList &Args,
 
   if (IsIncludePath) {
     if (March == "kv3-1")
-      return "/";
+      return "";
     return (std::string("/") + March);
   }
 
@@ -90,14 +91,26 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     C.setContainsError();
     return;
   }
+
+  const bool Mhal = (nullptr != Args.getLastArg(options::OPT_kvx_mhal));
+
   std::string LDPrefix = llvm::sys::path::parent_path(LDPath).str();
   std::string SYSROOT = llvm::sys::path::parent_path(LDPrefix).str();
   std::string ARCH = getSubarchName(Args, true);
-  auto DefaultLibPath = SYSROOT + "/kvx-llvm/mbr/lib" + ARCH + "/";
-  // For not using gcc's crt0.o.
-  // TODO: FIXME: Compile crt0.o for different archs in kvx-llvm/elf folder
+  // kvx-mbr/lib/
+  // For now using library compiled with gcc.
+  // TODO: FIXME: Compile newlib and other dependencies with clang.
   if (!Args.hasArg(options::OPT_nostdlib)) {
-    CmdArgs.push_back(Args.MakeArgString(DefaultLibPath + "crt0.o"));
+    CmdArgs.push_back(Args.MakeArgString(SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ARCH + "/crti.o"));
+    CmdArgs.push_back(Args.MakeArgString(SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ARCH + "/crtbegin.o"));
+    CmdArgs.push_back(
+        Args.MakeArgString(SYSROOT + "/kvx-mbr/lib" + ARCH + "/crt0.o"));
+    CmdArgs.push_back(Args.MakeArgString(SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ARCH + "/crtend.o"));
+    CmdArgs.push_back(Args.MakeArgString(SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ARCH + "/crtn.o"));
   }
 
   for (const auto &II : Inputs)
@@ -105,14 +118,26 @@ void kvxosporting::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back(II.getFilename());
 
   if (!Args.hasArg(options::OPT_nostdlib)) {
-    CmdArgs.push_back(Args.MakeArgString("-L" + DefaultLibPath));
-
-    CmdArgs.push_back("-melf64kvx");
-    CmdArgs.push_back("-Tbare.ld");
+    CmdArgs.push_back(Args.MakeArgString("-L" + SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ARCH + ""));
+    CmdArgs.push_back(
+        Args.MakeArgString("-L" + SYSROOT + "/kvx-mbr/lib" + ARCH + ""));
+    CmdArgs.push_back(Args.MakeArgString("-L" + SYSROOT + "/lib/gcc/kvx-mbr/" +
+                                         KVX::GCC_VER + ""));
+    CmdArgs.push_back(Args.MakeArgString("-L" + SYSROOT + "/lib/gcc"));
+    CmdArgs.push_back(Args.MakeArgString("-L" + SYSROOT + "/kvx-mbr/lib"));
+    if (!Mhal) {
+      CmdArgs.push_back("--defsym=exec_on_main=1");
+      CmdArgs.push_back("--defsym=mppa_bare_runtime=1");
+    }
     CmdArgs.push_back("--start-group");
+    CmdArgs.push_back("-lmppahal");
+    CmdArgs.push_back("-lmppabareruntime");
     CmdArgs.push_back("-lc");
     CmdArgs.push_back("-lgloss");
     CmdArgs.push_back("--end-group");
+    CmdArgs.push_back(Mhal ? "-Tbare.ld" : "-Tmppabareruntime.ld");
+    CmdArgs.push_back("-lgcc");
 
     Args.addAllArgs(CmdArgs, {options::OPT_T, options::OPT_L, options::OPT_l});
   }

@@ -7220,16 +7220,22 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
        Std->containsValue("c++26") || Std->containsValue("gnu++26") ||
        Std->containsValue("c++latest") || Std->containsValue("gnu++latest"));
 
-  if (getToolChain().getTriple().isKVX()) {
-    if (Arg *A = Args.getLastArg(options::OPT_fstack_limit_register)) {
+  // Fixme: This should be inside the non-existing ToolChains/Arch/KVX.cpp file.
+  if (auto Triple = getToolChain().getTriple(); Triple.isKVX()) {
+    if (Arg *A = Args.getLastArg(options::OPT_kvx_fstack_limit_register);
+        Triple.isOSClusterOS() && (A != nullptr)) {
       if (strncmp(A->getValue(), "=sr", 3) != 0) {
         getToolChain().getDriver().Diag(
             diag::err_drv_unsupported_option_argument)
             << A->getOption().getName() << A->getValue();
       } else {
         CmdArgs.push_back("-mllvm");
-        Args.AddLastArg(CmdArgs, options::OPT_fstack_limit_register);
+        Args.AddLastArg(CmdArgs, options::OPT_kvx_fstack_limit_register);
       }
+    }
+    if (Triple.isOSKVXOSPorting() && !Args.hasArg(options::OPT_kvx_mhal)) {
+      CmdArgs.push_back("-D");
+      CmdArgs.push_back("__mppa_bare_runtime__");
     }
   }
   bool HaveModules =
