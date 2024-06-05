@@ -9,6 +9,7 @@
 
 #include "ClusterOS.h"
 #include "CommonArgs.h"
+#include "Arch/KVX.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
 #include "clang/Driver/InputInfo.h"
@@ -24,7 +25,6 @@ using namespace clang;
 using namespace llvm::opt;
 
 // TODO: Obtain GCC internal paths dynamically by invoking gcc directly.
-#define KVX_CLUSTEROS_GCC_VERSION "13.2.1"
 
 void clusteros::Assembler::ConstructJob(Compilation &C, const JobAction &JA,
                                         const InputInfo &Output,
@@ -271,7 +271,7 @@ bool ClusterOS::GCCInstallationIsValid() const {
 StringRef ClusterOS::getGCCVersion() const {
   return GCCInstallation.isValid()
              ? StringRef(GCCInstallation.getVersion().Text)
-             : StringRef(KVX_CLUSTEROS_GCC_VERSION);
+             : StringRef(KVX::GCC_VER);
 }
 
 StringRef ClusterOS::getGCCInstallPath() const {

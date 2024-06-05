@@ -6414,10 +6414,20 @@ defm : FlangIgnoredDiagOpt<"realloc-lhs">;
 defm : FlangIgnoredDiagOpt<"realloc-lhs-all">;
 defm : FlangIgnoredDiagOpt<"frontend-loop-interchange">;
 defm : FlangIgnoredDiagOpt<"target-lifetime">;
-// KVX Options
-def m_kvx_Features_Group : OptionGroup<"<kvx features group>">,
+
+// KVX Target Options
+def m_kvx_Features_Group : OptionGroup<"<Kalray target>">,
                              Group<m_Group>, DocName<"KVX">;
-def fstack_limit_register : Joined<["-"], "fstack-limit-register">, Group<m_kvx_Features_Group>;
+
+def kvx_fstack_limit_register : Joined<["-"], "fstack-limit-register">,
+                              Visibility<[ClangOption, CLOption, CC1Option]>,
+                              HelpText<"Enable stack limit check using SR register (kvx-cos only).">,
+                              Group<m_kvx_Features_Group>;
+
+def kvx_mhal : Flag<["-"], "mhal">,
+                              Visibility<[ClangOption, CLOption, CC1Option]>,
+                              HelpText<"Enable mppa hardware layer mode (kvx-mbr only).">,
+                              Group<m_kvx_Features_Group>;
 
 // C++ SYCL options
 def fsycl : Flag<["-"], "fsycl">,
