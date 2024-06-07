@@ -78,8 +78,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     // on into the multiplib selection when the kvx-cos-clang link is
     // used. Check the correct Suffix.
     const Arg *A = Args.getLastArg(options::OPT_march_EQ);
-    if (A && llvm::StringRef(A->getValue()) != "kv3-1")
-      Suffix = "/" + std::string(A->getValue());
+    Suffix = "/" + std::string(A ? A->getValue() : "kv3-1");
   }
 
   if (CTC.GCCInstallationIsValid()) {
