@@ -1,0 +1,207 @@
+# RUN: llc -x mir --run-pass=postmisched -o - %s | FileCheck --implicit-check-not='MCYCLESp{{.*}}{' %s
+
+# CHECK: $r14 = LDri10
+# CHECK: $r14 = LDri10
+# CHECK: $r14 = LDri10
+
+--- |
+  source_filename = "gzclose.c"
+  target datalayout = "e-S256-p:64:64-i1:8-i8:8-i16:16-i32:32-i64:64-v64:64-v128:128-v256:256-v512:256-v1024:256-f16:16-f32:32-f64:64-a:0:64-m:e-n32:64"
+  target triple = "kvx-kalray-cos"
+  
+  define dso_local i32 @gzclose(ptr noundef %0) local_unnamed_addr #0 {
+    %2 = icmp eq ptr %0, null
+    br i1 %2, label %11, label %3
+  
+  3:                                                ; preds = %1
+    %4 = getelementptr inbounds i8, ptr %0, i64 24
+    %5 = load i32, ptr %4, align 8, !tbaa !2
+    %6 = icmp eq i32 %5, 7247
+    br i1 %6, label %7, label %9
+  
+  7:                                                ; preds = %3
+    %8 = tail call i32 @gzclose_r(ptr noundef nonnull %0) #4
+    ret i32 %8
+  
+  9:                                                ; preds = %3
+    %10 = tail call i32 @gzclose_w(ptr noundef nonnull %0) #4
+    ret i32 %10
+  
+  11:                                               ; preds = %1
+    ret i32 -2
+  }
+  
+  declare dso_local i32 @gzclose_r(ptr noundef) local_unnamed_addr #1
+  
+  declare dso_local i32 @gzclose_w(ptr noundef) local_unnamed_addr #1
+  
+  declare void @_Unwind_SjLj_Register(ptr)
+  
+  declare void @_Unwind_SjLj_Unregister(ptr)
+  declare ptr @llvm.frameaddress.p0(i32 immarg) #2
+  declare ptr @llvm.stacksave.p0() #3
+  declare void @llvm.stackrestore.p0(ptr) #3
+  declare void @llvm.eh.sjlj.setup.dispatch() #4
+  declare ptr @llvm.eh.sjlj.lsda() #5
+  declare void @llvm.eh.sjlj.callsite(i32 immarg) #5
+  declare void @llvm.eh.sjlj.functioncontext(ptr) #4
+  
+  attributes #0 = { nounwind "approx-func-fp-math"="true" "no-infs-fp-math"="true" "no-nans-fp-math"="true" "no-signed-zeros-fp-math"="true" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="kv3-2" "unsafe-fp-math"="true" }
+  attributes #1 = { "approx-func-fp-math"="true" "no-infs-fp-math"="true" "no-nans-fp-math"="true" "no-signed-zeros-fp-math"="true" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="kv3-2" "unsafe-fp-math"="true" }
+  attributes #2 = { nocallback nofree nosync nounwind willreturn memory(none) }
+  attributes #3 = { nocallback nofree nosync nounwind willreturn }
+  attributes #4 = { nounwind }
+  attributes #5 = { nounwind memory(none) }
+  
+  !llvm.module.flags = !{!0}
+  !llvm.ident = !{!1}
+  
+  !0 = !{i32 1, !"wchar_size", i32 4}
+  !1 = !{!"Kalray clang version 19.0.0acb-5.2.0"}
+  !2 = !{!3, !5, i64 24}
+  !3 = !{!"", !4, i64 0, !5, i64 24, !5, i64 28, !8, i64 32, !5, i64 40, !5, i64 44, !8, i64 48, !8, i64 56, !5, i64 64, !5, i64 68, !9, i64 72, !5, i64 80, !5, i64 84, !5, i64 88, !5, i64 92, !9, i64 96, !5, i64 104, !5, i64 108, !8, i64 112, !10, i64 120}
+  !4 = !{!"gzFile_s", !5, i64 0, !8, i64 8, !9, i64 16}
+  !5 = !{!"int", !6, i64 0}
+  !6 = !{!"omnipotent char", !7, i64 0}
+  !7 = !{!"Simple C/C++ TBAA"}
+  !8 = !{!"any pointer", !6, i64 0}
+  !9 = !{!"long", !6, i64 0}
+  !10 = !{!"z_stream_s", !8, i64 0, !5, i64 8, !9, i64 16, !8, i64 24, !5, i64 32, !9, i64 40, !8, i64 48, !8, i64 56, !8, i64 64, !8, i64 72, !8, i64 80, !5, i64 88, !9, i64 96, !9, i64 104}
+
+...
+---
+name:            gzclose
+alignment:       64
+exposesReturnsTwice: false
+legalized:       false
+regBankSelected: false
+selected:        false
+failedISel:      false
+tracksRegLiveness: true
+hasWinCFI:       false
+callsEHReturn:   false
+callsUnwindInit: false
+hasEHCatchret:   false
+hasEHScopes:     false
+hasEHFunclets:   false
+isOutlined:      false
+debugInstrRef:   false
+failsVerification: false
+tracksDebugUserValues: true
+registers:       []
+liveins:
+  - { reg: '$r0', virtual-reg: '' }
+frameInfo:
+  isFrameAddressTaken: false
+  isReturnAddressTaken: false
+  hasStackMap:     false
+  hasPatchPoint:   false
+  stackSize:       32
+  offsetAdjustment: 0
+  maxAlignment:    8
+  adjustsStack:    false
+  hasCalls:        false
+  stackProtector:  ''
+  functionContext: ''
+  maxCallFrameSize: 0
+  cvBytesOfCalleeSavedRegisters: 0
+  hasOpaqueSPAdjustment: false
+  hasVAStart:      false
+  hasMustTailInVarArgFunc: false
+  hasTailCall:     true
+  localFrameSize:  0
+  savePoint:       ''
+  restorePoint:    ''
+fixedStack:      []
+stack:
+  - { id: 0, name: '', type: spill-slot, offset: -8, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$ra', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+  - { id: 1, name: '', type: spill-slot, offset: -16, size: 8, alignment: 8, 
+      stack-id: default, callee-saved-register: '$r14', callee-saved-restored: true, 
+      debug-info-variable: '', debug-info-expression: '', debug-info-location: '' }
+entry_values:    []
+callSites:       []
+debugValueSubstitutions: []
+constants:       []
+machineFunctionInfo: {}
+body:             |
+  bb.0:
+    successors: %bb.1(0x40000000), %bb.4(0x40000000)
+  
+    $r17 = frame-setup GET $sr
+    $r16 = frame-setup ADDDri10 $r12, -32
+    $r16 = frame-setup SBFDrr $r16, killed $r17
+    CB killed $r16, %bb.4, 5
+  
+  bb.1 (%ir-block.1):
+    successors: %bb.5(0x30000000), %bb.2(0x50000000)
+    liveins: $r0
+  
+    $r12 = frame-setup ADDDri10 $r12, -32
+    frame-setup CFI_INSTRUCTION def_cfa_offset 32
+    $r16 = frame-setup GET $ra
+    SDri10 24, $r12, killed $r16
+    frame-setup CFI_INSTRUCTION offset $ra, -8
+    SDri10 16, $r12, killed $r14
+    frame-setup CFI_INSTRUCTION offset $r14, -16
+    $r14 = frame-setup ADDDri64 $r12, 16
+    frame-setup CFI_INSTRUCTION def_cfa $r14, 16
+    CB $r0, %bb.5, 1
+  
+  bb.2 (%ir-block.3):
+    successors: %bb.3(0x40000000), %bb.6(0x40000000)
+    liveins: $r0
+  
+    $r1 = LWZri10 24, $r0, 0 :: (load (s32) from %ir.4, align 8, !tbaa !2)
+    $r12 = frame-destroy ADDDri10 $r14, -16
+    $r1 = COMPWri killed $r1, 7247, 0
+    CB killed $r1, %bb.6, 6
+  
+  bb.3 (%ir-block.7):
+    liveins: $r0
+  
+    frame-destroy CFI_INSTRUCTION def_cfa $r12, 32
+    $r14 = LDri10 16, $r12, 0
+    frame-destroy CFI_INSTRUCTION restore $r14
+    $r16 = LDri10 24, $r12, 0
+    $ra = frame-destroy SETrst3 killed $r16
+    frame-destroy CFI_INSTRUCTION restore $ra
+    $r12 = frame-destroy ADDDri10 $r12, 32
+    frame-destroy CFI_INSTRUCTION def_cfa_offset 0
+    TAIL @gzclose_r, implicit-def dead $pm0, implicit-def dead $pm1, implicit-def dead $pm2, implicit-def dead $pm3, implicit-def dead $pm4, implicit-def dead $pm5, implicit-def dead $pm6, implicit-def dead $pm7, implicit-def dead $pcr, implicit-def dead $pmc, implicit-def dead $cs, implicit $r12, implicit $r0
+  
+  bb.4:
+    successors:
+  
+    $r0 = frame-setup GET $pc
+    $r1 = COPYD $r12
+    frame-setup CALL &__stack_overflow_detected, implicit-def $ra, implicit-def $pm0, implicit-def $pm1, implicit-def $pm2, implicit-def $pm3, implicit-def $pm4, implicit-def $pm5, implicit-def $pm6, implicit-def $pm7, implicit-def $pcr, implicit-def $pmc, implicit-def $cs
+  
+  bb.5 (%ir-block.11):
+    $r0 = MAKEi43 4294967294
+    $r12 = frame-destroy ADDDri10 $r14, -16
+    frame-destroy CFI_INSTRUCTION def_cfa $r12, 32
+    $r14 = LDri10 16, $r12, 0
+    frame-destroy CFI_INSTRUCTION restore $r14
+    $r16 = LDri10 24, $r12, 0
+    $ra = frame-destroy SETrst3 killed $r16
+    frame-destroy CFI_INSTRUCTION restore $ra
+    $r12 = frame-destroy ADDDri10 $r12, 32
+    frame-destroy CFI_INSTRUCTION def_cfa_offset 0
+    RET implicit $ra, implicit $r0
+  
+  bb.6 (%ir-block.9):
+    liveins: $r0
+  
+    frame-destroy CFI_INSTRUCTION def_cfa $r12, 32
+    $r14 = LDri10 16, $r12, 0
+    frame-destroy CFI_INSTRUCTION restore $r14
+    $r16 = LDri10 24, $r12, 0
+    $ra = frame-destroy SETrst3 killed $r16
+    frame-destroy CFI_INSTRUCTION restore $ra
+    $r12 = frame-destroy ADDDri10 $r12, 32
+    frame-destroy CFI_INSTRUCTION def_cfa_offset 0
+    TAIL @gzclose_w, implicit-def dead $pm0, implicit-def dead $pm1, implicit-def dead $pm2, implicit-def dead $pm3, implicit-def dead $pm4, implicit-def dead $pm5, implicit-def dead $pm6, implicit-def dead $pm7, implicit-def dead $pcr, implicit-def dead $pmc, implicit-def dead $cs, implicit $r12, implicit $r0
+
+...
