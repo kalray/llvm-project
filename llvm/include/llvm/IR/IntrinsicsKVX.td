@@ -96,6 +96,10 @@ def int_kvx_sbfcd: Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i32_
 
 def int_kvx_loopdoexit : Intrinsic<[llvm_i64_ty], [], [IntrNoDuplicate]>;
 
+def int_kvx_mm212w : Intrinsic<[llvm_v4i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty], [IntrNoMem]>;
+def int_kvx_mma212w : Intrinsic<[llvm_v4i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty, llvm_v4i32_ty], [IntrNoMem]>;
+def int_kvx_mms212w : Intrinsic<[llvm_v4i32_ty], [llvm_v2i32_ty, llvm_v2i32_ty, llvm_v4i32_ty], [IntrNoMem]>;
+
 //===----------------------------------------------------------------------===//
 // KVX Coolidge V2 builtins
 //===----------------------------------------------------------------------===//

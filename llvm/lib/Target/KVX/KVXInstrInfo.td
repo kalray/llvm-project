@@ -3373,7 +3373,7 @@ let Constraints = "$a1 = $a1o" in
 def MMA212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mma212w $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
+   [(set v4i32:$a1o, (v4i32 (int_kvx_mma212w v2i32:$a2, v2i32:$a3, v4i32:$a1)))],
    MAU_AUXR_INT_AV1>;
 
 let Constraints = "$a1 = $a1o" in
@@ -3401,7 +3401,7 @@ let Constraints = "$a1 = $a1o" in
 def MMS212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1o), (ins PairedReg:$a1, SingleReg:$a2, SingleReg:$a3),
    "mms212w $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
+   [(set v4i32:$a1o, (v4i32 (int_kvx_mms212w v2i32:$a2, v2i32:$a3, v4i32:$a1)))],
    MAU_AUXR_INT_AV1>;
 
 def MULWDP : KVX_INSTRUCTION
@@ -3425,7 +3425,7 @@ def MULSUWDP : KVX_INSTRUCTION
 def MM212W : KVX_INSTRUCTION
   <(outs PairedReg:$a1), (ins SingleReg:$a2, SingleReg:$a3),
    "mm212w $a1 = $a2, $a3",
-   [/* no straightforward pattern */],
+   [(set v4i32:$a1, (v4i32 (int_kvx_mm212w v2i32:$a2, v2i32:$a3)))],
    MAU_INT>;
 
 let Uses = [CS] in {
