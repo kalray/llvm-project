@@ -551,7 +551,7 @@ void KVXScheduleDAGMI::finishBlock() {
     MachineInstr *Attach = Entry.Attach, *CFI = Entry.CFI;
 
     if (Entry.CFIAtMBBStart) {
-      MBB->insertAfter(MBB->begin(), CFI);
+      MBB->insert(MBB->begin(), CFI);
       continue;
     }
 

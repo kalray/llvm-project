@@ -453,7 +453,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
   // Restore SP from FP first.
   if (hasFP(MF)) {
     if (!MFI.getStackSize()) {
-      LLVM_DEBUG(dbgs() << "Enforcing StackSize to 32 bytes.");
+      LLVM_DEBUG(dbgs() << "Enforcing StackSize to 32 bytes.\n");
       MFI.setStackSize(32);
     }
     // SUBDri64 is translated to ADDDri at FrameIndexElimination.
@@ -468,7 +468,7 @@ bool KVXFrameLowering::restoreCalleeSavedRegisters(
 
     BuildMI(MBB, MI, DL, TII->get(TargetOpcode::CFI_INSTRUCTION))
         .addCFIIndex(CFIIndex)
-        .setMIFlags(MachineInstr::FrameSetup);
+        .setMIFlags(MachineInstr::FrameDestroy);
   }
 
   // Emit load instructions.
