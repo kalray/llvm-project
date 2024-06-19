@@ -25,6 +25,7 @@ add_llvm_target(KVXCodeGen
     KVXInstrInfo.cpp
     KVXISelDAGToDAG.cpp
     KVXISelLowering.cpp
+    KVXLoadLatencyMutation.cpp
     KVXLoadStorePacking.cpp
     KVXMCInstLower.cpp
     KVXPostScheduler.cpp

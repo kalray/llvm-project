@@ -861,6 +861,70 @@ bool KVXInstrInfo::isSoloInstruction(const MachineInstr &MI) const {
   return false;
 }
 
+/// Gets the position of the first memory operand
+/// Returns -1 if the instruction has no memory operand
+static int getFirstMemOpPos(const MachineInstr &MI) {
+  assert(MI.mayLoadOrStore());
+
+  // Some exceptions to the general rule..
+  switch (MI.getOpcode()) {
+  case KVX::DTOUCHLri10:
+  case KVX::DTOUCHLri37:
+  case KVX::DTOUCHLri64:
+  case KVX::DTOUCHLrr:
+  case KVX::DTOUCHLrrc:
+  case KVX::DTOUCHLri27c:
+  case KVX::DTOUCHLri54c:
+    return 0;
+  }
+
+  return MI.mayLoad() ? 1 : 0;
+}
+
+// Get memory mod (like .xs or .u) from a memory instruction
+// Need the position and the mask defined in KVXII
+// Returns -1 if the mod could not be found
+static int getMemMod(const MachineInstr &MI, unsigned Pos, unsigned Mask) {
+  unsigned ModRelPos = llvm::KVXII::getKVXFlag(MI, Pos, Mask);
+
+  if (!ModRelPos)
+    return -1;
+
+  int FirstMemOpPos = getFirstMemOpPos(MI);
+  if (FirstMemOpPos < 0)
+    return -1;
+
+  unsigned ModPos = FirstMemOpPos + ModRelPos;
+  return MI.getOperand(ModPos).getImm();
+}
+
+// Returns true if the instruction has .u modifier set.
+// Uses the VariantModRelPos TSFlag
+static bool hasUncachedVariant(const MachineInstr &MI) {
+  int VariantVal =
+      getMemMod(MI, KVXII::VariantModRelPosPos, KVXII::VariantModRelPosMask);
+  if (VariantVal < 0)
+    return false;
+  return VariantVal == KVXMOD::VARIANT_U || VariantVal == KVXMOD::VARIANT_US;
+}
+
+bool KVXInstrInfo::isUncachedLoad(const MachineInstr *MI) const {
+  if (!MI->mayLoad())
+    return false;
+  if (getKVXFlag(*MI, KVXII::AlwaysUncachedPos, KVXII::AlwaysUncachedMask))
+    return true;
+  return hasUncachedVariant(*MI);
+}
+
+// A cached access takes 3 cycles at best case
+// An uncached access takes 22 cycles at best case: penalty of 19 cycles
+// On CV1, the penalty is 20 cycles
+unsigned KVXInstrInfo::getUncachedPenalty(void) const {
+  if (Subtarget.isV1())
+    return 20;
+  return 19;
+}
+
 bool KVXInstrInfo::isSchedulingBoundary(const MachineInstr &MI,
                                         const MachineBasicBlock *MBB,
                                         const MachineFunction &MF) const {
@@ -896,26 +960,6 @@ bool KVXInstrInfo::isSchedulingBoundaryPostRA(const MachineInstr &MI,
 static bool hasOnlyBaseMemOp(const MachineInstr &MI) {
   unsigned F = MI.getDesc().TSFlags;
   return (F >> KVXII::hasNoOffsetPos & 1);
-}
-
-/// Gets the position of the first memory operand
-/// Returns -1 if the instruction has no memory operand
-static int getFirstMemOpPos(const MachineInstr &MI) {
-  assert(MI.mayLoadOrStore());
-
-  // Some exceptions to the general rule..
-  switch (MI.getOpcode()) {
-  case KVX::DTOUCHLri10:
-  case KVX::DTOUCHLri37:
-  case KVX::DTOUCHLri64:
-  case KVX::DTOUCHLrr:
-  case KVX::DTOUCHLrrc:
-  case KVX::DTOUCHLri27c:
-  case KVX::DTOUCHLri54c:
-    return 0;
-  }
-
-  return MI.mayLoad() ? 1 : 0;
 }
 
 static bool getBaseAndOffsetPositionGeneric(const MachineInstr &MI,
@@ -964,20 +1008,11 @@ static bool getMemWidth(const MachineInstr &MI, LocationSize &Width) {
 
 /// Returns true if the instruction has .xs modifier set.
 /// Uses the XSModRelPos TSFlag
-bool hasXSMod(const MachineInstr &MI) {
-  unsigned XSModRelPos =
-      getKVXFlag(MI, KVXII::XSModRelPosPos, KVXII::XSModRelPosMask);
-
-  if (!XSModRelPos)
+static bool hasXSMod(const MachineInstr &MI) {
+  int XSModVal = getMemMod(MI, KVXII::XSModRelPosPos, KVXII::XSModRelPosMask);
+  if (XSModVal < 0)
     return false;
-
-  int FirstMemOpPos = getFirstMemOpPos(MI);
-  if (FirstMemOpPos < 0)
-    return false;
-
-  unsigned XSModPos = FirstMemOpPos + XSModRelPos;
-
-  return MI.getOperand(XSModPos).getImm() == KVXMOD::DOSCALE_XS;
+  return XSModVal == KVXMOD::DOSCALE_XS;
 }
 
 bool KVXInstrInfo::getMemOperandsWithOffsetWidth(

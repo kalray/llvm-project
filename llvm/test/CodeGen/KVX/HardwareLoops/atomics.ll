@@ -39,7 +39,7 @@ define void @set(ptr %x, i32 %num) {
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.even $r6 ? $r5 = $r4
 ; CV1-NEXT:    cb.even $r6 ? .LBB0_3
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 26)
 ; CV1-NEXT:  # %bb.4: # %atomicrmw.end
 ; CV1-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CV1-NEXT:    sw.xs $r1[$r0] = $r3
@@ -81,7 +81,7 @@ define void @set(ptr %x, i32 %num) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r4 ? .LBB0_3
 ; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 24)
 ; CV2-NEXT:  # %bb.4: # %atomicrmw.end
 ; CV2-NEXT:    # in Loop: Header=BB0_2 Depth=1
 ; CV2-NEXT:    sw.xs $r1[$r0] = $r3

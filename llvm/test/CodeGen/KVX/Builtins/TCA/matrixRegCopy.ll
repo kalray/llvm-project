@@ -14,20 +14,20 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    ;; # (end cycle 41)
 ; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
-; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 30)
+; CHECK-NEXT:    ;; # (end cycle 70)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
-; CHECK-NEXT:    ;; # (end cycle 34)
+; CHECK-NEXT:    ;; # (end cycle 74)
 ; CHECK-NEXT:  # %bb.2: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;

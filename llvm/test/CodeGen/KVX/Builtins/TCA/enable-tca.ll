@@ -7,90 +7,94 @@ target triple = "kvx-kalray-cos"
 define void @foo(ptr %0, ptr %1) {
 ; NORMAL-LABEL: foo:
 ; NORMAL:       # %bb.0:
-; NORMAL-NEXT:    lwz $r2 = 0[$r1]
-; NORMAL-NEXT:    ;; # (end cycle 0)
 ; NORMAL-NEXT:    xlo.u $a3 = 96[$r0]
-; NORMAL-NEXT:    ;; # (end cycle 1)
+; NORMAL-NEXT:    ;; # (end cycle 0)
 ; NORMAL-NEXT:    xlo.u $a2 = 64[$r0]
-; NORMAL-NEXT:    ;; # (end cycle 2)
+; NORMAL-NEXT:    ;; # (end cycle 1)
 ; NORMAL-NEXT:    xlo.u $a1 = 32[$r0]
-; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
-; NORMAL-NEXT:    ;; # (end cycle 3)
+; NORMAL-NEXT:    ;; # (end cycle 2)
 ; NORMAL-NEXT:    xlo.u $a0 = 0[$r0]
+; NORMAL-NEXT:    ;; # (end cycle 3)
+; NORMAL-NEXT:    lwz $r2 = 0[$r1]
 ; NORMAL-NEXT:    ;; # (end cycle 4)
+; NORMAL-NEXT:    faddw $r2 = $r2, 0x42280000
+; NORMAL-NEXT:    ;; # (end cycle 7)
 ; NORMAL-NEXT:    sw 0[$r1] = $r2
 ; NORMAL-NEXT:    make $r1 = 0x10000000000000
-; NORMAL-NEXT:    ;; # (end cycle 6)
-; NORMAL-NEXT:     # (here cycle 7)
+; NORMAL-NEXT:    ;; # (end cycle 10)
+; NORMAL-NEXT:     # (here cycle 11)
 ; NORMAL-NEXT:    #APP
 ; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
 ; NORMAL-NEXT:    make $r1 = 0x100000
+; NORMAL-NEXT:    ;; # (end cycle 12)
 ; NORMAL-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; NORMAL-NEXT:    ;; # (end cycle 8)
-; NORMAL-NEXT:     # (here cycle 9)
+; NORMAL-NEXT:    ;; # (end cycle 26)
+; NORMAL-NEXT:     # (here cycle 27)
 ; NORMAL-NEXT:    #APP
 ; NORMAL-NEXT:    wfxm $pcr, $r1
 ; NORMAL-NEXT:    ;;
 ; NORMAL-NEXT:    #NO_APP
 ; NORMAL-NEXT:    xso 32[$r0] = $a1
-; NORMAL-NEXT:    ;; # (end cycle 12)
+; NORMAL-NEXT:    ;; # (end cycle 30)
 ; NORMAL-NEXT:    xso 0[$r0] = $a0
-; NORMAL-NEXT:    ;; # (end cycle 13)
+; NORMAL-NEXT:    ;; # (end cycle 31)
 ; NORMAL-NEXT:    xso 96[$r0] = $a3
-; NORMAL-NEXT:    ;; # (end cycle 14)
+; NORMAL-NEXT:    ;; # (end cycle 32)
 ; NORMAL-NEXT:    xso 64[$r0] = $a2
 ; NORMAL-NEXT:    ret
-; NORMAL-NEXT:    ;; # (end cycle 15)
+; NORMAL-NEXT:    ;; # (end cycle 33)
 ;
 ; VLIW-LABEL: foo:
 ; VLIW:       # %bb.0:
-; VLIW-NEXT:    lwz $r2 = 0[$r1]
+; VLIW-NEXT:    xlo.u $a0 = 0[$r0]
 ; VLIW-NEXT:    make $r3 = 0x10000000000000
 ; VLIW-NEXT:    ;; # (end cycle 0)
-; VLIW-NEXT:    xlo.u $a0 = 0[$r0]
-; VLIW-NEXT:    ;; # (end cycle 1)
 ; VLIW-NEXT:    xlo.u $a1 = 32[$r0]
-; VLIW-NEXT:    ;; # (end cycle 2)
+; VLIW-NEXT:    ;; # (end cycle 1)
 ; VLIW-NEXT:    xlo.u $a2 = 64[$r0]
-; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
-; VLIW-NEXT:    ;; # (end cycle 3)
+; VLIW-NEXT:    ;; # (end cycle 2)
 ; VLIW-NEXT:    xlo.u $a3 = 96[$r0]
+; VLIW-NEXT:    ;; # (end cycle 3)
+; VLIW-NEXT:    lwz $r2 = 0[$r1]
 ; VLIW-NEXT:    ;; # (end cycle 4)
+; VLIW-NEXT:    faddw $r2 = $r2, 0x42280000
+; VLIW-NEXT:    ;; # (end cycle 7)
 ; VLIW-NEXT:    sw 0[$r1] = $r2
 ; VLIW-NEXT:    make $r1 = 0x100000
-; VLIW-NEXT:    ;; # (end cycle 6)
-; VLIW-NEXT:     # (here cycle 7)
+; VLIW-NEXT:    ;; # (end cycle 10)
+; VLIW-NEXT:     # (here cycle 11)
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r3
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
 ; VLIW-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; VLIW-NEXT:    ;; # (end cycle 8)
-; VLIW-NEXT:     # (here cycle 9)
+; VLIW-NEXT:    ;; # (end cycle 26)
+; VLIW-NEXT:     # (here cycle 27)
 ; VLIW-NEXT:    #APP
 ; VLIW-NEXT:    wfxm $pcr, $r1
 ; VLIW-NEXT:    ;;
 ; VLIW-NEXT:    #NO_APP
 ; VLIW-NEXT:    xso 0[$r0] = $a0
-; VLIW-NEXT:    ;; # (end cycle 12)
+; VLIW-NEXT:    ;; # (end cycle 30)
 ; VLIW-NEXT:    xso 64[$r0] = $a2
-; VLIW-NEXT:    ;; # (end cycle 13)
+; VLIW-NEXT:    ;; # (end cycle 31)
 ; VLIW-NEXT:    xso 96[$r0] = $a3
-; VLIW-NEXT:    ;; # (end cycle 14)
+; VLIW-NEXT:    ;; # (end cycle 32)
 ; VLIW-NEXT:    xso 32[$r0] = $a1
 ; VLIW-NEXT:    ret
-; VLIW-NEXT:    ;; # (end cycle 15)
-  %3 = load <1024 x i1>, ptr %0, align 32
-  %4 = load float, ptr %1, align 4
-  %5 = fadd float %4, 4.200000e+01
-  store float %5, ptr %1, align 4
-  tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
-  %6 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %3)
-  tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
-  store <1024 x i1> %6, ptr %0, align 32
-  ret void
+; VLIW-NEXT:    ;; # (end cycle 33)
+%3 = bitcast i8* %0 to <1024 x i1>*
+%4 = load <1024 x i1>, <1024 x i1>* %3, align 32
+%5 = load float, float* %1, align 4
+%6 = fadd float %5, 4.200000e+01
+store float %6, float* %1, align 4
+tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 4503599627370496)
+%7 = tail call <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1> %4)
+tail call void asm sideeffect "wfxm $$pcr, $0", "r,~{$pcr}"(i64 1048576)
+store <1024 x i1> %7, <1024 x i1>* %3, align 32
+ret void
 }
 
 declare <1024 x i1> @llvm.kvx.xmt44d(<1024 x i1>)

@@ -475,12 +475,12 @@ define void @xload256(ptr %0) {
 ; CHECK-NEXT:    xlo.u $a0 = 96[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xso 64[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xlo.us $a0 = 64[$r0]
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 57)
   %2 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
   %3 = tail call <256 x i1> @llvm.kvx.xload256(ptr nonnull %2, i32 0)
   store <256 x i1> %3, ptr %0
@@ -510,10 +510,10 @@ define void @xloadc256(ptr %0, i64 %1) {
 ; CHECK-NEXT:    make $r1 = 1
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo.us.mfc $r1 ? $a0 = 64[$r0]
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 54)
   %3 = getelementptr inbounds <256 x i1>, ptr %0, i64 1
   %4 = tail call <256 x i1> @llvm.kvx.xloadc256(<256 x i1> undef, ptr nonnull %3, i64 %1, i32 0, i32 4)
   %5 = getelementptr inbounds <256 x i1>, ptr %0, i64 3
@@ -541,14 +541,14 @@ define void @xload1024q(ptr %0) {
 ; CHECK-NEXT:    xlo.us.q3 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 38)
   %2 = tail call <1024 x i1> @llvm.kvx.xload1024q0(<1024 x i1> undef, ptr %0, i32 0)
   %3 = tail call <1024 x i1> @llvm.kvx.xload1024q1(<1024 x i1> %2, ptr %0, i32 0)
   %4 = tail call <1024 x i1> @llvm.kvx.xload1024q2(<1024 x i1> %3, ptr %0, i32 1)
@@ -575,16 +575,16 @@ define void @xloadc1024q(ptr %0, i64 %1) {
 ; CHECK-NEXT:    xlo.u.mtc.q2 $r1 ? $a0a1a2a3 = [$r0]
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    xlo.us.mfc.q3 $r1 ? $a0a1a2a3 = [$r0]
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 54)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 55)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 56)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 57)
   %3 = tail call <1024 x i1> @llvm.kvx.xloadc1024q0(<1024 x i1> undef, ptr %0, i64 %1, i32 0, i32 4)
   %4 = icmp eq i64 %1, 0
   %5 = zext i1 %4 to i64
@@ -703,19 +703,19 @@ define void @xloadc512(ptr %0, i64 %1) {
 ; CHECK-NEXT:    srld $r1 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    xlo.u.mtc $r1 ? $a1 = 32[$r2]
-; CHECK-NEXT:    addd $r1 = $r0, 128
-; CHECK-NEXT:    make $r2 = 1
+; CHECK-NEXT:    make $r1 = 1
+; CHECK-NEXT:    addd $r2 = $r0, 128
 ; CHECK-NEXT:    ;; # (end cycle 10)
-; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r1]
-; CHECK-NEXT:    srld $r2 = $r2, 32
-; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    xlo.us.mfc $r2 ? $a1 = 32[$r1]
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    xlo.us.mfc $r1 ? $a0 = [$r2]
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    ;; # (end cycle 32)
+; CHECK-NEXT:    xlo.us.mfc $r1 ? $a1 = 32[$r2]
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 55)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 56)
   %3 = getelementptr inbounds <512 x i1>, ptr %0, i64 1
   %4 = tail call <512 x i1> @llvm.kvx.xloadc512(<512 x i1> undef, ptr nonnull %3, i64 %1, i32 0, i32 0)
   %5 = getelementptr inbounds <512 x i1>, ptr %0, i64 3
@@ -773,27 +773,28 @@ define void @xloadc1024(ptr %0, <4 x i32> %1) {
 ; CHECK-NEXT:    addd $r4 = $r0, 256
 ; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xlo.us.mfc $r2 ? $a0 = [$r4]
-; CHECK-NEXT:    xcopyo $a1 = $a2
-; CHECK-NEXT:    ;; # (end cycle 26)
-; CHECK-NEXT:    xcopyo $a5 = $a1
-; CHECK-NEXT:    ;; # (end cycle 30)
-; CHECK-NEXT:    xlo.us.mfc $r1 ? $a5 = 32[$r4]
-; CHECK-NEXT:    ;; # (end cycle 34)
-; CHECK-NEXT:    xlo.us.mfc $r3 ? $a2 = 64[$r4]
-; CHECK-NEXT:    ;; # (end cycle 35)
-; CHECK-NEXT:    xlo.us.mfc $r5 ? $a1 = 96[$r4]
-; CHECK-NEXT:    ;; # (end cycle 36)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 37)
-; CHECK-NEXT:    xso 32[$r0] = $a5
 ; CHECK-NEXT:    ;; # (end cycle 38)
-; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    xcopyo $a1 = $a2
 ; CHECK-NEXT:    ;; # (end cycle 39)
+; CHECK-NEXT:    xcopyo $a5 = $a1
+; CHECK-NEXT:    ;; # (end cycle 43)
+; CHECK-NEXT:    xlo.us.mfc $r1 ? $a5 = 32[$r4]
+; CHECK-NEXT:    ;; # (end cycle 47)
+; CHECK-NEXT:    xlo.us.mfc $r3 ? $a2 = 64[$r4]
+; CHECK-NEXT:    ;; # (end cycle 48)
+; CHECK-NEXT:    xlo.us.mfc $r5 ? $a1 = 96[$r4]
+; CHECK-NEXT:    ;; # (end cycle 49)
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;; # (end cycle 61)
+; CHECK-NEXT:    xso 32[$r0] = $a5
+; CHECK-NEXT:    ;; # (end cycle 70)
+; CHECK-NEXT:    xso 64[$r0] = $a2
+; CHECK-NEXT:    ;; # (end cycle 71)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;; # (end cycle 40)
+; CHECK-NEXT:    ;; # (end cycle 72)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 44)
+; CHECK-NEXT:    ;; # (end cycle 76)
   %3 = getelementptr inbounds <1024 x i1>, ptr %0, i64 1
   %4 = tail call <1024 x i1> @llvm.kvx.xloadc1024(<1024 x i1> undef, ptr nonnull %3, <4 x i32> %1, i32 0, i32 0)
   %5 = getelementptr inbounds <1024 x i1>, ptr %0, i64 3
@@ -845,7 +846,7 @@ define void @xloadStore256(ptr addrspace(257) %0) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 23)
   %2 = getelementptr inbounds <256 x i1>, ptr addrspace(257) %0, i64 1
   %3 = load volatile <256 x i1>, ptr addrspace(257) %2
   store volatile <256 x i1> %3, ptr addrspace(257) %0
@@ -882,14 +883,14 @@ define void @xloadStore1024(ptr addrspace(256) %0) {
 ; CHECK-NEXT:    xlo.u $a3 = 128[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 32[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 64[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xso 96[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 29)
   %2 = getelementptr inbounds <1024 x i1>, ptr addrspace(256) %0, i64 1
   %3 = load volatile <1024 x i1>, ptr addrspace(256) %2
   store volatile <1024 x i1> %3, ptr addrspace(256) %0
@@ -1330,14 +1331,14 @@ define void @xpreload1024(ptr %0, i64 %1) {
 ; CHECK-NEXT:    xlo.us.q $a0..a3, $r1 = [$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
   %3 = tail call <1024 x i1> @llvm.kvx.xpreload.v1024i1(<1024 x i1> undef, ptr %0, i64 %1, i32 3, i32 1)
   store <1024 x i1> %3, ptr %0
   ret void
@@ -1380,38 +1381,38 @@ define void @xpreload4096(ptr %0, i64 %1) {
 ; CHECK-NEXT:    xlo.u.b $a0..a15, $r1 = [$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 160[$r0] = $a5
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 128[$r0] = $a4
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xso 224[$r0] = $a7
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    xso 192[$r0] = $a6
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    xso 288[$r0] = $a9
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 256[$r0] = $a8
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    xso 352[$r0] = $a11
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xso 320[$r0] = $a10
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xso 416[$r0] = $a13
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 384[$r0] = $a12
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 36)
 ; CHECK-NEXT:    xso 480[$r0] = $a15
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    xso 448[$r0] = $a14
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 38)
   %3 = tail call <4096 x i1> @llvm.kvx.xpreload.v4096i1(<4096 x i1> undef, ptr %0, i64 %1, i32 2, i32 5)
   store <4096 x i1> %3, ptr %0
   ret void

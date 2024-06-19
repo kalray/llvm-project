@@ -17,10 +17,10 @@ define void @test_movetohi(i64 %a, i64 %b, ptr %p0, ptr %p1) {
 ; CHECK-NEXT:    xmovetq $a1.hi = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xso 0[$r2] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r3] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 24)
 entry:
   %v0 = load <256 x i1>, ptr %p0, align 32
   %v1 = load <256 x i1>, ptr %p1, align 32
@@ -42,10 +42,10 @@ define void @test_movetolo(i64 %a, i64 %b, ptr %p0, ptr %p1) {
 ; CHECK-NEXT:    xmovetq $a1.lo = $r0, $r1
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xso 0[$r2] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r3] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 24)
 entry:
   %v0 = load <256 x i1>, ptr %p0, align 32
   %v1 = load <256 x i1>, ptr %p1, align 32
@@ -118,7 +118,7 @@ define <4 x i64> @test_xmovefo256(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xmovefo $r0r1r2r3 = $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <256 x i1>, ptr %p0, align 32
@@ -136,7 +136,7 @@ define <4 x i64> @test_alignovi(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    aligno $r0r1r2r3 = $a0, $a1, 16
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, ptr %p0, align 32
@@ -152,7 +152,7 @@ define <4 x i64> @test_alignovr(ptr %p0, i64 %s) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    aligno $r0r1r2r3 = $a0, $a1, $r1
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %v0 = load <512 x i1>, ptr %p0, align 32
@@ -170,11 +170,11 @@ define void @test_alignvi(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    alignv $a0 = $a0, $a1, 16
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 8)
-  %v0 = load <512 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 28)
+  %v0 = load <512 x i1>, <512 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %v0, i64 16)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -188,11 +188,11 @@ define void @test_alignvr(ptr %p0, i64 %s) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    alignv $a0 = $a0, $a1, $r1
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 8)
-  %v0 = load <512 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 28)
+  %v0 = load <512 x i1>, <512 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xaligno.v512i1(<512 x i1> %v0, i64 %s)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -212,11 +212,11 @@ define void @test_convdhv0(ptr %p0, ptr %p1) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    convdhv0.rhu.satu $a0.lo = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
-  %m0 = load <1024 x i1>, ptr %p1, align 32
+; CHECK-NEXT:    ;; # (end cycle 30)
+  %m0 = load <1024 x i1>, <1024 x i1>* %p1
   %v1 = tail call <256 x i1> @llvm.kvx.xconvdhv0(<256 x i1> undef, <1024 x i1> %m0, i32 4, i32 1)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -236,11 +236,11 @@ define void @test_convdhv1(ptr %p0, ptr %p1) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    convdhv1.rz.satu $a0.hi = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
-  %m0 = load <1024 x i1>, ptr %p1, align 32
+; CHECK-NEXT:    ;; # (end cycle 30)
+  %m0 = load <1024 x i1>, <1024 x i1>* %p1
   %v1 = tail call <256 x i1> @llvm.kvx.xconvdhv1(<256 x i1> undef, <1024 x i1> %m0, i32 3, i32 1)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -260,13 +260,13 @@ define void @test_convdhv(ptr %p0, ptr %p1) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    convdhv0.rd.sat $a4.lo = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    convdhv1.rd.sat $a4.hi = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 0[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
-  %m0 = load <1024 x i1>, ptr %p1, align 32
+; CHECK-NEXT:    ;; # (end cycle 31)
+  %m0 = load <1024 x i1>, <1024 x i1>* %p1
   %v1 = tail call <256 x i1> @llvm.kvx.xconvdhv(<1024 x i1> %m0, i32 2, i32 0)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -280,11 +280,11 @@ define void @test_convwbv0(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    convwbv0.rn.sat $a0.x = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xconvwbv0(<256 x i1> %v0, <1024 x i1> undef, i32 0, i32 0)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -298,11 +298,11 @@ define void @test_convwbv1(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    convwbv1.ru.satu $a0.y = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xconvwbv1(<256 x i1> %v0, <1024 x i1> undef, i32 1, i32 1)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -316,11 +316,11 @@ define void @test_convwbv2(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    convwbv2.rd.sat $a0.z = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xconvwbv2(<256 x i1> %v0, <1024 x i1> undef, i32 2, i32 0)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -334,11 +334,11 @@ define void @test_convwbv3(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    convwbv3.rz.sat $a0.t = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xconvwbv3(<256 x i1> %v0, <1024 x i1> undef, i32 3, i32 0)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -373,11 +373,11 @@ define void @test_fmma242hw0(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 29)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw0(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -391,11 +391,11 @@ define void @test_fmma242hw1(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 29)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw1(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -409,11 +409,11 @@ define void @test_fmma242hw2(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 29)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw2(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -427,11 +427,11 @@ define void @test_fmma242hw3(ptr %p0) {
 ; CHECK-NEXT:    xlo.u $a1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
-  %v0 = load <256 x i1>, ptr %p0, align 32
+; CHECK-NEXT:    ;; # (end cycle 29)
+  %v0 = load <256 x i1>, <256 x i1>* %p0
   %v1 = tail call <256 x i1> @llvm.kvx.xfmma242hw3(<256 x i1> %v0, <512 x i1> undef, <256 x i1> undef, <256 x i1> undef)
   store <256 x i1> %v1, ptr %p0, align 32
   ret void
@@ -825,155 +825,156 @@ define <4 x i64> @test_tca_builtins(i64 %0, i64 %1, i64 %2, i64 %3, ptr %4, ptr 
 ; CHECK-NEXT:    xmovetq $a4.hi = $r34, $r35
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xmovetq $a0.lo = $r35, $r34
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 47)
 ; CHECK-NEXT:    xso 32[$r4] = $a1
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 48)
 ; CHECK-NEXT:    xlo.u $a5 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 49)
 ; CHECK-NEXT:    xlo.u $a3 = 96[$r6]
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 50)
 ; CHECK-NEXT:    xlo.u $a2 = 64[$r6]
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 51)
 ; CHECK-NEXT:    xlo.u $a1 = 32[$r6]
-; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 52)
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r6]
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 53)
+; CHECK-NEXT:    alignv $a5 = $a4, $a5, 16
+; CHECK-NEXT:    ;; # (end cycle 72)
 ; CHECK-NEXT:    convdhv0.rn.sat $a4.lo = $a0a1a2a3
 ; CHECK-NEXT:    aligno $r8r9r10r11 = $a4, $a5, 1
-; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    ;; # (end cycle 76)
 ; CHECK-NEXT:    xlo.u $a7 = 32[$r5]
 ; CHECK-NEXT:    convdhv1.ru.satu $a4.hi = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    ;; # (end cycle 77)
 ; CHECK-NEXT:    xlo.u $a6 = 0[$r5]
 ; CHECK-NEXT:    convwbv0.ru.sat $a5.x = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    ;; # (end cycle 78)
 ; CHECK-NEXT:    convwbv1.ru.sat $a5.y = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    ;; # (end cycle 79)
 ; CHECK-NEXT:    convwbv2.ru.sat $a5.z = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    ;; # (end cycle 80)
 ; CHECK-NEXT:    xcopyo $a8 = $a4
 ; CHECK-NEXT:    convwbv3.ru.sat $a5.t = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    ;; # (end cycle 81)
 ; CHECK-NEXT:    fmma242hw0 $a8.lo = $a6a7, $a8, $a5
-; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    ;; # (end cycle 101)
 ; CHECK-NEXT:    xcopyo $a10 = $a8
-; CHECK-NEXT:    ;; # (end cycle 35)
+; CHECK-NEXT:    ;; # (end cycle 107)
 ; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a4, $a10
-; CHECK-NEXT:    ;; # (end cycle 39)
+; CHECK-NEXT:    ;; # (end cycle 111)
 ; CHECK-NEXT:    xcopyo $a5 = $a10
-; CHECK-NEXT:    ;; # (end cycle 45)
+; CHECK-NEXT:    ;; # (end cycle 117)
 ; CHECK-NEXT:    fmma242hw2 $a5.lo = $a6a7, $a10, $a8
-; CHECK-NEXT:    ;; # (end cycle 46)
-; CHECK-NEXT:    xcopyo $a9 = $a5
-; CHECK-NEXT:    ;; # (end cycle 52)
-; CHECK-NEXT:    fmma242hw3 $a9.hi = $a6a7, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 56)
-; CHECK-NEXT:    fmma242hw0 $a10.lo = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 62)
-; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 63)
-; CHECK-NEXT:    fmma242hw2 $a11.lo = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 64)
-; CHECK-NEXT:    fmma242hw3 $a11.hi = $a6a7, $a5, $a9
-; CHECK-NEXT:    ;; # (end cycle 65)
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 66)
-; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 70)
-; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 74)
-; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 78)
-; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 82)
-; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 86)
-; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 90)
-; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 94)
-; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
-; CHECK-NEXT:    ;; # (end cycle 98)
-; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 102)
-; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 106)
-; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 110)
-; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
-; CHECK-NEXT:    ;; # (end cycle 114)
-; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
 ; CHECK-NEXT:    ;; # (end cycle 118)
-; CHECK-NEXT:    mma444uhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 122)
-; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 126)
-; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 130)
-; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    xcopyo $a9 = $a5
+; CHECK-NEXT:    ;; # (end cycle 124)
+; CHECK-NEXT:    fmma242hw3 $a9.hi = $a6a7, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 128)
+; CHECK-NEXT:    fmma242hw0 $a10.lo = $a6a7, $a5, $a9
 ; CHECK-NEXT:    ;; # (end cycle 134)
-; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
+; CHECK-NEXT:    fmma242hw1 $a10.hi = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 135)
+; CHECK-NEXT:    fmma242hw2 $a11.lo = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 136)
+; CHECK-NEXT:    fmma242hw3 $a11.hi = $a6a7, $a5, $a9
+; CHECK-NEXT:    ;; # (end cycle 137)
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
 ; CHECK-NEXT:    ;; # (end cycle 138)
-; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
 ; CHECK-NEXT:    ;; # (end cycle 142)
+; CHECK-NEXT:    mma444hbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 146)
+; CHECK-NEXT:    mma444hbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
+; CHECK-NEXT:    ;; # (end cycle 150)
+; CHECK-NEXT:    mma444hd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 154)
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 158)
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 162)
+; CHECK-NEXT:    mma444suhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 166)
+; CHECK-NEXT:    mma444suhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
+; CHECK-NEXT:    ;; # (end cycle 170)
+; CHECK-NEXT:    mma444suhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 174)
+; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 178)
+; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 182)
+; CHECK-NEXT:    mma444uhbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 186)
+; CHECK-NEXT:    mma444uhbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
+; CHECK-NEXT:    ;; # (end cycle 190)
+; CHECK-NEXT:    mma444uhd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 194)
+; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 198)
+; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 202)
+; CHECK-NEXT:    mma444ushbd0 $a0a1a2a3 = $a0a1a2a3, $a10, $a9
+; CHECK-NEXT:    ;; # (end cycle 206)
+; CHECK-NEXT:    mma444ushbd1 $a0a1a2a3 = $a0a1a2a3, $a11, $a9
+; CHECK-NEXT:    ;; # (end cycle 210)
+; CHECK-NEXT:    mma444ushd $a0a1a2a3 = $a0a1a2a3, $a9, $a9
+; CHECK-NEXT:    ;; # (end cycle 214)
 ; CHECK-NEXT:    xmma484bw $a6a7 = $a10a11, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 143)
+; CHECK-NEXT:    ;; # (end cycle 215)
 ; CHECK-NEXT:    xmma484subw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 147)
+; CHECK-NEXT:    ;; # (end cycle 219)
 ; CHECK-NEXT:    xmma484ubw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 151)
+; CHECK-NEXT:    ;; # (end cycle 223)
 ; CHECK-NEXT:    xmma484usbw $a6a7 = $a6a7, $a9, $a9
-; CHECK-NEXT:    ;; # (end cycle 155)
+; CHECK-NEXT:    ;; # (end cycle 227)
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 156)
+; CHECK-NEXT:    ;; # (end cycle 228)
 ; CHECK-NEXT:    fscalewv $a4 = $a5
-; CHECK-NEXT:    ;; # (end cycle 157)
+; CHECK-NEXT:    ;; # (end cycle 229)
 ; CHECK-NEXT:    fnarrow44wh.rn.s $a5 = $a6a7
-; CHECK-NEXT:    ;; # (end cycle 159)
+; CHECK-NEXT:    ;; # (end cycle 231)
 ; CHECK-NEXT:    fscalewv.rn.relu $a4 = $a4
-; CHECK-NEXT:    ;; # (end cycle 161)
+; CHECK-NEXT:    ;; # (end cycle 233)
 ; CHECK-NEXT:    xmovetq $a4.lo = $r8, $r9
 ; CHECK-NEXT:    xmovetq $a4.hi = $r10, $r11
 ; CHECK-NEXT:    xmovefo $r8r9r10r11 = $a4
-; CHECK-NEXT:    ;; # (end cycle 165)
+; CHECK-NEXT:    ;; # (end cycle 237)
 ; CHECK-NEXT:    fscalewv.relu $a4 = $a4
-; CHECK-NEXT:    ;; # (end cycle 168)
+; CHECK-NEXT:    ;; # (end cycle 240)
 ; CHECK-NEXT:    xlo.us $a4 = 0[$r4]
-; CHECK-NEXT:    ;; # (end cycle 169)
+; CHECK-NEXT:    ;; # (end cycle 241)
 ; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 128[$r4]
-; CHECK-NEXT:    ;; # (end cycle 170)
+; CHECK-NEXT:    ;; # (end cycle 242)
 ; CHECK-NEXT:    xlo.u.odd.q0 $r0 ? $a0a1a2a3 = 160[$r4]
-; CHECK-NEXT:    ;; # (end cycle 173)
+; CHECK-NEXT:    ;; # (end cycle 265)
 ; CHECK-NEXT:    xso 0[$r4] = $a4
-; CHECK-NEXT:    ;; # (end cycle 174)
+; CHECK-NEXT:    ;; # (end cycle 266)
 ; CHECK-NEXT:    xso.even $r33 ? 32[$r4] = $a4
-; CHECK-NEXT:    ;; # (end cycle 175)
+; CHECK-NEXT:    ;; # (end cycle 267)
 ; CHECK-NEXT:    xso 0[$r5] = $a6
-; CHECK-NEXT:    ;; # (end cycle 176)
+; CHECK-NEXT:    ;; # (end cycle 268)
 ; CHECK-NEXT:    xso 32[$r5] = $a7
-; CHECK-NEXT:    ;; # (end cycle 177)
+; CHECK-NEXT:    ;; # (end cycle 269)
 ; CHECK-NEXT:    xso 0[$r6] = $a0
-; CHECK-NEXT:    ;; # (end cycle 178)
+; CHECK-NEXT:    ;; # (end cycle 288)
 ; CHECK-NEXT:    xso 32[$r6] = $a1
-; CHECK-NEXT:    ;; # (end cycle 179)
+; CHECK-NEXT:    ;; # (end cycle 289)
 ; CHECK-NEXT:    xso 64[$r6] = $a2
-; CHECK-NEXT:    ;; # (end cycle 180)
+; CHECK-NEXT:    ;; # (end cycle 290)
 ; CHECK-NEXT:    xso 96[$r6] = $a3
 ; CHECK-NEXT:    copyd $r0 = $r8
 ; CHECK-NEXT:    copyd $r1 = $r9
 ; CHECK-NEXT:    copyd $r2 = $r10
-; CHECK-NEXT:    ;; # (end cycle 181)
+; CHECK-NEXT:    ;; # (end cycle 291)
 ; CHECK-NEXT:    copyd $r3 = $r11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 182)
-  %8 = load volatile <256 x i1>, ptr %4, align 32
+; CHECK-NEXT:    ;; # (end cycle 292)
+  %8 = load volatile <256 x i1>, <256 x i1>* %4
   %9 = tail call <256 x i1> @llvm.kvx.xmovetq(<256 x i1> %8, i64 0, i64 1, i32 1)
   store volatile <256 x i1> %9, ptr %4, align 32
   %10 = load volatile <256 x i1>, ptr %4, align 32
@@ -1052,26 +1053,26 @@ define void @convdhv(ptr %v, ptr %m) {
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    convdhv1.rn.sat $a4.hi = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    convdhv0.rn.satu $a4.lo = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 32[$r0] = $a4
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xlo.u $a3 = 224[$r1]
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    xlo.u $a2 = 192[$r1]
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xlo.u $a1 = 160[$r1]
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xlo.u $a0 = 128[$r1]
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    convdhv0.rz.sat $a4.lo = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 58)
 ; CHECK-NEXT:    convdhv1.rz.sat $a4.hi = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 59)
 ; CHECK-NEXT:    xso 64[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    ;; # (end cycle 63)
 entry:
   %0 = load <256 x i1>, ptr %v, align 32
   %1 = load <1024 x i1>, ptr %m, align 128
@@ -1101,39 +1102,39 @@ define void @convwbv(ptr %v, ptr %m) {
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    convwbv1.rn.sat $a4.y = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    convwbv0.rn.satu $a4.x = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    convwbv2.rd.sat $a4.z = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xcopyo $a5 = $a4
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    convwbv3.rhu.satu $a5.t = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xso 32[$r0] = $a5
 ; CHECK-NEXT:    convwbv3.rn.sat $a4.t = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    xso 0[$r0] = $a4
-; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    ;; # (end cycle 41)
 ; CHECK-NEXT:    xlo.u $a3 = 224[$r1]
-; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    ;; # (end cycle 42)
 ; CHECK-NEXT:    xlo.u $a2 = 192[$r1]
-; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    ;; # (end cycle 43)
 ; CHECK-NEXT:    xlo.u $a1 = 160[$r1]
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    ;; # (end cycle 44)
 ; CHECK-NEXT:    xlo.u $a0 = 128[$r1]
-; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    convwbv0.rz.satu $a4.x = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    ;; # (end cycle 68)
 ; CHECK-NEXT:    convwbv1.rz.satu $a4.y = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    ;; # (end cycle 69)
 ; CHECK-NEXT:    convwbv2.rz.satu $a4.z = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 30)
+; CHECK-NEXT:    ;; # (end cycle 70)
 ; CHECK-NEXT:    convwbv3.rz.satu $a4.t = $a0a1a2a3
-; CHECK-NEXT:    ;; # (end cycle 31)
+; CHECK-NEXT:    ;; # (end cycle 71)
 ; CHECK-NEXT:    xso 64[$r0] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 35)
+; CHECK-NEXT:    ;; # (end cycle 75)
 entry:
   %0 = load <256 x i1>, ptr %v, align 32
   %1 = load <1024 x i1>, ptr %m, align 128
@@ -1167,39 +1168,39 @@ define void @fmma444hw(ptr %v, ptr %w) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a4, $a6
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a4, $a6
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xcopyo $a1 = $a0
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xcopyo $a5 = $a1
-; CHECK-NEXT:    ;; # (end cycle 17)
+; CHECK-NEXT:    ;; # (end cycle 37)
 ; CHECK-NEXT:    fmma242hw2 $a5.lo = $a2a3, $a4, $a6
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 38)
 ; CHECK-NEXT:    xso 32[$r0] = $a5
 ; CHECK-NEXT:    fmma242hw3 $a1.hi = $a2a3, $a5, $a6
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    ;; # (end cycle 44)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    ;; # (end cycle 45)
 ; CHECK-NEXT:    xso 64[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 30)
+; CHECK-NEXT:    ;; # (end cycle 50)
 ; CHECK-NEXT:    xlo.u $a3 = 96[$r1]
-; CHECK-NEXT:    ;; # (end cycle 31)
+; CHECK-NEXT:    ;; # (end cycle 51)
 ; CHECK-NEXT:    xlo.u $a2 = 64[$r1]
-; CHECK-NEXT:    ;; # (end cycle 32)
+; CHECK-NEXT:    ;; # (end cycle 52)
 ; CHECK-NEXT:    fmma242hw0 $a0.lo = $a2a3, $a1, $a5
-; CHECK-NEXT:    ;; # (end cycle 35)
+; CHECK-NEXT:    ;; # (end cycle 75)
 ; CHECK-NEXT:    fmma242hw1 $a0.hi = $a2a3, $a1, $a5
-; CHECK-NEXT:    ;; # (end cycle 36)
+; CHECK-NEXT:    ;; # (end cycle 76)
 ; CHECK-NEXT:    fmma242hw2 $a7.lo = $a2a3, $a1, $a5
-; CHECK-NEXT:    ;; # (end cycle 37)
+; CHECK-NEXT:    ;; # (end cycle 77)
 ; CHECK-NEXT:    fmma242hw3 $a7.hi = $a2a3, $a1, $a5
-; CHECK-NEXT:    ;; # (end cycle 38)
+; CHECK-NEXT:    ;; # (end cycle 78)
 ; CHECK-NEXT:    xso 192[$r1] = $a0
-; CHECK-NEXT:    ;; # (end cycle 42)
+; CHECK-NEXT:    ;; # (end cycle 82)
 ; CHECK-NEXT:    xso 224[$r1] = $a7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 44)
+; CHECK-NEXT:    ;; # (end cycle 84)
 entry:
   %0 = load <256 x i1>, ptr %v, align 32
   %1 = load <512 x i1>, ptr %w, align 32
@@ -1259,21 +1260,21 @@ define void @insertwm(ptr %a0, ptr %a1) {
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xcopyo $a2 = $a0
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 32)
 entry:
   %0 = load <1024 x i1>, ptr %a0, align 128
   %1 = load <512 x i1>, ptr %a1, align 32
@@ -1300,22 +1301,22 @@ define void @insertvm(ptr %a0, ptr %a1) {
 ; CHECK-NEXT:    xlo.u $a1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xcopyo $a1 = $a0
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    xcopyo $a2 = $a0
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    # implicit-def: $w0
 ; CHECK-NEXT:    xcopyo $a3 = $a0
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    ;; # (end cycle 39)
 entry:
   %0 = load <1024 x i1>, ptr %a0, align 128
   %1 = load <256 x i1>, ptr %a1, align 32
@@ -1340,12 +1341,12 @@ define void @insertvw(ptr %a0, ptr %a1) {
 ; CHECK-NEXT:    xlo.u $a1 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xcopyo $a1 = $a0
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 28)
 entry:
   %0 = load <512 x i1>, ptr %a0, align 32
   %1 = load <256 x i1>, ptr %a1, align 32
@@ -1368,15 +1369,15 @@ define void @movefmw(ptr %o, ptr %a0) {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo.u $a2 = 64[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
 entry:
   %0 = load <1024 x i1>, ptr %a0, align 128
   %1 = tail call <512 x i1> @llvm.kvx.xmovefmw(<1024 x i1> %0, i32 0)
@@ -1400,15 +1401,15 @@ define void @movefmv(ptr %o, ptr %a0) {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xlo.u $a2 = 64[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    xso 32[$r0] = $a1
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    xso 0[$r0] = $a0
+; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
 entry:
   %0 = load <1024 x i1>, ptr %a0, align 128
   %1 = tail call <256 x i1> @llvm.kvx.xmovefmv(<1024 x i1> %0, i32 0)
@@ -1435,10 +1436,10 @@ define void @movefwv(ptr %o, ptr %a0) {
 ; CHECK-NEXT:    xlo.u $a1 = 32[$r1]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 entry:
   %0 = load <512 x i1>, ptr %a0, align 32
   %1 = tail call <256 x i1> @llvm.kvx.xmovefwv(<512 x i1> %0, i32 0)
@@ -1461,16 +1462,16 @@ define void @buildfvm(ptr %a, ptr %M) {
 ; CHECK-NEXT:    xlo.u $a3 = 32[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    xso 32[$r1] = $a1
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xso 96[$r1] = $a3
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xcopyo $a2 = $a0
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 64[$r1] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 30)
 entry:
   %0 = load <256 x i1>, ptr %a, align 32
   %arrayidx1 = getelementptr inbounds i8, ptr %a, i64 64
@@ -1492,30 +1493,30 @@ define void @buildfwm(ptr %a, ptr %M) {
 ; CHECK-NEXT:    xlo.u $a0 = 128[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 160[$r1] = $a1
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 128[$r1] = $a0
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    xcopyo $a2 = $a0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xcopyo $a3 = $a1
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 192[$r1] = $a2
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    xso 224[$r1] = $a3
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    xlo.u $a3 = 96[$r0]
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    xlo.u $a2 = 64[$r0]
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    xso 32[$r1] = $a1
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    xso 96[$r1] = $a3
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 54)
 ; CHECK-NEXT:    xso 64[$r1] = $a2
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 55)
 entry:
   %arrayidx = getelementptr inbounds i8, ptr %a, i64 128
   %0 = load <512 x i1>, ptr %arrayidx, align 32
@@ -1539,10 +1540,10 @@ define void @buildfvw(ptr %a, ptr %W) {
 ; CHECK-NEXT:    xlo.u $a0 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xso 32[$r1] = $a1
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r1] = $a0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 24)
 entry:
   %0 = load <256 x i1>, ptr %a, align 32
   %arrayidx1 = getelementptr inbounds i8, ptr %a, i64 64
