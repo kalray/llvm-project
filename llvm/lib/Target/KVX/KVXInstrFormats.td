@@ -27,13 +27,23 @@ class InstKVX : Instruction {
   bits<1> hasNoOffset = 0; // 1 if the memory instruction has no offset
   let TSFlags{0} = hasNoOffset;
 
-  // relative position of .xs modifier from the first memory operand
-  // A value of 0 means there is no .xs modifier
+  // relative position of modifiers from the first memory operand
+  // A value of 0 means there is no modifier
+
+  // .xs modifier
   bits<2> XSModRelPos = 0;
   let TSFlags{2-1} = XSModRelPos;
 
+  // .u modifier
+  bits<2> VariantModRelPos = 0;
+  let TSFlags{4-3} = VariantModRelPos;
+
+  // true if the instruction always performs uncached access
+  bit AlwaysUncached = false;
+  let TSFlags{5} = AlwaysUncached;
+
   AWType MemAccessSize = NoAccess; // size of memory access
-  let TSFlags{5-3} = MemAccessSize.Value;
+  let TSFlags{8-6} = MemAccessSize.Value;
 }
 
 // Generic KVX instruction definition.
@@ -245,6 +255,28 @@ multiclass I <string asm,
     // Position of .xs mod, relative to Memops
     let XSModRelPos = !cond(
       !gt(DoscaleModRelPos, -1) : !add(!size(MemOps), !size(Ops), DoscaleModRelPos),
+      true : 0);
+
+    // Position of .u mod, relative to Mods
+    defvar VariantModRelPos_ = !cond(
+      !ge(!size(Mods), 3): !cond(
+        !eq(Mods[0], VariantMod) : 0,
+        !eq(Mods[1], VariantMod) : 1,
+        !eq(Mods[2], VariantMod) : 2,
+        true : -1),
+      !ge(!size(Mods), 2): !cond(
+        !eq(Mods[0], VariantMod) : 0,
+        !eq(Mods[1], VariantMod) : 1,
+        true : -1),
+      !ge(!size(Mods), 1): !cond(
+        !eq(Mods[0], VariantMod) : 0,
+        true : -1),
+      true: -1
+    );
+
+    // Position of .u mod, relative to Memops
+    let VariantModRelPos = !cond(
+      !gt(VariantModRelPos_, -1) : !add(!size(MemOps), !size(Ops), VariantModRelPos_),
       true : 0);
  }
 }

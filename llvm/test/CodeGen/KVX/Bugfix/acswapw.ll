@@ -23,7 +23,7 @@ define i32 @foo(ptr align 8 %p ) {
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    cmoved.even $r4 ? $r3 = $r1
 ; CV1-NEXT:    cb.even $r4 ? .LBB0_1
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 26)
 ; CV1-NEXT:  # %bb.2: # %atomicrmw.end
 ; CV1-NEXT:    fence
 ; CV1-NEXT:    copyd $r0 = $r3
@@ -46,7 +46,7 @@ define i32 @foo(ptr align 8 %p ) {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    cb.even $r1 ? .LBB0_1
 ; CV2-NEXT:    cmoved.even $r1 ? $r3 = $r2
-; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    ;; # (end cycle 24)
 ; CV2-NEXT:  # %bb.2: # %atomicrmw.end
 ; CV2-NEXT:    fence
 ; CV2-NEXT:    copyd $r0 = $r3

@@ -1694,6 +1694,7 @@ let MemAccessSize = Octuple in
 defm LO : MC_LOADS<"lo", QuadReg>;
 
 let MemAccessSize = Octuple in {
+  let AlwaysUncached = true in
   defm LV : MC_LV<"xlo.u">, Requires<[IsV1]>;
   defm XLO : MC_XLO, Requires<[IsV2]>;
 }

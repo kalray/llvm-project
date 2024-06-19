@@ -16,6 +16,7 @@
 #ifndef LLVM_LIB_TARGET_KVX_KVXPOSTSCHEDULER_H
 #define LLVM_LIB_TARGET_KVX_KVXPOSTSCHEDULER_H
 
+#include "KVXLoadLatencyMutation.h"
 #include "llvm/CodeGen/DFAPacketizer.h"
 #include "llvm/CodeGen/MachineBasicBlock.h"
 #include "llvm/CodeGen/MachineScheduler.h"
@@ -106,6 +107,7 @@ public:
         DisableBundling(DisableBundling) {
     this->addMutation(createKVXPrologEpilogDAGMutation());
     this->addMutation(createKVXExitMIDataDepsMutation());
+    this->addMutation(createKVXLoadLatencyMutation());
   }
   ~KVXScheduleDAGMI() override = default;
 

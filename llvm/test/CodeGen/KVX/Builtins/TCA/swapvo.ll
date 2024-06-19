@@ -46,13 +46,13 @@ define i32 @main() {
 ; CV1-NEXT:    make $r0 = .L.str.1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    xmovefo $r4r5r6r7 = $a0
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 23)
 ; CV1-NEXT:    copyd $r1 = $r4
 ; CV1-NEXT:    copyd $r2 = $r5
 ; CV1-NEXT:    copyd $r3 = $r6
 ; CV1-NEXT:    copyd $r4 = $r7
 ; CV1-NEXT:    call printf
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 26)
 ; CV1-NEXT:    make $r0 = 0
 ; CV1-NEXT:    ld $r16 = 56[$r12]
 ; CV1-NEXT:    ;; # (end cycle 0)
