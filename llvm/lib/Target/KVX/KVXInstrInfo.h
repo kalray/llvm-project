@@ -169,6 +169,12 @@ public:
   bool isProlog(const MachineInstr *MI) const;
   bool isEpilog(const MachineInstr *MI) const;
 
+  // Returns true if the memory load is performing an uncached access
+  bool isUncachedLoad(const MachineInstr *MI) const;
+
+  // Get the best-case penalty of an uncached memory load
+  unsigned getUncachedPenalty(void) const;
+
   const KVXSubtarget &getSubtarget() const;
 
   bool isBranchOffsetInRange(unsigned, int64_t) const override;

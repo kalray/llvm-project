@@ -71,7 +71,7 @@ define void @asm_clobber_wide_vec(ptr nocapture readonly %a) {
 ; CHECK:       # %bb.0: # %entry
 ; CHECK-NEXT:    xlo.u $a2 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:     # (here cycle 1)
+; CHECK-NEXT:     # (here cycle 20)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xcopyo $a2 = $a2
 ; CHECK-NEXT:    ;;
@@ -92,7 +92,7 @@ define void @asm_clobber_multiple_quad(ptr nocapture %c, ptr nocapture %b) {
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
 ; CHECK-NEXT:    copyd $r5 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:     # (here cycle 2)
+; CHECK-NEXT:     # (here cycle 21)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xcopyo $a4 = $a5
 ; CHECK-NEXT:    ;;
@@ -100,10 +100,10 @@ define void @asm_clobber_multiple_quad(ptr nocapture %c, ptr nocapture %b) {
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    xso 0[$r4] = $a4
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xso 0[$r5] = $a5
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 23)
 entry:
   %0 = load <256 x i1>, ptr %c, align 32
   %1 = tail call { <256 x i1>, <256 x i1> } asm sideeffect "xcopyo $0 = $1\0A\09;;\0A\09xcopyo $1 = $0", "=x,=x,x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
@@ -121,14 +121,14 @@ define ptr @asm_clobber_quad_matrix(ptr readonly returned %a) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:     # (here cycle 2)
+; CHECK-NEXT:     # (here cycle 21)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xso 0[$r3] = $a4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    copyd $r0 = $r4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 3)
+; CHECK-NEXT:    ;; # (end cycle 22)
 entry:
   %0 = load <256 x i1>, ptr %a, align 32
   tail call void asm sideeffect "xso 0[$$r3] = $0", "x,~{$r0r1r2r3},~{$a0a1a2a3}"(<256 x i1> %0)
@@ -145,16 +145,16 @@ define void @use_wide_reg(ptr nocapture %x, ptr nocapture readonly %v) #1 {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:     # (here cycle 3)
+; CHECK-NEXT:     # (here cycle 22)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmma484bw $a4a5 = $a4a5, $a6, $a6
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    xso 32[$r4] = $a5
-; CHECK-NEXT:    ;; # (end cycle 4)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    xso 0[$r4] = $a4
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    ;; # (end cycle 24)
 entry:
   %0 = load <512 x i1>, ptr %x, align 32
   %1 = load <256 x i1>, ptr %v, align 32
@@ -176,20 +176,20 @@ define void @use_matrix_reg(ptr nocapture %x) #2 {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xlo.u $a4 = 0[$r4]
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:     # (here cycle 5)
+; CHECK-NEXT:     # (here cycle 24)
 ; CHECK-NEXT:    #APP
 ; CHECK-NEXT:    xmt44d $a4a5a6a7 = $a4a5a6a7
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:    #NO_APP
 ; CHECK-NEXT:    xso 32[$r4] = $a5
-; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 0[$r4] = $a4
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 26)
 ; CHECK-NEXT:    xso 96[$r4] = $a7
-; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    xso 64[$r4] = $a6
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    ;; # (end cycle 28)
 entry:
   %0 = load <1024 x i1>, ptr %x, align 128
   %1 = tail call <1024 x i1> asm sideeffect "xmt44d $0 = $0", "=x,0,~{$r0r1r2r3},~{$a0a1a2a3}"(<1024 x i1> %0)

@@ -16,22 +16,22 @@ define void @test_lvc(ptr nocapture readonly %0, ptr %1, ptr nocapture %2, ptr n
 ; CV1-NEXT:    xlo.u $a0 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    xlo.u.q1 $a0a1a2a3 = 0[$r1]
-; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    ;; # (end cycle 26)
 ; CV1-NEXT:    xso 32[$r2] = $a1
-; CV1-NEXT:    ;; # (end cycle 9)
+; CV1-NEXT:    ;; # (end cycle 49)
 ; CV1-NEXT:    xso 0[$r2] = $a0
-; CV1-NEXT:    ;; # (end cycle 10)
+; CV1-NEXT:    ;; # (end cycle 50)
 ; CV1-NEXT:    xso 96[$r2] = $a3
-; CV1-NEXT:    ;; # (end cycle 11)
+; CV1-NEXT:    ;; # (end cycle 51)
 ; CV1-NEXT:    xso 64[$r2] = $a2
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 12)
-  %5 = load <1024 x i1>, ptr %0, align 32
-  %6 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %5, ptr %1, i32 2, i32 1)
-  %7 = load <1024 x i1>, ptr %0, align 32
-  %8 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %7, ptr %1, i32 2, i32 1)
-  store <1024 x i1> %6, ptr %2, align 32
-  store <1024 x i1> %8, ptr %2, align 32
+; CV1-NEXT:    ;; # (end cycle 52)
+  %5 = load <1024 x i1>, <1024 x i1>* %0, align 32
+  %6 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %5, i8* %1, i32 2, i32 1)
+  %7 = load <1024 x i1>, <1024 x i1>* %0, align 32
+  %8 = tail call <1024 x i1> @llvm.kvx.lvc(<1024 x i1> %7, i8* %1, i32 2, i32 1)
+  store <1024 x i1> %6, <1024 x i1>* %2, align 32
+  store <1024 x i1> %8, <1024 x i1>* %2, align 32
   ret void
 }
 

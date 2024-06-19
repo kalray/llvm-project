@@ -190,9 +190,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 128[$r1] = $a6
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 64[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 192[$r1] = $a20
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 64[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 448[$r12]
 ; CV1-NEXT:    ;;
@@ -200,9 +200,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 256[$r1] = $a10
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 224[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 352[$r1] = $a32
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 224[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 416[$r12]
 ; CV1-NEXT:    ;;
@@ -210,9 +210,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 384[$r1] = $a14
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 320[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 480[$r1] = $a44
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 320[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 384[$r12]
 ; CV1-NEXT:    ;;
@@ -220,9 +220,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 512[$r1] = $a18
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 448[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 608[$r1] = $a17
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 448[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 352[$r12]
 ; CV1-NEXT:    ;;
@@ -230,9 +230,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 640[$r1] = $a22
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 576[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 736[$r1] = $a21
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 576[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 320[$r12]
 ; CV1-NEXT:    ;;
@@ -240,9 +240,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 768[$r1] = $a26
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 704[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 864[$r1] = $a25
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 704[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 288[$r12]
 ; CV1-NEXT:    ;;
@@ -250,9 +250,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 896[$r1] = $a30
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 832[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 992[$r1] = $a29
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 832[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 256[$r12]
 ; CV1-NEXT:    ;;
@@ -260,9 +260,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 1024[$r1] = $a34
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 960[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x460[$r1] = $a33
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 960[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 224[$r12]
 ; CV1-NEXT:    ;;
@@ -270,9 +270,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x480[$r1] = $a38
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x440[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x4e0[$r1] = $a37
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x440[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 192[$r12]
 ; CV1-NEXT:    ;;
@@ -280,9 +280,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x500[$r1] = $a42
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x4c0[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x560[$r1] = $a41
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x4c0[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 160[$r12]
 ; CV1-NEXT:    ;;
@@ -290,9 +290,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x580[$r1] = $a46
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x540[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x5e0[$r1] = $a45
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x540[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a3 = 128[$r12]
 ; CV1-NEXT:    ;;
@@ -300,9 +300,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x600[$r1] = $a5
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x5c0[$r1] = $a3
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x660[$r1] = $a16
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x5c0[$r1] = $a3
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a0 = 96[$r12]
 ; CV1-NEXT:    ;;
@@ -310,9 +310,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x680[$r1] = $a13
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x640[$r1] = $a0
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x6e0[$r1] = $a40
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x640[$r1] = $a0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a0 = 64[$r12]
 ; CV1-NEXT:    ;;
@@ -320,9 +320,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x700[$r1] = $a8
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x6c0[$r1] = $a0
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x760[$r1] = $a24
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x6c0[$r1] = $a0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a0 = 32[$r12]
 ; CV1-NEXT:    ;;
@@ -330,9 +330,9 @@ define void @move_all(ptr %from, ptr %to) {
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x780[$r1] = $a12
 ; CV1-NEXT:    ;;
-; CV1-NEXT:    xso 0x740[$r1] = $a0
-; CV1-NEXT:    ;;
 ; CV1-NEXT:    xso 0x7e0[$r1] = $a36
+; CV1-NEXT:    ;;
+; CV1-NEXT:    xso 0x740[$r1] = $a0
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:    xlo.u $a0 = 0[$r12]
 ; CV1-NEXT:    ;;

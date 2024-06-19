@@ -170,11 +170,19 @@ enum {
   XSModRelPosPos = 1,
   XSModRelPosMask = 0x3,
 
-  /* --- bits 5-3 --- */
-  MemAccessSizePos = 3,
+  /* --- bits 4-3 --- */
+  VariantModRelPosPos = 3,
+  VariantModRelPosMask = 0x3,
+
+  /* --- bit 5 --- */
+  AlwaysUncachedPos = 5,
+  AlwaysUncachedMask = 0x1,
+
+  /* --- bits 8-6 --- */
+  MemAccessSizePos = 6,
   MemAccessSizeMask = 0x7
 
-  /* --- bits 63-6 not allocated yet --- */
+  /* --- bits 63-9 not allocated yet --- */
 };
 
 inline uint64_t getKVXFlag(const MachineInstr &MI, int Pos, int Mask) {
