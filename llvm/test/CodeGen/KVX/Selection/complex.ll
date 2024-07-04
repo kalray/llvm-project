@@ -285,22 +285,20 @@ define i64 @SBFCWC(i64 %0, i64 %1) {
 define i64 @MULCWC(i64 %0, i64 %1) {
 ; CHECK-LABEL: MULCWC:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r1, 32
-; CHECK-NEXT:    srld $r3 = $r0, 32
+; CHECK-NEXT:    srld $r3 = $r1, 32
+; CHECK-NEXT:    srld $r4 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    muluwd $r4 = $r2, $r3
+; CHECK-NEXT:    muluwd $r2 = $r3, $r4
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    muld $r3 = $r3, $r1
+; CHECK-NEXT:    muld $r4 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    maddd $r4 = $r1, $r0
+; CHECK-NEXT:    maddd $r2 = $r1, $r0
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    msbfd $r3 = $r2, $r0
+; CHECK-NEXT:    msbfd $r4 = $r3, $r0
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    slld $r0 = $r3, 32
+; CHECK-NEXT:    insf $r2 = $r4, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 7)
   %3 = lshr i64 %1, 32
@@ -358,21 +356,19 @@ define %"struct.std::complex.1" @MULCWDC(i64 %0, i64 %1) {
 define i64 @MULWC(i64 %0, i64 %1) {
 ; CHECK-LABEL: MULWC:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r1, 32
-; CHECK-NEXT:    srld $r3 = $r0, 32
-; CHECK-NEXT:    muld $r4 = $r1, $r0
+; CHECK-NEXT:    muld $r2 = $r1, $r0
+; CHECK-NEXT:    srld $r3 = $r1, 32
+; CHECK-NEXT:    srld $r4 = $r0, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    muld $r0 = $r2, $r0
+; CHECK-NEXT:    muld $r0 = $r3, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    msbfuwd $r4 = $r2, $r3
+; CHECK-NEXT:    msbfuwd $r2 = $r3, $r4
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    maddd $r0 = $r3, $r1
+; CHECK-NEXT:    maddd $r0 = $r4, $r1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    slld $r0 = $r0, 32
+; CHECK-NEXT:    insf $r2 = $r0, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %1, 32
@@ -682,21 +678,19 @@ define { i64, i64 } @MULCWDC_2(i64 %0, i64 %1) {
 define i64 @MULWC_2(i64 %0, i64 %1) {
 ; CHECK-LABEL: MULWC_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    srld $r2 = $r0, 32
-; CHECK-NEXT:    srld $r3 = $r1, 32
-; CHECK-NEXT:    muld $r4 = $r1, $r0
+; CHECK-NEXT:    muld $r2 = $r1, $r0
+; CHECK-NEXT:    srld $r3 = $r0, 32
+; CHECK-NEXT:    srld $r4 = $r1, 32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    muld $r0 = $r3, $r0
+; CHECK-NEXT:    muld $r0 = $r4, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    msbfuwd $r4 = $r3, $r2
+; CHECK-NEXT:    msbfuwd $r2 = $r4, $r3
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    maddd $r0 = $r2, $r1
+; CHECK-NEXT:    maddd $r0 = $r3, $r1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    zxwd $r1 = $r4
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    slld $r0 = $r0, 32
+; CHECK-NEXT:    insf $r2 = $r0, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    iord $r0 = $r0, $r1
+; CHECK-NEXT:    copyd $r0 = $r2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 6)
   %3 = lshr i64 %0, 32
