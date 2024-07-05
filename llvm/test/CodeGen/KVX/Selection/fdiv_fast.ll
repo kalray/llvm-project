@@ -563,40 +563,24 @@ define void @doublediv(double %0, double %1, ptr %2) {
 define void @double2fdiv(<2 x double> %0, <2 x double> %1, ptr %2) {
 ; ALL-LABEL: double2fdiv:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -64
+; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 56[$r12] = $r16
+; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sq 40[$r12] = $r20r21
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    sq 24[$r12] = $r18r19
+; ALL-NEXT:    sd 16[$r12] = $r18
 ; ALL-NEXT:    copyd $r18 = $r4
-; ALL-NEXT:    copyd $r19 = $r2
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r1 = $r3
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    copyd $r0 = $r20
-; ALL-NEXT:    copyd $r1 = $r19
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sq 0[$r18] = $r20r21
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    lq $r18r19 = 24[$r12]
+; ALL-NEXT:    call __divv2df3
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lq $r20r21 = 40[$r12]
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    ld $r16 = 56[$r12]
-; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    sq 0[$r18] = $r0r1
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    ld $r18 = 16[$r12]
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 64
-; ALL-NEXT:    ;; # (end cycle 9)
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %4 = fdiv fast <2 x double> %0, %1
@@ -607,59 +591,24 @@ define void @double2fdiv(<2 x double> %0, <2 x double> %1, ptr %2) {
 define void @double4fdiv(<4 x double> %0, <4 x double> %1, ptr %2) {
 ; ALL-LABEL: double4fdiv:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -96
+; ALL-NEXT:    addd $r12 = $r12, -32
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 88[$r12] = $r16
+; ALL-NEXT:    sd 24[$r12] = $r16
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    so 56[$r12] = $r24r25r26r27
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    so 24[$r12] = $r20r21r22r23
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    sq 8[$r12] = $r18r19
+; ALL-NEXT:    sd 16[$r12] = $r18
 ; ALL-NEXT:    copyd $r18 = $r8
-; ALL-NEXT:    copyd $r19 = $r7
-; ALL-NEXT:    copyd $r20 = $r6
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    copyd $r21 = $r4
-; ALL-NEXT:    copyd $r22 = $r3
-; ALL-NEXT:    copyd $r23 = $r2
-; ALL-NEXT:    copyd $r24 = $r0
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    copyd $r1 = $r5
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    copyd $r0 = $r24
-; ALL-NEXT:    copyd $r1 = $r21
-; ALL-NEXT:    copyd $r25 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r23
-; ALL-NEXT:    copyd $r1 = $r20
-; ALL-NEXT:    copyd $r24 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r22
-; ALL-NEXT:    copyd $r1 = $r19
-; ALL-NEXT:    copyd $r26 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r27 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 0[$r18] = $r24r25r26r27
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    lq $r18r19 = 8[$r12]
+; ALL-NEXT:    call __divv4df3
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lo $r20r21r22r23 = 24[$r12]
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    lo $r24r25r26r27 = 56[$r12]
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    ld $r16 = 88[$r12]
-; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    so 0[$r18] = $r0r1r2r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    ld $r18 = 16[$r12]
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r16 = 24[$r12]
+; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 96
-; ALL-NEXT:    ;; # (end cycle 10)
+; ALL-NEXT:    addd $r12 = $r12, 32
+; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %4 = fdiv fast <4 x double> %0, %1
@@ -670,89 +619,66 @@ define void @double4fdiv(<4 x double> %0, <4 x double> %1, ptr %2) {
 define void @double8fdiv(ptr %0, ptr %1, ptr %2) {
 ; ALL-LABEL: double8fdiv:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -160
+; ALL-NEXT:    addd $r12 = $r12, -128
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 152[$r12] = $r16
+; ALL-NEXT:    sd 120[$r12] = $r16
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    so 120[$r12] = $r28r29r30r31
+; ALL-NEXT:    so 88[$r12] = $r28r29r30r31
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    so 88[$r12] = $r24r25r26r27
+; ALL-NEXT:    so 56[$r12] = $r24r25r26r27
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    so 56[$r12] = $r20r21r22r23
+; ALL-NEXT:    so 24[$r12] = $r20r21r22r23
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sd 48[$r12] = $r18
+; ALL-NEXT:    sd 16[$r12] = $r18
 ; ALL-NEXT:    copyd $r18 = $r2
 ; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; ALL-NEXT:    lo $r8r9r10r11 = 32[$r0]
 ; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    so 0[$r12] = $r4r5r6r7
+; ALL-NEXT:    lo $r4r5r6r7 = 32[$r1]
+; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    lo $r24r25r26r27 = 0[$r0]
 ; ALL-NEXT:    ;; # (end cycle 8)
-; ALL-NEXT:    lo $r28r29r30r31 = 32[$r0]
+; ALL-NEXT:    lo $r20r21r22r23 = 0[$r1]
+; ALL-NEXT:    copyd $r0 = $r8
+; ALL-NEXT:    copyd $r1 = $r9
+; ALL-NEXT:    copyd $r2 = $r10
 ; ALL-NEXT:    ;; # (end cycle 9)
-; ALL-NEXT:    lo $r20r21r22r23 = 32[$r1]
+; ALL-NEXT:    copyd $r3 = $r11
+; ALL-NEXT:    call __divv4df3
 ; ALL-NEXT:    ;; # (end cycle 10)
-; ALL-NEXT:    lo $r24r25r26r27 = 0[$r1]
-; ALL-NEXT:    ;; # (end cycle 11)
-; ALL-NEXT:    copyd $r0 = $r29
-; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    copyd $r1 = $r21
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 13)
-; ALL-NEXT:    copyd $r0 = $r28
-; ALL-NEXT:    copyd $r1 = $r20
-; ALL-NEXT:    copyd $r29 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r30
-; ALL-NEXT:    copyd $r1 = $r22
 ; ALL-NEXT:    copyd $r28 = $r0
-; ALL-NEXT:    call __divdf3
+; ALL-NEXT:    copyd $r29 = $r1
+; ALL-NEXT:    copyd $r30 = $r2
+; ALL-NEXT:    copyd $r31 = $r3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r31
-; ALL-NEXT:    copyd $r1 = $r23
-; ALL-NEXT:    copyd $r30 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lo $r20r21r22r23 = 0[$r12]
-; ALL-NEXT:    copyd $r31 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r21
+; ALL-NEXT:    copyd $r0 = $r24
 ; ALL-NEXT:    copyd $r1 = $r25
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    copyd $r0 = $r20
-; ALL-NEXT:    copyd $r1 = $r24
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r22
-; ALL-NEXT:    copyd $r1 = $r26
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r23
-; ALL-NEXT:    copyd $r1 = $r27
-; ALL-NEXT:    copyd $r22 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 32[$r18] = $r28r29r30r31
-; ALL-NEXT:    copyd $r23 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 0[$r18] = $r20r21r22r23
+; ALL-NEXT:    copyd $r2 = $r26
+; ALL-NEXT:    copyd $r3 = $r27
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    ld $r18 = 48[$r12]
+; ALL-NEXT:    copyd $r4 = $r20
+; ALL-NEXT:    copyd $r5 = $r21
+; ALL-NEXT:    copyd $r6 = $r22
+; ALL-NEXT:    copyd $r7 = $r23
+; ALL-NEXT:    call __divv4df3
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lo $r20r21r22r23 = 56[$r12]
+; ALL-NEXT:    so 32[$r18] = $r28r29r30r31
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    so 0[$r18] = $r0r1r2r3
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ld $r18 = 16[$r12]
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    lo $r20r21r22r23 = 24[$r12]
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    lo $r24r25r26r27 = 88[$r12]
+; ALL-NEXT:    lo $r24r25r26r27 = 56[$r12]
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    lo $r28r29r30r31 = 120[$r12]
+; ALL-NEXT:    lo $r28r29r30r31 = 88[$r12]
 ; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    ld $r16 = 152[$r12]
+; ALL-NEXT:    ld $r16 = 120[$r12]
 ; ALL-NEXT:    ;; # (end cycle 6)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 160
+; ALL-NEXT:    addd $r12 = $r12, 128
 ; ALL-NEXT:    ;; # (end cycle 11)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
@@ -766,167 +692,107 @@ define void @double8fdiv(ptr %0, ptr %1, ptr %2) {
 define void @double16fdiv(ptr %0, ptr %1, ptr %2) {
 ; ALL-LABEL: double16fdiv:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addd $r12 = $r12, -320
+; ALL-NEXT:    addd $r12 = $r12, -256
 ; ALL-NEXT:    get $r16 = $ra
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sd 312[$r12] = $r16
+; ALL-NEXT:    sd 248[$r12] = $r16
 ; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    so 280[$r12] = $r28r29r30r31
+; ALL-NEXT:    so 216[$r12] = $r28r29r30r31
 ; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    so 248[$r12] = $r24r25r26r27
+; ALL-NEXT:    so 184[$r12] = $r24r25r26r27
 ; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    so 216[$r12] = $r20r21r22r23
+; ALL-NEXT:    so 152[$r12] = $r20r21r22r23
 ; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    sd 208[$r12] = $r18
+; ALL-NEXT:    sd 144[$r12] = $r18
 ; ALL-NEXT:    copyd $r18 = $r2
 ; ALL-NEXT:    ;; # (end cycle 5)
 ; ALL-NEXT:    lo $r4r5r6r7 = 64[$r0]
 ; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    so 160[$r12] = $r4r5r6r7
+; ALL-NEXT:    so 96[$r12] = $r4r5r6r7
 ; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    lo $r4r5r6r7 = 96[$r0]
 ; ALL-NEXT:    ;; # (end cycle 9)
-; ALL-NEXT:    so 64[$r12] = $r4r5r6r7
-; ALL-NEXT:    ;; # (end cycle 11)
-; ALL-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    so 0[$r12] = $r4r5r6r7
-; ALL-NEXT:    ;; # (end cycle 14)
-; ALL-NEXT:    lo $r4r5r6r7 = 64[$r1]
-; ALL-NEXT:    ;; # (end cycle 15)
-; ALL-NEXT:    lo $r28r29r30r31 = 32[$r0]
-; ALL-NEXT:    ;; # (end cycle 16)
-; ALL-NEXT:    so 128[$r12] = $r4r5r6r7
-; ALL-NEXT:    ;; # (end cycle 17)
-; ALL-NEXT:    lo $r4r5r6r7 = 96[$r1]
-; ALL-NEXT:    ;; # (end cycle 18)
 ; ALL-NEXT:    so 32[$r12] = $r4r5r6r7
-; ALL-NEXT:    ;; # (end cycle 20)
-; ALL-NEXT:    lo $r20r21r22r23 = 32[$r1]
-; ALL-NEXT:    ;; # (end cycle 21)
-; ALL-NEXT:    lo $r24r25r26r27 = 0[$r1]
-; ALL-NEXT:    copyd $r0 = $r29
-; ALL-NEXT:    ;; # (end cycle 22)
-; ALL-NEXT:    copyd $r1 = $r21
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 24)
-; ALL-NEXT:    copyd $r0 = $r28
-; ALL-NEXT:    copyd $r1 = $r20
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r30
-; ALL-NEXT:    copyd $r1 = $r22
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r31
-; ALL-NEXT:    copyd $r1 = $r23
-; ALL-NEXT:    copyd $r22 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r23 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 96[$r12] = $r20r21r22r23
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    lo $r20r21r22r23 = 0[$r12]
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    copyd $r0 = $r21
-; ALL-NEXT:    copyd $r1 = $r25
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    copyd $r0 = $r20
-; ALL-NEXT:    copyd $r1 = $r24
-; ALL-NEXT:    copyd $r21 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r22
-; ALL-NEXT:    copyd $r1 = $r26
-; ALL-NEXT:    copyd $r20 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r23
-; ALL-NEXT:    copyd $r1 = $r27
-; ALL-NEXT:    copyd $r22 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r23 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 0[$r12] = $r20r21r22r23
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    lo $r20r21r22r23 = 64[$r12]
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    lo $r24r25r26r27 = 32[$r12]
-; ALL-NEXT:    copyd $r0 = $r21
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    copyd $r1 = $r25
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 8)
-; ALL-NEXT:    copyd $r0 = $r20
-; ALL-NEXT:    copyd $r1 = $r24
-; ALL-NEXT:    copyd $r25 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r22
-; ALL-NEXT:    copyd $r1 = $r26
-; ALL-NEXT:    copyd $r24 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r23
-; ALL-NEXT:    copyd $r1 = $r27
-; ALL-NEXT:    copyd $r26 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lo $r28r29r30r31 = 160[$r12]
-; ALL-NEXT:    copyd $r27 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lo $r20r21r22r23 = 128[$r12]
-; ALL-NEXT:    copyd $r0 = $r29
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    copyd $r1 = $r21
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    copyd $r0 = $r28
-; ALL-NEXT:    copyd $r1 = $r20
-; ALL-NEXT:    copyd $r29 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r30
-; ALL-NEXT:    copyd $r1 = $r22
-; ALL-NEXT:    copyd $r28 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    copyd $r0 = $r31
-; ALL-NEXT:    copyd $r1 = $r23
-; ALL-NEXT:    copyd $r30 = $r0
-; ALL-NEXT:    call __divdf3
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 96[$r18] = $r24r25r26r27
-; ALL-NEXT:    copyd $r31 = $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    so 64[$r18] = $r28r29r30r31
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    lo $r0r1r2r3 = 0[$r12]
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    so 0[$r18] = $r0r1r2r3
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    lo $r0r1r2r3 = 96[$r12]
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    so 32[$r18] = $r0r1r2r3
-; ALL-NEXT:    ;; # (end cycle 7)
-; ALL-NEXT:    ld $r18 = 208[$r12]
-; ALL-NEXT:    ;; # (end cycle 8)
-; ALL-NEXT:    lo $r20r21r22r23 = 216[$r12]
-; ALL-NEXT:    ;; # (end cycle 9)
-; ALL-NEXT:    lo $r24r25r26r27 = 248[$r12]
-; ALL-NEXT:    ;; # (end cycle 10)
-; ALL-NEXT:    lo $r28r29r30r31 = 280[$r12]
 ; ALL-NEXT:    ;; # (end cycle 11)
-; ALL-NEXT:    ld $r16 = 312[$r12]
+; ALL-NEXT:    lo $r4r5r6r7 = 64[$r1]
 ; ALL-NEXT:    ;; # (end cycle 12)
+; ALL-NEXT:    lo $r20r21r22r23 = 0[$r0]
+; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    lo $r8r9r10r11 = 32[$r0]
+; ALL-NEXT:    ;; # (end cycle 14)
+; ALL-NEXT:    so 64[$r12] = $r4r5r6r7
+; ALL-NEXT:    ;; # (end cycle 15)
+; ALL-NEXT:    lo $r4r5r6r7 = 96[$r1]
+; ALL-NEXT:    ;; # (end cycle 16)
+; ALL-NEXT:    so 0[$r12] = $r4r5r6r7
+; ALL-NEXT:    ;; # (end cycle 18)
+; ALL-NEXT:    lo $r4r5r6r7 = 32[$r1]
+; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    lo $r24r25r26r27 = 0[$r1]
+; ALL-NEXT:    copyd $r0 = $r8
+; ALL-NEXT:    copyd $r1 = $r9
+; ALL-NEXT:    copyd $r2 = $r10
+; ALL-NEXT:    ;; # (end cycle 20)
+; ALL-NEXT:    copyd $r3 = $r11
+; ALL-NEXT:    call __divv4df3
+; ALL-NEXT:    ;; # (end cycle 21)
+; ALL-NEXT:    copyd $r28 = $r0
+; ALL-NEXT:    copyd $r29 = $r1
+; ALL-NEXT:    copyd $r30 = $r2
+; ALL-NEXT:    copyd $r31 = $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    copyd $r0 = $r20
+; ALL-NEXT:    copyd $r1 = $r21
+; ALL-NEXT:    copyd $r2 = $r22
+; ALL-NEXT:    copyd $r3 = $r23
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    copyd $r4 = $r24
+; ALL-NEXT:    copyd $r5 = $r25
+; ALL-NEXT:    copyd $r6 = $r26
+; ALL-NEXT:    copyd $r7 = $r27
+; ALL-NEXT:    call __divv4df3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    copyd $r20 = $r0
+; ALL-NEXT:    copyd $r21 = $r1
+; ALL-NEXT:    copyd $r22 = $r2
+; ALL-NEXT:    copyd $r23 = $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lo $r0r1r2r3 = 32[$r12]
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    lo $r4r5r6r7 = 0[$r12]
+; ALL-NEXT:    call __divv4df3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    copyd $r24 = $r0
+; ALL-NEXT:    copyd $r25 = $r1
+; ALL-NEXT:    copyd $r26 = $r2
+; ALL-NEXT:    copyd $r27 = $r3
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    lo $r0r1r2r3 = 96[$r12]
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    lo $r4r5r6r7 = 64[$r12]
+; ALL-NEXT:    call __divv4df3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    so 96[$r18] = $r24r25r26r27
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    so 0[$r18] = $r20r21r22r23
+; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    so 64[$r18] = $r0r1r2r3
+; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    so 32[$r18] = $r28r29r30r31
+; ALL-NEXT:    ;; # (end cycle 3)
+; ALL-NEXT:    ld $r18 = 144[$r12]
+; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    lo $r20r21r22r23 = 152[$r12]
+; ALL-NEXT:    ;; # (end cycle 5)
+; ALL-NEXT:    lo $r24r25r26r27 = 184[$r12]
+; ALL-NEXT:    ;; # (end cycle 6)
+; ALL-NEXT:    lo $r28r29r30r31 = 216[$r12]
+; ALL-NEXT:    ;; # (end cycle 7)
+; ALL-NEXT:    ld $r16 = 248[$r12]
+; ALL-NEXT:    ;; # (end cycle 8)
 ; ALL-NEXT:    set $ra = $r16
-; ALL-NEXT:    addd $r12 = $r12, 320
-; ALL-NEXT:    ;; # (end cycle 17)
+; ALL-NEXT:    addd $r12 = $r12, 256
+; ALL-NEXT:    ;; # (end cycle 13)
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;;
   %4 = load <16 x double>, ptr %0, align 128

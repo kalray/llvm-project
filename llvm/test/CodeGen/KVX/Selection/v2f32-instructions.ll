@@ -165,32 +165,13 @@ define <2 x float> @test_fdiv(<2 x float> %a, <2 x float> %b) #0 {
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 16[$r12] = $r20
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    srad $r0 = $r19, 32
-; CHECK-NEXT:    srad $r1 = $r18, 32
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    copyd $r0 = $r19
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    insf $r0 = $r20, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    ld $r20 = 16[$r12]
+; CHECK-NEXT:    call __divv2sf3
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    set $ra = $r16
 ; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fdiv <2 x float> %a, %b

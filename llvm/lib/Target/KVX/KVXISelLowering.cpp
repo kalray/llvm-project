@@ -1901,8 +1901,18 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   case ISD::ADDRSPACECAST:
     return lowerADDRSPACECAST(Op, DAG);
   case ISD::FDIV: {
-    if (Op.getNode()->getFlags().hasAllowReciprocal())
+    if (Op->getFlags().hasAllowReciprocal() &&
+        Op.getScalarValueSizeInBits() == 32)
       return Op;
+
+    const LibCalls Fdivs = {
+        {MVT::v2f32, "__divv2sf3"}, {MVT::v2f64, "__divv2df3"},
+        {MVT::v4f32, "__divv4sf3"}, {MVT::v4f64, "__divv4df3"},
+        {MVT::v8f32, "__divv8sf3"},
+    };
+    SDValue R = expandDivRemLibCall(Fdivs, Op, true, DAG);
+    if (R)
+      return R;
 
     if (auto *FPN = dyn_cast<ConstantFPSDNode>(Op.getOperand(0))) {
       auto &APF = FPN->getValueAPF();
@@ -4133,19 +4143,21 @@ SDValue KVXTargetLowering::expandDivRemLibCall(const LibCalls &Names,
   return DivRem;
 }
 
-SDValue KVXTargetLowering::combineIntDivAlike(SDNode *N,
-                                              SelectionDAG &Dag) const {
-  if (!N->getValueType(0).isVector())
+SDValue KVXTargetLowering::combineDivAlike(SDNode *N, SelectionDAG &Dag) const {
+  EVT Ty = N->getValueType(0);
+  if (!Ty.isVector())
     return SDValue();
 
   LLVM_DEBUG(dbgs() << "KVX DagCombine DivAlike: "; N->dump(););
   auto Div = N->getOperand(1);
-  if (isa<ConstantSDNode>(Div))
-    return SDValue();
-
-  if (auto *BV = dyn_cast<BuildVectorSDNode>(N)) {
-    if (BV->isConstant())
+  if (Ty.isInteger()) {
+    if (isa<ConstantSDNode>(Div))
       return SDValue();
+
+    if (auto *BV = dyn_cast<BuildVectorSDNode>(N)) {
+      if (BV->isConstant())
+        return SDValue();
+    }
   }
 
   SDValue R;
@@ -4216,7 +4228,10 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::VECREDUCE_ADD:
     return (Subtarget.isV1()) ? SDValue() : combineVecRedAdd(N, DAG);
   case ISD::FDIV: {
-    return combineFDIV(N, DAG, DCI);
+    SDValue R = combineFDIV(N, DAG, DCI);
+    if (!R)
+      return combineDivAlike(N, DAG);
+    return R;
   }
   case ISD::SRA: {
     SDValue R = combineSRA(N, DAG);
@@ -4235,7 +4250,7 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::UREM:
   case ISD::UDIVREM:
     if (DCI.isBeforeLegalize())
-      return combineIntDivAlike(N, DAG);
+      return combineDivAlike(N, DAG);
     return SDValue();
   }
 
