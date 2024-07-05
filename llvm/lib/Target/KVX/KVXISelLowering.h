@@ -284,7 +284,7 @@ private:
   SDValue expandDivRemLibCall(const LibCalls &Funcs, SDValue &Node,
                               bool IsSigned, SelectionDAG &DAG,
                               bool PackReminder = false) const;
-  SDValue combineIntDivAlike(SDNode *N, SelectionDAG &Dag) const;
+  SDValue combineDivAlike(SDNode *N, SelectionDAG &Dag) const;
 
   bool shouldSplitVecBinOp(const unsigned Opc, const EVT VT) const override;
   bool shouldProduceDivRem(const unsigned Opc, const EVT VT) const override;

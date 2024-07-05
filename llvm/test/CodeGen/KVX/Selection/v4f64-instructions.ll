@@ -181,63 +181,17 @@ define <4 x double> @test_fmul(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_fdiv(<4 x double> %a, <4 x double> %b) #0 {
 ; CHECK-LABEL: test_fdiv:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -96
+; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    get $r16 = $ra
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 88[$r12] = $r16
+; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    call __divv4df3
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 80[$r12] = $r26
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sd 72[$r12] = $r24
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    so 40[$r12] = $r20r21r22r23
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    sq 24[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r7
-; CHECK-NEXT:    copyd $r19 = $r6
-; CHECK-NEXT:    copyd $r20 = $r4
-; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    copyd $r0 = $r1
-; CHECK-NEXT:    copyd $r22 = $r3
-; CHECK-NEXT:    copyd $r23 = $r2
-; CHECK-NEXT:    copyd $r24 = $r0
-; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    copyd $r1 = $r5
-; CHECK-NEXT:    call __divdf3
-; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    copyd $r0 = $r24
-; CHECK-NEXT:    copyd $r1 = $r20
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    call __divdf3
+; CHECK-NEXT:    ld $r16 = 24[$r12]
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r0 = $r23
-; CHECK-NEXT:    copyd $r1 = $r19
-; CHECK-NEXT:    copyd $r20 = $r0
-; CHECK-NEXT:    call __divdf3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r0 = $r22
-; CHECK-NEXT:    copyd $r1 = $r18
-; CHECK-NEXT:    copyd $r26 = $r0
-; CHECK-NEXT:    call __divdf3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r0 = $r20
-; CHECK-NEXT:    copyd $r1 = $r21
-; CHECK-NEXT:    copyd $r2 = $r26
-; CHECK-NEXT:    copyd $r3 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r18r19 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lo $r20r21r22r23 = 40[$r12]
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ld $r24 = 72[$r12]
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    ld $r26 = 80[$r12]
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    ld $r16 = 88[$r12]
-; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 96
-; CHECK-NEXT:    ;; # (end cycle 10)
+; CHECK-NEXT:    addd $r12 = $r12, 32
+; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %r = fdiv <4 x double> %a, %b
