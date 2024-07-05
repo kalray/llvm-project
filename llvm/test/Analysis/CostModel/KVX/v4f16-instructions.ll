@@ -193,7 +193,7 @@ define <4 x half> @test_fmul_imm(<4 x half> %a) {
 
 define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 ; ALL-LABEL: 'test_fdiv'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 200 for instruction: %r = fdiv <4 x half> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 21 for instruction: %r = fdiv <4 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %r = fdiv <4 x half> %a, %b

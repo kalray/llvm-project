@@ -297,7 +297,7 @@ define <8 x half> @test_fmul_imm(<8 x half> %a) {
 define <8 x half> @test_fdiv(<8 x half> %a, <8 x half> %b) #0 {
 ;
 ; ALL-LABEL: 'test_fdiv'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = fdiv <8 x half> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 26 for instruction: %r = fdiv <8 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %r = fdiv <8 x half> %a, %b

@@ -570,54 +570,50 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
                                          Op2Info, Args, CxtI);
 
   static CostTblEntry CV1[] = {
-      {ISD::FDIV, MVT::f16, 17},        {ISD::FDIV, MVT::f32, 65},
-      {ISD::FDIV, MVT::f64, 80},        {ISD::SDIV, MVT::i32, 15},
-      {ISD::SDIV, MVT::i64, 12},        {ISD::SDIV, MVT::v16i16, 188},
-      {ISD::SDIV, MVT::v4i16, 57},      {ISD::SDIV, MVT::v4i32, 90},
-      {ISD::SDIV, MVT::v8i16, 101},     {ISD::SDIV, MVT::v8i32, 166},
-      {ISD::SDIVREM, MVT::i32, 26},     {ISD::SDIVREM, MVT::i64, 26},
-      {ISD::SDIVREM, MVT::v16i16, 194}, {ISD::SDIVREM, MVT::v4i16, 59},
-      {ISD::SDIVREM, MVT::v4i32, 94},   {ISD::SDIVREM, MVT::v8i16, 104},
-      {ISD::SDIVREM, MVT::v8i32, 175},  {ISD::SREM, MVT::i32, 18},
-      {ISD::SREM, MVT::i64, 18},        {ISD::SREM, MVT::v16i16, 191},
-      {ISD::SREM, MVT::v4i16, 59},      {ISD::SREM, MVT::v4i32, 91},
-      {ISD::SREM, MVT::v8i16, 102},     {ISD::SREM, MVT::v8i32, 166},
-      {ISD::UDIV, MVT::i32, 24},        {ISD::UDIV, MVT::i64, 24},
-      {ISD::UDIV, MVT::v16i16, 182},    {ISD::UDIV, MVT::v4i16, 54},
-      {ISD::UDIV, MVT::v4i32, 84},      {ISD::UDIV, MVT::v8i16, 96},
-      {ISD::UDIV, MVT::v8i32, 157},     {ISD::UDIVREM, MVT::i32, 22},
-      {ISD::UDIVREM, MVT::i64, 24},     {ISD::UDIVREM, MVT::v16i16, 191},
-      {ISD::UDIVREM, MVT::v4i16, 56},   {ISD::UDIVREM, MVT::v4i32, 88},
-      {ISD::UDIVREM, MVT::v8i16, 99},   {ISD::UDIVREM, MVT::v8i32, 163},
-      {ISD::UREM, MVT::i32, 21},        {ISD::UREM, MVT::i64, 21},
-      {ISD::UREM, MVT::v16i16, 186},    {ISD::UREM, MVT::v4i16, 54},
-      {ISD::UREM, MVT::v4i32, 85},      {ISD::UREM, MVT::v8i16, 97},
-      {ISD::UREM, MVT::v8i32, 158},
+      {ISD::SDIV, MVT::i32, 15},        {ISD::SDIV, MVT::i64, 12},
+      {ISD::SDIV, MVT::v16i16, 188},    {ISD::SDIV, MVT::v4i16, 57},
+      {ISD::SDIV, MVT::v4i32, 90},      {ISD::SDIV, MVT::v8i16, 101},
+      {ISD::SDIV, MVT::v8i32, 166},     {ISD::SDIVREM, MVT::i32, 26},
+      {ISD::SDIVREM, MVT::i64, 26},     {ISD::SDIVREM, MVT::v16i16, 194},
+      {ISD::SDIVREM, MVT::v4i16, 59},   {ISD::SDIVREM, MVT::v4i32, 94},
+      {ISD::SDIVREM, MVT::v8i16, 104},  {ISD::SDIVREM, MVT::v8i32, 175},
+      {ISD::SREM, MVT::i32, 18},        {ISD::SREM, MVT::i64, 18},
+      {ISD::SREM, MVT::v16i16, 191},    {ISD::SREM, MVT::v4i16, 59},
+      {ISD::SREM, MVT::v4i32, 91},      {ISD::SREM, MVT::v8i16, 102},
+      {ISD::SREM, MVT::v8i32, 166},     {ISD::UDIV, MVT::i32, 24},
+      {ISD::UDIV, MVT::i64, 24},        {ISD::UDIV, MVT::v16i16, 182},
+      {ISD::UDIV, MVT::v4i16, 54},      {ISD::UDIV, MVT::v4i32, 84},
+      {ISD::UDIV, MVT::v8i16, 96},      {ISD::UDIV, MVT::v8i32, 157},
+      {ISD::UDIVREM, MVT::i32, 22},     {ISD::UDIVREM, MVT::i64, 24},
+      {ISD::UDIVREM, MVT::v16i16, 191}, {ISD::UDIVREM, MVT::v4i16, 56},
+      {ISD::UDIVREM, MVT::v4i32, 88},   {ISD::UDIVREM, MVT::v8i16, 99},
+      {ISD::UDIVREM, MVT::v8i32, 163},  {ISD::UREM, MVT::i32, 21},
+      {ISD::UREM, MVT::i64, 21},        {ISD::UREM, MVT::v16i16, 186},
+      {ISD::UREM, MVT::v4i16, 54},      {ISD::UREM, MVT::v4i32, 85},
+      {ISD::UREM, MVT::v8i16, 97},      {ISD::UREM, MVT::v8i32, 158},
   };
   static CostTblEntry CV2[] = {
-      {ISD::FDIV, MVT::f16, 17},       {ISD::FDIV, MVT::f32, 65},
-      {ISD::FDIV, MVT::f64, 80},       {ISD::SDIV, MVT::i32, 15},
-      {ISD::SDIV, MVT::i64, 12},       {ISD::SDIV, MVT::v16i16, 70},
-      {ISD::SDIV, MVT::v4i16, 37},     {ISD::SDIV, MVT::v4i32, 58},
-      {ISD::SDIV, MVT::v8i16, 42},     {ISD::SDIV, MVT::v8i32, 101},
-      {ISD::SDIVREM, MVT::i32, 26},    {ISD::SDIVREM, MVT::i64, 26},
-      {ISD::SDIVREM, MVT::v16i16, 73}, {ISD::SDIVREM, MVT::v4i16, 39},
-      {ISD::SDIVREM, MVT::v4i32, 62},  {ISD::SDIVREM, MVT::v8i16, 45},
-      {ISD::SDIVREM, MVT::v8i32, 110}, {ISD::SREM, MVT::i32, 18},
-      {ISD::SREM, MVT::i64, 18},       {ISD::SREM, MVT::v16i16, 73},
-      {ISD::SREM, MVT::v4i16, 39},     {ISD::SREM, MVT::v4i32, 91},
-      {ISD::SREM, MVT::v8i16, 43},     {ISD::SREM, MVT::v8i32, 101},
-      {ISD::UDIV, MVT::i32, 24},       {ISD::UDIV, MVT::i64, 24},
-      {ISD::UDIV, MVT::v16i16, 64},    {ISD::UDIV, MVT::v4i16, 34},
-      {ISD::UDIV, MVT::v4i32, 84},     {ISD::UDIV, MVT::v8i16, 37},
-      {ISD::UDIV, MVT::v8i32, 92},     {ISD::UDIVREM, MVT::i32, 22},
-      {ISD::UDIVREM, MVT::i64, 24},    {ISD::UDIVREM, MVT::v16i16, 73},
-      {ISD::UDIVREM, MVT::v4i16, 36},  {ISD::UDIVREM, MVT::v4i32, 88},
-      {ISD::UDIVREM, MVT::v8i16, 40},  {ISD::UDIVREM, MVT::v8i32, 98},
-      {ISD::UREM, MVT::i32, 21},       {ISD::UREM, MVT::i64, 21},
-      {ISD::UREM, MVT::v16i16, 68},    {ISD::UREM, MVT::v4i16, 34},
-      {ISD::UREM, MVT::v4i32, 85},     {ISD::UREM, MVT::v8i16, 39},
-      {ISD::UREM, MVT::v8i32, 93},
+      {ISD::SDIV, MVT::i32, 15},       {ISD::SDIV, MVT::i64, 12},
+      {ISD::SDIV, MVT::v16i16, 70},    {ISD::SDIV, MVT::v4i16, 37},
+      {ISD::SDIV, MVT::v4i32, 58},     {ISD::SDIV, MVT::v8i16, 42},
+      {ISD::SDIV, MVT::v8i32, 101},    {ISD::SDIVREM, MVT::i32, 26},
+      {ISD::SDIVREM, MVT::i64, 26},    {ISD::SDIVREM, MVT::v16i16, 73},
+      {ISD::SDIVREM, MVT::v4i16, 39},  {ISD::SDIVREM, MVT::v4i32, 62},
+      {ISD::SDIVREM, MVT::v8i16, 45},  {ISD::SDIVREM, MVT::v8i32, 110},
+      {ISD::SREM, MVT::i32, 18},       {ISD::SREM, MVT::i64, 18},
+      {ISD::SREM, MVT::v16i16, 73},    {ISD::SREM, MVT::v4i16, 39},
+      {ISD::SREM, MVT::v4i32, 91},     {ISD::SREM, MVT::v8i16, 43},
+      {ISD::SREM, MVT::v8i32, 101},    {ISD::UDIV, MVT::i32, 24},
+      {ISD::UDIV, MVT::i64, 24},       {ISD::UDIV, MVT::v16i16, 64},
+      {ISD::UDIV, MVT::v4i16, 34},     {ISD::UDIV, MVT::v4i32, 84},
+      {ISD::UDIV, MVT::v8i16, 37},     {ISD::UDIV, MVT::v8i32, 92},
+      {ISD::UDIVREM, MVT::i32, 22},    {ISD::UDIVREM, MVT::i64, 24},
+      {ISD::UDIVREM, MVT::v16i16, 73}, {ISD::UDIVREM, MVT::v4i16, 36},
+      {ISD::UDIVREM, MVT::v4i32, 88},  {ISD::UDIVREM, MVT::v8i16, 40},
+      {ISD::UDIVREM, MVT::v8i32, 98},  {ISD::UREM, MVT::i32, 21},
+      {ISD::UREM, MVT::i64, 21},       {ISD::UREM, MVT::v16i16, 68},
+      {ISD::UREM, MVT::v4i16, 34},     {ISD::UREM, MVT::v4i32, 85},
+      {ISD::UREM, MVT::v8i16, 39},     {ISD::UREM, MVT::v8i32, 93},
   };
 
   auto VT = TLI->getValueType(DL, Ty);
@@ -650,6 +646,22 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
       break;
     case ISD::FREM:
     case ISD::FDIV: {
+      // TODO: When AllowRec is false, we should use mesured functions costs.
+      // See https://phab.kalray.eu/D33463
+      bool AllowRec = (CxtI && CxtI->getFastMathFlags().allowReciprocal()) ||
+                      (VT.getScalarSizeInBits() == 16);
+      static CostTblEntry FDIVrec[] = {
+          {ISD::FDIV, MVT::f16, 17},    {ISD::FDIV, MVT::v2f16, 19},
+          {ISD::FDIV, MVT::v4f16, 21},  {ISD::FDIV, MVT::v8f16, 26},
+          {ISD::FDIV, MVT::v16f16, 34}, {ISD::FDIV, MVT::f32, 14},
+          {ISD::FDIV, MVT::v2f32, 16},  {ISD::FDIV, MVT::v4f32, 18},
+          {ISD::FDIV, MVT::v8f32, 22},  {ISD::FDIV, MVT::v16f32, 33},
+          {ISD::FDIV, MVT::f64, 80}};
+      if (VT.isSimple() && AllowRec)
+        if (const auto *Entry =
+                CostTableLookup(FDIVrec, ISDi, VT.getSimpleVT()))
+          return Entry->Cost;
+
       auto BaseCst = 50;
       // Can this division be lowered to frecw ?
       if (CxtI && CxtI->getFastMathFlags().allowReciprocal() &&

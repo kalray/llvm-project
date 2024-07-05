@@ -1878,3 +1878,11 @@ def : Pat<(f32 (fdiv fpimm_m1, f32:$a)),
 // Patterns used only for -freciprocal-math
 def : Pat<(fdiv f32:$a, f32:$b), (FMULWrr SingleReg:$a, (FRECW SingleReg:$b, rounding_, silent_), rounding_, silent_)>;
 def : Pat<(fsqrt f32:$a), (FMULWrr SingleReg:$a, (FRSRW SingleReg:$a, rounding_, silent_), rounding_, silent_)>;
+
+def : Pat<(fdiv v2f32:$a, v2f32:$b),
+          (FMULWPrr SingleReg:$a,
+            (v2f32 (INSF
+              (f32 (FRECW SingleReg:$b, rounding_, silent_)),
+              (f32 (FRECW (SRLDri SingleReg:$b, 32), rounding_, silent_)),
+              63, 32)),
+              rounding_, silent_)>;
