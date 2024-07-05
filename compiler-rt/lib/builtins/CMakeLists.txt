@@ -760,6 +760,11 @@ set(kvx_SOURCES
   kvx/divmodv8si4.c
   kvx/divsi3.c
   kvx/divv16hi3.c
+  kvx/divv2df3.c
+  kvx/divv2sf3.c
+  kvx/divv4df3.c
+  kvx/divv4sf3.c
+  kvx/divv8sf3.c
   kvx/divv4hi3.c
   kvx/divv4si3.c
   kvx/divv8hi3.c

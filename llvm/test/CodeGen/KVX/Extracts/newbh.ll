@@ -44,32 +44,32 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    lq $r22r23 = 16[$r19]
 ; KV3_1-NEXT:    ;; # (end cycle 6)
-; KV3_1-NEXT:    ld $r26 = 0[$r18]
+; KV3_1-NEXT:    ld $r29 = 0[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    ld $r20 = 24[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 8)
 ; KV3_1-NEXT:    ld $r24 = 32[$r19]
 ; KV3_1-NEXT:    ;; # (end cycle 9)
-; KV3_1-NEXT:    fsbfd $r0 = $r26, $r22
+; KV3_1-NEXT:    fsbfd $r0 = $r29, $r22
 ; KV3_1-NEXT:    ;; # (end cycle 10)
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 11)
-; KV3_1-NEXT:    lq $r30r31 = 8[$r18]
+; KV3_1-NEXT:    lq $r26r27 = 8[$r18]
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fsbfd $r0 = $r30, $r23
+; KV3_1-NEXT:    fsbfd $r0 = $r26, $r23
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    fsbfd $r0 = $r31, $r24
+; KV3_1-NEXT:    fsbfd $r0 = $r27, $r24
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    copyd $r21 = $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    make $r23 = 0
+; KV3_1-NEXT:    make $r1 = 0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fcompd.ult $r1 = $r0, $r23
+; KV3_1-NEXT:    fcompd.ult $r1 = $r0, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 1)
 ; KV3_1-NEXT:    cb.wnez $r1 ? .LBB0_7
 ; KV3_1-NEXT:    ;;
@@ -117,7 +117,7 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  .LBB0_7:
 ; KV3_1-NEXT:    make $r3 = cp_free_list
-; KV3_1-NEXT:    make $r27 = 0x3ff0000000000000
+; KV3_1-NEXT:    make $r23 = 0x3ff0000000000000
 ; KV3_1-NEXT:    make $r28 = 0
 ; KV3_1-NEXT:    goto .LBB0_9
 ; KV3_1-NEXT:    ;; # (end cycle 0)
@@ -137,19 +137,19 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    fmuld $r0 = $r20, 0x3fe0000000000000
 ; KV3_1-NEXT:    ld $r1 = 16[$r19]
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    faddd $r22 = $r26, $r0
+; KV3_1-NEXT:    faddd $r22 = $r29, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    copyd $r1 = $r0
 ; KV3_1-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_1-NEXT:    ;; # (end cycle 8)
-; KV3_1-NEXT:    fadddp $r24r25 = $r30r31, $r0r1
+; KV3_1-NEXT:    fadddp $r24r25 = $r26r27, $r0r1
 ; KV3_1-NEXT:    ;; # (end cycle 9)
 ; KV3_1-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.11: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fsbfd $r26 = $r20, $r26
+; KV3_1-NEXT:    fsbfd $r29 = $r20, $r29
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 0[$r18] = $r26
+; KV3_1-NEXT:    sd 0[$r18] = $r29
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:  .LBB0_12: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 24[$r19]
@@ -159,9 +159,9 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fsbfd $r30 = $r20, $r30
+; KV3_1-NEXT:    fsbfd $r26 = $r20, $r26
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 8[$r18] = $r30
+; KV3_1-NEXT:    sd 8[$r18] = $r26
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 32[$r19]
@@ -171,9 +171,9 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    cb.wnez $r0 ? .LBB0_16
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.15: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fsbfd $r31 = $r20, $r31
+; KV3_1-NEXT:    fsbfd $r27 = $r20, $r27
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    sd 16[$r18] = $r31
+; KV3_1-NEXT:    sd 16[$r18] = $r27
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:  .LBB0_16: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    ld $r0 = 32[$r18]
@@ -213,59 +213,55 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    so 80[$r21] = $r28r29r30r31
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    ld $r26 = 0[$r18]
+; KV3_1-NEXT:    ld $r29 = 0[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    ld $r20 = 24[$r18]
 ; KV3_1-NEXT:    ;; # (end cycle 5)
-; KV3_1-NEXT:    fsbfd $r0 = $r26, $r22
+; KV3_1-NEXT:    fsbfd $r0 = $r29, $r22
 ; KV3_1-NEXT:    ;; # (end cycle 7)
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 8)
-; KV3_1-NEXT:    lq $r30r31 = 8[$r18]
+; KV3_1-NEXT:    lq $r26r27 = 8[$r18]
+; KV3_1-NEXT:    copyd $r2 = $r20
+; KV3_1-NEXT:    copyd $r3 = $r20
 ; KV3_1-NEXT:    copyd $r22 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
+; KV3_1-NEXT:    fsbfdp $r0r1 = $r26r27, $r24r25
+; KV3_1-NEXT:    call __divv2df3
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    copyd $r0 = $r25
-; KV3_1-NEXT:    copyd $r1 = $r20
-; KV3_1-NEXT:    call __divdf3
-; KV3_1-NEXT:    ;; # (end cycle 7)
-; KV3_1-NEXT:    copyd $r0 = $r24
-; KV3_1-NEXT:    copyd $r1 = $r20
-; KV3_1-NEXT:    copyd $r25 = $r0
-; KV3_1-NEXT:    call __divdf3
-; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fcompd.olt $r0 = $r25, $r27
-; KV3_1-NEXT:    fcompd.oge $r1 = $r25, $r23
-; KV3_1-NEXT:    make $r2 = -1
+; KV3_1-NEXT:    fcompd.olt $r0 = $r1, $r23
+; KV3_1-NEXT:    make $r3 = -1
 ; KV3_1-NEXT:    copyd $r24 = $r0
+; KV3_1-NEXT:    make $r30 = 0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    make $r0 = -1
-; KV3_1-NEXT:    cmoved.even $r0 ? $r2 = 0
-; KV3_1-NEXT:    fcompd.olt $r3 = $r24, $r27
+; KV3_1-NEXT:    cmoved.even $r0 ? $r3 = 0
+; KV3_1-NEXT:    fcompd.olt $r4 = $r24, $r23
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    cmoved.even $r3 ? $r0 = 0
-; KV3_1-NEXT:    fcompd.oge $r3 = $r24, $r23
+; KV3_1-NEXT:    cmoved.even $r4 ? $r0 = 0
+; KV3_1-NEXT:    fcompd.oge $r2 = $r1, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    cmoved.even $r3 ? $r0 = 0
-; KV3_1-NEXT:    cmoved.even $r1 ? $r2 = 0
+; KV3_1-NEXT:    cmoved.even $r2 ? $r3 = 0
+; KV3_1-NEXT:    fcompd.oge $r4 = $r24, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    insf $r0 = $r2, 15, 8
+; KV3_1-NEXT:    cmoved.even $r4 ? $r0 = 0
 ; KV3_1-NEXT:    ;; # (end cycle 4)
-; KV3_1-NEXT:    extfz $r1 = $r0, 15, 8
+; KV3_1-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_1-NEXT:    ;; # (end cycle 5)
-; KV3_1-NEXT:    cb.even $r1 ? .LBB0_26
+; KV3_1-NEXT:    extfz $r2 = $r0, 15, 8
+; KV3_1-NEXT:    ;; # (end cycle 6)
+; KV3_1-NEXT:    cb.even $r2 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.21: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fcompd.ult $r1 = $r22, $r23
+; KV3_1-NEXT:    fcompd.ult $r2 = $r22, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    cb.wnez $r1 ? .LBB0_26
+; KV3_1-NEXT:    cb.wnez $r2 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.22: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fcompd.uge $r1 = $r22, $r27
+; KV3_1-NEXT:    fcompd.uge $r2 = $r22, $r23
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    cb.wnez $r1 ? .LBB0_26
+; KV3_1-NEXT:    cb.wnez $r2 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.23: # in Loop: Header=BB0_9 Depth=1
 ; KV3_1-NEXT:    zxbd $r0 = $r0
@@ -275,7 +271,7 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    cb.weqz $r0 ? .LBB0_26
 ; KV3_1-NEXT:    ;;
 ; KV3_1-NEXT:  # %bb.24: # in Loop: Header=BB0_9 Depth=1
-; KV3_1-NEXT:    fmuld $r0 = $r25, 0x41d0000000000000
+; KV3_1-NEXT:    fmuld $r0 = $r1, 0x41d0000000000000
 ; KV3_1-NEXT:    call floor
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    fixedd.rz $r25 = $r0, 0
@@ -314,29 +310,29 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_1-NEXT:    lq $r24r25 = 24[$r19]
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    ;; # (end cycle 12)
-; KV3_1-NEXT:    fsbfd $r0 = $r26, $r0
+; KV3_1-NEXT:    fsbfd $r0 = $r29, $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 14)
-; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    fsbfd $r0 = $r30, $r24
+; KV3_1-NEXT:    fsbfd $r0 = $r26, $r24
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    andw $r21 = $r1, $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andw $r0 = $r1, $r0
 ; KV3_1-NEXT:    copyd $r1 = $r20
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    fsbfd $r0 = $r31, $r25
+; KV3_1-NEXT:    fsbfd $r0 = $r27, $r25
 ; KV3_1-NEXT:    andw $r21 = $r21, $r0
 ; KV3_1-NEXT:    call __divdf3
 ; KV3_1-NEXT:    ;; # (end cycle 2)
-; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_1-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_1-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_1-NEXT:    make $r3 = cp_free_list
 ; KV3_1-NEXT:    ;; # (end cycle 0)
 ; KV3_1-NEXT:    andw $r0 = $r1, $r0
@@ -395,32 +391,32 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    ;; # (end cycle 5)
 ; KV3_2-NEXT:    lq $r22r23 = 16[$r19]
 ; KV3_2-NEXT:    ;; # (end cycle 6)
-; KV3_2-NEXT:    ld $r26 = 0[$r18]
+; KV3_2-NEXT:    ld $r29 = 0[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    ld $r20 = 24[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 8)
 ; KV3_2-NEXT:    ld $r24 = 32[$r19]
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    fsbfd $r0 = $r26, $r22
+; KV3_2-NEXT:    fsbfd $r0 = $r29, $r22
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 11)
-; KV3_2-NEXT:    lq $r30r31 = 8[$r18]
+; KV3_2-NEXT:    lq $r26r27 = 8[$r18]
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    copyd $r22 = $r0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fsbfd $r0 = $r30, $r23
+; KV3_2-NEXT:    fsbfd $r0 = $r26, $r23
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    fsbfd $r0 = $r31, $r24
+; KV3_2-NEXT:    fsbfd $r0 = $r27, $r24
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    copyd $r21 = $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    make $r23 = 0
+; KV3_2-NEXT:    make $r1 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fcompd.ult $r1 = $r0, $r23
+; KV3_2-NEXT:    fcompd.ult $r1 = $r0, $r1
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    cb.wnez $r1 ? .LBB0_7
 ; KV3_2-NEXT:    ;;
@@ -468,7 +464,7 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_7:
 ; KV3_2-NEXT:    make $r3 = cp_free_list
-; KV3_2-NEXT:    make $r27 = 0x3ff0000000000000
+; KV3_2-NEXT:    make $r23 = 0x3ff0000000000000
 ; KV3_2-NEXT:    make $r28 = 0
 ; KV3_2-NEXT:    goto .LBB0_9
 ; KV3_2-NEXT:    ;; # (end cycle 0)
@@ -490,19 +486,19 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    fmuld $r0 = $r20, $r0
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    faddd $r22 = $r26, $r0
+; KV3_2-NEXT:    faddd $r22 = $r29, $r0
 ; KV3_2-NEXT:    ;; # (end cycle 5)
 ; KV3_2-NEXT:    copyd $r1 = $r0
 ; KV3_2-NEXT:    fcompd.olt $r2 = $r1, $r22
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    fadddp $r24r25 = $r30r31, $r0r1
+; KV3_2-NEXT:    fadddp $r24r25 = $r26r27, $r0r1
 ; KV3_2-NEXT:    ;; # (end cycle 10)
 ; KV3_2-NEXT:    cb.weqz $r2 ? .LBB0_12
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.11: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fsbfd $r26 = $r20, $r26
+; KV3_2-NEXT:    fsbfd $r29 = $r20, $r29
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 0[$r18] = $r26
+; KV3_2-NEXT:    sd 0[$r18] = $r29
 ; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:  .LBB0_12: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 24[$r19]
@@ -512,9 +508,9 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_14
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.13: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fsbfd $r30 = $r20, $r30
+; KV3_2-NEXT:    fsbfd $r26 = $r20, $r26
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 8[$r18] = $r30
+; KV3_2-NEXT:    sd 8[$r18] = $r26
 ; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:  .LBB0_14: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 32[$r19]
@@ -524,9 +520,9 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    cb.wnez $r0 ? .LBB0_16
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.15: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fsbfd $r31 = $r20, $r31
+; KV3_2-NEXT:    fsbfd $r27 = $r20, $r27
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    sd 16[$r18] = $r31
+; KV3_2-NEXT:    sd 16[$r18] = $r27
 ; KV3_2-NEXT:    ;; # (end cycle 3)
 ; KV3_2-NEXT:  .LBB0_16: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    ld $r0 = 32[$r18]
@@ -566,54 +562,49 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    ;; # (end cycle 2)
 ; KV3_2-NEXT:    so 80[$r21] = $r28r29r30r31
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    ld $r26 = 0[$r18]
+; KV3_2-NEXT:    ld $r29 = 0[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 4)
 ; KV3_2-NEXT:    ld $r20 = 24[$r18]
 ; KV3_2-NEXT:    ;; # (end cycle 5)
-; KV3_2-NEXT:    fsbfd $r0 = $r26, $r22
+; KV3_2-NEXT:    fsbfd $r0 = $r29, $r22
 ; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    lq $r30r31 = 8[$r18]
+; KV3_2-NEXT:    lq $r26r27 = 8[$r18]
+; KV3_2-NEXT:    copyd $r2 = $r20
+; KV3_2-NEXT:    copyd $r3 = $r20
 ; KV3_2-NEXT:    copyd $r22 = $r0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fsbfdp $r24r25 = $r30r31, $r24r25
+; KV3_2-NEXT:    fsbfdp $r0r1 = $r26r27, $r24r25
+; KV3_2-NEXT:    call __divv2df3
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    copyd $r0 = $r25
-; KV3_2-NEXT:    copyd $r1 = $r20
-; KV3_2-NEXT:    call __divdf3
-; KV3_2-NEXT:    ;; # (end cycle 7)
-; KV3_2-NEXT:    copyd $r0 = $r24
-; KV3_2-NEXT:    copyd $r1 = $r20
-; KV3_2-NEXT:    copyd $r25 = $r0
-; KV3_2-NEXT:    call __divdf3
-; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fcompd.oge $r1 = $r25, $r23
-; KV3_2-NEXT:    fcompnd.olt $r2 = $r25, $r27
+; KV3_2-NEXT:    fcompnd.olt $r3 = $r1, $r23
 ; KV3_2-NEXT:    copyd $r24 = $r0
+; KV3_2-NEXT:    make $r30 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fcompnd.olt $r0 = $r24, $r27
-; KV3_2-NEXT:    cmoved.even $r1 ? $r2 = 0
-; KV3_2-NEXT:    fcompd.oge $r3 = $r24, $r23
+; KV3_2-NEXT:    fcompnd.olt $r0 = $r24, $r23
+; KV3_2-NEXT:    fcompd.oge $r2 = $r1, $r30
+; KV3_2-NEXT:    fcompd.oge $r4 = $r24, $r30
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    cmoved.even $r3 ? $r0 = 0
+; KV3_2-NEXT:    cmoved.even $r4 ? $r0 = 0
+; KV3_2-NEXT:    cmoved.even $r2 ? $r3 = 0
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    insf $r0 = $r2, 15, 8
+; KV3_2-NEXT:    insf $r0 = $r3, 15, 8
 ; KV3_2-NEXT:    ;; # (end cycle 3)
-; KV3_2-NEXT:    extfz $r1 = $r0, 15, 8
+; KV3_2-NEXT:    extfz $r2 = $r0, 15, 8
 ; KV3_2-NEXT:    ;; # (end cycle 4)
-; KV3_2-NEXT:    cb.even $r1 ? .LBB0_26
+; KV3_2-NEXT:    cb.even $r2 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.21: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fcompd.ult $r1 = $r22, $r23
+; KV3_2-NEXT:    fcompd.ult $r2 = $r22, $r30
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    cb.wnez $r1 ? .LBB0_26
+; KV3_2-NEXT:    cb.wnez $r2 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.22: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    fcompd.uge $r1 = $r22, $r27
+; KV3_2-NEXT:    fcompd.uge $r2 = $r22, $r23
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    cb.wnez $r1 ? .LBB0_26
+; KV3_2-NEXT:    cb.wnez $r2 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.23: # in Loop: Header=BB0_9 Depth=1
 ; KV3_2-NEXT:    zxbd $r0 = $r0
@@ -623,19 +614,19 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    cb.weqz $r0 ? .LBB0_26
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  # %bb.24: # in Loop: Header=BB0_9 Depth=1
-; KV3_2-NEXT:    make $r29 = 0x41d0000000000000
+; KV3_2-NEXT:    make $r31 = 0x41d0000000000000
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fmuld $r0 = $r25, $r29
+; KV3_2-NEXT:    fmuld $r0 = $r1, $r31
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    fixedd.rz $r25 = $r0, 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fmuld $r0 = $r24, $r29
+; KV3_2-NEXT:    fmuld $r0 = $r24, $r31
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    fixedd.rz $r24 = $r0, 0
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fmuld $r0 = $r22, $r29
+; KV3_2-NEXT:    fmuld $r0 = $r22, $r31
 ; KV3_2-NEXT:    call floor
 ; KV3_2-NEXT:    ;; # (end cycle 1)
 ; KV3_2-NEXT:    fixedd.rz $r0 = $r0, 0
@@ -664,29 +655,29 @@ define void @expandbox(ptr %0, ptr %1, i32 %2, i32 %3) {
 ; KV3_2-NEXT:    lq $r24r25 = 24[$r19]
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    ;; # (end cycle 12)
-; KV3_2-NEXT:    fsbfd $r0 = $r26, $r0
+; KV3_2-NEXT:    fsbfd $r0 = $r29, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 14)
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_2-NEXT:    ;; # (end cycle 0)
-; KV3_2-NEXT:    fsbfd $r0 = $r30, $r24
+; KV3_2-NEXT:    fsbfd $r0 = $r26, $r24
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    andw $r21 = $r1, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andw $r0 = $r1, $r0
 ; KV3_2-NEXT:    copyd $r1 = $r20
 ; KV3_2-NEXT:    ;; # (end cycle 1)
-; KV3_2-NEXT:    fsbfd $r0 = $r31, $r25
+; KV3_2-NEXT:    fsbfd $r0 = $r27, $r25
 ; KV3_2-NEXT:    andw $r21 = $r21, $r0
 ; KV3_2-NEXT:    call __divdf3
 ; KV3_2-NEXT:    ;; # (end cycle 2)
-; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r27
-; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r23
+; KV3_2-NEXT:    fcompd.olt $r0 = $r0, $r23
+; KV3_2-NEXT:    fcompd.oge $r1 = $r0, $r30
 ; KV3_2-NEXT:    make $r3 = cp_free_list
 ; KV3_2-NEXT:    ;; # (end cycle 0)
 ; KV3_2-NEXT:    andw $r0 = $r1, $r0
