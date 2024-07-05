@@ -188,48 +188,24 @@ math_kernel.exit:
 define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 %c, ptr addrspace(1) %d) {
 ; CHECK-LABEL: _pocl_kernel_math_kernel_nohwloop_fdiv_half:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -64
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    # implicit-def: $r4
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    fwidenlhw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 56[$r12] = $r16
+; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    # implicit-def: $r22
-; CHECK-NEXT:    sd 48[$r12] = $r22
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sq 32[$r12] = $r20r21
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    sq 16[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r3
-; CHECK-NEXT:    copyd $r19 = $r2
-; CHECK-NEXT:    copyd $r20 = $r1
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    copyd $r21 = $r0
-; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:  .LBB3_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    fwidenlhw $r0 = $r21
-; CHECK-NEXT:    fwidenlhw $r1 = $r20
-; CHECK-NEXT:    call __divsf3
+; CHECK-NEXT:    sh.xs $r2[$r3] = $r0
+; CHECK-NEXT:    addd $r4 = $r4, -1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    addd $r22 = $r22, -1
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sh.xs $r19[$r18] = $r0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.dnez $r22 ? .LBB3_1
+; CHECK-NEXT:    cb.dnez $r4 ? .LBB3_1
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %math_kernel.exit
-; CHECK-NEXT:    lq $r18r19 = 16[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lq $r20r21 = 32[$r12]
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r22 = 48[$r12]
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    ld $r16 = 56[$r12]
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 64
-; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
 br label %pregion_for_entry.pregion_for_init4.i

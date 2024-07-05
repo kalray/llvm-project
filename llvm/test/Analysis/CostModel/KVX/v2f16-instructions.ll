@@ -121,7 +121,7 @@ define <2 x half> @test_fmul_imm(<2 x half> %a) {
 
 define <2 x half> @test_fdiv(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fdiv'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 100 for instruction: %r = fdiv <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %r = fdiv <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x half> %r
 ;
   %r = fdiv <2 x half> %a, %b
