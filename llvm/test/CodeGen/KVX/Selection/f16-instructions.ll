@@ -168,21 +168,14 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    fwidenlhw $r0 = $r0
 ; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    addd $r12 = $r12, -32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    fmulw $r0 = $r0, $r1
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
   %r = fdiv half %a, %b
   ret half %r
 }
@@ -220,24 +213,16 @@ define half @test_neg_frec(half %a) {
 define half @test_fdiv_cst(half %a) {
 ; CHECK-LABEL: test_fdiv_cst:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    fwidenlhw $r0 = $r0
+; CHECK-NEXT:    make $r1 = 0x40b00000
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
-; CHECK-NEXT:    make $r0 = 0x40b00000
-; CHECK-NEXT:    copyd $r1 = $r0
+; CHECK-NEXT:    frecw $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    fwidenlhw $r1 = $r1
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    fmulw $r0 = $r1, $r0
+; CHECK-NEXT:    ;; # (end cycle 12)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 16)
   %r = fdiv half 5.5, %a
   ret half %r
 }

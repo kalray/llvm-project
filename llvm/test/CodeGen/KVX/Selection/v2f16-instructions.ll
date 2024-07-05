@@ -203,40 +203,22 @@ define <2 x half> @test_fmul_imm(<2 x half> %a) {
 define <2 x half> @test_fdiv(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-LABEL: test_fdiv:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addd $r12 = $r12, -32
-; CHECK-NEXT:    get $r16 = $ra
+; CHECK-NEXT:    fwidenlhwp $r0 = $r0
+; CHECK-NEXT:    fwidenlhwp $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd 24[$r12] = $r16
+; CHECK-NEXT:    srld $r1 = $r1, 32
+; CHECK-NEXT:    frecw $r2 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd 16[$r12] = $r20
+; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    sq 0[$r12] = $r18r19
-; CHECK-NEXT:    copyd $r18 = $r1
-; CHECK-NEXT:    copyd $r19 = $r0
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    fwidenmhw $r0 = $r19
-; CHECK-NEXT:    fwidenmhw $r1 = $r18
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    fwidenlhw $r0 = $r19
-; CHECK-NEXT:    fnarrowwh $r20 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    fwidenlhw $r1 = $r18
-; CHECK-NEXT:    call __divsf3
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    lq $r18r19 = 0[$r12]
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    insf $r0 = $r20, 31, 16
-; CHECK-NEXT:    ld $r20 = 16[$r12]
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    ld $r16 = 24[$r12]
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    set $ra = $r16
-; CHECK-NEXT:    addd $r12 = $r12, 32
-; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    make $r1 = 0
+; CHECK-NEXT:    insf $r2 = $r1, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    fmulwp $r0 = $r0, $r2
+; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;;
+; CHECK-NEXT:    ;; # (end cycle 18)
   %r = fdiv <2 x half> %a, %b
   ret <2 x half> %r
 }

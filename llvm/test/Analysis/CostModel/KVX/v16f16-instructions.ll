@@ -280,7 +280,7 @@ define <16 x half> @test_fmul_imm(<16 x half> %a) {
 
 define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_fdiv'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 400 for instruction: %r = fdiv <16 x half> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = fdiv <16 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = fdiv <16 x half> %a, %b
