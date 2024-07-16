@@ -115,6 +115,10 @@ public:
   bool isSPRegName(StringRef R) const override {
     return R == "$sp" || R == "$r12";
   }
+
+  bool useFP16ConversionIntrinsics() const override {
+    return false;
+  }
 };
 
 } // namespace targets
