@@ -172,10 +172,10 @@ define half @test_fdiv(half %a, half %b) #0 {
 ; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 20)
   %r = fdiv half %a, %b
   ret half %r
 }
@@ -189,7 +189,7 @@ define half @test_frec(half %a) {
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 16)
   %r = fdiv half 1.0, %a
   ret half %r
 }
@@ -205,7 +205,7 @@ define half @test_neg_frec(half %a) {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 17)
   %r = fdiv half -1.0, %a
   ret half %r
 }
@@ -219,10 +219,10 @@ define half @test_fdiv_cst(half %a) {
 ; CHECK-NEXT:    frecw $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fmulw $r0 = $r1, $r0
-; CHECK-NEXT:    ;; # (end cycle 12)
+; CHECK-NEXT:    ;; # (end cycle 16)
 ; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 20)
   %r = fdiv half 5.5, %a
   ret half %r
 }

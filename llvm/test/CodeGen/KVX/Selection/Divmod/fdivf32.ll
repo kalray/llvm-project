@@ -23,7 +23,7 @@ define float @fdivf32_fast(float %a, float %b) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 15)
 entry:
   %div = fdiv fast float %a, %b
   ret float %div
@@ -36,7 +36,7 @@ define float @fdivf32_arcp(float %a, float %b) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 15)
 entry:
   %div = fdiv arcp float %a, %b
   ret float %div

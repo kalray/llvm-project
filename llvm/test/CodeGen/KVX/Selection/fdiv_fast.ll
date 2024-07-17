@@ -15,12 +15,12 @@ define void @halfdiv(half %0, half %1, ptr %2) {
 ; ALL-NEXT:    frecw $r1 = $r1
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    fmulw $r0 = $r0, $r1
-; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    fnarrowwh $r0 = $r0
 ; ALL-NEXT:    ;; # (end cycle 16)
+; ALL-NEXT:    fnarrowwh $r0 = $r0
+; ALL-NEXT:    ;; # (end cycle 20)
 ; ALL-NEXT:    sh 0[$r2] = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 17)
+; ALL-NEXT:    ;; # (end cycle 21)
   %4 = fdiv half %0, %1
   store half %4, ptr %2, align 2
   ret void
@@ -39,14 +39,14 @@ define void @half2fdiv(<2 x half> %0, <2 x half> %1, ptr %2) {
 ; ALL-NEXT:    ;; # (end cycle 2)
 ; ALL-NEXT:    make $r1 = 0
 ; ALL-NEXT:    insf $r3 = $r1, 63, 32
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    fmulwp $r0 = $r0, $r3
-; ALL-NEXT:    ;; # (end cycle 14)
-; ALL-NEXT:    fnarrowwhq $r0 = $r0r1
 ; ALL-NEXT:    ;; # (end cycle 18)
+; ALL-NEXT:    fnarrowwhq $r0 = $r0r1
+; ALL-NEXT:    ;; # (end cycle 22)
 ; ALL-NEXT:    sw 0[$r2] = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    ;; # (end cycle 23)
   %4 = fdiv <2 x half> %0, %1
   store <2 x half> %4, ptr %2, align 4
   ret void
@@ -70,19 +70,19 @@ define void @half4fdiv(<4 x half> %0, <4 x half> %1, ptr %2) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    fwidenmhwp $r1 = $r0
 ; CV1-NEXT:    insf $r4 = $r1, 63, 32
-; CV1-NEXT:    ;; # (end cycle 13)
+; CV1-NEXT:    ;; # (end cycle 17)
 ; CV1-NEXT:    fwidenlhwp $r0 = $r0
 ; CV1-NEXT:    fmulwp $r1 = $r1, $r4
-; CV1-NEXT:    ;; # (end cycle 14)
+; CV1-NEXT:    ;; # (end cycle 18)
 ; CV1-NEXT:    insf $r3 = $r5, 63, 32
-; CV1-NEXT:    ;; # (end cycle 15)
+; CV1-NEXT:    ;; # (end cycle 19)
 ; CV1-NEXT:    fmulwp $r0 = $r0, $r3
-; CV1-NEXT:    ;; # (end cycle 16)
-; CV1-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CV1-NEXT:    ;; # (end cycle 20)
+; CV1-NEXT:    fnarrowwhq $r0 = $r0r1
+; CV1-NEXT:    ;; # (end cycle 24)
 ; CV1-NEXT:    sd 0[$r2] = $r0
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 21)
+; CV1-NEXT:    ;; # (end cycle 25)
 ;
 ; CV2-LABEL: half4fdiv:
 ; CV2:       # %bb.0:
@@ -102,18 +102,18 @@ define void @half4fdiv(<4 x half> %0, <4 x half> %1, ptr %2) {
 ; CV2-NEXT:    fwidenlhwp $r0 = $r0
 ; CV2-NEXT:    fwidenmhwp $r1 = $r0
 ; CV2-NEXT:    insf $r4 = $r1, 63, 32
-; CV2-NEXT:    ;; # (end cycle 13)
+; CV2-NEXT:    ;; # (end cycle 17)
 ; CV2-NEXT:    fmulwp $r1 = $r1, $r4
-; CV2-NEXT:    ;; # (end cycle 14)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    insf $r3 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 15)
+; CV2-NEXT:    ;; # (end cycle 19)
 ; CV2-NEXT:    fmulwp $r0 = $r0, $r3
-; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CV2-NEXT:    ;; # (end cycle 20)
+; CV2-NEXT:    fnarrowwhq $r0 = $r0r1
+; CV2-NEXT:    ;; # (end cycle 24)
 ; CV2-NEXT:    sd 0[$r2] = $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 21)
+; CV2-NEXT:    ;; # (end cycle 25)
   %4 = fdiv <4 x half> %0, %1
   store <4 x half> %4, ptr %2, align 8
   ret void
@@ -150,28 +150,28 @@ define void @half8fdiv(<8 x half> %0, <8 x half> %1, ptr %2) {
 ; CV1-NEXT:    frecw $r2 = $r2
 ; CV1-NEXT:    ;; # (end cycle 9)
 ; CV1-NEXT:    insf $r3 = $r5, 63, 32
-; CV1-NEXT:    ;; # (end cycle 17)
+; CV1-NEXT:    ;; # (end cycle 21)
 ; CV1-NEXT:    fwidenlhwp $r6 = $r1
 ; CV1-NEXT:    insf $r7 = $r6, 63, 32
 ; CV1-NEXT:    fmulwp $r17 = $r9, $r3
-; CV1-NEXT:    ;; # (end cycle 18)
+; CV1-NEXT:    ;; # (end cycle 22)
 ; CV1-NEXT:    fwidenmhwp $r1 = $r0
 ; CV1-NEXT:    insf $r8 = $r10, 63, 32
 ; CV1-NEXT:    fmulwp $r16 = $r6, $r7
-; CV1-NEXT:    ;; # (end cycle 19)
+; CV1-NEXT:    ;; # (end cycle 23)
 ; CV1-NEXT:    fwidenlhwp $r0 = $r0
 ; CV1-NEXT:    fmulwp $r1 = $r1, $r8
 ; CV1-NEXT:    insf $r11 = $r2, 63, 32
-; CV1-NEXT:    ;; # (end cycle 20)
+; CV1-NEXT:    ;; # (end cycle 24)
 ; CV1-NEXT:    fmulwp $r0 = $r0, $r11
-; CV1-NEXT:    ;; # (end cycle 21)
-; CV1-NEXT:    fnarrowwhq $r3 = $r16r17
-; CV1-NEXT:    ;; # (end cycle 23)
-; CV1-NEXT:    fnarrowwhq $r2 = $r0r1
 ; CV1-NEXT:    ;; # (end cycle 25)
+; CV1-NEXT:    fnarrowwhq $r3 = $r16r17
+; CV1-NEXT:    ;; # (end cycle 27)
+; CV1-NEXT:    fnarrowwhq $r2 = $r0r1
+; CV1-NEXT:    ;; # (end cycle 29)
 ; CV1-NEXT:    sq 0[$r4] = $r2r3
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 26)
+; CV1-NEXT:    ;; # (end cycle 30)
 ;
 ; CV2-LABEL: half8fdiv:
 ; CV2:       # %bb.0:
@@ -203,28 +203,28 @@ define void @half8fdiv(<8 x half> %0, <8 x half> %1, ptr %2) {
 ; CV2-NEXT:    frecw $r2 = $r2
 ; CV2-NEXT:    ;; # (end cycle 9)
 ; CV2-NEXT:    insf $r3 = $r5, 63, 32
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 21)
 ; CV2-NEXT:    fwidenmhwp $r1 = $r0
 ; CV2-NEXT:    fwidenlhwp $r6 = $r1
 ; CV2-NEXT:    insf $r7 = $r6, 63, 32
 ; CV2-NEXT:    fmulwp $r17 = $r9, $r3
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 22)
 ; CV2-NEXT:    fwidenlhwp $r0 = $r0
 ; CV2-NEXT:    insf $r8 = $r10, 63, 32
 ; CV2-NEXT:    fmulwp $r16 = $r6, $r7
-; CV2-NEXT:    ;; # (end cycle 19)
+; CV2-NEXT:    ;; # (end cycle 23)
 ; CV2-NEXT:    fmulwp $r1 = $r1, $r8
 ; CV2-NEXT:    insf $r11 = $r2, 63, 32
-; CV2-NEXT:    ;; # (end cycle 20)
+; CV2-NEXT:    ;; # (end cycle 24)
 ; CV2-NEXT:    fmulwp $r0 = $r0, $r11
-; CV2-NEXT:    ;; # (end cycle 21)
-; CV2-NEXT:    fnarrowwhq $r3 = $r16r17
-; CV2-NEXT:    ;; # (end cycle 23)
-; CV2-NEXT:    fnarrowwhq $r2 = $r0r1
 ; CV2-NEXT:    ;; # (end cycle 25)
+; CV2-NEXT:    fnarrowwhq $r3 = $r16r17
+; CV2-NEXT:    ;; # (end cycle 27)
+; CV2-NEXT:    fnarrowwhq $r2 = $r0r1
+; CV2-NEXT:    ;; # (end cycle 29)
 ; CV2-NEXT:    sq 0[$r4] = $r2r3
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 26)
+; CV2-NEXT:    ;; # (end cycle 30)
   %4 = fdiv <8 x half> %0, %1
   store <8 x half> %4, ptr %2, align 16
   ret void
@@ -276,57 +276,59 @@ define void @half16fdiv(<16 x half> %0, <16 x half> %1, ptr %2) {
 ; ALL-NEXT:    srld $r4 = $r4, 32
 ; ALL-NEXT:    frecw $r40 = $r4
 ; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    insf $r10 = $r11, 63, 32
 ; ALL-NEXT:    frecw $r17 = $r17
 ; ALL-NEXT:    ;; # (end cycle 13)
-; ALL-NEXT:    fwidenlhwp $r10 = $r3
-; ALL-NEXT:    fmulwp $r11 = $r7, $r10
 ; ALL-NEXT:    frecw $r35 = $r35
 ; ALL-NEXT:    ;; # (end cycle 14)
-; ALL-NEXT:    insf $r15 = $r16, 63, 32
 ; ALL-NEXT:    frecw $r36 = $r36
 ; ALL-NEXT:    ;; # (end cycle 15)
-; ALL-NEXT:    fmulwp $r10 = $r10, $r15
 ; ALL-NEXT:    frecw $r34 = $r34
 ; ALL-NEXT:    ;; # (end cycle 16)
+; ALL-NEXT:    insf $r10 = $r11, 63, 32
 ; ALL-NEXT:    frecw $r39 = $r39
 ; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    frecw $r4 = $r4
+; ALL-NEXT:    fwidenlhwp $r10 = $r3
+; ALL-NEXT:    fmulwp $r11 = $r7, $r10
 ; ALL-NEXT:    ;; # (end cycle 18)
-; ALL-NEXT:    insf $r6 = $r33, 63, 32
+; ALL-NEXT:    insf $r15 = $r16, 63, 32
+; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    fmulwp $r10 = $r10, $r15
 ; ALL-NEXT:    ;; # (end cycle 20)
+; ALL-NEXT:    insf $r6 = $r33, 63, 32
+; ALL-NEXT:    ;; # (end cycle 24)
 ; ALL-NEXT:    fwidenmhwp $r1 = $r0
 ; ALL-NEXT:    fmulwp $r2 = $r2, $r6
 ; ALL-NEXT:    fwidenlhwp $r6 = $r1
-; ALL-NEXT:    ;; # (end cycle 21)
+; ALL-NEXT:    ;; # (end cycle 25)
 ; ALL-NEXT:    fwidenlhwp $r0 = $r0
-; ALL-NEXT:    ;; # (end cycle 22)
+; ALL-NEXT:    ;; # (end cycle 26)
 ; ALL-NEXT:    insf $r32 = $r17, 63, 32
-; ALL-NEXT:    ;; # (end cycle 24)
+; ALL-NEXT:    ;; # (end cycle 28)
 ; ALL-NEXT:    fmulwp $r3 = $r9, $r32
 ; ALL-NEXT:    insf $r35 = $r5, 63, 32
-; ALL-NEXT:    ;; # (end cycle 25)
+; ALL-NEXT:    ;; # (end cycle 29)
 ; ALL-NEXT:    fmulwp $r7 = $r37, $r35
 ; ALL-NEXT:    fnarrowwhq $r35 = $r10r11
-; ALL-NEXT:    ;; # (end cycle 26)
+; ALL-NEXT:    ;; # (end cycle 30)
 ; ALL-NEXT:    insf $r36 = $r34, 63, 32
-; ALL-NEXT:    ;; # (end cycle 27)
+; ALL-NEXT:    ;; # (end cycle 31)
 ; ALL-NEXT:    fmulwp $r6 = $r6, $r36
 ; ALL-NEXT:    insf $r38 = $r39, 63, 32
-; ALL-NEXT:    ;; # (end cycle 28)
+; ALL-NEXT:    ;; # (end cycle 32)
 ; ALL-NEXT:    fmulwp $r1 = $r1, $r38
 ; ALL-NEXT:    fnarrowwhq $r34 = $r2r3
 ; ALL-NEXT:    insf $r40 = $r4, 63, 32
-; ALL-NEXT:    ;; # (end cycle 29)
+; ALL-NEXT:    ;; # (end cycle 33)
 ; ALL-NEXT:    fmulwp $r0 = $r0, $r40
-; ALL-NEXT:    ;; # (end cycle 30)
-; ALL-NEXT:    fnarrowwhq $r33 = $r6r7
-; ALL-NEXT:    ;; # (end cycle 32)
-; ALL-NEXT:    fnarrowwhq $r32 = $r0r1
 ; ALL-NEXT:    ;; # (end cycle 34)
+; ALL-NEXT:    fnarrowwhq $r33 = $r6r7
+; ALL-NEXT:    ;; # (end cycle 36)
+; ALL-NEXT:    fnarrowwhq $r32 = $r0r1
+; ALL-NEXT:    ;; # (end cycle 38)
 ; ALL-NEXT:    so 0[$r8] = $r32r33r34r35
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 35)
+; ALL-NEXT:    ;; # (end cycle 39)
   %4 = fdiv <16 x half> %0, %1
   store <16 x half> %4, ptr %2, align 32
   ret void
@@ -338,10 +340,10 @@ define void @floatdiv(float %0, float %1, ptr %2) {
 ; ALL-NEXT:    frecw $r1 = $r1
 ; ALL-NEXT:    ;; # (end cycle 0)
 ; ALL-NEXT:    fmulw $r0 = $r0, $r1
-; ALL-NEXT:    ;; # (end cycle 11)
+; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    sw 0[$r2] = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 14)
+; ALL-NEXT:    ;; # (end cycle 18)
   %4 = fdiv fast float %0, %1
   store float %4, ptr %2, align 4
   ret void
@@ -356,12 +358,12 @@ define void @float2fdiv(<2 x float> %0, <2 x float> %1, ptr %2) {
 ; ALL-NEXT:    frecw $r1 = $r1
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r3 = $r1, 63, 32
-; ALL-NEXT:    ;; # (end cycle 12)
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    fmulwp $r0 = $r0, $r3
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    sd 0[$r2] = $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 16)
+; ALL-NEXT:    ;; # (end cycle 20)
   %4 = fdiv fast <2 x float> %0, %1
   store <2 x float> %4, ptr %2, align 8
   ret void
@@ -381,16 +383,16 @@ define void @float4fdiv(<4 x float> %0, <4 x float> %1, ptr %2) {
 ; ALL-NEXT:    frecw $r6 = $r6
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    insf $r5 = $r3, 63, 32
-; ALL-NEXT:    ;; # (end cycle 12)
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    fmulwp $r1 = $r1, $r5
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    insf $r2 = $r6, 63, 32
-; ALL-NEXT:    ;; # (end cycle 14)
+; ALL-NEXT:    ;; # (end cycle 18)
 ; ALL-NEXT:    fmulwp $r0 = $r0, $r2
-; ALL-NEXT:    ;; # (end cycle 15)
+; ALL-NEXT:    ;; # (end cycle 19)
 ; ALL-NEXT:    sq 0[$r4] = $r0r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 18)
+; ALL-NEXT:    ;; # (end cycle 22)
   %4 = fdiv fast <4 x float> %0, %1
   store <4 x float> %4, ptr %2, align 16
   ret void
@@ -420,23 +422,23 @@ define void @float8fdiv(<8 x float> %0, <8 x float> %1, ptr %2) {
 ; ALL-NEXT:    frecw $r15 = $r15
 ; ALL-NEXT:    ;; # (end cycle 7)
 ; ALL-NEXT:    insf $r9 = $r7, 63, 32
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    fmulwp $r3 = $r3, $r9
 ; ALL-NEXT:    insf $r10 = $r6, 63, 32
-; ALL-NEXT:    ;; # (end cycle 14)
-; ALL-NEXT:    fmulwp $r2 = $r2, $r10
-; ALL-NEXT:    ;; # (end cycle 15)
-; ALL-NEXT:    insf $r5 = $r11, 63, 32
-; ALL-NEXT:    ;; # (end cycle 16)
-; ALL-NEXT:    fmulwp $r1 = $r1, $r5
-; ALL-NEXT:    ;; # (end cycle 17)
-; ALL-NEXT:    insf $r4 = $r15, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 18)
-; ALL-NEXT:    fmulwp $r0 = $r0, $r4
+; ALL-NEXT:    fmulwp $r2 = $r2, $r10
 ; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    insf $r5 = $r11, 63, 32
+; ALL-NEXT:    ;; # (end cycle 20)
+; ALL-NEXT:    fmulwp $r1 = $r1, $r5
+; ALL-NEXT:    ;; # (end cycle 21)
+; ALL-NEXT:    insf $r4 = $r15, 63, 32
+; ALL-NEXT:    ;; # (end cycle 22)
+; ALL-NEXT:    fmulwp $r0 = $r0, $r4
+; ALL-NEXT:    ;; # (end cycle 23)
 ; ALL-NEXT:    so 0[$r8] = $r0r1r2r3
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 22)
+; ALL-NEXT:    ;; # (end cycle 26)
   %4 = fdiv fast <8 x float> %0, %1
   store <8 x float> %4, ptr %2, align 32
   ret void
@@ -488,43 +490,45 @@ define void @float16fdiv(ptr %0, ptr %1, ptr %2) {
 ; ALL-NEXT:    ;; # (end cycle 15)
 ; ALL-NEXT:    frecw $r8 = $r8
 ; ALL-NEXT:    ;; # (end cycle 16)
-; ALL-NEXT:    insf $r15 = $r5, 63, 32
 ; ALL-NEXT:    frecw $r34 = $r34
 ; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    frecw $r4 = $r4
-; ALL-NEXT:    fmulwp $r38 = $r38, $r15
 ; ALL-NEXT:    ;; # (end cycle 18)
+; ALL-NEXT:    insf $r15 = $r5, 63, 32
+; ALL-NEXT:    ;; # (end cycle 21)
+; ALL-NEXT:    fmulwp $r38 = $r38, $r15
+; ALL-NEXT:    ;; # (end cycle 22)
 ; ALL-NEXT:    insf $r3 = $r7, 63, 32
-; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    ;; # (end cycle 23)
 ; ALL-NEXT:    insf $r16 = $r1, 63, 32
 ; ALL-NEXT:    fmulwp $r39 = $r39, $r3
-; ALL-NEXT:    ;; # (end cycle 20)
-; ALL-NEXT:    fmulwp $r37 = $r37, $r16
-; ALL-NEXT:    ;; # (end cycle 21)
-; ALL-NEXT:    insf $r11 = $r17, 63, 32
-; ALL-NEXT:    ;; # (end cycle 22)
-; ALL-NEXT:    fmulwp $r11 = $r43, $r11
-; ALL-NEXT:    ;; # (end cycle 23)
-; ALL-NEXT:    insf $r10 = $r32, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 24)
-; ALL-NEXT:    fmulwp $r10 = $r42, $r10
+; ALL-NEXT:    fmulwp $r37 = $r37, $r16
 ; ALL-NEXT:    ;; # (end cycle 25)
-; ALL-NEXT:    insf $r9 = $r33, 63, 32
+; ALL-NEXT:    insf $r11 = $r17, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 26)
-; ALL-NEXT:    fmulwp $r9 = $r41, $r9
+; ALL-NEXT:    fmulwp $r11 = $r43, $r11
 ; ALL-NEXT:    ;; # (end cycle 27)
-; ALL-NEXT:    insf $r8 = $r34, 63, 32
+; ALL-NEXT:    insf $r10 = $r32, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 28)
+; ALL-NEXT:    fmulwp $r10 = $r42, $r10
+; ALL-NEXT:    ;; # (end cycle 29)
+; ALL-NEXT:    insf $r9 = $r33, 63, 32
+; ALL-NEXT:    ;; # (end cycle 30)
+; ALL-NEXT:    fmulwp $r9 = $r41, $r9
+; ALL-NEXT:    ;; # (end cycle 31)
+; ALL-NEXT:    insf $r8 = $r34, 63, 32
+; ALL-NEXT:    ;; # (end cycle 32)
 ; ALL-NEXT:    insf $r6 = $r4, 63, 32
 ; ALL-NEXT:    fmulwp $r8 = $r40, $r8
-; ALL-NEXT:    ;; # (end cycle 29)
+; ALL-NEXT:    ;; # (end cycle 33)
 ; ALL-NEXT:    fmulwp $r36 = $r36, $r6
-; ALL-NEXT:    ;; # (end cycle 30)
+; ALL-NEXT:    ;; # (end cycle 34)
 ; ALL-NEXT:    so 32[$r2] = $r8r9r10r11
-; ALL-NEXT:    ;; # (end cycle 32)
+; ALL-NEXT:    ;; # (end cycle 36)
 ; ALL-NEXT:    so 0[$r2] = $r36r37r38r39
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 33)
+; ALL-NEXT:    ;; # (end cycle 37)
   %4 = load <16 x float>, ptr %0, align 64
   %5 = load <16 x float>, ptr %1, align 64
   %6 = fdiv fast <16 x float> %4, %5
