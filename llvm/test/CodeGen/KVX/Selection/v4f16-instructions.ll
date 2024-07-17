@@ -322,17 +322,17 @@ define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    fwidenmhwp $r1 = $r0
 ; KV3_1-NEXT:    insf $r2 = $r1, 63, 32
-; KV3_1-NEXT:    ;; # (end cycle 13)
+; KV3_1-NEXT:    ;; # (end cycle 17)
 ; KV3_1-NEXT:    fwidenlhwp $r0 = $r0
 ; KV3_1-NEXT:    fmulwp $r1 = $r1, $r2
-; KV3_1-NEXT:    ;; # (end cycle 14)
+; KV3_1-NEXT:    ;; # (end cycle 18)
 ; KV3_1-NEXT:    insf $r3 = $r4, 63, 32
-; KV3_1-NEXT:    ;; # (end cycle 15)
+; KV3_1-NEXT:    ;; # (end cycle 19)
 ; KV3_1-NEXT:    fmulwp $r0 = $r0, $r3
-; KV3_1-NEXT:    ;; # (end cycle 16)
+; KV3_1-NEXT:    ;; # (end cycle 20)
 ; KV3_1-NEXT:    fnarrowwhq $r0 = $r0r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 20)
+; KV3_1-NEXT:    ;; # (end cycle 24)
 ;
 ; KV3_2-LABEL: test_fdiv:
 ; KV3_2:       # %bb.0:
@@ -352,16 +352,16 @@ define <4 x half> @test_fdiv(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_2-NEXT:    fwidenlhwp $r0 = $r0
 ; KV3_2-NEXT:    fwidenmhwp $r1 = $r0
 ; KV3_2-NEXT:    insf $r2 = $r1, 63, 32
-; KV3_2-NEXT:    ;; # (end cycle 13)
+; KV3_2-NEXT:    ;; # (end cycle 17)
 ; KV3_2-NEXT:    fmulwp $r1 = $r1, $r2
-; KV3_2-NEXT:    ;; # (end cycle 14)
+; KV3_2-NEXT:    ;; # (end cycle 18)
 ; KV3_2-NEXT:    insf $r3 = $r4, 63, 32
-; KV3_2-NEXT:    ;; # (end cycle 15)
+; KV3_2-NEXT:    ;; # (end cycle 19)
 ; KV3_2-NEXT:    fmulwp $r0 = $r0, $r3
-; KV3_2-NEXT:    ;; # (end cycle 16)
+; KV3_2-NEXT:    ;; # (end cycle 20)
 ; KV3_2-NEXT:    fnarrowwhq $r0 = $r0r1
 ; KV3_2-NEXT:    ret
-; KV3_2-NEXT:    ;; # (end cycle 20)
+; KV3_2-NEXT:    ;; # (end cycle 24)
   %r = fdiv <4 x half> %a, %b
   ret <4 x half> %r
 }

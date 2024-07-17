@@ -894,53 +894,56 @@ define <16 x half> @div_v16f16_v16f16(<16 x half> %0, <16 x half> %1) {
 ; CHECK-NEXT:    srld $r38 = $r38, 32
 ; CHECK-NEXT:    frecw $r39 = $r38
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    insf $r8 = $r10, 63, 32
 ; CHECK-NEXT:    frecw $r15 = $r15
 ; CHECK-NEXT:    ;; # (end cycle 13)
-; CHECK-NEXT:    fmulwp $r9 = $r9, $r8
 ; CHECK-NEXT:    frecw $r33 = $r33
 ; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    insf $r11 = $r4, 63, 32
 ; CHECK-NEXT:    frecw $r34 = $r34
 ; CHECK-NEXT:    ;; # (end cycle 15)
-; CHECK-NEXT:    fwidenlhwp $r0 = $r1
-; CHECK-NEXT:    fmulwp $r8 = $r0, $r11
 ; CHECK-NEXT:    frecw $r37 = $r37
 ; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    fwidenmhwp $r1 = $r3
+; CHECK-NEXT:    insf $r8 = $r10, 63, 32
 ; CHECK-NEXT:    frecw $r38 = $r38
 ; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    insf $r32 = $r17, 63, 32
+; CHECK-NEXT:    fmulwp $r9 = $r9, $r8
 ; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    insf $r11 = $r4, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    fwidenlhwp $r0 = $r1
+; CHECK-NEXT:    fwidenmhwp $r1 = $r3
+; CHECK-NEXT:    fmulwp $r8 = $r0, $r11
+; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    insf $r32 = $r17, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r2
 ; CHECK-NEXT:    fmulwp $r4 = $r0, $r32
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    insf $r6 = $r36, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r3
 ; CHECK-NEXT:    fmulwp $r10 = $r0, $r6
-; CHECK-NEXT:    ;; # (end cycle 22)
-; CHECK-NEXT:    insf $r16 = $r15, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 24)
-; CHECK-NEXT:    fmulwp $r5 = $r5, $r16
-; CHECK-NEXT:    ;; # (end cycle 25)
-; CHECK-NEXT:    insf $r33 = $r34, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    insf $r16 = $r15, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    fmulwp $r5 = $r5, $r16
+; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    insf $r33 = $r34, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    insf $r7 = $r37, 63, 32
 ; CHECK-NEXT:    fmulwp $r11 = $r35, $r33
-; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    fmulwp $r7 = $r1, $r7
 ; CHECK-NEXT:    insf $r39 = $r38, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r8r9
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r4r5
 ; CHECK-NEXT:    fmulwp $r6 = $r0, $r39
-; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    fnarrowwhq $r2 = $r10r11
-; CHECK-NEXT:    ;; # (end cycle 31)
+; CHECK-NEXT:    ;; # (end cycle 35)
 ; CHECK-NEXT:    fnarrowwhq $r3 = $r6r7
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 33)
+; CHECK-NEXT:    ;; # (end cycle 37)
   %3 = fdiv <16 x half> %0, %1
   ret <16 x half> %3
 }
@@ -962,34 +965,34 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V1-NEXT:    ;; # (end cycle 3)
 ; V1-NEXT:    fwidenlhwp $r4 = $r1
 ; V1-NEXT:    insf $r5 = $r4, 63, 32
-; V1-NEXT:    ;; # (end cycle 14)
+; V1-NEXT:    ;; # (end cycle 18)
 ; V1-NEXT:    fwidenlhwp $r0 = $r2
 ; V1-NEXT:    fwidenmhwp $r1 = $r2
 ; V1-NEXT:    fmulwp $r6 = $r0, $r5
-; V1-NEXT:    ;; # (end cycle 15)
+; V1-NEXT:    ;; # (end cycle 19)
 ; V1-NEXT:    fwidenmhwp $r1 = $r3
 ; V1-NEXT:    fmulwp $r11 = $r1, $r5
-; V1-NEXT:    ;; # (end cycle 16)
+; V1-NEXT:    ;; # (end cycle 20)
 ; V1-NEXT:    fwidenlhwp $r0 = $r3
 ; V1-NEXT:    fmulwp $r10 = $r0, $r5
-; V1-NEXT:    ;; # (end cycle 17)
+; V1-NEXT:    ;; # (end cycle 21)
 ; V1-NEXT:    fmulwp $r7 = $r7, $r5
-; V1-NEXT:    ;; # (end cycle 18)
+; V1-NEXT:    ;; # (end cycle 22)
 ; V1-NEXT:    fmulwp $r9 = $r9, $r5
-; V1-NEXT:    ;; # (end cycle 19)
+; V1-NEXT:    ;; # (end cycle 23)
 ; V1-NEXT:    fmulwp $r8 = $r4, $r5
-; V1-NEXT:    ;; # (end cycle 20)
+; V1-NEXT:    ;; # (end cycle 24)
 ; V1-NEXT:    fnarrowwhq $r2 = $r10r11
 ; V1-NEXT:    fmulwp $r17 = $r1, $r5
-; V1-NEXT:    ;; # (end cycle 21)
+; V1-NEXT:    ;; # (end cycle 25)
 ; V1-NEXT:    fnarrowwhq $r0 = $r6r7
 ; V1-NEXT:    fmulwp $r16 = $r0, $r5
-; V1-NEXT:    ;; # (end cycle 22)
+; V1-NEXT:    ;; # (end cycle 26)
 ; V1-NEXT:    fnarrowwhq $r1 = $r8r9
-; V1-NEXT:    ;; # (end cycle 24)
+; V1-NEXT:    ;; # (end cycle 28)
 ; V1-NEXT:    fnarrowwhq $r3 = $r16r17
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 26)
+; V1-NEXT:    ;; # (end cycle 30)
 ;
 ; V2-LABEL: div_v16f16_f16:
 ; V2:       # %bb.0:
@@ -1008,33 +1011,33 @@ define <16 x half> @div_v16f16_f16(<16 x half> %0, half %1) {
 ; V2-NEXT:    fwidenmhwp $r1 = $r2
 ; V2-NEXT:    fwidenlhwp $r4 = $r1
 ; V2-NEXT:    insf $r5 = $r4, 63, 32
-; V2-NEXT:    ;; # (end cycle 14)
+; V2-NEXT:    ;; # (end cycle 18)
 ; V2-NEXT:    fwidenlhwp $r0 = $r2
 ; V2-NEXT:    fmulwp $r6 = $r0, $r5
-; V2-NEXT:    ;; # (end cycle 15)
+; V2-NEXT:    ;; # (end cycle 19)
 ; V2-NEXT:    fwidenmhwp $r1 = $r3
 ; V2-NEXT:    fmulwp $r11 = $r1, $r5
-; V2-NEXT:    ;; # (end cycle 16)
+; V2-NEXT:    ;; # (end cycle 20)
 ; V2-NEXT:    fwidenlhwp $r0 = $r3
 ; V2-NEXT:    fmulwp $r10 = $r0, $r5
-; V2-NEXT:    ;; # (end cycle 17)
+; V2-NEXT:    ;; # (end cycle 21)
 ; V2-NEXT:    fmulwp $r7 = $r7, $r5
-; V2-NEXT:    ;; # (end cycle 18)
+; V2-NEXT:    ;; # (end cycle 22)
 ; V2-NEXT:    fmulwp $r9 = $r9, $r5
-; V2-NEXT:    ;; # (end cycle 19)
+; V2-NEXT:    ;; # (end cycle 23)
 ; V2-NEXT:    fmulwp $r8 = $r4, $r5
-; V2-NEXT:    ;; # (end cycle 20)
+; V2-NEXT:    ;; # (end cycle 24)
 ; V2-NEXT:    fnarrowwhq $r2 = $r10r11
 ; V2-NEXT:    fmulwp $r17 = $r1, $r5
-; V2-NEXT:    ;; # (end cycle 21)
+; V2-NEXT:    ;; # (end cycle 25)
 ; V2-NEXT:    fnarrowwhq $r0 = $r6r7
 ; V2-NEXT:    fmulwp $r16 = $r0, $r5
-; V2-NEXT:    ;; # (end cycle 22)
+; V2-NEXT:    ;; # (end cycle 26)
 ; V2-NEXT:    fnarrowwhq $r1 = $r8r9
-; V2-NEXT:    ;; # (end cycle 24)
+; V2-NEXT:    ;; # (end cycle 28)
 ; V2-NEXT:    fnarrowwhq $r3 = $r16r17
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 26)
+; V2-NEXT:    ;; # (end cycle 30)
   %3 = insertelement <16 x half> undef, half %1, i32 0
   %4 = shufflevector <16 x half> %3, <16 x half> undef, <16 x i32> zeroinitializer
   %5 = fdiv <16 x half> %0, %4
@@ -3717,44 +3720,46 @@ define <16 x half> @p_div_v16f16_v16f16(ptr nocapture readonly %0, ptr nocapture
 ; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    frecw $r32 = $r32
 ; CHECK-NEXT:    ;; # (end cycle 16)
-; CHECK-NEXT:    insf $r2 = $r5, 63, 32
 ; CHECK-NEXT:    frecw $r10 = $r10
 ; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    insf $r3 = $r4, 63, 32
-; CHECK-NEXT:    fmulwp $r5 = $r37, $r2
 ; CHECK-NEXT:    frecw $r33 = $r33
 ; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    insf $r2 = $r5, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 21)
+; CHECK-NEXT:    insf $r3 = $r4, 63, 32
+; CHECK-NEXT:    fmulwp $r5 = $r37, $r2
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    lo $r0r1r2r3 = 16[$r0]
 ; CHECK-NEXT:    fmulwp $r4 = $r36, $r3
 ; CHECK-NEXT:    insf $r15 = $r1, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    insf $r6 = $r7, 63, 32
 ; CHECK-NEXT:    fmulwp $r7 = $r39, $r15
-; CHECK-NEXT:    ;; # (end cycle 21)
-; CHECK-NEXT:    fmulwp $r6 = $r38, $r6
-; CHECK-NEXT:    ;; # (end cycle 22)
-; CHECK-NEXT:    insf $r9 = $r16, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 23)
-; CHECK-NEXT:    fmulwp $r9 = $r1, $r9
-; CHECK-NEXT:    ;; # (end cycle 24)
-; CHECK-NEXT:    insf $r8 = $r17, 63, 32
 ; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    fmulwp $r6 = $r38, $r6
+; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    insf $r9 = $r16, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    fmulwp $r9 = $r1, $r9
+; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    insf $r8 = $r17, 63, 32
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r4r5
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r6r7
 ; CHECK-NEXT:    fmulwp $r8 = $r0, $r8
-; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    ;; # (end cycle 30)
 ; CHECK-NEXT:    insf $r11 = $r32, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 27)
+; CHECK-NEXT:    ;; # (end cycle 31)
 ; CHECK-NEXT:    fmulwp $r11 = $r3, $r11
-; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    insf $r10 = $r33, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    ;; # (end cycle 33)
 ; CHECK-NEXT:    fnarrowwhq $r2 = $r8r9
 ; CHECK-NEXT:    fmulwp $r10 = $r2, $r10
-; CHECK-NEXT:    ;; # (end cycle 30)
+; CHECK-NEXT:    ;; # (end cycle 34)
 ; CHECK-NEXT:    fnarrowwhq $r3 = $r10r11
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 34)
+; CHECK-NEXT:    ;; # (end cycle 38)
   %3 = load <16 x half>, ptr %0, align 32
   %4 = load <16 x half>, ptr %1, align 32
   %5 = fdiv <16 x half> %3, %4
@@ -3780,30 +3785,30 @@ define <16 x half> @p_div_v16f16_f16(ptr nocapture readonly %0, ptr nocapture re
 ; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
 ; CHECK-NEXT:    insf $r2 = $r1, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 17)
-; CHECK-NEXT:    fmulwp $r1 = $r5, $r2
-; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    fmulwp $r5 = $r7, $r2
-; CHECK-NEXT:    ;; # (end cycle 19)
-; CHECK-NEXT:    fmulwp $r0 = $r4, $r2
-; CHECK-NEXT:    ;; # (end cycle 20)
-; CHECK-NEXT:    fmulwp $r4 = $r6, $r2
 ; CHECK-NEXT:    ;; # (end cycle 21)
-; CHECK-NEXT:    fmulwp $r7 = $r9, $r2
+; CHECK-NEXT:    fmulwp $r1 = $r5, $r2
 ; CHECK-NEXT:    ;; # (end cycle 22)
-; CHECK-NEXT:    fmulwp $r9 = $r11, $r2
+; CHECK-NEXT:    fmulwp $r5 = $r7, $r2
 ; CHECK-NEXT:    ;; # (end cycle 23)
+; CHECK-NEXT:    fmulwp $r0 = $r4, $r2
+; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    fmulwp $r4 = $r6, $r2
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    fmulwp $r7 = $r9, $r2
+; CHECK-NEXT:    ;; # (end cycle 26)
+; CHECK-NEXT:    fmulwp $r9 = $r11, $r2
+; CHECK-NEXT:    ;; # (end cycle 27)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    fmulwp $r6 = $r8, $r2
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    ;; # (end cycle 28)
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r4r5
 ; CHECK-NEXT:    fmulwp $r8 = $r10, $r2
-; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    ;; # (end cycle 29)
 ; CHECK-NEXT:    fnarrowwhq $r2 = $r6r7
-; CHECK-NEXT:    ;; # (end cycle 28)
+; CHECK-NEXT:    ;; # (end cycle 32)
 ; CHECK-NEXT:    fnarrowwhq $r3 = $r8r9
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 29)
+; CHECK-NEXT:    ;; # (end cycle 33)
   %3 = load <16 x half>, ptr %0, align 32
   %4 = load half, ptr %1, align 2
   %5 = insertelement <16 x half> undef, half %4, i32 0

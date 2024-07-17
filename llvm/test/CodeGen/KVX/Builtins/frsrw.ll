@@ -30,17 +30,17 @@ define <8 x float> @frsrwo(<8 x float> %0) {
 ; CV1-NEXT:    frsrw.rz.s $r7 = $r7
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r4 = $r0, 63, 32
-; CV1-NEXT:    ;; # (end cycle 13)
+; CV1-NEXT:    ;; # (end cycle 17)
 ; CV1-NEXT:    copyd $r0 = $r4
 ; CV1-NEXT:    insf $r5 = $r1, 63, 32
-; CV1-NEXT:    ;; # (end cycle 14)
+; CV1-NEXT:    ;; # (end cycle 18)
 ; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    ;; # (end cycle 15)
+; CV1-NEXT:    ;; # (end cycle 19)
 ; CV1-NEXT:    insf $r2 = $r6, 63, 32
-; CV1-NEXT:    ;; # (end cycle 16)
+; CV1-NEXT:    ;; # (end cycle 20)
 ; CV1-NEXT:    insf $r3 = $r7, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 18)
+; CV1-NEXT:    ;; # (end cycle 22)
 ;
 ; CV2-LABEL: frsrwo:
 ; CV2:       # %bb.0:
@@ -65,18 +65,18 @@ define <8 x float> @frsrwo(<8 x float> %0) {
 ; CV2-NEXT:    frsrw.rz.s $r7 = $r7
 ; CV2-NEXT:    ;; # (end cycle 7)
 ; CV2-NEXT:    insf $r4 = $r0, 63, 32
-; CV2-NEXT:    ;; # (end cycle 14)
+; CV2-NEXT:    ;; # (end cycle 18)
 ; CV2-NEXT:    copyd $r0 = $r4
 ; CV2-NEXT:    insf $r5 = $r1, 63, 32
-; CV2-NEXT:    ;; # (end cycle 15)
+; CV2-NEXT:    ;; # (end cycle 19)
 ; CV2-NEXT:    copyd $r1 = $r5
 ; CV2-NEXT:    insf $r6 = $r2, 63, 32
-; CV2-NEXT:    ;; # (end cycle 16)
+; CV2-NEXT:    ;; # (end cycle 20)
 ; CV2-NEXT:    copyd $r2 = $r6
-; CV2-NEXT:    ;; # (end cycle 17)
+; CV2-NEXT:    ;; # (end cycle 21)
 ; CV2-NEXT:    insf $r3 = $r7, 63, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 18)
+; CV2-NEXT:    ;; # (end cycle 22)
   %2 = extractelement <8 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frsrw(float %2, i32 3, i32 1)
   %4 = extractelement <8 x float> %0, i64 1
@@ -115,10 +115,10 @@ define <2 x float> @frsrwp(<2 x float> %0) {
 ; ALL-NEXT:    frsrw.rz.s $r0 = $r0
 ; ALL-NEXT:    ;; # (end cycle 1)
 ; ALL-NEXT:    insf $r1 = $r0, 63, 32
-; ALL-NEXT:    ;; # (end cycle 12)
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    copyd $r0 = $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
   %2 = extractelement <2 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frsrw(float %2, i32 3, i32 1)
   %4 = extractelement <2 x float> %0, i64 1
@@ -142,12 +142,12 @@ define <4 x float> @frsrwq(<4 x float> %0) {
 ; ALL-NEXT:    frsrw.rz.s $r3 = $r3
 ; ALL-NEXT:    ;; # (end cycle 3)
 ; ALL-NEXT:    insf $r2 = $r0, 63, 32
-; ALL-NEXT:    ;; # (end cycle 12)
+; ALL-NEXT:    ;; # (end cycle 16)
 ; ALL-NEXT:    copyd $r0 = $r2
-; ALL-NEXT:    ;; # (end cycle 13)
+; ALL-NEXT:    ;; # (end cycle 17)
 ; ALL-NEXT:    insf $r1 = $r3, 63, 32
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 14)
+; ALL-NEXT:    ;; # (end cycle 18)
   %2 = extractelement <4 x float> %0, i64 0
   %3 = tail call float @llvm.kvx.frsrw(float %2, i32 3, i32 1)
   %4 = extractelement <4 x float> %0, i64 1
