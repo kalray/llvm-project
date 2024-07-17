@@ -22,7 +22,7 @@ define float @sqrtf32_fast(float %x) {
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 15)
   %tmp = call fast float @llvm.sqrt.f32(float %x)
   ret float %tmp
 }

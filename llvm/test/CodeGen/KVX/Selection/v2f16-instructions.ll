@@ -213,12 +213,12 @@ define <2 x half> @test_fdiv(<2 x half> %a, <2 x half> %b) #0 {
 ; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    make $r1 = 0
 ; CHECK-NEXT:    insf $r2 = $r1, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    fmulwp $r0 = $r0, $r2
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r0r1
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 22)
   %r = fdiv <2 x half> %a, %b
   ret <2 x half> %r
 }

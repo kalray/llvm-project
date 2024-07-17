@@ -195,9 +195,9 @@ define void @_pocl_kernel_math_kernel_nohwloop_fdiv_half( half %a, half %b, i64 
 ; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:  .LBB3_1: # %pregion_for_entry.pregion_for_init4.i
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sh.xs $r2[$r3] = $r0
@@ -232,9 +232,9 @@ define void @_pocl_kernel_math_kernel_hwloop_fdiv_half_fast( half %a, half %b, i
 ; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    fnarrowwh $r0 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    fnarrowwh $r0 = $r0
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    loopdo $r0, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB4_1: # %pregion_for_entry.pregion_for_init4.i
@@ -266,7 +266,7 @@ define void @_pocl_kernel_math_kernel_hwloop_fdiv_fast( float %a, float %b, i64 
 ; CHECK-NEXT:    frecw $r1 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    fmulw $r0 = $r0, $r1
-; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    ;; # (end cycle 15)
 ; CHECK-NEXT:    loopdo $r0, .__LOOPDO_1_END_
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB5_1: # %pregion_for_entry.pregion_for_init4.i

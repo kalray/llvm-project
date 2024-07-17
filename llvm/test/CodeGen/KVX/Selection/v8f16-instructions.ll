@@ -449,25 +449,25 @@ define <8 x half> @test_fdiv(<8 x half> %a, <8 x half> %b) #0 {
 ; CHECK-NEXT:    frecw $r8 = $r8
 ; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    insf $r4 = $r5, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 14)
+; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    fmulwp $r5 = $r7, $r4
 ; CHECK-NEXT:    insf $r6 = $r2, 63, 32
 ; CHECK-NEXT:    fwidenmhwp $r7 = $r1
-; CHECK-NEXT:    ;; # (end cycle 15)
+; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    fwidenlhwp $r0 = $r1
 ; CHECK-NEXT:    fmulwp $r4 = $r0, $r6
-; CHECK-NEXT:    ;; # (end cycle 16)
+; CHECK-NEXT:    ;; # (end cycle 20)
 ; CHECK-NEXT:    insf $r3 = $r9, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    fmulwp $r3 = $r7, $r3
 ; CHECK-NEXT:    insf $r10 = $r8, 63, 32
-; CHECK-NEXT:    ;; # (end cycle 19)
+; CHECK-NEXT:    ;; # (end cycle 23)
 ; CHECK-NEXT:    fnarrowwhq $r0 = $r4r5
 ; CHECK-NEXT:    fmulwp $r2 = $r0, $r10
-; CHECK-NEXT:    ;; # (end cycle 20)
+; CHECK-NEXT:    ;; # (end cycle 24)
 ; CHECK-NEXT:    fnarrowwhq $r1 = $r2r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 24)
+; CHECK-NEXT:    ;; # (end cycle 28)
   %r = fdiv <8 x half> %a, %b
   ret <8 x half> %r
 }

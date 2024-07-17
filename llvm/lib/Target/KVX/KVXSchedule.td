@@ -299,6 +299,12 @@ defvar MAU_AUXR_ITIN_RT = [ONE_TINY, ONE_MAU, ONE_AUXR];
 
 defvar ALL_ITIN_RT = XTINY # [ONE_BCU, ONE_TCA] # XNOP;
 
+/*
+ * Read stages are counted from 1: ID is 1, RR is 2, E1 is 3, etc..
+ * We cannot count them from 0 as LLVM would interpret that as a lack of
+ * information (it would assign a default latency)
+ */
+
 defvar READ_ID = [1];
 defvar READ_RR = [2];
 defvar READ_E1 = [3];
@@ -309,16 +315,27 @@ defvar READ_RRx5 = READ_RRx4 # READ_RR;
 defvar READ_RR_E1_RRx3 = READ_RR # READ_E1 # READ_RRx3;
 defvar READ_RRx2_E1_RRx2 = READ_RRx2 # READ_E1 # READ_RRx2;
 
+/*
+ * Write stages are also counted from 1, but that number is decremented by 1
+ * in case of bypasses.
+ *
+ * Without bypass: 3 is E1, 4 is E2, 5 is E3, etc..
+ * With bypass: 2 is E1, 3 is E2, 4 is E3, etc..
+ */
+
 defvar WE1 = [2];
 defvar WE2 = [3];
 defvar WE3 = [4];
 defvar WE4 = [5];
 defvar WE5 = [6];
 defvar WE6 = [7];
-defvar WSFU = [12];
+defvar WSFU = [16];
 
-// NB = No Bypass. We assume there are always bypasses; when they aren't, we
-// must wait one more cycle. This is the case on the TCA.
+/*
+ * NB = No Bypass. In the definitions above we assume there are always bypasses
+ * We cannot make that assumption for TCA instructions so we wait one more
+ * cycle.
+ */
 // TODO: handle TCA bypasses once they are clearly defined
 defvar WE3NB = WE4;
 defvar WE4NB = WE5;

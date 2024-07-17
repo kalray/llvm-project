@@ -536,53 +536,56 @@ define <16 x half> @test_fdiv(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-NEXT:    srld $r38 = $r38, 32
 ; ALL-NEXT:    frecw $r39 = $r38
 ; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    insf $r8 = $r10, 63, 32
 ; ALL-NEXT:    frecw $r15 = $r15
 ; ALL-NEXT:    ;; # (end cycle 13)
-; ALL-NEXT:    fmulwp $r9 = $r9, $r8
 ; ALL-NEXT:    frecw $r33 = $r33
 ; ALL-NEXT:    ;; # (end cycle 14)
-; ALL-NEXT:    insf $r11 = $r4, 63, 32
 ; ALL-NEXT:    frecw $r34 = $r34
 ; ALL-NEXT:    ;; # (end cycle 15)
-; ALL-NEXT:    fwidenlhwp $r0 = $r1
-; ALL-NEXT:    fmulwp $r8 = $r0, $r11
 ; ALL-NEXT:    frecw $r37 = $r37
 ; ALL-NEXT:    ;; # (end cycle 16)
-; ALL-NEXT:    fwidenmhwp $r1 = $r3
+; ALL-NEXT:    insf $r8 = $r10, 63, 32
 ; ALL-NEXT:    frecw $r38 = $r38
 ; ALL-NEXT:    ;; # (end cycle 17)
-; ALL-NEXT:    insf $r32 = $r17, 63, 32
+; ALL-NEXT:    fmulwp $r9 = $r9, $r8
 ; ALL-NEXT:    ;; # (end cycle 18)
+; ALL-NEXT:    insf $r11 = $r4, 63, 32
+; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    fwidenlhwp $r0 = $r1
+; ALL-NEXT:    fwidenmhwp $r1 = $r3
+; ALL-NEXT:    fmulwp $r8 = $r0, $r11
+; ALL-NEXT:    ;; # (end cycle 20)
+; ALL-NEXT:    insf $r32 = $r17, 63, 32
+; ALL-NEXT:    ;; # (end cycle 22)
 ; ALL-NEXT:    fwidenlhwp $r0 = $r2
 ; ALL-NEXT:    fmulwp $r4 = $r0, $r32
-; ALL-NEXT:    ;; # (end cycle 19)
+; ALL-NEXT:    ;; # (end cycle 23)
 ; ALL-NEXT:    insf $r6 = $r36, 63, 32
-; ALL-NEXT:    ;; # (end cycle 21)
+; ALL-NEXT:    ;; # (end cycle 25)
 ; ALL-NEXT:    fwidenlhwp $r0 = $r3
 ; ALL-NEXT:    fmulwp $r10 = $r0, $r6
-; ALL-NEXT:    ;; # (end cycle 22)
-; ALL-NEXT:    insf $r16 = $r15, 63, 32
-; ALL-NEXT:    ;; # (end cycle 24)
-; ALL-NEXT:    fmulwp $r5 = $r5, $r16
-; ALL-NEXT:    ;; # (end cycle 25)
-; ALL-NEXT:    insf $r33 = $r34, 63, 32
 ; ALL-NEXT:    ;; # (end cycle 26)
+; ALL-NEXT:    insf $r16 = $r15, 63, 32
+; ALL-NEXT:    ;; # (end cycle 28)
+; ALL-NEXT:    fmulwp $r5 = $r5, $r16
+; ALL-NEXT:    ;; # (end cycle 29)
+; ALL-NEXT:    insf $r33 = $r34, 63, 32
+; ALL-NEXT:    ;; # (end cycle 30)
 ; ALL-NEXT:    insf $r7 = $r37, 63, 32
 ; ALL-NEXT:    fmulwp $r11 = $r35, $r33
-; ALL-NEXT:    ;; # (end cycle 27)
+; ALL-NEXT:    ;; # (end cycle 31)
 ; ALL-NEXT:    fmulwp $r7 = $r1, $r7
 ; ALL-NEXT:    insf $r39 = $r38, 63, 32
-; ALL-NEXT:    ;; # (end cycle 28)
+; ALL-NEXT:    ;; # (end cycle 32)
 ; ALL-NEXT:    fnarrowwhq $r0 = $r8r9
 ; ALL-NEXT:    fnarrowwhq $r1 = $r4r5
 ; ALL-NEXT:    fmulwp $r6 = $r0, $r39
-; ALL-NEXT:    ;; # (end cycle 29)
+; ALL-NEXT:    ;; # (end cycle 33)
 ; ALL-NEXT:    fnarrowwhq $r2 = $r10r11
-; ALL-NEXT:    ;; # (end cycle 31)
+; ALL-NEXT:    ;; # (end cycle 35)
 ; ALL-NEXT:    fnarrowwhq $r3 = $r6r7
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 33)
+; ALL-NEXT:    ;; # (end cycle 37)
   %r = fdiv <16 x half> %a, %b
   ret <16 x half> %r
 }
