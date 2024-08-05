@@ -82,7 +82,7 @@ elif runner == "--qemu":
 
     if (len(args) != 0):
         cmd.append("-append")
-        cmd.append(" ".join(args))
+        cmd.append("\"{}\"".format(" ".join(args)))
 
 else:
     print(f"Unknown runner:{runner}")
