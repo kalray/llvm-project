@@ -147,7 +147,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r3 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r0 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB0_1:
 ; CV2-NEXT:    ld $r0 = 0[$r1]
@@ -169,7 +169,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r3 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r0 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r0 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -180,7 +180,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r4 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r3 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -190,7 +190,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r3 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r0 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r0 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -201,7 +201,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r4 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r3 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -211,7 +211,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r3 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r0 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r0 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r0 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -222,7 +222,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r4 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.dnez $r3 ? .LBB0_9
+; CV2-NEXT:    cb.wnez $r3 ? .LBB0_9
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:    ld $r3 = 0[$r1]
 ; CV2-NEXT:    ;; # (end cycle 0)
@@ -232,7 +232,7 @@ define void @_Z1av() {
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    ld.u $r3 = 0[$r2]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    cb.deqz $r0 ? .LBB0_1
+; CV2-NEXT:    cb.weqz $r0 ? .LBB0_1
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  .LBB0_9:
 ; CV2-NEXT:    addd $r12 = $r12, 32
