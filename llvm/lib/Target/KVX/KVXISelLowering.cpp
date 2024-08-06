@@ -1409,7 +1409,7 @@ static SDValue buildCV2CmpSwap(const AtomicSDNode *N, SelectionDAG &Dag) {
   SwapArgs.push_back(Dag.getTargetConstant(COHERENCY, DL, MVT::i32));
   // Add chain operand.
   SwapArgs.push_back(N->getChain());
-  auto *ACPSW = Dag.getMachineNode(Opcode, DL, {VT, MVT::Other}, SwapArgs);
+  auto *ACPSW = Dag.getMachineNode(Opcode, DL, {N->getValueType(1), MVT::Other}, SwapArgs);
 
   // Uncached load.
   LoadArgs.push_back(Dag.getTargetConstant(KVXMOD::VARIANT_U, DL, MVT::i32));
