@@ -67,22 +67,24 @@ elif runner == "--iss":
            "--", env ] + args[0:]
 
 elif runner == "--qemu":
-    if (len(envs)): #T21616
-        print("--qemu does not allow passing environment variables, ignoring them.")
+    if (len(env)): #T21616
+        env = env.replace(",", ",,").replace('"', '\\"')
+        env = ',mppa-argarea-env="' + env + '"'
+
 
     cmd = ["qemu-system-kvx",
         "-display", "none",
         "-nographic",
         "-semihosting",
         "-m", "2G",
-        "-M", f"mppa-coolidge-v{arch[-1]}",
+        "-M", f"mppa-coolidge-v{arch[-1]}" + env,
         "-kernel", args[0]]
 
     args = args[1:]
 
     if (len(args) != 0):
         cmd.append("-append")
-        cmd.append("\"{}\"".format(" ".join(args)))
+        cmd.append("\"{}\"".format(" ".join(args).replace('"', '\\"')))
 
 else:
     print(f"Unknown runner:{runner}")
