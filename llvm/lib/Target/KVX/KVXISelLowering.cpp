@@ -2088,7 +2088,7 @@ SDValue KVXTargetLowering::lowerFRAMEADDR(SDValue Op, SelectionDAG &DAG) const {
   MachineFunction &MF = DAG.getMachineFunction();
   MachineFrameInfo &MFI = MF.getFrameInfo();
   MFI.setFrameAddressIsTaken(true);
-  unsigned FrameReg = getSPReg();
+  unsigned FrameReg = getFPReg();
   int XLenInBytes = 8;
 
   EVT VT = Op.getValueType();
