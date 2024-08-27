@@ -9,10 +9,18 @@
 #ifndef LLVM_CLANG_LIB_DRIVER_TOOLCHAINS_ARCH_KVX_H
 #define LLVM_CLANG_LIB_DRIVER_TOOLCHAINS_ARCH_KVX_H
 
+#include "clang/Driver/Driver.h"
+#include "clang/Driver/Options.h"
+#include "llvm/Option/ArgList.h"
+
 namespace clang {
 namespace driver {
 namespace tools {
 namespace KVX {
+void getKVXTargetFeatures(const Driver &D, const llvm::Triple &Triple,
+                           const llvm::opt::ArgList &Args,
+                           llvm::opt::ArgStringList &CmdArgs,
+                           std::vector<llvm::StringRef> &Features);
 
 constexpr char GCC_VER[] = "13.2.1";
 } // end namespace KVX
