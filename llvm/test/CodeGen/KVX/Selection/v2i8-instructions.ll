@@ -519,8 +519,8 @@ define <2 x i8> @test_select_cc(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> 
 define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c, <2 x i8> %d) #0 {
 ; V1-LABEL: test_select_cc_f32_f32:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r4 = $r4
-; V1-NEXT:    sxlbhq $r5 = $r5
+; V1-NEXT:    sbmm8 $r4 = $r4, 0x20001
+; V1-NEXT:    sbmm8 $r5 = $r5, 0x20001
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.ltu $r4 = $r4, $r5
 ; V1-NEXT:    ;; # (end cycle 1)
@@ -557,8 +557,8 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 define <2 x i1> @test_icmp_ule(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_icmp_ule:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 1)
@@ -599,8 +599,8 @@ define <2 x i1> @test_icmp_slt(<2 x i8> %a, <2 x i8> %b) #0 {
 define <2 x i1> @test_icmp_ugt(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_icmp_ugt:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 1)
@@ -620,8 +620,8 @@ define <2 x i1> @test_icmp_ugt(<2 x i8> %a, <2 x i8> %b) #0 {
 define <2 x i1> @test_icmp_uge(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_icmp_uge:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 1)
@@ -641,8 +641,8 @@ define <2 x i1> @test_icmp_uge(<2 x i8> %a, <2 x i8> %b) #0 {
 define <2 x i1> @test_icmp_ult(<2 x i8> %a, <2 x i8> %b) #0 {
 ; V1-LABEL: test_icmp_ult:
 ; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    sxlbhq $r1 = $r1
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x20001
+; V1-NEXT:    sbmm8 $r1 = $r1, 0x20001
 ; V1-NEXT:    ;; # (end cycle 0)
 ; V1-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; V1-NEXT:    ;; # (end cycle 1)
@@ -1558,6 +1558,38 @@ define <2 x i8> @fshr_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
 ; V2-NEXT:    ;; # (end cycle 4)
   %r = call <2 x i8> @llvm.fshr.v2i8(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c)
   ret <2 x i8> %r
+}
+
+; A sign-extension should be done between the "<2 x i8> add" legalized into
+; <2 x i16>, and the "icmp <2 x i8>" legalized into <2 x i16>
+; Cf. TOOLCHAIN-711
+define <2 x i1> @add_then_cmp(<2 x i8> %a) {
+; V1-LABEL: add_then_cmp:
+; V1:       # %bb.0:
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    addhq $r0 = $r0, 0xff00ff
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    sxlbhq $r0 = $r0
+; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    compnhq.lt $r0 = $r0, 0
+; V1-NEXT:    ;; # (end cycle 4)
+; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 5)
+;
+; V2-LABEL: add_then_cmp:
+; V2:       # %bb.0:
+; V2-NEXT:    addbo $r0 = $r0, -1
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    compnbo.lt $r0 = $r0, 0
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
+  %add = add <2 x i8> %a, <i8 -1, i8 -1>
+  %cmp = icmp slt <2 x i8> %add, zeroinitializer
+  ret <2 x i1> %cmp
 }
 
 declare <2 x i8> @llvm.fshr.v2i8(<2 x i8>, <2 x i8>, <2 x i8>)
