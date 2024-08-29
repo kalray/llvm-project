@@ -628,7 +628,11 @@ void VectorLegalizer::PromoteSETCC(SDNode *Node,
   MVT VecVT = Node->getOperand(0).getSimpleValueType();
   MVT NewVecVT = TLI.getTypeToPromoteTo(Node->getOpcode(), VecVT);
 
-  unsigned ExtOp = VecVT.isFloatingPoint() ? ISD::FP_EXTEND : ISD::ANY_EXTEND;
+  unsigned ExtOp = VecVT.isFloatingPoint() ? ISD::FP_EXTEND
+                   : ISD::isUnsignedIntSetCC(
+                         cast<CondCodeSDNode>(Node->getOperand(2))->get())
+                       ? ISD::ZERO_EXTEND
+                       : ISD::SIGN_EXTEND;
 
   SDLoc DL(Node);
   SmallVector<SDValue, 5> Operands(Node->getNumOperands());

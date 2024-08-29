@@ -694,8 +694,8 @@ define <4 x i8> @test_select_cc(<4 x i8> %a, <4 x i8> %b, <4 x i8> %c, <4 x i8> 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c, <4 x i8> %d) #0 {
 ; CV1-LABEL: test_select_cc_f32_f32:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r8 = $r8
-; CV1-NEXT:    sxlbhq $r9 = $r9
+; CV1-NEXT:    sbmm8 $r8 = $r8, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r9 = $r9, 0x8000400020001
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ltu $r8 = $r8, $r9
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -756,8 +756,8 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i8> %c
 define <4 x i1> @test_icmp_ule(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ule:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.leu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -798,8 +798,8 @@ define <4 x i1> @test_icmp_slt(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_ugt(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ugt:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.gtu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -819,8 +819,8 @@ define <4 x i1> @test_icmp_ugt(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_uge(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_uge:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.geu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -840,8 +840,8 @@ define <4 x i1> @test_icmp_uge(<4 x i8> %a, <4 x i8> %b) #0 {
 define <4 x i1> @test_icmp_ult(<4 x i8> %a, <4 x i8> %b) #0 {
 ; CV1-LABEL: test_icmp_ult:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sxlbhq $r0 = $r0
-; CV1-NEXT:    sxlbhq $r1 = $r1
+; CV1-NEXT:    sbmm8 $r0 = $r0, 0x8000400020001
+; CV1-NEXT:    sbmm8 $r1 = $r1, 0x8000400020001
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    compnhq.ltu $r0 = $r0, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
