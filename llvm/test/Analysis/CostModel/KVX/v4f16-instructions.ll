@@ -261,7 +261,7 @@ define <4 x half> @test_select(<4 x half> %a, <4 x half> %b, i1 zeroext %c) #0 {
 define <4 x half> @test_select_cc(<4 x half> %a, <4 x half> %b, <4 x half> %c, <4 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <4 x half> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x half> %a, <4 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x half> %a, <4 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %cc = fcmp une <4 x half> %c, %d
@@ -272,7 +272,7 @@ define <4 x half> @test_select_cc(<4 x half> %a, <4 x half> %b, <4 x half> %c, <
 define <4 x float> @test_select_cc_f32_f16(<4 x float> %a, <4 x float> %b, <4 x half> %c, <4 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f32_f16'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <4 x half> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x float> %a, <4 x float> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x float> %a, <4 x float> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x float> %r
 ;
   %cc = fcmp une <4 x half> %c, %d
@@ -283,7 +283,7 @@ define <4 x float> @test_select_cc_f32_f16(<4 x float> %a, <4 x float> %b, <4 x 
 define <4 x half> @test_select_cc_f16_f32(<4 x half> %a, <4 x half> %b, <4 x float> %c, <4 x float> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f16_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <4 x float> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x half> %a, <4 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x half> %a, <4 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x half> %r
 ;
   %cc = fcmp une <4 x float> %c, %d
