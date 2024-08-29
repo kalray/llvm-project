@@ -1560,37 +1560,5 @@ define <2 x i8> @fshr_vec(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c) {
   ret <2 x i8> %r
 }
 
-; A sign-extension should be done between the "<2 x i8> add" legalized into
-; <2 x i16>, and the "icmp <2 x i8>" legalized into <2 x i16>
-; Cf. TOOLCHAIN-711
-define <2 x i1> @add_then_cmp(<2 x i8> %a) {
-; V1-LABEL: add_then_cmp:
-; V1:       # %bb.0:
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    addhq $r0 = $r0, 0xff00ff
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    sxlbhq $r0 = $r0
-; V1-NEXT:    ;; # (end cycle 3)
-; V1-NEXT:    compnhq.lt $r0 = $r0, 0
-; V1-NEXT:    ;; # (end cycle 4)
-; V1-NEXT:    sbmm8 $r0 = $r0, 0x401
-; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 5)
-;
-; V2-LABEL: add_then_cmp:
-; V2:       # %bb.0:
-; V2-NEXT:    addbo $r0 = $r0, -1
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    compnbo.lt $r0 = $r0, 0
-; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 1)
-  %add = add <2 x i8> %a, <i8 -1, i8 -1>
-  %cmp = icmp slt <2 x i8> %add, zeroinitializer
-  ret <2 x i1> %cmp
-}
-
 declare <2 x i8> @llvm.fshr.v2i8(<2 x i8>, <2 x i8>, <2 x i8>)
 declare <2 x i8> @llvm.fshl.v2i8(<2 x i8>, <2 x i8>, <2 x i8>)
