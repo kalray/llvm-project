@@ -251,7 +251,7 @@ define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) {
 define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) {
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i16> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i16> %a, <4 x i16> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i16> %a, <4 x i16> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %cc = icmp slt <4 x i16> %c, %d
@@ -262,7 +262,7 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %c, <4 x i16> %d) {
 ; ALL-LABEL: 'test_select_cc_f32_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i16> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
   %cc = icmp ult <4 x i16> %c, %d
@@ -371,7 +371,7 @@ declare <4 x i16> @llvm.abs.v4i16(<4 x i16>, i1) #0
 
 define <4 x i16> @test_abs(<4 x i16> %a) {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a, i1 false)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
   %r = call <4 x i16> @llvm.abs.v4i16(<4 x i16> %a, i1 false)
@@ -529,7 +529,7 @@ define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 define <4 x i16> @abdhq_rr(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'abdhq_rr'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %sub = sub nsw <4 x i16> %a, %b
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %0 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %sub, i1 true)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %sub, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -541,7 +541,7 @@ entry:
 define <4 x i16> @abdhq_not_ri(<4 x i16> %0) {
 ; ALL-LABEL: 'abdhq_not_ri'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <4 x i16> <i16 18, i16 16, i16 15, i16 16>, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %3
 ;
   %2 = sub nsw <4 x i16> <i16 18, i16 16, i16 15, i16 16>, %0
@@ -552,7 +552,7 @@ define <4 x i16> @abdhq_not_ri(<4 x i16> %0) {
 define <4 x i16> @abdhq_ri_(<4 x i16> %0) {
 ; ALL-LABEL: 'abdhq_ri_'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 0, i16 0>, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %3
 ;
   %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 0, i16 0>, %0
@@ -563,7 +563,7 @@ define <4 x i16> @abdhq_ri_(<4 x i16> %0) {
 define <4 x i16> @abdhq_ri_at(<4 x i16> %0) {
 ; ALL-LABEL: 'abdhq_ri_at'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 15, i16 16>, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <4 x i16> @llvm.abs.v4i16(<4 x i16> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %3
 ;
   %2 = sub nsw <4 x i16> <i16 15, i16 16, i16 15, i16 16>, %0
@@ -770,7 +770,7 @@ define <4 x i16> @splat_3_64(i64 %0) {
 
 define  <4 x i16> @v4_maxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_maxhq_rr_i16'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -780,7 +780,7 @@ entry:
 
 define  <4 x i16> @v4_minhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_minhq_rr_i16'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -790,7 +790,7 @@ entry:
 
 define  <4 x i16> @v4_umaxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_umaxhq_rr_i16'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -800,7 +800,7 @@ entry:
 
 define  <4 x i16> @v4_uminhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_uminhq_rr_i16'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:

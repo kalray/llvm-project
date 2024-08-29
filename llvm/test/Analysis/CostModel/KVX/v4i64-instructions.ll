@@ -304,12 +304,12 @@ define <4 x i64> @test_select(<4 x i64> %a, <4 x i64> %b, i1 zeroext %c) #0 {
 define <4 x i64> @test_select_cc(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x i64> %d) #0 {
 ; CV1-LABEL: 'test_select_cc'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i64> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
 ; CV2-LABEL: 'test_select_cc'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i64> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
   %cc = icmp slt <4 x i64> %c, %d
@@ -320,12 +320,12 @@ define <4 x i64> @test_select_cc(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x i64> %d) #0 {
 ; CV1-LABEL: 'test_select_cc_f32_f32'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i64> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
 ; CV2-LABEL: 'test_select_cc_f32_f32'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i64> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
   %cc = icmp ult <4 x i64> %c, %d
@@ -402,11 +402,11 @@ declare <4 x i64> @llvm.abs.v4i64(<4 x i64>, i1) #0
 
 define <4 x i64> @test_abs(<4 x i64> %a) #0 {
 ; CV1-LABEL: 'test_abs'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
 ; CV2-LABEL: 'test_abs'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
   %r = call <4 x i64> @llvm.abs.v4i64(<4 x i64> %a, i1 false)

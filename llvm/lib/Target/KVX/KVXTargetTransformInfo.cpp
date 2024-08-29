@@ -933,8 +933,11 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
   case Instruction::FCmp:
     break;
   case Instruction::Select:
-    if (CondTy && !CondTy->isVectorTy())
-      break;
+    if (!CondTy || CondTy->isVectorTy()) {
+      LLVM_DEBUG(dbgs() << "Invalid, ICmp/select: "; if (I) I->print(dbgs());
+                 dbgs() << "\n");
+      return InstructionCost::getInvalid();
+    }
     LLVM_FALLTHROUGH;
   case Instruction::ICmp: {
     if (!ValTy || ValTy->getScalarSizeInBits() < 8) {

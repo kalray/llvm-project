@@ -372,7 +372,7 @@ define <8 x half> @test_select_cc(<8 x half> %a, <8 x half> %b, <8 x half> %c, <
 ;
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <8 x half> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <8 x i1> %cc, <8 x half> %a, <8 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <8 x i1> %cc, <8 x half> %a, <8 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %cc = fcmp une <8 x half> %c, %d
@@ -384,7 +384,7 @@ define <8 x float> @test_select_cc_f32_f16(<8 x float> %a, <8 x float> %b, <8 x 
 ;
 ; ALL-LABEL: 'test_select_cc_f32_f16'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <8 x half> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <8 x i1> %cc, <8 x float> %a, <8 x float> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <8 x i1> %cc, <8 x float> %a, <8 x float> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x float> %r
 ;
   %cc = fcmp une <8 x half> %c, %d
@@ -396,7 +396,7 @@ define <8 x half> @test_select_cc_f16_f32(<8 x half> %a, <8 x half> %b, <8 x flo
 ;
 ; ALL-LABEL: 'test_select_cc_f16_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <8 x float> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <8 x i1> %cc, <8 x half> %a, <8 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <8 x i1> %cc, <8 x half> %a, <8 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x half> %r
 ;
   %cc = fcmp une <8 x float> %c, %d

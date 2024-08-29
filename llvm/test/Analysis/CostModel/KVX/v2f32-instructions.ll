@@ -180,7 +180,7 @@ define <2 x float> @test_select(<2 x float> %a, <2 x float> %b, i1 zeroext %c) #
 define <2 x float> @test_select_cc(<2 x float> %a, <2 x float> %b, <2 x float> %c, <2 x float> %d) #0 {
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x float> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %cc = fcmp une <2 x float> %c, %d
@@ -191,7 +191,7 @@ define <2 x float> @test_select_cc(<2 x float> %a, <2 x float> %b, <2 x float> %
 define <2 x double> @test_select_cc_f32_f32(<2 x double> %a, <2 x double> %b, <2 x float> %c, <2 x float> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f32_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x float> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x double> %a, <2 x double> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %cc = fcmp une <2 x float> %c, %d

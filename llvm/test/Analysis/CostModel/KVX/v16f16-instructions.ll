@@ -348,7 +348,7 @@ define <16 x half> @test_select(<16 x half> %a, <16 x half> %b, i1 zeroext %c) #
 define <16 x half> @test_select_cc(<16 x half> %a, <16 x half> %b, <16 x half> %c, <16 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <16 x half> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x half> %a, <16 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x half> %a, <16 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %cc = fcmp une <16 x half> %c, %d
@@ -359,7 +359,7 @@ define <16 x half> @test_select_cc(<16 x half> %a, <16 x half> %b, <16 x half> %
 define <16 x half> @test_select_cc_f16_f32(<16 x half> %a, <16 x half> %b, <16 x float> %c, <16 x float> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f16_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = fcmp une <16 x float> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <16 x i1> %cc, <16 x half> %a, <16 x half> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x half> %a, <16 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %cc = fcmp une <16 x float> %c, %d

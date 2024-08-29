@@ -225,7 +225,7 @@ define <2 x i64> @test_select(<2 x i64> %a, <2 x i64> %b, i1 zeroext %c) {
 define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x i64> %d) {
 ; ALL-LABEL: 'test_select_cc'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <2 x i64> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
   %cc = icmp slt <2 x i64> %c, %d
@@ -236,7 +236,7 @@ define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x 
 define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x i64> %d) {
 ; ALL-LABEL: 'test_select_cc_f32_f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <2 x i64> %c, %d
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
   %cc = icmp ult <2 x i64> %c, %d
@@ -293,7 +293,7 @@ declare <2 x i64> @llvm.abs.v2i64(<2 x i64>, i1)
 
 define <2 x i64> @test_abs(<2 x i64> %a) {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x i64> @llvm.abs.v2i64(<2 x i64> %a, i1 false)
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <2 x i64> @llvm.abs.v2i64(<2 x i64> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
   %r = call <2 x i64> @llvm.abs.v2i64(<2 x i64> %a, i1 false)
