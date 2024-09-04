@@ -352,27 +352,14 @@ bool KVXTTIImpl::preferInLoopReduction(unsigned Opcode, Type *Ty,
   if (Ty->isFloatTy())
     return false;
 
-  switch (Opcode) {
-  case ISD::ADD:
-    return true;
-  // These reductions haven't been implemented:
-  case ISD::AND:
-  case ISD::OR:
-  case ISD::XOR:
-  case ISD::SMAX:
-  case ISD::SMIN:
-  case ISD::UMAX:
-  case ISD::UMIN:
-  // Any other is not supported.
-  default:
-    return false;
-  }
+  // TODO: Implement other reductions
+  return Opcode == Instruction::Add;
 }
 
 unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const {
-  #define REG(X) \
-  case KVX::X ## RegRegClassID: \
-    return KVX::X ## RegRegClass.getNumRegs()
+#define REG(X)                                                                 \
+  case KVX::X##RegRegClassID:                                                  \
+    return KVX::X##RegRegClass.getNumRegs()
 
   switch (ClassID) {
     REG(Copro);
@@ -385,15 +372,15 @@ unsigned KVXTTIImpl::getNumberOfRegisters(unsigned ClassID) const {
     REG(Paired);
     REG(Quad);
     REG(System);
-    default:
+  default:
     REG(Single);
   }
 }
 
 const char *KVXTTIImpl::getRegisterClassName(unsigned ClassID) const {
-  #define REGNAME(X) \
-  case KVX::X ## RegRegClassID: \
-    return "KVX::" # X  "RegRegClass"
+#define REGNAME(X)                                                             \
+  case KVX::X##RegRegClassID:                                                  \
+    return "KVX::" #X "RegRegClass"
 
   switch (ClassID) {
     REGNAME(Copro);
@@ -406,7 +393,7 @@ const char *KVXTTIImpl::getRegisterClassName(unsigned ClassID) const {
     REGNAME(Paired);
     REGNAME(Quad);
     REGNAME(System);
-    default:
+  default:
     REGNAME(Single);
   }
 }
@@ -453,15 +440,20 @@ InstructionCost
 KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
                                        std::optional<FastMathFlags> FMF,
                                        TTI::TargetCostKind CostKind) {
-
-  if (CostKind != TTI::TCK_RecipThroughput)
+  LLVM_DEBUG(dbgs() << "KVX - getArithmeticReductionCost for " << Opcode
+                    << '\n');
+  if (CostKind != TTI::TCK_RecipThroughput) {
+    LLVM_DEBUG(dbgs() << "KVX - getArithmeticReductionCost - Not "
+                         "TCK_RecipThroughput, using BaseT cost computation\n");
     return BaseT::getArithmeticReductionCost(Opcode, Ty, FMF, CostKind);
+  }
 
   if (Ty->getScalarSizeInBits() < 8) {
     LLVM_DEBUG(dbgs() << "Invalid, reduction: " << Opcode << ", ";
                Ty->print(dbgs()); dbgs() << '\n');
     return InstructionCost::getInvalid();
   }
+
   unsigned Sz = Ty->getPrimitiveSizeInBits();
   // Fixme: FP costs are really wrong
   if (Ty->isFPOrFPVectorTy() || Sz > 512)
@@ -489,69 +481,71 @@ KVXTTIImpl::getArithmeticReductionCost(unsigned Opcode, VectorType *Ty,
 
 InstructionCost
 KVXTTIImpl::getMinMaxReductionCost(Intrinsic::ID IID, VectorType *Ty,
-                                         FastMathFlags FMF,
-                                         TTI::TargetCostKind CostKind) {
+                                   FastMathFlags FMF,
+                                   TTI::TargetCostKind CostKind) {
+  LLVM_DEBUG(
+      dbgs() << "KVX - getMinMaxReductionCost: obtaining cost for intrinsic "
+             << IID << '\n');
   if (CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getMinMaxReductionCost(IID, Ty, FMF, CostKind);
+
   // Hack: we can simply use the cost of an And reduction for the type.
   InstructionCost IC = getArithmeticReductionCost(
-      Instruction::And, VectorType::getInteger(Ty), FastMathFlags(), CostKind);
+      Instruction::And, VectorType::getInteger(Ty), FMF, CostKind);
+
   if (Ty->isFPOrFPVectorTy() || ST->isV1())
     IC += Log2_32(Ty->getPrimitiveSizeInBits() / Ty->getScalarSizeInBits()) - 1;
 
   // CV1 has a fmin/fmax bug.
-  if (Ty->isFPOrFPVectorTy() && ST->isV1()) {
+  if (Ty->isFPOrFPVectorTy() && ST->isV1())
     IC *= 2;
-  }
+
+  LLVM_DEBUG(dbgs() << "getMinMaxReductionCost: cost is " << IC << '\n');
   return IC;
 }
 
 InstructionCost KVXTTIImpl::getVectorInstrCost(unsigned Opcode, Type *Ty,
-                                     TTI::TargetCostKind CostKind,
-                                     unsigned Index, Value *Op0, Value *Op1) const {
+                                               TTI::TargetCostKind CostKind,
+                                               unsigned Index, Value *Op0,
+                                               Value *Op1) const {
+  LLVM_DEBUG(dbgs() << "KVX - getVectorInstrCost for " << Opcode << '\n');
+
+  switch (Opcode) {
+  case Instruction::InsertElement:
+  case Instruction::ExtractElement:
+    break;
+  default:
+    LLVM_DEBUG(dbgs() << (Twine("KVX - getVectorInstrCost unhandled opcode ") +
+                          Twine(Opcode))
+                             .str()
+                             .c_str());
+    return 1;
+  }
+
   auto EltSz = Ty->getScalarSizeInBits();
   if (EltSz < 8) {
     LLVM_DEBUG(dbgs() << "Invalid, bit-vector operation\n");
     return InstructionCost::getInvalid();
   }
-  const static unsigned M = std::numeric_limits<unsigned>::max();
-  unsigned TypeSize;
-  switch (Opcode) {
-  // TODO: This only treats unhandled cases of ShuffleVector
-  // that are not treated by ShuffleKind that uses the
-  // getShuffleCost hook. It will return a negative value which
-  // should mean don't know, but I'm not sure the vectorizer is
-  // considering like that.
-  case ISD::VECTOR_SHUFFLE:
-    return Ty->getPrimitiveSizeInBits() / Ty->getScalarSizeInBits();
 
-  case ISD::INSERT_VECTOR_ELT:
-  case ISD::INSERT_SUBVECTOR:
-    return (Index == M) ? 3 : 1;
+  // Indirect index?
+  const bool Ind = std::numeric_limits<unsigned>::max() == Index;
+  if (Ind)
+    return 3 + Ty->getScalarSizeInBits() / getRegisterBitWidth(false);
 
-  case ISD::EXTRACT_SUBVECTOR:
-    TypeSize = Ty->getPrimitiveSizeInBits();
-    break;
-  default:
-    TypeSize = Ty->getScalarSizeInBits();
-    break;
-  }
-
-  auto SingleRegWidth = getRegisterBitWidth(false);
-  // Probably an variable index
-  if (Index == M)
-    return 3;
-
-  return ((Index * TypeSize) % SingleRegWidth) ? 1 : 0;
+  return ((Opcode == Instruction::InsertElement) ||
+          (Ty->getScalarSizeInBits() * Index) % getRegisterBitWidth(false) !=
+              0);
 }
 
 InstructionCost KVXTTIImpl::getArithmeticInstrCost(
-      unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
-      TTI::OperandValueInfo Op1Info, TTI::OperandValueInfo Op2Info,
-      ArrayRef<const Value *> Args, const Instruction *CxtI) {
+    unsigned Opcode, Type *Ty, TTI::TargetCostKind CostKind,
+    TTI::OperandValueInfo Op1Info, TTI::OperandValueInfo Op2Info,
+    ArrayRef<const Value *> Args, const Instruction *CxtI) {
+  LLVM_DEBUG(dbgs() << "KVX - getArithmeticInstrCost for " << Opcode << '\n');
   if (CostKind != TTI::TCK_RecipThroughput)
-    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info,
-                                         Op2Info, Args, CxtI);
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info, Op2Info,
+                                         Args, CxtI);
   // Legalize the type.
   std::pair<InstructionCost, MVT> LT = getTypeLegalizationCost(Ty);
 
@@ -565,10 +559,11 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
     LT.first = 1;
 
   int ISDi = TLI->InstructionOpcodeToISD(Opcode);
-  if (!ISDi)
-    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info,
-                                         Op2Info, Args, CxtI);
-
+  if (!ISDi) {
+    LLVM_DEBUG(dbgs() << "Can't obtain ISD for opcode " << Opcode << '\n');
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info, Op2Info,
+                                         Args, CxtI);
+  }
   static CostTblEntry CV1[] = {
       {ISD::SDIV, MVT::i32, 15},        {ISD::SDIV, MVT::i64, 12},
       {ISD::SDIV, MVT::v16i16, 188},    {ISD::SDIV, MVT::v4i16, 57},
@@ -680,17 +675,21 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
     return LT.first * std::max(1ul, LT.second.getFixedSizeInBits() / BitWidth);
   }
   if (!IsVector)
-    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info,
-                                         Op2Info, Args, CxtI);
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info, Op2Info,
+                                         Args, CxtI);
   switch (ISDi) {
   default:
-    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info,
-                                         Op2Info, Args, CxtI);
+    return BaseT::getArithmeticInstrCost(Opcode, Ty, CostKind, Op1Info, Op2Info,
+                                         Args, CxtI);
   case ISD::ROTL:
   case ISD::ROTR:
     if (ElementSize != 32)
       LT.first *= 3;
     LLVM_FALLTHROUGH;
+  case ISD::UMIN:
+  case ISD::SMIN:
+  case ISD::UMAX:
+  case ISD::SMAX:
   case ISD::SHL:
   case ISD::SRA:
   case ISD::SRL: {
@@ -753,28 +752,59 @@ InstructionCost KVXTTIImpl::getArithmeticInstrCost(
   return LT.first * std::max(1ul, LT.second.getFixedSizeInBits() / BitWidth);
 }
 
-InstructionCost KVXTTIImpl::getScalarizationOverhead(VectorType *Ty,
-                                                  const APInt &DemandedElts,
-                                                  bool Insert, bool Extract,
-                                                  TTI::TargetCostKind CostKind) {
-  unsigned Size, ScalarSize = Ty->getScalarSizeInBits(),
-                 RegWidth = getRegisterBitWidth(false);
+InstructionCost
+KVXTTIImpl::getScalarizationOverhead(VectorType *Ty, const APInt &DemandedElts,
+                                     bool Insert, bool Extract,
+                                     TTI::TargetCostKind CostKind) {
+  LLVM_DEBUG(dbgs() << "KVX - getScalarizationOverhead for " << *Ty << '\n');
+  if (CostKind != TTI::TCK_RecipThroughput)
+    return BaseT::getScalarizationOverhead(Ty, DemandedElts, Insert, Extract,
+                                           CostKind);
+
+  unsigned ScalarSize = Ty->getScalarSizeInBits(),
+           RegWidth = getRegisterBitWidth(false);
 
   if (ScalarSize == 1)
     return InstructionCost::getInvalid(0xDEAD);
 
-  // non-complex insert/extract cases
-  auto *FVTy = dyn_cast<FixedVectorType>(Ty);
-  Size = ScalarSize * (FVTy ? FVTy->getNumElements() : 1);
-  if (Size == RegWidth || Size == RegWidth * 2 || Size == RegWidth * 4)
-    return 1;
+  // Scalarization elements that takes entire registers are free
+  if (ScalarSize >= RegWidth)
+    return InstructionCost(0);
 
-  return BaseT::getScalarizationOverhead(Ty, DemandedElts, Insert, Extract, CostKind);
+  // Elements in 64-bit borders are free
+  APInt RequiredAnyOps = DemandedElts;
+
+  APInt NotRequired(DemandedElts.getBitWidth(), 1);
+  unsigned Sht = 6 - Log2_32(Ty->getScalarSizeInBits());
+  while (NotRequired.getActiveBits() && NotRequired.uge(DemandedElts)) {
+    RequiredAnyOps &= ~NotRequired;
+    NotRequired <<= Sht;
+  }
+
+  unsigned RequireAnyOpsCount = RequiredAnyOps.popcount();
+  // Not demanding any elementy is also free
+
+  if (!RequireAnyOpsCount)
+    return InstructionCost(0);
+
+  unsigned Cost = 0;
+  // Extracting can be bundled together in groups of 4
+  if (Extract)
+    Cost = std::max(RequireAnyOpsCount / 4, 1u);
+
+  // Technically speaking, we can insert elements in a tree shape pattern
+  // and have a log2(numElts) but in reality they are inserted linearly.
+  if (Insert)
+    Cost += RequireAnyOpsCount;
+
+  return InstructionCost(Cost);
 }
 
 InstructionCost
 KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
                                   TTI::TargetCostKind CostKind) {
+  LLVM_DEBUG(dbgs() << "KVX - getIntrinsicInstrCost for " << ICA.getID()
+                    << '\n');
 
 #define REDUCTION(op, Type)                                                    \
   case Intrinsic::vector_reduce_##op:                                          \
@@ -827,6 +857,12 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
   case Intrinsic::fabs:
     BitWidth = 256;
     break;
+  case Intrinsic::umax:
+  case Intrinsic::umin:
+  case Intrinsic::smax:
+  case Intrinsic::smin:
+    break;
+
   case Intrinsic::fshl:
   case Intrinsic::fshr: {
     // Requires 2 shift + or. The shifts take 2 TINY, so bitwidth / 2.
@@ -872,10 +908,10 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
     // conversion cost the penalty is:
     LegalizeCost += (ICA.getArgs().size() + 1) * std::max(1u, VecSize / 64) +
                     // we also need to count the number of sub-vector insertions
-                   // to be done, we can generate 64 bits per cycle, if it is
-                   // required. However this can be pipelined with other
-                   // operations, so it will not penalize more than 3 cycles.
-                   std::min(3u, VecSize / 64);
+                    // to be done, we can generate 64 bits per cycle, if it is
+                    // required. However this can be pipelined with other
+                    // operations, so it will not penalize more than 3 cycles.
+                    std::min(3u, VecSize / 64);
     // usually there aren't i8 to i16 patterns implementing immediates, if the
     // last operand is immediate, we need to materialize it.
     if (isa<Constant>(ICA.getArgs().back()))
@@ -888,6 +924,7 @@ KVXTTIImpl::getIntrinsicInstrCost(const IntrinsicCostAttributes &ICA,
 InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
                                                      VectorType *VecTy,
                                                      unsigned Index) {
+  LLVM_DEBUG(dbgs() << "KVX - getExtractWithExtendCost for " << Opcode << '\n');
   const static unsigned M = std::numeric_limits<unsigned>::max();
   if (Index == M)
     return 3;
@@ -913,6 +950,7 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
                                                CmpInst::Predicate VecPred,
                                                TTI::TargetCostKind CostKind,
                                                const Instruction *I) {
+  LLVM_DEBUG(dbgs() << "KVX - getCmpSelInstrCost for " << Opcode << '\n');
   if (!ValTy->isVectorTy() || CostKind != TTI::TCK_RecipThroughput)
     return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
                                      I);
@@ -970,6 +1008,10 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
                                              TTI::CastContextHint CCH,
                                              TTI::TargetCostKind CostKind,
                                              const Instruction *I) {
+  LLVM_DEBUG(dbgs() << "KVX - getCastInstrCost for " << Opcode << '\n');
+  if (Dst == Src)
+    return 0;
+
 #define assertM(COND, TXT)                                                     \
   if (!(COND)) {                                                               \
     errs() << TXT << ":" << *Src << " == (" << Opcode << ") ==> " << *Dst      \
@@ -1098,6 +1140,7 @@ InstructionCost KVXTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
 InstructionCost KVXTTIImpl::getCFInstrCost(unsigned Opcode,
                                            TTI::TargetCostKind CostKind,
                                            const Instruction *I) {
+  LLVM_DEBUG(dbgs() << "KVX - getCFInstrCost for " << Opcode << '\n');
   // TODO: Bit-vectors phis can be promoted to i8-vector
   if (Opcode != Instruction::PHI || !I)
     return BaseT::getCFInstrCost(Opcode, CostKind, I);
@@ -1106,5 +1149,18 @@ InstructionCost KVXTTIImpl::getCFInstrCost(unsigned Opcode,
   if (VT->isVectorTy() && VT->getScalarSizeInBits() == 1)
     return InstructionCost::getInvalid(404);
 
+  switch (Opcode) {
+  case Instruction::Call:
+  case Instruction::Ret:
+    return 1;
+  case Instruction::Br:
+    return 2;
+  default:
+    LLVM_DEBUG(dbgs() << "KVX - getCFInstrCost unhandled opcode " << Opcode
+                      << '\n');
+    LLVM_FALLTHROUGH;
+  case Instruction::PHI:
+    break;
+  }
   return 0;
 }
