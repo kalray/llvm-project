@@ -342,7 +342,7 @@ define <2 x i8> @test_abs(<2 x i8> %a) #0 {
 
 define <2 x i8> @test_insertelement0(<2 x i8> %a, i8 %x) #0 {
 ; ALL-LABEL: 'test_insertelement0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x i8> %a, i8 %x, i8 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x i8> %a, i8 %x, i8 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %i
 ;
   %i = insertelement <2 x i8> %a, i8 %x, i8 0
@@ -432,9 +432,13 @@ define <2 x i8> @nandw_v2i8_ri37_2(<2 x i8> %0) {
 }
 
 define  <2 x i8> @v2_maxbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: 'v2_maxbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+; CV1-LABEL: 'v2_maxbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+;
+; CV2-LABEL: 'v2_maxbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
 ;
 entry:
   %0 = call <2 x i8> @llvm.smax.v2i8(<2 x i8> %a, <2 x i8> %b)
@@ -442,9 +446,13 @@ entry:
 }
 
 define  <2 x i8> @v2_minbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: 'v2_minbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+; CV1-LABEL: 'v2_minbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+;
+; CV2-LABEL: 'v2_minbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
 ;
 entry:
   %0 = call <2 x i8> @llvm.smin.v2i8(<2 x i8> %a, <2 x i8> %b)
@@ -452,9 +460,13 @@ entry:
 }
 
 define  <2 x i8> @v2_umaxbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: 'v2_umaxbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+; CV1-LABEL: 'v2_umaxbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+;
+; CV2-LABEL: 'v2_umaxbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
 ;
 entry:
   %0 = call <2 x i8> @llvm.umax.v2i8(<2 x i8> %a, <2 x i8> %b)
@@ -462,9 +474,13 @@ entry:
 }
 
 define  <2 x i8> @v2_uminbo_rr_i8(<2 x i8> %a, <2 x i8> %b) {
-; ALL-LABEL: 'v2_uminbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+; CV1-LABEL: 'v2_uminbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
+;
+; CV2-LABEL: 'v2_uminbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %0
 ;
 entry:
   %0 = call <2 x i8> @llvm.umin.v2i8(<2 x i8> %a, <2 x i8> %b)
