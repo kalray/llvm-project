@@ -31,7 +31,7 @@ define double @test_extract_1(<2 x double> %a) #0 {
 
 define double @test_extract_i(<2 x double> %a, i64 %idx) #0 {
 ; ALL-LABEL: 'test_extract_i'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %e = extractelement <2 x double> %a, i64 %idx
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = extractelement <2 x double> %a, i64 %idx
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
   %e = extractelement <2 x double> %a, i64 %idx
@@ -535,7 +535,7 @@ declare <2 x double> @llvm.fmuladd.v2f64(<2 x double> %a, <2 x double> %b, <2 x 
 
 define <2 x double> @test_sqrt(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_sqrt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.sqrt.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.sqrt.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.sqrt.v2f64(<2 x double> %a)
@@ -544,7 +544,7 @@ define <2 x double> @test_sqrt(<2 x double> %a) #0 {
 
 define <2 x double> @test_powi(<2 x double> %a, i32 %b) #0 {
 ; ALL-LABEL: 'test_powi'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.powi.v2f64.i32(<2 x double> %a, i32 %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.powi.v2f64.i32(<2 x double> %a, i32 %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.powi.v2f64(<2 x double> %a, i32 %b)
@@ -553,7 +553,7 @@ define <2 x double> @test_powi(<2 x double> %a, i32 %b) #0 {
 
 define <2 x double> @test_sin(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_sin'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.sin.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.sin.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.sin.v2f64(<2 x double> %a)
@@ -562,7 +562,7 @@ define <2 x double> @test_sin(<2 x double> %a) #0 {
 
 define <2 x double> @test_cos(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_cos'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.cos.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.cos.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.cos.v2f64(<2 x double> %a)
@@ -571,7 +571,7 @@ define <2 x double> @test_cos(<2 x double> %a) #0 {
 
 define <2 x double> @test_pow(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_pow'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x double> @llvm.pow.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.pow.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.pow.v2f64(<2 x double> %a, <2 x double> %b)
@@ -580,7 +580,7 @@ define <2 x double> @test_pow(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_exp(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_exp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.exp.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.exp.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.exp.v2f64(<2 x double> %a)
@@ -589,7 +589,7 @@ define <2 x double> @test_exp(<2 x double> %a) #0 {
 
 define <2 x double> @test_exp2(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_exp2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.exp2.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.exp2.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.exp2.v2f64(<2 x double> %a)
@@ -598,7 +598,7 @@ define <2 x double> @test_exp2(<2 x double> %a) #0 {
 
 define <2 x double> @test_log(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_log'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.log.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.log.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.log.v2f64(<2 x double> %a)
@@ -607,7 +607,7 @@ define <2 x double> @test_log(<2 x double> %a) #0 {
 
 define <2 x double> @test_log10(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_log10'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.log10.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.log10.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.log10.v2f64(<2 x double> %a)
@@ -616,7 +616,7 @@ define <2 x double> @test_log10(<2 x double> %a) #0 {
 
 define <2 x double> @test_log2(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_log2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.log2.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.log2.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.log2.v2f64(<2 x double> %a)
@@ -647,7 +647,7 @@ define <2 x double> @test_fabs(<2 x double> %a) #0 {
 
 define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_minnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -656,7 +656,7 @@ define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_minnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -665,7 +665,7 @@ define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_maxnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -674,7 +674,7 @@ define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_maxnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_maxnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
@@ -683,7 +683,7 @@ define <2 x double> @test_maxnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 
 define <2 x double> @test_copysign(<2 x double> %a, <2 x double> %b) #0 {
 ; ALL-LABEL: 'test_copysign'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %b)
@@ -693,7 +693,7 @@ define <2 x double> @test_copysign(<2 x double> %a, <2 x double> %b) #0 {
 define <2 x double> @test_copysign_v2f16(<2 x double> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_copysign_v2f16'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %tb = fpext <2 x half> %b to <2 x double>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %tb)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %tb)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %tb = fpext <2 x half> %b to <2 x double>
@@ -704,7 +704,7 @@ define <2 x double> @test_copysign_v2f16(<2 x double> %a, <2 x half> %b) #0 {
 define <2 x double> @test_copysign_v2f32(<2 x double> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'test_copysign_v2f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %tb = fpext <2 x float> %b to <2 x double>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %tb)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = call <2 x double> @llvm.copysign.v2f64(<2 x double> %a, <2 x double> %tb)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %tb = fpext <2 x float> %b to <2 x double>
@@ -714,7 +714,7 @@ define <2 x double> @test_copysign_v2f32(<2 x double> %a, <2 x float> %b) #0 {
 
 define <2 x double> @test_floor(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_floor'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.floor.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.floor.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.floor.v2f64(<2 x double> %a)
@@ -723,7 +723,7 @@ define <2 x double> @test_floor(<2 x double> %a) #0 {
 
 define <2 x double> @test_ceil(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_ceil'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.ceil.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.ceil.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.ceil.v2f64(<2 x double> %a)
@@ -732,7 +732,7 @@ define <2 x double> @test_ceil(<2 x double> %a) #0 {
 
 define <2 x double> @test_trunc(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_trunc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.trunc.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.trunc.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.trunc.v2f64(<2 x double> %a)
@@ -741,7 +741,7 @@ define <2 x double> @test_trunc(<2 x double> %a) #0 {
 
 define <2 x double> @test_rint(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_rint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.rint.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.rint.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.rint.v2f64(<2 x double> %a)
@@ -750,7 +750,7 @@ define <2 x double> @test_rint(<2 x double> %a) #0 {
 
 define <2 x double> @test_nearbyint(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_nearbyint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.nearbyint.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.nearbyint.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.nearbyint.v2f64(<2 x double> %a)
@@ -759,7 +759,7 @@ define <2 x double> @test_nearbyint(<2 x double> %a) #0 {
 
 define <2 x double> @test_round(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_round'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x double> @llvm.round.v2f64(<2 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x double> @llvm.round.v2f64(<2 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
   %r = call <2 x double> @llvm.round.v2f64(<2 x double> %a)
@@ -781,7 +781,7 @@ define <2 x double> @test_fmuladd(<2 x double> %a, <2 x double> %b, <2 x double>
 
 define <2 x double> @test_shufflevector(<2 x double> %a) #0 {
 ; ALL-LABEL: 'test_shufflevector'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %s
 ;
   %s = shufflevector <2 x double> %a, <2 x double> undef, <2 x i32> <i32 1, i32 0>
@@ -790,7 +790,7 @@ define <2 x double> @test_shufflevector(<2 x double> %a) #0 {
 
 define <2 x double> @test_insertelement0(<2 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 0
@@ -799,7 +799,7 @@ define <2 x double> @test_insertelement0(<2 x double> %a, double %x) #0 {
 
 define <2 x double> @test_insertelement1(<2 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement1'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <2 x double> %a, double %x, i64 1
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 1
@@ -808,7 +808,7 @@ define <2 x double> @test_insertelement1(<2 x double> %a, double %x) #0 {
 
 define <2 x double> @test_insertelement(<2 x double> %a, double %x, i64 %p) #0 {
 ; ALL-LABEL: 'test_insertelement'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %i = insertelement <2 x double> %a, double %x, i64 %p
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %i
 ;
   %i = insertelement <2 x double> %a, double %x, i64 %p
@@ -1377,12 +1377,12 @@ entry:
 
 define <2 x double> @add_splat_const_op1(<2 x double> %vx) #0 {
 ; CV1-LABEL: 'add_splat_const_op1'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;
 ; CV2-LABEL: 'add_splat_const_op1'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %splatx = shufflevector <2 x double> %vx, <2 x double> undef, <2 x i32> zeroinitializer
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fadd <2 x double> %splatx, <double 4.200000e+01, double 4.200000e+01>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x double> %r
 ;

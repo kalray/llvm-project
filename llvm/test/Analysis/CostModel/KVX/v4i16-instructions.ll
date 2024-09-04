@@ -330,7 +330,7 @@ define <4 x i8> @trunc_to_v4i8_buildvector(i32 %arg1, i32 %arg2, i32 %arg3, i32 
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %arg2b = trunc i32 %arg2 to i16
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %arg3b = trunc i32 %arg3 to i16
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %arg4b = trunc i32 %arg4 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %v0 = insertelement <4 x i16> undef, i16 %arg1b, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v0 = insertelement <4 x i16> undef, i16 %arg1b, i32 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v1 = insertelement <4 x i16> %v0, i16 %arg2b, i32 1
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2 = insertelement <4 x i16> %v1, i16 %arg3b, i32 2
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v3 = insertelement <4 x i16> %v2, i16 %arg4b, i32 3
@@ -380,7 +380,7 @@ define <4 x i16> @test_abs(<4 x i16> %a) {
 
 define <4 x i16> @test_insertelement0(<4 x i16> %a, i16 %x) {
 ; ALL-LABEL: 'test_insertelement0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i16> %a, i16 %x, i64 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i16> %a, i16 %x, i64 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %i
 ;
   %i = insertelement <4 x i16> %a, i16 %x, i64 0
@@ -662,8 +662,8 @@ define <4 x i16> @nandd_v4i16_ri64_2(<4 x i16> %0) {
 define <4 x i16> @splat(i32 %0) {
 ; ALL-LABEL: 'splat'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = trunc i32 %0 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %3 = insertelement <4 x i16> undef, i16 %2, i32 0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %4 = shufflevector <4 x i16> %3, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = insertelement <4 x i16> undef, i16 %2, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %4 = shufflevector <4 x i16> %3, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %4
 ;
   %2 = trunc i32 %0 to i16
@@ -674,7 +674,7 @@ define <4 x i16> @splat(i32 %0) {
 
 define <4 x i16> @splat_0(<4 x i16> %0) {
 ; ALL-LABEL: 'splat_0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %2
 ;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> zeroinitializer
@@ -683,7 +683,7 @@ define <4 x i16> @splat_0(<4 x i16> %0) {
 
 define <4 x i16> @splat_1(<4 x i16> %0) {
 ; ALL-LABEL: 'splat_1'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %2
 ;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 1, i32 1, i32 1, i32 1>
@@ -694,8 +694,8 @@ define <4 x i16> @splat_1_32(i32 %0) {
 ; ALL-LABEL: 'splat_1_32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = lshr i32 %0, 16
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = trunc i32 %2 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %2 = lshr i32 %0, 16
@@ -709,8 +709,8 @@ define <4 x i16> @splat_1_64(i64 %0) {
 ; ALL-LABEL: 'splat_1_64'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = lshr i64 %0, 16
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = trunc i64 %2 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %2 = lshr i64 %0, 16
@@ -722,7 +722,7 @@ define <4 x i16> @splat_1_64(i64 %0) {
 
 define <4 x i16> @splat_2(<4 x i16> %0) {
 ; ALL-LABEL: 'splat_2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %2
 ;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 2, i32 2, i32 2, i32 2>
@@ -733,8 +733,8 @@ define <4 x i16> @splat_2_64(i64 %0) {
 ; ALL-LABEL: 'splat_2_64'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = lshr i64 %0, 32
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = trunc i64 %2 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %2 = lshr i64 %0, 32
@@ -746,7 +746,7 @@ define <4 x i16> @splat_2_64(i64 %0) {
 
 define <4 x i16> @splat_3(<4 x i16> %0) {
 ; ALL-LABEL: 'splat_3'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %2
 ;
   %2 = shufflevector <4 x i16> %0, <4 x i16> undef, <4 x i32> <i32 3, i32 3, i32 3, i32 3>
@@ -757,8 +757,8 @@ define <4 x i16> @splat_3_64(i64 %0) {
 ; ALL-LABEL: 'splat_3_64'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = lshr i64 %0, 48
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = trunc i64 %2 to i16
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = insertelement <4 x i16> undef, i16 %3, i32 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %5 = shufflevector <4 x i16> %4, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
   %2 = lshr i64 %0, 48
@@ -770,7 +770,7 @@ define <4 x i16> @splat_3_64(i64 %0) {
 
 define  <4 x i16> @v4_maxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_maxhq_rr_i16'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i16> @llvm.smax.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -780,7 +780,7 @@ entry:
 
 define  <4 x i16> @v4_minhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_minhq_rr_i16'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i16> @llvm.smin.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -790,7 +790,7 @@ entry:
 
 define  <4 x i16> @v4_umaxhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_umaxhq_rr_i16'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i16> @llvm.umax.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -800,7 +800,7 @@ entry:
 
 define  <4 x i16> @v4_uminhq_rr_i16(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'v4_uminhq_rr_i16'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %0
 ;
 entry:
@@ -815,7 +815,7 @@ declare <4 x i16> @llvm.umin.v4i16(<4 x i16> %a, <4 x i16> %b)
 
 define <4 x i16> @add_splat_const_op1(<4 x i16> %vx) #0 {
 ; ALL-LABEL: 'add_splat_const_op1'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %splatx = shufflevector <4 x i16> %vx, <4 x i16> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = add <4 x i16> %splatx, <i16 42, i16 42, i16 42, i16 42>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;

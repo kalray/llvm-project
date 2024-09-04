@@ -359,7 +359,7 @@ define <4 x i8> @test_abs(<4 x i8> %a) #0 {
 
 define <4 x i8> @test_insertelement0(<4 x i8> %a, i8 %x) #0 {
 ; ALL-LABEL: 'test_insertelement0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x i8> %a, i8 %x, i64 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x i8> %a, i8 %x, i64 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %i
 ;
   %i = insertelement <4 x i8> %a, i8 %x, i64 0
@@ -476,9 +476,13 @@ define <4 x i8> @concat(<2 x i8> %a, <2 x i8> %b){
 }
 
 define  <4 x i8> @v4_maxbo_rr_i8(<4 x i8> %a, <4 x i8> %b) {
-; ALL-LABEL: 'v4_maxbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+; CV1-LABEL: 'v4_maxbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+;
+; CV2-LABEL: 'v4_maxbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
 ;
 entry:
   %0 = call <4 x i8> @llvm.smax.v4i8(<4 x i8> %a, <4 x i8> %b)
@@ -486,9 +490,13 @@ entry:
 }
 
 define  <4 x i8> @v4_minbo_rr_i8(<4 x i8> %a, <4 x i8> %b) {
-; ALL-LABEL: 'v4_minbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+; CV1-LABEL: 'v4_minbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+;
+; CV2-LABEL: 'v4_minbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
 ;
 entry:
   %0 = call <4 x i8> @llvm.smin.v4i8(<4 x i8> %a, <4 x i8> %b)
@@ -496,9 +504,13 @@ entry:
 }
 
 define  <4 x i8> @v4_umaxbo_rr_i8(<4 x i8> %a, <4 x i8> %b) {
-; ALL-LABEL: 'v4_umaxbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+; CV1-LABEL: 'v4_umaxbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+;
+; CV2-LABEL: 'v4_umaxbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
 ;
 entry:
   %0 = call <4 x i8> @llvm.umax.v4i8(<4 x i8> %a, <4 x i8> %b)
@@ -506,9 +518,13 @@ entry:
 }
 
 define  <4 x i8> @v4_uminbo_rr_i8(<4 x i8> %a, <4 x i8> %b) {
-; ALL-LABEL: 'v4_uminbo_rr_i8'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = call <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+; CV1-LABEL: 'v4_uminbo_rr_i8'
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = call <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
+;
+; CV2-LABEL: 'v4_uminbo_rr_i8'
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = call <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %0
 ;
 entry:
   %0 = call <4 x i8> @llvm.umin.v4i8(<4 x i8> %a, <4 x i8> %b)
@@ -540,7 +556,7 @@ define <4 x i8> @abdbo_ri(<4 x i8> %0) {
 
 define <4 x i8> @add_splat_const_op1(<4 x i8> %vx) #0 {
 ; ALL-LABEL: 'add_splat_const_op1'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = add <4 x i8> %splatx, <i8 42, i8 42, i8 42, i8 42>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %r
 ;
@@ -551,8 +567,8 @@ define <4 x i8> @add_splat_const_op1(<4 x i8> %vx) #0 {
 
 define <4 x i8> @add_splat_splat(<4 x i8> %vx, <4 x i8> %vy) #0 {
 ; ALL-LABEL: 'add_splat_splat'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %splaty = shufflevector <4 x i8> %vy, <4 x i8> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %splatx = shufflevector <4 x i8> %vx, <4 x i8> undef, <4 x i32> zeroinitializer
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %splaty = shufflevector <4 x i8> %vy, <4 x i8> undef, <4 x i32> zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = add <4 x i8> %splatx, %splaty
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %r
 ;
@@ -602,14 +618,14 @@ define <4 x i8> @lshr_cst_splat_w_undefs(<4 x i8> %lhs ) {
 define <4 x i8> @lshr_val_splat_w_undefs(<4 x i8> %lhs, i32 %s ) {
 ; CV1-LABEL: 'lshr_val_splat_w_undefs'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %conv = trunc i32 %s to i8
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %vecinit = insertelement <4 x i8> undef, i8 %conv, i32 0
+; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %vecinit = insertelement <4 x i8> undef, i8 %conv, i32 0
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %rhs = insertelement <4 x i8> %vecinit, i8 %conv, i32 2
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 9 for instruction: %r = lshr <4 x i8> %lhs, %rhs
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %r
 ;
 ; CV2-LABEL: 'lshr_val_splat_w_undefs'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %conv = trunc i32 %s to i8
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %vecinit = insertelement <4 x i8> undef, i8 %conv, i32 0
+; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %vecinit = insertelement <4 x i8> undef, i8 %conv, i32 0
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %rhs = insertelement <4 x i8> %vecinit, i8 %conv, i32 2
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %r = lshr <4 x i8> %lhs, %rhs
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i8> %r

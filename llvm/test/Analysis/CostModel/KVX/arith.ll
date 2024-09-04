@@ -519,18 +519,18 @@ define void @vi64() {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %f2 = ashr <2 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %g2 = lshr <2 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %h2 = shl <2 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %i2 = and <2 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %j2 = or <2 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %k2 = xor <2 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %c4 = add <4 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %d4 = sub <4 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %i2 = and <2 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %j2 = or <2 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %k2 = xor <2 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %c4 = add <4 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %d4 = sub <4 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e4 = mul <4 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %f4 = ashr <4 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %g4 = lshr <4 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %h4 = shl <4 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %i4 = and <4 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %j4 = or <4 x i64> undef, undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %k4 = xor <4 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %i4 = and <4 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %j4 = or <4 x i64> undef, undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %k4 = xor <4 x i64> undef, undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
   %c2 = add <2 x i64> undef, undef

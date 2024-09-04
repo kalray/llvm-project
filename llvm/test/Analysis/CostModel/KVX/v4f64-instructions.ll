@@ -31,7 +31,7 @@ define double @test_extract_1(<4 x double> %a) #0 {
 
 define double @test_extract_i(<4 x double> %a, i64 %idx) #0 {
 ; ALL-LABEL: 'test_extract_i'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %e = extractelement <4 x double> %a, i64 %idx
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = extractelement <4 x double> %a, i64 %idx
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %e
 ;
   %e = extractelement <4 x double> %a, i64 %idx
@@ -535,7 +535,7 @@ declare <4 x double> @llvm.fmuladd.v4f64(<4 x double> %a, <4 x double> %b, <4 x 
 
 define <4 x double> @test_sqrt(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_sqrt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.sqrt.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.sqrt.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.sqrt.v4f64(<4 x double> %a)
@@ -544,7 +544,7 @@ define <4 x double> @test_sqrt(<4 x double> %a) #0 {
 
 define <4 x double> @test_powi(<4 x double> %a, i32 %b) #0 {
 ; ALL-LABEL: 'test_powi'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <4 x double> @llvm.powi.v4f64.i32(<4 x double> %a, i32 %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.powi.v4f64.i32(<4 x double> %a, i32 %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.powi.v4f64(<4 x double> %a, i32 %b)
@@ -553,7 +553,7 @@ define <4 x double> @test_powi(<4 x double> %a, i32 %b) #0 {
 
 define <4 x double> @test_sin(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_sin'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.sin.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.sin.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.sin.v4f64(<4 x double> %a)
@@ -562,7 +562,7 @@ define <4 x double> @test_sin(<4 x double> %a) #0 {
 
 define <4 x double> @test_cos(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_cos'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.cos.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.cos.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.cos.v4f64(<4 x double> %a)
@@ -571,7 +571,7 @@ define <4 x double> @test_cos(<4 x double> %a) #0 {
 
 define <4 x double> @test_pow(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_pow'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 11 for instruction: %r = call <4 x double> @llvm.pow.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.pow.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.pow.v4f64(<4 x double> %a, <4 x double> %b)
@@ -580,7 +580,7 @@ define <4 x double> @test_pow(<4 x double> %a, <4 x double> %b) #0 {
 
 define <4 x double> @test_exp(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_exp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.exp.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.exp.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.exp.v4f64(<4 x double> %a)
@@ -589,7 +589,7 @@ define <4 x double> @test_exp(<4 x double> %a) #0 {
 
 define <4 x double> @test_exp2(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_exp2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.exp2.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.exp2.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.exp2.v4f64(<4 x double> %a)
@@ -598,7 +598,7 @@ define <4 x double> @test_exp2(<4 x double> %a) #0 {
 
 define <4 x double> @test_log(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_log'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.log.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.log.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.log.v4f64(<4 x double> %a)
@@ -607,7 +607,7 @@ define <4 x double> @test_log(<4 x double> %a) #0 {
 
 define <4 x double> @test_log10(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_log10'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.log10.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.log10.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.log10.v4f64(<4 x double> %a)
@@ -616,7 +616,7 @@ define <4 x double> @test_log10(<4 x double> %a) #0 {
 
 define <4 x double> @test_log2(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_log2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.log2.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.log2.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.log2.v4f64(<4 x double> %a)
@@ -647,7 +647,7 @@ define <4 x double> @test_fabs(<4 x double> %a) #0 {
 
 define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_minnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
@@ -656,7 +656,7 @@ define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 
 define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_minnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call fast <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call fast <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
@@ -665,7 +665,7 @@ define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 
 define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_maxnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
@@ -674,7 +674,7 @@ define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 
 define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_maxnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call fast <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call fast <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call fast <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
@@ -683,7 +683,7 @@ define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 
 define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 ; ALL-LABEL: 'test_copysign'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %b)
@@ -693,7 +693,7 @@ define <4 x double> @test_copysign(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
 ; ALL-LABEL: 'test_copysign_v4f16'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %tb = fpext <4 x half> %b to <4 x double>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %tb)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %tb)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %tb = fpext <4 x half> %b to <4 x double>
@@ -704,7 +704,7 @@ define <4 x double> @test_copysign_v4f16(<4 x double> %a, <4 x half> %b) #0 {
 define <4 x double> @test_copysign_v4f32(<4 x double> %a, <4 x float> %b) #0 {
 ; ALL-LABEL: 'test_copysign_v4f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %tb = fpext <4 x float> %b to <4 x double>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %tb)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <4 x double> @llvm.copysign.v4f64(<4 x double> %a, <4 x double> %tb)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %tb = fpext <4 x float> %b to <4 x double>
@@ -714,7 +714,7 @@ define <4 x double> @test_copysign_v4f32(<4 x double> %a, <4 x float> %b) #0 {
 
 define <4 x double> @test_floor(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_floor'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.floor.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.floor.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.floor.v4f64(<4 x double> %a)
@@ -723,7 +723,7 @@ define <4 x double> @test_floor(<4 x double> %a) #0 {
 
 define <4 x double> @test_ceil(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_ceil'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.ceil.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.ceil.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.ceil.v4f64(<4 x double> %a)
@@ -732,7 +732,7 @@ define <4 x double> @test_ceil(<4 x double> %a) #0 {
 
 define <4 x double> @test_trunc(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_trunc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.trunc.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.trunc.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.trunc.v4f64(<4 x double> %a)
@@ -741,7 +741,7 @@ define <4 x double> @test_trunc(<4 x double> %a) #0 {
 
 define <4 x double> @test_rint(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_rint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.rint.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.rint.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.rint.v4f64(<4 x double> %a)
@@ -750,7 +750,7 @@ define <4 x double> @test_rint(<4 x double> %a) #0 {
 
 define <4 x double> @test_nearbyint(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_nearbyint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.nearbyint.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.nearbyint.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.nearbyint.v4f64(<4 x double> %a)
@@ -759,7 +759,7 @@ define <4 x double> @test_nearbyint(<4 x double> %a) #0 {
 
 define <4 x double> @test_round(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_round'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 10 for instruction: %r = call <4 x double> @llvm.round.v4f64(<4 x double> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <4 x double> @llvm.round.v4f64(<4 x double> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %r
 ;
   %r = call <4 x double> @llvm.round.v4f64(<4 x double> %a)
@@ -781,7 +781,7 @@ define <4 x double> @test_fmuladd(<4 x double> %a, <4 x double> %b, <4 x double>
 
 define <4 x double> @test_shufflevector(<4 x double> %a) #0 {
 ; ALL-LABEL: 'test_shufflevector'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %s = shufflevector <4 x double> %a, <4 x double> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %s = shufflevector <4 x double> %a, <4 x double> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %s
 ;
   %s = shufflevector <4 x double> %a, <4 x double> undef, <4 x i32> <i32 3, i32 2, i32 1, i32 0>
@@ -790,7 +790,7 @@ define <4 x double> @test_shufflevector(<4 x double> %a) #0 {
 
 define <4 x double> @test_insertelement0(<4 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement0'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x double> %a, double %x, i64 0
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x double> %a, double %x, i64 0
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %i
 ;
   %i = insertelement <4 x double> %a, double %x, i64 0
@@ -799,7 +799,7 @@ define <4 x double> @test_insertelement0(<4 x double> %a, double %x) #0 {
 
 define <4 x double> @test_insertelement1(<4 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement1'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x double> %a, double %x, i64 1
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x double> %a, double %x, i64 1
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %i
 ;
   %i = insertelement <4 x double> %a, double %x, i64 1
@@ -808,7 +808,7 @@ define <4 x double> @test_insertelement1(<4 x double> %a, double %x) #0 {
 
 define <4 x double> @test_insertelement2(<4 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x double> %a, double %x, i64 2
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x double> %a, double %x, i64 2
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %i
 ;
   %i = insertelement <4 x double> %a, double %x, i64 2
@@ -817,7 +817,7 @@ define <4 x double> @test_insertelement2(<4 x double> %a, double %x) #0 {
 
 define <4 x double> @test_insertelement3(<4 x double> %a, double %x) #0 {
 ; ALL-LABEL: 'test_insertelement3'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %i = insertelement <4 x double> %a, double %x, i64 3
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i = insertelement <4 x double> %a, double %x, i64 3
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %i
 ;
   %i = insertelement <4 x double> %a, double %x, i64 3
@@ -827,7 +827,7 @@ define <4 x double> @test_insertelement3(<4 x double> %a, double %x) #0 {
 
 define <4 x double> @test_insertelement(<4 x double> %a, double %x, i64 %p) #0 {
 ; ALL-LABEL: 'test_insertelement'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 3 for instruction: %i = insertelement <4 x double> %a, double %x, i64 %p
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %i = insertelement <4 x double> %a, double %x, i64 %p
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x double> %i
 ;
   %i = insertelement <4 x double> %a, double %x, i64 %p
@@ -1399,19 +1399,19 @@ attributes #0 = { nounwind }
 define void @subvec0fp(ptr %0) {
 ; CV1-LABEL: 'subvec0fp'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %4 = fadd <2 x double> zeroinitializer, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x double> %4, <2 x double> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x double> %6, ptr undef, align 16
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
 ; CV2-LABEL: 'subvec0fp'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = fadd <2 x double> zeroinitializer, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x double> %4, <2 x double> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 0, i32 1, i32 6, i32 7>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x double> %6, ptr undef, align 16
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
@@ -1429,19 +1429,19 @@ define void @subvec0fp(ptr %0) {
 define void @subvec2fp(ptr %0) {
 ; CV1-LABEL: 'subvec2fp'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %4 = fadd <2 x double> zeroinitializer, %3
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x double> %4, <2 x double> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x double> %6, ptr undef, align 16
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;
 ; CV2-LABEL: 'subvec2fp'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %3 = shufflevector <4 x double> zeroinitializer, <4 x double> undef, <2 x i32> <i32 0, i32 1>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = fadd <2 x double> zeroinitializer, %3
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %5 = shufflevector <2 x double> %4, <2 x double> poison, <4 x i32> <i32 0, i32 1, i32 poison, i32 poison>
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
+; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %6 = shufflevector <4 x double> %5, <4 x double> zeroinitializer, <4 x i32> <i32 6, i32 7, i32 2, i32 3>
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: store <4 x double> %6, ptr undef, align 16
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: br label %2
 ;

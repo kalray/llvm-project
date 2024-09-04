@@ -118,12 +118,12 @@ declare double @llvm.vector.reduce.fmax.v8f64(<8 x double>)
 define double @red_max_double16(ptr %0) {
 ; CV1-LABEL: 'red_max_double16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 32
-; CV1-NEXT:  Cost Model: Found an estimated cost of 38 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 86 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_max_double16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 32
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <16 x double>, ptr %0
@@ -307,12 +307,12 @@ declare double @llvm.vector.reduce.fmin.v8f64(<8 x double>)
 define double @red_min_double16(ptr %0) {
 ; CV1-LABEL: 'red_min_double16'
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 32
-; CV1-NEXT:  Cost Model: Found an estimated cost of 38 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
+; CV1-NEXT:  Cost Model: Found an estimated cost of 86 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
 ; CV2-LABEL: 'red_min_double16'
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %2 = load <16 x double>, ptr %0, align 32
-; CV2-NEXT:  Cost Model: Found an estimated cost of 19 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
+; CV2-NEXT:  Cost Model: Found an estimated cost of 43 for instruction: %3 = tail call fast double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret double %3
 ;
   %2 = load <16 x double>, ptr %0
