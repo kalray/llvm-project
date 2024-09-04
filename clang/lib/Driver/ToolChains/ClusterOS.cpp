@@ -88,7 +88,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     LLVMLibDir =
         CTC.getGCCInstallPath().str() + "/../../../../lib/llvm/cos" + Suffix;
     LLVMTCLibDir = CTC.getGCCInstallPath().str() +
-                   "/../../../../kvx-llvm/cos/lib" + Suffix;
+                   "/../../../../kvx-llvm/kvx-cos/lib" + Suffix;
   } else {
     // GCCInstallation isn't valid, which means that the toolchain isn't
     // installed in /opt/kalray/accesscore nor the user didn't provided
@@ -101,7 +101,7 @@ void clusteros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
     GCCLibDir =
         LDPrefix + "/../lib/gcc/kvx-cos/" + CTC.getGCCVersion().data() + Suffix;
     LLVMLibDir = LDPrefix + "/../lib/llvm/cos" + Suffix;
-    LLVMTCLibDir = LDPrefix + "/../kvx-llvm/cos/lib" + Suffix;
+    LLVMTCLibDir = LDPrefix + "/../kvx-llvm/kvx-cos/lib" + Suffix;
   }
 
   ArgStringList CmdArgs;
@@ -301,7 +301,7 @@ void ClusterOS::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
 
   // Include LLVM toolchain include dir first.
   addSystemInclude(DriverArgs, CC1Args,
-                   getIncludeDirRoot() + "/../../kvx-llvm/cos/include");
+                   getIncludeDirRoot() + "/../../kvx-llvm/kvx-cos/include");
   addSystemInclude(DriverArgs, CC1Args, getIncludeDirRoot());
 }
 
