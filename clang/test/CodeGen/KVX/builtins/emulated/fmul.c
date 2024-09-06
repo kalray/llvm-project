@@ -15,8 +15,8 @@
 // CHECK-NEXT:    [[TMP7:%.*]] = bitcast <8 x i16> [[B]] to <8 x half>
 // CHECK-NEXT:    [[TMP8:%.*]] = shufflevector <8 x half> [[TMP7]], <8 x half> poison, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
 // CHECK-NEXT:    [[TMP9:%.*]] = tail call <4 x half> @llvm.kvx.fmul.v4f16(<4 x half> [[TMP6]], <4 x half> [[TMP8]], i32 1, i32 0)
-// CHECK-NEXT:    [[DOTUNCASTED:%.*]] = shufflevector <4 x half> [[TMP4]], <4 x half> [[TMP9]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
-// CHECK-NEXT:    [[TMP10:%.*]] = bitcast <8 x half> [[DOTUNCASTED]] to <8 x i16>
+// CHECK-NEXT:    [[SHUFFLE4:%.*]] = shufflevector <4 x half> [[TMP4]], <4 x half> [[TMP9]], <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+// CHECK-NEXT:    [[TMP10:%.*]] = bitcast <8 x half> [[SHUFFLE4]] to <8 x i16>
 // CHECK-NEXT:    ret <8 x i16> [[TMP10]]
 //
 __kvx_v8hi fmulho(__kvx_v8hi a, __kvx_v8hi b){

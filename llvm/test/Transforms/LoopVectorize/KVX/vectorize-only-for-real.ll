@@ -40,21 +40,21 @@ define zeroext i32 @test() {
 ; CHECK-NEXT:    br label [[VECTOR_BODY5:%.*]]
 ; CHECK:       vector.body5:
 ; CHECK-NEXT:    [[INDEX6:%.*]] = phi i64 [ 0, [[VECTOR_PH3]] ], [ [[INDEX_NEXT7:%.*]], [[VECTOR_BODY5]] ]
-; CHECK-NEXT:    [[VEC_PHI:%.*]] = phi i32 [ 0, [[VECTOR_PH3]] ], [ [[TMP11:%.*]], [[VECTOR_BODY5]] ]
+; CHECK-NEXT:    [[VEC_PHI:%.*]] = phi i32 [ 0, [[VECTOR_PH3]] ], [ [[TMP10:%.*]], [[VECTOR_BODY5]] ]
 ; CHECK-NEXT:    [[TMP6:%.*]] = add i64 [[INDEX6]], 0
 ; CHECK-NEXT:    [[TMP7:%.*]] = getelementptr inbounds [1600 x i32], ptr [[C]], i64 0, i64 [[TMP6]]
 ; CHECK-NEXT:    [[TMP8:%.*]] = getelementptr inbounds i32, ptr [[TMP7]], i32 0
 ; CHECK-NEXT:    [[WIDE_LOAD:%.*]] = load <8 x i32>, ptr [[TMP8]], align 4
 ; CHECK-NEXT:    [[TMP9:%.*]] = call i32 @llvm.vector.reduce.add.v8i32(<8 x i32> [[WIDE_LOAD]])
-; CHECK-NEXT:    [[TMP11]] = add i32 [[TMP9]], [[VEC_PHI]]
+; CHECK-NEXT:    [[TMP10]] = add i32 [[TMP9]], [[VEC_PHI]]
 ; CHECK-NEXT:    [[INDEX_NEXT7]] = add nuw i64 [[INDEX6]], 8
-; CHECK-NEXT:    [[TMP10:%.*]] = icmp eq i64 [[INDEX_NEXT7]], 1600
-; CHECK-NEXT:    br i1 [[TMP10]], label [[MIDDLE_BLOCK1:%.*]], label [[VECTOR_BODY5]], !llvm.loop [[LOOP3:![0-9]+]]
+; CHECK-NEXT:    [[TMP11:%.*]] = icmp eq i64 [[INDEX_NEXT7]], 1600
+; CHECK-NEXT:    br i1 [[TMP11]], label [[MIDDLE_BLOCK1:%.*]], label [[VECTOR_BODY5]], !llvm.loop [[LOOP3:![0-9]+]]
 ; CHECK:       middle.block1:
 ; CHECK-NEXT:    br i1 true, label [[FOR_COND_CLEANUP5:%.*]], label [[SCALAR_PH2]]
 ; CHECK:       scalar.ph2:
 ; CHECK-NEXT:    [[BC_RESUME_VAL4:%.*]] = phi i64 [ 1600, [[MIDDLE_BLOCK1]] ], [ 0, [[FOR_COND_CLEANUP]] ]
-; CHECK-NEXT:    [[BC_MERGE_RDX:%.*]] = phi i32 [ 0, [[FOR_COND_CLEANUP]] ], [ [[TMP11]], [[MIDDLE_BLOCK1]] ]
+; CHECK-NEXT:    [[BC_MERGE_RDX:%.*]] = phi i32 [ 0, [[FOR_COND_CLEANUP]] ], [ [[TMP10]], [[MIDDLE_BLOCK1]] ]
 ; CHECK-NEXT:    br label [[FOR_BODY6:%.*]]
 ; CHECK:       for.body:
 ; CHECK-NEXT:    [[INDVARS_IV25:%.*]] = phi i64 [ [[BC_RESUME_VAL]], [[SCALAR_PH]] ], [ [[INDVARS_IV_NEXT26:%.*]], [[FOR_BODY]] ]
@@ -65,7 +65,7 @@ define zeroext i32 @test() {
 ; CHECK-NEXT:    [[EXITCOND27:%.*]] = icmp eq i64 [[INDVARS_IV_NEXT26]], 1600
 ; CHECK-NEXT:    br i1 [[EXITCOND27]], label [[FOR_COND_CLEANUP]], label [[FOR_BODY]], !llvm.loop [[LOOP4:![0-9]+]]
 ; CHECK:       for.cond.cleanup5:
-; CHECK-NEXT:    [[ADD_LCSSA:%.*]] = phi i32 [ [[ADD:%.*]], [[FOR_BODY6]] ], [ [[TMP11]], [[MIDDLE_BLOCK1]] ]
+; CHECK-NEXT:    [[ADD_LCSSA:%.*]] = phi i32 [ [[ADD:%.*]], [[FOR_BODY6]] ], [ [[TMP10]], [[MIDDLE_BLOCK1]] ]
 ; CHECK-NEXT:    call void @llvm.lifetime.end.p0(i64 6400, ptr nonnull [[TMP5]])
 ; CHECK-NEXT:    call void @llvm.lifetime.end.p0(i64 6400, ptr [[TMP0]])
 ; CHECK-NEXT:    ret i32 [[ADD_LCSSA]]

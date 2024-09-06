@@ -22655,10 +22655,10 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
       CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
     llvm::Type *ASType = DataType->getPointerTo(AS);
-    Addr = CGF.Builder.CreateAddrSpaceCast(Addr, ASType);
+    Addr.replaceBasePointer(CGF.Builder.CreateAddrSpaceCast(Addr.getBasePointer(), ASType));
   }
 
-  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, Addr.getPointer(),
+  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, Addr.getBasePointer(),
                                              Addr.getAlignment(), "kvxld");
 
   Load->setVolatile(KVX_isVolatile(CGF, E));
@@ -22768,7 +22768,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
 
   if (Ready) {
     unsigned IID = Volatile ? Intrinsic::kvx_store_vol : Intrinsic::kvx_store;
-    Value *Ptr = Addr.getPointer();
+    Value *Ptr = Addr.getBasePointer();
     Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
     SmallVector<Value *, 4> Ops = {StoreVal, Ptr, SizeInfo, Ready};
     Function *StoreI =
@@ -22776,7 +22776,7 @@ static Value *KVX_emitStoreBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     return CGF.Builder.CreateCall(StoreI, Ops);
   }
 
-  return CGF.Builder.CreateAlignedStore(StoreVal, Addr.getPointer(),
+  return CGF.Builder.CreateAlignedStore(StoreVal, Addr.getBasePointer(),
                                         Addr.getAlignment(), Volatile);
 }
 
@@ -22933,7 +22933,7 @@ static Value *KVX_emitStoreCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     StoreSize = 256;
   }
 
-  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getBasePointer();
 
   unsigned IID = Volatile ? Intrinsic::kvx_storec_vol : Intrinsic::kvx_storec;
   Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, StoreSize);
@@ -23005,7 +23005,7 @@ static Value *KVX_emitLoadCondBuiltin(CodeGenFunction &CGF, const CallExpr *E,
     LoadSize = 256;
   }
 
-  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getPointer();
+  Value *Ptr = CGF.EmitPointerWithAlignment(E->getArg(1)).getBasePointer();
 
   unsigned IID = Volatile ? Intrinsic::kvx_loadc_u_vol : Intrinsic::kvx_loadc_u;
   Value *SizeInfo = ConstantInt::get(CGF.Int32Ty, LoadSize);

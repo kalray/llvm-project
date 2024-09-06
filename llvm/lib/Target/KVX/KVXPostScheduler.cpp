@@ -690,7 +690,7 @@ public:
           Dep.setLatency(SchedModel->computeOperandLatency(
               Info.From->getInstr(), Info.OperIdx, TerminatorMI, I));
           ST.adjustSchedDependency(Info.From, Info.OperIdx, &DAG->ExitSU, I,
-                                   Dep);
+                                   Dep, SchedModel);
           DAG->addEdge(&DAG->ExitSU, Dep);
         }
       }

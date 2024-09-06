@@ -51,7 +51,7 @@ define <4 x i8> @srs_v4i8(<4 x i8> %0) {
 ; CV1:       # %bb.0:
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    srahqs $r1 = $r0, 7
+; CV1-NEXT:    srlhqs $r1 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    andd $r1 = $r1, 0xff00ff.@
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -63,7 +63,7 @@ define <4 x i8> @srs_v4i8(<4 x i8> %0) {
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    srahqs $r0 = $r0, 4
+; CV1-NEXT:    srlhqs $r0 = $r0, 4
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -277,18 +277,17 @@ define <16 x i16> @diff_srs16(<16 x i16> %0) {
 ; CV1-NEXT:    srahqs $r7 = $r2, 15
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    addhq $r0 = $r0, $r5
-; CV1-NEXT:    srahqs $r4 = $r3, 15
 ; CV1-NEXT:    srlhqs $r5 = $r6, 13
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    addhq $r1 = $r1, $r5
-; CV1-NEXT:    srlhqs $r4 = $r4, 15
 ; CV1-NEXT:    srlhqs $r6 = $r7, 14
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    srahqs $r0 = $r0, 4
+; CV1-NEXT:    addhq $r1 = $r1, $r5
 ; CV1-NEXT:    addhq $r2 = $r2, $r6
+; CV1-NEXT:    srlhqs $r4 = $r3, 15
+; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    srahqs $r1 = $r1, 3
 ; CV1-NEXT:    avghq $r3 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r1 = $r1, 3
 ; CV1-NEXT:    srahqs $r2 = $r2, 2
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 5)
@@ -298,7 +297,6 @@ define <16 x i16> @diff_srs16(<16 x i16> %0) {
 ; CV2-NEXT:    srahqs $r4 = $r0, 15
 ; CV2-NEXT:    srahqs $r5 = $r1, 15
 ; CV2-NEXT:    srahqs $r6 = $r2, 15
-; CV2-NEXT:    srahqs $r7 = $r3, 15
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:    srlhqs $r4 = $r4, 12
 ; CV2-NEXT:    srlhqs $r5 = $r5, 13
@@ -307,7 +305,7 @@ define <16 x i16> @diff_srs16(<16 x i16> %0) {
 ; CV2-NEXT:    addhq $r0 = $r0, $r4
 ; CV2-NEXT:    addhq $r1 = $r1, $r5
 ; CV2-NEXT:    addhq $r2 = $r2, $r6
-; CV2-NEXT:    srlhqs $r4 = $r7, 15
+; CV2-NEXT:    srlhqs $r4 = $r3, 15
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    srahqs $r0 = $r0, 4
 ; CV2-NEXT:    srahqs $r1 = $r1, 3

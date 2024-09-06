@@ -350,7 +350,7 @@ define <4 x i8> @sext_4xi1_4xi8(<4 x i1> %a){
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 7
+; CV1-NEXT:    srlhqs $r0 = $r0, 7
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret

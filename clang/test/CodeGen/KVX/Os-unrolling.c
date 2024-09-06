@@ -18,7 +18,7 @@
 // OPS-NEXT:    br label [[FOR_BODY3:%.*]]
 // OPS:       for.body3:
 // OPS-NEXT:    [[INDVARS_IV:%.*]] = phi i64 [ 0, [[FOR_COND1_PREHEADER]] ], [ [[INDVARS_IV_NEXT:%.*]], [[FOR_BODY3]] ]
-// OPS-NEXT:    [[TMP0:%.*]] = trunc i64 [[INDVARS_IV]] to i32
+// OPS-NEXT:    [[TMP0:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OPS-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP0]]
 // OPS-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
 // OPS-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
@@ -54,7 +54,7 @@
 // OPZ-NEXT:    [[EXITCOND_NOT:%.*]] = icmp eq i64 [[INDVARS_IV]], [[WIDE_TRIP_COUNT]]
 // OPZ-NEXT:    br i1 [[EXITCOND_NOT]], label [[FOR_INC10]], label [[FOR_BODY3]]
 // OPZ:       for.body3:
-// OPZ-NEXT:    [[TMP0:%.*]] = trunc i64 [[INDVARS_IV]] to i32
+// OPZ-NEXT:    [[TMP0:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OPZ-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP0]]
 // OPZ-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
 // OPZ-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
@@ -96,7 +96,7 @@
 // OP3:       for.body3:
 // OP3-NEXT:    [[INDVARS_IV:%.*]] = phi i64 [ [[INDVARS_IV_NEXT_7:%.*]], [[FOR_BODY3]] ], [ 0, [[FOR_COND1_PREHEADER]] ]
 // OP3-NEXT:    [[NITER:%.*]] = phi i64 [ [[NITER_NEXT_7:%.*]], [[FOR_BODY3]] ], [ 0, [[FOR_COND1_PREHEADER]] ]
-// OP3-NEXT:    [[TMP1:%.*]] = trunc i64 [[INDVARS_IV]] to i32
+// OP3-NEXT:    [[TMP1:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP1]]
 // OP3-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
 // OP3-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
@@ -183,7 +183,7 @@
 // OP3-NEXT:    [[INDVARS_IV_UNR:%.*]] = phi i64 [ 0, [[FOR_COND1_PREHEADER]] ], [ [[INDVARS_IV_NEXT_7]], [[FOR_BODY3]] ]
 // OP3-NEXT:    br i1 [[LCMP_MOD_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL:%.*]]
 // OP3:       for.body3.epil:
-// OP3-NEXT:    [[TMP24:%.*]] = trunc i64 [[INDVARS_IV_UNR]] to i32
+// OP3-NEXT:    [[TMP24:%.*]] = trunc nuw i64 [[INDVARS_IV_UNR]] to i32
 // OP3-NEXT:    [[ADD_EPIL:%.*]] = add i32 [[MUL]], [[TMP24]]
 // OP3-NEXT:    [[IDXPROM_EPIL:%.*]] = zext i32 [[ADD_EPIL]] to i64
 // OP3-NEXT:    [[ARRAYIDX_EPIL:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL]]

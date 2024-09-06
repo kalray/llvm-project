@@ -453,7 +453,7 @@ int u_gtz(u128 a){
 // CHECK-LABEL: @ltz(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[A_LOBIT:%.*]] = lshr i128 [[A:%.*]], 127
-// CHECK-NEXT:    [[CONV:%.*]] = trunc i128 [[A_LOBIT]] to i32
+// CHECK-NEXT:    [[CONV:%.*]] = trunc nuw nsw i128 [[A_LOBIT]] to i32
 // CHECK-NEXT:    ret i32 [[CONV]]
 //
 int ltz(i128 a){

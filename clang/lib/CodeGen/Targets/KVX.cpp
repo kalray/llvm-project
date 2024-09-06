@@ -148,13 +148,13 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   CGBuilderTy &Builder = CGF.Builder;
   Address CurPtr = Address(Builder.CreateLoad(VAListAddr, "ap.cur"),
                          getVAListElementType(CGF), SlotSize);
-  Address EltAddress = Address(CurPtr.getPointer(), ArgTy, SlotSize);
+  Address EltAddress = Address(CurPtr.getBasePointer(), ArgTy, SlotSize);
 
   auto AllocSize = getDataLayout().getTypeAllocSize(AI.getCoerceToType());
   CharUnits Stride = CharUnits::fromQuantity(AllocSize).alignTo(SlotSize);
 
   Address NextPtr = Builder.CreateConstInBoundsByteGEP(CurPtr, Stride, "ap.next");
-  Builder.CreateStore(NextPtr.getPointer(), VAListAddr);
+  Builder.CreateStore(NextPtr.getBasePointer(), VAListAddr);
 
   return EltAddress;
 }

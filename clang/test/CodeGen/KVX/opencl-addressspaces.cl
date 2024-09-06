@@ -189,7 +189,7 @@ int test_func_return_type(void) {
 extern float g_extern_var;
 
 // CHECK-LABEL: define {{[^@]+}}@test_extern
-// CHECK-SAME: (ptr addrspace(1) noundef align 4 [[BUF:%.*]]) #[[ATTR1:[0-9]+]] !kernel_arg_addr_space !3 !kernel_arg_access_qual !4 !kernel_arg_type !5 !kernel_arg_base_type !5 !kernel_arg_type_qual !6 {
+// CHECK-SAME: (ptr addrspace(1) noundef align 4 [[BUF:%.*]]) #[[ATTR1:[0-9]+]] !kernel_arg_addr_space [[META3:![0-9]+]] !kernel_arg_access_qual [[META4:![0-9]+]] !kernel_arg_type [[META5:![0-9]+]] !kernel_arg_base_type [[META5]] !kernel_arg_type_qual [[META6:![0-9]+]] {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[BUF_ADDR:%.*]] = alloca ptr addrspace(1), align 8
 // CHECK-NEXT:    store ptr addrspace(1) [[BUF]], ptr [[BUF_ADDR]], align 8
@@ -211,7 +211,7 @@ kernel void test_extern(global float *buf) {
 static float g_static_var;
 
 // CHECK-LABEL: define {{[^@]+}}@test_static
-// CHECK-SAME: (ptr addrspace(1) noundef align 4 [[BUF:%.*]]) #[[ATTR1]] !kernel_arg_addr_space !3 !kernel_arg_access_qual !4 !kernel_arg_type !5 !kernel_arg_base_type !5 !kernel_arg_type_qual !6 {
+// CHECK-SAME: (ptr addrspace(1) noundef align 4 [[BUF:%.*]]) #[[ATTR1]] !kernel_arg_addr_space [[META3]] !kernel_arg_access_qual [[META4]] !kernel_arg_type [[META5]] !kernel_arg_base_type [[META5]] !kernel_arg_type_qual [[META6]] {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[BUF_ADDR:%.*]] = alloca ptr addrspace(1), align 8
 // CHECK-NEXT:    store ptr addrspace(1) [[BUF]], ptr [[BUF_ADDR]], align 8
@@ -236,8 +236,8 @@ kernel void test_static(global float *buf) {
 // CHECK: [[META0:![0-9]+]] = !{i32 1, !"wchar_size", i32 4}
 // CHECK: [[META1:![0-9]+]] = !{i32 2, i32 0}
 // CHECK: [[META2:![0-9]+]] = !{!"{{.*}}clang version {{.*}}"}
-// CHECK: [[META3:![0-9]+]] = !{i32 1}
-// CHECK: [[META4:![0-9]+]] = !{!"none"}
-// CHECK: [[META5:![0-9]+]] = !{!"float*"}
-// CHECK: [[META6:![0-9]+]] = !{!""}
+// CHECK: [[META3]] = !{i32 1}
+// CHECK: [[META4]] = !{!"none"}
+// CHECK: [[META5]] = !{!"float*"}
+// CHECK: [[META6]] = !{!""}
 //.

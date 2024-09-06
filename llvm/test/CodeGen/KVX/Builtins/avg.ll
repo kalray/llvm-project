@@ -108,7 +108,7 @@ define <4 x i8> @avgbq(<4 x i8> %0, <4 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 1
+; CV1-NEXT:    srlhqs $r0 = $r0, 1
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -529,7 +529,7 @@ define <4 x i8> @avgrbq(<4 x i8> %0, <4 x i8> %1) {
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    srahqs $r0 = $r0, 1
+; CV1-NEXT:    srlhqs $r0 = $r0, 1
 ; CV1-NEXT:    ;; # (end cycle 5)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -2119,7 +2119,7 @@ define <4 x i8> @avgbq_ri(<4 x i8> %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 1
+; CV1-NEXT:    srlhqs $r0 = $r0, 1
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -2501,7 +2501,7 @@ define <4 x i8> @avgrbq_ri(<4 x i8> %0) {
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    srahqs $r0 = $r0, 1
+; CV1-NEXT:    srlhqs $r0 = $r0, 1
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret
@@ -3053,11 +3053,9 @@ define <8 x i8> @avgrubo_ri(<8 x i8> %0) {
 ; CV2:       # %bb.0:
 ; CV2-NEXT:    make $r1 = 0x10101010101012b
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r1
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srlbos $r0 = $r0, 1
+; CV2-NEXT:    avgubo $r0 = $r1, $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = tail call <8 x i8> @llvm.kvx.avg.v8i8(<8 x i8> %0, <8 x i8> <i8 42, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, i32 3)
   ret <8 x i8> %2
 }
@@ -3086,11 +3084,9 @@ define <2 x i8> @avgrubp_ri(<2 x i8> %0) {
 ;
 ; CV2-LABEL: avgrubp_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    addbo $r0 = $r0, 299
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlbos $r0 = $r0, 1
+; CV2-NEXT:    avgubo $r0 = $r0, 299
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i8> @llvm.kvx.avg.v2i8(<2 x i8> %0, <2 x i8> <i8 42, i8 0>, i32 3)
   ret <2 x i8> %2
 }
@@ -3113,11 +3109,9 @@ define <4 x i8> @avgrubq_ri(<4 x i8> %0) {
 ;
 ; CV2-LABEL: avgrubq_ri:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    addbo $r0 = $r0, 0x101012b
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    srlbos $r0 = $r0, 1
+; CV2-NEXT:    avgubo $r0 = $r0, 0x101012b
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
   %2 = tail call <4 x i8> @llvm.kvx.avg.v4i8(<4 x i8> %0, <4 x i8> <i8 42, i8 0, i8 0, i8 0>, i32 3)
   ret <4 x i8> %2
 }
@@ -3169,11 +3163,9 @@ define <16 x i8> @avgrubx_ri(<16 x i8> %0) {
 ; CV2-NEXT:    avgubo $r1 = $r1, 0x1010101.@
 ; CV2-NEXT:    make $r2 = 0x10101010101012b
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r2
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srlbos $r0 = $r0, 1
+; CV2-NEXT:    avgubo $r0 = $r2, $r0
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <8 x i8> @llvm.kvx.avg.v8i8(<8 x i8> %2, <8 x i8> <i8 42, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, i32 3)
   %4 = shufflevector <16 x i8> %0, <16 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -3259,12 +3251,10 @@ define <32 x i8> @avgrubv_ri(<32 x i8> %0) {
 ; CV2-NEXT:    avgubo $r2 = $r2, 0x1010101.@
 ; CV2-NEXT:    make $r4 = 0x10101010101012b
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addbo $r0 = $r0, $r4
+; CV2-NEXT:    avgubo $r0 = $r4, $r0
 ; CV2-NEXT:    avgubo $r3 = $r3, 0x1010101.@
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srlbos $r0 = $r0, 1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
   %3 = tail call <8 x i8> @llvm.kvx.avg.v8i8(<8 x i8> %2, <8 x i8> <i8 42, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0, i8 0>, i32 3)
   %4 = shufflevector <32 x i8> %0, <32 x i8> undef, <8 x i32> <i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15>
@@ -3485,11 +3475,9 @@ define <8 x i16> @avgruho_ri(<8 x i16> %0) {
 ; ALL-NEXT:    avguhq $r1 = $r1, 0x10001.@
 ; ALL-NEXT:    make $r2 = 0x100010001002b
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    addhq $r0 = $r0, $r2
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srlhqs $r0 = $r0, 1
+; ALL-NEXT:    avguhq $r0 = $r2, $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %2, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 3)
   %4 = shufflevector <8 x i16> %0, <8 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -3501,11 +3489,9 @@ define <8 x i16> @avgruho_ri(<8 x i16> %0) {
 define <2 x i16> @avgruhp_ri(<2 x i16> %0) {
 ; ALL-LABEL: avgruhp_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addhq $r0 = $r0, 0x1002b
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    srlhqs $r0 = $r0, 1
+; ALL-NEXT:    avguhq $r0 = $r0, 0x1002b
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i16> @llvm.kvx.avg.v2i16(<2 x i16> %0, <2 x i16> <i16 42, i16 0>, i32 3)
   ret <2 x i16> %2
 }
@@ -3515,11 +3501,9 @@ define <4 x i16> @avgruhq_ri(<4 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r1 = 0x100010001002b
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    addhq $r0 = $r0, $r1
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srlhqs $r0 = $r0, 1
+; ALL-NEXT:    avguhq $r0 = $r1, $r0
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %0, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 3)
   ret <4 x i16> %2
 }
@@ -3531,12 +3515,10 @@ define <16 x i16> @avgruhx_ri(<16 x i16> %0) {
 ; ALL-NEXT:    avguhq $r2 = $r2, 0x10001.@
 ; ALL-NEXT:    make $r4 = 0x100010001002b
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    addhq $r0 = $r0, $r4
+; ALL-NEXT:    avguhq $r0 = $r4, $r0
 ; ALL-NEXT:    avguhq $r3 = $r3, 0x10001.@
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srlhqs $r0 = $r0, 1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 0, i32 1, i32 2, i32 3>
   %3 = tail call <4 x i16> @llvm.kvx.avg.v4i16(<4 x i16> %2, <4 x i16> <i16 42, i16 0, i16 0, i16 0>, i32 3)
   %4 = shufflevector <16 x i16> %0, <16 x i16> undef, <4 x i32> <i32 4, i32 5, i32 6, i32 7>
@@ -3554,29 +3536,23 @@ define <16 x i16> @avgruhx_ri(<16 x i16> %0) {
 define <8 x i32> @avgruwo_ri(<8 x i32> %0) {
 ; CV1-LABEL: avgruwo_ri:
 ; CV1:       # %bb.0:
+; CV1-NEXT:    avgruwp $r0 = $r0, 42
 ; CV1-NEXT:    avgruwp $r1 = $r1, 0
-; CV1-NEXT:    avgruwp $r2 = $r2, 0
-; CV1-NEXT:    make $r4 = 0x10000002b
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    addwp $r0 = $r0, $r4
+; CV1-NEXT:    avgruwp $r2 = $r2, 0
 ; CV1-NEXT:    avgruwp $r3 = $r3, 0
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    srlwps $r0 = $r0, 1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: avgruwo_ri:
 ; CV2:       # %bb.0:
+; CV2-NEXT:    avgruwp $r0 = $r0, 42
 ; CV2-NEXT:    avgruwp $r1 = $r1, 0
 ; CV2-NEXT:    avgruwp $r2 = $r2, 0
 ; CV2-NEXT:    avgruwp $r3 = $r3, 0
-; CV2-NEXT:    make $r4 = 0x10000002b
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    addwp $r0 = $r0, $r4
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    srlwps $r0 = $r0, 1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;;
   %2 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.avg.v2i32(<2 x i32> %2, <2 x i32> <i32 42, i32 0>, i32 3)
   %4 = shufflevector <8 x i32> %0, <8 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -3594,13 +3570,9 @@ define <8 x i32> @avgruwo_ri(<8 x i32> %0) {
 define <2 x i32> @avgruwp_ri(<2 x i32> %0) {
 ; ALL-LABEL: avgruwp_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    make $r1 = 0x10000002b
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    addwp $r0 = $r0, $r1
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srlwps $r0 = $r0, 1
+; ALL-NEXT:    avgruwp $r0 = $r0, 42
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call <2 x i32> @llvm.kvx.avg.v2i32(<2 x i32> %0, <2 x i32> <i32 42, i32 0>, i32 3)
   ret <2 x i32> %2
 }
@@ -3608,14 +3580,10 @@ define <2 x i32> @avgruwp_ri(<2 x i32> %0) {
 define <4 x i32> @avgruwq_ri(<4 x i32> %0) {
 ; ALL-LABEL: avgruwq_ri:
 ; ALL:       # %bb.0:
+; ALL-NEXT:    avgruwp $r0 = $r0, 42
 ; ALL-NEXT:    avgruwp $r1 = $r1, 0
-; ALL-NEXT:    make $r2 = 0x10000002b
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    addwp $r0 = $r0, $r2
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    srlwps $r0 = $r0, 1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 0, i32 1>
   %3 = tail call <2 x i32> @llvm.kvx.avg.v2i32(<2 x i32> %2, <2 x i32> <i32 42, i32 0>, i32 3)
   %4 = shufflevector <4 x i32> %0, <4 x i32> undef, <2 x i32> <i32 2, i32 3>
@@ -3832,11 +3800,9 @@ define i32 @avgrw_ri(i32 %0) {
 define i32 @avgruw_ri(i32 %0) {
 ; ALL-LABEL: avgruw_ri:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    addw $r0 = $r0, 43
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    srlw $r0 = $r0, 1
+; ALL-NEXT:    avguw $r0 = $r0, 43
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 1)
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call i32 @llvm.kvx.avg.i32(i32 %0, i32 42, i32 3)
   ret i32 %2
 }

@@ -11,7 +11,7 @@ define <4 x i8> @ashiftR_imm(<4 x i8> %a){
 ; CV1:       # %bb.0: # %entry
 ; CV1-NEXT:    sxlbhq $r0 = $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    srahqs $r0 = $r0, 3
+; CV1-NEXT:    srlhqs $r0 = $r0, 3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; CV1-NEXT:    ret

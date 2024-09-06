@@ -1244,7 +1244,7 @@ define <4 x i8> @avg_v4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 1
+; KV3_1-NEXT:    srlhqs $r0 = $r0, 1
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; KV3_1-NEXT:    ret
@@ -1272,7 +1272,7 @@ define <4 x i8> @avg_v4i8_ri_(<4 x i8> %a) {
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 1
+; KV3_1-NEXT:    srlhqs $r0 = $r0, 1
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; KV3_1-NEXT:    ret
@@ -1300,7 +1300,7 @@ define <4 x i8> @avg_v4i8_ri_2(<4 x i8> %a) {
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 1
+; KV3_1-NEXT:    srlhqs $r0 = $r0, 1
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; KV3_1-NEXT:    ret
@@ -1331,7 +1331,7 @@ define <4 x i8> @ravg_v4i8(<4 x i8> %a, <4 x i8> %b) {
 ; KV3_1-NEXT:    ;; # (end cycle 3)
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 4)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 1
+; KV3_1-NEXT:    srlhqs $r0 = $r0, 1
 ; KV3_1-NEXT:    ;; # (end cycle 5)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; KV3_1-NEXT:    ret
@@ -1360,7 +1360,7 @@ define <4 x i8> @ravg_v4i8_ri_at(<4 x i8> %a) {
 ; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    sxlbhq $r0 = $r0
 ; KV3_1-NEXT:    ;; # (end cycle 3)
-; KV3_1-NEXT:    srahqs $r0 = $r0, 1
+; KV3_1-NEXT:    srlhqs $r0 = $r0, 1
 ; KV3_1-NEXT:    ;; # (end cycle 4)
 ; KV3_1-NEXT:    sbmm8 $r0 = $r0, 0x40100401
 ; KV3_1-NEXT:    ret

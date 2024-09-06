@@ -23,7 +23,7 @@ void getKVXTargetFeatures(const Driver &D, const llvm::Triple &Triple,
 
     bool AddO3Opts = A->getOption().matches(options::OPT_O4) ||
                      A->getOption().matches(options::OPT_Ofast) ||
-                     (StringRef(A->getValue())).equals("3");
+                     (StringRef(A->getValue()) == "3");
 
     if (!AddO3Opts)
       return;

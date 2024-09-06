@@ -234,7 +234,7 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
   }
 
   for (auto VT :
-       {MVT::v4i64, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8, MVT::v4i8}) {
+       {MVT::v4i64, MVT::v2i64, MVT::v4i32, MVT::v8i8, MVT::v2i8}) {
     setOperationAction(ISD::SHL, VT, Expand);
     setOperationAction(ISD::SRL, VT, Expand);
     setOperationAction(ISD::SRA, VT, Expand);
@@ -5281,4 +5281,8 @@ SDValue KVXTargetLowering::expandVecLibCall(const LibCalls &Names,
 
   LLVM_DEBUG(dbgs() << "Created libcall: "; CallInfo.first.dump(&DAG));
   return CallInfo.first;
+}
+
+bool KVXTargetLowering::isTypeDesirableForOp(unsigned Opc, EVT VT) const {
+  return isOperationLegalOrCustom(Opc, VT);
 }

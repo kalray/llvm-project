@@ -1,4 +1,4 @@
-// RUN: not %clang_cc1 -ferror-limit 20 -O2 -triple kvx-kalray-cos -target-cpu kv3-2 -S -emit-llvm -o /dev/null %s 2>&1 | FileCheck %s
+// RUN: not %clang_cc1 -ferror-limit 20 -O2 -triple kvx-kalray-cos -target-cpu kv3-2 -emit-llvm -o /dev/null %s 2>&1 | FileCheck %s
 
 typedef struct {
   int a, b;

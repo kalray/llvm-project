@@ -304,6 +304,8 @@ private:
 
   AtomicExpansionKind
   shouldExpandAtomicRMWInIR(AtomicRMWInst *RMW) const override;
+
+  bool isTypeDesirableForOp(unsigned Opc, EVT VT) const override;
 };
 
 } // namespace llvm

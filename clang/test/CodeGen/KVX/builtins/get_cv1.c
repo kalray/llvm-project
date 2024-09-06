@@ -1,4 +1,4 @@
-// RUN: %clang_cc1 -target-cpu kv3-1 -triple kvx-kalray-cos -S -O2 -emit-llvm -o - %s | FileCheck %s
+// RUN: %clang_cc1 -target-cpu kv3-1 -triple kvx-kalray-cos -O2 -emit-llvm -o - %s | FileCheck %s
 
 // CHECK-LABEL: @get_0(
 // CHECK-NEXT:  entry:
