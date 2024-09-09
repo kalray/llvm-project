@@ -2211,43 +2211,22 @@ define <4 x double> @test_minnum(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_minnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_minnum_fast:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV1-NEXT:    fcompd.olt $r9 = $r0, $r4
+; CV1-NEXT:    fmind $r0 = $r0, $r4
+; CV1-NEXT:    fmind $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CV1-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompd.olt $r0 = $r2, $r6
-; CV1-NEXT:    fcompd.olt $r1 = $r3, $r7
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    copyd $r0 = $r4
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r2
-; CV1-NEXT:    cmoved.wnez $r1 ? $r7 = $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    copyd $r2 = $r6
-; CV1-NEXT:    copyd $r3 = $r7
+; CV1-NEXT:    fmind $r2 = $r2, $r6
+; CV1-NEXT:    fmind $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: test_minnum_fast:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    fcompd.olt $r8 = $r1, $r5
-; CV2-NEXT:    fcompd.olt $r9 = $r0, $r4
-; CV2-NEXT:    fcompd.olt $r10 = $r2, $r6
-; CV2-NEXT:    fcompd.olt $r11 = $r3, $r7
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CV2-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
-; CV2-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CV2-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    copyd $r0 = $r4
-; CV2-NEXT:    copyd $r1 = $r5
-; CV2-NEXT:    copyd $r2 = $r6
-; CV2-NEXT:    copyd $r3 = $r7
+; CV2-NEXT:    fmind $r0 = $r0, $r4
+; CV2-NEXT:    fmind $r1 = $r1, $r5
+; CV2-NEXT:    fmind $r2 = $r2, $r6
+; CV2-NEXT:    fmind $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 0)
   %r = call fast <4 x double> @llvm.minnum.v4f64(<4 x double> %a, <4 x double> %b)
   ret <4 x double> %r
 }
@@ -2298,43 +2277,22 @@ define <4 x double> @test_maxnum(<4 x double> %a, <4 x double> %b) #0 {
 define <4 x double> @test_maxnum_fast(<4 x double> %a, <4 x double> %b) #0 {
 ; CV1-LABEL: test_maxnum_fast:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    fcompd.olt $r8 = $r5, $r1
-; CV1-NEXT:    fcompd.olt $r9 = $r4, $r0
+; CV1-NEXT:    fmaxd $r0 = $r0, $r4
+; CV1-NEXT:    fmaxd $r1 = $r1, $r5
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CV1-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
-; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    fcompd.olt $r0 = $r6, $r2
-; CV1-NEXT:    fcompd.olt $r1 = $r7, $r3
-; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    copyd $r0 = $r4
-; CV1-NEXT:    copyd $r1 = $r5
-; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r2
-; CV1-NEXT:    cmoved.wnez $r1 ? $r7 = $r3
-; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    copyd $r2 = $r6
-; CV1-NEXT:    copyd $r3 = $r7
+; CV1-NEXT:    fmaxd $r2 = $r2, $r6
+; CV1-NEXT:    fmaxd $r3 = $r3, $r7
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    ;; # (end cycle 1)
 ;
 ; CV2-LABEL: test_maxnum_fast:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    fcompd.olt $r8 = $r5, $r1
-; CV2-NEXT:    fcompd.olt $r9 = $r4, $r0
-; CV2-NEXT:    fcompd.olt $r10 = $r6, $r2
-; CV2-NEXT:    fcompd.olt $r11 = $r7, $r3
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    cmoved.wnez $r9 ? $r4 = $r0
-; CV2-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
-; CV2-NEXT:    cmoved.wnez $r10 ? $r6 = $r2
-; CV2-NEXT:    cmoved.wnez $r11 ? $r7 = $r3
-; CV2-NEXT:    ;; # (end cycle 1)
-; CV2-NEXT:    copyd $r0 = $r4
-; CV2-NEXT:    copyd $r1 = $r5
-; CV2-NEXT:    copyd $r2 = $r6
-; CV2-NEXT:    copyd $r3 = $r7
+; CV2-NEXT:    fmaxd $r0 = $r0, $r4
+; CV2-NEXT:    fmaxd $r1 = $r1, $r5
+; CV2-NEXT:    fmaxd $r2 = $r2, $r6
+; CV2-NEXT:    fmaxd $r3 = $r3, $r7
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 2)
+; CV2-NEXT:    ;; # (end cycle 0)
   %r = call fast <4 x double> @llvm.maxnum.v4f64(<4 x double> %a, <4 x double> %b)
   ret <4 x double> %r
 }

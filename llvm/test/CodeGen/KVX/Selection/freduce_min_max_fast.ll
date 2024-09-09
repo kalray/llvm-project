@@ -196,37 +196,48 @@ define float @red_max_float16(ptr %0) {
 declare float @llvm.vector.reduce.fmax.v16f32(<16 x float>)
 
 define double @red_max_double2(<2 x double> %0) {
-; ALL-LABEL: red_max_double2:
-; ALL:       # %bb.0:
-; ALL-NEXT:    fcompd.olt $r2 = $r1, $r0
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    copyd $r0 = $r1
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
-  %2 = tail call fast double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
+; CV1-LABEL: red_max_double2:
+; CV1:       # %bb.0:
+; CV1-NEXT:    slld $r2 = $r0, 1
+; CV1-NEXT:    fcompd.olt $r3 = $r0, $r1
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    compd.gtu $r2 = $r2, 0xffe0000000000000
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    iord $r2 = $r3, $r2
+; CV1-NEXT:    ;; # (end cycle 2)
+; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 3)
+;
+; CV2-LABEL: red_max_double2:
+; CV2:       # %bb.0:
+; CV2-NEXT:    fmaxd $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 0)
+  %2 = tail call double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
   ret double %2
 }
 
+define double @red_max_double2_nonans(<2 x double> %0) {
+; ALL-LABEL: red_max_double2_nonans:
+; ALL:       # %bb.0:
+; ALL-NEXT:    fmaxd $r0 = $r0, $r1
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 0)
+  %2 = tail call nnan double @llvm.vector.reduce.fmax.v2f64(<2 x double> %0)
+  ret double %2
+}
 declare double @llvm.vector.reduce.fmax.v2f64(<2 x double>)
 
 define double @red_max_double4(<4 x double> %0) {
 ; ALL-LABEL: red_max_double4:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fcompd.olt $r4 = $r2, $r0
-; ALL-NEXT:    fcompd.olt $r5 = $r3, $r1
+; ALL-NEXT:    fmaxd $r0 = $r0, $r2
+; ALL-NEXT:    fmaxd $r1 = $r1, $r3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    cmoved.wnez $r4 ? $r2 = $r0
-; ALL-NEXT:    cmoved.wnez $r5 ? $r3 = $r1
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    fcompd.olt $r0 = $r3, $r2
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    copyd $r0 = $r3
+; ALL-NEXT:    fmaxd $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call fast double @llvm.vector.reduce.fmax.v4f64(<4 x double> %0)
   ret double %2
 }
@@ -234,39 +245,42 @@ define double @red_max_double4(<4 x double> %0) {
 declare double @llvm.vector.reduce.fmax.v4f64(<4 x double>)
 
 define double @red_max_double8(ptr %0) {
-; ALL-LABEL: red_max_double8:
-; ALL:       # %bb.0:
-; ALL-NEXT:    lo $r4r5r6r7 = 32[$r0]
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lo $r0r1r2r3 = 0[$r0]
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    fcompd.olt $r8 = $r5, $r1
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    fcompd.olt $r1 = $r7, $r3
-; ALL-NEXT:    cmoved.wnez $r8 ? $r5 = $r1
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    fcompd.olt $r1 = $r4, $r0
-; ALL-NEXT:    cmoved.wnez $r1 ? $r7 = $r3
-; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    fcompd.olt $r0 = $r6, $r2
-; ALL-NEXT:    cmoved.wnez $r1 ? $r4 = $r0
-; ALL-NEXT:    ;; # (end cycle 7)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r6 = $r2
-; ALL-NEXT:    ;; # (end cycle 8)
-; ALL-NEXT:    fcompd.olt $r0 = $r6, $r4
-; ALL-NEXT:    ;; # (end cycle 9)
-; ALL-NEXT:    fcompd.olt $r0 = $r7, $r5
-; ALL-NEXT:    cmoved.wnez $r0 ? $r6 = $r4
-; ALL-NEXT:    ;; # (end cycle 10)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r7 = $r5
-; ALL-NEXT:    ;; # (end cycle 11)
-; ALL-NEXT:    fcompd.olt $r0 = $r7, $r6
-; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r7 = $r6
-; ALL-NEXT:    ;; # (end cycle 13)
-; ALL-NEXT:    copyd $r0 = $r7
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 14)
+; CV1-LABEL: red_max_double8:
+; CV1:       # %bb.0:
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    fmaxd $r0 = $r4, $r0
+; CV1-NEXT:    fmaxd $r2 = $r6, $r2
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    fmaxd $r1 = $r5, $r1
+; CV1-NEXT:    fmaxd $r3 = $r7, $r3
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    fmaxd $r0 = $r0, $r2
+; CV1-NEXT:    fmaxd $r1 = $r1, $r3
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    fmaxd $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
+;
+; CV2-LABEL: red_max_double8:
+; CV2:       # %bb.0:
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    fmaxd $r0 = $r4, $r0
+; CV2-NEXT:    fmaxd $r1 = $r5, $r1
+; CV2-NEXT:    fmaxd $r2 = $r6, $r2
+; CV2-NEXT:    fmaxd $r3 = $r7, $r3
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    fmaxd $r0 = $r0, $r2
+; CV2-NEXT:    fmaxd $r1 = $r1, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    fmaxd $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 6)
   %2 = load <8 x double>, ptr %0
   %3 = tail call fast double @llvm.vector.reduce.fmax.v8f64(<8 x double> %2)
   ret double %3
@@ -277,127 +291,70 @@ declare double @llvm.vector.reduce.fmax.v8f64(<8 x double>)
 define double @red_max_double16(ptr %0) {
 ; CV1-LABEL: red_max_double16:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r4r5r6r7 = 96[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
-; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    lo $r8r9r10r11 = 64[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.olt $r16 = $r6, $r34
+; CV1-NEXT:    fmaxd $r5 = $r5, $r9
+; CV1-NEXT:    fmaxd $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.wnez $r16 ? $r6 = $r34
+; CV1-NEXT:    fmaxd $r4 = $r4, $r8
+; CV1-NEXT:    fmaxd $r6 = $r6, $r10
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    fcompd.olt $r15 = $r10, $r2
+; CV1-NEXT:    fmaxd $r1 = $r33, $r1
+; CV1-NEXT:    fmaxd $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    fcompd.olt $r2 = $r8, $r0
-; CV1-NEXT:    cmoved.wnez $r15 ? $r10 = $r2
+; CV1-NEXT:    fmaxd $r0 = $r32, $r0
+; CV1-NEXT:    fmaxd $r2 = $r34, $r2
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    fcompd.olt $r0 = $r11, $r3
-; CV1-NEXT:    cmoved.wnez $r2 ? $r8 = $r0
+; CV1-NEXT:    fmaxd $r0 = $r4, $r0
+; CV1-NEXT:    fmaxd $r2 = $r6, $r2
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    fcompd.olt $r2 = $r7, $r35
-; CV1-NEXT:    cmoved.wnez $r0 ? $r11 = $r3
+; CV1-NEXT:    fmaxd $r1 = $r5, $r1
+; CV1-NEXT:    fmaxd $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    fcompd.olt $r0 = $r9, $r1
-; CV1-NEXT:    cmoved.wnez $r2 ? $r7 = $r35
+; CV1-NEXT:    fmaxd $r0 = $r0, $r2
+; CV1-NEXT:    fmaxd $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    fcompd.olt $r2 = $r5, $r33
-; CV1-NEXT:    cmoved.wnez $r0 ? $r9 = $r1
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    cmoved.wnez $r2 ? $r5 = $r33
-; CV1-NEXT:    fcompd.olt $r15 = $r4, $r32
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    fcompd.olt $r0 = $r5, $r9
-; CV1-NEXT:    cmoved.wnez $r15 ? $r4 = $r32
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    fcompd.olt $r0 = $r7, $r11
-; CV1-NEXT:    cmoved.wnez $r0 ? $r5 = $r9
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    fcompd.olt $r0 = $r4, $r8
-; CV1-NEXT:    cmoved.wnez $r0 ? $r7 = $r11
-; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    fcompd.olt $r0 = $r6, $r10
-; CV1-NEXT:    cmoved.wnez $r0 ? $r4 = $r8
-; CV1-NEXT:    ;; # (end cycle 16)
-; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r10
-; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    fcompd.olt $r0 = $r6, $r4
-; CV1-NEXT:    ;; # (end cycle 18)
-; CV1-NEXT:    fcompd.olt $r0 = $r7, $r5
-; CV1-NEXT:    cmoved.wnez $r0 ? $r6 = $r4
-; CV1-NEXT:    ;; # (end cycle 19)
-; CV1-NEXT:    cmoved.wnez $r0 ? $r7 = $r5
-; CV1-NEXT:    ;; # (end cycle 20)
-; CV1-NEXT:    fcompd.olt $r0 = $r7, $r6
-; CV1-NEXT:    ;; # (end cycle 21)
-; CV1-NEXT:    cmoved.wnez $r0 ? $r7 = $r6
-; CV1-NEXT:    ;; # (end cycle 22)
-; CV1-NEXT:    copyd $r0 = $r7
+; CV1-NEXT:    fmaxd $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 23)
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: red_max_double16:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r4r5r6r7 = 96[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
-; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    lo $r8r9r10r11 = 64[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
-; CV2-NEXT:    lo $r0r1r2r3 = 0[$r0]
+; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    fcompd.olt $r16 = $r6, $r34
+; CV2-NEXT:    fmaxd $r4 = $r4, $r8
+; CV2-NEXT:    fmaxd $r5 = $r5, $r9
+; CV2-NEXT:    fmaxd $r6 = $r6, $r10
+; CV2-NEXT:    fmaxd $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmoved.wnez $r16 ? $r6 = $r34
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    fcompd.olt $r15 = $r10, $r2
+; CV2-NEXT:    fmaxd $r0 = $r32, $r0
+; CV2-NEXT:    fmaxd $r1 = $r33, $r1
+; CV2-NEXT:    fmaxd $r2 = $r34, $r2
+; CV2-NEXT:    fmaxd $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    fcompd.olt $r2 = $r8, $r0
-; CV2-NEXT:    cmoved.wnez $r15 ? $r10 = $r2
-; CV2-NEXT:    fcompd.olt $r15 = $r4, $r32
+; CV2-NEXT:    fmaxd $r0 = $r4, $r0
+; CV2-NEXT:    fmaxd $r1 = $r5, $r1
+; CV2-NEXT:    fmaxd $r2 = $r6, $r2
+; CV2-NEXT:    fmaxd $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    fcompd.olt $r0 = $r11, $r3
-; CV2-NEXT:    fcompd.olt $r2 = $r7, $r35
-; CV2-NEXT:    cmoved.wnez $r15 ? $r4 = $r32
-; CV2-NEXT:    cmoved.wnez $r2 ? $r8 = $r0
+; CV2-NEXT:    fmaxd $r0 = $r0, $r2
+; CV2-NEXT:    fmaxd $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    fcompd.olt $r0 = $r9, $r1
-; CV2-NEXT:    fcompd.olt $r2 = $r5, $r33
-; CV2-NEXT:    cmoved.wnez $r2 ? $r7 = $r35
-; CV2-NEXT:    cmoved.wnez $r0 ? $r11 = $r3
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    cmoved.wnez $r2 ? $r5 = $r33
-; CV2-NEXT:    cmoved.wnez $r0 ? $r9 = $r1
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    fcompd.olt $r0 = $r5, $r9
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    fcompd.olt $r0 = $r7, $r11
-; CV2-NEXT:    cmoved.wnez $r0 ? $r5 = $r9
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    fcompd.olt $r0 = $r4, $r8
-; CV2-NEXT:    cmoved.wnez $r0 ? $r7 = $r11
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    fcompd.olt $r0 = $r6, $r10
-; CV2-NEXT:    cmoved.wnez $r0 ? $r4 = $r8
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    cmoved.wnez $r0 ? $r6 = $r10
-; CV2-NEXT:    ;; # (end cycle 15)
-; CV2-NEXT:    fcompd.olt $r0 = $r6, $r4
-; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    fcompd.olt $r0 = $r7, $r5
-; CV2-NEXT:    cmoved.wnez $r0 ? $r6 = $r4
-; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    cmoved.wnez $r0 ? $r7 = $r5
-; CV2-NEXT:    ;; # (end cycle 18)
-; CV2-NEXT:    fcompd.olt $r0 = $r7, $r6
-; CV2-NEXT:    ;; # (end cycle 19)
-; CV2-NEXT:    cmoved.wnez $r0 ? $r7 = $r6
-; CV2-NEXT:    ;; # (end cycle 20)
-; CV2-NEXT:    copyd $r0 = $r7
+; CV2-NEXT:    fmaxd $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 21)
+; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <16 x double>, ptr %0
   %3 = tail call fast double @llvm.vector.reduce.fmax.v16f64(<16 x double> %2)
   ret double %3
@@ -710,13 +667,9 @@ declare float @llvm.vector.reduce.fmin.v16f32(<16 x float>)
 define double @red_min_double2(<2 x double> %0) {
 ; ALL-LABEL: red_min_double2:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fcompd.olt $r2 = $r0, $r1
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    cmoved.wnez $r2 ? $r1 = $r0
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    copyd $r0 = $r1
+; ALL-NEXT:    fmind $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 2)
+; ALL-NEXT:    ;; # (end cycle 0)
   %2 = tail call fast double @llvm.vector.reduce.fmin.v2f64(<2 x double> %0)
   ret double %2
 }
@@ -726,19 +679,12 @@ declare double @llvm.vector.reduce.fmin.v2f64(<2 x double>)
 define double @red_min_double4(<4 x double> %0) {
 ; ALL-LABEL: red_min_double4:
 ; ALL:       # %bb.0:
-; ALL-NEXT:    fcompd.olt $r4 = $r1, $r3
-; ALL-NEXT:    fcompd.olt $r5 = $r0, $r2
+; ALL-NEXT:    fmind $r0 = $r0, $r2
+; ALL-NEXT:    fmind $r1 = $r1, $r3
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    cmoved.wnez $r5 ? $r2 = $r0
-; ALL-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    fcompd.olt $r0 = $r2, $r3
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; ALL-NEXT:    ;; # (end cycle 3)
-; ALL-NEXT:    copyd $r0 = $r3
+; ALL-NEXT:    fmind $r0 = $r0, $r1
 ; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 4)
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = tail call fast double @llvm.vector.reduce.fmin.v4f64(<4 x double> %0)
   ret double %2
 }
@@ -746,39 +692,42 @@ define double @red_min_double4(<4 x double> %0) {
 declare double @llvm.vector.reduce.fmin.v4f64(<4 x double>)
 
 define double @red_min_double8(ptr %0) {
-; ALL-LABEL: red_min_double8:
-; ALL:       # %bb.0:
-; ALL-NEXT:    lo $r4r5r6r7 = 0[$r0]
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    lo $r0r1r2r3 = 32[$r0]
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    fcompd.olt $r8 = $r6, $r2
-; ALL-NEXT:    ;; # (end cycle 4)
-; ALL-NEXT:    cmoved.wnez $r8 ? $r2 = $r6
-; ALL-NEXT:    fcompd.olt $r6 = $r4, $r0
-; ALL-NEXT:    ;; # (end cycle 5)
-; ALL-NEXT:    cmoved.wnez $r6 ? $r0 = $r4
-; ALL-NEXT:    fcompd.olt $r4 = $r7, $r3
-; ALL-NEXT:    ;; # (end cycle 6)
-; ALL-NEXT:    cmoved.wnez $r4 ? $r3 = $r7
-; ALL-NEXT:    fcompd.olt $r4 = $r5, $r1
-; ALL-NEXT:    ;; # (end cycle 7)
-; ALL-NEXT:    cmoved.wnez $r4 ? $r1 = $r5
-; ALL-NEXT:    ;; # (end cycle 8)
-; ALL-NEXT:    fcompd.olt $r4 = $r1, $r3
-; ALL-NEXT:    ;; # (end cycle 9)
-; ALL-NEXT:    fcompd.olt $r1 = $r0, $r2
-; ALL-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; ALL-NEXT:    ;; # (end cycle 10)
-; ALL-NEXT:    cmoved.wnez $r1 ? $r2 = $r0
-; ALL-NEXT:    ;; # (end cycle 11)
-; ALL-NEXT:    fcompd.olt $r0 = $r2, $r3
-; ALL-NEXT:    ;; # (end cycle 12)
-; ALL-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; ALL-NEXT:    ;; # (end cycle 13)
-; ALL-NEXT:    copyd $r0 = $r3
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 14)
+; CV1-LABEL: red_min_double8:
+; CV1:       # %bb.0:
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CV1-NEXT:    ;; # (end cycle 0)
+; CV1-NEXT:    lo $r0r1r2r3 = 32[$r0]
+; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    fmind $r0 = $r4, $r0
+; CV1-NEXT:    fmind $r2 = $r6, $r2
+; CV1-NEXT:    ;; # (end cycle 4)
+; CV1-NEXT:    fmind $r1 = $r5, $r1
+; CV1-NEXT:    fmind $r3 = $r7, $r3
+; CV1-NEXT:    ;; # (end cycle 5)
+; CV1-NEXT:    fmind $r0 = $r0, $r2
+; CV1-NEXT:    fmind $r1 = $r1, $r3
+; CV1-NEXT:    ;; # (end cycle 6)
+; CV1-NEXT:    fmind $r0 = $r0, $r1
+; CV1-NEXT:    ret
+; CV1-NEXT:    ;; # (end cycle 7)
+;
+; CV2-LABEL: red_min_double8:
+; CV2:       # %bb.0:
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
+; CV2-NEXT:    ;; # (end cycle 0)
+; CV2-NEXT:    lo $r0r1r2r3 = 32[$r0]
+; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    fmind $r0 = $r4, $r0
+; CV2-NEXT:    fmind $r1 = $r5, $r1
+; CV2-NEXT:    fmind $r2 = $r6, $r2
+; CV2-NEXT:    fmind $r3 = $r7, $r3
+; CV2-NEXT:    ;; # (end cycle 4)
+; CV2-NEXT:    fmind $r0 = $r0, $r2
+; CV2-NEXT:    fmind $r1 = $r1, $r3
+; CV2-NEXT:    ;; # (end cycle 5)
+; CV2-NEXT:    fmind $r0 = $r0, $r1
+; CV2-NEXT:    ret
+; CV2-NEXT:    ;; # (end cycle 6)
   %2 = load <8 x double>, ptr %0
   %3 = tail call fast double @llvm.vector.reduce.fmin.v8f64(<8 x double> %2)
   ret double %3
@@ -789,127 +738,70 @@ declare double @llvm.vector.reduce.fmin.v8f64(<8 x double>)
 define double @red_min_double16(ptr %0) {
 ; CV1-LABEL: red_min_double16:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV1-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lo $r4r5r6r7 = 64[$r0]
+; CV1-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV1-NEXT:    ;; # (end cycle 3)
-; CV1-NEXT:    fcompd.olt $r16 = $r9, $r5
+; CV1-NEXT:    fmind $r5 = $r5, $r9
+; CV1-NEXT:    fmind $r7 = $r7, $r11
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    cmoved.wnez $r16 ? $r5 = $r9
+; CV1-NEXT:    fmind $r4 = $r4, $r8
+; CV1-NEXT:    fmind $r6 = $r6, $r10
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    fcompd.olt $r9 = $r35, $r3
-; CV1-NEXT:    fcompd.olt $r15 = $r33, $r1
+; CV1-NEXT:    fmind $r1 = $r33, $r1
+; CV1-NEXT:    fmind $r3 = $r35, $r3
 ; CV1-NEXT:    ;; # (end cycle 6)
-; CV1-NEXT:    cmoved.wnez $r15 ? $r1 = $r33
-; CV1-NEXT:    fcompd.olt $r15 = $r11, $r7
+; CV1-NEXT:    fmind $r0 = $r32, $r0
+; CV1-NEXT:    fmind $r2 = $r34, $r2
 ; CV1-NEXT:    ;; # (end cycle 7)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r3 = $r35
-; CV1-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
+; CV1-NEXT:    fmind $r0 = $r4, $r0
+; CV1-NEXT:    fmind $r2 = $r6, $r2
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:    fcompd.olt $r9 = $r32, $r0
-; CV1-NEXT:    fcompd.olt $r11 = $r8, $r4
+; CV1-NEXT:    fmind $r1 = $r5, $r1
+; CV1-NEXT:    fmind $r3 = $r7, $r3
 ; CV1-NEXT:    ;; # (end cycle 9)
-; CV1-NEXT:    cmoved.wnez $r9 ? $r0 = $r32
-; CV1-NEXT:    cmoved.wnez $r11 ? $r4 = $r8
+; CV1-NEXT:    fmind $r0 = $r0, $r2
+; CV1-NEXT:    fmind $r1 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 10)
-; CV1-NEXT:    fcompd.olt $r8 = $r34, $r2
-; CV1-NEXT:    fcompd.olt $r9 = $r10, $r6
-; CV1-NEXT:    ;; # (end cycle 11)
-; CV1-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
-; CV1-NEXT:    cmoved.wnez $r9 ? $r6 = $r10
-; CV1-NEXT:    ;; # (end cycle 12)
-; CV1-NEXT:    fcompd.olt $r8 = $r6, $r2
-; CV1-NEXT:    ;; # (end cycle 13)
-; CV1-NEXT:    cmoved.wnez $r8 ? $r2 = $r6
-; CV1-NEXT:    fcompd.olt $r6 = $r4, $r0
-; CV1-NEXT:    ;; # (end cycle 14)
-; CV1-NEXT:    cmoved.wnez $r6 ? $r0 = $r4
-; CV1-NEXT:    fcompd.olt $r4 = $r7, $r3
-; CV1-NEXT:    ;; # (end cycle 15)
-; CV1-NEXT:    cmoved.wnez $r4 ? $r3 = $r7
-; CV1-NEXT:    fcompd.olt $r4 = $r5, $r1
-; CV1-NEXT:    ;; # (end cycle 16)
-; CV1-NEXT:    cmoved.wnez $r4 ? $r1 = $r5
-; CV1-NEXT:    ;; # (end cycle 17)
-; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CV1-NEXT:    ;; # (end cycle 18)
-; CV1-NEXT:    fcompd.olt $r1 = $r0, $r2
-; CV1-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CV1-NEXT:    ;; # (end cycle 19)
-; CV1-NEXT:    cmoved.wnez $r1 ? $r2 = $r0
-; CV1-NEXT:    ;; # (end cycle 20)
-; CV1-NEXT:    fcompd.olt $r0 = $r2, $r3
-; CV1-NEXT:    ;; # (end cycle 21)
-; CV1-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CV1-NEXT:    ;; # (end cycle 22)
-; CV1-NEXT:    copyd $r0 = $r3
+; CV1-NEXT:    fmind $r0 = $r0, $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 23)
+; CV1-NEXT:    ;; # (end cycle 11)
 ;
 ; CV2-LABEL: red_min_double16:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    lo $r8r9r10r11 = 0[$r0]
+; CV2-NEXT:    lo $r4r5r6r7 = 0[$r0]
 ; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lo $r4r5r6r7 = 64[$r0]
+; CV2-NEXT:    lo $r8r9r10r11 = 64[$r0]
 ; CV2-NEXT:    ;; # (end cycle 1)
 ; CV2-NEXT:    lo $r32r33r34r35 = 32[$r0]
 ; CV2-NEXT:    ;; # (end cycle 2)
 ; CV2-NEXT:    lo $r0r1r2r3 = 96[$r0]
 ; CV2-NEXT:    ;; # (end cycle 3)
-; CV2-NEXT:    fcompd.olt $r16 = $r9, $r5
+; CV2-NEXT:    fmind $r4 = $r4, $r8
+; CV2-NEXT:    fmind $r5 = $r5, $r9
+; CV2-NEXT:    fmind $r6 = $r6, $r10
+; CV2-NEXT:    fmind $r7 = $r7, $r11
 ; CV2-NEXT:    ;; # (end cycle 4)
-; CV2-NEXT:    cmoved.wnez $r16 ? $r5 = $r9
-; CV2-NEXT:    ;; # (end cycle 5)
-; CV2-NEXT:    fcompd.olt $r9 = $r35, $r3
-; CV2-NEXT:    fcompd.olt $r15 = $r33, $r1
+; CV2-NEXT:    fmind $r0 = $r32, $r0
+; CV2-NEXT:    fmind $r1 = $r33, $r1
+; CV2-NEXT:    fmind $r2 = $r34, $r2
+; CV2-NEXT:    fmind $r3 = $r35, $r3
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:    cmoved.wnez $r15 ? $r1 = $r33
-; CV2-NEXT:    cmoved.wnez $r9 ? $r3 = $r35
-; CV2-NEXT:    fcompd.olt $r9 = $r32, $r0
-; CV2-NEXT:    fcompd.olt $r15 = $r11, $r7
+; CV2-NEXT:    fmind $r0 = $r4, $r0
+; CV2-NEXT:    fmind $r1 = $r5, $r1
+; CV2-NEXT:    fmind $r2 = $r6, $r2
+; CV2-NEXT:    fmind $r3 = $r7, $r3
 ; CV2-NEXT:    ;; # (end cycle 7)
-; CV2-NEXT:    cmoved.wnez $r9 ? $r0 = $r32
-; CV2-NEXT:    cmoved.wnez $r15 ? $r7 = $r11
-; CV2-NEXT:    fcompd.olt $r9 = $r10, $r6
-; CV2-NEXT:    fcompd.olt $r11 = $r8, $r4
+; CV2-NEXT:    fmind $r0 = $r0, $r2
+; CV2-NEXT:    fmind $r1 = $r1, $r3
 ; CV2-NEXT:    ;; # (end cycle 8)
-; CV2-NEXT:    cmoved.wnez $r11 ? $r4 = $r8
-; CV2-NEXT:    cmoved.wnez $r9 ? $r6 = $r10
-; CV2-NEXT:    fcompd.olt $r8 = $r34, $r2
-; CV2-NEXT:    ;; # (end cycle 9)
-; CV2-NEXT:    cmoved.wnez $r8 ? $r2 = $r34
-; CV2-NEXT:    ;; # (end cycle 10)
-; CV2-NEXT:    fcompd.olt $r8 = $r6, $r2
-; CV2-NEXT:    ;; # (end cycle 11)
-; CV2-NEXT:    cmoved.wnez $r8 ? $r2 = $r6
-; CV2-NEXT:    fcompd.olt $r6 = $r4, $r0
-; CV2-NEXT:    ;; # (end cycle 12)
-; CV2-NEXT:    cmoved.wnez $r6 ? $r0 = $r4
-; CV2-NEXT:    fcompd.olt $r4 = $r7, $r3
-; CV2-NEXT:    ;; # (end cycle 13)
-; CV2-NEXT:    cmoved.wnez $r4 ? $r3 = $r7
-; CV2-NEXT:    fcompd.olt $r4 = $r5, $r1
-; CV2-NEXT:    ;; # (end cycle 14)
-; CV2-NEXT:    cmoved.wnez $r4 ? $r1 = $r5
-; CV2-NEXT:    ;; # (end cycle 15)
-; CV2-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CV2-NEXT:    ;; # (end cycle 16)
-; CV2-NEXT:    fcompd.olt $r1 = $r0, $r2
-; CV2-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CV2-NEXT:    ;; # (end cycle 17)
-; CV2-NEXT:    cmoved.wnez $r1 ? $r2 = $r0
-; CV2-NEXT:    ;; # (end cycle 18)
-; CV2-NEXT:    fcompd.olt $r0 = $r2, $r3
-; CV2-NEXT:    ;; # (end cycle 19)
-; CV2-NEXT:    cmoved.wnez $r0 ? $r3 = $r2
-; CV2-NEXT:    ;; # (end cycle 20)
-; CV2-NEXT:    copyd $r0 = $r3
+; CV2-NEXT:    fmind $r0 = $r0, $r1
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 21)
+; CV2-NEXT:    ;; # (end cycle 9)
   %2 = load <16 x double>, ptr %0
   %3 = tail call fast double @llvm.vector.reduce.fmin.v16f64(<16 x double> %2)
   ret double %3

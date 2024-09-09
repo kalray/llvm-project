@@ -1454,16 +1454,10 @@ define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CHECK-LABEL: test_minnum_fast:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.olt $r4 = $r1, $r3
-; CHECK-NEXT:    fcompd.olt $r5 = $r0, $r2
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmind $r0 = $r0, $r2
+; CHECK-NEXT:    fmind $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <2 x double> @llvm.minnum.v2f64(<2 x double> %a, <2 x double> %b)
   ret <2 x double> %r
 }
@@ -1500,16 +1494,10 @@ define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 define <2 x double> @test_maxnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 ; CHECK-LABEL: test_maxnum_fast:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    fcompd.olt $r4 = $r3, $r1
-; CHECK-NEXT:    fcompd.olt $r5 = $r2, $r0
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cmoved.wnez $r5 ? $r2 = $r0
-; CHECK-NEXT:    cmoved.wnez $r4 ? $r3 = $r1
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    copyd $r0 = $r2
-; CHECK-NEXT:    copyd $r1 = $r3
+; CHECK-NEXT:    fmaxd $r0 = $r0, $r2
+; CHECK-NEXT:    fmaxd $r1 = $r1, $r3
 ; CHECK-NEXT:    ret
-; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    ;; # (end cycle 0)
   %r = call fast <2 x double> @llvm.maxnum.v2f64(<2 x double> %a, <2 x double> %b)
   ret <2 x double> %r
 }

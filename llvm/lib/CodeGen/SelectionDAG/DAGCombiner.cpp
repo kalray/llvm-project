@@ -11706,8 +11706,10 @@ SDValue DAGCombiner::visitSELECT(SDNode *N) {
     // This is OK if we don't care what happens if either operand is a NaN.
     if (N0.hasOneUse() && isLegalToCombineMinNumMaxNum(DAG, N1, N2, Flags, TLI))
       if (SDValue FMinMax =
-              combineMinNumMaxNum(DL, VT, Cond0, Cond1, N1, N2, CC))
+              combineMinNumMaxNum(DL, VT, Cond0, Cond1, N1, N2, CC)) {
+        FMinMax->setFlags(Flags);
         return FMinMax;
+      }
 
     // Use 'unsigned add with overflow' to optimize an unsigned saturating add.
     // This is conservatively limited to pre-legal-operations to give targets
@@ -12348,8 +12350,9 @@ SDValue DAGCombiner::visitVSELECT(SDNode *N) {
     // NaN.
     //
     if (N0.hasOneUse() &&
-        isLegalToCombineMinNumMaxNum(DAG, LHS, RHS, N->getFlags(), TLI)) {
-      if (SDValue FMinMax = combineMinNumMaxNum(DL, VT, LHS, RHS, N1, N2, CC))
+        isLegalToCombineMinNumMaxNum(DAG, LHS, RHS, N->getFlags(), TLI))
+      if (SDValue FMinMax = combineMinNumMaxNum(DL, VT, LHS, RHS, N1, N2, CC)) {
+        FMinMax->setFlags(N->getFlags());
         return FMinMax;
     }
 
