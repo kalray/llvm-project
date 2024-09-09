@@ -40,42 +40,49 @@ define void @loadons(ptr noundef %a, i32 noundef %n, i32 noundef %i) {
 ; KV3_2-NEXT:    xlo $a0 = $r11[$r0]
 ; KV3_2-NEXT:    slld $r11 = $r17, 2
 ; KV3_2-NEXT:    make $r34 = 0
-; KV3_2-NEXT:    slld $r44 = $r33, 2
+; KV3_2-NEXT:    slld $r47 = $r10, 5
 ; KV3_2-NEXT:    ;; # (end cycle 6)
 ; KV3_2-NEXT:    xlo $a1 = $r11[$r0]
-; KV3_2-NEXT:    sxwd $r32 = $r4
-; KV3_2-NEXT:    slld $r46 = $r16, 2
-; KV3_2-NEXT:    slld $r47 = $r10, 5
-; KV3_2-NEXT:    ;; # (end cycle 7)
-; KV3_2-NEXT:    copyq $r32r33 = $r34, $r35
 ; KV3_2-NEXT:    addx4wd $r9 = $r1, 32
 ; KV3_2-NEXT:    addx4wd $r15 = $r8, 32
-; KV3_2-NEXT:    slld $r39 = $r32, 2
-; KV3_2-NEXT:    ;; # (end cycle 8)
-; KV3_2-NEXT:    copyq $r16r17 = $r34, $r35
+; KV3_2-NEXT:    sxwd $r32 = $r4
+; KV3_2-NEXT:    ;; # (end cycle 7)
 ; KV3_2-NEXT:    addx4wd $r38 = $r3, 32
+; KV3_2-NEXT:    slld $r39 = $r32, 2
+; KV3_2-NEXT:    slld $r44 = $r33, 2
+; KV3_2-NEXT:    slld $r46 = $r16, 2
+; KV3_2-NEXT:    ;; # (end cycle 8)
+; KV3_2-NEXT:    copyd $r16 = $r34
+; KV3_2-NEXT:    copyd $r32 = $r34
+; KV3_2-NEXT:    copyd $r33 = $r35
 ; KV3_2-NEXT:    make $r52 = 32
 ; KV3_2-NEXT:    xcopyx.zd $a2a3 = $a2a3
 ; KV3_2-NEXT:    ;; # (end cycle 9)
-; KV3_2-NEXT:    copyq $r10r11 = $r34, $r35
+; KV3_2-NEXT:    copyd $r10 = $r34
+; KV3_2-NEXT:    copyd $r11 = $r35
+; KV3_2-NEXT:    copyd $r17 = $r35
+; KV3_2-NEXT:    copyd $r36 = $r34
 ; KV3_2-NEXT:    ;; # (end cycle 10)
-; KV3_2-NEXT:    copyq $r36r37 = $r34, $r35
+; KV3_2-NEXT:    copyd $r37 = $r35
+; KV3_2-NEXT:    copyd $r40 = $r34
+; KV3_2-NEXT:    copyd $r41 = $r35
+; KV3_2-NEXT:    copyd $r42 = $r34
 ; KV3_2-NEXT:    ;; # (end cycle 11)
-; KV3_2-NEXT:    copyq $r40r41 = $r34, $r35
+; KV3_2-NEXT:    copyd $r43 = $r35
+; KV3_2-NEXT:    copyd $r48 = $r34
+; KV3_2-NEXT:    copyd $r49 = $r35
+; KV3_2-NEXT:    copyd $r50 = $r34
 ; KV3_2-NEXT:    ;; # (end cycle 12)
-; KV3_2-NEXT:    copyq $r42r43 = $r34, $r35
 ; KV3_2-NEXT:    xmovefo $r60r61r62r63 = $a3
+; KV3_2-NEXT:    copyd $r51 = $r35
+; KV3_2-NEXT:    copyd $r54 = $r34
+; KV3_2-NEXT:    copyd $r55 = $r35
 ; KV3_2-NEXT:    ;; # (end cycle 13)
-; KV3_2-NEXT:    copyq $r48r49 = $r34, $r35
 ; KV3_2-NEXT:    xmovefo $r20r21r22r23 = $a2
-; KV3_2-NEXT:    ;; # (end cycle 14)
-; KV3_2-NEXT:    copyq $r50r51 = $r34, $r35
-; KV3_2-NEXT:    ;; # (end cycle 15)
-; KV3_2-NEXT:    copyq $r54r55 = $r34, $r35
-; KV3_2-NEXT:    ;; # (end cycle 16)
-; KV3_2-NEXT:    copyq $r56r57 = $r34, $r35
 ; KV3_2-NEXT:    compd.ne $r35 = $r47, $r34
-; KV3_2-NEXT:    ;; # (end cycle 17)
+; KV3_2-NEXT:    copyd $r56 = $r34
+; KV3_2-NEXT:    copyd $r57 = $r35
+; KV3_2-NEXT:    ;; # (end cycle 14)
 ; KV3_2-NEXT:    cb.even $r35 ? .LBB0_2
 ; KV3_2-NEXT:    ;;
 ; KV3_2-NEXT:  .LBB0_1: # %for.body

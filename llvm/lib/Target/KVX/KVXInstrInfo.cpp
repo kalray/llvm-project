@@ -48,8 +48,10 @@ void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
   }
   if (KVX::PairedRegRegClass.contains(DstReg, SrcReg)) {
     LLVM_DEBUG(dbgs() << "It is a PairedReg copyq.\n");
-    BuildMI(MBB, MBBI, DL, get(KVX::COPYQ), DstReg)
-        .addReg(TRI->getSubReg(SrcReg, KVX::sub_d0), getKillRegState(KillSrc))
+    LLVM_DEBUG(dbgs() << "It is a PairedReg, 2xcopyd.\n");
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYD), TRI->getSubReg(DstReg, KVX::sub_d0))
+        .addReg(TRI->getSubReg(SrcReg, KVX::sub_d0), getKillRegState(KillSrc));
+    BuildMI(MBB, MBBI, DL, get(KVX::COPYD), TRI->getSubReg(DstReg, KVX::sub_d1))
         .addReg(TRI->getSubReg(SrcReg, KVX::sub_d1), getKillRegState(KillSrc));
     return;
   }

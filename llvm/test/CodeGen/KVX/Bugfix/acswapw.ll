@@ -15,7 +15,8 @@ define i32 @foo(ptr align 8 %p ) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    addw $r2 = $r3, -1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 8[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)

@@ -32,7 +32,8 @@ define i64 @atomicrmw_i64_xchg(ptr %ptr, i64 %c, i64 %s) {
 ; CV1-NEXT:    ld $r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:  .LBB2_1:
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -72,7 +73,8 @@ define i32 @atomicrmw_i32_xchg(ptr %ptr, i32 %c, i32 %s) {
 ; CV1-NEXT:    lwz $r3 = 0[$r0]
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB3_1:
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -122,7 +124,8 @@ define i64 @atomicrmw_i64_xchg_as(ptr addrspace(1) %ptr, i64 %c, i64 %s) {
 ; CV1-NEXT:    ld $r21 = 0[$r18]
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB4_1:
-; CV1-NEXT:    copyq $r0r1 = $r20, $r21
+; CV1-NEXT:    copyd $r0 = $r20
+; CV1-NEXT:    copyd $r1 = $r21
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    acswapd 0[$r18] = $r0r1
 ; CV1-NEXT:    ;; # (end cycle 1)
@@ -211,7 +214,8 @@ define i8 @atomic_test_and_set(ptr %ptr) {
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -276,8 +280,9 @@ define i64 @cmpxchg_i64(ptr %ptr, i64 %c, i64 %s) {
 ; CV1-LABEL: cmpxchg_i64:
 ; CV1:         fence
 ; CV1-NEXT:    copyd $r3 = $r1
+; CV1-NEXT:    copyd $r4 = $r2
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -437,7 +442,8 @@ define i8 @atomicrmw_i8_min(ptr %src, i8 %b) {
 ; CV1-NEXT:    ;; # (end cycle 4)
 ; CV1-NEXT:    iorw $r4 = $r6, $r4
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 7)
@@ -503,7 +509,8 @@ define i64 @atomicrmw_i64_max(ptr %src, i64 %b) {
 ; CV1-NEXT:  .LBB13_1:
 ; CV1-NEXT:    maxd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -549,7 +556,8 @@ define i64 @atomicrmw_i64_add(ptr %src, i64 %b) {
 ; CV1-NEXT:  .LBB14_1:
 ; CV1-NEXT:    addd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -593,7 +601,8 @@ define i64 @atomicrmw_i64_sub(ptr %src, i64 %b) {
 ; CV1-NEXT:  .LBB15_1:
 ; CV1-NEXT:    sbfd $r2 = $r1, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -637,7 +646,8 @@ define i64 @atomicrmw_i64_nand(ptr %src, i64 %b) {
 ; CV1-NEXT:  .LBB16_1:
 ; CV1-NEXT:    nandd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -681,7 +691,8 @@ define i32 @atomicrmw_i32_xor(ptr %src, i32 %b) {
 ; CV1-NEXT:  .LBB17_1:
 ; CV1-NEXT:    eorw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -737,7 +748,8 @@ define i64 @atomicrmw_i64_sub_global_as(ptr addrspace(1)%src, i64 %b) {
 ; CV1-NEXT:  .LBB18_1:
 ; CV1-NEXT:    sbfd $r20 = $r18, $r21
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r0r1 = $r20, $r21
+; CV1-NEXT:    copyd $r0 = $r20
+; CV1-NEXT:    copyd $r1 = $r21
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r19] = $r0r1
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -818,7 +830,8 @@ define i64 @bigimm(ptr %0, i64 %1) {
 ; CV1-NEXT:  .LBB19_1:
 ; CV1-NEXT:    addd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0x40000000000[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)

@@ -31,7 +31,8 @@ define void @set(ptr %x, i32 %num) {
 ; CV1-NEXT:    # => This Inner Loop Header: Depth=2
 ; CV1-NEXT:    addw $r4 = $r5, -4
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r2] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 2)

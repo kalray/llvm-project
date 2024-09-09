@@ -681,12 +681,14 @@ define void @shiftwx_last(ptr noalias nocapture sret(<16 x i32>) align 32 %0, pt
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 5)
-; CHECK-NEXT:    copyq $r4r5 = $r2, $r3
+; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    copyd $r6 = $r2
+; CHECK-NEXT:    copyd $r7 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
-; CHECK-NEXT:    copyq $r6r7 = $r2, $r3
-; CHECK-NEXT:    ;; # (end cycle 7)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 8)
@@ -1101,12 +1103,14 @@ define void @shiftfhv_last(ptr noalias nocapture sret(<32 x half>) align 32 %0, 
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    copyq $r4r5 = $r2, $r3
+; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    copyd $r6 = $r2
+; CHECK-NEXT:    copyd $r7 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 8)
-; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
-; CHECK-NEXT:    copyq $r6r7 = $r2, $r3
-; CHECK-NEXT:    ;; # (end cycle 9)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
+; CHECK-NEXT:    ;; # (end cycle 9)
+; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 10)
@@ -1318,12 +1322,14 @@ define void @shiftfwx_last(ptr noalias nocapture sret(<16 x float>) align 32 %0,
 ; CHECK-NEXT:    copyd $r2 = $r1
 ; CHECK-NEXT:    copyd $r3 = $r1
 ; CHECK-NEXT:    ;; # (end cycle 6)
-; CHECK-NEXT:    copyq $r4r5 = $r2, $r3
+; CHECK-NEXT:    copyd $r4 = $r2
+; CHECK-NEXT:    copyd $r5 = $r3
+; CHECK-NEXT:    copyd $r6 = $r2
+; CHECK-NEXT:    copyd $r7 = $r3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
-; CHECK-NEXT:    copyq $r6r7 = $r2, $r3
-; CHECK-NEXT:    ;; # (end cycle 8)
 ; CHECK-NEXT:    so 32[$r15] = $r4r5r6r7
+; CHECK-NEXT:    ;; # (end cycle 8)
+; CHECK-NEXT:    so 0[$r15] = $r0r1r2r3
 ; CHECK-NEXT:    copyd $r0 = $r15
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 9)

@@ -92,7 +92,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -134,7 +135,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -171,7 +173,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -203,7 +206,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -237,7 +241,8 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    iorw $r4 = $r4, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    copyq $r6r7 = $r4, $r5
+; CV1-NEXT:    copyd $r6 = $r4
+; CV1-NEXT:    copyd $r7 = $r5
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    acswapw 0[$r0] = $r6r7
 ; CV1-NEXT:    ;; # (end cycle 3)

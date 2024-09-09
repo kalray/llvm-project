@@ -29,7 +29,8 @@ define void @foo32() {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    copyd $r2 = $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw.xs $r1[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -98,7 +99,8 @@ define void @foo64() {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    copyd $r2 = $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd.xs $r1[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)

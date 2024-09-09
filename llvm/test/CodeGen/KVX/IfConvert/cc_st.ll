@@ -571,7 +571,8 @@ define <2 x i64> @select_inputs_paired(ptr %0, <2 x i64> %1, <2 x i64> %a, i32 %
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sq 0[$r0] = $r8r9
-; CHECK-NEXT:    copyq $r6r7 = $r8, $r9
+; CHECK-NEXT:    copyd $r6 = $r8
+; CHECK-NEXT:    copyd $r7 = $r9
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB28_2:
 ; CHECK-NEXT:    copyd $r0 = $r6

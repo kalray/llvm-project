@@ -17,7 +17,8 @@ define i32 @f32min(ptr %src, i32 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    minw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -69,7 +70,8 @@ define i32 @f32max(ptr %src, i32 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    maxw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -121,7 +123,8 @@ define i32 @f32umin(ptr %src, i32 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    minuw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -173,7 +176,8 @@ define i32 @f32umax(ptr %src, i32 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    maxuw $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapw 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -225,7 +229,8 @@ define i64 @f64min(ptr %src, i64 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    mind $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -277,7 +282,8 @@ define i64 @f64max(ptr %src, i64 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    maxd $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -329,7 +335,8 @@ define i64 @f64umin(ptr %src, i64 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    minud $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
@@ -381,7 +388,8 @@ define i64 @f64umax(ptr %src, i64 %b) {
 ; CV1-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CV1-NEXT:    maxud $r2 = $r3, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    copyq $r4r5 = $r2, $r3
+; CV1-NEXT:    copyd $r4 = $r2
+; CV1-NEXT:    copyd $r5 = $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
 ; CV1-NEXT:    acswapd 0[$r0] = $r4r5
 ; CV1-NEXT:    ;; # (end cycle 2)
