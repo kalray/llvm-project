@@ -11,16 +11,14 @@ declare half @llvm.maxnum.f16(half, half)
 define half @fmaxh(half %a, half %b) {
 ; CV1-LABEL: fmaxh:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sllhqs $r2 = $r0, 1
-; CV1-NEXT:    fcompnhq.olt $r3 = $r0, $r1
+; CV1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; CV1-NEXT:    fcompnhq.une $r3 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800
+; CV1-NEXT:    iorw $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iorw $r2 = $r3, $r2
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: fmaxh:
 ; CV2:       # %bb.0:
@@ -44,16 +42,14 @@ define half @fmaxh_fast(half %a, half %b) {
 define float @fmaxw(float %a, float %b) {
 ; CV1-LABEL: fmaxw:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sllw $r2 = $r0, 1
-; CV1-NEXT:    fcompw.olt $r3 = $r0, $r1
+; CV1-NEXT:    fcompw.olt $r2 = $r0, $r1
+; CV1-NEXT:    fcompw.une $r3 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compw.gtu $r2 = $r2, 0xff000000
+; CV1-NEXT:    iorw $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iorw $r2 = $r3, $r2
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: fmaxw:
 ; CV2:       # %bb.0:
@@ -79,16 +75,14 @@ declare float @llvm.maxnum.f32(float, float)
 define double @fmaxd(double %a, double %b) {
 ; CV1-LABEL: fmaxd:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    slld $r2 = $r0, 1
-; CV1-NEXT:    fcompd.olt $r3 = $r0, $r1
+; CV1-NEXT:    fcompd.olt $r2 = $r0, $r1
+; CV1-NEXT:    fcompd.une $r3 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.gtu $r2 = $r2, 0xffe0000000000000
+; CV1-NEXT:    iord $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r2 = $r3, $r2
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: fmaxd:
 ; CV2:       # %bb.0:

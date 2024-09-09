@@ -198,16 +198,14 @@ declare float @llvm.vector.reduce.fmax.v16f32(<16 x float>)
 define double @red_max_double2(<2 x double> %0) {
 ; CV1-LABEL: red_max_double2:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    slld $r2 = $r0, 1
-; CV1-NEXT:    fcompd.olt $r3 = $r0, $r1
+; CV1-NEXT:    fcompd.olt $r2 = $r0, $r1
+; CV1-NEXT:    fcompd.une $r3 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.gtu $r2 = $r2, 0xffe0000000000000
+; CV1-NEXT:    iord $r2 = $r2, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r2 = $r3, $r2
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r2 ? $r0 = $r1
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 3)
+; CV1-NEXT:    ;; # (end cycle 2)
 ;
 ; CV2-LABEL: red_max_double2:
 ; CV2:       # %bb.0:

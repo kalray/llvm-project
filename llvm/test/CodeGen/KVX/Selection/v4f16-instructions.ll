@@ -1763,16 +1763,14 @@ define <4 x half> @test_fabs(<4 x half> %a) #0 {
 define <4 x half> @test_minnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-LABEL: test_minnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
-; KV3_1-NEXT:    fcompnhq.olt $r3 = $r1, $r0
+; KV3_1-NEXT:    fcompnhq.olt $r2 = $r1, $r0
+; KV3_1-NEXT:    fcompnhq.une $r3 = $r0, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800.@
+; KV3_1-NEXT:    iord $r2 = $r2, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r2 = $r3, $r2
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_minnum:
 ; KV3_2:       # %bb.0:
@@ -1796,16 +1794,14 @@ define <4 x half> @test_minnum_fast(<4 x half> %a, <4 x half> %b) #0 {
 define <4 x half> @test_maxnum(<4 x half> %a, <4 x half> %b) #0 {
 ; KV3_1-LABEL: test_maxnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllhqs $r2 = $r0, 1
-; KV3_1-NEXT:    fcompnhq.olt $r3 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.olt $r2 = $r0, $r1
+; KV3_1-NEXT:    fcompnhq.une $r3 = $r1, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnhq.gtu $r2 = $r2, 0xf800f800.@
+; KV3_1-NEXT:    iord $r2 = $r2, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r2 = $r3, $r2
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovehq.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_maxnum:
 ; KV3_2:       # %bb.0:

@@ -3397,18 +3397,16 @@ define <8 x half> @test_fabs(<8 x half> %a) #0 {
 define <8 x half> @test_minnum(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-LABEL: test_minnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sllhqs $r4 = $r0, 1
-; CV1-NEXT:    sllhqs $r5 = $r1, 1
+; CV1-NEXT:    fcompnhq.olt $r4 = $r2, $r0
+; CV1-NEXT:    fcompnhq.une $r5 = $r0, $r0
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compnhq.gtu $r4 = $r4, 0xf800f800.@
-; CV1-NEXT:    compnhq.gtu $r5 = $r5, 0xf800f800.@
-; CV1-NEXT:    fcompnhq.olt $r6 = $r2, $r0
-; CV1-NEXT:    fcompnhq.olt $r7 = $r3, $r1
+; CV1-NEXT:    iord $r4 = $r4, $r5
+; CV1-NEXT:    fcompnhq.olt $r6 = $r3, $r1
+; CV1-NEXT:    fcompnhq.une $r7 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r4 = $r6, $r4
-; CV1-NEXT:    iord $r5 = $r7, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r4 ? $r0 = $r2
+; CV1-NEXT:    iord $r5 = $r6, $r7
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r5 ? $r1 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
@@ -3437,18 +3435,16 @@ define <8 x half> @test_minnum_fast(<8 x half> %a, <8 x half> %b) #0 {
 define <8 x half> @test_maxnum(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-LABEL: test_maxnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    sllhqs $r4 = $r0, 1
-; CV1-NEXT:    sllhqs $r5 = $r1, 1
+; CV1-NEXT:    fcompnhq.olt $r4 = $r0, $r2
+; CV1-NEXT:    fcompnhq.une $r5 = $r2, $r2
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compnhq.gtu $r4 = $r4, 0xf800f800.@
-; CV1-NEXT:    compnhq.gtu $r5 = $r5, 0xf800f800.@
-; CV1-NEXT:    fcompnhq.olt $r6 = $r0, $r2
-; CV1-NEXT:    fcompnhq.olt $r7 = $r1, $r3
+; CV1-NEXT:    iord $r4 = $r4, $r5
+; CV1-NEXT:    fcompnhq.olt $r6 = $r1, $r3
+; CV1-NEXT:    fcompnhq.une $r7 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r4 = $r6, $r4
-; CV1-NEXT:    iord $r5 = $r7, $r5
-; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r4 ? $r0 = $r2
+; CV1-NEXT:    iord $r5 = $r6, $r7
+; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmovehq.odd $r5 ? $r1 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)

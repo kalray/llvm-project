@@ -1425,19 +1425,17 @@ define <2 x double> @test_fabs(<2 x double> %a) #0 {
 define <2 x double> @test_minnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: test_minnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    slld $r4 = $r1, 1
-; CV1-NEXT:    slld $r5 = $r0, 1
-; CV1-NEXT:    fcompd.olt $r6 = $r3, $r1
-; CV1-NEXT:    fcompd.olt $r7 = $r2, $r0
+; CV1-NEXT:    fcompd.olt $r4 = $r3, $r1
+; CV1-NEXT:    fcompd.une $r5 = $r1, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.gtu $r4 = $r4, 0xffe0000000000000
-; CV1-NEXT:    compd.gtu $r5 = $r5, 0xffe0000000000000
+; CV1-NEXT:    iord $r4 = $r4, $r5
+; CV1-NEXT:    fcompd.olt $r6 = $r2, $r0
+; CV1-NEXT:    fcompd.une $r7 = $r0, $r0
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r4 = $r6, $r4
-; CV1-NEXT:    iord $r5 = $r7, $r5
+; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
+; CV1-NEXT:    iord $r5 = $r6, $r7
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r5 ? $r0 = $r2
-; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;
@@ -1465,19 +1463,17 @@ define <2 x double> @test_minnum_fast(<2 x double> %a, <2 x double> %b) #0 {
 define <2 x double> @test_maxnum(<2 x double> %a, <2 x double> %b) #0 {
 ; CV1-LABEL: test_maxnum:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    slld $r4 = $r1, 1
-; CV1-NEXT:    slld $r5 = $r0, 1
-; CV1-NEXT:    fcompd.olt $r6 = $r1, $r3
-; CV1-NEXT:    fcompd.olt $r7 = $r0, $r2
+; CV1-NEXT:    fcompd.olt $r4 = $r1, $r3
+; CV1-NEXT:    fcompd.une $r5 = $r3, $r3
 ; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    compd.gtu $r4 = $r4, 0xffe0000000000000
-; CV1-NEXT:    compd.gtu $r5 = $r5, 0xffe0000000000000
+; CV1-NEXT:    iord $r4 = $r4, $r5
+; CV1-NEXT:    fcompd.olt $r6 = $r0, $r2
+; CV1-NEXT:    fcompd.une $r7 = $r2, $r2
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    iord $r4 = $r6, $r4
-; CV1-NEXT:    iord $r5 = $r7, $r5
+; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
+; CV1-NEXT:    iord $r5 = $r6, $r7
 ; CV1-NEXT:    ;; # (end cycle 2)
 ; CV1-NEXT:    cmoved.odd $r5 ? $r0 = $r2
-; CV1-NEXT:    cmoved.odd $r4 ? $r1 = $r3
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;; # (end cycle 3)
 ;

@@ -1563,18 +1563,16 @@ define <4 x float> @test_fabs(<4 x float> %a) #0 {
 define <4 x float> @test_minnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-LABEL: test_minnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllwps $r4 = $r0, 1
-; KV3_1-NEXT:    sllwps $r5 = $r1, 1
+; KV3_1-NEXT:    fcompnwp.olt $r4 = $r2, $r0
+; KV3_1-NEXT:    fcompnwp.une $r5 = $r0, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnwp.gtu $r4 = $r4, 0xff000000.@
-; KV3_1-NEXT:    compnwp.gtu $r5 = $r5, 0xff000000.@
-; KV3_1-NEXT:    fcompnwp.olt $r6 = $r2, $r0
-; KV3_1-NEXT:    fcompnwp.olt $r7 = $r3, $r1
+; KV3_1-NEXT:    iord $r4 = $r4, $r5
+; KV3_1-NEXT:    fcompnwp.olt $r6 = $r3, $r1
+; KV3_1-NEXT:    fcompnwp.une $r7 = $r1, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r4 = $r6, $r4
-; KV3_1-NEXT:    iord $r5 = $r7, $r5
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r4 ? $r0 = $r2
+; KV3_1-NEXT:    iord $r5 = $r6, $r7
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r5 ? $r1 = $r3
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 3)
@@ -1603,18 +1601,16 @@ define <4 x float> @test_minnum_fast(<4 x float> %a, <4 x float> %b) #0 {
 define <4 x float> @test_maxnum(<4 x float> %a, <4 x float> %b) #0 {
 ; KV3_1-LABEL: test_maxnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllwps $r4 = $r0, 1
-; KV3_1-NEXT:    sllwps $r5 = $r1, 1
+; KV3_1-NEXT:    fcompnwp.olt $r4 = $r0, $r2
+; KV3_1-NEXT:    fcompnwp.une $r5 = $r2, $r2
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnwp.gtu $r4 = $r4, 0xff000000.@
-; KV3_1-NEXT:    compnwp.gtu $r5 = $r5, 0xff000000.@
-; KV3_1-NEXT:    fcompnwp.olt $r6 = $r0, $r2
-; KV3_1-NEXT:    fcompnwp.olt $r7 = $r1, $r3
+; KV3_1-NEXT:    iord $r4 = $r4, $r5
+; KV3_1-NEXT:    fcompnwp.olt $r6 = $r1, $r3
+; KV3_1-NEXT:    fcompnwp.une $r7 = $r3, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r4 = $r6, $r4
-; KV3_1-NEXT:    iord $r5 = $r7, $r5
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r4 ? $r0 = $r2
+; KV3_1-NEXT:    iord $r5 = $r6, $r7
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r5 ? $r1 = $r3
 ; KV3_1-NEXT:    ret
 ; KV3_1-NEXT:    ;; # (end cycle 3)

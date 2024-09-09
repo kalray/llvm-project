@@ -1417,13 +1417,13 @@ foreach I = [int_kvx_min, fminnum_ok] in {
 }
 }
 
-multiclass FMAX_FMIN_Pat<ValueType vt, Instruction SHL, Instruction FCMP, OutPatFrag IsNan, Instruction OR, Instruction CMOVE, dag CMOVE_cond> {
+multiclass FMAX_FMIN_Pat<ValueType vt, Instruction FCMP, Instruction OR, Instruction CMOVE, dag CMOVE_cond> {
   def _fminnum : Pat
   <(vt (fminnum vt:$lhs, vt:$rhs)),
       (vt (CMOVE
               (OR
               (FCMP SingleReg:$rhs, SingleReg:$lhs, floatcomp_olt),
-              (IsNan (SHL SingleReg:$lhs, 1))),
+              (FCMP SingleReg:$lhs, SingleReg:$lhs, floatcomp_une)),
               SingleReg:$lhs,
               SingleReg:$rhs,
               CMOVE_cond))>;
@@ -1433,36 +1433,19 @@ multiclass FMAX_FMIN_Pat<ValueType vt, Instruction SHL, Instruction FCMP, OutPat
       (vt (CMOVE
               (OR
               (FCMP SingleReg:$lhs, SingleReg:$rhs, floatcomp_olt),
-              (IsNan (SHL SingleReg:$lhs, 1))),
+              (FCMP SingleReg:$rhs, SingleReg:$rhs, floatcomp_une)),
               SingleReg:$lhs,
               SingleReg:$rhs,
               CMOVE_cond))>;
 }
 
-def IsNanD : OutPatFrag <(ops node:$v),
-                (COMPDri64 node:$v, (i64 0xFFE0000000000000), comparison_gtu)>;
-
-def IsNanW : OutPatFrag <(ops node:$v),
-                (COMPWri node:$v, (i32 0xFF000000), comparison_gtu)>;
-
-def IsNanWP: OutPatFrag <(ops node:$v),
-                (COMPNWPris node:$v, (i32 0xFF000000), comparison_gtu)>;
-
-def IsNanH: OutPatFrag <(ops node:$v),
-                (COMPNHQri node:$v, (i32 0xF800), comparison_gtu)>;
-
-def IsNanHP: OutPatFrag <(ops node:$v),
-                (COMPNHQri node:$v, (i32 0xF800F800), comparison_gtu)>;
-
-def IsNanHQ: OutPatFrag <(ops node:$v),
-                (COMPNHQris node:$v, (i32 0xF800F800), comparison_gtu)>;
-
-defm cv1_h : FMAX_FMIN_Pat<f16, SLLHQSri, FCOMPNHQ, IsNanH, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
-defm cv1_hp : FMAX_FMIN_Pat<v2f16, SLLHQSri, FCOMPNHQ, IsNanHP, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
-defm cv1_hq : FMAX_FMIN_Pat<v4f16, SLLHQSri, FCOMPNHQ, IsNanHQ, ORDrr, CMOVEHQ, (i32 simplecond_odd)>;
-defm cv1_w : FMAX_FMIN_Pat<f32, SLLWri, FCOMPWrr, IsNanW, ORWrr, CMOVEDrr, (i32 scalarcond_odd)>;
-defm cv1_wp : FMAX_FMIN_Pat<v2f32, SLLWPSri, FCOMPNWP, IsNanWP, ORDrr, CMOVEWP, (i32 simplecond_odd)>;
-defm cv1_d : FMAX_FMIN_Pat<f64, SLLDri, FCOMPD, IsNanD, ORDrr, CMOVEDrr, (i32 scalarcond_odd)>;
+ 
+defm cv1_h : FMAX_FMIN_Pat<f16, FCOMPNHQ, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_hp : FMAX_FMIN_Pat<v2f16, FCOMPNHQ, ORWrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_hq : FMAX_FMIN_Pat<v4f16, FCOMPNHQ, ORDrr, CMOVEHQ, (i32 simplecond_odd)>;
+defm cv1_w : FMAX_FMIN_Pat<f32, FCOMPWrr, ORWrr, CMOVEDrr, (i32 scalarcond_odd)>;
+defm cv1_wp : FMAX_FMIN_Pat<v2f32, FCOMPNWP, ORDrr, CMOVEWP, (i32 simplecond_odd)>;
+defm cv1_d : FMAX_FMIN_Pat<f64, FCOMPD, ORDrr, CMOVEDrr, (i32 scalarcond_odd)>;
 
 // FNEG
 def : Pat<(vfneg f16:$rs), (FNEGHQ SingleReg:$rs)>;

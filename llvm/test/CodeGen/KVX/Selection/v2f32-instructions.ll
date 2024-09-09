@@ -1127,16 +1127,14 @@ define <2 x float> @test_fabs(<2 x float> %a) #0 {
 define <2 x float> @test_minnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: test_minnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllwps $r2 = $r0, 1
-; KV3_1-NEXT:    fcompnwp.olt $r3 = $r1, $r0
+; KV3_1-NEXT:    fcompnwp.olt $r2 = $r1, $r0
+; KV3_1-NEXT:    fcompnwp.une $r3 = $r0, $r0
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnwp.gtu $r2 = $r2, 0xff000000.@
+; KV3_1-NEXT:    iord $r2 = $r2, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r2 = $r3, $r2
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_minnum:
 ; KV3_2:       # %bb.0:
@@ -1160,16 +1158,14 @@ define <2 x float> @test_minnum_fast(<2 x float> %a, <2 x float> %b) #0 {
 define <2 x float> @test_maxnum(<2 x float> %a, <2 x float> %b) #0 {
 ; KV3_1-LABEL: test_maxnum:
 ; KV3_1:       # %bb.0:
-; KV3_1-NEXT:    sllwps $r2 = $r0, 1
-; KV3_1-NEXT:    fcompnwp.olt $r3 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.olt $r2 = $r0, $r1
+; KV3_1-NEXT:    fcompnwp.une $r3 = $r1, $r1
 ; KV3_1-NEXT:    ;; # (end cycle 0)
-; KV3_1-NEXT:    compnwp.gtu $r2 = $r2, 0xff000000.@
+; KV3_1-NEXT:    iord $r2 = $r2, $r3
 ; KV3_1-NEXT:    ;; # (end cycle 1)
-; KV3_1-NEXT:    iord $r2 = $r3, $r2
-; KV3_1-NEXT:    ;; # (end cycle 2)
 ; KV3_1-NEXT:    cmovewp.odd $r2 ? $r0 = $r1
 ; KV3_1-NEXT:    ret
-; KV3_1-NEXT:    ;; # (end cycle 3)
+; KV3_1-NEXT:    ;; # (end cycle 2)
 ;
 ; KV3_2-LABEL: test_maxnum:
 ; KV3_2:       # %bb.0:
