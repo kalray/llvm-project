@@ -1,5 +1,6 @@
-// RUN: %clang_cc1 -fsyntax-only -verify -std=c23 %s
+// UNSUPPORTED: target=kvx-{{.*}}
 
+// RUN: %clang_cc1 -fsyntax-only -verify -std=c23 %s
 // GH87641 noticed that integer promotion of a bit-field of bit-precise integer
 // type was promoting to int rather than the type of the bit-field.
 struct S {

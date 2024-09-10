@@ -1,3 +1,4 @@
+// UNSUPPORTED: target=kvx-{{.*}}
 // RUN: %clang_cc1 -verify -std=c++2a -fsyntax-only -Wno-bit-int-extension %s
 // RUN: %clang_cc1 -verify -std=c++2a -fsyntax-only -Wno-bit-int-extension -triple ppc64-unknown-linux %s
 // RUN: %clang_cc1 -verify -std=c++2a -fsyntax-only -Wno-bit-int-extension -triple ppc64le-unknown-linux %s

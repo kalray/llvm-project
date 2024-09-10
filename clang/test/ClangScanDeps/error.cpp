@@ -1,3 +1,5 @@
+// kvx-cos-as does not support @import
+// UNSUPPORTED: target=kvx-{{.*}}
 // RUN: rm -rf %t
 // RUN: split-file %s %t
 

@@ -1,3 +1,6 @@
+// FIXME: kvx-cos-as does not accept @import
+// UNSUPPORTED: target=kvx-{{.*}}
+
 // This test checks that only module map files defining affecting modules are
 // affecting.
 
