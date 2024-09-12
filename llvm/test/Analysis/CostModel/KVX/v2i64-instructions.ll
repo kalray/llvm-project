@@ -224,7 +224,7 @@ define <2 x i64> @test_select(<2 x i64> %a, <2 x i64> %b, i1 zeroext %c) {
 
 define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x i64> %d) {
 ; ALL-LABEL: 'test_select_cc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <2 x i64> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <2 x i64> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
@@ -235,7 +235,7 @@ define <2 x i64> @test_select_cc(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x 
 
 define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %c, <2 x i64> %d) {
 ; ALL-LABEL: 'test_select_cc_f32_f32'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <2 x i64> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ult <2 x i64> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
@@ -246,7 +246,7 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i64> %
 
 define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) {
 ; ALL-LABEL: 'test_icmp_ule'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ule <2 x i64> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ule <2 x i64> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ule <2 x i64> %a, %b
@@ -255,7 +255,7 @@ define <2 x i1> @test_icmp_ule(<2 x i64> %a, <2 x i64> %b) {
 
 define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) {
 ; ALL-LABEL: 'test_icmp_slt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp slt <2 x i64> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp slt <2 x i64> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp slt <2 x i64> %a, %b
@@ -264,7 +264,7 @@ define <2 x i1> @test_icmp_slt(<2 x i64> %a, <2 x i64> %b) {
 
 define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) {
 ; ALL-LABEL: 'test_icmp_ugt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ugt <2 x i64> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ugt <2 x i64> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ugt <2 x i64> %a, %b
@@ -273,7 +273,7 @@ define <2 x i1> @test_icmp_ugt(<2 x i64> %a, <2 x i64> %b) {
 
 define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) {
 ; ALL-LABEL: 'test_icmp_uge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp uge <2 x i64> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp uge <2 x i64> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp uge <2 x i64> %a, %b
@@ -282,7 +282,7 @@ define <2 x i1> @test_icmp_uge(<2 x i64> %a, <2 x i64> %b) {
 
 define <2 x i1> @test_icmp_ult(<2 x i64> %a, <2 x i64> %b) {
 ; ALL-LABEL: 'test_icmp_ult'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ult <2 x i64> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ult <2 x i64> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ult <2 x i64> %a, %b

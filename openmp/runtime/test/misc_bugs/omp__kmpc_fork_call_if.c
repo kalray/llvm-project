@@ -1,4 +1,4 @@
-// RUN: %libomp-compile && %t | FileCheck %s
+// RUN: %libomp-compile && %libomp-run | FileCheck %s
 
 #include <stdio.h>
 #include <omp.h>

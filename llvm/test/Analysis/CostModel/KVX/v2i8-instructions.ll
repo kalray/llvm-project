@@ -223,15 +223,10 @@ define <2 x i8> @test_select(<2 x i8> %a, <2 x i8> %b, i1 zeroext %c) #0 {
 }
 
 define <2 x i8> @test_select_cc(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> %d) #0 {
-; CV1-LABEL: 'test_select_cc'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp slt <2 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i8> %a, <2 x i8> %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %r
-;
-; CV2-LABEL: 'test_select_cc'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <2 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i8> %a, <2 x i8> %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %r
+; ALL-LABEL: 'test_select_cc'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <2 x i8> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i8> %a, <2 x i8> %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i8> %r
 ;
   %cc = icmp slt <2 x i8> %c, %d
   %r = select <2 x i1> %cc, <2 x i8> %a, <2 x i8> %b
@@ -239,15 +234,10 @@ define <2 x i8> @test_select_cc(<2 x i8> %a, <2 x i8> %b, <2 x i8> %c, <2 x i8> 
 }
 
 define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c, <2 x i8> %d) #0 {
-; CV1-LABEL: 'test_select_cc_f32_f32'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp ult <2 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
-;
-; CV2-LABEL: 'test_select_cc_f32_f32'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <2 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
+; ALL-LABEL: 'test_select_cc_f32_f32'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ult <2 x i8> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i64> %r
 ;
   %cc = icmp ult <2 x i8> %c, %d
   %r = select <2 x i1> %cc, <2 x i64> %a, <2 x i64> %b
@@ -255,65 +245,45 @@ define <2 x i64> @test_select_cc_f32_f32(<2 x i64> %a, <2 x i64> %b, <2 x i8> %c
 }
 
 define <2 x i1> @test_icmp_ule(<2 x i8> %a, <2 x i8> %b) #0 {
-; CV1-LABEL: 'test_icmp_ule'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = icmp ule <2 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
-;
-; CV2-LABEL: 'test_icmp_ule'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ule <2 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
+; ALL-LABEL: 'test_icmp_ule'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ule <2 x i8> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ule <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_slt(<2 x i8> %a, <2 x i8> %b) #0 {
-; CV1-LABEL: 'test_icmp_slt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = icmp slt <2 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
-;
-; CV2-LABEL: 'test_icmp_slt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp slt <2 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
+; ALL-LABEL: 'test_icmp_slt'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp slt <2 x i8> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp slt <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_ugt(<2 x i8> %a, <2 x i8> %b) #0 {
-; CV1-LABEL: 'test_icmp_ugt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = icmp ugt <2 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
-;
-; CV2-LABEL: 'test_icmp_ugt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ugt <2 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
+; ALL-LABEL: 'test_icmp_ugt'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ugt <2 x i8> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ugt <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_uge(<2 x i8> %a, <2 x i8> %b) #0 {
-; CV1-LABEL: 'test_icmp_uge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = icmp uge <2 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
-;
-; CV2-LABEL: 'test_icmp_uge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp uge <2 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
+; ALL-LABEL: 'test_icmp_uge'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp uge <2 x i8> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp uge <2 x i8> %a, %b
   ret <2 x i1> %r
 }
 
 define <2 x i1> @test_icmp_ult(<2 x i8> %a, <2 x i8> %b) #0 {
-; CV1-LABEL: 'test_icmp_ult'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %r = icmp ult <2 x i8> %a, %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
-;
-; CV2-LABEL: 'test_icmp_ult'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ult <2 x i8> %a, %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
+; ALL-LABEL: 'test_icmp_ult'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ult <2 x i8> %a, %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = icmp ult <2 x i8> %a, %b
   ret <2 x i1> %r

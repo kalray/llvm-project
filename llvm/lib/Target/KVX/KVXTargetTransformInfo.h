@@ -178,6 +178,8 @@ public:
 
   unsigned getNumberOfParts(Type *Tp);
 
+
+  bool prefersVectorizedAddressing() const { return false; }
 private:
   bool isHardwareLoopProfitableCheck(Loop *L, ScalarEvolution &SE);
 };

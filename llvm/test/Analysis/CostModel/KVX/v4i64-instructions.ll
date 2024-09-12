@@ -303,12 +303,12 @@ define <4 x i64> @test_select(<4 x i64> %a, <4 x i64> %b, i1 zeroext %c) #0 {
 
 define <4 x i64> @test_select_cc(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x i64> %d) #0 {
 ; CV1-LABEL: 'test_select_cc'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i64> %c, %d
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <4 x i64> %c, %d
 ; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
 ; CV2-LABEL: 'test_select_cc'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i64> %c, %d
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <4 x i64> %c, %d
 ; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
@@ -319,12 +319,12 @@ define <4 x i64> @test_select_cc(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x 
 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i64> %c, <4 x i64> %d) #0 {
 ; CV1-LABEL: 'test_select_cc_f32_f32'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i64> %c, %d
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ult <4 x i64> %c, %d
 ; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
 ; CV2-LABEL: 'test_select_cc_f32_f32'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i64> %c, %d
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ult <4 x i64> %c, %d
 ; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
@@ -335,11 +335,11 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i64> %
 
 define <4 x i1> @test_icmp_ule(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CV1-LABEL: 'test_icmp_ule'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ule <4 x i64> %a, %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ule <4 x i64> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
 ; CV2-LABEL: 'test_icmp_ule'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ule <4 x i64> %a, %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ule <4 x i64> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ule <4 x i64> %a, %b
@@ -348,11 +348,11 @@ define <4 x i1> @test_icmp_ule(<4 x i64> %a, <4 x i64> %b) #0 {
 
 define <4 x i1> @test_icmp_slt(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CV1-LABEL: 'test_icmp_slt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp slt <4 x i64> %a, %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp slt <4 x i64> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
 ; CV2-LABEL: 'test_icmp_slt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp slt <4 x i64> %a, %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp slt <4 x i64> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp slt <4 x i64> %a, %b
@@ -361,11 +361,11 @@ define <4 x i1> @test_icmp_slt(<4 x i64> %a, <4 x i64> %b) #0 {
 
 define <4 x i1> @test_icmp_ugt(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CV1-LABEL: 'test_icmp_ugt'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ugt <4 x i64> %a, %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ugt <4 x i64> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
 ; CV2-LABEL: 'test_icmp_ugt'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ugt <4 x i64> %a, %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ugt <4 x i64> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ugt <4 x i64> %a, %b
@@ -374,11 +374,11 @@ define <4 x i1> @test_icmp_ugt(<4 x i64> %a, <4 x i64> %b) #0 {
 
 define <4 x i1> @test_icmp_uge(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CV1-LABEL: 'test_icmp_uge'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp uge <4 x i64> %a, %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp uge <4 x i64> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
 ; CV2-LABEL: 'test_icmp_uge'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp uge <4 x i64> %a, %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp uge <4 x i64> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp uge <4 x i64> %a, %b
@@ -387,11 +387,11 @@ define <4 x i1> @test_icmp_uge(<4 x i64> %a, <4 x i64> %b) #0 {
 
 define <4 x i1> @test_icmp_ult(<4 x i64> %a, <4 x i64> %b) #0 {
 ; CV1-LABEL: 'test_icmp_ult'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ult <4 x i64> %a, %b
+; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ult <4 x i64> %a, %b
 ; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
 ; CV2-LABEL: 'test_icmp_ult'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ult <4 x i64> %a, %b
+; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ult <4 x i64> %a, %b
 ; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ult <4 x i64> %a, %b

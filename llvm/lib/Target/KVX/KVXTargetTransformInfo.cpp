@@ -335,7 +335,7 @@ bool KVXTTIImpl::shouldExpandReduction(const IntrinsicInst *II) const {
   case Intrinsic::vector_reduce_umax:
   case Intrinsic::vector_reduce_umin:
   case Intrinsic::vector_reduce_xor:
-    return false;
+    return II->getType()->getScalarSizeInBits() >= 8;
   // These reductions are not present in KVX
   case Intrinsic::vector_reduce_fadd:
   case Intrinsic::vector_reduce_fmax:
@@ -761,21 +761,21 @@ KVXTTIImpl::getScalarizationOverhead(VectorType *Ty, const APInt &DemandedElts,
     return BaseT::getScalarizationOverhead(Ty, DemandedElts, Insert, Extract,
                                            CostKind);
 
-  unsigned ScalarSize = Ty->getScalarSizeInBits(),
-           RegWidth = getRegisterBitWidth(false);
-
-  if (ScalarSize == 1)
-    return InstructionCost::getInvalid(0xDEAD);
+  unsigned RegWidth = getRegisterBitWidth(false);
+  unsigned ScalarSize = Ty->isPtrOrPtrVectorTy() ?
+                        RegWidth : Ty->getScalarSizeInBits();
 
   // Scalarization elements that takes entire registers are free
-  if (ScalarSize >= RegWidth)
+  if (ScalarSize >= RegWidth) {
+    LLVM_DEBUG(dbgs() << "KVX - getScalarizationOverhead: 0\n");
     return InstructionCost(0);
+  }
 
   // Elements in 64-bit borders are free
   APInt RequiredAnyOps = DemandedElts;
 
   APInt NotRequired(DemandedElts.getBitWidth(), 1);
-  unsigned Sht = 6 - Log2_32(Ty->getScalarSizeInBits());
+  unsigned Sht = 6 - Log2_32(ScalarSize);
   while (NotRequired.getActiveBits() && NotRequired.uge(DemandedElts)) {
     RequiredAnyOps &= ~NotRequired;
     NotRequired <<= Sht;
@@ -784,9 +784,10 @@ KVXTTIImpl::getScalarizationOverhead(VectorType *Ty, const APInt &DemandedElts,
   unsigned RequireAnyOpsCount = RequiredAnyOps.popcount();
   // Not demanding any elementy is also free
 
-  if (!RequireAnyOpsCount)
+  if (!RequireAnyOpsCount) {
+    LLVM_DEBUG(dbgs() << "KVX - getScalarizationOverhead: No required ops.\n");
     return InstructionCost(0);
-
+  }
   unsigned Cost = 0;
   // Extracting can be bundled together in groups of 4
   if (Extract)
@@ -797,6 +798,7 @@ KVXTTIImpl::getScalarizationOverhead(VectorType *Ty, const APInt &DemandedElts,
   if (Insert)
     Cost += RequireAnyOpsCount;
 
+    LLVM_DEBUG(dbgs() << "KVX - getScalarizationOverhead: " << Cost << '\n');
   return InstructionCost(Cost);
 }
 
@@ -936,6 +938,10 @@ InstructionCost KVXTTIImpl::getExtractWithExtendCost(unsigned Opcode, Type *Dst,
 }
 
 bool KVXTTIImpl::isTypeLegal(Type *Ty) const {
+  // Prevent vector pointers
+  if (Ty->isPtrOrPtrVectorTy() && Ty->isVectorTy())
+    return false;
+
   if (!Ty->isSized())
     return true;
 
@@ -951,53 +957,28 @@ InstructionCost KVXTTIImpl::getCmpSelInstrCost(unsigned Opcode, Type *ValTy,
                                                TTI::TargetCostKind CostKind,
                                                const Instruction *I) {
   LLVM_DEBUG(dbgs() << "KVX - getCmpSelInstrCost for " << Opcode << '\n');
-  if (!ValTy->isVectorTy() || CostKind != TTI::TCK_RecipThroughput)
-    return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
-                                     I);
+  if (!ValTy->isVectorTy())
+    return 1;
 
-  // It is possible to compare up to 256 bits per cycle. It takes log2
-  // (vector_size_bits / 64) to lower it to 64 bits.
-  // If a condition vector type holds less thant 32 bits, it will be
-  // required to clear the upper bits of the comparison.
-  unsigned BaseCost = 1;
-  unsigned PrimSz = ValTy->getPrimitiveSizeInBits();
-  if (ST->isV1() && (!ValTy || ValTy->getScalarSizeInBits() == 8)) {
-    if (!(CondTy && !CondTy->isVectorTy())) {
-      PrimSz *= 2;
-      BaseCost += (Instruction::Select != Opcode);
-    }
-  }
-  switch (Opcode) {
-  case Instruction::FCmp:
-    break;
-  case Instruction::Select:
-    if (!CondTy || CondTy->isVectorTy()) {
-      LLVM_DEBUG(dbgs() << "Invalid, ICmp/select: "; if (I) I->print(dbgs());
-                 dbgs() << "\n");
-      return InstructionCost::getInvalid();
-    }
-    LLVM_FALLTHROUGH;
-  case Instruction::ICmp: {
-    if (!ValTy || ValTy->getScalarSizeInBits() < 8) {
-      LLVM_DEBUG(dbgs() << "Invalid, ICmp/select: "; if (I) I->print(dbgs());
-                 dbgs() << "\n");
-      return InstructionCost::getInvalid();
-    }
-  } break;
-  default:
-    return BaseT::getCmpSelInstrCost(Opcode, ValTy, CondTy, VecPred, CostKind,
-                                     I);
-  }
+  // We can compare / select an entire 256bit vector in a single cycle.
+  if (CondTy && !CondTy->isVectorTy())
+    return 1;
 
-  return BaseCost * std::max(1u, PrimSz / 256);
+  // FIXME: Allow performing vector comparisons and selects. The current
+  // issue is that such instructions output/use bit-vector, where in the
+  // KVX target they are sized as the operands. Then the compiler will
+  // bitcast these vectors into integer values of wrong size.
+  LLVM_DEBUG(dbgs() << "Can't vectorize, ICmp/FCmp/select for kvx.\n");
+  return InstructionCost::getInvalid();
 }
 
 unsigned KVXTTIImpl::getNumberOfParts(Type *Tp) {
   // vXi1 vectors are produced from control flow operations.
   // Always scalaryze them.
   if (Tp->isVectorTy()) {
-    if (Tp->getScalarSizeInBits() == 1)
-      return Tp->getPrimitiveSizeInBits().getKnownMinValue();
+    VectorType *Vt = cast<VectorType>(Tp);
+    if (Vt->getScalarSizeInBits() == 1 || Vt->isPtrOrPtrVectorTy())
+      return Vt->getElementCount().getKnownMinValue();
   }
 
   return BasicTTIImplBase::getNumberOfParts(Tp);
@@ -1141,7 +1122,6 @@ InstructionCost KVXTTIImpl::getCFInstrCost(unsigned Opcode,
                                            TTI::TargetCostKind CostKind,
                                            const Instruction *I) {
   LLVM_DEBUG(dbgs() << "KVX - getCFInstrCost for " << Opcode << '\n');
-  // TODO: Bit-vectors phis can be promoted to i8-vector
   if (Opcode != Instruction::PHI || !I)
     return BaseT::getCFInstrCost(Opcode, CostKind, I);
 
@@ -1149,18 +1129,7 @@ InstructionCost KVXTTIImpl::getCFInstrCost(unsigned Opcode,
   if (VT->isVectorTy() && VT->getScalarSizeInBits() == 1)
     return InstructionCost::getInvalid(404);
 
-  switch (Opcode) {
-  case Instruction::Call:
-  case Instruction::Ret:
-    return 1;
-  case Instruction::Br:
-    return 2;
-  default:
-    LLVM_DEBUG(dbgs() << "KVX - getCFInstrCost unhandled opcode " << Opcode
-                      << '\n');
-    LLVM_FALLTHROUGH;
-  case Instruction::PHI:
-    break;
-  }
-  return 0;
+  auto V = BaseT::getCFInstrCost(Opcode, CostKind, I);
+  LLVM_DEBUG(dbgs() << "KVX - getCFInstrCost: " << V << '\n');
+  return V;
 }

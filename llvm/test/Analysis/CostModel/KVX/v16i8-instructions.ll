@@ -238,15 +238,10 @@ define <16 x i8> @test_select(<16 x i8> %a, <16 x i8> %b, i1 zeroext %c) #0 {
 }
 
 define <16 x i8> @test_select_cc(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
-; CV1-LABEL: 'test_select_cc'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp slt <16 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
-;
-; CV2-LABEL: 'test_select_cc'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <16 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
+; ALL-LABEL: 'test_select_cc'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <16 x i8> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp slt <16 x i8> %c, %d
   %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
@@ -634,19 +629,12 @@ define <16 x i8> @lshr_val_splat_w_undefs(<16 x i8> %lhs, i32 %s ) {
 }
 
 define <16 x i8> @test_select_cmp(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
-; CV1-LABEL: 'test_select_cmp'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <16 x i1> %cc to i16
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i16 %bc, -1
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
-;
-; CV2-LABEL: 'test_select_cmp'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <16 x i1> %cc to i16
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i16 %bc, -1
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
+; ALL-LABEL: 'test_select_cmp'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ne <16 x i8> %c, %d
+; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <16 x i1> %cc to i16
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i16 %bc, -1
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <16 x i8> %a, <16 x i8> %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp ne <16 x i8> %c, %d
   %bc = bitcast <16 x i1> %cc to i16
@@ -656,15 +644,10 @@ define <16 x i8> @test_select_cmp(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 
 }
 
 define <16 x i8> @test_select_cmp_vec(<16 x i8> %a, <16 x i8> %b, <16 x i8> %c, <16 x i8> %d) #0 {
-; CV1-LABEL: 'test_select_cmp_vec'
-; CV1-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV1-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
-; CV1-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
-;
-; CV2-LABEL: 'test_select_cmp_vec'
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ne <16 x i8> %c, %d
-; CV2-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
-; CV2-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
+; ALL-LABEL: 'test_select_cmp_vec'
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ne <16 x i8> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %cc = icmp ne <16 x i8> %c, %d
   %r = select <16 x i1> %cc, <16 x i8> %a, <16 x i8> %b

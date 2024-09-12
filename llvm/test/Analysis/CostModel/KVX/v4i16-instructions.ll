@@ -250,7 +250,7 @@ define <4 x i16> @test_select(<4 x i16> %a, <4 x i16> %b, i1 zeroext %c) {
 
 define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) {
 ; ALL-LABEL: 'test_select_cc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp slt <4 x i16> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp slt <4 x i16> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i16> %a, <4 x i16> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %r
 ;
@@ -261,7 +261,7 @@ define <4 x i16> @test_select_cc(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x 
 
 define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %c, <4 x i16> %d) {
 ; ALL-LABEL: 'test_select_cc_f32_f32'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ult <4 x i16> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ult <4 x i16> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <4 x i1> %cc, <4 x i64> %a, <4 x i64> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i64> %r
 ;
@@ -272,7 +272,7 @@ define <4 x i64> @test_select_cc_f32_f32(<4 x i64> %a, <4 x i64> %b, <4 x i16> %
 
 define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'test_icmp_ule'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ule <4 x i16> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ule <4 x i16> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ule <4 x i16> %a, %b
@@ -281,7 +281,7 @@ define <4 x i1> @test_icmp_ule(<4 x i16> %a, <4 x i16> %b) {
 
 define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'test_icmp_slt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp slt <4 x i16> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp slt <4 x i16> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp slt <4 x i16> %a, %b
@@ -290,7 +290,7 @@ define <4 x i1> @test_icmp_slt(<4 x i16> %a, <4 x i16> %b) {
 
 define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'test_icmp_ugt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ugt <4 x i16> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ugt <4 x i16> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ugt <4 x i16> %a, %b
@@ -299,7 +299,7 @@ define <4 x i1> @test_icmp_ugt(<4 x i16> %a, <4 x i16> %b) {
 
 define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'test_icmp_uge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp uge <4 x i16> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp uge <4 x i16> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp uge <4 x i16> %a, %b
@@ -308,7 +308,7 @@ define <4 x i1> @test_icmp_uge(<4 x i16> %a, <4 x i16> %b) {
 
 define <4 x i1> @test_icmp_ult(<4 x i16> %a, <4 x i16> %b) {
 ; ALL-LABEL: 'test_icmp_ult'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = icmp ult <4 x i16> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = icmp ult <4 x i16> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i1> %r
 ;
   %r = icmp ult <4 x i16> %a, %b
@@ -445,8 +445,8 @@ define <4 x i16> @vnot(<4 x i16> %a) {
 
 define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnand'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = zext <4 x i1> %5 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
@@ -460,8 +460,8 @@ define <4 x i16> @lnand(<4 x i16> %0, <4 x i16> %1) {
 
 define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnandn'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = icmp eq <4 x i16> %0, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp eq <4 x i16> %1, zeroinitializer
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %5 = or <4 x i1> %4, %3
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %6 = sext <4 x i1> %5 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %6
@@ -476,7 +476,7 @@ define <4 x i16> @lnandn(<4 x i16> %0, <4 x i16> %1) {
 define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
@@ -489,7 +489,7 @@ define <4 x i16> @lor(<4 x i16> %0, <4 x i16> %1) {
 define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp ne <4 x i16> %3, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
@@ -502,7 +502,7 @@ define <4 x i16> @lorneg(<4 x i16> %0, <4 x i16> %1) {
 define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnor'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = zext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
@@ -515,7 +515,7 @@ define <4 x i16> @lnor(<4 x i16> %0, <4 x i16> %1) {
 define <4 x i16> @lnorneg(<4 x i16> %0, <4 x i16> %1) {
 ; ALL-LABEL: 'lnorneg'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = or <4 x i16> %1, %0
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %4 = icmp eq <4 x i16> %3, zeroinitializer
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %5 = sext <4 x i1> %4 to <4 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i16> %5
 ;
@@ -853,7 +853,7 @@ define <4 x i16> @test_div_32(<4 x i16> %a, <4 x i16> %b) #0 {
 
 define <4 x i16> @test_select_cmp(<4 x i16> %a, <4 x i16> %b, <4 x i16> %c, <4 x i16> %d) #0 {
 ; ALL-LABEL: 'test_select_cmp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = icmp ne <4 x i16> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = icmp ne <4 x i16> %c, %d
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <4 x i1> %cc to i4
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i4 %bc, -1
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <4 x i16> %a, <4 x i16> %b

@@ -14,7 +14,7 @@ define void @scalar_scalar_select() {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i32 = select i1 undef, i32 undef, i32 undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %f64 = select i1 undef, double undef, double undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i64 = select i1 undef, i64 undef, i64 undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %i128 = select i1 undef, i128 undef, i128 undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %i128 = select i1 undef, i128 undef, i128 undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
   %i1  = select i1 undef, i1 undef, i1 undef
@@ -32,11 +32,11 @@ define void @scalar_scalar_select() {
 
 define void @scalar_vector_select_i1() {
 ; ALL-LABEL: 'scalar_vector_select_i1'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %v2i1 = select i1 undef, <2 x i1> undef, <2 x i1> undef
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %v4i1 = select i1 undef, <4 x i1> undef, <4 x i1> undef
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %v8i1 = select i1 undef, <8 x i1> undef, <8 x i1> undef
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %v16i1 = select i1 undef, <16 x i1> undef, <16 x i1> undef
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %v32i1 = select i1 undef, <32 x i1> undef, <32 x i1> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2i1 = select i1 undef, <2 x i1> undef, <2 x i1> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4i1 = select i1 undef, <4 x i1> undef, <4 x i1> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8i1 = select i1 undef, <8 x i1> undef, <8 x i1> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16i1 = select i1 undef, <16 x i1> undef, <16 x i1> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32i1 = select i1 undef, <32 x i1> undef, <32 x i1> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2i8 = select i1 undef, <2 x i8> undef, <2 x i8> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4i8 = select i1 undef, <4 x i8> undef, <4 x i8> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8i8 = select i1 undef, <8 x i8> undef, <8 x i8> undef
@@ -46,32 +46,32 @@ define void @scalar_vector_select_i1() {
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4f16 = select i1 undef, <4 x half> undef, <4 x half> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8f16 = select i1 undef, <8 x half> undef, <8 x half> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16f16 = select i1 undef, <16 x half> undef, <16 x half> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v32f16 = select i1 undef, <32 x half> undef, <32 x half> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32f16 = select i1 undef, <32 x half> undef, <32 x half> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2i16 = select i1 undef, <2 x i16> undef, <2 x i16> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4i16 = select i1 undef, <4 x i16> undef, <4 x i16> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8i16 = select i1 undef, <8 x i16> undef, <8 x i16> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16i16 = select i1 undef, <16 x i16> undef, <16 x i16> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v32i16 = select i1 undef, <32 x i16> undef, <32 x i16> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32i16 = select i1 undef, <32 x i16> undef, <32 x i16> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2f32 = select i1 undef, <2 x float> undef, <2 x float> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4f32 = select i1 undef, <4 x float> undef, <4 x float> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8f32 = select i1 undef, <8 x float> undef, <8 x float> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v16f32 = select i1 undef, <16 x float> undef, <16 x float> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v32f32 = select i1 undef, <32 x float> undef, <32 x float> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16f32 = select i1 undef, <16 x float> undef, <16 x float> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32f32 = select i1 undef, <32 x float> undef, <32 x float> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2i32 = select i1 undef, <2 x i32> undef, <2 x i32> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4i32 = select i1 undef, <4 x i32> undef, <4 x i32> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8i32 = select i1 undef, <8 x i32> undef, <8 x i32> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v16i32 = select i1 undef, <16 x i32> undef, <16 x i32> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v32i32 = select i1 undef, <32 x i32> undef, <32 x i32> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16i32 = select i1 undef, <16 x i32> undef, <16 x i32> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32i32 = select i1 undef, <32 x i32> undef, <32 x i32> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2f64 = select i1 undef, <2 x double> undef, <2 x double> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4f64 = select i1 undef, <4 x double> undef, <4 x double> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v8f64 = select i1 undef, <8 x double> undef, <8 x double> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v16f64 = select i1 undef, <16 x double> undef, <16 x double> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %v32f64 = select i1 undef, <32 x double> undef, <32 x double> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8f64 = select i1 undef, <8 x double> undef, <8 x double> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16f64 = select i1 undef, <16 x double> undef, <16 x double> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32f64 = select i1 undef, <32 x double> undef, <32 x double> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v2i64 = select i1 undef, <2 x i64> undef, <2 x i64> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v4i64 = select i1 undef, <4 x i64> undef, <4 x i64> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %v8i64 = select i1 undef, <8 x i64> undef, <8 x i64> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %v16i64 = select i1 undef, <16 x i64> undef, <16 x i64> undef
-; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %v32i64 = select i1 undef, <32 x i64> undef, <32 x i64> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v8i64 = select i1 undef, <8 x i64> undef, <8 x i64> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v16i64 = select i1 undef, <16 x i64> undef, <16 x i64> undef
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %v32i64 = select i1 undef, <32 x i64> undef, <32 x i64> undef
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret void
 ;
   %v2i1  = select i1 undef, <2 x i1> undef, <2 x i1> undef

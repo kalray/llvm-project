@@ -188,7 +188,7 @@ define <2 x half> @test_select(<2 x half> %a, <2 x half> %b, i1 zeroext %c) #0 {
 
 define <2 x half> @test_select_cc(<2 x half> %a, <2 x half> %b, <2 x half> %c, <2 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x half> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = fcmp une <2 x half> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x half> %a, <2 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x half> %r
 ;
@@ -199,7 +199,7 @@ define <2 x half> @test_select_cc(<2 x half> %a, <2 x half> %b, <2 x half> %c, <
 
 define <2 x float> @test_select_cc_f32_f16(<2 x float> %a, <2 x float> %b, <2 x half> %c, <2 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f32_f16'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x half> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = fcmp une <2 x half> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x float> %a, <2 x float> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
@@ -210,7 +210,7 @@ define <2 x float> @test_select_cc_f32_f16(<2 x float> %a, <2 x float> %b, <2 x 
 
 define <2 x half> @test_select_cc_f16_f32(<2 x half> %a, <2 x half> %b, <2 x float> %c, <2 x float> %d) #0 {
 ; ALL-LABEL: 'test_select_cc_f16_f32'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x float> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = fcmp une <2 x float> %c, %d
 ; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = select <2 x i1> %cc, <2 x half> %a, <2 x half> %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x half> %r
 ;
@@ -221,7 +221,7 @@ define <2 x half> @test_select_cc_f16_f32(<2 x half> %a, <2 x half> %b, <2 x flo
 
 define <2 x i1> @test_fcmp_une(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_une'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp une <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp une <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp une <2 x half> %a, %b
@@ -230,7 +230,7 @@ define <2 x i1> @test_fcmp_une(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ueq(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ueq'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ueq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ueq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ueq <2 x half> %a, %b
@@ -239,7 +239,7 @@ define <2 x i1> @test_fcmp_ueq(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ugt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ugt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ugt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ugt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ugt <2 x half> %a, %b
@@ -248,7 +248,7 @@ define <2 x i1> @test_fcmp_ugt(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_uge(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_uge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp uge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp uge <2 x half> %a, %b
@@ -257,7 +257,7 @@ define <2 x i1> @test_fcmp_uge(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ult(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ult'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ult <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ult <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ult <2 x half> %a, %b
@@ -266,7 +266,7 @@ define <2 x i1> @test_fcmp_ult(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ule(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ule'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ule <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ule <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ule <2 x half> %a, %b
@@ -275,7 +275,7 @@ define <2 x i1> @test_fcmp_ule(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_uno(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_uno'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp uno <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp uno <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp uno <2 x half> %a, %b
@@ -284,7 +284,7 @@ define <2 x i1> @test_fcmp_uno(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_one(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_one'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp one <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp one <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp one <2 x half> %a, %b
@@ -293,7 +293,7 @@ define <2 x i1> @test_fcmp_one(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_oeq(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_oeq'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oeq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp oeq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp oeq <2 x half> %a, %b
@@ -302,7 +302,7 @@ define <2 x i1> @test_fcmp_oeq(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ogt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ogt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ogt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ogt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ogt <2 x half> %a, %b
@@ -311,7 +311,7 @@ define <2 x i1> @test_fcmp_ogt(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_oge(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_oge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp oge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp oge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp oge <2 x half> %a, %b
@@ -320,7 +320,7 @@ define <2 x i1> @test_fcmp_oge(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_olt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_olt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp olt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp olt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp olt <2 x half> %a, %b
@@ -329,7 +329,7 @@ define <2 x i1> @test_fcmp_olt(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ole(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ole'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ole <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ole <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ole <2 x half> %a, %b
@@ -338,7 +338,7 @@ define <2 x i1> @test_fcmp_ole(<2 x half> %a, <2 x half> %b) #0 {
 
 define <2 x i1> @test_fcmp_ord(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'test_fcmp_ord'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = fcmp ord <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = fcmp ord <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i1> %r
 ;
   %r = fcmp ord <2 x half> %a, %b
@@ -990,7 +990,7 @@ entry:
 
 define <2 x i16> @fcmp_setoeq(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoeq'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp oeq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1002,7 +1002,7 @@ entry:
 
 define <2 x i16> @fcmp_setoeq_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oeq <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp oeq <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1014,7 +1014,7 @@ entry:
 
 define <2 x i16> @fcmp_setogt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setogt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ogt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1026,7 +1026,7 @@ entry:
 
 define <2 x i16> @fcmp_setogt_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setogt_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ogt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ogt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1038,7 +1038,7 @@ entry:
 
 define <2 x i16> @fcmp_setoge(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp oge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1050,7 +1050,7 @@ entry:
 
 define <2 x i16> @fcmp_setoge_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoge_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp oge <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp oge <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1062,7 +1062,7 @@ entry:
 
 define <2 x i16> @fcmp_setolt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setolt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp olt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1074,7 +1074,7 @@ entry:
 
 define <2 x i16> @fcmp_setolt_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setolt_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp olt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp olt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1086,7 +1086,7 @@ entry:
 
 define <2 x i16> @fcmp_setole(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setole'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ole <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1098,7 +1098,7 @@ entry:
 
 define <2 x i16> @fcmp_setole_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setole_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ole <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ole <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1110,7 +1110,7 @@ entry:
 
 define <2 x i16> @fcmp_setone(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setone'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp one <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1122,7 +1122,7 @@ entry:
 
 define <2 x i16> @fcmp_setone_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setone_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp one <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp one <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1134,7 +1134,7 @@ entry:
 
 define <2 x i16> @fcmp_setord(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setord'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ord <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1146,7 +1146,7 @@ entry:
 
 define <2 x i16> @fcmp_setord_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setord_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ord <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ord <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1158,7 +1158,7 @@ entry:
 
 define <2 x i16> @fcmp_setuno(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuno'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp uno <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1170,7 +1170,7 @@ entry:
 
 define <2 x i16> @fcmp_setuno_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuno_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uno <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp uno <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1182,7 +1182,7 @@ entry:
 
 define <2 x i16> @fcmp_setueq(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setueq'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ueq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1194,7 +1194,7 @@ entry:
 
 define <2 x i16> @fcmp_setueq_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setueq_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ueq <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ueq <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1206,7 +1206,7 @@ entry:
 
 define <2 x i16> @fcmp_setugt(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setugt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ugt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1218,7 +1218,7 @@ entry:
 
 define <2 x i16> @fcmp_setugt_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setugt_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ugt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ugt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1230,7 +1230,7 @@ entry:
 
 define <2 x i16> @fcmp_setuge(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuge'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp uge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1242,7 +1242,7 @@ entry:
 
 define <2 x i16> @fcmp_setuge_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuge_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp uge <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp uge <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1254,7 +1254,7 @@ entry:
 
 define <2 x i16> @fcmp_setult(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setult'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ult <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1266,7 +1266,7 @@ entry:
 
 define <2 x i16> @fcmp_setult_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setult_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ult <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ult <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1278,7 +1278,7 @@ entry:
 
 define <2 x i16> @fcmp_setule(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setule'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ule <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1290,7 +1290,7 @@ entry:
 
 define <2 x i16> @fcmp_setule_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setule_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp ule <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp ule <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1302,7 +1302,7 @@ entry:
 
 define <2 x i16> @fcmp_setune(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setune'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp une <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1314,7 +1314,7 @@ entry:
 
 define <2 x i16> @fcmp_setune_single(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setune_single'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp une <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp une <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1326,7 +1326,7 @@ entry:
 
 define <2 x i16> @fcmp_setoeq_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast oeq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1338,7 +1338,7 @@ entry:
 
 define <2 x i16> @fcmp_setoeq_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoeq_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oeq <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast oeq <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1350,7 +1350,7 @@ entry:
 
 define <2 x i16> @fcmp_setogt_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setogt_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ogt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1362,7 +1362,7 @@ entry:
 
 define <2 x i16> @fcmp_setogt_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setogt_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ogt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ogt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1374,7 +1374,7 @@ entry:
 
 define <2 x i16> @fcmp_setoge_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setoge_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast oge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1386,7 +1386,7 @@ entry:
 
 define <2 x i16> @fcmp_setoge_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setoge_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast oge <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast oge <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1398,7 +1398,7 @@ entry:
 
 define <2 x i16> @fcmp_setolt_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setolt_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast olt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1410,7 +1410,7 @@ entry:
 
 define <2 x i16> @fcmp_setolt_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setolt_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast olt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast olt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1422,7 +1422,7 @@ entry:
 
 define <2 x i16> @fcmp_setole_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setole_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ole <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1434,7 +1434,7 @@ entry:
 
 define <2 x i16> @fcmp_setole_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setole_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ole <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ole <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1446,7 +1446,7 @@ entry:
 
 define <2 x i16> @fcmp_setone_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setone_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast one <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1458,7 +1458,7 @@ entry:
 
 define <2 x i16> @fcmp_setone_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setone_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast one <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast one <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1470,7 +1470,7 @@ entry:
 
 define <2 x i16> @fcmp_setord_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setord_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ord <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1482,7 +1482,7 @@ entry:
 
 define <2 x i16> @fcmp_setord_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setord_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ord <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ord <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1494,7 +1494,7 @@ entry:
 
 define <2 x i16> @fcmp_setuno_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuno_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast uno <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1506,7 +1506,7 @@ entry:
 
 define <2 x i16> @fcmp_setuno_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuno_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uno <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast uno <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1518,7 +1518,7 @@ entry:
 
 define <2 x i16> @fcmp_setueq_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setueq_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ueq <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1530,7 +1530,7 @@ entry:
 
 define <2 x i16> @fcmp_setueq_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setueq_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ueq <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ueq <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1542,7 +1542,7 @@ entry:
 
 define <2 x i16> @fcmp_setugt_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setugt_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ugt <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1554,7 +1554,7 @@ entry:
 
 define <2 x i16> @fcmp_setugt_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setugt_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ugt <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ugt <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1566,7 +1566,7 @@ entry:
 
 define <2 x i16> @fcmp_setuge_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setuge_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast uge <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1578,7 +1578,7 @@ entry:
 
 define <2 x i16> @fcmp_setuge_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setuge_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast uge <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast uge <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1590,7 +1590,7 @@ entry:
 
 define <2 x i16> @fcmp_setult_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setult_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ult <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1602,7 +1602,7 @@ entry:
 
 define <2 x i16> @fcmp_setult_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setult_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ult <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ult <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1614,7 +1614,7 @@ entry:
 
 define <2 x i16> @fcmp_setule_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setule_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ule <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1626,7 +1626,7 @@ entry:
 
 define <2 x i16> @fcmp_setule_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setule_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast ule <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast ule <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1638,7 +1638,7 @@ entry:
 
 define <2 x i16> @fcmp_setune_fast(<2 x half> %a, <2 x half> %b) #0 {
 ; ALL-LABEL: 'fcmp_setune_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x half> %a, %b
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast une <2 x half> %a, %b
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1650,7 +1650,7 @@ entry:
 
 define <2 x i16> @fcmp_setune_single_fast(<2 x half> %a) #0 {
 ; ALL-LABEL: 'fcmp_setune_single_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = fcmp fast une <2 x half> %a, %a
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = fcmp fast une <2 x half> %a, %a
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %1 = sext <2 x i1> %0 to <2 x i16>
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %1
 ;
@@ -1692,7 +1692,7 @@ define <2 x half> @subvect_0(<4 x half> %0) {
 
 define <2 x half> @test_select_cmp(<2 x half> %a, <2 x half> %b, <2 x half> %c, <2 x half> %d) #0 {
 ; ALL-LABEL: 'test_select_cmp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cc = fcmp une <2 x half> %c, %d
+; ALL-NEXT:  Cost Model: Invalid cost for instruction: %cc = fcmp une <2 x half> %c, %d
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 0 for instruction: %bc = bitcast <2 x i1> %cc to i2
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %cmp = icmp eq i2 %bc, -1
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = select i1 %cmp, <2 x half> %a, <2 x half> %b
