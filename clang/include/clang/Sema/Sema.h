@@ -178,6 +178,7 @@ class SemaCodeCompletion;
 class SemaCUDA;
 class SemaHLSL;
 class SemaHexagon;
+class SemaKVX;
 class SemaLoongArch;
 class SemaM68k;
 class SemaMIPS;
@@ -1176,6 +1177,11 @@ public:
     return *HexagonPtr;
   }
 
+  SemaKVX &KVX() {
+    assert(KVXPtr);
+    return *KVXPtr;
+  }
+
   SemaLoongArch &LoongArch() {
     assert(LoongArchPtr);
     return *LoongArchPtr;
@@ -1299,6 +1305,7 @@ private:
   std::unique_ptr<SemaCUDA> CUDAPtr;
   std::unique_ptr<SemaHLSL> HLSLPtr;
   std::unique_ptr<SemaHexagon> HexagonPtr;
+  std::unique_ptr<SemaKVX> KVXPtr;
   std::unique_ptr<SemaLoongArch> LoongArchPtr;
   std::unique_ptr<SemaM68k> M68kPtr;
   std::unique_ptr<SemaMIPS> MIPSPtr;

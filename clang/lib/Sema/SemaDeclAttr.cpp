@@ -6041,9 +6041,9 @@ static void handleCFGuardAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
 }
 
 static void handleMPPANativeAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
-  if (!isFunctionOrMethod(D)) {
+  if (!isFuncOrMethodForAttrSubject(D)) {
     S.Diag(D->getLocation(), diag::warn_attribute_wrong_decl_type)
-        << AL << ExpectedFunction;
+        << AL << AL.isRegularKeywordAttribute() << ExpectedFunction;
     return;
   }
   handleSimpleAttribute<MPPANativeAttr>(S, D, AL);

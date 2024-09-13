@@ -67,6 +67,7 @@
 #include "clang/Sema/SemaHLSL.h"
 #include "clang/Sema/SemaHexagon.h"
 #include "clang/Sema/SemaInternal.h"
+#include "clang/Sema/SemaKVX.h"
 #include "clang/Sema/SemaLoongArch.h"
 #include "clang/Sema/SemaMIPS.h"
 #include "clang/Sema/SemaNVPTX.h"
@@ -9166,6 +9167,10 @@ Sema::CheckReturnValExpr(Expr *RetValExp, QualType lhsType,
   // here prevent the user from using a PPC MMA type as trailing return type.
   if (Context.getTargetInfo().getTriple().isPPC64())
     PPC().CheckPPCMMAType(RetValExp->getType(), ReturnLoc);
+
+  // KVX TCA rule just as PPC MMA above.
+  if (Context.getTargetInfo().getTriple().isKVX())
+    KVX().CheckKVXTCAType(RetValExp->getType(), ReturnLoc);
 }
 
 void Sema::CheckFloatComparison(SourceLocation Loc, Expr *LHS, Expr *RHS,
