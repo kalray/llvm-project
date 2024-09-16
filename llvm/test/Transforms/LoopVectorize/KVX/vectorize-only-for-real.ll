@@ -54,7 +54,7 @@ define zeroext i32 @test() {
 ; CHECK-NEXT:    br i1 true, label [[FOR_COND_CLEANUP5:%.*]], label [[SCALAR_PH2]]
 ; CHECK:       scalar.ph2:
 ; CHECK-NEXT:    [[BC_RESUME_VAL4:%.*]] = phi i64 [ 1600, [[MIDDLE_BLOCK1]] ], [ 0, [[FOR_COND_CLEANUP]] ]
-; CHECK-NEXT:    [[BC_MERGE_RDX:%.*]] = phi i32 [ 0, [[FOR_COND_CLEANUP]] ], [ [[TMP10]], [[MIDDLE_BLOCK1]] ]
+; CHECK-NEXT:    [[BC_MERGE_RDX:%.*]] = phi i32 [ [[TMP10]], [[MIDDLE_BLOCK1]] ], [ 0, [[FOR_COND_CLEANUP]] ]
 ; CHECK-NEXT:    br label [[FOR_BODY6:%.*]]
 ; CHECK:       for.body:
 ; CHECK-NEXT:    [[INDVARS_IV25:%.*]] = phi i64 [ [[BC_RESUME_VAL]], [[SCALAR_PH]] ], [ [[INDVARS_IV_NEXT26:%.*]], [[FOR_BODY]] ]

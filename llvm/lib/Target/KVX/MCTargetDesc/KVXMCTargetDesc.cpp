@@ -75,8 +75,7 @@ static MCSubtargetInfo *createKVXMCSubtargetInfo(const Triple &TT,
 
 static MCTargetStreamer *createKVXTargetStreamer(MCStreamer &S,
                                                  formatted_raw_ostream &OS,
-                                                 MCInstPrinter *InstPrint,
-                                                 bool isVerboseAsm) {
+                                                 MCInstPrinter *InstPrint) {
   return new KVXTargetStreamer(S);
 }
 

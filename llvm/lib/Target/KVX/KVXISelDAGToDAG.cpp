@@ -26,14 +26,9 @@ class KVXDAGToDAGISel final : public SelectionDAGISel {
   const KVXSubtarget *Subtarget;
 
 public:
-  static char ID;
-  explicit KVXDAGToDAGISel(KVXTargetMachine &TargetMachine,
+  explicit KVXDAGToDAGISel(KVXTargetMachine &tm,
                   CodeGenOptLevel OptLevel)
-      : SelectionDAGISel(ID, TargetMachine, OptLevel), Subtarget(nullptr) {}
-
-  StringRef getPassName() const override {
-    return "KVX DAG->DAG Pattern Instruction Selection";
-  }
+      : SelectionDAGISel(tm, OptLevel), Subtarget(nullptr) {}
 
   bool runOnMachineFunction(MachineFunction &MF) override {
     Subtarget = &MF.getSubtarget<KVXSubtarget>();
@@ -53,9 +48,16 @@ public:
 #include "KVXGenDAGISel.inc"
 };
 
+struct KVXDAGToDAGISelLegacy final : public SelectionDAGISelLegacy {
+  static char ID;
+  explicit KVXDAGToDAGISelLegacy(KVXTargetMachine &tm,
+                                     CodeGenOptLevel OptLevel)
+      : SelectionDAGISelLegacy(
+            ID, std::make_unique<KVXDAGToDAGISel>(tm, OptLevel)) {}
+};
 
 } // namespace
-char KVXDAGToDAGISel::ID = 0;
+char KVXDAGToDAGISelLegacy::ID = 0;
 
 bool KVXDAGToDAGISel::selectAddrFI(SDValue Addr, SDValue &Base) {
   if (auto *FIN = dyn_cast<FrameIndexSDNode>(Addr)) {
@@ -184,7 +186,7 @@ MachineSDNode *KVXDAGToDAGISel::buildMake(SDLoc &DL, SDNode *Imm,
 }
 
 FunctionPass *llvm::createKVXISelDag(KVXTargetMachine &TM, CodeGenOptLevel OptLevel) {
-  return new KVXDAGToDAGISel(TM, OptLevel);
+  return new KVXDAGToDAGISelLegacy(TM, OptLevel);
 }
 
 bool KVXDAGToDAGISel::SelectInlineAsmMemoryOperand(const SDValue &Op,

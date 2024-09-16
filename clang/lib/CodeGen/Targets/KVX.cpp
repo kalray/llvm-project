@@ -21,8 +21,8 @@ public:
 
   void computeInfo(CGFunctionInfo &FI) const override;
 
-  Address EmitVAArg(CodeGenFunction &CGF, Address VAListAddr, QualType Ty) const
-      override;
+  RValue EmitVAArg(CodeGenFunction &CGF, Address VAListAddr, QualType Ty,
+                      AggValueSlot Slot) const override;
 
 private:
   static const unsigned Alignment;
@@ -110,6 +110,21 @@ class KVXTargetCodeGenInfo : public TargetCodeGenInfo {
 public:
   KVXTargetCodeGenInfo(CodeGen::CodeGenTypes &CGT)
       : TargetCodeGenInfo(std::make_unique<KVXABIInfo>(CGT)) {}
+
+  void setTargetAttributes(const Decl *D, llvm::GlobalValue *GV,
+                                   CodeGen::CodeGenModule &M) const override {
+    const FunctionDecl *FD = dyn_cast_or_null<FunctionDecl>(D);
+    if (!FD)
+      return;
+
+    auto *F = dyn_cast_or_null<llvm::Function>(GV);
+    if (!F)
+      return;
+
+    if (FD->hasAttr<MPPANativeAttr>())
+      F->addFnAttr(llvm::Attribute::MPPANative);
+}
+
 };
 } // end anonymous namespace
 
@@ -130,14 +145,14 @@ void KVXABIInfo::computeInfo(CGFunctionInfo &FI) const {
     I.info = classifyBigType(I.type);
 }
 
-Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
-                              QualType Ty) const {
+RValue KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
+                              QualType Ty, AggValueSlot Slot) const {
   CharUnits SlotSize = CharUnits::fromQuantity(8);
 
   if (getContext().getTypeSize(Ty) > RegSize * NumRegs) {
     auto TInfo = getContext().getTypeInfoInChars(Ty);
     return emitVoidPtrVAArg(CGF, VAListAddr, Ty, /*Indirect=*/true, TInfo,
-                            SlotSize, /*AllowHigherAlign=*/false);
+                            SlotSize, /*AllowHigherAlign=*/false, Slot);
   }
 
   ABIArgInfo AI = classifyType(Ty);
@@ -156,7 +171,7 @@ Address KVXABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   Address NextPtr = Builder.CreateConstInBoundsByteGEP(CurPtr, Stride, "ap.next");
   Builder.CreateStore(NextPtr.getBasePointer(), VAListAddr);
 
-  return EltAddress;
+  return CGF.EmitLoadOfAnyValue(CGF.MakeAddrLValue(EltAddress, Ty), Slot);
 }
 
 ABIArgInfo KVXABIInfo::classifyBigType(QualType Ty) const {

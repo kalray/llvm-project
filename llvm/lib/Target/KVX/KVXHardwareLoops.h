@@ -39,10 +39,10 @@ public:
   bool runOnLoop(MachineLoop *Loop);
 
   void getAnalysisUsage(AnalysisUsage &AU) const override {
-    AU.addRequired<MachineDominatorTree>();
+    AU.addRequired<MachineDominatorTreeWrapperPass>();
     AU.addRequired<LoopInfoWrapperPass>();
-    AU.addRequired<MachineLoopInfo>();
-    AU.addRequired<MachineBranchProbabilityInfo>();
+    AU.addRequired<MachineLoopInfoWrapperPass>();
+    AU.addRequired<MachineBranchProbabilityInfoWrapperPass>();
 
     MachineFunctionPass::getAnalysisUsage(AU);
   }

@@ -46,8 +46,8 @@ char KVXHardwareLoops::ID = 0;
 static unsigned LoopC = 0;
 INITIALIZE_PASS_BEGIN(KVXHardwareLoops, KVXHARDWARELOOPS_NAME,
                       KVXHARDWARELOOPS_DESC, false, false)
-INITIALIZE_PASS_DEPENDENCY(MachineDominatorTree)
-INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
+INITIALIZE_PASS_DEPENDENCY(MachineDominatorTreeWrapperPass)
+INITIALIZE_PASS_DEPENDENCY(MachineLoopInfoWrapperPass)
 INITIALIZE_PASS_END(KVXHardwareLoops, KVXHARDWARELOOPS_NAME,
                     KVXHARDWARELOOPS_DESC, false, false)
 
@@ -268,7 +268,7 @@ bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
   // so that phi-nodes at the loop header will correctly be dominated
   // by it.
   MBB *Prehead = Loop->getLoopPreheader();
-  auto &DT = getAnalysis<MachineDominatorTree>();
+  auto &DT = getAnalysis<MachineDominatorTreeWrapperPass>().getDomTree();
   auto *NumIt = MRI->getVRegDef(LoopdoPseudo->getOperand(0).getReg());
   MBB *NumItBB = NumIt->getParent();
   if (!Prehead) {
@@ -323,10 +323,10 @@ bool KVXHardwareLoops::runOnLoop(MachineLoop *Loop) {
 bool KVXHardwareLoops::runOnMachineFunction(MachineFunction &MF) {
   bool Changed = false;
 
-  MachineLoopInfo &MLI = getAnalysis<MachineLoopInfo>();
+  MachineLoopInfo &MLI = getAnalysis<MachineLoopInfoWrapperPass>().getLI();
   TII = MF.getSubtarget<KVXSubtarget>().getInstrInfo();
   MRI = std::addressof(MF.getRegInfo());
-  MBPI = &getAnalysis<MachineBranchProbabilityInfo>();
+  MBPI = &getAnalysis<MachineBranchProbabilityInfoWrapperPass>().getMBPI();
 
   for (auto &Loop : MLI)
     Changed |= runOnLoop(Loop);

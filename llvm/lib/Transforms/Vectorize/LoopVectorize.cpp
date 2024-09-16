@@ -7191,7 +7191,7 @@ static void addMetaDataToRemainderLoops(Loop *L, const StringRef &Str) {
     // Add runtime unroll disable metadata.
     LLVMContext &Context = L->getHeader()->getContext();
     SmallVector<Metadata *, 1> DisableOperands;
-    const StringRef &Attribute = (Str.equals("llvm.loop.unroll.disable"))
+    const StringRef &Attribute = (Str == "llvm.loop.unroll.disable")
                                      ? "llvm.loop.unroll.runtime.disable"
                                      : Str;
     DisableOperands.push_back(MDString::get(Context, Attribute));

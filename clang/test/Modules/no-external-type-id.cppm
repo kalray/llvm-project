@@ -1,4 +1,5 @@
 // Testing that we won't record the type ID from external modules.
+// UNSUPPORTED: target=kvx-{{.*}}
 //
 // RUN: rm -rf %t
 // RUN: split-file %s %t

@@ -9,14 +9,14 @@ target triple = "kvx-kalray-cos"
 define i8 @ctlzi8(i8 %a) {
 ; CHECK-LABEL: ctlzi8:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxbd $r0 = $r0
+; CHECK-NEXT:    zxbd $r1 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_2
+; CHECK-NEXT:    cb.weqz $r1 ? .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %cond.false
-; CHECK-NEXT:    clzw $r0 = $r0
+; CHECK-NEXT:    sllw $r0 = $r0, 24
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addw $r0 = $r0, -24
+; CHECK-NEXT:    clzw $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB0_2:
@@ -30,14 +30,14 @@ define i8 @ctlzi8(i8 %a) {
 define i16 @ctlzi16(i16 %a) {
 ; CHECK-LABEL: ctlzi16:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    zxhd $r0 = $r0
+; CHECK-NEXT:    zxhd $r1 = $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB1_2
+; CHECK-NEXT:    cb.weqz $r1 ? .LBB1_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1: # %cond.false
-; CHECK-NEXT:    clzw $r0 = $r0
+; CHECK-NEXT:    sllw $r0 = $r0, 16
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    addw $r0 = $r0, -16
+; CHECK-NEXT:    clzw $r0 = $r0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 1)
 ; CHECK-NEXT:  .LBB1_2:

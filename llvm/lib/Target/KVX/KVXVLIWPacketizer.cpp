@@ -47,10 +47,10 @@ public:
   void getAnalysisUsage(AnalysisUsage &AU) const override {
     AU.setPreservesCFG();
     AU.addRequired<AAResultsWrapperPass>();
-    AU.addRequired<MachineDominatorTree>();
-    AU.addRequired<MachineLoopInfo>();
-    AU.addPreserved<MachineDominatorTree>();
-    AU.addPreserved<MachineLoopInfo>();
+    AU.addRequired<MachineDominatorTreeWrapperPass>();
+    AU.addRequired<MachineLoopInfoWrapperPass>();
+    AU.addPreserved<MachineDominatorTreeWrapperPass>();
+    AU.addPreserved<MachineLoopInfoWrapperPass>();
     MachineFunctionPass::getAnalysisUsage(AU);
   }
 
@@ -63,8 +63,8 @@ public:
 char KVXPacketizer::ID = 0;
 
 INITIALIZE_PASS_BEGIN(KVXPacketizer, DEBUG_TYPE, PASS_NAME, false, false)
-INITIALIZE_PASS_DEPENDENCY(MachineDominatorTree)
-INITIALIZE_PASS_DEPENDENCY(MachineLoopInfo)
+INITIALIZE_PASS_DEPENDENCY(MachineDominatorTreeWrapperPass)
+INITIALIZE_PASS_DEPENDENCY(MachineLoopInfoWrapperPass)
 INITIALIZE_PASS_DEPENDENCY(AAResultsWrapperPass)
 INITIALIZE_PASS_END(KVXPacketizer, DEBUG_TYPE, PASS_NAME, false, false)
 
@@ -73,7 +73,7 @@ bool KVXPacketizer::runOnMachineFunction(MachineFunction &MF) {
   LLVM_DEBUG(dbgs() << PASS_NAME << ": runOnMachineFunction -> " << MF.getName()
                     << '\n';);
 
-  auto &MLI = getAnalysis<MachineLoopInfo>();
+  auto &MLI = getAnalysis<MachineLoopInfoWrapperPass>().getLI();
   auto *AA = &getAnalysis<AAResultsWrapperPass>().getAAResults();
 
   MF.getProperties().set(MachineFunctionProperties::Property::TracksLiveness);
