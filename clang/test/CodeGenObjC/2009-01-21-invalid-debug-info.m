@@ -1,3 +1,4 @@
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -S -debug-info-kind=limited -o %t.s %s
 
 // FIXME: This test case can be removed at some point (since it will

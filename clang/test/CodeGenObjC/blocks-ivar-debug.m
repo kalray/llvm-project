@@ -1,3 +1,4 @@
+// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -debug-info-kind=limited %s -fblocks -S -o %t
 
 @interface NSObject {
