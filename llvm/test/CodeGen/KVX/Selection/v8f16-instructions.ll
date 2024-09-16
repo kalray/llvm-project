@@ -378,6 +378,17 @@ define <8 x half> @test_fneg(<8 x half> %a) #0 {
   ret <8 x half> %r
 }
 
+define <8 x half> @test_fneg_new(<8 x half> %a) #0 {
+; CHECK-LABEL: test_fneg_new:
+; CHECK:       # %bb.0:
+; CHECK-NEXT:    fneghq $r0 = $r0
+; CHECK-NEXT:    fneghq $r1 = $r1
+; CHECK-NEXT:    ret
+; CHECK-NEXT:    ;; # (end cycle 0)
+  %r = fneg <8 x half> %a
+  ret <8 x half> %r
+}
+
 define <8 x half> @test_fmul(<8 x half> %a, <8 x half> %b) #0 {
 ; CV1-LABEL: test_fmul:
 ; CV1:       # %bb.0:
@@ -5810,7 +5821,7 @@ attributes #0 = { nounwind }
 define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
 ; CV1-LABEL: select_shufflehx_2:
 ; CV1:       # %bb.0:
-; CV1-NEXT:    cb.weqz $r5 ? .LBB155_2
+; CV1-NEXT:    cb.weqz $r5 ? .LBB156_2
 ; CV1-NEXT:    ;;
 ; CV1-NEXT:  # %bb.1:
 ; CV1-NEXT:    extfz $r0 = $r0, 47, 32
@@ -5848,13 +5859,13 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
 ; CV1-NEXT:    ;; # (end cycle 7)
 ; CV1-NEXT:    insf $r3 = $r4, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 8)
-; CV1-NEXT:  .LBB155_2:
+; CV1-NEXT:  .LBB156_2:
 ; CV1-NEXT:    ret
 ; CV1-NEXT:    ;;
 ;
 ; CV2-LABEL: select_shufflehx_2:
 ; CV2:       # %bb.0:
-; CV2-NEXT:    cb.weqz $r5 ? .LBB155_2
+; CV2-NEXT:    cb.weqz $r5 ? .LBB156_2
 ; CV2-NEXT:    ;;
 ; CV2-NEXT:  # %bb.1:
 ; CV2-NEXT:    extfz $r0 = $r0, 47, 32
@@ -5890,7 +5901,7 @@ define <16 x half> @select_shufflehx_2(<16 x half> %0, half %1, i32 %2) {
 ; CV2-NEXT:    insf $r2 = $r8, 63, 32
 ; CV2-NEXT:    insf $r3 = $r4, 63, 32
 ; CV2-NEXT:    ;; # (end cycle 6)
-; CV2-NEXT:  .LBB155_2:
+; CV2-NEXT:  .LBB156_2:
 ; CV2-NEXT:    ret
 ; CV2-NEXT:    ;;
   %4 = icmp eq i32 %2, 0

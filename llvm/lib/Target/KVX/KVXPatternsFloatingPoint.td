@@ -1458,6 +1458,11 @@ def : Pat<(vfneg v4f32:$rs),
             (v2f32(FNEGWP (v2f32 (EXTRACT_SUBREG PairedReg:$rs, sub_d0)))), sub_d0,
             (v2f32(FNEGWP (v2f32 (EXTRACT_SUBREG PairedReg:$rs, sub_d1)))), sub_d1))>;
 
+def : Pat<(fneg v8f16:$rs),
+          (v8f16 (REG_SEQUENCE PairedReg,
+            (v4f16(FNEGHQ (v4f16 (EXTRACT_SUBREG PairedReg:$rs, sub_d0)))), sub_d0,
+            (v4f16(FNEGHQ (v4f16 (EXTRACT_SUBREG PairedReg:$rs, sub_d1)))), sub_d1))>;
+
 def : Pat<(vfneg v2f64:$rs),
           (v2f64 (REG_SEQUENCE PairedReg,
             (f64 (FNEGD (f64 (EXTRACT_SUBREG PairedReg:$rs, sub_d0)))), sub_d0,
