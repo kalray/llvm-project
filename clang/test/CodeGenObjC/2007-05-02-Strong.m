@@ -1,4 +1,3 @@
-// XFAIL: target=kvx-{{.*}}
 // RUN: %clang_cc1 -S %s -fobjc-gc -o /dev/null
 typedef int NSInteger;
 typedef struct _NSRect {
