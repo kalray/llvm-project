@@ -79,8 +79,10 @@ bool KVXAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
 
 void KVXAsmPrinter::emitInstruction(const MachineInstr *MI) {
   // Do any auto-generated pseudo lowerings.
-  if (emitPseudoExpansionLowering(*OutStreamer, MI))
+  if (MCInst OutInst; lowerPseudoInstExpansion(MI, OutInst)) {
+    EmitToStreamer(*OutStreamer, OutInst);
     return;
+  }
 
   // Some MCYCLESp are not bundled: print them separately
   if (MI->getOpcode() == KVX::MCYCLESp) {

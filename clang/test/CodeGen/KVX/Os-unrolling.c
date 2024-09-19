@@ -21,11 +21,11 @@
 // OPS-NEXT:    [[TMP0:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OPS-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP0]]
 // OPS-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
-// OPS-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
+// OPS-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds nuw i16, ptr [[A:%.*]], i64 [[IDXPROM]]
 // OPS-NEXT:    [[TMP1:%.*]] = load i16, ptr [[ARRAYIDX]], align 2, !tbaa [[TBAA2:![0-9]+]]
 // OPS-NEXT:    [[CONV:%.*]] = sext i16 [[TMP1]] to i32
 // OPS-NEXT:    [[MUL5:%.*]] = mul nsw i32 [[CONV]], [[CONV4]]
-// OPS-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds i32, ptr [[C:%.*]], i64 [[IDXPROM]]
+// OPS-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds nuw i32, ptr [[C:%.*]], i64 [[IDXPROM]]
 // OPS-NEXT:    store i32 [[MUL5]], ptr [[ARRAYIDX9]], align 4, !tbaa [[TBAA6:![0-9]+]]
 // OPS-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
 // OPS-NEXT:    [[EXITCOND_NOT:%.*]] = icmp eq i64 [[INDVARS_IV_NEXT]], [[WIDE_TRIP_COUNT]]
@@ -57,11 +57,11 @@
 // OPZ-NEXT:    [[TMP0:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OPZ-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP0]]
 // OPZ-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
-// OPZ-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
+// OPZ-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds nuw i16, ptr [[A:%.*]], i64 [[IDXPROM]]
 // OPZ-NEXT:    [[TMP1:%.*]] = load i16, ptr [[ARRAYIDX]], align 2, !tbaa [[TBAA2:![0-9]+]]
 // OPZ-NEXT:    [[CONV:%.*]] = sext i16 [[TMP1]] to i32
 // OPZ-NEXT:    [[MUL5:%.*]] = mul nsw i32 [[CONV]], [[CONV4]]
-// OPZ-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds i32, ptr [[C:%.*]], i64 [[IDXPROM]]
+// OPZ-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds nuw i32, ptr [[C:%.*]], i64 [[IDXPROM]]
 // OPZ-NEXT:    store i32 [[MUL5]], ptr [[ARRAYIDX9]], align 4, !tbaa [[TBAA6:![0-9]+]]
 // OPZ-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
 // OPZ-NEXT:    br label [[FOR_COND1]], !llvm.loop [[LOOP8:![0-9]+]]
@@ -99,81 +99,81 @@
 // OP3-NEXT:    [[TMP1:%.*]] = trunc nuw i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[ADD:%.*]] = add i32 [[MUL]], [[TMP1]]
 // OP3-NEXT:    [[IDXPROM:%.*]] = zext i32 [[ADD]] to i64
-// OP3-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i16, ptr [[A:%.*]], i64 [[IDXPROM]]
+// OP3-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds nuw i16, ptr [[A:%.*]], i64 [[IDXPROM]]
 // OP3-NEXT:    [[TMP2:%.*]] = load i16, ptr [[ARRAYIDX]], align 2, !tbaa [[TBAA2:![0-9]+]]
 // OP3-NEXT:    [[CONV:%.*]] = sext i16 [[TMP2]] to i32
 // OP3-NEXT:    [[MUL5:%.*]] = mul nsw i32 [[CONV]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds i32, ptr [[C:%.*]], i64 [[IDXPROM]]
+// OP3-NEXT:    [[ARRAYIDX9:%.*]] = getelementptr inbounds nuw i32, ptr [[C:%.*]], i64 [[IDXPROM]]
 // OP3-NEXT:    store i32 [[MUL5]], ptr [[ARRAYIDX9]], align 4, !tbaa [[TBAA6:![0-9]+]]
 // OP3-NEXT:    [[TMP3:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP4:%.*]] = or disjoint i32 [[TMP3]], 1
 // OP3-NEXT:    [[ADD_1:%.*]] = add i32 [[MUL]], [[TMP4]]
 // OP3-NEXT:    [[IDXPROM_1:%.*]] = zext i32 [[ADD_1]] to i64
-// OP3-NEXT:    [[ARRAYIDX_1:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_1]]
+// OP3-NEXT:    [[ARRAYIDX_1:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_1]]
 // OP3-NEXT:    [[TMP5:%.*]] = load i16, ptr [[ARRAYIDX_1]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_1:%.*]] = sext i16 [[TMP5]] to i32
 // OP3-NEXT:    [[MUL5_1:%.*]] = mul nsw i32 [[CONV_1]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_1:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_1]]
+// OP3-NEXT:    [[ARRAYIDX9_1:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_1]]
 // OP3-NEXT:    store i32 [[MUL5_1]], ptr [[ARRAYIDX9_1]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP6:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP7:%.*]] = or disjoint i32 [[TMP6]], 2
 // OP3-NEXT:    [[ADD_2:%.*]] = add i32 [[MUL]], [[TMP7]]
 // OP3-NEXT:    [[IDXPROM_2:%.*]] = zext i32 [[ADD_2]] to i64
-// OP3-NEXT:    [[ARRAYIDX_2:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_2]]
+// OP3-NEXT:    [[ARRAYIDX_2:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_2]]
 // OP3-NEXT:    [[TMP8:%.*]] = load i16, ptr [[ARRAYIDX_2]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_2:%.*]] = sext i16 [[TMP8]] to i32
 // OP3-NEXT:    [[MUL5_2:%.*]] = mul nsw i32 [[CONV_2]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_2:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_2]]
+// OP3-NEXT:    [[ARRAYIDX9_2:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_2]]
 // OP3-NEXT:    store i32 [[MUL5_2]], ptr [[ARRAYIDX9_2]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP9:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP10:%.*]] = or disjoint i32 [[TMP9]], 3
 // OP3-NEXT:    [[ADD_3:%.*]] = add i32 [[MUL]], [[TMP10]]
 // OP3-NEXT:    [[IDXPROM_3:%.*]] = zext i32 [[ADD_3]] to i64
-// OP3-NEXT:    [[ARRAYIDX_3:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_3]]
+// OP3-NEXT:    [[ARRAYIDX_3:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_3]]
 // OP3-NEXT:    [[TMP11:%.*]] = load i16, ptr [[ARRAYIDX_3]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_3:%.*]] = sext i16 [[TMP11]] to i32
 // OP3-NEXT:    [[MUL5_3:%.*]] = mul nsw i32 [[CONV_3]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_3:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_3]]
+// OP3-NEXT:    [[ARRAYIDX9_3:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_3]]
 // OP3-NEXT:    store i32 [[MUL5_3]], ptr [[ARRAYIDX9_3]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP12:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP13:%.*]] = or disjoint i32 [[TMP12]], 4
 // OP3-NEXT:    [[ADD_4:%.*]] = add i32 [[MUL]], [[TMP13]]
 // OP3-NEXT:    [[IDXPROM_4:%.*]] = zext i32 [[ADD_4]] to i64
-// OP3-NEXT:    [[ARRAYIDX_4:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_4]]
+// OP3-NEXT:    [[ARRAYIDX_4:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_4]]
 // OP3-NEXT:    [[TMP14:%.*]] = load i16, ptr [[ARRAYIDX_4]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_4:%.*]] = sext i16 [[TMP14]] to i32
 // OP3-NEXT:    [[MUL5_4:%.*]] = mul nsw i32 [[CONV_4]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_4:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_4]]
+// OP3-NEXT:    [[ARRAYIDX9_4:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_4]]
 // OP3-NEXT:    store i32 [[MUL5_4]], ptr [[ARRAYIDX9_4]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP15:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP16:%.*]] = or disjoint i32 [[TMP15]], 5
 // OP3-NEXT:    [[ADD_5:%.*]] = add i32 [[MUL]], [[TMP16]]
 // OP3-NEXT:    [[IDXPROM_5:%.*]] = zext i32 [[ADD_5]] to i64
-// OP3-NEXT:    [[ARRAYIDX_5:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_5]]
+// OP3-NEXT:    [[ARRAYIDX_5:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_5]]
 // OP3-NEXT:    [[TMP17:%.*]] = load i16, ptr [[ARRAYIDX_5]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_5:%.*]] = sext i16 [[TMP17]] to i32
 // OP3-NEXT:    [[MUL5_5:%.*]] = mul nsw i32 [[CONV_5]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_5:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_5]]
+// OP3-NEXT:    [[ARRAYIDX9_5:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_5]]
 // OP3-NEXT:    store i32 [[MUL5_5]], ptr [[ARRAYIDX9_5]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP18:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP19:%.*]] = or disjoint i32 [[TMP18]], 6
 // OP3-NEXT:    [[ADD_6:%.*]] = add i32 [[MUL]], [[TMP19]]
 // OP3-NEXT:    [[IDXPROM_6:%.*]] = zext i32 [[ADD_6]] to i64
-// OP3-NEXT:    [[ARRAYIDX_6:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_6]]
+// OP3-NEXT:    [[ARRAYIDX_6:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_6]]
 // OP3-NEXT:    [[TMP20:%.*]] = load i16, ptr [[ARRAYIDX_6]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_6:%.*]] = sext i16 [[TMP20]] to i32
 // OP3-NEXT:    [[MUL5_6:%.*]] = mul nsw i32 [[CONV_6]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_6:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_6]]
+// OP3-NEXT:    [[ARRAYIDX9_6:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_6]]
 // OP3-NEXT:    store i32 [[MUL5_6]], ptr [[ARRAYIDX9_6]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[TMP21:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 // OP3-NEXT:    [[TMP22:%.*]] = or disjoint i32 [[TMP21]], 7
 // OP3-NEXT:    [[ADD_7:%.*]] = add i32 [[MUL]], [[TMP22]]
 // OP3-NEXT:    [[IDXPROM_7:%.*]] = zext i32 [[ADD_7]] to i64
-// OP3-NEXT:    [[ARRAYIDX_7:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_7]]
+// OP3-NEXT:    [[ARRAYIDX_7:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_7]]
 // OP3-NEXT:    [[TMP23:%.*]] = load i16, ptr [[ARRAYIDX_7]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_7:%.*]] = sext i16 [[TMP23]] to i32
 // OP3-NEXT:    [[MUL5_7:%.*]] = mul nsw i32 [[CONV_7]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_7:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_7]]
+// OP3-NEXT:    [[ARRAYIDX9_7:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_7]]
 // OP3-NEXT:    store i32 [[MUL5_7]], ptr [[ARRAYIDX9_7]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    [[INDVARS_IV_NEXT_7]] = add nuw nsw i64 [[INDVARS_IV]], 8
 // OP3-NEXT:    [[NITER_NEXT_7]] = add i64 [[NITER]], 8
@@ -186,11 +186,11 @@
 // OP3-NEXT:    [[TMP24:%.*]] = trunc nuw i64 [[INDVARS_IV_UNR]] to i32
 // OP3-NEXT:    [[ADD_EPIL:%.*]] = add i32 [[MUL]], [[TMP24]]
 // OP3-NEXT:    [[IDXPROM_EPIL:%.*]] = zext i32 [[ADD_EPIL]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL]]
 // OP3-NEXT:    [[TMP25:%.*]] = load i16, ptr [[ARRAYIDX_EPIL]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL:%.*]] = sext i16 [[TMP25]] to i32
 // OP3-NEXT:    [[MUL5_EPIL:%.*]] = mul nsw i32 [[CONV_EPIL]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL]], ptr [[ARRAYIDX9_EPIL]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_1:%.*]]
 // OP3:       for.body3.epil.1:
@@ -198,11 +198,11 @@
 // OP3-NEXT:    [[TMP27:%.*]] = add i32 [[TMP26]], 1
 // OP3-NEXT:    [[ADD_EPIL_1:%.*]] = add i32 [[MUL]], [[TMP27]]
 // OP3-NEXT:    [[IDXPROM_EPIL_1:%.*]] = zext i32 [[ADD_EPIL_1]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_1:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_1]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_1:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_1]]
 // OP3-NEXT:    [[TMP28:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_1]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_1:%.*]] = sext i16 [[TMP28]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_1:%.*]] = mul nsw i32 [[CONV_EPIL_1]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_1:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_1]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_1:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_1]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_1]], ptr [[ARRAYIDX9_EPIL_1]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_1_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_2:%.*]]
 // OP3:       for.body3.epil.2:
@@ -210,11 +210,11 @@
 // OP3-NEXT:    [[TMP30:%.*]] = add i32 [[TMP29]], 2
 // OP3-NEXT:    [[ADD_EPIL_2:%.*]] = add i32 [[MUL]], [[TMP30]]
 // OP3-NEXT:    [[IDXPROM_EPIL_2:%.*]] = zext i32 [[ADD_EPIL_2]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_2:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_2]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_2:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_2]]
 // OP3-NEXT:    [[TMP31:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_2]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_2:%.*]] = sext i16 [[TMP31]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_2:%.*]] = mul nsw i32 [[CONV_EPIL_2]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_2:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_2]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_2:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_2]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_2]], ptr [[ARRAYIDX9_EPIL_2]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_2_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_3:%.*]]
 // OP3:       for.body3.epil.3:
@@ -222,11 +222,11 @@
 // OP3-NEXT:    [[TMP33:%.*]] = add i32 [[TMP32]], 3
 // OP3-NEXT:    [[ADD_EPIL_3:%.*]] = add i32 [[MUL]], [[TMP33]]
 // OP3-NEXT:    [[IDXPROM_EPIL_3:%.*]] = zext i32 [[ADD_EPIL_3]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_3:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_3]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_3:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_3]]
 // OP3-NEXT:    [[TMP34:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_3]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_3:%.*]] = sext i16 [[TMP34]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_3:%.*]] = mul nsw i32 [[CONV_EPIL_3]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_3:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_3]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_3:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_3]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_3]], ptr [[ARRAYIDX9_EPIL_3]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_3_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_4:%.*]]
 // OP3:       for.body3.epil.4:
@@ -234,11 +234,11 @@
 // OP3-NEXT:    [[TMP36:%.*]] = add i32 [[TMP35]], 4
 // OP3-NEXT:    [[ADD_EPIL_4:%.*]] = add i32 [[MUL]], [[TMP36]]
 // OP3-NEXT:    [[IDXPROM_EPIL_4:%.*]] = zext i32 [[ADD_EPIL_4]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_4:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_4]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_4:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_4]]
 // OP3-NEXT:    [[TMP37:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_4]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_4:%.*]] = sext i16 [[TMP37]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_4:%.*]] = mul nsw i32 [[CONV_EPIL_4]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_4:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_4]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_4:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_4]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_4]], ptr [[ARRAYIDX9_EPIL_4]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_4_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_5:%.*]]
 // OP3:       for.body3.epil.5:
@@ -246,11 +246,11 @@
 // OP3-NEXT:    [[TMP39:%.*]] = add i32 [[TMP38]], 5
 // OP3-NEXT:    [[ADD_EPIL_5:%.*]] = add i32 [[MUL]], [[TMP39]]
 // OP3-NEXT:    [[IDXPROM_EPIL_5:%.*]] = zext i32 [[ADD_EPIL_5]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_5:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_5]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_5:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_5]]
 // OP3-NEXT:    [[TMP40:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_5]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_5:%.*]] = sext i16 [[TMP40]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_5:%.*]] = mul nsw i32 [[CONV_EPIL_5]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_5:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_5]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_5:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_5]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_5]], ptr [[ARRAYIDX9_EPIL_5]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br i1 [[EPIL_ITER_CMP_5_NOT]], label [[FOR_INC10]], label [[FOR_BODY3_EPIL_6:%.*]]
 // OP3:       for.body3.epil.6:
@@ -258,11 +258,11 @@
 // OP3-NEXT:    [[TMP42:%.*]] = add i32 [[TMP41]], 6
 // OP3-NEXT:    [[ADD_EPIL_6:%.*]] = add i32 [[MUL]], [[TMP42]]
 // OP3-NEXT:    [[IDXPROM_EPIL_6:%.*]] = zext i32 [[ADD_EPIL_6]] to i64
-// OP3-NEXT:    [[ARRAYIDX_EPIL_6:%.*]] = getelementptr inbounds i16, ptr [[A]], i64 [[IDXPROM_EPIL_6]]
+// OP3-NEXT:    [[ARRAYIDX_EPIL_6:%.*]] = getelementptr inbounds nuw i16, ptr [[A]], i64 [[IDXPROM_EPIL_6]]
 // OP3-NEXT:    [[TMP43:%.*]] = load i16, ptr [[ARRAYIDX_EPIL_6]], align 2, !tbaa [[TBAA2]]
 // OP3-NEXT:    [[CONV_EPIL_6:%.*]] = sext i16 [[TMP43]] to i32
 // OP3-NEXT:    [[MUL5_EPIL_6:%.*]] = mul nsw i32 [[CONV_EPIL_6]], [[CONV4]]
-// OP3-NEXT:    [[ARRAYIDX9_EPIL_6:%.*]] = getelementptr inbounds i32, ptr [[C]], i64 [[IDXPROM_EPIL_6]]
+// OP3-NEXT:    [[ARRAYIDX9_EPIL_6:%.*]] = getelementptr inbounds nuw i32, ptr [[C]], i64 [[IDXPROM_EPIL_6]]
 // OP3-NEXT:    store i32 [[MUL5_EPIL_6]], ptr [[ARRAYIDX9_EPIL_6]], align 4, !tbaa [[TBAA6]]
 // OP3-NEXT:    br label [[FOR_INC10]]
 // OP3:       for.inc10:

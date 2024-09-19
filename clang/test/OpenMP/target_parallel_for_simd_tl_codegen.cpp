@@ -24,7 +24,7 @@ int thread_limit_target_parallel_for_simd() {
 // OMP51-NEXT:    [[AGG_CAPTURED:%.*]] = alloca [[STRUCT_ANON:%.*]], align 1
 // OMP51-NEXT:    [[TMP0:%.*]] = call i32 @__kmpc_global_thread_num(ptr @[[GLOB2:[0-9]+]])
 // OMP51-NEXT:    [[TMP1:%.*]] = call ptr @__kmpc_omp_task_alloc(ptr @[[GLOB2]], i32 [[TMP0]], i32 1, i64 40, i64 1, ptr @.omp_task_entry.)
-// OMP51-NEXT:    [[TMP2:%.*]] = getelementptr inbounds [[STRUCT_KMP_TASK_T_WITH_PRIVATES:%.*]], ptr [[TMP1]], i32 0, i32 0
+// OMP51-NEXT:    [[TMP2:%.*]] = getelementptr inbounds nuw [[STRUCT_KMP_TASK_T_WITH_PRIVATES:%.*]], ptr [[TMP1]], i32 0, i32 0
 // OMP51-NEXT:    call void @__kmpc_omp_task_begin_if0(ptr @[[GLOB2]], i32 [[TMP0]], ptr [[TMP1]])
 // OMP51-NEXT:    [[TMP3:%.*]] = call i32 @.omp_task_entry.(i32 [[TMP0]], ptr [[TMP1]]) #[[ATTR2:[0-9]+]]
 // OMP51-NEXT:    call void @__kmpc_omp_task_complete_if0(ptr @[[GLOB2]], i32 [[TMP0]], ptr [[TMP1]])
@@ -120,9 +120,9 @@ int thread_limit_target_parallel_for_simd() {
 // OMP51-NEXT:    store ptr [[TMP1]], ptr [[DOTADDR1]], align 8
 // OMP51-NEXT:    [[TMP2:%.*]] = load i32, ptr [[DOTADDR]], align 4
 // OMP51-NEXT:    [[TMP3:%.*]] = load ptr, ptr [[DOTADDR1]], align 8
-// OMP51-NEXT:    [[TMP4:%.*]] = getelementptr inbounds [[STRUCT_KMP_TASK_T_WITH_PRIVATES:%.*]], ptr [[TMP3]], i32 0, i32 0
-// OMP51-NEXT:    [[TMP5:%.*]] = getelementptr inbounds [[STRUCT_KMP_TASK_T:%.*]], ptr [[TMP4]], i32 0, i32 2
-// OMP51-NEXT:    [[TMP6:%.*]] = getelementptr inbounds [[STRUCT_KMP_TASK_T]], ptr [[TMP4]], i32 0, i32 0
+// OMP51-NEXT:    [[TMP4:%.*]] = getelementptr inbounds nuw [[STRUCT_KMP_TASK_T_WITH_PRIVATES:%.*]], ptr [[TMP3]], i32 0, i32 0
+// OMP51-NEXT:    [[TMP5:%.*]] = getelementptr inbounds nuw [[STRUCT_KMP_TASK_T:%.*]], ptr [[TMP4]], i32 0, i32 2
+// OMP51-NEXT:    [[TMP6:%.*]] = getelementptr inbounds nuw [[STRUCT_KMP_TASK_T]], ptr [[TMP4]], i32 0, i32 0
 // OMP51-NEXT:    [[TMP7:%.*]] = load ptr, ptr [[TMP6]], align 8
 // OMP51-NEXT:    call void @llvm.experimental.noalias.scope.decl(metadata [[META9:![0-9]+]])
 // OMP51-NEXT:    call void @llvm.experimental.noalias.scope.decl(metadata [[META12:![0-9]+]])

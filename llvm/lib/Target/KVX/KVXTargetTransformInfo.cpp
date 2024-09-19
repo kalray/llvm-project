@@ -776,10 +776,14 @@ KVXTTIImpl::getScalarizationOverhead(VectorType *Ty, const APInt &DemandedElts,
 
   APInt NotRequired(DemandedElts.getBitWidth(), 1);
   unsigned Sht = 6 - Log2_32(ScalarSize);
-  while (NotRequired.getActiveBits() && NotRequired.uge(DemandedElts)) {
-    RequiredAnyOps &= ~NotRequired;
-    NotRequired <<= Sht;
-  }
+
+  RequiredAnyOps &= ~NotRequired;
+  if (Sht < DemandedElts.getBitWidth())
+    for (NotRequired <<= Sht;
+        NotRequired.getActiveBits() && NotRequired.uge(DemandedElts);
+        NotRequired <<= Sht)
+      RequiredAnyOps &= ~NotRequired;
+
 
   unsigned RequireAnyOpsCount = RequiredAnyOps.popcount();
   // Not demanding any elementy is also free

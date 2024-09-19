@@ -252,7 +252,7 @@ declare <16 x i8> @llvm.abs.v8i8(<16 x i8>, i1) #0
 
 define <16 x i8> @test_abs(<16 x i8> %a) #0 {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <16 x i8> @llvm.abs.v16i8(<16 x i8> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %r
 ;
   %r = call <16 x i8> @llvm.abs.v8i8(<16 x i8> %a, i1 false)
@@ -502,7 +502,7 @@ entry:
 define <16 x i8> @abdbo_rr(<16 x i8> %a, <16 x i8> %b) {
 ; ALL-LABEL: 'abdbo_rr'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %sub = sub nsw <16 x i8> %a, %b
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %0 = tail call <16 x i8> @llvm.abs.v16i8(<16 x i8> %sub, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x i8> %0
 ;
 entry:

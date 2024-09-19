@@ -2537,14 +2537,19 @@ static bool hoistAdd(ICmpInst::Predicate Pred, Value *VariantLHS,
                      Value *InvariantRHS, ICmpInst &ICmp, Loop &L,
                      ICFLoopSafetyInfo &SafetyInfo, MemorySSAUpdater &MSSAU,
                      AssumptionCache *AC, DominatorTree *DT) {
-  assert(ICmpInst::isSigned(Pred) && "Not supported yet!");
   assert(!L.isLoopInvariant(VariantLHS) && "Precondition.");
   assert(L.isLoopInvariant(InvariantRHS) && "Precondition.");
+
+  bool IsSigned = ICmpInst::isSigned(Pred);
 
   // Try to represent VariantLHS as sum of invariant and variant operands.
   using namespace PatternMatch;
   Value *VariantOp, *InvariantOp;
-  if (!match(VariantLHS, m_NSWAdd(m_Value(VariantOp), m_Value(InvariantOp))))
+  if (IsSigned &&
+      !match(VariantLHS, m_NSWAdd(m_Value(VariantOp), m_Value(InvariantOp))))
+    return false;
+  if (!IsSigned &&
+      !match(VariantLHS, m_NUWAdd(m_Value(VariantOp), m_Value(InvariantOp))))
     return false;
 
   // LHS itself is a loop-variant, try to represent it in the form:
@@ -2559,17 +2564,20 @@ static bool hoistAdd(ICmpInst::Predicate Pred, Value *VariantLHS,
   // normal linear arithmetics). Overflows make things much more complicated, so
   // we want to avoid this.
   auto &DL = L.getHeader()->getDataLayout();
-  bool ProvedNoOverflowAfterReassociate =
-      computeOverflowForSignedSub(InvariantRHS, InvariantOp,
-                                  SimplifyQuery(DL, DT, AC, &ICmp)) ==
-      llvm::OverflowResult::NeverOverflows;
-  if (!ProvedNoOverflowAfterReassociate)
+  SimplifyQuery SQ(DL, DT, AC, &ICmp);
+  if (IsSigned && computeOverflowForSignedSub(InvariantRHS, InvariantOp, SQ) !=
+                      llvm::OverflowResult::NeverOverflows)
+    return false;
+  if (!IsSigned &&
+      computeOverflowForUnsignedSub(InvariantRHS, InvariantOp, SQ) !=
+          llvm::OverflowResult::NeverOverflows)
     return false;
   auto *Preheader = L.getLoopPreheader();
   assert(Preheader && "Loop is not in simplify form?");
   IRBuilder<> Builder(Preheader->getTerminator());
-  Value *NewCmpOp = Builder.CreateSub(InvariantRHS, InvariantOp, "invariant.op",
-                                      /*HasNUW*/ false, /*HasNSW*/ true);
+  Value *NewCmpOp =
+      Builder.CreateSub(InvariantRHS, InvariantOp, "invariant.op",
+                        /*HasNUW*/ !IsSigned, /*HasNSW*/ IsSigned);
   ICmp.setPredicate(Pred);
   ICmp.setOperand(0, VariantOp);
   ICmp.setOperand(1, NewCmpOp);
@@ -2584,14 +2592,19 @@ static bool hoistSub(ICmpInst::Predicate Pred, Value *VariantLHS,
                      Value *InvariantRHS, ICmpInst &ICmp, Loop &L,
                      ICFLoopSafetyInfo &SafetyInfo, MemorySSAUpdater &MSSAU,
                      AssumptionCache *AC, DominatorTree *DT) {
-  assert(ICmpInst::isSigned(Pred) && "Not supported yet!");
   assert(!L.isLoopInvariant(VariantLHS) && "Precondition.");
   assert(L.isLoopInvariant(InvariantRHS) && "Precondition.");
+
+  bool IsSigned = ICmpInst::isSigned(Pred);
 
   // Try to represent VariantLHS as sum of invariant and variant operands.
   using namespace PatternMatch;
   Value *VariantOp, *InvariantOp;
-  if (!match(VariantLHS, m_NSWSub(m_Value(VariantOp), m_Value(InvariantOp))))
+  if (IsSigned &&
+      !match(VariantLHS, m_NSWSub(m_Value(VariantOp), m_Value(InvariantOp))))
+    return false;
+  if (!IsSigned &&
+      !match(VariantLHS, m_NUWSub(m_Value(VariantOp), m_Value(InvariantOp))))
     return false;
 
   bool VariantSubtracted = false;
@@ -2613,14 +2626,24 @@ static bool hoistSub(ICmpInst::Predicate Pred, Value *VariantLHS,
   // "C1 - C2" does not overflow.
   auto &DL = L.getHeader()->getDataLayout();
   SimplifyQuery SQ(DL, DT, AC, &ICmp);
-  if (VariantSubtracted) {
+  if (VariantSubtracted && IsSigned) {
     // C1 - LV < C2 --> LV > C1 - C2
     if (computeOverflowForSignedSub(InvariantOp, InvariantRHS, SQ) !=
         llvm::OverflowResult::NeverOverflows)
       return false;
-  } else {
+  } else if (VariantSubtracted && !IsSigned) {
+    // C1 - LV < C2 --> LV > C1 - C2
+    if (computeOverflowForUnsignedSub(InvariantOp, InvariantRHS, SQ) !=
+        llvm::OverflowResult::NeverOverflows)
+      return false;
+  } else if (!VariantSubtracted && IsSigned) {
     // LV - C1 < C2 --> LV < C1 + C2
     if (computeOverflowForSignedAdd(InvariantOp, InvariantRHS, SQ) !=
+        llvm::OverflowResult::NeverOverflows)
+      return false;
+  } else { // !VariantSubtracted && !IsSigned
+    // LV - C1 < C2 --> LV < C1 + C2
+    if (computeOverflowForUnsignedAdd(InvariantOp, InvariantRHS, SQ) !=
         llvm::OverflowResult::NeverOverflows)
       return false;
   }
@@ -2630,9 +2653,9 @@ static bool hoistSub(ICmpInst::Predicate Pred, Value *VariantLHS,
   Value *NewCmpOp =
       VariantSubtracted
           ? Builder.CreateSub(InvariantOp, InvariantRHS, "invariant.op",
-                              /*HasNUW*/ false, /*HasNSW*/ true)
+                              /*HasNUW*/ !IsSigned, /*HasNSW*/ IsSigned)
           : Builder.CreateAdd(InvariantOp, InvariantRHS, "invariant.op",
-                              /*HasNUW*/ false, /*HasNSW*/ true);
+                              /*HasNUW*/ !IsSigned, /*HasNSW*/ IsSigned);
   ICmp.setPredicate(Pred);
   ICmp.setOperand(0, VariantOp);
   ICmp.setOperand(1, NewCmpOp);
@@ -2648,10 +2671,6 @@ static bool hoistAddSub(Instruction &I, Loop &L, ICFLoopSafetyInfo &SafetyInfo,
   ICmpInst::Predicate Pred;
   Value *LHS, *RHS;
   if (!match(&I, m_ICmp(Pred, m_Value(LHS), m_Value(RHS))))
-    return false;
-
-  // TODO: Support unsigned predicates?
-  if (!ICmpInst::isSigned(Pred))
     return false;
 
   // Put variant operand to LHS position.
@@ -2767,8 +2786,9 @@ static bool hoistMulAddAssociation(Instruction &I, Loop &L,
     unsigned OpIdx = U->getOperandNo();
     auto *LHS = OpIdx == 0 ? Mul : Ins->getOperand(0);
     auto *RHS = OpIdx == 1 ? Mul : Ins->getOperand(1);
-    auto *NewBO = BinaryOperator::Create(Ins->getOpcode(), LHS, RHS,
-                                         Ins->getName() + ".reass", Ins);
+    auto *NewBO =
+        BinaryOperator::Create(Ins->getOpcode(), LHS, RHS,
+                               Ins->getName() + ".reass", Ins->getIterator());
     NewBO->copyIRFlags(Ins);
     if (VariantOp == Ins)
       VariantOp = NewBO;
@@ -2781,58 +2801,73 @@ static bool hoistMulAddAssociation(Instruction &I, Loop &L,
   return true;
 }
 
-/// Reassociate general associative binary expressions of the form
+/// Reassociate associative binary expressions of the form
 ///
 /// 1. "(LV op C1) op C2" ==> "LV op (C1 op C2)"
+/// 2. "(C1 op LV) op C2" ==> "LV op (C1 op C2)"
+/// 3. "C2 op (C1 op LV)" ==> "LV op (C1 op C2)"
+/// 4. "C2 op (LV op C1)" ==> "LV op (C1 op C2)"
 ///
-/// where op is an associative binary op, LV is a loop variant, and C1 and C2
-/// are loop invariants that we want to hoist.
-///
-/// TODO: This can be extended to more cases such as
-/// 2. "C1 op (C2 op LV)" ==> "(C1 op C2) op LV"
-/// 3. "(C1 op LV) op C2" ==> "LV op (C1 op C2)" if op is commutative
-/// 4. "C1 op (LV op C2)" ==> "(C1 op C2) op LV" if op is commutative
+/// where op is an associative BinOp, LV is a loop variant, and C1 and C2 are
+/// loop invariants that we want to hoist, noting that associativity implies
+/// commutativity.
 static bool hoistBOAssociation(Instruction &I, Loop &L,
                                ICFLoopSafetyInfo &SafetyInfo,
                                MemorySSAUpdater &MSSAU, AssumptionCache *AC,
                                DominatorTree *DT) {
-  BinaryOperator *BO = dyn_cast<BinaryOperator>(&I);
+  auto *BO = dyn_cast<BinaryOperator>(&I);
   if (!BO || !BO->isAssociative())
     return false;
 
+  // TODO: Only hoist ADDs and MULs for now.
   Instruction::BinaryOps Opcode = BO->getOpcode();
-  BinaryOperator *Op0 = dyn_cast<BinaryOperator>(BO->getOperand(0));
+  if (Opcode != Instruction::Add && Opcode != Instruction::Mul)
+    return false;
 
-  // Transform: "(LV op C1) op C2" ==> "LV op (C1 op C2)"
-  if (Op0 && Op0->getOpcode() == Opcode) {
-    Value *LV = Op0->getOperand(0);
-    Value *C1 = Op0->getOperand(1);
-    Value *C2 = BO->getOperand(1);
+  bool LVInRHS = L.isLoopInvariant(BO->getOperand(0));
+  auto *BO0 = dyn_cast<BinaryOperator>(BO->getOperand(LVInRHS));
+  if (!BO0 || BO0->getOpcode() != Opcode || !BO0->isAssociative() ||
+      BO0->hasNUsesOrMore(3))
+    return false;
 
-    if (L.isLoopInvariant(LV) || !L.isLoopInvariant(C1) ||
-        !L.isLoopInvariant(C2))
-      return false;
+  Value *LV = BO0->getOperand(0);
+  Value *C1 = BO0->getOperand(1);
+  Value *C2 = BO->getOperand(!LVInRHS);
 
-    auto *Preheader = L.getLoopPreheader();
-    assert(Preheader && "Loop is not in simplify form?");
-    IRBuilder<> Builder(Preheader->getTerminator());
-    Value *Inv = Builder.CreateBinOp(Opcode, C1, C2, "invariant.op");
+  assert(BO->isCommutative() && BO0->isCommutative() &&
+         "Associativity implies commutativity");
+  if (L.isLoopInvariant(LV) && !L.isLoopInvariant(C1))
+    std::swap(LV, C1);
+  if (L.isLoopInvariant(LV) || !L.isLoopInvariant(C1) || !L.isLoopInvariant(C2))
+    return false;
 
-    auto *NewBO =
-        BinaryOperator::Create(Opcode, LV, Inv, BO->getName() + ".reass", BO);
-    NewBO->copyIRFlags(BO);
-    BO->replaceAllUsesWith(NewBO);
-    eraseInstruction(*BO, SafetyInfo, MSSAU);
+  auto *Preheader = L.getLoopPreheader();
+  assert(Preheader && "Loop is not in simplify form?");
 
-    // Note: (LV op C1) might not be erased if it has more uses than the one we
-    //       just replaced.
-    if (Op0->use_empty())
-      eraseInstruction(*Op0, SafetyInfo, MSSAU);
+  IRBuilder<> Builder(Preheader->getTerminator());
+  auto *Inv = Builder.CreateBinOp(Opcode, C1, C2, "invariant.op");
 
-    return true;
+  auto *NewBO = BinaryOperator::Create(
+      Opcode, LV, Inv, BO->getName() + ".reass", BO->getIterator());
+
+  // Copy NUW for ADDs if both instructions have it.
+  if (Opcode == Instruction::Add && BO->hasNoUnsignedWrap() &&
+      BO0->hasNoUnsignedWrap()) {
+    // If `Inv` was not constant-folded, a new Instruction has been created.
+    if (auto *I = dyn_cast<Instruction>(Inv))
+      I->setHasNoUnsignedWrap(true);
+    NewBO->setHasNoUnsignedWrap(true);
   }
 
-  return false;
+  BO->replaceAllUsesWith(NewBO);
+  eraseInstruction(*BO, SafetyInfo, MSSAU);
+
+  // (LV op C1) might not be erased if it has more uses than the one we just
+  // replaced.
+  if (BO0->use_empty())
+    eraseInstruction(*BO0, SafetyInfo, MSSAU);
+
+  return true;
 }
 
 static bool hoistArithmetics(Instruction &I, Loop &L,

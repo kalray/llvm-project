@@ -159,7 +159,7 @@ void test_typedef(global int_td *x, constant int_td *y, intp_td z) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[PS:%.*]] = alloca ptr addrspace(4), align 8
 // CHECK-NEXT:    [[TMP0:%.*]] = load ptr addrspace(4), ptr [[PS]], align 8
-// CHECK-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr addrspace(4) [[TMP0]], i32 0, i32 0
+// CHECK-NEXT:    [[X:%.*]] = getelementptr inbounds nuw [[STRUCT_S:%.*]], ptr addrspace(4) [[TMP0]], i32 0, i32 0
 // CHECK-NEXT:    store i32 0, ptr addrspace(4) [[X]], align 8
 // CHECK-NEXT:    store i32 0, ptr addrspace(1) @g_s, align 8
 // CHECK-NEXT:    ret void

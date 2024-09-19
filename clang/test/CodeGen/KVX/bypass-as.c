@@ -95,7 +95,7 @@ int foo_bypass_a(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds i8, ptr addrspace(256) [[S:%.*]], i64 4
+// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds nuw i8, ptr addrspace(256) [[S:%.*]], i64 4
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[B]], align 4, !tbaa [[TBAA17:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
@@ -105,7 +105,7 @@ int foo_bypass_b(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_c(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds i8, ptr addrspace(256) [[S:%.*]], i64 8
+// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds nuw i8, ptr addrspace(256) [[S:%.*]], i64 8
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[C]], align 4, !tbaa [[TBAA18:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
@@ -115,7 +115,7 @@ int foo_bypass_c(__bypass struct S *s) {
 
 // CHECK-LABEL: @foo_bypass_d(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds i8, ptr addrspace(256) [[S:%.*]], i64 12
+// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds nuw i8, ptr addrspace(256) [[S:%.*]], i64 12
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr addrspace(256) [[D]], align 4, !tbaa [[TBAA19:![0-9]+]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
@@ -163,7 +163,7 @@ int foo_default_a(struct S *s) {
 
 // CHECK-LABEL: @foo_default_b(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds i8, ptr [[S:%.*]], i64 4
+// CHECK-NEXT:    [[B:%.*]] = getelementptr inbounds nuw i8, ptr [[S:%.*]], i64 4
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[B]], align 4, !tbaa [[TBAA17]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
@@ -173,7 +173,7 @@ int foo_default_b(struct S *s) {
 
 // CHECK-LABEL: @foo_default_c(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds i8, ptr [[S:%.*]], i64 8
+// CHECK-NEXT:    [[C:%.*]] = getelementptr inbounds nuw i8, ptr [[S:%.*]], i64 8
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[C]], align 4, !tbaa [[TBAA18]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //
@@ -183,7 +183,7 @@ int foo_default_c(struct S *s) {
 
 // CHECK-LABEL: @foo_default_d(
 // CHECK-NEXT:  entry:
-// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds i8, ptr [[S:%.*]], i64 12
+// CHECK-NEXT:    [[D:%.*]] = getelementptr inbounds nuw i8, ptr [[S:%.*]], i64 12
 // CHECK-NEXT:    [[TMP0:%.*]] = load i32, ptr [[D]], align 4, !tbaa [[TBAA19]]
 // CHECK-NEXT:    ret i32 [[TMP0]]
 //

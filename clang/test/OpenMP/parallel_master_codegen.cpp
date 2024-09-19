@@ -484,11 +484,11 @@ void parallel_master_allocate() {
 // CHECK17-NEXT:    [[TMP4:%.*]] = icmp ne i32 [[TMP3]], 0
 // CHECK17-NEXT:    br i1 [[TMP4]], label [[OMP_IF_THEN:%.*]], label [[OMP_IF_END:%.*]]
 // CHECK17:       omp_if.then:
-// CHECK17-NEXT:    [[A4:%.*]] = getelementptr inbounds [[STRUCT_ST]], ptr [[A3]], i32 0, i32 0
+// CHECK17-NEXT:    [[A4:%.*]] = getelementptr inbounds nuw [[STRUCT_ST]], ptr [[A3]], i32 0, i32 0
 // CHECK17-NEXT:    [[TMP5:%.*]] = load i32, ptr [[A4]], align 4
 // CHECK17-NEXT:    [[ADD:%.*]] = add nsw i32 [[TMP5]], 1
 // CHECK17-NEXT:    store i32 [[ADD]], ptr [[A4]], align 4
-// CHECK17-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_ST]], ptr [[A3]], i32 0, i32 1
+// CHECK17-NEXT:    [[B:%.*]] = getelementptr inbounds nuw [[STRUCT_ST]], ptr [[A3]], i32 0, i32 1
 // CHECK17-NEXT:    [[TMP6:%.*]] = load i32, ptr [[B]], align 4
 // CHECK17-NEXT:    [[ADD5:%.*]] = add nsw i32 [[TMP6]], 1
 // CHECK17-NEXT:    store i32 [[ADD5]], ptr [[B]], align 4
@@ -521,9 +521,9 @@ void parallel_master_allocate() {
 // CHECK17-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // CHECK17-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
 // CHECK17-NEXT:    [[THIS1:%.*]] = load ptr, ptr [[THIS_ADDR]], align 8
-// CHECK17-NEXT:    [[A:%.*]] = getelementptr inbounds [[STRUCT_ST:%.*]], ptr [[THIS1]], i32 0, i32 0
+// CHECK17-NEXT:    [[A:%.*]] = getelementptr inbounds nuw [[STRUCT_ST:%.*]], ptr [[THIS1]], i32 0, i32 0
 // CHECK17-NEXT:    store i32 0, ptr [[A]], align 4
-// CHECK17-NEXT:    [[B:%.*]] = getelementptr inbounds [[STRUCT_ST]], ptr [[THIS1]], i32 0, i32 1
+// CHECK17-NEXT:    [[B:%.*]] = getelementptr inbounds nuw [[STRUCT_ST]], ptr [[THIS1]], i32 0, i32 1
 // CHECK17-NEXT:    store i32 0, ptr [[B]], align 4
 // CHECK17-NEXT:    ret void
 //

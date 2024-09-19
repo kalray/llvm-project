@@ -82,7 +82,7 @@ i128 nor_2(i128 a, i128 b){
 // CHECK-LABEL: @andn_1(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[NOT:%.*]] = xor i128 [[A:%.*]], -1
-// CHECK-NEXT:    [[AND:%.*]] = and i128 [[NOT]], [[B:%.*]]
+// CHECK-NEXT:    [[AND:%.*]] = and i128 [[B:%.*]], [[NOT]]
 // CHECK-NEXT:    ret i128 [[AND]]
 //
 i128 andn_1(i128 a, i128 b){
@@ -92,7 +92,7 @@ i128 andn_1(i128 a, i128 b){
 // CHECK-LABEL: @andn_2(
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[NOT:%.*]] = xor i128 [[B:%.*]], -1
-// CHECK-NEXT:    [[AND:%.*]] = and i128 [[NOT]], [[A:%.*]]
+// CHECK-NEXT:    [[AND:%.*]] = and i128 [[A:%.*]], [[NOT]]
 // CHECK-NEXT:    ret i128 [[AND]]
 //
 i128 andn_2(i128 a, i128 b){

@@ -52,7 +52,7 @@ static cl::opt<bool> UseVLIWSched("use-kvx-vliw-sched", cl::Hidden,
 #ifndef NDEBUG
 inline static StringRef getMVTName(const MVT &T) {
   switch (T.SimpleTy) {
-#define GET_VT_ATTR(Ty, N, Sz, Any, Int, FP, Vec, Sc)                          \
+#define GET_VT_ATTR(Ty, N, Sz, Any, Int, FP, Vec, Sc, Tup, NF, NElem, EltTy)   \
   case MVT::Ty: return "MVT::" # Ty;
 #include "llvm/CodeGen/GenVT.inc"
   default: llvm_unreachable("ILLEGAL VALUE TYPE!");
@@ -4284,7 +4284,7 @@ SDValue KVXTargetLowering::LowerINTRINSIC(SDValue Op, SelectionDAG &DAG,
     MachineFunction &MF = DAG.getMachineFunction();
     const TargetLowering &TLI = DAG.getTargetLoweringInfo();
     MVT PtrVT = TLI.getPointerTy(DAG.getDataLayout());
-    auto &Context = MF.getMMI().getContext();
+    auto &Context = MF.getContext();
     // Our lsda symbol name must match the (hard-coded) one that
     // will be emmited by EHStreamer::emitExceptionTable()
     MCSymbol *S = Context.getOrCreateSymbol(Twine("GCC_except_table") +

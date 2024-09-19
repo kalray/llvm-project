@@ -456,7 +456,7 @@ __kvx_v4si maddwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4si b) {
 // CHECK-NEXT:    [[MUL2_I:%.*]] = mul nsw <4 x i64> [[CONV1_I]], [[CONV_I]]
 // CHECK-NEXT:    [[SHR_I:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
 // CHECK-NEXT:    [[CONV3_I:%.*]] = trunc nuw <4 x i64> [[SHR_I]] to <4 x i32>
-// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[CONV3_I]], [[ACC:%.*]]
+// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[ACC:%.*]], [[CONV3_I]]
 // CHECK-NEXT:    ret <4 x i32> [[ADD_I]]
 //
 __kvx_v4si maddmwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4si b) {
@@ -470,7 +470,7 @@ __kvx_v4si maddmwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4si b) {
 // CHECK-NEXT:    [[MUL2_I:%.*]] = mul nuw <4 x i64> [[CONV1_I]], [[CONV_I]]
 // CHECK-NEXT:    [[SHR_I:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
 // CHECK-NEXT:    [[CONV3_I:%.*]] = trunc nuw <4 x i64> [[SHR_I]] to <4 x i32>
-// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[CONV3_I]], [[ACC:%.*]]
+// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[ACC:%.*]], [[CONV3_I]]
 // CHECK-NEXT:    ret <4 x i32> [[ADD_I]]
 //
 __kvx_v4su maddumwq(__kvx_v4su acc, __kvx_v4su a, __kvx_v4su b) {
@@ -548,7 +548,7 @@ __kvx_v4si msbfwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4si b) {
 // CHECK-NEXT:    [[MUL2_I:%.*]] = mul nsw <4 x i64> [[CONV1_I]], [[CONV_I]]
 // CHECK-NEXT:    [[SHR_I:%.*]] = lshr <4 x i64> [[MUL2_I]], <i64 32, i64 32, i64 32, i64 32>
 // CHECK-NEXT:    [[CONV3_I:%.*]] = trunc nuw <4 x i64> [[SHR_I]] to <4 x i32>
-// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[CONV3_I]], [[ACC:%.*]]
+// CHECK-NEXT:    [[ADD_I:%.*]] = add <4 x i32> [[ACC:%.*]], [[CONV3_I]]
 // CHECK-NEXT:    ret <4 x i32> [[ADD_I]]
 //
 __kvx_v4si maddsumwq(__kvx_v4si acc, __kvx_v4si a, __kvx_v4su b) {

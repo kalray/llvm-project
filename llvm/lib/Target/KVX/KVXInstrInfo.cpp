@@ -32,7 +32,8 @@ KVXInstrInfo::KVXInstrInfo(KVXSubtarget &ST)
 void KVXInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                MachineBasicBlock::iterator MBBI,
                                const DebugLoc &DL, MCRegister DstReg,
-                               MCRegister SrcReg, bool KillSrc) const {
+                               MCRegister SrcReg, bool KillSrc,
+                               bool RenamableDest, bool RenamableSrc) const {
 
   const KVXRegisterInfo *TRI = Subtarget.getRegisterInfo();
 

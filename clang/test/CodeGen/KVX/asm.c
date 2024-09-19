@@ -113,7 +113,7 @@ v2i64_t asm_clobber_double_quad(v2i64_t a) {
 // CHECK-NEXT:    [[VECEXT2:%.*]] = extractelement <4 x i64> [[C:%.*]], i64 0
 // CHECK-NEXT:    [[ADD3:%.*]] = add nsw i64 [[ADD]], [[VECEXT2]]
 // CHECK-NEXT:    [[CONV:%.*]] = sitofp i64 [[ADD3]] to float
-// CHECK-NEXT:    [[ADD4:%.*]] = fadd float [[CONV]], [[A:%.*]]
+// CHECK-NEXT:    [[ADD4:%.*]] = fadd float [[A:%.*]], [[CONV]]
 // CHECK-NEXT:    ret float [[ADD4]]
 //
 float asm_clobber_multiple_quad(float a, v2i64_t b, v4i64_t c) {

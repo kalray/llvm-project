@@ -302,7 +302,7 @@ declare <2 x i32> @llvm.abs.v2i32(<2 x i32>, i1) #0
 
 define <2 x i32> @test_abs(<2 x i32> %a) {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <2 x i32> @llvm.abs.v2i32(<2 x i32> %a, i1 false)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x i32> @llvm.abs.v2i32(<2 x i32> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %r
 ;
   %r = call <2 x i32> @llvm.abs.v2i32(<2 x i32> %a, i1 false)
@@ -602,7 +602,7 @@ define <2 x i32> @lnorneg(<2 x i32> %0, <2 x i32> %1) {
 define <2 x i32> @abdwp_rr(<2 x i32> %a, <2 x i32> %b) {
 ; ALL-LABEL: 'abdwp_rr'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %sub = sub nsw <2 x i32> %a, %b
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %sub, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %sub, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %0
 ;
 entry:
@@ -614,7 +614,7 @@ entry:
 define <2 x i32> @abdwp_not_ri(<2 x i32> %0) {
 ; ALL-LABEL: 'abdwp_not_ri'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <2 x i32> <i32 15, i32 16>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %3
 ;
   %2 = sub nsw <2 x i32> <i32 15, i32 16>, %0
@@ -625,7 +625,7 @@ define <2 x i32> @abdwp_not_ri(<2 x i32> %0) {
 define <2 x i32> @abdwp_ri_(<2 x i32> %0) {
 ; ALL-LABEL: 'abdwp_ri_'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <2 x i32> <i32 15, i32 0>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %3
 ;
   %2 = sub nsw <2 x i32> <i32 15, i32 0>, %0
@@ -636,7 +636,7 @@ define <2 x i32> @abdwp_ri_(<2 x i32> %0) {
 define <2 x i32> @abdwp_ri_at(<2 x i32> %0) {
 ; ALL-LABEL: 'abdwp_ri_at'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <2 x i32> <i32 15, i32 15>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <2 x i32> @llvm.abs.v2i32(<2 x i32> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i32> %3
 ;
   %2 = sub nsw <2 x i32> <i32 15, i32 15>, %0

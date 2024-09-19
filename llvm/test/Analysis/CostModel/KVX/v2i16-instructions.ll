@@ -302,7 +302,7 @@ declare <2 x i16> @llvm.abs.v2i16(<2 x i16>, i1) #0
 
 define <2 x i16> @test_abs(<2 x i16> %a) {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <2 x i16> @llvm.abs.v2i16(<2 x i16> %a, i1 false)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <2 x i16> @llvm.abs.v2i16(<2 x i16> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %r
 ;
   %r = call <2 x i16> @llvm.abs.v2i16(<2 x i16> %a, i1 false)
@@ -602,7 +602,7 @@ define <2 x i16> @lnorneg(<2 x i16> %0, <2 x i16> %1) {
 define <2 x i16> @abdhq_rr(<2 x i16> %a, <2 x i16> %b) {
 ; ALL-LABEL: 'abdhq_rr'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %sub = sub nsw <2 x i16> %a, %b
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %sub, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %sub, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %0
 ;
 entry:
@@ -614,7 +614,7 @@ entry:
 define <2 x i16> @abdhq_ri(<2 x i16> %0) {
 ; ALL-LABEL: 'abdhq_ri'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <2 x i16> <i16 15, i16 16>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <2 x i16> @llvm.abs.v2i16(<2 x i16> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x i16> %3
 ;
   %2 = sub nsw <2 x i16> <i16 15, i16 16>, %0

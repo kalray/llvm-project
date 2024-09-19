@@ -33,9 +33,6 @@ KVXMCAsmInfo::KVXMCAsmInfo(const Triple &TT) {
   UsesCFIForDebug = true;
   UsesCFIWithoutEH = false;
   UsesELFSectionDirectiveForBSS = false;
-  SupportsQuotedNames = true;
-  AllowAtInName = false;
-  HasDotTypeDotSizeDirective = false;
 }
 
 bool KVXMCAsmInfo::shouldOmitSectionDirective(StringRef SectionName) const {

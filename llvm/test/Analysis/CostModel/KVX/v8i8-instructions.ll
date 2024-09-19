@@ -302,7 +302,7 @@ declare <8 x i8> @llvm.abs.v8i8(<8 x i8>, i1) #0
 define <8 x i8> @test_abs(<8 x i8> %a) #0 {
 ;
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <8 x i8> @llvm.abs.v8i8(<8 x i8> %a, i1 false)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <8 x i8> @llvm.abs.v8i8(<8 x i8> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %r
 ;
   %r = call <8 x i8> @llvm.abs.v8i8(<8 x i8> %a, i1 false)
@@ -602,7 +602,7 @@ define <8 x i8> @abdbo_rr(<8 x i8> %a, <8 x i8> %b) {
 ;
 ; ALL-LABEL: 'abdbo_rr'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %sub = sub nsw <8 x i8> %a, %b
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %0 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %sub, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %0 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %sub, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %0
 ;
 entry:
@@ -615,7 +615,7 @@ define <8 x i8> @abdbo_ri_(<8 x i8> %0) {
 ;
 ; ALL-LABEL: 'abdbo_ri_'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 0, i8 0, i8 0, i8 0>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %3
 ;
   %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 0, i8 0, i8 0, i8 0>, %0
@@ -627,7 +627,7 @@ define <8 x i8> @abdbo_ri_at(<8 x i8> %0) {
 ;
 ; ALL-LABEL: 'abdbo_ri_at'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 15, i8 16, i8 15, i8 16>, %0
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %3 = tail call <8 x i8> @llvm.abs.v8i8(<8 x i8> %2, i1 true)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <8 x i8> %3
 ;
   %2 = sub nsw <8 x i8> <i8 15, i8 16, i8 15, i8 16, i8 15, i8 16, i8 15, i8 16>, %0

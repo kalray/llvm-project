@@ -30,7 +30,7 @@ float setcs_builtin(long l, float a, float b) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[MUL:%.*]] = fmul float [[B:%.*]], [[C:%.*]]
 // CHECK-NEXT:    tail call void asm sideeffect "set $$cs = $0", "r,~{$cs}"(i64 [[L:%.*]]) #[[ATTR3]], !srcloc [[META4:![0-9]+]]
-// CHECK-NEXT:    [[ADD:%.*]] = fadd float [[MUL]], [[A:%.*]]
+// CHECK-NEXT:    [[ADD:%.*]] = fadd float [[A:%.*]], [[MUL]]
 // CHECK-NEXT:    ret float [[ADD]]
 //
 float setcs_asm2(long l, float a, float b, float c) {
@@ -46,7 +46,7 @@ float setcs_asm2(long l, float a, float b, float c) {
 // CHECK-NEXT:  entry:
 // CHECK-NEXT:    [[MUL:%.*]] = fmul float [[B:%.*]], [[C:%.*]]
 // CHECK-NEXT:    tail call void @llvm.write_register.i64(metadata [[META3]], i64 [[L:%.*]])
-// CHECK-NEXT:    [[ADD:%.*]] = fadd float [[MUL]], [[A:%.*]]
+// CHECK-NEXT:    [[ADD:%.*]] = fadd float [[A:%.*]], [[MUL]]
 // CHECK-NEXT:    ret float [[ADD]]
 //
 float setcs_builtin2(long l, float a, float b, float c) {

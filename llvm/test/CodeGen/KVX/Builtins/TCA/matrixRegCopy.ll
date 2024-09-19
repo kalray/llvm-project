@@ -23,11 +23,27 @@ define void @c([512 x float]* %0, [512 x float]* %1, [768 x half]* %2, [512 x ha
 ; CHECK-NEXT:    ;; # (end cycle 41)
 ; CHECK-NEXT:    xlo.us.q0 $a0a1a2a3 = 0[$r0]
 ; CHECK-NEXT:    ;; # (end cycle 47)
-; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
 ; CHECK-NEXT:    ;; # (end cycle 70)
+; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 76)
+; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 82)
+; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 88)
+; CHECK-NEXT:    fmma242hw0 $a0.lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 94)
+; CHECK-NEXT:    fmma242hw1 $a0.hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 100)
+; CHECK-NEXT:    fmma242hw2 $a1.lo = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 106)
+; CHECK-NEXT:    fmma242hw3 $a1.hi = $a0a1, $a0, $a0
+; CHECK-NEXT:    ;; # (end cycle 112)
+; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
+; CHECK-NEXT:    ;; # (end cycle 118)
 ; CHECK-NEXT:    xso 0[$r4] = $a0
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
-; CHECK-NEXT:    ;; # (end cycle 74)
+; CHECK-NEXT:    ;; # (end cycle 122)
 ; CHECK-NEXT:  # %bb.2: # in Loop: Header=BB0_1 Depth=1
 ; CHECK-NEXT:    cb.wnez $r0 ? .LBB0_1
 ; CHECK-NEXT:    ;;

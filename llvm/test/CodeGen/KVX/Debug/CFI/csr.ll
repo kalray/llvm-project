@@ -1058,18 +1058,18 @@ define i32 @fsum6_sum(i32 %first, i32 %second, ...) local_unnamed_addr #0 !dbg !
 ; CHECK-NEXT:    .cfi_def_cfa_offset 128
 ; CHECK-NEXT:    sd 40[$r12] = $r16
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    .cfi_offset 67, -88
+; CHECK-NEXT:    .cfi_offset 67, 4294967208
 ; CHECK-NEXT:    sd 32[$r12] = $r14
 ; CHECK-NEXT:    addd $r14 = $r12, 32
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    .cfi_def_cfa 14, 96
-; CHECK-NEXT:    .cfi_offset 14, -96
+; CHECK-NEXT:    .cfi_def_cfa 14, -4294967200
+; CHECK-NEXT:    .cfi_offset 14, 4294967200
 ; CHECK-NEXT:  .Ltmp69:
 ; CHECK-NEXT:    .loc 1 297 22 prologue_end # cfi-csr.c:297:22
 ; CHECK-NEXT:    sd 24[$r12] = $r18
 ; CHECK-NEXT:    addw $r18 = $r1, $r0
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    .cfi_offset 18, -104
+; CHECK-NEXT:    .cfi_offset 18, 4294967192
 ; CHECK-NEXT:  .Ltmp70:
 ; CHECK-NEXT:    #DEBUG_VALUE: fsum6_sum:result <- $r18
 ; CHECK-NEXT:    .loc 1 0 22 is_stmt 0 # cfi-csr.c:0:22

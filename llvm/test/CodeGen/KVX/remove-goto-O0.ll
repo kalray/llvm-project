@@ -69,12 +69,9 @@ define i32 @f(){
 ; CHECK-NEXT:  .LBB1_1: # %for.cond
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sw 28[$r12] = $r0
+; CHECK-NEXT:    compw.gt $r1 = $r0, 3
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lwz $r0 = 28[$r12]
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    compw.gt $r0 = $r0, 3
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.odd $r0 ? .LBB1_3
+; CHECK-NEXT:    cb.odd $r1 ? .LBB1_3
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.2: # %for.body
 ; CHECK-NEXT:    # in Loop: Header=BB1_1 Depth=1

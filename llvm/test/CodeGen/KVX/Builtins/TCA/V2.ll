@@ -185,9 +185,9 @@ define void @xmadd44bw_test(ptr %0, ptr %1) {
 ; CHECK-NEXT:    ;; # (end cycle 10)
 ; CHECK-NEXT:    xmadd44bw1 $a2a3 = $a4, $a4
 ; CHECK-NEXT:    ;; # (end cycle 14)
-; CHECK-NEXT:    xso 0[$r1] = $a2
-; CHECK-NEXT:    ;; # (end cycle 18)
 ; CHECK-NEXT:    xso 32[$r1] = $a3
+; CHECK-NEXT:    ;; # (end cycle 18)
+; CHECK-NEXT:    xso 0[$r1] = $a2
 ; CHECK-NEXT:    xcopyx $a2a3 = $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 19)
 ; CHECK-NEXT:    xmadd44bw0 $a2a3 = $a4, $a4
@@ -281,9 +281,9 @@ define void @xmma4164bw_test(ptr %0) {
 ; CHECK-NEXT:    ;; # (end cycle 17)
 ; CHECK-NEXT:    xmmaus4164bw $a0a1 = $a0a1, $a0a1
 ; CHECK-NEXT:    ;; # (end cycle 21)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 25)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 25)
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 26)
   %2 = load <512 x i1>, ptr %0
@@ -315,9 +315,9 @@ define void @xmma484bw_test(ptr %0, ptr %1) {
 ; CHECK-NEXT:    ;; # (end cycle 14)
 ; CHECK-NEXT:    xmmaus484bw $a0a1 = $a2, $a2
 ; CHECK-NEXT:    ;; # (end cycle 18)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 22)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 22)
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 23)
   %3 = load <256 x i1>, ptr %1
@@ -444,13 +444,13 @@ define void @xmt44d_test(ptr %0) {
 ; CHECK-NEXT:    ;; # (end cycle 3)
 ; CHECK-NEXT:    xmt44d $a0a1a2a3 = $a0a1a2a3
 ; CHECK-NEXT:    ;; # (end cycle 7)
-; CHECK-NEXT:    xso 0[$r0] = $a0
-; CHECK-NEXT:    ;; # (end cycle 11)
 ; CHECK-NEXT:    xso 32[$r0] = $a1
+; CHECK-NEXT:    ;; # (end cycle 11)
+; CHECK-NEXT:    xso 0[$r0] = $a0
 ; CHECK-NEXT:    ;; # (end cycle 12)
-; CHECK-NEXT:    xso 64[$r0] = $a2
-; CHECK-NEXT:    ;; # (end cycle 13)
 ; CHECK-NEXT:    xso 96[$r0] = $a3
+; CHECK-NEXT:    ;; # (end cycle 13)
+; CHECK-NEXT:    xso 64[$r0] = $a2
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 14)
   %2 = load <1024 x i1>, ptr %0

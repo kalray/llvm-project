@@ -357,24 +357,21 @@ define <3 x i32> @maddsumwq_v3(<3 x i32> %0, <3 x i32> %1, <3 x i32> %2) {
 ; CV1-NEXT:    mulsuwdp $r6r7 = $r3, $r5
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:    mulsuwdp $r4r5 = $r2, $r4
-; CV1-NEXT:    make $r2 = 32
 ; CV1-NEXT:    ;; # (end cycle 1)
-; CV1-NEXT:    srld $r2 = $r7, $r0
-; CV1-NEXT:    srld $r3 = $r6, $r2
+; CV1-NEXT:    srld $r3 = $r6, 32
 ; CV1-NEXT:    ;; # (end cycle 2)
-; CV1-NEXT:    insf $r3 = $r2, 63, 32
+; CV1-NEXT:    srld $r2 = $r5, 32
+; CV1-NEXT:    insf $r3 = $r0, 63, 32
 ; CV1-NEXT:    srld $r4 = $r4, 32
 ; CV1-NEXT:    ;; # (end cycle 3)
 ; CV1-NEXT:    addwp $r1 = $r3, $r1
-; CV1-NEXT:    insf $r5 = $r4, 31, 0
+; CV1-NEXT:    insf $r4 = $r2, 63, 32
 ; CV1-NEXT:    ;; # (end cycle 4)
-; CV1-NEXT:    copyd $r2 = $r5
+; CV1-NEXT:    addwp $r0 = $r4, $r0
 ; CV1-NEXT:    ;; # (end cycle 5)
-; CV1-NEXT:    addwp $r0 = $r2, $r0
-; CV1-NEXT:    ;; # (end cycle 6)
 ; CV1-NEXT:    insf $r1 = $r0, 63, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 7)
+; CV1-NEXT:    ;; # (end cycle 6)
 ;
 ; CV2-LABEL: maddsumwq_v3:
 ; CV2:       # %bb.0:

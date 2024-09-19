@@ -295,7 +295,7 @@ declare <4 x i32> @llvm.abs.v4i32(<4 x i32>, i1) #0
 
 define <4 x i32> @test_abs(<4 x i32> %a) #0 {
 ; ALL-LABEL: 'test_abs'
-; ALL-NEXT:  Cost Model: Invalid cost for instruction: %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a, i1 false)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a, i1 false)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <4 x i32> %r
 ;
   %r = call <4 x i32> @llvm.abs.v4i32(<4 x i32> %a, i1 false)

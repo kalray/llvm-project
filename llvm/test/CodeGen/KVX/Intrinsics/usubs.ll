@@ -48,27 +48,21 @@ entry:
 define signext i16 @usub_sat16(i16 signext %a, i16 signext %b) {
 ; KVXV1-LABEL: usub_sat16:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxhd $r1 = $r1
-; KVXV1-NEXT:    zxhd $r2 = $r0
+; KVXV1-NEXT:    maxuw $r1 = $r1, $r0
 ; KVXV1-NEXT:    ;; # (end cycle 0)
-; KVXV1-NEXT:    maxuw $r1 = $r1, $r2
-; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    sbfw $r0 = $r0, $r1
-; KVXV1-NEXT:    ;; # (end cycle 2)
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    sxhd $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;; # (end cycle 3)
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: usub_sat16:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    zxhd $r0 = $r0
-; KVXV2-NEXT:    zxhd $r1 = $r1
-; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
-; KVXV2-NEXT:    ;; # (end cycle 1)
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    sxhd $r0 = $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;; # (end cycle 2)
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call i16 @llvm.usub.sat.i16(i16 %b, i16 %a)
   ret i16 %0
@@ -78,27 +72,21 @@ entry:
 define signext i8 @usub_sat8(i8 signext %a, i8 signext %b) {
 ; KVXV1-LABEL: usub_sat8:
 ; KVXV1:       # %bb.0: # %entry
-; KVXV1-NEXT:    zxbd $r1 = $r1
-; KVXV1-NEXT:    zxbd $r2 = $r0
+; KVXV1-NEXT:    maxuw $r1 = $r1, $r0
 ; KVXV1-NEXT:    ;; # (end cycle 0)
-; KVXV1-NEXT:    maxuw $r1 = $r1, $r2
-; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    sbfw $r0 = $r0, $r1
-; KVXV1-NEXT:    ;; # (end cycle 2)
+; KVXV1-NEXT:    ;; # (end cycle 1)
 ; KVXV1-NEXT:    sxbd $r0 = $r0
 ; KVXV1-NEXT:    ret
-; KVXV1-NEXT:    ;; # (end cycle 3)
+; KVXV1-NEXT:    ;; # (end cycle 2)
 ;
 ; KVXV2-LABEL: usub_sat8:
 ; KVXV2:       # %bb.0: # %entry
-; KVXV2-NEXT:    zxbd $r0 = $r0
-; KVXV2-NEXT:    zxbd $r1 = $r1
-; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    sbfusw $r0 = $r0, $r1
-; KVXV2-NEXT:    ;; # (end cycle 1)
+; KVXV2-NEXT:    ;; # (end cycle 0)
 ; KVXV2-NEXT:    sxbd $r0 = $r0
 ; KVXV2-NEXT:    ret
-; KVXV2-NEXT:    ;; # (end cycle 2)
+; KVXV2-NEXT:    ;; # (end cycle 1)
 entry:
   %0 = tail call i8 @llvm.usub.sat.i8(i8 %b, i8 %a)
   ret i8 %0

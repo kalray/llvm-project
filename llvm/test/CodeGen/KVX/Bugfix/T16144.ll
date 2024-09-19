@@ -251,16 +251,14 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV1-NEXT:    cmoved.even $r6 ? $r5 = $r4
 ; CV1-NEXT:    cb.even $r6 ? .LBB2_15
 ; CV1-NEXT:    ;; # (end cycle 27)
-; CV1-NEXT:  .LBB2_16: # %atomicrmw.end
+; CV1-NEXT:  .LBB2_16: # %atomicrmw.end20
 ; CV1-NEXT:    srlw $r0 = $r5, $r1
 ; CV1-NEXT:    ;; # (end cycle 0)
 ; CV1-NEXT:  .LBB2_17:
 ; CV1-NEXT:    sb 18[$r12] = $r0
-; CV1-NEXT:    ;; # (end cycle 0)
-; CV1-NEXT:    lbz $r0 = 18[$r12]
 ; CV1-NEXT:    addd $r12 = $r12, 32
 ; CV1-NEXT:    ret
-; CV1-NEXT:    ;; # (end cycle 1)
+; CV1-NEXT:    ;; # (end cycle 0)
 ;
 ; CV2-LABEL: atomic_flag_test_and_set_explicit:
 ; CV2:       # %bb.0:
@@ -446,16 +444,14 @@ define internal i1 @atomic_flag_test_and_set_explicit(%struct.atomic_flag* %0, i
 ; CV2-NEXT:    cb.even $r4 ? .LBB2_15
 ; CV2-NEXT:    cmoved.even $r4 ? $r5 = $r6
 ; CV2-NEXT:    ;; # (end cycle 25)
-; CV2-NEXT:  .LBB2_16: # %atomicrmw.end
+; CV2-NEXT:  .LBB2_16: # %atomicrmw.end20
 ; CV2-NEXT:    srlw $r0 = $r5, $r1
 ; CV2-NEXT:    ;; # (end cycle 0)
 ; CV2-NEXT:  .LBB2_17:
 ; CV2-NEXT:    sb 18[$r12] = $r0
-; CV2-NEXT:    ;; # (end cycle 0)
-; CV2-NEXT:    lbz $r0 = 18[$r12]
 ; CV2-NEXT:    addd $r12 = $r12, 32
 ; CV2-NEXT:    ret
-; CV2-NEXT:    ;; # (end cycle 1)
+; CV2-NEXT:    ;; # (end cycle 0)
   %3 = alloca %struct.atomic_flag*, align 8
   %4 = alloca i32, align 4
   %5 = alloca i8, align 1

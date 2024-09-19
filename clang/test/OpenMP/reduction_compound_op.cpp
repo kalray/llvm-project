@@ -1274,9 +1274,9 @@ void foo(int N, Point const *Points) {
 // NORM-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // NORM-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
 // NORM-NEXT:    [[THIS1:%.*]] = load ptr, ptr [[THIS_ADDR]], align 8
-// NORM-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
+// NORM-NEXT:    [[X:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
 // NORM-NEXT:    store i32 0, ptr [[X]], align 4
-// NORM-NEXT:    [[Y:%.*]] = getelementptr inbounds [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
+// NORM-NEXT:    [[Y:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
 // NORM-NEXT:    store i32 0, ptr [[Y]], align 4
 // NORM-NEXT:    ret void
 //
@@ -2423,9 +2423,9 @@ void foo(int N, Point const *Points) {
 // COMP-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // COMP-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
 // COMP-NEXT:    [[THIS1:%.*]] = load ptr, ptr [[THIS_ADDR]], align 8
-// COMP-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
+// COMP-NEXT:    [[X:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
 // COMP-NEXT:    store i32 0, ptr [[X]], align 4
-// COMP-NEXT:    [[Y:%.*]] = getelementptr inbounds [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
+// COMP-NEXT:    [[Y:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
 // COMP-NEXT:    store i32 0, ptr [[Y]], align 4
 // COMP-NEXT:    ret void
 //
@@ -2610,9 +2610,9 @@ void foo(int N, Point const *Points) {
 // SIMD-ONLY-NEXT:    [[THIS_ADDR:%.*]] = alloca ptr, align 8
 // SIMD-ONLY-NEXT:    store ptr [[THIS]], ptr [[THIS_ADDR]], align 8
 // SIMD-ONLY-NEXT:    [[THIS1:%.*]] = load ptr, ptr [[THIS_ADDR]], align 8
-// SIMD-ONLY-NEXT:    [[X:%.*]] = getelementptr inbounds [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
+// SIMD-ONLY-NEXT:    [[X:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT:%.*]], ptr [[THIS1]], i32 0, i32 0
 // SIMD-ONLY-NEXT:    store i32 0, ptr [[X]], align 4
-// SIMD-ONLY-NEXT:    [[Y:%.*]] = getelementptr inbounds [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
+// SIMD-ONLY-NEXT:    [[Y:%.*]] = getelementptr inbounds nuw [[STRUCT_POINT]], ptr [[THIS1]], i32 0, i32 1
 // SIMD-ONLY-NEXT:    store i32 0, ptr [[Y]], align 4
 // SIMD-ONLY-NEXT:    ret void
 //
