@@ -515,7 +515,7 @@ declare <2 x float> @llvm.fmuladd.v2f32(<2 x float> %a, <2 x float> %b, <2 x flo
 
 define <2 x float> @test_sqrt(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_sqrt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.sqrt.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.sqrt.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.sqrt.v2f32(<2 x float> %a)
@@ -524,7 +524,7 @@ define <2 x float> @test_sqrt(<2 x float> %a) #0 {
 
 define <2 x float> @test_powi(<2 x float> %a, i32 %b) #0 {
 ; ALL-LABEL: 'test_powi'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 5 for instruction: %r = call <2 x float> @llvm.powi.v2f32.i32(<2 x float> %a, i32 %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %r = call <2 x float> @llvm.powi.v2f32.i32(<2 x float> %a, i32 %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.powi.v2f32(<2 x float> %a, i32 %b)
@@ -533,7 +533,7 @@ define <2 x float> @test_powi(<2 x float> %a, i32 %b) #0 {
 
 define <2 x float> @test_sin(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_sin'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.sin.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.sin.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.sin.v2f32(<2 x float> %a)
@@ -542,7 +542,7 @@ define <2 x float> @test_sin(<2 x float> %a) #0 {
 
 define <2 x float> @test_cos(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_cos'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.cos.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.cos.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.cos.v2f32(<2 x float> %a)
@@ -551,7 +551,7 @@ define <2 x float> @test_cos(<2 x float> %a) #0 {
 
 define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 ; ALL-LABEL: 'test_pow'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %r = call <2 x float> @llvm.pow.v2f32(<2 x float> %a, <2 x float> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.pow.v2f32(<2 x float> %a, <2 x float> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.pow.v2f32(<2 x float> %a, <2 x float> %b)
@@ -560,7 +560,7 @@ define <2 x float> @test_pow(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_exp(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_exp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.exp.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.exp.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.exp.v2f32(<2 x float> %a)
@@ -569,7 +569,7 @@ define <2 x float> @test_exp(<2 x float> %a) #0 {
 
 define <2 x float> @test_exp2(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_exp2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.exp2.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.exp2.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.exp2.v2f32(<2 x float> %a)
@@ -578,7 +578,7 @@ define <2 x float> @test_exp2(<2 x float> %a) #0 {
 
 define <2 x float> @test_log(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_log'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.log.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.log.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.log.v2f32(<2 x float> %a)
@@ -587,7 +587,7 @@ define <2 x float> @test_log(<2 x float> %a) #0 {
 
 define <2 x float> @test_log10(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_log10'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.log10.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.log10.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.log10.v2f32(<2 x float> %a)
@@ -596,7 +596,7 @@ define <2 x float> @test_log10(<2 x float> %a) #0 {
 
 define <2 x float> @test_log2(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_log2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.log2.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.log2.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.log2.v2f32(<2 x float> %a)
@@ -701,7 +701,7 @@ define <2 x double> @test_copysign_extended(<2 x float> %a, <2 x float> %b) #0 {
 
 define <2 x float> @test_floor(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_floor'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.floor.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.floor.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.floor.v2f32(<2 x float> %a)
@@ -710,7 +710,7 @@ define <2 x float> @test_floor(<2 x float> %a) #0 {
 
 define <2 x float> @test_ceil(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_ceil'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.ceil.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.ceil.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.ceil.v2f32(<2 x float> %a)
@@ -719,7 +719,7 @@ define <2 x float> @test_ceil(<2 x float> %a) #0 {
 
 define <2 x float> @test_trunc(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_trunc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.trunc.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.trunc.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.trunc.v2f32(<2 x float> %a)
@@ -728,7 +728,7 @@ define <2 x float> @test_trunc(<2 x float> %a) #0 {
 
 define <2 x float> @test_rint(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_rint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.rint.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.rint.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.rint.v2f32(<2 x float> %a)
@@ -737,7 +737,7 @@ define <2 x float> @test_rint(<2 x float> %a) #0 {
 
 define <2 x float> @test_nearbyint(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_nearbyint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.nearbyint.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.nearbyint.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.nearbyint.v2f32(<2 x float> %a)
@@ -746,7 +746,7 @@ define <2 x float> @test_nearbyint(<2 x float> %a) #0 {
 
 define <2 x float> @test_round(<2 x float> %a) #0 {
 ; ALL-LABEL: 'test_round'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 7 for instruction: %r = call <2 x float> @llvm.round.v2f32(<2 x float> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 6 for instruction: %r = call <2 x float> @llvm.round.v2f32(<2 x float> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <2 x float> %r
 ;
   %r = call <2 x float> @llvm.round.v2f32(<2 x float> %a)

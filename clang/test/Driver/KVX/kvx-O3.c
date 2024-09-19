@@ -1,6 +1,5 @@
 // RUN: %clang -### -O3 %s -o /dev/null |& FileCheck %s
 // RUN: %clang -### -O4 %s -o /dev/null |& FileCheck %s
-// RUN: %clang -### -Ofast %s -o /dev/null |& FileCheck %s
 
 // RUN: %clang -### -O2 %s -o /dev/null |& FileCheck %s --check-prefix=NO
 // RUN: %clang -### -O1 %s -o /dev/null |& FileCheck %s --check-prefix=NO

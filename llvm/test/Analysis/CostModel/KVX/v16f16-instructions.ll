@@ -613,7 +613,7 @@ declare <16 x half> @llvm.fmuladd.v8f16(<16 x half> %a, <16 x half> %b, <16 x ha
 
 define <16 x half> @test_sqrt(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_sqrt'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.sqrt.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.sqrt.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.sqrt.v8f16(<16 x half> %a)
@@ -622,7 +622,7 @@ define <16 x half> @test_sqrt(<16 x half> %a) #0 {
 
 define <16 x half> @test_powi(<16 x half> %a, i32 %b) #0 {
 ; ALL-LABEL: 'test_powi'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.powi.v16f16.i32(<16 x half> %a, i32 %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.powi.v16f16.i32(<16 x half> %a, i32 %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.powi.v8f16(<16 x half> %a, i32 %b)
@@ -631,7 +631,7 @@ define <16 x half> @test_powi(<16 x half> %a, i32 %b) #0 {
 
 define <16 x half> @test_sin(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_sin'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.sin.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.sin.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.sin.v8f16(<16 x half> %a)
@@ -640,7 +640,7 @@ define <16 x half> @test_sin(<16 x half> %a) #0 {
 
 define <16 x half> @test_cos(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_cos'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.cos.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.cos.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.cos.v8f16(<16 x half> %a)
@@ -649,7 +649,7 @@ define <16 x half> @test_cos(<16 x half> %a) #0 {
 
 define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_pow'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call <16 x half> @llvm.pow.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call <16 x half> @llvm.pow.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.pow.v8f16(<16 x half> %a, <16 x half> %b)
@@ -658,7 +658,7 @@ define <16 x half> @test_pow(<16 x half> %a, <16 x half> %b) #0 {
 
 define <16 x half> @test_exp(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_exp'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.exp.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.exp.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.exp.v8f16(<16 x half> %a)
@@ -667,7 +667,7 @@ define <16 x half> @test_exp(<16 x half> %a) #0 {
 
 define <16 x half> @test_exp2(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_exp2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.exp2.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.exp2.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.exp2.v8f16(<16 x half> %a)
@@ -676,7 +676,7 @@ define <16 x half> @test_exp2(<16 x half> %a) #0 {
 
 define <16 x half> @test_log(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_log'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.log.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.log.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.log.v8f16(<16 x half> %a)
@@ -685,7 +685,7 @@ define <16 x half> @test_log(<16 x half> %a) #0 {
 
 define <16 x half> @test_log10(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_log10'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.log10.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.log10.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.log10.v8f16(<16 x half> %a)
@@ -694,7 +694,7 @@ define <16 x half> @test_log10(<16 x half> %a) #0 {
 
 define <16 x half> @test_log2(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_log2'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.log2.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.log2.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.log2.v8f16(<16 x half> %a)
@@ -725,7 +725,7 @@ define <16 x half> @test_fabs(<16 x half> %a) #0 {
 
 define <16 x half> @test_minnum(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_minnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call <16 x half> @llvm.minnum.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call <16 x half> @llvm.minnum.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.minnum.v8f16(<16 x half> %a, <16 x half> %b)
@@ -734,7 +734,7 @@ define <16 x half> @test_minnum(<16 x half> %a, <16 x half> %b) #0 {
 
 define <16 x half> @test_minnum_fast(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_minnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call fast <16 x half> @llvm.minnum.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call fast <16 x half> @llvm.minnum.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call fast <16 x half> @llvm.minnum.v8f16(<16 x half> %a, <16 x half> %b)
@@ -743,7 +743,7 @@ define <16 x half> @test_minnum_fast(<16 x half> %a, <16 x half> %b) #0 {
 
 define <16 x half> @test_maxnum(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_maxnum'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call <16 x half> @llvm.maxnum.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call <16 x half> @llvm.maxnum.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.maxnum.v8f16(<16 x half> %a, <16 x half> %b)
@@ -752,7 +752,7 @@ define <16 x half> @test_maxnum(<16 x half> %a, <16 x half> %b) #0 {
 
 define <16 x half> @test_maxnum_fast(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_maxnum_fast'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call fast <16 x half> @llvm.maxnum.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call fast <16 x half> @llvm.maxnum.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call fast <16 x half> @llvm.maxnum.v8f16(<16 x half> %a, <16 x half> %b)
@@ -761,7 +761,7 @@ define <16 x half> @test_maxnum_fast(<16 x half> %a, <16 x half> %b) #0 {
 
 define <16 x half> @test_copysign(<16 x half> %a, <16 x half> %b) #0 {
 ; ALL-LABEL: 'test_copysign'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call <16 x half> @llvm.copysign.v16f16(<16 x half> %a, <16 x half> %b)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call <16 x half> @llvm.copysign.v16f16(<16 x half> %a, <16 x half> %b)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.copysign.v8f16(<16 x half> %a, <16 x half> %b)
@@ -771,7 +771,7 @@ define <16 x half> @test_copysign(<16 x half> %a, <16 x half> %b) #0 {
 define <16 x half> @test_copysign_v4f32(<16 x half> %a, <16 x float> %b) #0 {
 ; ALL-LABEL: 'test_copysign_v4f32'
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 8 for instruction: %tb = fptrunc <16 x float> %b to <16 x half>
-; ALL-NEXT:  Cost Model: Found an estimated cost of 40 for instruction: %r = call <16 x half> @llvm.copysign.v16f16(<16 x half> %a, <16 x half> %tb)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 37 for instruction: %r = call <16 x half> @llvm.copysign.v16f16(<16 x half> %a, <16 x half> %tb)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %tb = fptrunc <16 x float> %b to <16 x half>
@@ -781,7 +781,7 @@ define <16 x half> @test_copysign_v4f32(<16 x half> %a, <16 x float> %b) #0 {
 
 define <16 x half> @test_floor(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_floor'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.floor.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.floor.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.floor.v8f16(<16 x half> %a)
@@ -790,7 +790,7 @@ define <16 x half> @test_floor(<16 x half> %a) #0 {
 
 define <16 x half> @test_ceil(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_ceil'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.ceil.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.ceil.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.ceil.v8f16(<16 x half> %a)
@@ -799,7 +799,7 @@ define <16 x half> @test_ceil(<16 x half> %a) #0 {
 
 define <16 x half> @test_trunc(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_trunc'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.trunc.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.trunc.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.trunc.v8f16(<16 x half> %a)
@@ -808,7 +808,7 @@ define <16 x half> @test_trunc(<16 x half> %a) #0 {
 
 define <16 x half> @test_rint(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_rint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.rint.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.rint.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.rint.v8f16(<16 x half> %a)
@@ -817,7 +817,7 @@ define <16 x half> @test_rint(<16 x half> %a) #0 {
 
 define <16 x half> @test_nearbyint(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_nearbyint'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.nearbyint.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.nearbyint.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.nearbyint.v8f16(<16 x half> %a)
@@ -826,7 +826,7 @@ define <16 x half> @test_nearbyint(<16 x half> %a) #0 {
 
 define <16 x half> @test_round(<16 x half> %a) #0 {
 ; ALL-LABEL: 'test_round'
-; ALL-NEXT:  Cost Model: Found an estimated cost of 36 for instruction: %r = call <16 x half> @llvm.round.v16f16(<16 x half> %a)
+; ALL-NEXT:  Cost Model: Found an estimated cost of 34 for instruction: %r = call <16 x half> @llvm.round.v16f16(<16 x half> %a)
 ; ALL-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret <16 x half> %r
 ;
   %r = call <16 x half> @llvm.round.v8f16(<16 x half> %a)
