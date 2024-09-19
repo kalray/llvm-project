@@ -61,7 +61,7 @@ static cl::opt<bool>
                     cl::cat(KVXclOpts));
 
 static cl::opt<bool>
-    DisablePipeliner("disable-kvx-pipeliner", cl::Hidden, cl::init(false),
+    DisablePipeliner("disable-kvx-pipeliner", cl::Hidden, cl::init(true),
                      cl::desc("Disable MachinePipeliner Pass for KVX target"),
                      cl::cat(KVXclOpts));
 

@@ -12,166 +12,104 @@ target triple = "kvx-kalray-cos"
 define dso_local void @matrix_mul_const(i32 %0, ptr nocapture %1, ptr nocapture readonly %2, i16 %3) local_unnamed_addr #0 {
 ; CHECK-LABEL: matrix_mul_const:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_17
+; CHECK-NEXT:    cb.weqz $r0 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    sxhd $r3 = $r3
 ; CHECK-NEXT:    zxwd $r4 = $r0
 ; CHECK-NEXT:    make $r6 = 0
-; CHECK-NEXT:    compw.ltu $r7 = $r0, 2
+; CHECK-NEXT:    make $r16 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    clrf $r5 = $r4, 0, 31
-; CHECK-NEXT:    copyd $r9 = $r3
-; CHECK-NEXT:    make $r17 = 0
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    addd $r8 = $r5, -2
-; CHECK-NEXT:    insf $r9 = $r9, 63, 32
-; CHECK-NEXT:    compd.eq $r16 = $r5, $r4
-; CHECK-NEXT:    ;; # (end cycle 2)
 ; CHECK-NEXT:    addd $r8 = $r4, -1
-; CHECK-NEXT:    srld $r11 = $r8, 1
+; CHECK-NEXT:    copyd $r9 = $r3
+; CHECK-NEXT:    ;; # (end cycle 1)
+; CHECK-NEXT:    addd $r7 = $r5, -2
+; CHECK-NEXT:    insf $r9 = $r9, 63, 32
+; CHECK-NEXT:    compd.gtu $r11 = $r8, 0xffffffff
+; CHECK-NEXT:    compd.eq $r15 = $r5, $r4
+; CHECK-NEXT:    ;; # (end cycle 2)
+; CHECK-NEXT:    compw.ltu $r7 = $r0, 2
+; CHECK-NEXT:    srld $r10 = $r7, 1
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    addd $r10 = $r11, -2
-; CHECK-NEXT:    addd $r11 = $r11, 1
-; CHECK-NEXT:    compd.gtu $r15 = $r8, 0xffffffff
+; CHECK-NEXT:    addd $r10 = $r10, 1
 ; CHECK-NEXT:    goto .LBB0_3
 ; CHECK-NEXT:    ;; # (end cycle 4)
 ; CHECK-NEXT:  .LBB0_2: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    addw $r6 = $r6, $r0
-; CHECK-NEXT:    addw $r17 = $r17, 1
+; CHECK-NEXT:    addw $r16 = $r16, 1
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    compw.ne $r32 = $r17, $r0
+; CHECK-NEXT:    compw.ne $r17 = $r16, $r0
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r32 ? .LBB0_17
+; CHECK-NEXT:    cb.even $r17 ? .LBB0_11
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_3: # =>This Loop Header: Depth=1
-; CHECK-NEXT:    # Child Loop BB0_12 Depth 2
+; CHECK-NEXT:    # Child Loop BB0_9 Depth 2
 ; CHECK-NEXT:    # Child Loop BB0_5 Depth 2
 ; CHECK-NEXT:    cb.even $r7 ? .LBB0_6
-; CHECK-NEXT:    make $r33 = 0
+; CHECK-NEXT:    make $r32 = 0
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_4: # %.preheader
 ; CHECK-NEXT:    # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    sbfd $r32 = $r33, $r4
-; CHECK-NEXT:    addw $r33 = $r6, $r33
+; CHECK-NEXT:    sbfd $r17 = $r32, $r4
+; CHECK-NEXT:    addw $r32 = $r6, $r32
 ; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:  .LBB0_5: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    addd $r32 = $r32, -1
-; CHECK-NEXT:    addw $r33 = $r33, 1
-; CHECK-NEXT:    zxwd $r34 = $r33
+; CHECK-NEXT:    addd $r17 = $r17, -1
+; CHECK-NEXT:    addw $r32 = $r32, 1
+; CHECK-NEXT:    zxwd $r33 = $r32
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    lhs.xs $r35 = $r34[$r2]
+; CHECK-NEXT:    lhs.xs $r34 = $r33[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    mulw $r35 = $r35, $r3
+; CHECK-NEXT:    mulw $r34 = $r34, $r3
 ; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.dnez $r32 ? .LBB0_5
-; CHECK-NEXT:    sw.xs $r34[$r1] = $r35
+; CHECK-NEXT:    cb.dnez $r17 ? .LBB0_5
+; CHECK-NEXT:    sw.xs $r33[$r1] = $r34
 ; CHECK-NEXT:    ;; # (end cycle 5)
 ; CHECK-NEXT:    goto .LBB0_2
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  .LBB0_6: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    mulw $r32 = $r17, $r0
+; CHECK-NEXT:    mulw $r17 = $r16, $r0
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    notw $r32 = $r32
+; CHECK-NEXT:    notw $r17 = $r17
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    compw.ltu $r32 = $r32, $r8
+; CHECK-NEXT:    compw.ltu $r17 = $r17, $r8
 ; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    cb.odd $r32 ? .LBB0_4
+; CHECK-NEXT:    cb.odd $r17 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.7: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    cb.odd $r15 ? .LBB0_4
+; CHECK-NEXT:    cb.odd $r11 ? .LBB0_4
 ; CHECK-NEXT:    ;;
 ; CHECK-NEXT:  # %bb.8: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r33 = $r6
-; CHECK-NEXT:    compd.gt $r34 = $r11, 1
-; CHECK-NEXT:    addw $r36 = $r6, 2
+; CHECK-NEXT:    copyd $r17 = $r6
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r32 = $r33, 1
-; CHECK-NEXT:    slld $r33 = $r33, 2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r34 ? .LBB0_16
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.9: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r34 = $r36
-; CHECK-NEXT:    lwz $r35 = $r32[$r2]
-; CHECK-NEXT:    compd.gt $r37 = $r11, 2
-; CHECK-NEXT:    addw $r39 = $r36, 2
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r32 = $r34, 1
-; CHECK-NEXT:    slld $r34 = $r34, 2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r37 ? .LBB0_15
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    zxwd $r35 = $r39
-; CHECK-NEXT:    sxlhwp $r36 = $r35
-; CHECK-NEXT:    lwz $r38 = $r32[$r2]
-; CHECK-NEXT:    compd.gt $r40 = $r11, 3
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    slld $r32 = $r35, 1
-; CHECK-NEXT:    slld $r37 = $r35, 2
-; CHECK-NEXT:    addw $r39 = $r39, 2
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    cb.even $r40 ? .LBB0_13
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  # %bb.11: # in Loop: Header=BB0_3 Depth=1
 ; CHECK-NEXT:    loopdo $r10, .__LOOPDO_0_END_
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_12: # Parent Loop BB0_3 Depth=1
+; CHECK-NEXT:  .LBB0_9: # Parent Loop BB0_3 Depth=1
 ; CHECK-NEXT:    # => This Inner Loop Header: Depth=2
-; CHECK-NEXT:    mulwp $r32 = $r9, $r36
-; CHECK-NEXT:    copyd $r34 = $r37
-; CHECK-NEXT:    lwz $r35 = $r32[$r2]
-; CHECK-NEXT:    copyd $r40 = $r34
+; CHECK-NEXT:    addw $r17 = $r17, 2
+; CHECK-NEXT:    zxwd $r32 = $r17
 ; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sd $r33[$r1] = $r32
-; CHECK-NEXT:    sxlhwp $r36 = $r38
-; CHECK-NEXT:    zxwd $r37 = $r39
-; CHECK-NEXT:    addw $r39 = $r39, 2
+; CHECK-NEXT:    slld $r32 = $r32, 2
+; CHECK-NEXT:    slld $r33 = $r32, 1
 ; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    slld $r32 = $r37, 1
-; CHECK-NEXT:    slld $r37 = $r37, 2
+; CHECK-NEXT:    lwz $r33 = $r33[$r2]
 ; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:    copyd $r33 = $r40
-; CHECK-NEXT:    copyd $r38 = $r35
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:  .__LOOPDO_0_END_:
-; CHECK-NEXT:    goto .LBB0_14
-; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_13: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    copyd $r35 = $r38
-; CHECK-NEXT:    copyd $r40 = $r33
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:  .LBB0_14: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    copyd $r33 = $r34
-; CHECK-NEXT:    mulwp $r36 = $r9, $r36
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    copyd $r34 = $r37
-; CHECK-NEXT:    sd $r40[$r1] = $r36
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:  .LBB0_15: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    sxlhwp $r35 = $r35
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    mulwp $r35 = $r9, $r35
-; CHECK-NEXT:    ;; # (end cycle 1)
-; CHECK-NEXT:    sd $r33[$r1] = $r35
-; CHECK-NEXT:    copyd $r33 = $r34
-; CHECK-NEXT:    ;; # (end cycle 2)
-; CHECK-NEXT:  .LBB0_16: # in Loop: Header=BB0_3 Depth=1
-; CHECK-NEXT:    lwz $r32 = $r32[$r2]
-; CHECK-NEXT:    ;; # (end cycle 0)
-; CHECK-NEXT:    sxlhwp $r32 = $r32
-; CHECK-NEXT:    ;; # (end cycle 3)
-; CHECK-NEXT:    mulwp $r32 = $r9, $r32
-; CHECK-NEXT:    ;; # (end cycle 4)
-; CHECK-NEXT:    cb.odd $r16 ? .LBB0_2
-; CHECK-NEXT:    sd $r33[$r1] = $r32
-; CHECK-NEXT:    copyd $r33 = $r5
+; CHECK-NEXT:    sxlhwp $r33 = $r33
 ; CHECK-NEXT:    ;; # (end cycle 5)
+; CHECK-NEXT:    mulwp $r33 = $r9, $r33
+; CHECK-NEXT:    ;; # (end cycle 6)
+; CHECK-NEXT:    sd $r32[$r1] = $r33
+; CHECK-NEXT:    ;; # (end cycle 7)
+; CHECK-NEXT:  .__LOOPDO_0_END_:
+; CHECK-NEXT:  # %bb.10: # in Loop: Header=BB0_3 Depth=1
+; CHECK-NEXT:    cb.odd $r15 ? .LBB0_2
+; CHECK-NEXT:    copyd $r32 = $r5
+; CHECK-NEXT:    ;; # (end cycle 0)
 ; CHECK-NEXT:    goto .LBB0_4
 ; CHECK-NEXT:    ;;
-; CHECK-NEXT:  .LBB0_17:
+; CHECK-NEXT:  .LBB0_11:
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;;
   %5 = icmp eq i32 %0, 0
