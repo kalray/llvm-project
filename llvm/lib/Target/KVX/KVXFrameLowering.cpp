@@ -274,7 +274,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
     const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
 
     // Try to merge single regs into paired regs.
-    unsigned PairedReg =
+    MCRegister PairedReg =
         TRI->getMatchingSuperReg(Reg, KVX::sub_d0, &KVX::PairedRegRegClass);
 
     if (!RegSaved.empty() && PairedReg && RegSaved.back() - 1 == Reg &&
@@ -285,7 +285,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
         FrameIdxSaved.pop_back();
 
         // Try to merge paired regs into quad regs.
-        unsigned QuadReg =
+        MCRegister QuadReg =
             TRI->getMatchingSuperReg(Reg, KVX::sub_d0, &KVX::QuadRegRegClass);
         if (!RegSaved.empty() && RCSaved.back() == &KVX::PairedRegRegClass &&
             QuadReg && RegSaved.back() - 1 == PairedReg) {
@@ -313,7 +313,7 @@ bool KVXFrameLowering::spillCalleeSavedRegisters(
   const TargetSubtargetInfo &STI = MF.getSubtarget();
   const MCRegisterInfo *MRI = STI.getRegisterInfo();
   DebugLoc DL = MBB.findDebugLoc(MI);
-  int64_t DwarfOffset = -KVXFI->getVarArgsSaveSize();
+  int64_t DwarfOffset = -(int64_t)(KVXFI->getVarArgsSaveSize());
   Register DwarfReg;
   unsigned CFIIndex;
 
