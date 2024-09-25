@@ -68,10 +68,11 @@ void KVXInstPrinter::printOperand(
 
   if (MO.isImm()) {
     std::stringstream s;
-    if (MO.getImm() > 1024 || MO.getImm() < -1024)
-      s << "0x" << std::hex << MO.getImm();
+    auto V = MO.getImm();
+    if (V > 1024 || V < -1024)
+      s << "0x" << std::hex << V;
     else
-      s << MO.getImm();
+      s << V;
 
     O << s.str();
     return;
@@ -584,7 +585,7 @@ void KVXInstPrinter::printCoherencyMod(const MCInst *MI, unsigned OpNo,
   }
 }
 
-// Emits 32-bits integer litteral values.
+// Emits 32-bits integer literal values.
 //
 // Use the hexadecimal bit representation when the absolute value is above a
 // given Threshold. The goal is to make sure negative values do not end-up as
