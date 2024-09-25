@@ -850,8 +850,8 @@ define <8 x i16> @abdhq_not_ri(<8 x i16> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r2 = 0x10000f00100012
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    abdhq $r0 = $r0, $r2
-; ALL-NEXT:    abdhq $r1 = $r1, $r2
+; ALL-NEXT:    abdhq $r0 = $r2, $r0
+; ALL-NEXT:    abdhq $r1 = $r2, $r1
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <8 x i16> <i16 18, i16 16, i16 15, i16 16, i16 18, i16 16, i16 15, i16 16>, %0

@@ -12,7 +12,7 @@ declare i64 @llvm.abs.i64(i64, i1 immarg)
 define i64 @abdd_rr(i64 %a, i64 %b) {
 ; CHECK-LABEL: abdd_rr:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdd $r0 = $r1, $r0
+; CHECK-NEXT:    abdd $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:
@@ -57,7 +57,7 @@ define i64 @abdd_ri64(i64 %0) {
 define i32 @abdw_rr(i32 %a, i32 %b) {
 ; CHECK-LABEL: abdw_rr:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    abdw $r0 = $r1, $r0
+; CHECK-NEXT:    abdw $r0 = $r0, $r1
 ; CHECK-NEXT:    ret
 ; CHECK-NEXT:    ;; # (end cycle 0)
 entry:

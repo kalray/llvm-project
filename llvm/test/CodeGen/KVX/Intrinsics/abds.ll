@@ -29,10 +29,9 @@ declare <2 x i32> @llvm.ssub.sat.v2i32(<2 x i32>, <2 x i32>)
 define i32 @ABDSWrr(i32 %0, i32 %1) {
 ; V1-LABEL: ABDSWrr:
 ; V1:       # %bb.0:
-; V1-NEXT:    minw $r0 = $r1, $r0
-; V1-NEXT:    maxw $r2 = $r1, $r0
+; V1-NEXT:    abdw $r0 = $r1, $r0
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sbfw $r0 = $r0, $r2
+; V1-NEXT:    zxwd $r0 = $r0
 ; V1-NEXT:    ;; # (end cycle 1)
 ; V1-NEXT:    minud $r0 = $r0, 0x7fffffff
 ; V1-NEXT:    ret
@@ -40,14 +39,9 @@ define i32 @ABDSWrr(i32 %0, i32 %1) {
 ;
 ; V2-LABEL: ABDSWrr:
 ; V2:       # %bb.0:
-; V2-NEXT:    minw $r0 = $r1, $r0
-; V2-NEXT:    maxw $r2 = $r1, $r0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sbfw $r0 = $r0, $r2
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    minud $r0 = $r0, 0x7fffffff
+; V2-NEXT:    abdsw $r0 = $r1, $r0
 ; V2-NEXT:    ret
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    ;; # (end cycle 0)
   %3 = sext i32 %1 to i64
   %4 = sext i32 %0 to i64
   %5 = sub nsw i64 %3, %4

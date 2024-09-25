@@ -95,6 +95,11 @@ defm : ZEFPat<(and (srl i32:$v, Wrapped32:$shiftc), isMask:$andm), (EXTFZWp Sing
 // placed in two v4i16 vectors.
 // Perform the 16-bit operation on each v4i16 vector.
 // Then move the values back in position to form back the v8i8.
+// FIXME: These kind of emulate patterns can solve a single operation
+// faster than the normal compiler can solve, but the compiler won't
+// eliminate the constant convertion between i16 and i8 elements. They
+// should be removed and the expansion should be done by the legalizer or
+// DagCombine.
 multiclass Emulate_v8i8_with_v4i16<SDNode irnode, Instruction hqrr>{
   if !not(!empty(!filter(x, [smin, smax, umin, umax], !eq(irnode, x)))) then {
     def : Pat<(irnode v8i8:$a, v8i8:$b), (ORDrr
@@ -123,77 +128,32 @@ multiclass Emulate_v8i8_with_v4i16<SDNode irnode, Instruction hqrr>{
 }
 
 // ABDD
-def : Pat<(i64 (abs (sub Signed10:$lhs, i64:$rhs))), (i64 (ABDDri10 SingleReg:$rhs, Signed10:$lhs))>;
-def : Pat<(i64 (abs (add i64:$rhs, Signed10:$lhs))), (i64 (ABDDri10 SingleReg:$rhs, (get_neg_imm $lhs)))>;
-def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri37 SingleReg:$rhs, Signed37:$lhs))>;
-def : Pat<(i64 (abs (add i64:$rhs, Signed37:$lhs))), (i64 (ABDDri37 SingleReg:$rhs, (get_neg_imm $lhs)))>;
-def : Pat<(i64 (abs (sub imm:$lhs, i64:$rhs))), (i64 (ABDDri64 SingleReg:$rhs, Wrapped64:$lhs))>;
-def : Pat<(i64 (abs (add i64:$rhs, Wrapped64:$lhs))), (i64 (ABDDri64 SingleReg:$rhs, (get_neg_imm $lhs)))>;
-def : Pat<(i64 (abs (sub i64:$lhs, i64:$rhs))), (i64 (ABDDrr SingleReg:$rhs, SingleReg:$lhs))>;
-def : Pat<(i64 (abs (sub (smax i64:$lhs, imm:$rhs), (smin i64:$lhs, imm:$rhs)))), (i64 (ABDDri10 SingleReg:$lhs, Signed10:$rhs))>;
-def : Pat<(i64 (abs (sub (smax i64:$lhs, imm:$rhs), (smin i64:$lhs, imm:$rhs)))), (i64 (ABDDri37 SingleReg:$lhs, Signed37:$rhs))>;
-def : Pat<(i64 (abs (sub (smax i64:$lhs, imm:$rhs), (smin i64:$lhs, imm:$rhs)))), (i64 (ABDDri64 SingleReg:$lhs, Wrapped64:$rhs))>;
-def : Pat<(i64 (abs (sub (smax i64:$lhs, i64:$rhs), (smin i64:$lhs, i64:$rhs)))), (i64 (ABDDrr SingleReg:$rhs, SingleReg:$lhs))>;
+def : Pat<(i64 (abds i64:$lhs, Signed10:$rhs)), (i64 (ABDDri10 SingleReg:$lhs, Signed10:$rhs))>;
+def : Pat<(i64 (abds i64:$lhs, Signed37:$rhs)), (i64 (ABDDri37 SingleReg:$lhs, Signed37:$rhs))>;
+def : Pat<(i64 (abds i64:$lhs, Wrapped64:$rhs)), (i64 (ABDDri64 SingleReg:$lhs, Wrapped64:$rhs))>;
+def : Pat<(i64 (abds i64:$lhs, i64:$rhs)), (i64 (ABDDrr SingleReg:$lhs, SingleReg:$rhs))>;
 
-// ABDBO
-let Predicates = [IsV2] in {
-def : Pat<(v2i8 (abs (sub (v2i8 (is_imm_vec:$IMM)), v2i8:$rhs))), (v2i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v2i8 (abs (sub v2i8:$rhs, (v2i8 (is_imm_vec:$IMM))))), (v2i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v2i8 (abs (add v2i8:$rhs, (v2i8 (is_imm_vec:$IMM))))), (v2i8 (ABDBOri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
+multiclass AbsoluteDifferenceVectors<ValueType vt, Instruction RI, Instruction RR> {
+def : Pat<(vt (abds vt:$lhs, (vt (is_imm_vec_kvx_splat32_:$IMM)))),
+            (vt (RI SingleReg:$lhs, (build_imm_vec $IMM), splat32_ ) )>;
 
-def : Pat<(v4i8 (abs (sub (v4i8 (is_imm_vec_kvx_splat32_:$IMM)), v4i8:$rhs))), (v4i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v4i8 (abs (sub v4i8:$rhs, (v4i8 (is_imm_vec_kvx_splat32_:$IMM))))), (v4i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v4i8 (abs (add v4i8:$rhs, (v4i8 (is_imm_vec_kvx_splat32_:$IMM))))), (v4i8 (ABDBOri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
+def : Pat<(vt (abds vt:$lhs, (vt (is_imm_vec_kvx_splat32_at:$IMM)))),
+            (vt (RI SingleReg:$lhs, (build_imm_vec $IMM), splat32_at ) )>;
 
-def : Pat<(v8i8 (abs (sub (v8i8 (is_imm_vec_kvx_splat32_:$IMM)), v8i8:$rhs))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v8i8 (abs (sub v8i8:$rhs, (v8i8 (is_imm_vec_kvx_splat32_:$IMM))))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v8i8 (abs (add v8i8:$rhs, (v8i8 (is_imm_vec_kvx_splat32_:$IMM))))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
-
-def : Pat<(v8i8 (abs (sub (v8i8 (is_imm_vec_kvx_splat32_at:$IMM)), v8i8:$rhs))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v8i8 (abs (sub v8i8:$rhs, (v8i8 (is_imm_vec_kvx_splat32_at:$IMM))))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v8i8 (abs (add v8i8:$rhs, (v8i8 (is_imm_vec_kvx_splat32_at:$IMM))))), (v8i8 (ABDBOri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_at ) )>;
-
-def : Pat<(v2i8 (abs (sub v2i8:$lhs, v2i8:$rhs))), (v2i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>;
-def : Pat<(v4i8 (abs (sub v4i8:$lhs, v4i8:$rhs))), (v4i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>;
-def : Pat<(v8i8 (abs (sub v8i8:$lhs, v8i8:$rhs))), (v8i8 (ABDBOrr SingleReg:$rhs, SingleReg:$lhs))>;
+def : Pat<(vt (abds vt:$lhs, vt:$rhs)),
+            (vt (RR SingleReg:$rhs, SingleReg:$lhs))>;
 }
 
-def : Pat<(v8i8 (abs (sub v8i8:$lhs, v8i8:$rhs))),
-          (INSF
-            // Compute elements 7..4 and place them in high 32 bits
-            (SBMM8ri32s
-                  (SBFHQrr
-                        (MINUHQrr
-                              (SBMM8ri64 $lhs, (MAKEi64 0x80004000200010)),
-                              (SBMM8ri64 $rhs, (MAKEi64 0x80004000200010))),
-                        (MAXUHQrr
-                              (SBMM8ri64 $lhs, (MAKEi64 0x80004000200010)),
-                              (SBMM8ri64 $rhs, (MAKEi64 0x80004000200010)))),
-                  0x40100401),
-            // Compute elements 3..0 and place them in low 32 bits
-            (SBMM8ri37
-                  (SBFHQrr
-                        (MINUHQrr
-                              (SBMM8ri64 $lhs, (MAKEi64 0x08000400020001)),
-                              (SBMM8ri64 $rhs, (MAKEi64 0x08000400020001))),
-                        (MAXUHQrr
-                              (SBMM8ri64 $lhs, (MAKEi64 0x08000400020001)),
-                              (SBMM8ri64 $rhs, (MAKEi64 0x08000400020001)))),
-                  0x0000000040100401),
-            31, 0)>, Requires<[IsV1]>;
+// ABDBO
+foreach vt = [v2i8, v4i8, v8i8] in {
+  let Predicates = [IsV2] in {
+    defm : AbsoluteDifferenceVectors<vt, ABDBOri, ABDBOrr>;
+  }
+}
 
 // ABDHQ
-def : Pat<(v2i16 (abs (sub (v2i16 (is_imm_vec:$IMM)), v2i16:$rhs))), (v2i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v2i16 (abs (add v2i16:$rhs, (v2i16 (is_imm_vec:$IMM))))), (v2i16 (ABDHQri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
-def : Pat<(v2i16 (abs (sub v2i16:$lhs, v2i16:$rhs))), (v2i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
-
-def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v4i16 (abs (sub v4i16:$rhs, (v4i16 (is_imm_vec_kvx_splat32_:$IMM))))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v4i16 (abs (add v4i16:$rhs, (v4i16 (is_imm_vec_kvx_splat32_:$IMM))))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
-def : Pat<(v4i16 (abs (sub (v4i16 (is_imm_vec_kvx_splat32_at:$IMM)), v4i16:$rhs))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v4i16 (abs (sub v4i16:$rhs, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM))))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v4i16 (abs (add v4i16:$rhs, (v4i16 (is_imm_vec_kvx_splat32_at:$IMM))))), (v4i16 (ABDHQri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_at ) )>;
-def : Pat<(v4i16 (abs (sub v4i16:$lhs, v4i16:$rhs))), (v4i16 (ABDHQrr SingleReg:$rhs, SingleReg:$lhs))>;
+foreach vt = [v2i16, v4i16] in
+  defm : AbsoluteDifferenceVectors<vt, ABDHQri, ABDHQrr>;
 
 let Predicates = [IsV2] in {
 multiclass ABDS_64bit <ValueType vt, Instruction rr, Instruction ri> {
@@ -231,43 +191,37 @@ def : Pat<(i64(abs(ssubsat i64:$lhs, i64:$rhs))),
           (ABDSDrr SingleReg:$rhs, SingleReg:$lhs)>, Requires<[IsV2]>;
 
 // ABDSW
-def : Pat<(i32 (trunc (i64 (umin (abs (sub Wrapped64W:$lhs, (sext (i32 SingleReg:$rhs)))), i64_i32_max)))),
-          (i32 (ABDSWri SingleReg:$rhs, (trunc_imm_32 $lhs), splat32_))>, Requires<[IsV2]>;
+let Predicates = [IsV2] in {
+def : Pat<(i32 (trunc (i64 (umin (abds (i64 (sext i32:$lhs)), Wrapped64:$rhs), i64_i32_max)))),
+          (i32 (ABDSWri SingleReg:$lhs, (trunc_imm_32 $rhs), splat32_))>;
 
-def : Pat<(i32 (trunc (i64 (umin (abs (sub (sext(i32 SingleReg:$lhs)), (sext (i32 SingleReg:$rhs)))), i64_i32_max)))),
-          (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+def : Pat<(i32 (trunc (i64 (umin (zext (i32 (abds i32:$lhs, i32:$rhs))), i64_i32_max)))),
+          (i32 (ABDSWrr SingleReg:$lhs, SingleReg:$rhs))>;
 
 def : Pat<(i32 (abs (ssubsat i32:$lhs, Wrapped32:$rhs))),
           (i32 (ABDSWri SingleReg:$lhs, Wrapped32:$rhs, splat32_ ) )>;
 
 def : Pat<(i32 (abs (ssubsat i32:$lhs, i32:$rhs))),
-          (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>, Requires<[IsV2]>;
+          (i32 (ABDSWrr SingleReg:$rhs, SingleReg:$lhs))>;
+}
 
 // ABDSWP
 defm : ABDS_64bit<v2i32, ABDSWPrr, ABDSWPri>;
 } // IsV2
 // ABDW
-def : Pat<(i32 (abs (sub Signed10W:$lhs, i32:$rhs))), (i32 (ABDWri10 SingleReg:$rhs, Signed10W:$lhs))>;
-def : Pat<(i32 (abs (sub i32:$rhs, Signed10W:$lhs))), (i32 (ABDWri10 SingleReg:$rhs, Signed10W:$lhs))>;
-def : Pat<(i32 (abs (add i32:$rhs, Signed10W:$lhs))), (i32 (ABDWri10 SingleReg:$rhs, (get_neg_imm $lhs)))>;
-def : Pat<(i32 (abs (sub Wrapped32:$lhs, i32:$rhs))), (i32 (ABDWri37 SingleReg:$rhs, Wrapped32:$lhs))>;
-def : Pat<(i32 (abs (sub i32:$rhs, Wrapped32:$lhs))), (i32 (ABDWri37 SingleReg:$rhs, Wrapped32:$lhs))>;
-def : Pat<(i32 (abs (add i32:$rhs, Wrapped32:$lhs))), (i32 (ABDWri37 SingleReg:$rhs, (get_neg_imm $lhs)))>;
-def : Pat<(i32 (abs (sub i32:$lhs, i32:$rhs))), (i32 (ABDWrr SingleReg:$rhs, SingleReg:$lhs))>;
+def : Pat<(i32 (abds i32:$lhs, Signed10W:$rhs)), (i32 (ABDWri10 SingleReg:$lhs, Signed10W:$rhs))>;
+def : Pat<(i32 (abds i32:$lhs, Wrapped32:$rhs)), (i32 (ABDWri37 SingleReg:$lhs, Wrapped32:$rhs))>;
+def : Pat<(i32 (abds i32:$lhs, i32:$rhs)), (i32 (ABDWrr SingleReg:$lhs, SingleReg:$rhs))>;
 
 // ABDWP
-def : Pat<(v2i32 (abs (sub (v2i32 (is_imm_vec_kvx_splat32_:$IMM)), v2i32:$rhs))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v2i32 (abs (sub v2i32:$rhs, (v2i32 (is_imm_vec_kvx_splat32_:$IMM))))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_ ) )>;
-def : Pat<(v2i32 (abs (add v2i32:$rhs, (v2i32(is_imm_vec_kvx_splat32_:$IMM))))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_ ) )>;
-
-def : Pat<(v2i32 (abs (sub v2i32:$rhs, (v2i32 (is_imm_vec_kvx_splat32_at:$IMM))))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v2i32 (abs (sub (v2i32 (is_imm_vec_kvx_splat32_at:$IMM)), v2i32:$rhs))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec $IMM), splat32_at ) )>;
-def : Pat<(v2i32 (abs (add v2i32:$rhs, (v2i32 (is_imm_vec_kvx_splat32_at:$IMM))))), (v2i32 (ABDWPri SingleReg:$rhs, (build_imm_vec_neg $IMM), splat32_at ) )>;
-def : Pat<(v2i32 (abs (sub v2i32:$lhs, v2i32:$rhs))), (v2i32 (ABDWPrr SingleReg:$rhs, SingleReg:$lhs))>;
+defm : AbsoluteDifferenceVectors<v2i32, ABDWPri, ABDWPrr>;
 
 // TODO: The select versions can lower to RI once detecting (add -Imm, sub Imm).
 let Predicates = [IsV2] in {
 multiclass ABDU<ValueType vt, ValueType setvt, ValueType zextvt, Instruction RR, Instruction RI, bit is64Bit = 0, bit isZextLegal = 1, bit isVec = 1> {
+  def abdu_rr : Pat <(vt (abdu vt:$lhs, vt:$rhs)),
+                  (RR SingleReg:$lhs, SingleReg:$rhs)>;
+
   def gt: Pat<(vt (select
               (setvt (setugt vt:$lhs, vt:$rhs)),
               (vt (sub vt:$lhs, vt:$rhs)),
@@ -315,11 +269,18 @@ multiclass ABDU<ValueType vt, ValueType setvt, ValueType zextvt, Instruction RR,
                 (vt (umin vt:$lhs, (vt(is_imm_vec_kvx_splat32_:$rhs)))))),
           (vt (RI SingleReg:$lhs, (build_imm_vec $rhs), splat32_))>;
 
+    def abdu_ri_ : Pat <(vt (abdu vt:$lhs, (vt(is_imm_vec_kvx_splat32_:$rhs)))),
+          (vt(RI SingleReg:$lhs, (build_imm_vec $rhs), splat32_))>;
+
+
     if is64Bit then {
       def minmax_ri_vec_at1: Pat<(vt (sub
                   (vt (umax vt:$lhs, (vt(is_imm_vec_kvx_splat32_at:$rhs)))),
                   (vt (umin vt:$lhs, (vt(is_imm_vec_kvx_splat32_at:$rhs)))))),
             (vt (RI SingleReg:$lhs, (build_imm_vec $rhs), splat32_at))>;
+
+      def abdu_ri_at : Pat <(vt (abdu vt:$lhs, (vt(is_imm_vec_kvx_splat32_at:$rhs)))),
+            (vt(RI SingleReg:$lhs, (build_imm_vec $rhs), splat32_at))>;
     }
   } else {
     if is64Bit then {
@@ -332,11 +293,22 @@ multiclass ABDU<ValueType vt, ValueType setvt, ValueType zextvt, Instruction RR,
                   (vt (umax vt:$lhs, UnsignedSplat32Imm:$rhs)),
                   (vt (umin vt:$lhs, UnsignedSplat32Imm:$rhs)))),
             (vt (RI SingleReg:$lhs, (trunc_imm_32 $rhs), splat32_at))>;
-    } else
+
+      def abdu_ri_ : Pat <(vt (abdu vt:$lhs, Wrapped64W:$rhs)),
+            (vt(RI SingleReg:$lhs, (trunc_imm_32 $rhs), splat32_))>;
+
+      def abdu_ri_at : Pat <(vt (abdu vt:$lhs, UnsignedSplat32Imm:$rhs)),
+            (vt(RI SingleReg:$lhs, (trunc_imm_32 $rhs), splat32_at))>;
+
+    } else {
+        def abdu_ri_32 : Pat <(vt (abdu vt:$lhs, Wrapped32:$rhs)),
+            (vt(RI SingleReg:$lhs, Wrapped32:$rhs, splat32_))>;
+
         def minmax_ri_i32: Pat<(vt (sub
                 (vt (umax vt:$lhs, Wrapped32:$rhs)),
                 (vt (umin vt:$lhs, Wrapped32:$rhs)))),
           (vt (RI SingleReg:$lhs, Wrapped32:$rhs, splat32_))>;
+    }
   }
 }
 
@@ -2788,8 +2760,6 @@ def : Pat<(shl (v4i16 (allexts v4i8:$op0)), (v4i16 (v4_splat(i32 8)))),
 
 def : Pat<(shl (v4i16 (allexts (v4i8 (extract_subvector v8i8:$op0, (i64 4))))), (v4i16 (v4_splat(i32 8)))),
           (SBMM8ri64 SingleReg:$op0, 0x8000400020001000)>;
-
-def : Pat<(v2i32(zanyext v2i8:$v)), (SBMM8ri37 $v, 0x200000001)>;
 
 foreach i = [0, 2] in
 foreach vt = [v4i8, v8i8] in

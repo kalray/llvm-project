@@ -876,7 +876,7 @@ define <2 x i32> @abdwp_not_ri(<2 x i32> %0) {
 ; ALL:       # %bb.0:
 ; ALL-NEXT:    make $r1 = 0x100000000f
 ; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    abdwp $r0 = $r0, $r1
+; ALL-NEXT:    abdwp $r0 = $r1, $r0
 ; ALL-NEXT:    ret
 ; ALL-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <2 x i32> <i32 15, i32 16>, %0

@@ -764,7 +764,7 @@ define <8 x i32> @concat(<4 x i32> %a, <4 x i32> %b){
   ret <8 x i32> %v
 }
 
-declare <8 x i32> @llvm.abs.v4i32(<8 x i32>, i1) #0
+declare <8 x i32> @llvm.abs.v8i32(<8 x i32>, i1) #0
 
 define <8 x i32> @test_abs(<8 x i32> %a) {
 ; V1-LABEL: test_abs:
@@ -786,7 +786,7 @@ define <8 x i32> @test_abs(<8 x i32> %a) {
 ; V2-NEXT:    ;; # (end cycle 0)
 ; V2-NEXT:    ret
 ; V2-NEXT:    ;;
-  %r = call <8 x i32> @llvm.abs.v4i32(<8 x i32> %a, i1 false)
+  %r = call <8 x i32> @llvm.abs.v8i32(<8 x i32> %a, i1 false)
   ret <8 x i32> %r
 }
 
@@ -1218,36 +1218,25 @@ define <8 x i32> @lnorneg(<8 x i32> %0, <8 x i32> %1) {
 define <8 x i32> @abdhq_rr(<8 x i32> %a, <8 x i32> %b) {
 ; V1-LABEL: abdhq_rr:
 ; V1:       # %bb.0: # %entry
-; V1-NEXT:    sbfwp $r0 = $r4, $r0
-; V1-NEXT:    sbfwp $r1 = $r5, $r1
-; V1-NEXT:    sbfwp $r2 = $r6, $r2
-; V1-NEXT:    sbfwp $r3 = $r7, $r3
+; V1-NEXT:    abdwp $r0 = $r4, $r0
+; V1-NEXT:    abdwp $r1 = $r5, $r1
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    abswp $r2 = $r2
-; V1-NEXT:    abswp $r3 = $r3
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    abswp $r0 = $r0
-; V1-NEXT:    abswp $r1 = $r1
+; V1-NEXT:    abdwp $r2 = $r6, $r2
+; V1-NEXT:    abdwp $r3 = $r7, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 2)
+; V1-NEXT:    ;; # (end cycle 1)
 ;
 ; V2-LABEL: abdhq_rr:
 ; V2:       # %bb.0: # %entry
-; V2-NEXT:    sbfwp $r0 = $r4, $r0
-; V2-NEXT:    sbfwp $r1 = $r5, $r1
-; V2-NEXT:    sbfwp $r2 = $r6, $r2
-; V2-NEXT:    sbfwp $r3 = $r7, $r3
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    abswp $r0 = $r0
-; V2-NEXT:    abswp $r1 = $r1
-; V2-NEXT:    abswp $r2 = $r2
-; V2-NEXT:    abswp $r3 = $r3
-; V2-NEXT:    ;; # (end cycle 1)
+; V2-NEXT:    abdwp $r0 = $r4, $r0
+; V2-NEXT:    abdwp $r1 = $r5, $r1
+; V2-NEXT:    abdwp $r2 = $r6, $r2
+; V2-NEXT:    abdwp $r3 = $r7, $r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 0)
 entry:
   %sub = sub nsw <8 x i32> %a, %b
-  %0 = tail call <8 x i32> @llvm.abs.v4i32(<8 x i32> %sub, i1 true)
+  %0 = tail call <8 x i32> @llvm.abs.v8i32(<8 x i32> %sub, i1 true)
   ret <8 x i32> %0
 }
 
@@ -1257,102 +1246,71 @@ define <8 x i32> @abdhq_not_ri(<8 x i32> %0) {
 ; V1-NEXT:    make $r4 = 0x1000000012
 ; V1-NEXT:    make $r5 = 0x100000000f
 ; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sbfwp $r0 = $r0, $r4
-; V1-NEXT:    sbfwp $r1 = $r1, $r5
-; V1-NEXT:    sbfwp $r2 = $r2, $r4
-; V1-NEXT:    sbfwp $r3 = $r3, $r5
+; V1-NEXT:    abdwp $r0 = $r4, $r0
+; V1-NEXT:    abdwp $r1 = $r5, $r1
 ; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    abswp $r2 = $r2
-; V1-NEXT:    abswp $r3 = $r3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    abswp $r0 = $r0
-; V1-NEXT:    abswp $r1 = $r1
+; V1-NEXT:    abdwp $r2 = $r4, $r2
+; V1-NEXT:    abdwp $r3 = $r5, $r3
 ; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 3)
+; V1-NEXT:    ;; # (end cycle 2)
 ;
 ; V2-LABEL: abdhq_not_ri:
 ; V2:       # %bb.0:
 ; V2-NEXT:    make $r4 = 0x1000000012
 ; V2-NEXT:    make $r5 = 0x100000000f
 ; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sbfwp $r0 = $r0, $r4
-; V2-NEXT:    sbfwp $r1 = $r1, $r5
-; V2-NEXT:    sbfwp $r2 = $r2, $r4
-; V2-NEXT:    sbfwp $r3 = $r3, $r5
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    abswp $r0 = $r0
-; V2-NEXT:    abswp $r1 = $r1
-; V2-NEXT:    abswp $r2 = $r2
-; V2-NEXT:    abswp $r3 = $r3
-; V2-NEXT:    ;; # (end cycle 2)
+; V2-NEXT:    abdwp $r0 = $r4, $r0
+; V2-NEXT:    abdwp $r1 = $r5, $r1
+; V2-NEXT:    abdwp $r2 = $r4, $r2
+; V2-NEXT:    abdwp $r3 = $r5, $r3
 ; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <8 x i32> <i32 18, i32 16, i32 15, i32 16, i32 18, i32 16, i32 15, i32 16>, %0
-  %3 = tail call <8 x i32> @llvm.abs.v4i32(<8 x i32> %2, i1 true)
+  %3 = tail call <8 x i32> @llvm.abs.v8i32(<8 x i32> %2, i1 true)
   ret <8 x i32> %3
 }
 
 define <8 x i32> @abdhq_ri_(<8 x i32> %0) {
-; V1-LABEL: abdhq_ri_:
-; V1:       # %bb.0:
-; V1-NEXT:    make $r4 = 0x100000000f
-; V1-NEXT:    make $r5 = 0
-; V1-NEXT:    ;; # (end cycle 0)
-; V1-NEXT:    sbfwp $r0 = $r0, $r4
-; V1-NEXT:    sbfwp $r1 = $r1, $r5
-; V1-NEXT:    sbfwp $r2 = $r2, $r4
-; V1-NEXT:    sbfwp $r3 = $r3, $r5
-; V1-NEXT:    ;; # (end cycle 1)
-; V1-NEXT:    abswp $r2 = $r2
-; V1-NEXT:    abswp $r3 = $r3
-; V1-NEXT:    ;; # (end cycle 2)
-; V1-NEXT:    abswp $r0 = $r0
-; V1-NEXT:    abswp $r1 = $r1
-; V1-NEXT:    ret
-; V1-NEXT:    ;; # (end cycle 3)
-;
-; V2-LABEL: abdhq_ri_:
-; V2:       # %bb.0:
-; V2-NEXT:    make $r4 = 0x100000000f
-; V2-NEXT:    make $r5 = 0
-; V2-NEXT:    ;; # (end cycle 0)
-; V2-NEXT:    sbfwp $r0 = $r0, $r4
-; V2-NEXT:    sbfwp $r1 = $r1, $r5
-; V2-NEXT:    sbfwp $r2 = $r2, $r4
-; V2-NEXT:    sbfwp $r3 = $r3, $r5
-; V2-NEXT:    ;; # (end cycle 1)
-; V2-NEXT:    abswp $r0 = $r0
-; V2-NEXT:    abswp $r1 = $r1
-; V2-NEXT:    abswp $r2 = $r2
-; V2-NEXT:    abswp $r3 = $r3
-; V2-NEXT:    ;; # (end cycle 2)
-; V2-NEXT:    ret
-; V2-NEXT:    ;;
+; ALL-LABEL: abdhq_ri_:
+; ALL:       # %bb.0:
+; ALL-NEXT:    abswp $r1 = $r1
+; ALL-NEXT:    abswp $r3 = $r3
+; ALL-NEXT:    make $r4 = 0x100000000f
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    abdwp $r0 = $r4, $r0
+; ALL-NEXT:    abdwp $r2 = $r4, $r2
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <8 x i32> <i32 15, i32 16, i32 0, i32 0, i32 15, i32 16, i32 0, i32 0>, %0
-  %3 = tail call <8 x i32> @llvm.abs.v4i32(<8 x i32> %2, i1 true)
+  %3 = tail call <8 x i32> @llvm.abs.v8i32(<8 x i32> %2, i1 true)
   ret <8 x i32> %3
 }
 
 define <8 x i32> @abdhq_ri_at(<8 x i32> %0) {
-; ALL-LABEL: abdhq_ri_at:
-; ALL:       # %bb.0:
-; ALL-NEXT:    make $r5 = 0x100000000f
-; ALL-NEXT:    ;; # (end cycle 0)
-; ALL-NEXT:    sbfwp $r1 = $r1, $r5
-; ALL-NEXT:    sbfwp $r3 = $r3, $r5
-; ALL-NEXT:    copyd $r4 = $r5
-; ALL-NEXT:    ;; # (end cycle 1)
-; ALL-NEXT:    sbfwp $r0 = $r0, $r4
-; ALL-NEXT:    abswp $r1 = $r1
-; ALL-NEXT:    sbfwp $r2 = $r2, $r4
-; ALL-NEXT:    abswp $r3 = $r3
-; ALL-NEXT:    ;; # (end cycle 2)
-; ALL-NEXT:    abswp $r0 = $r0
-; ALL-NEXT:    abswp $r2 = $r2
-; ALL-NEXT:    ret
-; ALL-NEXT:    ;; # (end cycle 3)
+; V1-LABEL: abdhq_ri_at:
+; V1:       # %bb.0:
+; V1-NEXT:    make $r4 = 0x100000000f
+; V1-NEXT:    ;; # (end cycle 0)
+; V1-NEXT:    abdwp $r0 = $r4, $r0
+; V1-NEXT:    abdwp $r1 = $r4, $r1
+; V1-NEXT:    ;; # (end cycle 1)
+; V1-NEXT:    abdwp $r2 = $r4, $r2
+; V1-NEXT:    abdwp $r3 = $r4, $r3
+; V1-NEXT:    ret
+; V1-NEXT:    ;; # (end cycle 2)
+;
+; V2-LABEL: abdhq_ri_at:
+; V2:       # %bb.0:
+; V2-NEXT:    make $r4 = 0x100000000f
+; V2-NEXT:    ;; # (end cycle 0)
+; V2-NEXT:    abdwp $r0 = $r4, $r0
+; V2-NEXT:    abdwp $r1 = $r4, $r1
+; V2-NEXT:    abdwp $r2 = $r4, $r2
+; V2-NEXT:    abdwp $r3 = $r4, $r3
+; V2-NEXT:    ret
+; V2-NEXT:    ;; # (end cycle 1)
   %2 = sub nsw <8 x i32> <i32 15, i32 16, i32 15, i32 16, i32 15, i32 16, i32 15, i32 16>, %0
-  %3 = tail call <8 x i32> @llvm.abs.v4i32(<8 x i32> %2, i1 true)
+  %3 = tail call <8 x i32> @llvm.abs.v8i32(<8 x i32> %2, i1 true)
   ret <8 x i32> %3
 }
 

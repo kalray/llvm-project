@@ -891,6 +891,29 @@ define <4 x i64> @test_sext_2xi64(<4 x i8> %a) #0 {
   ret <4 x i64> %r
 }
 
+define <4 x i16> @test_sext_4xi16(<4 x i8> %a) #0 {
+; ALL-LABEL: test_sext_4xi16:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxlbhq $r0 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 0)
+  %r = sext <4 x i8> %a to <4 x i16>
+  ret <4 x i16> %r
+}
+
+define <4 x i32> @test_sext_4xi32(<4 x i8> %a) #0 {
+; ALL-LABEL: test_sext_4xi32:
+; ALL:       # %bb.0:
+; ALL-NEXT:    sxlbhq $r0 = $r0
+; ALL-NEXT:    ;; # (end cycle 0)
+; ALL-NEXT:    sxlhwp $r0 = $r0
+; ALL-NEXT:    sxmhwp $r1 = $r0
+; ALL-NEXT:    ret
+; ALL-NEXT:    ;; # (end cycle 1)
+  %r = sext <4 x i8> %a to <4 x i32>
+  ret <4 x i32> %r
+}
+
 declare <4 x i8> @llvm.abs.v4i8(<4 x i8>, i1) #0
 
 define <4 x i8> @test_abs(<4 x i8> %a) #0 {

@@ -613,7 +613,13 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
           ISD::VECREDUCE_UMIN, ISD::VECREDUCE_XOR})
       setOperationAction(I, VT, RedAction);
 
-  for (auto I : {ISD::BUILD_VECTOR,
+  for (auto I : {ISD::ABDS,
+                 ISD::ABDU,
+                 ISD::AVGCEILU,
+                 ISD::AVGCEILS,
+                 ISD::AVGFLOORS,
+                 ISD::AVGFLOORU,
+                 ISD::BUILD_VECTOR,
                  ISD::CTLZ,
                  ISD::CTPOP,
                  ISD::CTTZ,
@@ -646,6 +652,31 @@ KVXTargetLowering::KVXTargetLowering(const TargetMachine &TM,
     setTargetDAGCombine(I);
 
   setLibcallName(RTLIB::UNWIND_RESUME, "_Unwind_SjLj_Resume");
+
+  setOperationAction(
+      {ISD::ABDS, ISD::AVGFLOORS, ISD::AVGFLOORU, ISD::AVGCEILS, ISD::AVGCEILU},
+      {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16, MVT::i32,
+       MVT::v2i32, MVT::v4i32},
+      Legal);
+
+  setOperationAction(ISD::ABDS, MVT::i64, Legal);
+  if (IsV1) {
+    for (EVT VT : {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v16i8, MVT::v32i8})
+      setOperationPromotedToType({ISD::ABDS, ISD::ABDU, ISD::AVGFLOORS,
+                                  ISD::AVGFLOORU, ISD::AVGCEILS, ISD::AVGCEILU},
+                                 VT.getSimpleVT(),
+                                 VT.changeElementType(MVT::i16).getSimpleVT());
+
+    // Our own DAGCombine will split these:
+    setOperationAction({ISD::ABDU, ISD::ABDS}, MVT::v8i8, Expand);
+    // Allow general DAGCombine to generate them. We will custom lower
+    // them into ABDS if we can, or expand into SUB(MAXU, MINU)
+    setOperationAction(ISD::ABDU, {MVT::v2i16, MVT::v4i16, MVT::v2i32}, Custom);
+  } else
+    setOperationAction(ISD::ABDU,
+                       {MVT::v2i8, MVT::v4i8, MVT::v8i8, MVT::v2i16, MVT::v4i16,
+                        MVT::i32, MVT::v2i32, MVT::v4i32, MVT::i64},
+                       Legal);
 }
 
 EVT KVXTargetLowering::getSetCCResultType(const DataLayout &DL, LLVMContext &C,
@@ -1455,6 +1486,13 @@ SDValue KVXTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
   switch (Opcode) {
   default:
     report_fatal_error("unimplemented operand");
+  case ISD::ABDU: {
+    auto N0 = Op->getOperand(0);
+    auto N1 = Op->getOperand(1);
+      if (DAG.SignBitIsZero(N0) && DAG.SignBitIsZero(N1))
+        return DAG.getNode(ISD::ABDS, SDLoc(Op), Op->getValueType(0), N0, N1);
+      return SDValue();
+  }
   case KVXISD::VECREDUCE_ADD_SEXT:
   case KVXISD::VECREDUCE_ADD_ZEXT: {
     auto Op0 = Op->getOperand(0);
@@ -3217,18 +3255,8 @@ static SDValue combineAbd(SDNode *N, SelectionDAG &Dag) {
     return Dag.getNode(ISD::ABS, DL, VT, Subsat);
   }
 
-  if (NormalSatUn == 2) { // modifier == ".u", unsign-diff
-    auto Umax = Dag.getNode(ISD::UMAX, DL, VT, Op0, Op1);
-    auto Umin = Dag.getNode(ISD::UMIN, DL, VT, Op0, Op1);
-    return Dag.getNode(ISD::SUB, DL, VT, Umax, Umin);
-  }
-
-  // NormalSatUn == 1 modifier == "", sign-diff
-  auto Sub = Dag.getNode(ISD::SUB, DL, VT, Op0, Op1);
-  SDNodeFlags Flags = Sub->getFlags(); // Avoid undefs optimisations.
-  Flags.setNoSignedWrap(true);
-  Sub->setFlags(Flags);
-  return Dag.getNode(ISD::ABS, DL, VT, Sub);
+  unsigned Opc = (NormalSatUn == 2) ? ISD::ABDU : ISD::ABDS;
+  return Dag.getNode(Opc, DL, VT, Op0, Op1);
 }
 
 static SDValue combineAbs(SDNode *N, SelectionDAG &Dag) {
@@ -3336,8 +3364,7 @@ cv2Intrinsic(unsigned KvxOpcode, SDNode *N, SelectionDAG &Dag,
   return bitcastTypesAndMachineOp(KvxOpcode, N, Dag, InPlace, Mods, Map);
 }
 
-static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
-                              SelectionDAG & Dag) {
+static SDValue combineSplit(SDNode * N, SelectionDAG & Dag, bool ForceSplit = false) {
   auto VT = N->getValueType(0);
   LLVMContext &C = *Dag.getContext();
   const auto Opc = N->getOpcode();
@@ -3345,9 +3372,11 @@ static SDValue combineSplit(SDNode * N, TargetLowering::DAGCombinerInfo & DCI,
       !VT.isPow2VectorType())
     return SDValue();
 
-  auto &TLI = Dag.getTargetLoweringInfo();
-  if (TLI.getOperationAction(Opc, VT) != TargetLowering::Expand)
-    return SDValue();
+  if (!ForceSplit) {
+    auto &TLI = Dag.getTargetLoweringInfo();
+    if (TLI.getOperationAction(Opc, VT) != TargetLowering::Expand)
+      return SDValue();
+  }
 
   auto HalfVT = VT.getVectorMinNumElements() == 2
                     ? VT.getScalarType()
@@ -3398,7 +3427,7 @@ static inline SDValue splitDownTo64Bits(SDNode *N,
   if (VT.getSizeInBits() <= 64 || !VT.isPow2VectorType())
     return SDValue();
 
-  return combineSplit(N, DCI, Dag);
+  return combineSplit(N, Dag, true);
 }
 
 static SDValue combineIntrinsic(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
@@ -3838,6 +3867,15 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
     return combineSETCC(N, DAG);
   case ISD::BUILD_VECTOR:
     return combineBUILD_VECTOR(N, DAG);
+  case ISD::ABDS:
+  case ISD::ABDU:
+  case ISD::AVGCEILU:
+  case ISD::AVGCEILS:
+  case ISD::AVGFLOORS:
+  case ISD::AVGFLOORU:
+    if (N->getSimpleValueType(0).getScalarType() != MVT::i8)
+      return splitDownTo64Bits(N, DCI, DAG);
+    LLVM_FALLTHROUGH;
   case ISD::CTLZ:
   case ISD::CTTZ:
   case ISD::CTPOP:
@@ -3848,7 +3886,7 @@ SDValue KVXTargetLowering::PerformDAGCombine(SDNode *N,
   case ISD::FMUL:
   case ISD::FNEG:
   case ISD::FSUB:
-    return combineSplit(N, DCI, DAG);
+    return combineSplit(N, DAG);
   case ISD::INTRINSIC_WO_CHAIN:
     return combineIntrinsic(N, DCI, DAG);
   case ISD::LOAD:
