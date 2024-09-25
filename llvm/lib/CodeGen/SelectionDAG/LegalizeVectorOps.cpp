@@ -684,7 +684,10 @@ static unsigned getExtensionTypeFor(const SDNode *Node) {
       return ISD::SIGN_EXTEND;
     return ISD::ZERO_EXTEND;
   }
+  case ISD::ABDS:
   case ISD::ABS:
+  case ISD::AVGCEILS:
+  case ISD::AVGFLOORS:
   case ISD::MULHS:
   case ISD::SADDO:
   case ISD::SADDSAT:
