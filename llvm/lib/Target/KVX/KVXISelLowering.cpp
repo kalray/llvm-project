@@ -3646,23 +3646,7 @@ static SDValue combineLoad(SDNode *N, TargetLowering::DAGCombinerInfo &DCI,
       return splitLoad(LD, Dag, SDLoc(N));
   }
 
-  return SDValue(); // TODO: Do bitcast to non-tca types
-
-  // EVT ToVT = (Sz <= 64)?
-  //   EVT::getIntegerVT(*Dag.getContext(), Sz):
-  //   EVT::getVectorVT(*Dag.getContext(), MVT::i64, ElementCount::getFixed(Sz /
-  //   64));
-
-  // SDLoc DL(N);
-  // const MachinePointerInfo &SrcValue = LD->getMemOperand()->getPointerInfo();
-  // SDValue BasePtr = LD->getBasePtr();
-  // auto V = Dag.getExtLoad(ISD::NON_EXTLOAD, DL, ToVT, LD->getChain(),
-  //                    BasePtr, SrcValue.getWithOffset(VT.getStoreSize()),
-  //                    ToVT, LD->getAlign(), LD->getMemOperand()->getFlags());
-  // auto BC = Dag.getBitcast(VT, V);
-  // SDValue Ops[] = {BC, Dag.getNode(ISD::TokenFactor, DL, MVT::Other,
-  //                                    V.getValue(1))};
-  // return Dag.getMergeValues(Ops, DL);
+  return SDValue();
 }
 
 SDValue SplitVectorStore(StoreSDNode *Store, SelectionDAG &Dag) {
