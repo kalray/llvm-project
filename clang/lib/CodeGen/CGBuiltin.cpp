@@ -23004,6 +23004,7 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
   }
 
   Address Addr = CGF.EmitPointerWithAlignment(E->getArg(0));
+  llvm::Value *BP = Addr.getBasePointer();
   if (int AS = KVX_getLoadAS(CGF.getContext(),
                              E->getArg(1)->IgnoreParenImpCasts(), Mod)) {
 
@@ -23011,10 +23012,10 @@ KVX_emitLoadBuiltin(CodeGenFunction &CGF, const CallExpr *E,
       CGF.CGM.Error(E->getArg(1)->getBeginLoc(), "invalid value");
 
     llvm::Type *ASType = DataType->getPointerTo(AS);
-    Addr.replaceBasePointer(CGF.Builder.CreateAddrSpaceCast(Addr.getBasePointer(), ASType));
+    BP = CGF.Builder.CreateAddrSpaceCast(Addr.getBasePointer(), ASType);
   }
 
-  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, Addr.getBasePointer(),
+  auto *Load = CGF.Builder.CreateAlignedLoad(DataType, BP,
                                              Addr.getAlignment(), "kvxld");
 
   Load->setVolatile(KVX_isVolatile(CGF, E));
