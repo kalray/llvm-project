@@ -486,7 +486,6 @@ set(LLVM_ALL_TARGETS
   Sparc
   SystemZ
   VE
-  KVX
   WebAssembly
   X86
   XCore
@@ -499,6 +498,7 @@ set(LLVM_ALL_EXPERIMENTAL_TARGETS
   M68k
   SPIRV
   Xtensa
+  KVX
 )
 
 # List of targets with JIT support:
