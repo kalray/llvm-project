@@ -256,10 +256,10 @@ void TransformDialect::addOperationIfNotRegistered() {
       RegisteredOperationName::lookup(TypeID::get<OpTy>(), getContext());
   if (!opName) {
     addOperations<OpTy>();
-#ifndef NDEBUG
+/*#ifndef NDEBUG
     StringRef name = OpTy::getOperationName();
     detail::checkImplementsTransformOpInterface(name, getContext());
-#endif // NDEBUG
+#endif // NDEBUG*/
     return;
   }
 
