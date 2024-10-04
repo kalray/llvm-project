@@ -1097,9 +1097,13 @@ SDValue KVXTargetLowering::LowerCall(CallLoweringInfo &CLI,
                  *DAG.getContext());
   CCInfo.AnalyzeCallOperands(Outs, CC_SRET_KVX);
 
-  if (IsTailCall)
+  LLVM_DEBUG(dbgs() << "Lowering call to " << *CLI.CB->getCalledFunction() << '\n');
+  if (IsTailCall) {
+    LLVM_DEBUG(dbgs() << "Check if we can TailCall\n");
     IsTailCall = IsEligibleForTailCallOptimization(CCInfo, CLI, MF, ArgLocs);
+  }
 
+  LLVM_DEBUG(dbgs() << "Can TailCall: " << IsTailCall << "\n");
   if (IsTailCall)
     ++NumTailCalls;
   else if (CLI.CB && CLI.CB->isMustTailCall())
@@ -2173,27 +2177,35 @@ bool KVXTargetLowering::IsEligibleForTailCallOptimization(
   auto &Caller = MF.getFunction();
   auto CallerCC = Caller.getCallingConv();
 
+  LLVM_DEBUG(dbgs() << "Can tail call " << *CLI.CB << ": ");
   // Do not tail call opt functions with "disable-tail-calls" attribute.
-  if (Caller.getFnAttribute("disable-tail-calls").getValueAsString() == "true")
+  if (Caller.getFnAttribute("disable-tail-calls").getValueAsString() == "true") {
+    LLVM_DEBUG(dbgs() << "no, it has 'disable-tail-calls' attribute.\n");
     return false;
-
+  }
   // Do not tail call opt functions with varargs, unless arguments are all
   // passed in registers.
   if (IsVarArg)
     for (unsigned Idx = 0, End = ArgsLocs.size(); Idx != End; ++Idx)
-      if (!ArgsLocs[Idx].isRegLoc())
+      if (!ArgsLocs[Idx].isRegLoc()) {
+        LLVM_DEBUG(dbgs() << "no, it has in stack arguments.\n");
         return false;
+      }
 
   // Do not tail call opt if the stack is used to pass parameters.
-  if (CCInfo.getStackSize() != 0)
+  if (CCInfo.getStackSize() != 0) {
+    LLVM_DEBUG(dbgs() << "no, it has in stack arguments.\n");
     return false;
+  }
 
   // Do not tail call opt if either caller or callee uses struct return
-  // semantics.
-  auto IsCallerStructRet = Caller.hasStructRetAttr();
-  auto IsCalleeStructRet = Outs.empty() ? false : Outs[0].Flags.isSRet();
-  if (IsCallerStructRet || IsCalleeStructRet)
+  // semantics is not as the other.
+  bool IsCallerStructRet = Caller.hasStructRetAttr();
+  bool IsCalleeStructRet = Outs.empty() ? false : Outs[0].Flags.isSRet();
+  if (IsCalleeStructRet != IsCallerStructRet) {
     return false;
+    LLVM_DEBUG(dbgs() << "no, it has different return than current function.\n");
+  }
 
   // Externally-defined functions with weak linkage should not be
   // tail-called. The behaviour of branch instructions in this situation (as
@@ -2201,8 +2213,10 @@ bool KVXTargetLowering::IsEligibleForTailCallOptimization(
   // linker replacing the tail call with a return.
   if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee)) {
     const GlobalValue *GV = G->getGlobal();
-    if (GV->hasExternalWeakLinkage())
+    if (GV->hasExternalWeakLinkage()) {
+      LLVM_DEBUG(dbgs() << "no, it is an external weak linked symbol.\n");
       return false;
+    }
   }
 
   // The callee has to preserve all registers the caller needs to preserve.
@@ -2210,11 +2224,17 @@ bool KVXTargetLowering::IsEligibleForTailCallOptimization(
     const KVXRegisterInfo *TRI = Subtarget.getRegisterInfo();
     const uint32_t *CallerPreserved = TRI->getCallPreservedMask(MF, CallerCC);
     const uint32_t *CalleePreserved = TRI->getCallPreservedMask(MF, CalleeCC);
-    if (!TRI->regmaskSubsetEqual(CallerPreserved, CalleePreserved))
+    if (!TRI->regmaskSubsetEqual(CallerPreserved, CalleePreserved)) {
+      LLVM_DEBUG(dbgs() << "no, it does not preserve the same registers.\n");
       return false;
+    }
   }
-
+  LLVM_DEBUG(dbgs() << "yes.\n");
   return true;
+}
+
+bool KVXTargetLowering::allowTruncateForTailCall(Type *Ty1, Type *Ty2) const {
+  return Ty1->isIntegerTy() && Ty2->isIntegerTy();
 }
 
 SDValue KVXTargetLowering::lowerBlockAddress(SDValue Op,

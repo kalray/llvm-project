@@ -306,6 +306,8 @@ private:
   shouldExpandAtomicRMWInIR(AtomicRMWInst *RMW) const override;
 
   bool isTypeDesirableForOp(unsigned Opc, EVT VT) const override;
+
+  bool allowTruncateForTailCall(Type *Ty1, Type *Ty2) const override;
 };
 
 } // namespace llvm
