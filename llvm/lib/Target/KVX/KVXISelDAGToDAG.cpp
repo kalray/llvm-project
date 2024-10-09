@@ -50,6 +50,8 @@ public:
 
 struct KVXDAGToDAGISelLegacy final : public SelectionDAGISelLegacy {
   static char ID;
+  StringRef getPassName() const override { return "KVX DAG->DAG Pattern Instruction Selection"; }
+
   explicit KVXDAGToDAGISelLegacy(KVXTargetMachine &tm,
                                      CodeGenOptLevel OptLevel)
       : SelectionDAGISelLegacy(
