@@ -8594,6 +8594,8 @@ static char getObjCEncodingForPrimitiveType(const ASTContext *C,
 #include "clang/Basic/WebAssemblyReferenceTypes.def"
 #define AMDGPU_TYPE(Name, Id, SingletonId) case BuiltinType::Id:
 #include "clang/Basic/AMDGPUTypes.def"
+#define KVX_TCA_VECTOR_TYPE(Name, Id, Size) case BuiltinType::Id:
+#include "clang/Basic/KVXTypes.def"
       {
         DiagnosticsEngine &Diags = C->getDiagnostics();
         unsigned DiagID = Diags.getCustomDiagID(DiagnosticsEngine::Error,
