@@ -12,9 +12,11 @@
 #include "mlir/Dialect/Affine/IR/AffineOps.h"
 #include "mlir/Dialect/Affine/IR/AffineValueMap.h"
 #include "mlir/Dialect/Affine/LoopUtils.h"
+#include "mlir/Dialect/Affine/Utils.h"
 #include "mlir/Dialect/Transform/IR/TransformDialect.h"
 #include "mlir/Dialect/Transform/Interfaces/TransformInterfaces.h"
 #include "mlir/Transforms/GreedyPatternRewriteDriver.h"
+#include <cstdint>
 
 using namespace mlir;
 using namespace mlir::affine;
@@ -145,6 +147,56 @@ void SimplifyBoundedAffineOpsOp::getEffects(
   consumesHandle(getTargetMutable(), effects);
   for (OpOperand &operand : getBoundedValuesMutable())
     onlyReadsHandle(operand, effects);
+  modifiesPayload(effects);
+}
+
+DiagnosedSilenceableFailure
+SuperVectorizeOp::apply(transform::TransformRewriter &rewriter,
+                        TransformResults &results,
+                        TransformState &state) {
+  ArrayRef<int64_t> fastestVaryingPattern;
+  if (getFastestVaryingPattern().has_value()) {
+    if (getFastestVaryingPattern()->size() != getVectorSizes().size())
+      return emitSilenceableFailure(getLoc(), 
+                "Fastest varying pattern specified with different size than "
+                "the vector size.");
+    fastestVaryingPattern = getFastestVaryingPattern().value();
+  }
+  
+  for (Operation* target : state.getPayloadOps(getTarget())) {
+    // We vectorize affine loop nests at once, so we skip non outer-most loops 
+    if (!isa<AffineForOp>(target) || isa<AffineForOp>(target->getParentOp()))
+      continue;
+    DenseSet<Operation *> parallelLoops;
+    ReductionLoopMap reductionLoops;
+    // If 'vectorize-reduction=true' is provided, we also populate the
+    // `reductionLoops` map.
+    if (getVectorizeReductions()) {
+      target->walk([&parallelLoops, &reductionLoops](AffineForOp loop) {
+        SmallVector<LoopReduction, 2> reductions;
+        if (isLoopParallel(loop, &reductions)) {
+          parallelLoops.insert(loop);
+          // If it's not a reduction loop, adding it to the map is not necessary.
+          if (!reductions.empty())
+            reductionLoops[loop] = reductions;
+        }
+      });
+    } else {
+      target->walk([&parallelLoops](AffineForOp loop) {
+        if (isLoopParallel(loop))
+          parallelLoops.insert(loop);
+      });
+    }
+
+    vectorizeAffineLoops(target, parallelLoops, getVectorSizes(), 
+                        fastestVaryingPattern, reductionLoops);
+  }
+  return DiagnosedSilenceableFailure::success();
+}
+
+void SuperVectorizeOp::getEffects(
+    SmallVectorImpl<MemoryEffects::EffectInstance> &effects) {
+  consumesHandle(getTargetMutable(), effects);
   modifiesPayload(effects);
 }
 

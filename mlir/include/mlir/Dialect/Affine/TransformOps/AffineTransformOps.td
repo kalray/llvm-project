@@ -63,4 +63,50 @@ def SimplifyBoundedAffineOpsOp
   }];
 }
 
+def SuperVectorizeOp
+    : Op<Transform_Dialect, "affine.super_vectorize",
+         [DeclareOpInterfaceMethods<MemoryEffectsOpInterface>,
+         DeclareOpInterfaceMethods<TransformOpInterface>]> {
+  let description = [{
+    Vectorize to a target independent n-D vector abstraction.
+    This operation is an exposition to the transform dialect of the affine-super-vectorize pass.
+
+    Example:
+    ```
+    %0 = transform.structured.match ops{["affine.min", "affine.max"]} in %arg1
+    %1 = transform.structured.match ops{["gpu.lane_id"]} in %arg1
+    transform.affine.simplify_bounded_affine_ops %0 with [%1] within [0] and [32]
+
+    // Multiple bounds can be specified.
+    transform.affine.simplify_bounded_affine_ops %0 with [%1, %2] within [0, 5] and [32, 50]
+    ```
+
+    Bounded op handles (`%1` and `%2) must be mapped to ops that have a single
+    result of index type. The sets of target ops and bounded ops must not
+    overlap.
+
+    #### Return modes
+
+    Target ops must be affine.min or affine.max ops. This transform consumes the
+    target handle and does not produce any handle. It reads the bounded op
+    handles.
+
+    TODO: Support affine.apply targets.
+    TODO: Allow mixed PDL_Operation/int64_t for lower_bounds and upper_bounds.
+  }];
+
+  let arguments = (ins TransformHandleTypeInterface:$target,
+                       DenseI64ArrayAttr:$vector_sizes,
+                       OptionalAttr<DenseI64ArrayAttr>:$fastest_varying_pattern,
+                       DefaultValuedAttr<BoolAttr, "false">:$vectorize_reductions);
+  let results = (outs);
+
+  let assemblyFormat = [{
+      $target $vector_sizes
+          (`fastest_varying_pattern` `=` $fastest_varying_pattern^)? 
+          (`vectorize_reductions` `=` $vectorize_reductions^)? 
+          attr-dict `:` type($target)
+  }];
+}
+
 #endif // Affine_TRANSFORM_OPS
