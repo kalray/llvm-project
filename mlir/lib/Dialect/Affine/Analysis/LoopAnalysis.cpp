@@ -18,12 +18,16 @@
 #include "mlir/Dialect/Affine/Analysis/NestedMatcher.h"
 #include "mlir/Dialect/Affine/IR/AffineOps.h"
 #include "mlir/Dialect/Affine/IR/AffineValueMap.h"
+#include "mlir/IR/AffineExpr.h"
+#include "mlir/IR/Visitors.h"
+#include "llvm/Support/Casting.h"
 #include "llvm/Support/MathExtras.h"
 
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Support/Debug.h"
+#include <cstddef>
 #include <numeric>
 #include <optional>
 #include <type_traits>
@@ -200,9 +204,6 @@ bool mlir::affine::isContiguousAccess(Value iv, LoadOrStoreOp memoryOp,
   assert(memRefDim && "memRefDim == nullptr");
   auto memRefType = memoryOp.getMemRefType();
 
-  if (!memRefType.getLayout().isIdentity())
-    return memoryOp.emitError("NYI: non-trivial layout map"), false;
-
   int uniqueVaryingIndexAlongIv = -1;
   auto accessMap = memoryOp.getAffineMap();
   SmallVector<Value, 4> mapOperands(memoryOp.getMapOperands());
@@ -219,7 +220,41 @@ bool mlir::affine::isContiguousAccess(Value iv, LoadOrStoreOp memoryOp,
     });
     // Check access invariance of each operand in 'exprOperands'.
     for (Value exprOperand : exprOperands) {
-      if (!isAccessIndexInvariant(iv, exprOperand)) {
+      // Verify that the access is contiguous along the induction variable if it depends on it
+      // by checking that at most one of the op's access map's result is of the shape IV + constant
+      auto map = AffineMap::getMultiDimIdentityMap(/*numDims=*/1, iv.getContext());
+      SmallVector<Value> operands = {exprOperand};
+      AffineValueMap avm(map, operands);
+      avm.composeSimplifyAndCanonicalize();
+      WalkResult walkRes = avm.getResult(0).walk([&](AffineExpr expr) {
+        if (!isa<AffineBinaryOpExpr>(expr))
+          return WalkResult::skip();
+        if (expr.getKind() == AffineExprKind::Add) {
+          AffineExpr lhs = cast<AffineBinaryOpExpr>(expr).getLHS();
+          AffineExpr rhs = cast<AffineBinaryOpExpr>(expr).getRHS();
+          if (auto dimExpr = dyn_cast<AffineDimExpr>(lhs)) {
+            if (avm.getOperand(dimExpr.getPosition()) == iv)
+              return WalkResult::interrupt();
+          }
+          if (auto dimExpr = dyn_cast<AffineDimExpr>(rhs)) {
+            if (avm.getOperand(dimExpr.getPosition()) == iv)
+              return WalkResult::interrupt();
+          }
+          return WalkResult::advance();
+        }
+        if (expr.getKind() == AffineExprKind::Mod) {
+          AffineExpr lhs = cast<AffineBinaryOpExpr>(expr).getLHS();
+          if (auto dimExpr = dyn_cast<AffineDimExpr>(lhs)) {
+            if (avm.getOperand(dimExpr.getPosition()) == iv)
+              return WalkResult::interrupt();
+          }
+        }
+        return WalkResult::skip();
+      });
+      if (avm.isFunctionOf(0, iv)) {
+        if (!walkRes.wasInterrupted() && !avm.getAffineMap().isIdentity()) {
+          return false;
+        }
         if (uniqueVaryingIndexAlongIv != -1) {
           // 2+ varying indices -> do not vectorize along iv.
           return false;
@@ -229,10 +264,37 @@ bool mlir::affine::isContiguousAccess(Value iv, LoadOrStoreOp memoryOp,
     }
   }
 
-  if (uniqueVaryingIndexAlongIv == -1)
+  if (uniqueVaryingIndexAlongIv == -1) {
     *memRefDim = -1;
-  else
+    return true;
+  }
+
+  if (memRefType.getLayout().isIdentity()) {
     *memRefDim = memRefType.getRank() - (uniqueVaryingIndexAlongIv + 1);
+    return true;
+  }
+  // Verify that the memref access is contiguous by verifying that the layout map is of the shape IV + constant
+  AffineExpr resultExpr = memRefType.getLayout().getAffineMap().getResult(0);
+  AffineDimExpr dimResultExpr = dyn_cast<AffineDimExpr>(resultExpr);
+  AffineSymbolExpr symbolResultExpr = dyn_cast<AffineSymbolExpr>(resultExpr);
+  if ((!dimResultExpr || isAccessIndexInvariant(iv, mapOperands[dimResultExpr.getPosition()])) &&
+      (!symbolResultExpr || isAccessIndexInvariant(iv, mapOperands[numDims + symbolResultExpr.getPosition()]))) {
+    WalkResult walkRes = memRefType.getLayout().getAffineMap().getResult(0).walk([&](AffineExpr expr){
+      if (!isa<AffineBinaryOpExpr>(expr))
+        return WalkResult::skip();
+      if (expr.getKind() != AffineExprKind::Add)
+        return WalkResult::skip();
+      if ((isa<AffineDimExpr>(cast<AffineBinaryOpExpr>(expr).getLHS())
+            && (int) cast<AffineDimExpr>(cast<AffineBinaryOpExpr>(expr).getLHS()).getPosition() == uniqueVaryingIndexAlongIv)
+          || (isa<AffineDimExpr>(cast<AffineBinaryOpExpr>(expr).getRHS())
+              && (int) cast<AffineDimExpr>(cast<AffineBinaryOpExpr>(expr).getRHS()).getPosition() == uniqueVaryingIndexAlongIv))
+        return WalkResult::interrupt();
+      return WalkResult::advance();
+    });
+    if (!walkRes.wasInterrupted())
+      return false;
+  }
+  *memRefDim = memRefType.getRank() - (uniqueVaryingIndexAlongIv + 1);
   return true;
 }
 
@@ -256,6 +318,8 @@ isVectorizableLoopBodyWithOpCond(AffineForOp loop,
                                  const VectorizableOpFun &isVectorizableOp,
                                  NestedPattern &vectorTransferMatcher) {
   auto *forOp = loop.getOperation();
+  if (loop.getStepAsInt() != 1)
+    return false;
 
   // No vectorization across conditionals for now.
   auto conditionals = matcher::If();

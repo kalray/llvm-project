@@ -11,6 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "mlir/Dialect/Affine/LoopFusionUtils.h"
 #include "mlir/Dialect/Affine/Passes.h"
 
 #include "mlir/Analysis/SliceAnalysis.h"
@@ -23,11 +24,16 @@
 #include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/Dialect/Vector/IR/VectorOps.h"
 #include "mlir/Dialect/Vector/Utils/VectorUtils.h"
+#include "mlir/IR/BuiltinAttributes.h"
+#include "mlir/IR/BuiltinTypeInterfaces.h"
+#include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/IRMapping.h"
+#include "mlir/IR/Visitors.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Support/LLVM.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/Debug.h"
+#include <cstdint>
 #include <optional>
 
 namespace mlir {
@@ -949,7 +955,18 @@ static arith::ConstantOp vectorizeConstant(arith::ConstantOp constOp,
     return nullptr;
 
   auto vecTy = getVectorType(scalarTy, state.strategy);
-  auto vecAttr = DenseElementsAttr::get(vecTy, constOp.getValue());
+  // DenseElementsAttr::get method is bugged and will generate 64 bits floats instead
+  // of 32 ones even if the type is fp32 so we have to enforce the use of IEEEFloat so that it works
+  APInt intVal;
+  if (constOp.getType().isInteger())
+    intVal = cast<IntegerAttr>(constOp.getValue()).getAPSInt();
+  else {
+    FloatAttr floatAttr = cast<FloatAttr>(constOp.getValue());
+    intVal = constOp.getType().getIntOrFloatBitWidth() == 32 ?
+              llvm::detail::IEEEFloat(floatAttr.getValue().convertToFloat()).bitcastToAPInt()
+              : floatAttr.getValue().bitcastToAPInt();
+  }
+  auto vecAttr = DenseElementsAttr::get(vecTy, intVal);
 
   OpBuilder::InsertionGuard guard(state.builder);
   Operation *parentOp = state.builder.getInsertionBlock()->getParentOp();
